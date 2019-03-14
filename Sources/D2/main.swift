@@ -1,9 +1,13 @@
 import Foundation
-import SwiftDiscord
+import Sword
 
 func main() throws {
 	// 'discordToken' should be declared in 'authtoken.swift'
-	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(discordToken)"), delegate: D2ClientDelegate(), configuration: [.log(.info)])
+	let client = Sword(token: discordToken)
+	let handler = D2ClientHandler()
+	
+	client.on(.messageCreate) { handler.on(createMessage: $0 as! Message) }
+	
 	client.connect()
 }
 
