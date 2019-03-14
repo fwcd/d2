@@ -8,7 +8,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .upToNextMajor(from: "6.0.0"))
+        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("77a9cf9e99e64a54b9f61588c2e82675523b5c2b"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
