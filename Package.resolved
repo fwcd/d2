@@ -11,15 +11,6 @@
         }
       },
       {
-        "package": "COPUS",
-        "repositoryURL": "https://github.com/nuclearace/copus",
-        "state": {
-          "branch": null,
-          "revision": "365743902efc1c93730757cea288bef4b90637a0",
-          "version": "2.0.0"
-        }
-      },
-      {
         "package": "Core",
         "repositoryURL": "https://github.com/vapor/core.git",
         "state": {
@@ -57,7 +48,7 @@
       },
       {
         "package": "Engine",
-        "repositoryURL": "https://github.com/vapor/engine",
+        "repositoryURL": "https://github.com/vapor/engine.git",
         "state": {
           "branch": null,
           "revision": "e44822c7516676d8bcb0141a6e248a88847b110c",
@@ -84,20 +75,20 @@
       },
       {
         "package": "Sodium",
-        "repositoryURL": "https://github.com/nuclearace/Sodium",
+        "repositoryURL": "https://github.com/Azoy/Sodium",
         "state": {
           "branch": null,
-          "revision": "5812a3d879b77aae0fdfbd62d0e8354e914d15ae",
-          "version": "2.0.0"
+          "revision": "7708d654e26c76e245becdbcc507a427d4808c1f",
+          "version": "1.1.0"
         }
       },
       {
-        "package": "SwiftDiscord",
-        "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
+        "package": "Sword",
+        "repositoryURL": "https://github.com/Azoy/Sword.git",
         "state": {
           "branch": null,
-          "revision": "77a9cf9e99e64a54b9f61588c2e82675523b5c2b",
-          "version": null
+          "revision": "1b94ee1dfbfd9b2c78f2f298b2b10968befccef4",
+          "version": "0.9.0"
         }
       },
       {
