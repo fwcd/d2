@@ -7,4 +7,4 @@ func main() throws {
 	let client = DiscordClient(token: DiscordToken(stringLiteral: token), delegate: D2ClientDelegate(), configuration: [.log(.info)])
 }
 
-main()
+try main()
