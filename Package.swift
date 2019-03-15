@@ -8,7 +8,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/Azoy/Sword.git", .revision("ea772509ffdf273f4fc9fc99cdd5822e48f067e5"))
+        .package(url: "https://github.com/Azoy/Sword.git", .revision("0b98a557679d4d6d0c7223e0afeb8c75f406d230"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

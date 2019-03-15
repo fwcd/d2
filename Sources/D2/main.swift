@@ -8,6 +8,7 @@ func main() throws {
 	
 	client.on(.messageCreate) { handler.on(createMessage: $0 as! Message) }
 	
+	print("Connecting client")
 	client.connect()
 }
 

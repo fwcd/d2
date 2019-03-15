@@ -74,21 +74,12 @@
         }
       },
       {
-        "package": "Sodium",
-        "repositoryURL": "https://github.com/Azoy/Sodium",
-        "state": {
-          "branch": null,
-          "revision": "7708d654e26c76e245becdbcc507a427d4808c1f",
-          "version": "1.1.0"
-        }
-      },
-      {
         "package": "Sword",
         "repositoryURL": "https://github.com/Azoy/Sword.git",
         "state": {
           "branch": null,
-          "revision": "1b94ee1dfbfd9b2c78f2f298b2b10968befccef4",
-          "version": "0.9.0"
+          "revision": "0b98a557679d4d6d0c7223e0afeb8c75f406d230",
+          "version": null
         }
       },
       {
