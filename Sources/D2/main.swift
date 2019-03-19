@@ -4,7 +4,7 @@ import Sword
 func main() throws {
 	// 'discordToken' should be declared in 'authtoken.swift'
 	let client = Sword(token: discordToken)
-	let handler: ClientHandler = CommandHandler()
+	let handler: ClientHandler = try CommandHandler(withPrefix: "%")
 	
 	client.on(.messageCreate) { handler.on(createMessage: $0 as! Message) }
 	
