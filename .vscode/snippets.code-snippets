@@ -6,7 +6,11 @@
 			"import Sword",
 			"",
 			"class $1Command: Command {",
-			"\t$0",
+			"\tlet description = \"$2\"",
+			"\t",
+			"\tfunc invoke(withMessage message: Message, args: String) {",
+			"\t\t$0",
+			"\t}",
 			"}"
 		],
 		"description": "Creates a new command implementation"
