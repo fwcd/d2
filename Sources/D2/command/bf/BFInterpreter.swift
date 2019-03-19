@@ -6,6 +6,7 @@ struct BFInterpreter {
 	private var memory = [Int32]()
 	private(set) var cancelled = false
 	
+	/** Runs a BF program. */
 	mutating func interpret(program: String) throws -> BFOutput {
 		var i: String.Index = program.startIndex // The character index in the program
 		var output: String = ""
@@ -81,52 +82,54 @@ struct BFInterpreter {
 		return BFOutput(content: output, tooLong: false)
 	}
 	
+	/** Requests cancellation. */
 	mutating func cancel() {
 		cancelled = true
 	}
 	
+	/** Increments the pointer. */
 	private mutating func forward() {
 		ptr += 1
 	}
 	
+	/** Decrements the pointer. */
 	private mutating func backward() {
 		ptr -= 1
 	}
 	
+	/** Increments the current cell. */
 	private mutating func increment() throws {
 		try expand(to: ptr)
 		let value = try current()
 		let (successor, didOverflow) = value.addingReportingOverflow(1)
 		
-		if didOverflow {
-			throw BFError.incrementOverflow(value)
-		} else {
-			memory[try index(of: ptr)] = successor
-		}
+		guard !didOverflow else { throw BFError.incrementOverflow(value) }
+		try write(successor)
 	}
 	
+	/** Decrements the current cell. */
 	private mutating func decrement() throws {
 		try expand(to: ptr)
 		let value = try current()
 		let (predecessor, didOverflow) = value.subtractingReportingOverflow(1)
 		
-		if didOverflow {
-			throw BFError.decrementOverflow(value)
-		} else {
-			memory[try index(of: ptr)] = predecessor
-		}
+		guard !didOverflow else { throw BFError.decrementOverflow(value) }
+		try write(predecessor)
 	}
 	
+	/** Multiplies the current cell by a factor. */
 	private mutating func multiply(by factor: Int32) throws {
 		try expand(to: ptr)
 		let value = try current()
 		let (product, didOverflow) = value.multipliedReportingOverflow(by: factor)
 		
-		if didOverflow {
-			throw BFError.multiplicationOverflow(value, factor)
-		} else {
-			memory[try index(of: ptr)] = product
-		}
+		guard !didOverflow else { throw BFError.multiplicationOverflow(value, factor) }
+		try write(product)
+	}
+	
+	/** Writes a value to the current cell. */
+	private mutating func write(_ value: Int32) throws {
+		memory[try index(of: ptr)] = value
 	}
 	
 	/** The number in the cell currently pointing to. */
@@ -135,11 +138,13 @@ struct BFInterpreter {
 		return memory[try index(of: ptr)]
 	}
 	
+	/** Reads the current cell, interpreting it as a character. */
 	private mutating func currentASCII() throws -> String {
 		let value = try current()
 		return (value < 0) ? "?" : String(UnicodeScalar(Int(value)) ?? "?")
 	}
 	
+	/** Ensures that the memory is large enough to contain the given address. */
 	private mutating func expand(to address: Int32) throws {
 		let i = try index(of: address)
 		while memory.count <= i {
@@ -147,6 +152,7 @@ struct BFInterpreter {
 		}
 	}
 	
+	/** Converts the (possibly negative) address to a not-negative memory array index. */
 	private func index(of address: Int32) throws -> Int {
 		var result: (Int32, Bool)
 		
