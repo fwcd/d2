@@ -1,3 +1,5 @@
+fileprivate let maxStringLength = 700
+
 /** Dynamically interprets programs written in BF. */
 struct BFInterpreter {
 	private var ptr: Int = 0
@@ -18,7 +20,7 @@ struct BFInterpreter {
 		}
 	}
 	
-	mutating func interpret(program: String) throws -> String {
+	mutating func interpret(program: String) throws -> BFOutput {
 		var i: String.Index = program.startIndex // The character index in the program
 		var output: String = ""
 		
@@ -29,7 +31,11 @@ struct BFInterpreter {
 				case "<": backward()
 				case "+": increment()
 				case "-": decrement()
-				case ".": output += currentASCII
+				case ".":
+					output += currentASCII
+					if output.count > maxStringLength {
+						return BFOutput(content: "\(output)...", tooLong: true)
+					}
 				case ",": break // TODO: Read from some input source
 				case "/": multiply(by: 2)
 				case "[":
@@ -86,7 +92,7 @@ struct BFInterpreter {
 			}
 		}
 		
-		return output
+		return BFOutput(content: output, tooLong: false)
 	}
 	
 	mutating func cancel() {
