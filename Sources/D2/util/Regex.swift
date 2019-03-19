@@ -13,4 +13,10 @@ struct Regex {
 		return pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))
 			.compactMap { Range($0.range, in: str).map { String(str[$0]) } }
 	}
+	
+	func firstGroups(in str: String) -> [String]? {
+		let ranges = pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))[0]
+		return (0..<ranges.numberOfRanges)
+			.map { Range(ranges.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
+	}
 }

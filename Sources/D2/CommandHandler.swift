@@ -13,14 +13,12 @@ class CommandHandler: ClientHandler {
 	}
 	
 	func on(createMessage message: Message) {
-		let matches = commandPattern.matches(in: message.content)
-		
-		if !matches.isEmpty {
-			print("\(matches)")
-			let commandName = matches[0]
-			let commandArgs = matches[1]
-			if let command = commands[commandName] {
-				command.invoke(withMessage: message, args: commandArgs)
+		if let groups = commandPattern.firstGroups(in: message.content) {
+			let name = groups[1]
+			let args = groups[2]
+			
+			if let command = commands[name] {
+				command.invoke(withMessage: message, args: args)
 			}
 		}
 	}
