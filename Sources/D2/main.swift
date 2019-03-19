@@ -2,7 +2,7 @@ import Foundation
 import Sword
 
 func main() throws {
-	// 'discordToken' should be declared in 'authtoken.swift'
+	// 'discordToken' should be declared in 'authkeys.swift'
 	let client = Sword(token: discordToken)
 	let handler = try CommandHandler(withPrefix: "%")
 	
