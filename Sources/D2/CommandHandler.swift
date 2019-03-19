@@ -16,6 +16,7 @@ class CommandHandler: ClientHandler {
 		let matches = commandPattern.matches(in: message.content)
 		
 		if !matches.isEmpty {
+			print("\(matches)")
 			let commandName = matches[0]
 			let commandArgs = matches[1]
 			if let command = commands[commandName] {

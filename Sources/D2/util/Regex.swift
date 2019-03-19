@@ -10,7 +10,7 @@ struct Regex {
 	func matches(in str: String) -> [String] {
 		// Source: https://stackoverflow.com/questions/27880650/swift-extract-regex-matches
 		
-		return pattern.matches(in: str, range: str.startIndex...)
-			.compactMap { String(str[$0]) }
+		return pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))
+			.compactMap { Range($0.range, in: str).map { String(str[$0]) } }
 	}
 }
