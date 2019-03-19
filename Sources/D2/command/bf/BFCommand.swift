@@ -33,6 +33,14 @@ class BFCommand: Command {
 					}
 				} catch BFError.parenthesesMismatch(let msg) {
 					response = "Parentheses mismatch error: `\(msg)`"
+				} catch BFError.multiplicationOverflow(let a, let b) {
+					response = "Overflow while multiplying \(a) with \(b)"
+				} catch BFError.incrementOverflow(let x) {
+					response = "Overflow while incrementing \(x)"
+				} catch BFError.decrementOverflow(let x) {
+					response = "Overflow while decrementing \(x)"
+				} catch BFError.addressOverflow(let address) {
+					response = "Overflow while dereferencing address \(address)"
 				} catch {
 					response = "Error while executing code"
 				}
