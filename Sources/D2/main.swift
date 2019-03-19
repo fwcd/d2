@@ -8,6 +8,7 @@ func main() throws {
 	
 	handler["ping"] = PingCommand()
 	handler["vertical"] = VerticalCommand()
+	handler["bf"] = BFCommand()
 	handler["help"] = ClosureCommand(description: "Helps") { [unowned handler] message, _ in
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }
