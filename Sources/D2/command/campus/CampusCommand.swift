@@ -5,7 +5,10 @@ class CampusCommand: Command {
 	
 	func invoke(withMessage message: Message, args: String) {
 		// message.channel.send([
-		// 	DiscordMessageKey.file: 
+		// 	DiscordMessageKey.file: MapQuestStaticMap(
+		// 		latitude: 0,
+		// 		longitude: 0
+		// 	).url
 		// ])
 	}
 }
