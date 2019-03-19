@@ -47,9 +47,11 @@ class BFCommand: Command {
 		}
 		
 		queue.async(execute: task)
-		_ = task.wait(timeout: DispatchTime.now() + .seconds(maxExecutionSeconds))
-		interpreter.cancel()
 		
-		running = false
+		DispatchQueue.global(qos: .background).async {
+			_ = task.wait(timeout: DispatchTime.now() + .seconds(maxExecutionSeconds))
+			interpreter.cancel()
+			self.running = false
+		}
 	}
 }

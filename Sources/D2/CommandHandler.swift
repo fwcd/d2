@@ -4,6 +4,7 @@ import Foundation
 class CommandHandler: ClientHandler {
 	private let commandPattern: Regex
 	private(set) var commands = [String : Command]()
+	private var currentIndex = 0
 	
 	init(withPrefix msgPrefix: String) throws {
 		let escapedPrefix = NSRegularExpression.escapedPattern(for: msgPrefix)
@@ -13,12 +14,17 @@ class CommandHandler: ClientHandler {
 	}
 	
 	func on(createMessage message: Message) {
-		if let groups = commandPattern.firstGroups(in: message.content) {
-			print("Got command \(groups)")
+		let msgIndex = currentIndex
+		let fromBot = message.author?.isBot ?? false
+		
+		currentIndex += 1
+		
+		if !fromBot, let groups = commandPattern.firstGroups(in: message.content) {
+			print("Got command #\(msgIndex): \(groups)")
 			let name = groups[1]
 			let args = groups[2]
 			
-			if let command = commands[name] {
+			if let command = self.commands[name] {
 				print("Invoking '\(name)'")
 				command.invoke(withMessage: message, args: args)
 			} else {
