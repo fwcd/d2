@@ -2,6 +2,7 @@
 struct BFInterpreter {
 	private var ptr: Int = 0
 	private var memory = [Int]()
+	private(set) var cancelled = false
 	
 	/** The number in the cell currently pointing to. */
 	private var current: Int {
@@ -21,7 +22,7 @@ struct BFInterpreter {
 		var i: String.Index = program.startIndex // The character index in the program
 		var output: String = ""
 		
-		while i >= program.startIndex && i < program.endIndex {
+		while i >= program.startIndex && i < program.endIndex && !cancelled {
 			var c = program[i] // The character at the current index
 			switch c {
 				case ">": forward()
@@ -52,7 +53,7 @@ struct BFInterpreter {
 							if i < program.endIndex {
 								c = program[i]
 							}
-						} while stack > 0
+						} while stack > 0 && !cancelled
 					}
 				case "]":
 					let startIndex = i
@@ -75,7 +76,7 @@ struct BFInterpreter {
 							if i >= program.startIndex {
 								c = program[i]
 							}
-						} while stack > 0
+						} while stack > 0 && !cancelled
 					}
 				default: break
 			}
@@ -86,6 +87,10 @@ struct BFInterpreter {
 		}
 		
 		return output
+	}
+	
+	mutating func cancel() {
+		cancelled = true
 	}
 	
 	private mutating func forward() {
