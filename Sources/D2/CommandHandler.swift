@@ -9,7 +9,7 @@ class CommandHandler: ClientHandler {
 		let escapedPrefix = NSRegularExpression.escapedPattern(for: msgPrefix)
 		// The first group matches the command name,
 		// the second matches the arguments (the rest of the message content)
-		commandPattern = try Regex(from: "\(escapedPrefix)(\\w+)(?:\\s+(.*))?")
+		commandPattern = try Regex(from: "\(escapedPrefix)(\\w+)(?:\\s+([\\s\\S]*))?")
 	}
 	
 	func on(createMessage message: Message) {
