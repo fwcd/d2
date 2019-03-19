@@ -1,0 +1,14 @@
+{
+	"Command": {
+		"prefix": "command",
+		"scope": "swift",
+		"body": [
+			"import Sword",
+			"",
+			"class $1Command: Command {",
+			"\t$0",
+			"}"
+		],
+		"description": "Creates a new command implementation"
+	}
+}

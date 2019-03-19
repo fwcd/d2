@@ -5,6 +5,8 @@ bin
 Packages
 *.xcodeproj
 xcuserdata
-.vscode
 .idea
 authtoken.*
+
+.vscode/**
+!*.code-snippets
