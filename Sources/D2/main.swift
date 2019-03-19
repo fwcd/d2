@@ -7,6 +7,12 @@ func main() throws {
 	let handler = try CommandHandler(withPrefix: "%")
 	
 	handler["ping"] = PingCommand()
+	handler["help"] = ClosureCommand(description: "Helps") { [unowned handler] message, _ in
+		let helpText = handler.commands
+			.map { "\($0.key): \($0.value.description)" }
+			.reduce("") { "\($0)\n\($1)" }
+		message.channel.send("```\n\(helpText)\n```")
+	}
 	
 	client.on(.messageCreate) { handler.on(createMessage: $0 as! Message) }
 	

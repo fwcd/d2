@@ -3,7 +3,7 @@ import Foundation
 
 class CommandHandler: ClientHandler {
 	private let commandPattern: Regex
-	private var commands = [String : Command]()
+	private(set) var commands = [String : Command]()
 	
 	init(withPrefix msgPrefix: String) throws {
 		let escapedPrefix = NSRegularExpression.escapedPattern(for: msgPrefix)
