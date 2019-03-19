@@ -141,7 +141,7 @@ struct BFInterpreter {
 	/** Reads the current cell, interpreting it as a character. */
 	private mutating func currentASCII() throws -> String {
 		let value = try current()
-		return (value < 0) ? "?" : String(UnicodeScalar(Int(value)) ?? "?")
+		return (value < 0) ? "?" : String(Unicode.Scalar(Int(value)) ?? "?")
 	}
 	
 	/** Ensures that the memory is large enough to contain the given address. */
