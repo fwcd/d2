@@ -14,16 +14,22 @@ class CommandHandler: ClientHandler {
 	
 	func on(createMessage message: Message) {
 		if let groups = commandPattern.firstGroups(in: message.content) {
+			print("Got command \(groups)")
 			let name = groups[1]
 			let args = groups[2]
 			
 			if let command = commands[name] {
+				print("Invoking '\(name)'")
 				command.invoke(withMessage: message, args: args)
+			} else {
+				print("Did not recognize command '\(name)'")
+				message.channel.send("Sorry, I do not know the command `\(name)`.")
 			}
 		}
 	}
 	
-	func add(withName name: String, command: Command) {
-		commands[name] = command
+	subscript(name: String) -> Command? {
+		get { return commands[name] }
+		set(newValue) { commands[name] = newValue }
 	}
 }

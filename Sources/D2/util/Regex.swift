@@ -15,8 +15,11 @@ struct Regex {
 	}
 	
 	func firstGroups(in str: String) -> [String]? {
-		let ranges = pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))[0]
-		return (0..<ranges.numberOfRanges)
-			.map { Range(ranges.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
+		let optionalGroups = pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))[safe: 0]
+		
+		return optionalGroups.map { groups in
+			(0..<groups.numberOfRanges)
+				.map { Range(groups.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
+		}
 	}
 }

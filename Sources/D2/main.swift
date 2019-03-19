@@ -4,7 +4,9 @@ import Sword
 func main() throws {
 	// 'discordToken' should be declared in 'authtoken.swift'
 	let client = Sword(token: discordToken)
-	let handler: ClientHandler = try CommandHandler(withPrefix: "%")
+	let handler = try CommandHandler(withPrefix: "%")
+	
+	handler["ping"] = PingCommand()
 	
 	client.on(.messageCreate) { handler.on(createMessage: $0 as! Message) }
 	
