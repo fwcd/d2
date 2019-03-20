@@ -20,45 +20,27 @@ struct MapQuestGeocoder {
 			}
 			do {
 				let json = try JSONSerialization.jsonObject(with: data)
+				let latLng = (json as? [String : Any])
+					.flatMap { $0["results"] }
+					.flatMap { $0 as? [Any] }
+					.flatMap { $0.first }
+					.flatMap { $0 as? [String : Any] }
+					.flatMap { $0["locations"] }
+					.flatMap { $0 as? [Any] }
+					.flatMap { $0.first }
+					.flatMap { $0 as? [String : Any] }
+					.flatMap { $0["latLng"] }
+					.flatMap { $0 as? [String : Double] }
 				
-				guard let jsonDict = json as? [String : Any] else {
-					then(.error(MapQuestError.jsonParseError(json, "Top-level object mismatch")))
+				guard let location = latLng else {
+					then(.error(MapQuestError.jsonParseError(json, "Could not locate results -> locations -> latLng")))
 					return
 				}
-				guard let rawResults = jsonDict["results"] else {
-					then(.error(MapQuestError.jsonParseError(jsonDict, "'results' key is not present")))
+				guard let lat = location["lat"], let lng = location["lng"] else {
+					then(.error(MapQuestError.jsonParseError(location, "No 'lat'/'lng' keys found")))
 					return
 				}
-				guard let results = rawResults as? [Any] else {
-					then(.error(MapQuestError.jsonParseError(rawResults, "'results' key is not an array")))
-					return
-				}
-				guard let rawFirstResult = results[safe: 0] else {
-					then(.error(MapQuestError.foundNoMatches("MapQuest geocoder reponse returned no matches")))
-					return
-				}
-				guard let firstResult = rawFirstResult as? [String : Any] else {
-					then(.error(MapQuestError.jsonParseError(rawFirstResult, "First geocoding result is not an object")))
-					return
-				}
-				guard let rawLatLng = firstResult["latLng"] else {
-					then(.error(MapQuestError.jsonParseError(firstResult, "First geocoding result has no 'latLng'")))
-					return
-				}
-				guard let latLng = rawLatLng as? [String : Double] else {
-					then(.error(MapQuestError.jsonParseError(rawLatLng, "'latLng' could not be parsed")))
-					return
-				}
-				guard let latitude = latLng["lat"] else {
-					then(.error(MapQuestError.jsonParseError(latLng, "'latLng' has no latitude")))
-					return
-				}
-				guard let longitude = latLng["lng"] else {
-					then(.error(MapQuestError.jsonParseError(latLng, "'latLng' has no longitude")))
-					return
-				}
-				
-				then(.ok(GeoCoordinates(latitude: latitude, longitude: longitude)))
+				then(.ok(GeoCoordinates(latitude: lat, longitude: lng)))
 			} catch {
 				then(.error(MapQuestError.jsonIOError(error)))
 			}
