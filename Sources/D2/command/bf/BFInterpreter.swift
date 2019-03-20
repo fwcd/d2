@@ -61,7 +61,7 @@ struct BFInterpreter {
 							}
 							
 							if i <= program.startIndex {
-								throw BFError.parenthesesMismatch("Out of bounds while searching for opening parenthesis to ] at \(startIndex)")
+								throw BFError.parenthesesMismatch("Out of bounds while searching for opening parenthesis to ] at \(program.distance(from: program.startIndex, to: startIndex))")
 							}
 							
 							i = program.index(before: i)
