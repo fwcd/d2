@@ -1,4 +1,4 @@
 struct UnivISOfficeHour {
-	let comment: String?
-	let office: String?
+	var comment: String?
+	var office: String?
 }

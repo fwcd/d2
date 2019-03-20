@@ -1,25 +1,25 @@
 struct UnivISRoom: UnivISObjectNode {
 	let key: String
-	let address: String?
-	let chtab: Bool?
-	let contacts: [UnivISRef]
-	let description: String?
-	let id: UInt?
-	let inet: Bool?
-	let beam: Bool?
-	let dark: Bool?
-	let lose: Bool?
-	let ohead: Bool?
-	let wlan: Bool?
-	let tafel: Bool?
-	let laptopton: Bool?
-	let fest: Bool?
-	let tel: String?
-	let name: String?
-	let orgname: String?
-	let orgunits: [String]
-	let rolli: Bool?
-	let short: String?
-	let size: Int?
-	let wb: Bool?
+	var address: String? = nil
+	var chtab: Bool? = nil
+	var contacts = [UnivISRef]()
+	var description: String? = nil
+	var id: UInt? = nil
+	var inet: Bool? = nil
+	var beam: Bool? = nil
+	var dark: Bool? = nil
+	var lose: Bool? = nil
+	var ohead: Bool? = nil
+	var wlan: Bool? = nil
+	var tafel: Bool? = nil
+	var laptopton: Bool? = nil
+	var fest: Bool? = nil
+	var tel: String? = nil
+	var name: String? = nil
+	var orgname: String? = nil
+	var orgunits = [String]()
+	var rolli: Bool? = nil
+	var short: String? = nil
+	var size: Int? = nil
+	var wb: Bool? = nil
 }

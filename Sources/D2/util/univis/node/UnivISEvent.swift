@@ -1,12 +1,12 @@
 struct UnivISEvent: UnivISObjectNode {
 	let key: String
-	let contact: UnivISRef?
-	let dbref: UnivISRef?
-	let enddate: String?
-	let id: UInt?
-	let orgname: String?
-	let orgunits: [String]
-	let startdate: String?
-	let terms: [UnivISTerm]
-	let title: String?
+	var contact: UnivISRef? = nil
+	var dbref: UnivISRef? = nil
+	var enddate: String? = nil
+	var id: UInt? = nil
+	var orgname: String? = nil
+	var orgunits = [String]()
+	var startdate: String? = nil
+	var terms = [UnivISTerm]()
+	var title: String? = nil
 }

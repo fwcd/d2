@@ -1,7 +1,7 @@
 struct UnivISTerm {
-	let enddate: String?
-	let endtime: String?
-	let room: UnivISRef?
-	let startdate: String?
-	let starttime: String?
+	var enddate: String? = nil
+	var endtime: String? = nil
+	var room: UnivISRef? = nil
+	var startdate: String? = nil
+	var starttime: String? = nil
 }

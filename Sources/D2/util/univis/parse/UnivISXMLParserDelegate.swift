@@ -8,7 +8,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 	}
 	
 	func parserDidEndDocument(_ parser: XMLParser) {
-		// TODO
+		then(.ok())
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {

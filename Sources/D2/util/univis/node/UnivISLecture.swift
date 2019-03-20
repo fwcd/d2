@@ -1,24 +1,24 @@
 struct UnivISLecture: UnivISObjectNode {
 	let key: String
-	let classification: UnivISRef?
-	let dozs: [UnivISRef]
-	let id: Int?
-	let name: String?
-	let number: Int?
-	let ordernr: Int?
-	let orgname: String?
-	let orgunits: [String]
-	let sws: Int?
-	let terms: [UnivISTerm]
-	let type: String?
-	let parentLv: UnivISRef?
-	let short: String?
-	let startdate: String?
-	let turnout: Int?
-	let ects: Bool?
-	let ectsCred: Int?
-	let literature: String?
-	let organizational: String?
-	let evaluation: Bool?
-	let summary: String?
+	var classification: UnivISRef? = nil
+	var dozs = [UnivISRef]()
+	var id: Int? = nil
+	var name: String? = nil
+	var number: Int? = nil
+	var ordernr: Int? = nil
+	var orgname: String? = nil
+	var orgunits = [String]()
+	var sws: Int? = nil
+	var terms = [UnivISTerm]()
+	var type: String? = nil
+	var parentLv: UnivISRef?
+	var short: String? = nil
+	var startdate: String? = nil
+	var turnout: Int? = nil
+	var ects: Bool? = nil
+	var ectsCred: Int? = nil
+	var literature: String? = nil
+	var organizational: String? = nil
+	var evaluation: Bool? = nil
+	var summary: String? = nil
 }

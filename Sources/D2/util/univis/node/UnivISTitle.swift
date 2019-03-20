@@ -1,8 +1,8 @@
 struct UnivISTitle: UnivISObjectNode {
 	let key: String
-	let title: String?
-	let titleEn: String?
-	let ordernr: Int?
-	let parentTitle: UnivISRef?
-	let text: String?
+	var title: String? = nil
+	var titleEn: String? = nil
+	var ordernr: Int? = nil
+	var parentTitle: UnivISRef? = nil
+	var text: String? = nil
 }
