@@ -19,38 +19,46 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-		// Ignore top-level 'UnivIS' element
-		guard elementName != "UnivIS" else { return }
-		
-		if let builder = nodeBuilder {
-			// Enter child node in existing builder
-			builder.enter(childWithName: elementName, attributes: attributes)
-		} else if let builderFactory = registeredBuilderFactories[elementName] {
-			// Enter object node by creating a new builder
-			let builder = builderFactory()
-			builder.enter(selfWithName: elementName, attributes: attributes)
+		do {
+			// Ignore top-level 'UnivIS' element
+			guard elementName != "UnivIS" else { return }
 			
-			nodeBuilder = builder
-			currentName = elementName
-		} // else ignore unrecognized element
+			if let builder = nodeBuilder {
+				// Enter child node in existing builder
+				try builder.enter(childWithName: elementName, attributes: attributes)
+			} else if let builderFactory = registeredBuilderFactories[elementName] {
+				// Enter object node by creating a new builder
+				let builder = builderFactory()
+				try builder.enter(selfWithName: elementName, attributes: attributes)
+				
+				nodeBuilder = builder
+				currentName = elementName
+			} // else ignore unrecognized element
+		} catch {
+			then(.error(error))
+		}
 	}
 	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-		// Ignore top-level 'UnivIS' element
-		guard elementName != "UnivIS" else { return }
-		
-		if let builder = nodeBuilder {
-			if elementName == currentName {
-				// Exit object node
-				builder.exit(selfWithName: elementName)
-				nodes.append(builder.build())
-				
-				nodeBuilder = nil
-				currentName = nil
-			} else {
-				builder.exit(childWithName: elementName)
-			}
-		} // else ignore elements outside of builders
+		do {
+			// Ignore top-level 'UnivIS' element
+			guard elementName != "UnivIS" else { return }
+			
+			if let builder = nodeBuilder {
+				if elementName == currentName {
+					// Exit object node
+					try builder.exit(selfWithName: elementName)
+					nodes.append(builder.build())
+					
+					nodeBuilder = nil
+					currentName = nil
+				} else {
+					try builder.exit(childWithName: elementName)
+				}
+			} // else ignore elements outside of builders
+		} catch {
+			then(.error(error))
+		}
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {

@@ -1,9 +1,9 @@
 protocol UnivISObjectNodeXMLBuilder: UnivISObjectNodeBuilder {
-	func enter(selfWithName elementName: String, attributes: [String : String])
+	func enter(selfWithName elementName: String, attributes: [String : String]) throws
 	
-	func enter(childWithName elementName: String, attributes: [String : String])
+	func enter(childWithName elementName: String, attributes: [String : String]) throws
 	
-	func exit(childWithName elementName: String)
+	func exit(childWithName elementName: String) throws
 	
-	func exit(selfWithName elementName: String)
+	func exit(selfWithName elementName: String) throws
 }

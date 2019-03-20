@@ -11,4 +11,8 @@ struct UnivISPerson: UnivISObjectNode {
 	var orgname: String? = nil
 	var orgunits: [String] = nil
 	var visible: Bool? = nil
+	
+	init(key: String) {
+		self.key = key
+	}
 }

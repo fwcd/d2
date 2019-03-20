@@ -22,4 +22,8 @@ struct UnivISRoom: UnivISObjectNode {
 	var short: String? = nil
 	var size: Int? = nil
 	var wb: Bool? = nil
+	
+	init(key: String) {
+		self.key = key
+	}
 }

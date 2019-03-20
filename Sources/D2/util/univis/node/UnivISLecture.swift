@@ -21,4 +21,8 @@ struct UnivISLecture: UnivISObjectNode {
 	var organizational: String? = nil
 	var evaluation: Bool? = nil
 	var summary: String? = nil
+	
+	init(key: String) {
+		self.key = key
+	}
 }

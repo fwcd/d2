@@ -9,4 +9,8 @@ struct UnivISEvent: UnivISObjectNode {
 	var startdate: String? = nil
 	var terms = [UnivISTerm]()
 	var title: String? = nil
+	
+	init(key: String) {
+		self.key = key
+	}
 }

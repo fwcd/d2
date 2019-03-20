@@ -5,4 +5,8 @@ struct UnivISTitle: UnivISObjectNode {
 	var ordernr: Int? = nil
 	var parentTitle: UnivISRef? = nil
 	var text: String? = nil
+	
+	init(key: String) {
+		self.key = key
+	}
 }
