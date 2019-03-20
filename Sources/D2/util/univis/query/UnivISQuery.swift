@@ -23,17 +23,34 @@ struct UnivISQuery {
 		self.url = url
 	}
 	
-	func start(then: (Result<UnivISRootNode>) -> Void) {
-		let url = try UnivISQuery(
-			scheme: "http", host: "univis.uni-kiel.de", path: "/prg", search: .rooms, params: [
-				.name: "Haase"
-			]
-		).url
-		print(url)
-		var request = URLRequest(url: url)
-		request.httpMethod = "GET"
-		URLSession.shared.dataTask(with: request) { data, response, error in
-			print(String(data: data!, encoding: .utf8)!)
-		}.resume()
+	func start(then: @escaping (Result<UnivISOutputNode>) -> Void) {
+		do {
+			let url = try UnivISQuery(
+				scheme: "http", host: "univis.uni-kiel.de", path: "/prg", search: .rooms, params: [
+					.name: "Haase"
+				]
+			).url
+			
+			var request = URLRequest(url: url)
+			request.httpMethod = "GET"
+			URLSession.shared.dataTask(with: request) { data, response, error in
+				guard error == nil else {
+					then(.error(UnivISError.httpError(error!)))
+					return
+				}
+				guard let data = data else {
+					then(.error(UnivISError.missingData))
+					return
+				}
+				
+				let delegate = UnivISXMLParserDelegate(then: then)
+				let parser = XMLParser(data: data)
+				
+				parser.delegate = delegate
+				_ = parser.parse()
+			}.resume()
+		} catch {
+			then(.error(error))
+		}
 	}
 }
