@@ -6,8 +6,4 @@ struct UnivISLocation {
 	var street: String? = nil
 	var tel: String? = nil
 	var url: String? = nil
-	
-	init(key: String) {
-		self.key = key
-	}
 }

@@ -5,17 +5,17 @@ struct UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 	private var nameStack = [String]()
 	private var parsingRoomRef = false
 	
-	func enter(selfWithName elementName: String, attributes: [String : String]) throws {
+	mutating func enter(selfWithName elementName: String, attributes: [String : String]) throws {
 		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		event = UnivISEvent(key: key)
 	}
 	
-	func enter(childWithName elementName: String, attributes: [String : String]) throws {
+	mutating func enter(childWithName elementName: String, attributes: [String : String]) throws {
 		nameStack.append(elementName)
 		
 		if parsingRoomRef {
 			parsingRoomRef = (elementName == "UnivISRef")
-		} else if let term = currentTerm {
+		} else if currentTerm != nil {
 			switch elementName {
 				case "room": parsingRoomRef = true
 				default: break
@@ -28,29 +28,29 @@ struct UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 		}
 	}
 	
-	func characters(_ characters: String) throws {
+	mutating func characters(_ characters: String) throws {
 		if parsingRoomRef {
-			term.room = characters
+			currentTerm!.room = UnivISRef(key: characters)
 		} else if let name = nameStack.last {
-			if let term = currentTerm {
+			if var term = currentTerm {
 				switch name {
 					case "endate": term.enddate = characters
 					case "endtime": term.endtime = characters
 					case "startdate": term.startdate = characters
-					case "starttime": term.starttime = starttime
+					case "starttime": term.starttime = characters
 					default: break
 				}
 			}
 		}
 	}
 	
-	func exit(childWithName elementName: String) throws {
+	mutating func exit(childWithName elementName: String) throws {
 		if let term = currentTerm {
 			currentTerm = nil
 			event.terms.append(term)
 		}
 		
-		nameStack.popLast()
+		_ = nameStack.popLast()
 	}
 	
 	func exit(selfWithName elementName: String) throws {}

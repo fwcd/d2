@@ -24,33 +24,27 @@ struct UnivISQuery {
 	}
 	
 	func start(then: @escaping (Result<UnivISOutputNode>) -> Void) {
-		do {
-			let url = try UnivISQuery(
-				scheme: "http", host: "univis.uni-kiel.de", path: "/prg", search: .rooms, params: [
-					.name: "Haase"
-				]
-			).url
+		// print("Querying \(url)")
+		
+		var request = URLRequest(url: url)
+		request.httpMethod = "GET"
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			guard error == nil else {
+				then(.error(UnivISError.httpError(error!)))
+				return
+			}
+			guard let data = data else {
+				then(.error(UnivISError.missingData))
+				return
+			}
 			
-			var request = URLRequest(url: url)
-			request.httpMethod = "GET"
-			URLSession.shared.dataTask(with: request) { data, response, error in
-				guard error == nil else {
-					then(.error(UnivISError.httpError(error!)))
-					return
-				}
-				guard let data = data else {
-					then(.error(UnivISError.missingData))
-					return
-				}
-				
-				let delegate = UnivISXMLParserDelegate(then: then)
-				let parser = XMLParser(data: data)
-				
-				parser.delegate = delegate
-				_ = parser.parse()
-			}.resume()
-		} catch {
-			then(.error(error))
-		}
+			// print("Got \(String(data: data!, encoding: .utf8))")
+			
+			let delegate = UnivISXMLParserDelegate(then: then)
+			let parser = XMLParser(data: data)
+			
+			parser.delegate = delegate
+			_ = parser.parse()
+		}.resume()
 	}
 }

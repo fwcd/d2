@@ -9,7 +9,7 @@ struct UnivISPerson: UnivISObjectNode {
 	var locations = [UnivISLocation]()
 	var officehours = [UnivISOfficeHour]()
 	var orgname: String? = nil
-	var orgunits: [String] = nil
+	var orgunits = [String]()
 	var visible: Bool? = nil
 	
 	init(key: String) {
