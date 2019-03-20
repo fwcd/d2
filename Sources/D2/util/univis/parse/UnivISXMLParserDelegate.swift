@@ -39,6 +39,10 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 		}
 	}
 	
+	func parser(_ parser: XMLParser, foundCharacters string: String) {
+		
+	}
+	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
 		do {
 			// Ignore top-level 'UnivIS' element
