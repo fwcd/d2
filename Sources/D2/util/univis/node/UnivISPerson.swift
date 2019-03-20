@@ -1,4 +1,5 @@
 struct UnivISPerson: UnivISObjectNode {
+	let key: String
 	let atitle: String?
 	let title: String?
 	let firstname: String?

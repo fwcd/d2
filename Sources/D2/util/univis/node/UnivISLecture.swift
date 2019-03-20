@@ -1,4 +1,5 @@
 struct UnivISLecture: UnivISObjectNode {
+	let key: String
 	let classification: UnivISRef?
 	let dozs: [UnivISRef]
 	let id: Int?
