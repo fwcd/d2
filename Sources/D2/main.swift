@@ -10,6 +10,7 @@ func main() throws {
 	handler["vertical"] = VerticalCommand()
 	handler["bf"] = BFCommand()
 	handler["bfencode"] = BFEncodeCommand()
+	handler["echo"] = EchoCommand()
 	handler["help"] = ClosureCommand(description: "Helps") { [unowned handler] message, _ in
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }

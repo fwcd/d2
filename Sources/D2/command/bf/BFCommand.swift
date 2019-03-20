@@ -7,7 +7,7 @@ fileprivate let maxExecutionSeconds = 3
 
 class BFCommand: Command {
 	let description = "Interprets BF code"
-	var running = false
+	private var running = false
 	
 	func invoke(withMessage message: Message, args: String) {
 		guard !running else {
