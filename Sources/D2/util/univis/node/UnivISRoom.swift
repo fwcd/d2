@@ -1,3 +1,3 @@
-struct UnivISRoom {
+struct UnivISRoom: UnivISObjectNode {
 	
 }

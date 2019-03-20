@@ -1,3 +1,3 @@
-struct UnivISPerson {
+struct UnivISPerson: UnivISObjectNode {
 	
 }

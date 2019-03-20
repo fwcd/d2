@@ -1,7 +1,7 @@
 struct UnivISOutputNode {
-	let events: [UnivISEvent]
-	let lectures: [UnivISLecture]
-	let persons: [UnivISPerson]
-	let rooms: [UnivISRoom]
-	let titles: [UnivISTitle]
+	let childs: [UnivISObjectNode]
+	
+	func resolve(ref: UnivISRef) -> UnivISObjectNode? {
+		return childs.first { $0.key == ref.key }
+	}
 }

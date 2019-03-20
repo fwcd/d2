@@ -1,3 +1,3 @@
-struct UnivISTitle {
+struct UnivISTitle: UnivISObjectNode {
 	
 }
