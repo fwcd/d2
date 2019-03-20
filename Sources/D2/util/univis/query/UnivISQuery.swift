@@ -22,4 +22,18 @@ struct UnivISQuery {
 		guard let url = components.url else { throw UnivISError.urlError(components) }
 		self.url = url
 	}
+	
+	func start(then: (Result<UnivISRootNode>) -> Void) {
+		let url = try UnivISQuery(
+			scheme: "http", host: "univis.uni-kiel.de", path: "/prg", search: .rooms, params: [
+				.name: "Haase"
+			]
+		).url
+		print(url)
+		var request = URLRequest(url: url)
+		request.httpMethod = "GET"
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			print(String(data: data!, encoding: .utf8)!)
+		}.resume()
+	}
 }
