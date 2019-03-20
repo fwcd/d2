@@ -1,7 +1,9 @@
 # D2
-General-purpose Discord API bot.
+General-purpose virtual assistant for Discord.
 
 ## Installation
+
+### on Linux
 * Install the required system dependencies:
 	* Swift 4.1
     * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
