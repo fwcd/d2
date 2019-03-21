@@ -67,7 +67,6 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 						try builder.characters(currentCharacters)
 					}
 					
-					print("Passed chars, now exiting \(elementName)")
 					try builder.exit(childWithName: elementName)
 				}
 			} // else ignore elements outside of builders
