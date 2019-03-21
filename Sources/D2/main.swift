@@ -1,10 +1,10 @@
 import Foundation
-import Sword
+import SwiftDiscord
 
 func main() throws {
 	// 'discordToken' should be declared in 'authkeys.swift'
-	let client = Sword(token: discordToken)
 	let handler = try CommandHandler(withPrefix: "%")
+	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(discordToken)"), delegate: handler, configuration: [.log(.info)])
 	
 	handler["ping"] = PingCommand()
 	handler["vertical"] = VerticalCommand()
@@ -16,13 +16,12 @@ func main() throws {
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }
 			.reduce("") { "\($0)\n\($1)" }
-		message.channel.send("```\n\(helpText)\n```")
+		message.channel?.send("```\n\(helpText)\n```")
 	}
-	
-	client.on(.messageCreate) { handler.on(createMessage: $0 as! Message) }
 	
 	print("Connecting client")
 	client.connect()
+	RunLoop.current.run()
 }
 
 try main()

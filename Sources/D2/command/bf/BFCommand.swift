@@ -1,4 +1,4 @@
-import Sword
+import SwiftDiscord
 import Dispatch
 
 // The first group matches the BF code
@@ -10,9 +10,9 @@ class BFCommand: Command {
 	let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	
-	func invoke(withMessage message: Message, args: String) {
+	func invoke(withMessage message: DiscordMessage, args: String) {
 		guard !running else {
-			message.channel.send("Whoa, not so fast. Wait for the program to finish!")
+			message.channel?.send("Whoa, not so fast. Wait for the program to finish!")
 			return
 		}
 		
@@ -51,10 +51,10 @@ class BFCommand: Command {
 			
 			if interpreter.cancelled {
 				print("Cancelled BF task finished running")
-				message.channel.send("Your program took longer than \(maxExecutionSeconds) seconds. The output was:\n\(response)")
+				message.channel?.send("Your program took longer than \(maxExecutionSeconds) seconds. The output was:\n\(response)")
 			} else {
 				print("BF task finished running")
-				message.channel.send(response)
+				message.channel?.send(response)
 			}
 		}
 		

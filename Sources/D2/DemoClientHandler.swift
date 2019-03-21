@@ -1,7 +1,7 @@
-import Sword
+import SwiftDiscord
 
-class DemoClientHandler: ClientHandler {
-	func on(createMessage message: Message) {
+class DemoClientHandler: DiscordClientDelegate {
+	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
 		print("Created message \(message.content)")
 	}
 }

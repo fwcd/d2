@@ -1,4 +1,4 @@
-import Sword
+import SwiftDiscord
 import Foundation
 import Dispatch
 
@@ -14,7 +14,7 @@ class EchoCommand: Command {
 		self.intervalSeconds = intervalSeconds
 	}
 	
-	func invoke(withMessage message: Message, args: String) {
+	func invoke(withMessage message: DiscordMessage, args: String) {
 		if let groups = argPattern.firstGroups(in: args) {
 			// Extract parsed values
 			let n = groups[safe: 1].flatMap { Int($0) } ?? 1
@@ -33,7 +33,7 @@ class EchoCommand: Command {
 					self.timer?.cancel()
 					self.timer = nil
 				} else {
-					message.channel.send(value)
+					message.channel?.send(value)
 					count += 1
 				}
 			}

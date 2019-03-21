@@ -1,4 +1,4 @@
-import Sword
+import SwiftDiscord
 import Foundation
 
 class BFEncodeCommand: Command {
@@ -10,14 +10,14 @@ class BFEncodeCommand: Command {
 		self.maxStringLength = maxStringLength
 	}
 	
-	func invoke(withMessage message: Message, args: String) {
+	func invoke(withMessage message: DiscordMessage, args: String) {
 		guard args.count <= maxStringLength else {
-			message.channel.send("Your string needs to be shorter than \(maxStringLength) characters!")
+			message.channel?.send("Your string needs to be shorter than \(maxStringLength) characters!")
 			return
 		}
 		
 		let encoded = args.map { encode($0) ?? "" }.reduce("") { "\($0)>\($1)." }
-		message.channel.send("```\(encoded)```")
+		message.channel?.send("```\(encoded)```")
 	}
 	
 	private func encode(_ character: Character) -> String? {

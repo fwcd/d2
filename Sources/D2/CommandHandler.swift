@@ -1,7 +1,7 @@
-import Sword
+import SwiftDiscord
 import Foundation
 
-class CommandHandler: ClientHandler {
+class CommandHandler: DiscordClientDelegate {
 	private let commandPattern: Regex
 	private(set) var commands = [String : Command]()
 	private var currentIndex = 0
@@ -14,9 +14,9 @@ class CommandHandler: ClientHandler {
 		commandPattern = try Regex(from: "\(escapedPrefix)(\\w+)(?:\\s+([\\s\\S]*))?")
 	}
 	
-	func on(createMessage message: Message) {
+	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
 		let msgIndex = currentIndex
-		let fromBot = message.author?.isBot ?? false
+		let fromBot = message.author.bot
 		
 		currentIndex += 1
 		
@@ -26,17 +26,17 @@ class CommandHandler: ClientHandler {
 			let args = groups[2]
 			
 			if let command = self.commands[name] {
-				let hasPermission = message.author.map { permissionManager.user($0, hasPermission: command.requiredPermissionLevel) } ?? false
+				let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
 				if hasPermission {
 					print("Invoking '\(name)'")
 					command.invoke(withMessage: message, args: args)
 				} else {
 					print("Rejected '\(name)' due to insufficient permissions")
-					message.channel.send("Sorry, you are not permitted to execute `\(name)`.")
+					message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
 				}
 			} else {
 				print("Did not recognize command '\(name)'")
-				message.channel.send("Sorry, I do not know the command `\(name)`.")
+				message.channel?.send("Sorry, I do not know the command `\(name)`.")
 			}
 		}
 	}

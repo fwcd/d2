@@ -8,7 +8,7 @@
 			"class $1Command: Command {",
 			"\tlet description = \"$2\"",
 			"\t",
-			"\tfunc invoke(withMessage message: Message, args: String) {",
+			"\tfunc invoke(withMessage message: DiscordMessage, args: String) {",
 			"\t\t$0",
 			"\t}",
 			"}"

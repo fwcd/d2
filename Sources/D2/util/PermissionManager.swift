@@ -1,17 +1,17 @@
-import Sword
+import SwiftDiscord
 
 struct PermissionManager {
 	private var userPermissions = [String : PermissionLevel]()
 	
-	private func encode(user: User) -> String {
-		return "\(user.username ?? "")#\(user.discriminator ?? "")"
+	private func encode(user: DiscordUser) -> String {
+		return "\(user.username)#\(user.discriminator)"
 	}
 	
-	func user(_ theUser: User, hasPermission requiredLevel: PermissionLevel) -> Bool {
+	func user(_ theUser: DiscordUser, hasPermission requiredLevel: PermissionLevel) -> Bool {
 		return user(theUser, hasPermission: requiredLevel.rawValue)
 	}
 	
-	func user(_ theUser: User, hasPermission requiredLevel: Int) -> Bool {
+	func user(_ theUser: DiscordUser, hasPermission requiredLevel: Int) -> Bool {
 		return nameWithTag(encode(user: theUser), hasPermission: requiredLevel)
 	}
 	
@@ -23,7 +23,7 @@ struct PermissionManager {
 		return self[theNameWithTag].rawValue >= requiredLevel
 	}
 	
-	subscript(user: User) -> PermissionLevel? {
+	subscript(user: DiscordUser) -> PermissionLevel? {
 		get { return self[encode(user: user)] }
 		set(newValue) { self[encode(user: user)] = newValue! }
 	}

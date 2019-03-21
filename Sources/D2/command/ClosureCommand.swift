@@ -1,21 +1,21 @@
-import Sword
+import SwiftDiscord
 
 class ClosureCommand: Command {
 	let description: String
 	let requiredPermissionLevel: PermissionLevel
-	private let closure: (Message, String) -> Void
+	private let closure: (DiscordMessage, String) -> Void
 	
 	init(
 		description: String,
 		level requiredPermissionLevel: PermissionLevel,
-		closure: @escaping (Message, String) -> Void
+		closure: @escaping (DiscordMessage, String) -> Void
 	) {
 		self.description = description
 		self.requiredPermissionLevel = requiredPermissionLevel
 		self.closure = closure
 	}
 	
-	func invoke(withMessage message: Message, args: String) {
+	func invoke(withMessage message: DiscordMessage, args: String) {
 		self.closure(message, args)
 	}
 }
