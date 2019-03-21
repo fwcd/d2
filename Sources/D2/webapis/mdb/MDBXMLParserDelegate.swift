@@ -94,12 +94,4 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 			then(.ok(modules))
 		}
 	}
-	
-	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-		then(.error(parseError))
-	}
-	
-	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
-		then(.error(validationError))
-	}
 }

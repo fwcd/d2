@@ -19,7 +19,17 @@ class MDBCommand: Command {
 					message.channel?.send("An error occurred while querying.")
 					return
 				}
-				message.channel?.send(String(describing: output))
+				
+				if let module = output.first {
+					var embed = DiscordEmbed()
+					
+					embed.title = module.nameEnglish
+					embed.description = module.summary
+					
+					message.channel?.send(embed: embed)
+				} else {
+					message.channel?.send("No such module found.")
+				}
 			}
 		} catch {
 			print(error)
