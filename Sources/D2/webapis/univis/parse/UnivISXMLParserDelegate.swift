@@ -16,10 +16,6 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 		self.then = then
 	}
 	
-	func parserDidStartDocument(_ parser: XMLParser) {
-		print("Starting parsing")
-	}
-	
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
 		// print("Started \(elementName)")
 		do {
