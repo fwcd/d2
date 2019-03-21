@@ -5,21 +5,30 @@ class UnivISRoomXMLBuilder: UnivISObjectNodeXMLBuilder {
 	private var currentTerm: UnivISTerm? = nil
 	private var nameStack = [String]()
 	
+	// TODO: Parse orgunits
+	
 	func enter(selfWithName elementName: String, attributes: [String : String]) throws {
 		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		room = UnivISRoom(key: key)
 	}
 	
 	func enter(childWithName elementName: String, attributes: [String : String]) throws {
+		var previousName = nameStack.last
 		nameStack.append(elementName)
 		
 		if parsingRef {
 			if elementName == "UnivISRef" {
 				guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
-				currentTerm!.room = UnivISRef(key: key)
+				switch previousName {
+					case "contact": currentTerm!.contacts.append(UnivISRef(key: key))
+					default: break
+				}
 			}
 		} else {
-			// TODO
+			switch elementName {
+				case "contact": parsingRef = true
+				default: break
+			}
 		}
 	}
 	
@@ -27,10 +36,28 @@ class UnivISRoomXMLBuilder: UnivISObjectNodeXMLBuilder {
 		let str = characters.trimmingCharacters(in: .whitespacesAndNewlines)
 		
 		if let name = nameStack.last {
-			if parsingRef {
-				// TODO
-			} else {
-				// TODO
+			switch name {
+				case "address": room.address = str
+				case "chtab": room.chtab = parseUnivISBool(str)
+				case "description": room.description = str
+				case "id": room.id = UInt(str)
+				case "inet": room.inet = parseUnivISBool(str)
+				case "beam": room.beam = parseUnivISBool(str)
+				case "dark": room.dark = parseUnivISBool(str)
+				case "lose": room.lose = parseUnivISBool(str)
+				case "ohead": room.ohead = parseUnivISBool(str)
+				case "wlan": room.wlan = parseUnivISBool(str)
+				case "tafel": room.tafel = parseUnivISBool(str)
+				case "laptopton": room.laptopton = parseUnivISBool(str)
+				case "fest": room.fest = parseUnivISBool(str)
+				case "tel": room.tel = str
+				case "name": room.name = str
+				case "orgname": room.orgname = str
+				case "rolli": room.rolli = parseUnivISBool(str)
+				case "short": room.short = str
+				case "size": room.size = Int(str)
+				case "wb": room.wb = parseUnivISBool(str)
+				default: break
 			}
 		}
 	}

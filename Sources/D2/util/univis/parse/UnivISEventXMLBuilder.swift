@@ -5,18 +5,26 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 	private var currentTerm: UnivISTerm? = nil
 	private var nameStack = [String]()
 	
+	// TODO: Parse orgunits
+	
 	func enter(selfWithName elementName: String, attributes: [String : String]) throws {
 		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		event = UnivISEvent(key: key)
 	}
 	
 	func enter(childWithName elementName: String, attributes: [String : String]) throws {
+		var previousName = nameStack.last
 		nameStack.append(elementName)
 		
 		if parsingRef {
 			if elementName == "UnivISRef" {
 				guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
-				currentTerm!.room = UnivISRef(key: key)
+				switch previousName {
+					case "room": currentTerm!.room = UnivISRef(key: key)
+					case "contact": event.contact = UnivISRef(key: key)
+					case "dbref": event.dbref = UnivISRef(key: key)
+					default: break
+				}
 			}
 		} else if currentTerm != nil {
 			switch elementName {
@@ -36,36 +44,21 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 		
 		if let name = nameStack.last {
 			if var term = currentTerm {
-				if parsingRef {
-					switch name {
-						case "room": term.room = UnivISRef(key: str)
-						default: break
-					}
-				} else {
-					switch name {
-						case "endate": term.enddate = str
-						case "endtime": term.endtime = str
-						case "startdate": term.startdate = str
-						case "starttime": term.starttime = str
-						default: break
-					}
+				switch name {
+					case "endate": term.enddate = str
+					case "endtime": term.endtime = str
+					case "startdate": term.startdate = str
+					case "starttime": term.starttime = str
+					default: break
 				}
 			} else {
-				if parsingRef {
-					switch name {
-						case "contact": event.contact = UnivISRef(key: str)
-						case "dbref": event.dbref = UnivISRef(key: str)
-						default: break
-					}
-				} else {
-					switch name {
-						case "enddate": event.enddate = str
-						case "id": event.id = UInt(str)
-						case "orgname": event.orgname = str
-						case "startdate": event.startdate = str
-						case "title": event.title = str
-						default: break
-					}
+				switch name {
+					case "enddate": event.enddate = str
+					case "id": event.id = UInt(str)
+					case "orgname": event.orgname = str
+					case "startdate": event.startdate = str
+					case "title": event.title = str
+					default: break
 				}
 			}
 		}
@@ -82,6 +75,7 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 		}
 		
 		_ = nameStack.removeLast()
+		print("Now with \(nameStack)")
 	}
 	
 	func exit(selfWithName elementName: String) throws {}
