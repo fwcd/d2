@@ -1,5 +1,8 @@
 import Foundation
 
+// Matches the contents of an HTML paragraph
+fileprivate let htmlParagraphPattern = try! Regex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")
+
 class MDBXMLParserDelegate: XMLParserDelegate {
 	let then: (Result<[MDBModule]>) -> Void
 	
@@ -67,7 +70,12 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 					case "ectspunkte": currentModule!.ects = UInt(str)
 					case "workload": currentModule!.workload = str
 					case "lehrsprache": currentModule!.teachingLanguage = str
-					case "kurzfassung": currentModule!.summary = str
+					case "kurzfassung":
+						if let contents = (htmlParagraphPattern.firstGroups(in: str).flatMap { $0[safe: 1] }) {
+							currentModule!.summary = contents
+						} else {
+							currentModule!.summary = str
+						}
 					case "lernziele": currentModule!.objectives = str
 					case "lehrinhalte": currentModule!.contents = str
 					case "voraussetzungen": currentModule!.prerequisites = str
