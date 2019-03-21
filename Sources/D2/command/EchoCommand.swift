@@ -7,7 +7,7 @@ fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 class EchoCommand: Command {
 	let description = "Repeats something n times"
 	let intervalSeconds: Int
-	let requiredPermissionLevel = PermissionLevel.basic
+	let requiredPermissionLevel = PermissionLevel.vip
 	private var timer: DispatchSourceTimer? = nil
 	
 	init(intervalSeconds: Int = 1) {

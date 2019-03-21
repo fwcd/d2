@@ -26,8 +26,14 @@ class CommandHandler: ClientHandler {
 			let args = groups[2]
 			
 			if let command = self.commands[name] {
-				print("Invoking '\(name)'")
-				command.invoke(withMessage: message, args: args)
+				let hasPermission = message.author.map { permissionManager.user($0, hasPermission: command.requiredPermissionLevel) } ?? false
+				if hasPermission {
+					print("Invoking '\(name)'")
+					command.invoke(withMessage: message, args: args)
+				} else {
+					print("Rejected '\(name)' due to insufficient permissions")
+					message.channel.send("Sorry, you are not permitted to execute `\(name)`.")
+				}
 			} else {
 				print("Did not recognize command '\(name)'")
 				message.channel.send("Sorry, I do not know the command `\(name)`.")
