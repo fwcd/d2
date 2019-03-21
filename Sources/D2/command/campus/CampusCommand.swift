@@ -1,4 +1,5 @@
 import SwiftDiscord
+import Foundation
 
 class CampusCommand: Command {
 	let description = "Locates rooms on the CAU campus"
@@ -34,10 +35,21 @@ class CampusCommand: Command {
 						longitude: coords.longitude
 					).url
 					
-					message.channel?.send(DiscordMessage(
-						content: address
-						// files: [mapURL] TODO
-					))
+					URLSession.shared.dataTask(with: URL(string: mapURL)!) { data, response, error in
+						guard error == nil else {
+							message.channel?.send("An error occurred while fetching image.")
+							return
+						}
+						guard let data = data else {
+							message.channel?.send("Missing data while fetching image.")
+							return
+						}
+						
+						message.channel?.send(DiscordMessage(
+							content: address,
+							files: [DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")]
+						))
+					}.resume()
 				}
 			}
 		} catch {
