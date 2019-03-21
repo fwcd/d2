@@ -22,12 +22,12 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 			// Ignore top-level 'UnivIS' element
 			guard elementName != "UnivIS" else { return }
 			
-			if var builder = nodeBuilder {
+			if let builder = nodeBuilder {
 				// Enter child node in existing builder
 				try builder.enter(childWithName: elementName, attributes: attributeDict)
 			} else if let builderFactory = registeredBuilderFactories[elementName] {
 				// Enter object node by creating a new builder
-				var builder = builderFactory()
+				let builder = builderFactory()
 				try builder.enter(selfWithName: elementName, attributes: attributeDict)
 				
 				nodeBuilder = builder
@@ -49,7 +49,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 			if elementName == "UnivIS" {
 				print("Ending parsing")
 				then(.ok(UnivISOutputNode(childs: nodes)))
-			} else if var builder = nodeBuilder {
+			} else if let builder = nodeBuilder {
 				if elementName == currentName {
 					// Exit object node
 					try builder.exit(selfWithName: elementName)

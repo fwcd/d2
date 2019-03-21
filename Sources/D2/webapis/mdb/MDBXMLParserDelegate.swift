@@ -9,6 +9,7 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 	var parsingStudyPrograms = false
 	var parsingCategories = false
 	
+	var stackHeight = 0
 	var currentKey: String? = nil
 	var currentModule: MDBModule? = nil
 	var currentCharacters = ""
@@ -18,6 +19,7 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+		stackHeight += 1
 		switch elementName {
 			case "modul": currentModule = MDBModule()
 			case "modulname": parsingName = true
@@ -34,60 +36,70 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-		let str = characters.trimmingCharacters(in: .whitespacesAndNewlines)
+		let str = currentCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
 		
-		if let module = currentModule {
+		if currentModule != nil {
 			if parsingName {
 				switch elementName {
 					case "modulname": parsingName = false
-					case "deutsch": module.nameGerman = str
-					case "englisch": module.nameEnglish = str
+					case "deutsch": currentModule!.nameGerman = str
+					case "englisch": currentModule!.nameEnglish = str
 					default: break
 				}
 			} else if parsingStudyPrograms {
 				switch elementName {
 					case "studiengaenge": parsingStudyPrograms = false
-					case "studiengang": module.studyPrograms.append(MDBStudyProgram(key: currentKey, name: str))
+					case "studiengang": currentModule!.studyPrograms.append(MDBStudyProgram(key: currentKey, name: str))
 					default: break
 				}
 			} else if parsingCategories {
 				switch elementName {
 					case "kategorien": parsingCategories = false
-					case "kategorie": module.categories.append(MDBCategory(key: currentKey, name: str))
+					case "kategorie": currentModule!.categories.append(MDBCategory(key: currentKey, name: str))
 					default: break
 				}
 			} else {
 				switch elementName {
-					case "code": module.code = str
-					case "modulcode": module.code = str
-					case "url": module.url = str
-					case "verantwortlich": module.person = str
-					case "ectspunkte": module.ects = UInt(str)
-					case "workload": module.workload = str
-					case "lehrsprache": module.teachingLanguage = str
-					case "kurzfassung": module.summary = str
-					case "lernziele": module.objectives = str
-					case "lehrinhalte": module.contents = str
-					case "voraussetzungen": module.prerequisites = str
-					case "pruefungsleistung": module.exam = str
-					case "lehrmethoden": module.methods = str
-					case "literatur": module.literature = str
-					case "verweise": module.references = str
-					case "kommentar": module.comment = str
-					case "praesenz": module.presence = str
-					case "dauer": module.duration = UInt(str)
-					case "turnus": module.cycle = str
+					case "code": currentModule!.code = str
+					case "modulcode": currentModule!.code = str
+					case "url": currentModule!.url = str
+					case "verantwortlich": currentModule!.person = str
+					case "ectspunkte": currentModule!.ects = UInt(str)
+					case "workload": currentModule!.workload = str
+					case "lehrsprache": currentModule!.teachingLanguage = str
+					case "kurzfassung": currentModule!.summary = str
+					case "lernziele": currentModule!.objectives = str
+					case "lehrinhalte": currentModule!.contents = str
+					case "voraussetzungen": currentModule!.prerequisites = str
+					case "pruefungsleistung": currentModule!.exam = str
+					case "lehrmethoden": currentModule!.methods = str
+					case "literatur": currentModule!.literature = str
+					case "verweise": currentModule!.references = str
+					case "kommentar": currentModule!.comment = str
+					case "praesenz": currentModule!.presence = str
+					case "dauer": currentModule!.duration = UInt(str)
+					case "turnus": currentModule!.cycle = str
+					case "modul":
+						modules.append(currentModule!)
+						currentModule = nil
 					default: break
 				}
 			}
-		} else {
-			switch elementName {
-				case "modul":
-					modules.append(currentModule)
-					currentModule = nil
-				default: break
-			}
 		}
+		
 		currentCharacters = ""
+		stackHeight -= 1
+		
+		if stackHeight <= 0 {
+			then(.ok(modules))
+		}
+	}
+	
+	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+		then(.error(parseError))
+	}
+	
+	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+		then(.error(validationError))
 	}
 }

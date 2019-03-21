@@ -13,6 +13,7 @@ func main() throws {
 	handler["echo"] = EchoCommand()
 	handler["campus"] = CampusCommand()
 	handler["type"] = TriggerTypingCommand()
+	handler["mdb"] = MDBCommand()
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }

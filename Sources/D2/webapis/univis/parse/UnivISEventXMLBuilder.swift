@@ -43,12 +43,12 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 		let str = characters.trimmingCharacters(in: .whitespacesAndNewlines)
 		
 		if let name = nameStack.last {
-			if var term = currentTerm {
+			if currentTerm != nil {
 				switch name {
-					case "endate": term.enddate = str
-					case "endtime": term.endtime = str
-					case "startdate": term.startdate = str
-					case "starttime": term.starttime = str
+					case "endate": currentTerm!.enddate = str
+					case "endtime": currentTerm!.endtime = str
+					case "startdate": currentTerm!.startdate = str
+					case "starttime": currentTerm!.starttime = str
 					default: break
 				}
 			} else {

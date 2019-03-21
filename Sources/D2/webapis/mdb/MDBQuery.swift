@@ -4,10 +4,10 @@ struct MDBQuery {
 	let url: URL
 	
 	init(
-		scheme: String,
-		host: String,
-		path: String,
-		moduleCode: String? = nil
+		moduleCode: String? = nil,
+		scheme: String = "https",
+		host: String = "mdb.ps.informatik.uni-kiel.de",
+		path: String = "/show.cgi"
 	) throws {
 		var components = URLComponents()
 		components.scheme = scheme
@@ -34,11 +34,11 @@ struct MDBQuery {
 				return
 			}
 			
-			let delegate = MDBXMLParserDelegate()
+			let delegate = MDBXMLParserDelegate(then: then)
 			let parser = XMLParser(data: data)
 			
 			parser.delegate = delegate
 			_ = parser.parse()
-		}
+		}.resume()
 	}
 }
