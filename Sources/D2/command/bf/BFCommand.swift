@@ -7,6 +7,7 @@ fileprivate let maxExecutionSeconds = 3
 
 class BFCommand: Command {
 	let description = "Interprets BF code"
+	let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	
 	func invoke(withMessage message: Message, args: String) {

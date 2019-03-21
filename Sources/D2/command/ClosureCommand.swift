@@ -1,11 +1,17 @@
 import Sword
 
 class ClosureCommand: Command {
-	private let closure: (Message, String) -> Void
 	let description: String
+	let requiredPermissionLevel: PermissionLevel
+	private let closure: (Message, String) -> Void
 	
-	init(description: String, closure: @escaping (Message, String) -> Void) {
+	init(
+		description: String,
+		level requiredPermissionLevel: PermissionLevel,
+		closure: @escaping (Message, String) -> Void
+	) {
 		self.description = description
+		self.requiredPermissionLevel = requiredPermissionLevel
 		self.closure = closure
 	}
 	

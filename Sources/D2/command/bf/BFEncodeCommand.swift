@@ -3,6 +3,7 @@ import Foundation
 
 class BFEncodeCommand: Command {
 	let description = "Encodes strings to BF code"
+	let requiredPermissionLevel = PermissionLevel.basic
 	private let maxStringLength: Int
 	
 	init(maxStringLength: Int = 30) {
