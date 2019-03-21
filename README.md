@@ -5,7 +5,7 @@ General-purpose virtual assistant for Discord.
 
 ### on Linux
 * Install the required system dependencies:
-	* Swift 4.1
+	* Swift 5.0
     * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
 * Create a file named `authkeys.swift` in `Sources/D2` containing the API keys:
 

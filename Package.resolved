@@ -92,6 +92,15 @@
         }
       },
       {
+        "package": "swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log.git",
+        "state": {
+          "branch": null,
+          "revision": "ef8cc5a5d5974b3b778a7d8b217e18ab424e0de5",
+          "version": null
+        }
+      },
+      {
         "package": "SwiftDiscord",
         "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
         "state": {
