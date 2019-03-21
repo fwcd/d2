@@ -13,7 +13,7 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 	}
 	
 	func enter(childWithName elementName: String, attributes: [String : String]) throws {
-		var previousName = nameStack.last
+		let previousName = nameStack.last
 		nameStack.append(elementName)
 		
 		if parsingRef {
