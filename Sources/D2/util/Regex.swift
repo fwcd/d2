@@ -1,10 +1,15 @@
 import Foundation
 
+/** A wrapper around NSRegularExpression with a more modern API. */
 struct Regex {
 	let pattern: NSRegularExpression
 	
 	init(from str: String) throws {
 		pattern = try NSRegularExpression(pattern: str)
+	}
+	
+	func matchCount(in str: String) -> Int {
+		return pattern.numberOfMatches(in: str, range: NSRange(str.startIndex..., in: str))
 	}
 	
 	func matches(in str: String) -> [String] {

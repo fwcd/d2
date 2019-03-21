@@ -1,6 +1,9 @@
 import SwiftDiscord
 import Foundation
 
+fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
+
+/** Locates locations on the University of Kiel's campus. */
 class CampusCommand: Command {
 	let description = "Locates rooms on the CAU campus"
 	let requiredPermissionLevel = PermissionLevel.basic
@@ -20,14 +23,22 @@ class CampusCommand: Command {
 					message.channel?.send("No room was found!")
 					return
 				}
-				guard let address = room.address else {
+				guard let rawAddress = room.address else {
 					message.channel?.send("Room has no address!")
 					return
 				}
 				
+				let address: String
+				
+				if addressWithCityPattern.matchCount(in: rawAddress) > 0 {
+					address = rawAddress
+				} else {
+					address = rawAddress + ", 24118 Kiel"
+				}
+				
 				self.geocoder.geocode(location: address) { geocodeResponse in
 					guard case let .ok(coords) = geocodeResponse else {
-						message.channel?.send(address)
+						message.channel?.send(rawAddress)
 						return
 					}
 					let mapURL = MapQuestStaticMap(
@@ -46,7 +57,7 @@ class CampusCommand: Command {
 						}
 						
 						message.channel?.send(DiscordMessage(
-							content: address,
+							content: rawAddress,
 							files: [DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")]
 						))
 					}.resume()
