@@ -14,6 +14,14 @@ let discordToken = "YOUR_DISCORD_API_TOKEN"
 let mapQuestKey = "YOUR_MAP_QUEST_KEY"
 ```
 
+* Create a file named `userwhitelist.swift` in `Sources/D2` containing a list of Discord usernames that have full permissions:
+
+```swift
+let whitelistedDiscordUsers = [
+	"YOUR_DISCORD_TAG"
+]
+```
+
 ## Building
 * `swift build`
 

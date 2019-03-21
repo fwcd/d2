@@ -6,7 +6,9 @@ Packages
 *.xcodeproj
 xcuserdata
 .idea
+
 authkeys.*
+userwhitelist.*
 
 .vscode/**
 !*.code-snippets
