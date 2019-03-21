@@ -1,23 +1,26 @@
-struct UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
+class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 	private var event: UnivISEvent! = nil
 	
+	private var parsingRef = false
 	private var currentTerm: UnivISTerm? = nil
 	private var nameStack = [String]()
-	private var parsingRoomRef = false
 	
-	mutating func enter(selfWithName elementName: String, attributes: [String : String]) throws {
+	func enter(selfWithName elementName: String, attributes: [String : String]) throws {
 		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		event = UnivISEvent(key: key)
 	}
 	
-	mutating func enter(childWithName elementName: String, attributes: [String : String]) throws {
+	func enter(childWithName elementName: String, attributes: [String : String]) throws {
 		nameStack.append(elementName)
 		
-		if parsingRoomRef {
-			parsingRoomRef = (elementName == "UnivISRef")
+		if parsingRef {
+			if elementName == "UnivISRef" {
+				guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
+				currentTerm!.room = UnivISRef(key: key)
+			}
 		} else if currentTerm != nil {
 			switch elementName {
-				case "room": parsingRoomRef = true
+				case "room": parsingRef = true
 				default: break
 			}
 		} else {
@@ -28,29 +31,57 @@ struct UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 		}
 	}
 	
-	mutating func characters(_ characters: String) throws {
-		if parsingRoomRef {
-			currentTerm!.room = UnivISRef(key: characters)
-		} else if let name = nameStack.last {
+	func characters(_ characters: String) throws {
+		let str = characters.trimmingCharacters(in: .whitespacesAndNewlines)
+		
+		if let name = nameStack.last {
 			if var term = currentTerm {
-				switch name {
-					case "endate": term.enddate = characters
-					case "endtime": term.endtime = characters
-					case "startdate": term.startdate = characters
-					case "starttime": term.starttime = characters
-					default: break
+				if parsingRef {
+					switch name {
+						case "room": term.room = UnivISRef(key: str)
+						default: break
+					}
+				} else {
+					switch name {
+						case "endate": term.enddate = str
+						case "endtime": term.endtime = str
+						case "startdate": term.startdate = str
+						case "starttime": term.starttime = str
+						default: break
+					}
+				}
+			} else {
+				if parsingRef {
+					switch name {
+						case "contact": event.contact = UnivISRef(key: str)
+						case "dbref": event.dbref = UnivISRef(key: str)
+						default: break
+					}
+				} else {
+					switch name {
+						case "enddate": event.enddate = str
+						case "id": event.id = UInt(str)
+						case "orgname": event.orgname = str
+						case "startdate": event.startdate = str
+						case "title": event.title = str
+						default: break
+					}
 				}
 			}
 		}
 	}
 	
-	mutating func exit(childWithName elementName: String) throws {
-		if elementName == "term", let term = currentTerm {
+	func exit(childWithName elementName: String) throws {
+		if parsingRef {
+			if elementName == "room" {
+				parsingRef = false
+			}
+		} else if elementName == "term", let term = currentTerm {
 			currentTerm = nil
 			event.terms.append(term)
 		}
 		
-		_ = nameStack.popLast()
+		_ = nameStack.removeLast()
 	}
 	
 	func exit(selfWithName elementName: String) throws {}

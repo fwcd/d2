@@ -54,11 +54,6 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 				then(.ok(UnivISOutputNode(childs: nodes)))
 			} else if var builder = nodeBuilder {
 				if elementName == currentName {
-					if !currentCharacters.isEmpty {
-						// Pass the accumulated characters
-						try builder.characters(currentCharacters)
-					}
-					
 					// Exit object node
 					try builder.exit(selfWithName: elementName)
 					nodes.append(builder.build())
@@ -66,6 +61,12 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 					nodeBuilder = nil
 					currentName = nil
 				} else {
+					if !currentCharacters.isEmpty {
+						// Pass the accumulated characters
+						try builder.characters(currentCharacters)
+					}
+					
+					print("Passed chars, now exiting \(elementName)")
 					try builder.exit(childWithName: elementName)
 				}
 			} // else ignore elements outside of builders

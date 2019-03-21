@@ -2,6 +2,15 @@ import Foundation
 import Sword
 
 func main() throws {
+	try UnivISQuery(scheme: "http", host: "univis.uni-kiel.de", path: "/prg", search: .lectures, params: [
+		.name: "Algorithmen"
+	]).start {
+		switch $0 {
+			case let .ok(value): print(value)
+			case let .error(error): print(error)
+		}
+	}
+	
 	// 'discordToken' should be declared in 'authkeys.swift'
 	let client = Sword(token: discordToken)
 	let handler = try CommandHandler(withPrefix: "%")
