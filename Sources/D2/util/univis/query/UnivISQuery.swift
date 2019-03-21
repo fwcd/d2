@@ -24,7 +24,7 @@ struct UnivISQuery {
 	}
 	
 	func start(then: @escaping (Result<UnivISOutputNode>) -> Void) {
-		// print("Querying \(url)")
+		print("Querying \(url)")
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"

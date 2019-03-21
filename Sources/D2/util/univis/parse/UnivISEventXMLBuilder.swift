@@ -45,7 +45,7 @@ struct UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 	}
 	
 	mutating func exit(childWithName elementName: String) throws {
-		if let term = currentTerm {
+		if elementName == "term", let term = currentTerm {
 			currentTerm = nil
 			event.terms.append(term)
 		}
