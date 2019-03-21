@@ -35,8 +35,8 @@ class CampusCommand: Command {
 					).url
 					
 					message.channel.send([
-						DiscordMessageKey.file.rawValue: mapURL,
-						DiscordMessageKey.content.rawValue: address
+						.file: mapURL,
+						.content: address
 					])
 				}
 			}
