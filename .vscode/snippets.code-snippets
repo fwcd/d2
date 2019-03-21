@@ -7,6 +7,7 @@
 			"",
 			"class $1Command: Command {",
 			"\tlet description = \"$2\"",
+			"\tlet requiredPermissionLevel = PermissionLevel.$3",
 			"\t",
 			"\tfunc invoke(withMessage message: DiscordMessage, args: String) {",
 			"\t\t$0",
