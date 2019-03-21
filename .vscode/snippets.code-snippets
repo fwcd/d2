@@ -3,7 +3,7 @@
 		"prefix": "command",
 		"scope": "swift",
 		"body": [
-			"import Sword",
+			"import SwiftDiscord",
 			"",
 			"class $1Command: Command {",
 			"\tlet description = \"$2\"",
