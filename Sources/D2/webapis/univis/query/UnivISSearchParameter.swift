@@ -1,4 +1,4 @@
-enum UnivISSearchParameter: String {
+enum UnivISSearchParameter: String, CaseIterable {
 	case department = "department"
 	case chapter = "chapter"
 	case name = "name"

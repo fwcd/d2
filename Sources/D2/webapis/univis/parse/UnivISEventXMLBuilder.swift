@@ -75,7 +75,6 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 		}
 		
 		_ = nameStack.removeLast()
-		print("Now with \(nameStack)")
 	}
 	
 	func exit(selfWithName elementName: String) throws {}

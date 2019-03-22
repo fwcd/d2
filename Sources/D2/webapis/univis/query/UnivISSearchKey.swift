@@ -1,4 +1,4 @@
-enum UnivISSearchKey: String {
+enum UnivISSearchKey: String, CaseIterable {
 	case lectures = "lectures"
 	case persons = "persons"
 	case chapters = "chapters"

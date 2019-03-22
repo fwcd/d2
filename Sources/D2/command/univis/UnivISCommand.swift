@@ -1,12 +1,17 @@
 import SwiftDiscord
 
+fileprivate let rawKeyPattern = "\\w+"
+fileprivate let rawValuePattern = "\\w+|(?:\"[\\w ]+\")"
+fileprivate let rawCapturingKeyPattern = "(\\w+)"
+fileprivate let rawCapturingValuePattern = "(\\w+)|(?:\"([\\w ]+)\")"
+
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
-fileprivate let argsPattern = try! Regex(from: "(\\w+)((?:\\s+\\w+\\s*=\\s*\\w+)+)")
+fileprivate let argsPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
 
 // Matches a single key-value argument. The first group captures the
 // key, the second group captures the value.
-fileprivate let kvArgPattern = try! Regex(from: "(\\w+)\\s*=\\s*(\\w+)")
+fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
 
 class UnivISCommand: Command {
 	let description = "Queries the UnivIS of the CAU"
@@ -19,37 +24,41 @@ class UnivISCommand: Command {
 				return
 			}
 			guard let searchKey = UnivISSearchKey(rawValue: parsedArgs[1]) else {
-				message.channel?.send("Unrecognized search key `\(parsedArgs[1])`")
+				message.channel?.send("Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
 				return
 			}
 			
-			let queryParams = queryParameterDict(of: kvArgPattern.allGroups(in: args))
+			let queryParams = try queryParameterDict(of: kvArgPattern.allGroups(in: args))
 			
 			try UnivISQuery(search: searchKey, params: queryParams).start { response in
 				if case let .ok(result) = response {
 					var embed = DiscordEmbed()
 					embed.title = "UnivIS query result"
-					embed.fields = result.childs.map {
+					embed.fields = Array(result.childs.map {
 						DiscordEmbed.Field(name: $0.nodeType, value: $0.shortDescription)
-					}
+					}.prefix(8))
 					message.channel?.send(embed: embed)
 				} else if case let .error(error) = response {
 					print(error)
 					message.channel?.send("UnivIS query error. Check the log for more information.")
 				}
 			}
+		} catch UnivISCommandError.invalidSearchParameter(let paramName) {
+			message.channel?.send("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
 		} catch {
 			print(error)
 			message.channel?.send("An error occurred. Check the log for more information.")
 		}
 	}
 	
-	private func queryParameterDict(of parsedKVArgs: [[String]]) -> [UnivISSearchParameter : String] {
+	private func queryParameterDict(of parsedKVArgs: [[String]]) throws -> [UnivISSearchParameter : String] {
 		var dict = [UnivISSearchParameter : String]()
 		
 		for kvArg in parsedKVArgs {
 			if let searchParameter = UnivISSearchParameter(rawValue: kvArg[1]) {
 				dict[searchParameter] = kvArg[2]
+			} else {
+				throw UnivISCommandError.invalidSearchParameter(kvArg[1])
 			}
 		}
 		
