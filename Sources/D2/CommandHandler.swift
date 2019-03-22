@@ -5,7 +5,7 @@ class CommandHandler: DiscordClientDelegate {
 	private let commandPattern: Regex
 	private(set) var commands = [String: Command]()
 	private var currentIndex = 0
-	private var permissionManager = PermissionManager()
+	let permissionManager = PermissionManager()
 	
 	init(withPrefix msgPrefix: String) throws {
 		let escapedPrefix = NSRegularExpression.escapedPattern(for: msgPrefix)

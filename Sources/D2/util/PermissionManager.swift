@@ -1,6 +1,6 @@
 import SwiftDiscord
 
-struct PermissionManager {
+class PermissionManager {
 	private var userPermissions = [String: PermissionLevel]()
 	
 	private func encode(user: DiscordUser) -> String {
