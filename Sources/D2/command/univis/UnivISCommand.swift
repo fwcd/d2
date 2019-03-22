@@ -16,6 +16,11 @@ fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\
 class UnivISCommand: Command {
 	let description = "Queries the UnivIS of the CAU"
 	let requiredPermissionLevel = PermissionLevel.basic
+	let maxResponseEntries: Int
+	
+	init(maxResponseEntries: Int = 15) {
+		self.maxResponseEntries = maxResponseEntries
+	}
 	
 	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
 		do {
@@ -36,7 +41,7 @@ class UnivISCommand: Command {
 					embed.title = "UnivIS query result"
 					embed.fields = Array(result.childs.map {
 						DiscordEmbed.Field(name: $0.nodeType, value: $0.shortDescription)
-					}.prefix(8))
+					}.prefix(self.maxResponseEntries))
 					message.channel?.send(embed: embed)
 				} else if case let .error(error) = response {
 					print(error)
