@@ -67,9 +67,9 @@ class PermissionManager: CustomStringConvertible {
 		userPermissions.removeValue(forKey: nameWithTag)
 	}
 	
-	subscript(user: DiscordUser) -> PermissionLevel? {
+	subscript(user: DiscordUser) -> PermissionLevel {
 		get { return self[encode(user: user)] }
-		set(newValue) { self[encode(user: user)] = newValue! }
+		set(newValue) { self[encode(user: user)] = newValue }
 	}
 	
 	subscript(nameWithTag: String) -> PermissionLevel {
