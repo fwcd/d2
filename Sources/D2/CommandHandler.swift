@@ -29,7 +29,11 @@ class CommandHandler: DiscordClientDelegate {
 				let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
 				if hasPermission {
 					print("Invoking '\(name)'")
-					command.invoke(withMessage: message, guild: client.guildForChannel(message.channelId), args: args)
+					
+					let context = CommandContext(
+						guild: client.guildForChannel(message.channelId)
+					)
+					command.invoke(withMessage: message, context: context, args: args)
 				} else {
 					print("Rejected '\(name)' due to insufficient permissions")
 					message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")

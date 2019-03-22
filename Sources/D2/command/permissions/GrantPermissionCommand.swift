@@ -11,14 +11,14 @@ class GrantPermissionCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
+	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
 		if let parsedArgs = argsPattern.firstGroups(in: args) {
 			let rawLevel = parsedArgs[1]
 			if let level = PermissionLevel.of(rawLevel) {
 				var response = ""
 				var changedPermissions = false
 				
-				for mentionedUser in mentionedUsers(in: message, on: guild) {
+				for mentionedUser in mentionedUsers(in: message, on: context.guild) {
 					permissionManager[mentionedUser] = level
 					response += ":white_check_mark: Granted `\(mentionedUser.username)` \(rawLevel) permissions\n"
 					changedPermissions = true

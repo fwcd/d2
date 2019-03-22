@@ -11,12 +11,12 @@ class RevokePermissionCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
+	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
 		if argsPattern.matchCount(in: args) > 0 {
 			var response = ""
 			var changedPermissions = false
 			
-			for mentionedUser in mentionedUsers(in: message, on: guild) {
+			for mentionedUser in mentionedUsers(in: message, on: context.guild) {
 				permissionManager.remove(permissionsFrom: mentionedUser)
 				response += ":x: Revoked permissions from `\(mentionedUser.username)`\n"
 				changedPermissions = true

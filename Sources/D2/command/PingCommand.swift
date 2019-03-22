@@ -4,7 +4,7 @@ class PingCommand: Command {
 	let description = "Replies with 'Pong!'"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
+	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
 		message.channel?.send("Pong!")
 	}
 }

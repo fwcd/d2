@@ -17,7 +17,7 @@ class UnivISCommand: Command {
 	let description = "Queries the UnivIS of the CAU"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
+	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
 		do {
 			guard let parsedArgs = argsPattern.firstGroups(in: args) else {
 				message.channel?.send("Syntax error: Your arguments need to match `\(argsPattern.rawPattern)`")
