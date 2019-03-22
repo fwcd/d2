@@ -9,7 +9,7 @@ class CampusCommand: Command {
 	let requiredPermissionLevel = PermissionLevel.basic
 	let geocoder = MapQuestGeocoder()
 	
-	func invoke(withMessage message: DiscordMessage, args: String) {
+	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
 		do {
 			try UnivISQuery(search: .rooms, params: [
 				.name: args

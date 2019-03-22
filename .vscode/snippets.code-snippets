@@ -9,7 +9,7 @@
 			"\tlet description = \"$2\"",
 			"\tlet requiredPermissionLevel = PermissionLevel.$3",
 			"\t",
-			"\tfunc invoke(withMessage message: DiscordMessage, args: String) {",
+			"\tfunc invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {",
 			"\t\t$0",
 			"\t}",
 			"}"

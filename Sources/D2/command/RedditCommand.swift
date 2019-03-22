@@ -5,7 +5,7 @@ class RedditCommand: Command {
 	let description = "Fetches a post from a subreddit"
 	let requiredPermissionLevel = PermissionLevel.vip
 	
-	func invoke(withMessage message: DiscordMessage, args: String) {
+	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "www.reddit.com"
@@ -57,7 +57,7 @@ class RedditCommand: Command {
 					print(json)
 				}
 			} catch {
-				print(error)
+				print(String(describing: error))
 				message.channel?.send("Error while decoding JSON.")
 			}
 		}.resume()

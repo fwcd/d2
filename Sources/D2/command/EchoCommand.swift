@@ -14,7 +14,7 @@ class EchoCommand: Command {
 		self.intervalSeconds = intervalSeconds
 	}
 	
-	func invoke(withMessage message: DiscordMessage, args: String) {
+	func invoke(withMessage message: DiscordMessage, guild: DiscordGuild?, args: String) {
 		if let groups = argPattern.firstGroups(in: args) {
 			// Extract parsed values
 			let n = groups[safe: 1].flatMap { Int($0) } ?? 1
