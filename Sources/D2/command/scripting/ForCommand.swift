@@ -11,7 +11,7 @@ fileprivate let argsPattern = try! Regex(from: "^(\\w+)\\s+in\\s+(\(rawRangePatt
 
 class ForCommand: Command {
 	let description = "Iterates through a range"
-	let requiredPermissionLevel = PermissionLevel.basic
+	let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
 	
 	init(intervalSeconds: Int = 1) {
