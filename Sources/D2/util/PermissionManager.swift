@@ -1,7 +1,7 @@
 import SwiftDiscord
 import Foundation
 
-fileprivate let defaultStorageURL = URL(fileURLWithPath: "local/discordUserPermissions.txt")
+fileprivate let defaultStorageURL = URL(fileURLWithPath: "local/discordUserPermissions.json")
 
 class PermissionManager {
 	private var userPermissions = [String: PermissionLevel]()
@@ -56,6 +56,14 @@ class PermissionManager {
 	
 	func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: Int) -> Bool {
 		return self[theNameWithTag].rawValue >= requiredLevel
+	}
+	
+	func remove(permissionsFrom user: DiscordUser) {
+		remove(permissionsFrom: encode(user: user))
+	}
+	
+	func remove(permissionsFrom nameWithTag: String) {
+		userPermissions.removeValue(forKey: nameWithTag)
 	}
 	
 	subscript(user: DiscordUser) -> PermissionLevel? {

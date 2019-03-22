@@ -1,9 +1,9 @@
 import SwiftDiscord
 
-fileprivate let argsPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s*)+(.+)")
+fileprivate let argsPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
 
 class GrantPermissionCommand: Command {
-	let description = "Sets the permission level of a user"
+	let description = "Sets the permission level of one or more users"
 	let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
 	
@@ -18,7 +18,7 @@ class GrantPermissionCommand: Command {
 				var response = ""
 				var changedPermissions = false
 				
-				for mentionedUser in message.mentions + resolve(roles: message.mentionRoles, mentionedEveryone: message.mentionEveryone, guild: guild) {
+				for mentionedUser in mentionedUsers(in: message, on: guild) {
 					permissionManager[mentionedUser] = level
 					response += ":white_check_mark: Granted `\(mentionedUser.username)` \(rawLevel) permissions\n"
 					changedPermissions = true
@@ -35,20 +35,6 @@ class GrantPermissionCommand: Command {
 			}
 		} else {
 			message.channel?.send("Syntax error: The arguments need to match `\(argsPattern.rawPattern)`")
-		}
-	}
-	
-	private func resolve(roles: [RoleID], mentionedEveryone: Bool, guild: DiscordGuild?) -> [DiscordUser] {
-		if mentionedEveryone {
-			return guild?.members.map { $0.value.user } ?? []
-		} else {
-			return roles.flatMap { role in
-				guild?.members
-					.map { $0.value }
-					.filter { $0.roleIds.contains(role) }
-					.map { $0.user }
-					?? []
-			}
 		}
 	}
 }
