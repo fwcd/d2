@@ -45,7 +45,7 @@ class ForCommand: Command {
 				)
 			}
 		} else {
-			message.channel?.send("Syntax error: For arguments need to match `\(argsPattern.rawPattern)`")
+			message.channel?.send("Syntax error: For arguments need to match `[variable] in [number](...|..<)[number] [command invocation]`")
 		}
 	}
 	

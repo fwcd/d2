@@ -29,7 +29,7 @@ class RevokePermissionCommand: Command {
 				message.channel?.send("Did not change any permissions.")
 			}
 		} else {
-			message.channel?.send("Syntax error: The arguments need to match `\(argsPattern.rawPattern)`")
+			message.channel?.send("Syntax error: The arguments need to match `[@user or role]*`")
 		}
 	}
 }

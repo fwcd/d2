@@ -34,7 +34,7 @@ class GrantPermissionCommand: Command {
 				message.channel?.send("Unknown permission level `\(rawLevel)`")
 			}
 		} else {
-			message.channel?.send("Syntax error: The arguments need to match `\(argsPattern.rawPattern)`")
+			message.channel?.send("Syntax error: The arguments need to match `[@user or role]* [permission level]`")
 		}
 	}
 }

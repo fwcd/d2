@@ -3,7 +3,7 @@ import SwiftDiscord
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"
 fileprivate let rawCapturingKeyPattern = "(\\w+)"
-fileprivate let rawCapturingValuePattern = "(?:(\\w+)|(?:\"([\\w ]+)\"))"
+fileprivate let rawCapturingValuePattern = "(?:(\\S+)|(?:\"(.+)\"))"
 
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
@@ -20,7 +20,7 @@ class UnivISCommand: Command {
 	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
 		do {
 			guard let parsedArgs = argsPattern.firstGroups(in: args) else {
-				message.channel?.send("Syntax error: Your arguments need to match `\(argsPattern.rawPattern)`")
+				message.channel?.send("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
 				return
 			}
 			guard let searchKey = UnivISSearchKey(rawValue: parsedArgs[1]) else {
