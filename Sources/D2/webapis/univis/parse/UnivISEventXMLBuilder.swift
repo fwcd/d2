@@ -7,12 +7,12 @@ class UnivISEventXMLBuilder: UnivISObjectNodeXMLBuilder {
 	
 	// TODO: Parse orgunits
 	
-	func enter(selfWithName elementName: String, attributes: [String : String]) throws {
+	func enter(selfWithName elementName: String, attributes: [String: String]) throws {
 		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		event = UnivISEvent(key: key)
 	}
 	
-	func enter(childWithName elementName: String, attributes: [String : String]) throws {
+	func enter(childWithName elementName: String, attributes: [String: String]) throws {
 		let previousName = nameStack.last
 		nameStack.append(elementName)
 		

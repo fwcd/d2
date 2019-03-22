@@ -15,5 +15,10 @@
 			"}"
 		],
 		"description": "Creates a new command implementation"
+	},
+	"Send to message channel": {
+		"prefix": "msend",
+		"scope": "swift",
+		"body": "message.channel?.send($0)"
 	}
 }

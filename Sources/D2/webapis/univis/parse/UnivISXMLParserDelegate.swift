@@ -2,7 +2,7 @@ import Foundation
 
 class UnivISXMLParserDelegate: XMLParserDelegate {
 	let then: (Result<UnivISOutputNode>) -> Void
-	let registeredBuilderFactories: [String : () -> UnivISObjectNodeXMLBuilder] = [
+	let registeredBuilderFactories: [String: () -> UnivISObjectNodeXMLBuilder] = [
 		"Event": { UnivISEventXMLBuilder() },
 		"Room": { UnivISRoomXMLBuilder() },
 		"Person": { UnivISPersonXMLBuilder() }
@@ -18,7 +18,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 		self.then = then
 	}
 	
-	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
 		// print("Started \(elementName)")
 		do {
 			// Ignore top-level 'UnivIS' element

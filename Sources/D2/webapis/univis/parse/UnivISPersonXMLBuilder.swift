@@ -5,12 +5,12 @@ class UnivISPersonXMLBuilder: UnivISObjectNodeXMLBuilder {
 	
 	// TODO: Parse orgunits and locations
 	
-	func enter(selfWithName elementName: String, attributes: [String : String]) throws {
+	func enter(selfWithName elementName: String, attributes: [String: String]) throws {
 		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		person = UnivISPerson(key: key)
 	}
 	
-	func enter(childWithName elementName: String, attributes: [String : String]) throws {
+	func enter(childWithName elementName: String, attributes: [String: String]) throws {
 		let previousName = nameStack.last
 		nameStack.append(elementName)
 	}

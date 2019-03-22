@@ -5,7 +5,7 @@ struct UnivISQuery {
 	
 	init(
 		search: UnivISSearchKey,
-		params: [UnivISSearchParameter : String],
+		params: [UnivISSearchParameter: String],
 		scheme: String = "http",
 		host: String = "univis.uni-kiel.de",
 		path: String = "/prg"

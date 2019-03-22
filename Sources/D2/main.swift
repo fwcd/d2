@@ -16,6 +16,7 @@ func main() throws {
 	handler["mdb"] = MDBCommand()
 	handler["timetable"] = TimeTableCommand()
 	handler["univis"] = UnivISCommand()
+	handler["reddit"] = RedditCommand()
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }

@@ -20,17 +20,17 @@ struct MapQuestGeocoder {
 			}
 			do {
 				let json = try JSONSerialization.jsonObject(with: data)
-				let latLng = (json as? [String : Any])
+				let latLng = (json as? [String: Any])
 					.flatMap { $0["results"] }
 					.flatMap { $0 as? [Any] }
 					.flatMap { $0.first }
-					.flatMap { $0 as? [String : Any] }
+					.flatMap { $0 as? [String: Any] }
 					.flatMap { $0["locations"] }
 					.flatMap { $0 as? [Any] }
 					.flatMap { $0.first }
-					.flatMap { $0 as? [String : Any] }
+					.flatMap { $0 as? [String: Any] }
 					.flatMap { $0["latLng"] }
-					.flatMap { $0 as? [String : Double] }
+					.flatMap { $0 as? [String: Double] }
 				
 				guard let location = latLng else {
 					then(.error(MapQuestError.jsonParseError(json, "Could not locate results -> locations -> latLng")))

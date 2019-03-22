@@ -3,7 +3,7 @@ import Foundation
 
 class CommandHandler: DiscordClientDelegate {
 	private let commandPattern: Regex
-	private(set) var commands = [String : Command]()
+	private(set) var commands = [String: Command]()
 	private var currentIndex = 0
 	private var permissionManager = PermissionManager()
 	

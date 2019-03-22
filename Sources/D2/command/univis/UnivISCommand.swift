@@ -51,8 +51,8 @@ class UnivISCommand: Command {
 		}
 	}
 	
-	private func queryParameterDict(of parsedKVArgs: [[String]]) throws -> [UnivISSearchParameter : String] {
-		var dict = [UnivISSearchParameter : String]()
+	private func queryParameterDict(of parsedKVArgs: [[String]]) throws -> [UnivISSearchParameter: String] {
+		var dict = [UnivISSearchParameter: String]()
 		
 		for kvArg in parsedKVArgs {
 			if let searchParameter = UnivISSearchParameter(rawValue: kvArg[1]) {

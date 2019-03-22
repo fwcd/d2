@@ -1,7 +1,7 @@
 import SwiftDiscord
 
 struct PermissionManager {
-	private var userPermissions = [String : PermissionLevel]()
+	private var userPermissions = [String: PermissionLevel]()
 	
 	private func encode(user: DiscordUser) -> String {
 		return "\(user.username)#\(user.discriminator)"
