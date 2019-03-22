@@ -19,6 +19,7 @@ func main() throws {
 	handler["reddit"] = RedditCommand()
 	handler["grant"] = GrantPermissionCommand(permissionManager: handler.permissionManager)
 	handler["revoke"] = RevokePermissionCommand(permissionManager: handler.permissionManager)
+	handler["permissions"] = ShowPermissionsCommand(permissionManager: handler.permissionManager)
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }

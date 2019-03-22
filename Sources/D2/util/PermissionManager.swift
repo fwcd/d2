@@ -3,8 +3,9 @@ import Foundation
 
 fileprivate let defaultStorageURL = URL(fileURLWithPath: "local/discordUserPermissions.json")
 
-class PermissionManager {
+class PermissionManager: CustomStringConvertible {
 	private var userPermissions = [String: PermissionLevel]()
+	var description: String { return userPermissions.description }
 	
 	init() {
 		tryReadingFromDisk()
