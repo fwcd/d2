@@ -16,6 +16,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["grant"] = GrantPermissionCommand(permissionManager: handler.permissionManager)
 	handler["revoke"] = RevokePermissionCommand(permissionManager: handler.permissionManager)
 	handler["permissions"] = ShowPermissionsCommand(permissionManager: handler.permissionManager)
+	handler["for"] = ForCommand()
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
 		let helpText = Dictionary(grouping: handler.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { handler.permissionManager[message.author].rawValue >= $0.key.rawValue }

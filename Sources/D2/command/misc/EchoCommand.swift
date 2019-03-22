@@ -19,7 +19,7 @@ class EchoCommand: Command {
 			let n = groups[safe: 1].flatMap { Int($0) } ?? 1
 			guard let value = groups[safe: 2] else { return }
 			
-			timer.schedule(nTimes: n) {
+			timer.schedule(nTimes: n) { _, _ in
 				message.channel?.send(value)
 			}
 		}

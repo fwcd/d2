@@ -1,11 +1,10 @@
 import Foundation
 
 /** A wrapper around NSRegularExpression with a more modern API. */
-struct Regex {
+struct Regex: CustomStringConvertible {
 	private let pattern: NSRegularExpression
-	var rawPattern: String {
-		return pattern.pattern
-	}
+	var rawPattern: String { return pattern.pattern }
+	var description: String { return rawPattern }
 	
 	init(from str: String) throws {
 		pattern = try NSRegularExpression(pattern: str)
@@ -36,5 +35,13 @@ struct Regex {
 			.map { groups in (0..<groups.numberOfRanges)
 				.map { Range(groups.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
 		}
+	}
+	
+	func replace(in str: String, with replacement: String) -> String {
+		return pattern.stringByReplacingMatches(in: str, range: NSRange(str.startIndex..., in: str), withTemplate: replacement)
+	}
+	
+	static func escape(_ str: String) -> String {
+		return NSRegularExpression.escapedPattern(for: str)
 	}
 }

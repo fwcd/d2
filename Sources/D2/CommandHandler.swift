@@ -9,10 +9,9 @@ class CommandHandler: DiscordClientDelegate {
 	let permissionManager = PermissionManager()
 	
 	init(withPrefix msgPrefix: String) throws {
-		let escapedPrefix = NSRegularExpression.escapedPattern(for: msgPrefix)
 		// The first group matches the command name,
 		// the second matches the arguments (the rest of the message content)
-		commandPattern = try Regex(from: "^\(escapedPrefix)(\\w+)(?:\\s+([\\s\\S]*))?")
+		commandPattern = try Regex(from: "^\(Regex.escape(msgPrefix))(\\w+)(?:\\s+([\\s\\S]*))?")
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
