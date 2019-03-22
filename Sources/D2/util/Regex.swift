@@ -2,7 +2,10 @@ import Foundation
 
 /** A wrapper around NSRegularExpression with a more modern API. */
 struct Regex {
-	let pattern: NSRegularExpression
+	private let pattern: NSRegularExpression
+	var rawPattern: String {
+		return pattern.pattern
+	}
 	
 	init(from str: String) throws {
 		pattern = try NSRegularExpression(pattern: str)
@@ -22,8 +25,15 @@ struct Regex {
 	func firstGroups(in str: String) -> [String]? {
 		let optionalGroups = pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))[safe: 0]
 		
-		return optionalGroups.map { groups in
-			(0..<groups.numberOfRanges)
+		return optionalGroups
+			.map { groups in (0..<groups.numberOfRanges)
+				.map { Range(groups.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
+		}
+	}
+	
+	func allGroups(in str: String) -> [[String]] {
+		return pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))
+			.map { groups in (0..<groups.numberOfRanges)
 				.map { Range(groups.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
 		}
 	}

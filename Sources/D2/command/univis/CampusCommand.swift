@@ -11,7 +11,7 @@ class CampusCommand: Command {
 	
 	func invoke(withMessage message: DiscordMessage, args: String) {
 		do {
-			try UnivISQuery(scheme: univISCAUScheme, host: univISCAUHost, path: univISCAUPath, search: .rooms, params: [
+			try UnivISQuery(search: .rooms, params: [
 				.name: args
 			]).start { response in
 				guard case let .ok(output) = response else {

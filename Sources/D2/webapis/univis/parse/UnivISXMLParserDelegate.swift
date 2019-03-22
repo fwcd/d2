@@ -11,6 +11,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 	var nodeBuilder: UnivISObjectNodeXMLBuilder? = nil
 	var currentName: String? = nil
 	var currentCharacters = ""
+	var hasErrored = false
 	
 	init(then: @escaping (Result<UnivISOutputNode>) -> Void) {
 		self.then = then
@@ -74,10 +75,16 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-		then(.error(parseError))
+		if !hasErrored {
+			then(.error(parseError))
+			hasErrored = true
+		}
 	}
 	
 	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
-		then(.error(validationError))
+		if !hasErrored {
+			then(.error(validationError))
+			hasErrored = true
+		}
 	}
 }

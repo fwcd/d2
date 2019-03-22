@@ -1,4 +1,5 @@
 struct UnivISRoom: UnivISObjectNode {
+	let nodeType = "Room"
 	let key: String
 	var address: String? = nil
 	var chtab: Bool? = nil
@@ -22,6 +23,9 @@ struct UnivISRoom: UnivISObjectNode {
 	var short: String? = nil
 	var size: Int? = nil
 	var wb: Bool? = nil
+	var shortDescription: String {
+		return "\(name ?? "?"): \(address ?? "?")"
+	}
 	
 	init(key: String) {
 		self.key = key

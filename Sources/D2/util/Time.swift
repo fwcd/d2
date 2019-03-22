@@ -26,19 +26,19 @@ struct Time {
 		}
 	}
 	
-	func timeInterval(to other: Time): TimeInterval {
+	func timeInterval(to other: Time) -> TimeInterval {
 		return TimeInterval(other.secondOfDay - secondOfDay)
 	}
 	
-	func seconds(to other: Time): TimeInterval {
+	func seconds(to other: Time) -> Int {
 		return other.secondOfDay - secondOfDay
 	}
 	
-	func minutes(to other: Time): TimeInterval {
+	func minutes(to other: Time) -> Int {
 		return other.minuteOfDay - minuteOfDay
 	}
 	
-	func hours(to other: Time): TimeInterval {
+	func hours(to other: Time) -> Int {
 		return other.hour - hour
 	}
 }

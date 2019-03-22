@@ -16,6 +16,7 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 	var currentKey: String? = nil
 	var currentModule: MDBModule? = nil
 	var currentCharacters = ""
+	var hasErrored = false
 	
 	init(then: @escaping (Result<[MDBModule]>) -> Void) {
 		self.then = then
@@ -100,6 +101,20 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 		
 		if stackHeight <= 0 {
 			then(.ok(modules))
+		}
+	}
+	
+	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+		if !hasErrored {
+			then(.error(parseError))
+			hasErrored = true
+		}
+	}
+	
+	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+		if !hasErrored {
+			then(.error(validationError))
+			hasErrored = true
 		}
 	}
 }

@@ -1,4 +1,5 @@
 struct UnivISPerson: UnivISObjectNode {
+	let nodeType = "Person"
 	let key: String
 	var atitle: String? = nil
 	var title: String? = nil
@@ -11,6 +12,9 @@ struct UnivISPerson: UnivISObjectNode {
 	var orgname: String? = nil
 	var orgunits = [String]()
 	var visible: Bool? = nil
+	var shortDescription: String {
+		return "\(title.map { "\($0) " } ?? "")\(firstname ?? "") \(lastname ?? "")"
+	}
 	
 	init(key: String) {
 		self.key = key

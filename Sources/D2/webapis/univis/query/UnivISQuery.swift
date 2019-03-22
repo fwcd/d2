@@ -4,11 +4,11 @@ struct UnivISQuery {
 	let url: URL
 	
 	init(
-		scheme: String,
-		host: String,
-		path: String,
 		search: UnivISSearchKey,
-		params: [UnivISSearchParameter : String]
+		params: [UnivISSearchParameter : String],
+		scheme: String = "http",
+		host: String = "univis.uni-kiel.de",
+		path: String = "/prg"
 	) throws {
 		var components = URLComponents()
 		components.scheme = scheme

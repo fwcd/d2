@@ -1,4 +1,5 @@
 struct UnivISEvent: UnivISObjectNode {
+	let nodeType = "Event"
 	let key: String
 	var contact: UnivISRef? = nil
 	var dbref: UnivISRef? = nil
@@ -9,6 +10,9 @@ struct UnivISEvent: UnivISObjectNode {
 	var startdate: String? = nil
 	var terms = [UnivISTerm]()
 	var title: String? = nil
+	var shortDescription: String {
+		return "\(title ?? "?"): \(startdate.map { "\($0) " } ?? "")\(enddate.map { "-> \($0)" } ?? "")"
+	}
 	
 	init(key: String) {
 		self.key = key

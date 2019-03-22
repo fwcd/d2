@@ -1,4 +1,5 @@
 struct UnivISLecture: UnivISObjectNode {
+	let nodeType = "Lecture"
 	let key: String
 	var classification: UnivISRef? = nil
 	var dozs = [UnivISRef]()
@@ -21,6 +22,9 @@ struct UnivISLecture: UnivISObjectNode {
 	var organizational: String? = nil
 	var evaluation: Bool? = nil
 	var summary: String? = nil
+	var shortDescription: String {
+		return "\(name ?? "?"): \(summary ?? "?")"
+	}
 	
 	init(key: String) {
 		self.key = key
