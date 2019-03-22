@@ -14,6 +14,7 @@ func main() throws {
 	handler["campus"] = CampusCommand()
 	handler["type"] = TriggerTypingCommand()
 	handler["mdb"] = MDBCommand()
+	handler["timetable"] = TimeTableCommand()
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
 		let helpText = handler.commands
 			.map { "\($0.key): \($0.value.description)" }
