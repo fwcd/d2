@@ -37,7 +37,7 @@ class RedditCommand: Command {
 					.flatMap { $0 as? [String: Any] }
 					.flatMap { $0["children"] }
 					.flatMap { $0 as? [Any] }
-					.flatMap { $0.first } // TODO: Pick random?
+					.flatMap { $0.isEmpty ? nil : $0[Int.random(in: 0..<$0.count)] }
 					.flatMap { $0 as? [String: Any] }
 					.flatMap { $0["data"] }
 					.flatMap { $0 as? [String: Any] }
