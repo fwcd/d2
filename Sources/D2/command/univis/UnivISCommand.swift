@@ -1,16 +1,16 @@
 import SwiftDiscord
 
-fileprivate let rawKeyPattern = "\\w+"
-fileprivate let rawValuePattern = "\\w+|(?:\"[\\w ]+\")"
+fileprivate let rawKeyPattern = "(?:\\w+)"
+fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"
 fileprivate let rawCapturingKeyPattern = "(\\w+)"
-fileprivate let rawCapturingValuePattern = "(\\w+)|(?:\"([\\w ]+)\")"
+fileprivate let rawCapturingValuePattern = "(?:(\\w+)|(?:\"([\\w ]+)\"))"
 
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
 fileprivate let argsPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
 
 // Matches a single key-value argument. The first group captures the
-// key, the second group captures the value.
+// key, the second (or third) group captures the value.
 fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
 
 class UnivISCommand: Command {
@@ -56,7 +56,8 @@ class UnivISCommand: Command {
 		
 		for kvArg in parsedKVArgs {
 			if let searchParameter = UnivISSearchParameter(rawValue: kvArg[1]) {
-				dict[searchParameter] = kvArg[2]
+				let value = kvArg[2].nilIfEmpty ?? kvArg[3]
+				dict[searchParameter] = value
 			} else {
 				throw UnivISCommandError.invalidSearchParameter(kvArg[1])
 			}
