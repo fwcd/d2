@@ -17,10 +17,11 @@ func register(commandsFor handler: CommandHandler) {
 	handler["revoke"] = RevokePermissionCommand(permissionManager: handler.permissionManager)
 	handler["permissions"] = ShowPermissionsCommand(permissionManager: handler.permissionManager)
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
-		let helpText = handler.commands
-			.map { "\($0.key): \($0.value.description)" }
+		let helpText = Dictionary(grouping: handler.commands, by: { $0.value.requiredPermissionLevel })
+			.sorted { $0.key.rawValue < $1.key.rawValue }
+			.map { group in ":star: \(group.key):\n```\n\(group.value.map { "\($0.key): \($0.value.description)" }.reduce("") { "\($0)\n\($1)" })\n```" }
 			.reduce("") { "\($0)\n\($1)" }
-		message.channel?.send("```\n\(helpText)\n```")
+		message.channel?.send(helpText)
 	}
 }
 

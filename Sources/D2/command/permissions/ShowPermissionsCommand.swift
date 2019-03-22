@@ -1,7 +1,7 @@
 import SwiftDiscord
 
 class ShowPermissionsCommand: Command {
-	let description = "Displays the permissions"
+	let description = "Displays the configured permissions"
 	let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
 	
