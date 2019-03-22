@@ -1,11 +1,7 @@
 import Foundation
 import SwiftDiscord
 
-func main() throws {
-	// 'discordToken' should be declared in 'authkeys.swift'
-	let handler = try CommandHandler(withPrefix: "%")
-	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(discordToken)"), delegate: handler, configuration: [.log(.info)])
-	
+func register(commandsFor handler: CommandHandler) {
 	handler["ping"] = PingCommand()
 	handler["vertical"] = VerticalCommand()
 	handler["bf"] = BFCommand()
@@ -26,6 +22,14 @@ func main() throws {
 			.reduce("") { "\($0)\n\($1)" }
 		message.channel?.send("```\n\(helpText)\n```")
 	}
+}
+
+func main() throws {
+	// 'discordToken' should be declared in 'authkeys.swift'
+	let handler = try CommandHandler(withPrefix: "%")
+	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(discordToken)"), delegate: handler, configuration: [.log(.info)])
+	
+	register(commandsFor: handler)
 	
 	print("Connecting client")
 	client.connect()
