@@ -5,7 +5,7 @@ import Dispatch
 fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 
 class EchoCommand: Command {
-	let description = "Repeats something n times"
+	let description = "Prints something n times"
 	let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
 	
