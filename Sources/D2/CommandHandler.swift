@@ -3,8 +3,9 @@ import Foundation
 
 class CommandHandler: DiscordClientDelegate {
 	private let commandPattern: Regex
-	private(set) var commands = [String: Command]()
 	private var currentIndex = 0
+	
+	private(set) var registry = CommandRegistry()
 	let permissionManager = PermissionManager()
 	
 	init(withPrefix msgPrefix: String) throws {
@@ -25,13 +26,14 @@ class CommandHandler: DiscordClientDelegate {
 			let name = groups[1]
 			let args = groups[2]
 			
-			if let command = self.commands[name] {
+			if let command = registry[name] {
 				let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
 				if hasPermission {
 					print("Invoking '\(name)'")
 					
 					let context = CommandContext(
-						guild: client.guildForChannel(message.channelId)
+						guild: client.guildForChannel(message.channelId),
+						registry: registry
 					)
 					command.invoke(withMessage: message, context: context, args: args)
 				} else {
@@ -46,7 +48,7 @@ class CommandHandler: DiscordClientDelegate {
 	}
 	
 	subscript(name: String) -> Command? {
-		get { return commands[name] }
-		set(newValue) { commands[name] = newValue }
+		get { return registry[name] }
+		set(newValue) { registry[name] = newValue }
 	}
 }

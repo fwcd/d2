@@ -17,7 +17,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["revoke"] = RevokePermissionCommand(permissionManager: handler.permissionManager)
 	handler["permissions"] = ShowPermissionsCommand(permissionManager: handler.permissionManager)
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
-		let helpText = Dictionary(grouping: handler.commands.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
+		let helpText = Dictionary(grouping: handler.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { handler.permissionManager[message.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 			.map { group in ":star: \(group.key):\n```\n\(group.value.map { "\($0.key): \($0.value.description)" }.reduce("") { "\($0)\n\($1)" })\n```" }
