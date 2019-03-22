@@ -10,5 +10,6 @@ xcuserdata
 authkeys.*
 userwhitelist.*
 
+local
 .vscode/**
 !*.code-snippets

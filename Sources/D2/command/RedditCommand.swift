@@ -21,7 +21,7 @@ class RedditCommand: Command {
 		request.addValue("Discord application D2", forHTTPHeaderField: "User-Agent")
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				print(error)
+				print(String(describing: error))
 				message.channel?.send("Error while querying URL.")
 				return
 			}

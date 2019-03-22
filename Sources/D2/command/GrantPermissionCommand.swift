@@ -16,16 +16,19 @@ class GrantPermissionCommand: Command {
 			let rawLevel = parsedArgs[1]
 			if let level = PermissionLevel.of(rawLevel) {
 				var response = ""
+				var changedPermissions = false
 				
 				for mentionedUser in message.mentions + resolve(roles: message.mentionRoles, mentionedEveryone: message.mentionEveryone, guild: guild) {
 					permissionManager[mentionedUser] = level
 					response += ":white_check_mark: Granted `\(mentionedUser.username)` \(rawLevel) permissions\n"
+					changedPermissions = true
 				}
 				
-				if response.isEmpty {
-					message.channel?.send("Did not change any permissions.")
-				} else {
+				if changedPermissions {
 					message.channel?.send(response)
+					permissionManager.writeToDisk()
+				} else {
+					message.channel?.send("Did not change any permissions.")
 				}
 			} else {
 				message.channel?.send("Unknown permission level `\(rawLevel)`")

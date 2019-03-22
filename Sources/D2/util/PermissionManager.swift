@@ -1,10 +1,45 @@
 import SwiftDiscord
+import Foundation
+
+fileprivate let defaultStorageURL = URL(fileURLWithPath: "local/discordUserPermissions.txt")
 
 class PermissionManager {
 	private var userPermissions = [String: PermissionLevel]()
 	
+	init() {
+		tryReadingFromDisk()
+	}
+	
 	private func encode(user: DiscordUser) -> String {
 		return "\(user.username)#\(user.discriminator)"
+	}
+	
+	func writeToDisk(url: URL = defaultStorageURL) {
+		do {
+			let fileManager = FileManager.default
+			let data = try JSONEncoder().encode(userPermissions)
+			
+			if fileManager.fileExists(atPath: url.path) {
+				try fileManager.removeItem(at: url)
+			}
+			
+			fileManager.createFile(atPath: url.path, contents: data, attributes: nil)
+		} catch {
+			print(error)
+		}
+	}
+	
+	func tryReadingFromDisk(url: URL = defaultStorageURL) {
+		do {
+			let fileManager = FileManager.default
+			guard fileManager.fileExists(atPath: url.path) else { return }
+			
+			if let data = fileManager.contents(atPath: url.path) {
+				userPermissions = try JSONDecoder().decode([String: PermissionLevel].self, from: data)
+			}
+		} catch {
+			print(String(describing: error))
+		}
 	}
 	
 	func user(_ theUser: DiscordUser, hasPermission requiredLevel: PermissionLevel) -> Bool {

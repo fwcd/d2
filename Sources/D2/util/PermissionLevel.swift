@@ -1,4 +1,4 @@
-enum PermissionLevel: Int {
+enum PermissionLevel: Int, Codable {
 	case admin = 500
 	case vip = 50
 	case basic = 10
