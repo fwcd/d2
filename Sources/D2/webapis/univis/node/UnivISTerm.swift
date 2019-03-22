@@ -4,4 +4,5 @@ struct UnivISTerm {
 	var room: UnivISRef? = nil
 	var startdate: String? = nil
 	var starttime: String? = nil
+	var repeatPattern: String? = nil
 }

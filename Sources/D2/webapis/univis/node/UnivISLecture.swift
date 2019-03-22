@@ -15,6 +15,7 @@ struct UnivISLecture: UnivISObjectNode {
 	var parentLv: UnivISRef?
 	var short: String? = nil
 	var startdate: String? = nil
+	var enddate: String? = nil
 	var turnout: Int? = nil
 	var ects: Bool? = nil
 	var ectsCred: Int? = nil
@@ -23,7 +24,7 @@ struct UnivISLecture: UnivISObjectNode {
 	var evaluation: Bool? = nil
 	var summary: String? = nil
 	var shortDescription: String {
-		return "\(name ?? "?"): \(summary ?? "?")"
+		return "\(short ?? "?"): \(name ?? "?")"
 	}
 	
 	init(key: String) {

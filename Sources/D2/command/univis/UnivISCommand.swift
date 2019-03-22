@@ -3,7 +3,7 @@ import SwiftDiscord
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"
 fileprivate let rawCapturingKeyPattern = "(\\w+)"
-fileprivate let rawCapturingValuePattern = "(?:(\\S+)|(?:\"(.+)\"))"
+fileprivate let rawCapturingValuePattern = "(?:(?:\"(.+)\")|(\\S+))"
 
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
