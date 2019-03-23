@@ -24,7 +24,7 @@ struct UnivISLecture: UnivISObjectNode, Hashable {
 	var evaluation: Bool? = nil
 	var summary: String? = nil
 	var shortDescription: String {
-		return "\(short ?? "?"): \(name ?? "?")"
+		return "\(name ?? "?"): \(startdate.map { "\($0) " } ?? "")\(enddate.map { "-> \($0)" } ?? "")"
 	}
 	
 	init(key: String) {

@@ -42,7 +42,6 @@ class UnivISCommand: Command {
 					
 					embed.title = "UnivIS query result"
 					embed.fields = Array(responseGroups
-						.sorted { $0.key.caseInsensitiveCompare(searchKey.rawValue) == .orderedSame && $1.key.caseInsensitiveCompare(searchKey.rawValue) != .orderedSame }
 						.map { DiscordEmbed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
 						.prefix(self.maxResponseEntries))
 					

@@ -11,7 +11,7 @@ struct UnivISEvent: UnivISObjectNode, Hashable {
 	var terms = [UnivISTerm]()
 	var title: String? = nil
 	var shortDescription: String {
-		return "\(title ?? "?"): \(startdate.map { "\($0) " } ?? "")\(enddate.map { "-> \($0)" } ?? "")"
+		return "\(title ?? "?"): \(startdate.map { "\($0) " } ?? "")\(enddate.flatMap { startdate == $0 ? nil : self }.map { "-> \($0)" } ?? "")"
 	}
 	
 	init(key: String) {

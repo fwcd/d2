@@ -5,7 +5,8 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 	let registeredBuilderFactories: [String: () -> UnivISObjectNodeXMLBuilder] = [
 		"Event": { UnivISEventXMLBuilder() },
 		"Room": { UnivISRoomXMLBuilder() },
-		"Person": { UnivISPersonXMLBuilder() }
+		"Person": { UnivISPersonXMLBuilder() },
+		"Lecture": { UnivISLectureXMLBuilder() }
 	]
 	
 	var nodes = [UnivISObjectNode]()
