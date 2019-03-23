@@ -1,4 +1,4 @@
-struct UnivISLocation {
+struct UnivISLocation: Hashable {
 	var email: String? = nil
 	var fax: String? = nil
 	var ort: String? = nil

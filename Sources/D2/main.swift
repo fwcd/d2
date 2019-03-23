@@ -21,8 +21,8 @@ func register(commandsFor handler: CommandHandler) {
 		let helpText = Dictionary(grouping: handler.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { handler.permissionManager[message.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
-			.map { group in ":star: \(group.key):\n```\n\(group.value.map { "\($0.key): \($0.value.description)" }.reduce("") { "\($0)\n\($1)" })\n```" }
-			.reduce("") { "\($0)\n\($1)" }
+			.map { group in ":star: \(group.key):\n```\n\(group.value.map { "\($0.key): \($0.value.description)" }.joined(separator: "\n"))\n```" }
+			.joined(separator: "\n")
 		message.channel?.send(helpText)
 	}
 }

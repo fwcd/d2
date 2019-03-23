@@ -1,4 +1,4 @@
-struct UnivISLecture: UnivISObjectNode {
+struct UnivISLecture: UnivISObjectNode, Hashable {
 	let nodeType = "Lecture"
 	let key: String
 	var classification: UnivISRef? = nil

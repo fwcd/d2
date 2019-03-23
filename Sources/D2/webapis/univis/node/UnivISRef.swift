@@ -1,3 +1,3 @@
-struct UnivISRef {
+struct UnivISRef: Hashable {
 	let key: String
 }

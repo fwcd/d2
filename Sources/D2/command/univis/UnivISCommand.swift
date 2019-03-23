@@ -37,11 +37,15 @@ class UnivISCommand: Command {
 			
 			try UnivISQuery(search: searchKey, params: queryParams).start { response in
 				if case let .ok(result) = response {
+					let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
 					var embed = DiscordEmbed()
+					
 					embed.title = "UnivIS query result"
-					embed.fields = Array(result.childs.map {
-						DiscordEmbed.Field(name: $0.nodeType, value: $0.shortDescription)
-					}.prefix(self.maxResponseEntries))
+					embed.fields = Array(responseGroups
+						.sorted { $0.key.caseInsensitiveCompare(searchKey.rawValue) == .orderedSame && $1.key.caseInsensitiveCompare(searchKey.rawValue) != .orderedSame }
+						.map { DiscordEmbed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
+						.prefix(self.maxResponseEntries))
+					
 					message.channel?.send(embed: embed)
 				} else if case let .error(error) = response {
 					print(error)
