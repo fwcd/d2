@@ -1,8 +1,6 @@
 import SwiftDiscord
 import Dispatch
 
-// The first group matches the BF code
-fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
 fileprivate let maxExecutionSeconds = 3
 
 class BFCommand: Command {
@@ -24,7 +22,7 @@ class BFCommand: Command {
 		let task = DispatchWorkItem {
 			var response: String
 			
-			if let program = codePattern.firstGroups(in: args)?[1] {
+			if let program = bfCodePattern.firstGroups(in: args)?[1] {
 				do {
 					let output = try interpreter.interpret(program: program)
 					

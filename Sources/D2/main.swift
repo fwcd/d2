@@ -6,6 +6,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["vertical"] = VerticalCommand()
 	handler["bf"] = BFCommand()
 	handler["bfencode"] = BFEncodeCommand()
+	handler["bftoc"] = BFToCCommand()
 	handler["echo"] = EchoCommand()
 	handler["campus"] = CampusCommand()
 	handler["type"] = TriggerTypingCommand()
