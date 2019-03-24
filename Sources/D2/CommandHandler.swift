@@ -45,6 +45,7 @@ class CommandHandler: DiscordClientDelegate {
 			
 			for rawPipeCommand in message.content.components(separatedBy: chainSeparator) {
 				var pipe = [PipeComponent]()
+				var pipeConstructionSuccessful = true
 				
 				// Construct the pipe
 				for rawCommand in rawPipeCommand.components(separatedBy: pipeSeparator) {
@@ -70,27 +71,33 @@ class CommandHandler: DiscordClientDelegate {
 							} else {
 								print("Rejected '\(name)' due to insufficient permissions")
 								message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
+								pipeConstructionSuccessful = false
+								break
 							}
 						} else {
 							print("Did not recognize command '\(name)'")
 							message.channel?.send("Sorry, I do not know the command `\(name)`.")
+							pipeConstructionSuccessful = false
+							break
 						}
 					}
 				}
 				
-				// Setup the pipe outputs
-				if let pipeSink = pipe.last {
-					pipeSink.output = DiscordChannelOutput(channel: message.channel)
-				}
-				
-				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
-					let pipeNext = pipe[i + 1]
-					pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
-				}
-				
-				// Execute the pipe
-				if let pipeSource = pipe.first {
-					pipeSource.command.invoke(withInput: nil, output: pipeSource.output!, context: pipeSource.context, args: pipeSource.args)
+				if pipeConstructionSuccessful {
+					// Setup the pipe outputs
+					if let pipeSink = pipe.last {
+						pipeSink.output = DiscordChannelOutput(channel: message.channel)
+					}
+					
+					for i in stride(from: pipe.count - 2, through: 0, by: -1) {
+						let pipeNext = pipe[i + 1]
+						pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
+					}
+					
+					// Execute the pipe
+					if let pipeSource = pipe.first {
+						pipeSource.command.invoke(withInput: nil, output: pipeSource.output!, context: pipeSource.context, args: pipeSource.args)
+					}
 				}
 			}
 		}
