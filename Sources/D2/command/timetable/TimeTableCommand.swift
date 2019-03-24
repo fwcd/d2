@@ -1,11 +1,11 @@
 import SwiftDiscord
 
-class TimeTableCommand: Command {
+class TimeTableCommand: StringCommand {
 	let description = "Generates a TimeTable from CAU modules"
 	let requiredPermissionLevel = PermissionLevel.basic
 	let hidden = true
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		// TODO
 	}
 }

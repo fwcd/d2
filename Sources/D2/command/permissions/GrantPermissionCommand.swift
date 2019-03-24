@@ -1,8 +1,8 @@
 import SwiftDiscord
 
-fileprivate let argsPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
+fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
 
-class GrantPermissionCommand: Command {
+class GrantPermissionCommand: StringCommand {
 	let description = "Sets the permission level of one or more users"
 	let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
@@ -11,8 +11,8 @@ class GrantPermissionCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
-		if let parsedArgs = argsPattern.firstGroups(in: args) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		if let parsedArgs = inputPattern.firstGroups(in: input) {
 			let rawLevel = parsedArgs[1]
 			if let level = PermissionLevel.of(rawLevel) {
 				var response = ""

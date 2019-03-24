@@ -7,13 +7,13 @@ fileprivate let rawCapturingValuePattern = "(?:(?:\"(.+?)\")|(\\S+))"
 
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
-fileprivate let argsPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
+fileprivate let inputPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
 
 // Matches a single key-value argument. The first group captures the
 // key, the second (or third) group captures the value.
 fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
 
-class UnivISCommand: Command {
+class UnivISCommand: StringCommand {
 	let description = "Queries the UnivIS of the CAU"
 	let requiredPermissionLevel = PermissionLevel.basic
 	let maxResponseEntries: Int
@@ -22,9 +22,9 @@ class UnivISCommand: Command {
 		self.maxResponseEntries = maxResponseEntries
 	}
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			guard let parsedArgs = argsPattern.firstGroups(in: args) else {
+			guard let parsedArgs = inputPattern.firstGroups(in: input) else {
 				output.append("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
 				return
 			}
@@ -33,7 +33,7 @@ class UnivISCommand: Command {
 				return
 			}
 			
-			let queryParams = try queryParameterDict(of: kvArgPattern.allGroups(in: args))
+			let queryParams = try queryParameterDict(of: kvArgPattern.allGroups(in: input))
 			
 			try UnivISQuery(search: searchKey, params: queryParams).start { response in
 				if case let .ok(result) = response {

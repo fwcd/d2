@@ -1,8 +1,8 @@
 import SwiftDiscord
 
-fileprivate let argsPattern = try! Regex(from: "(?:(?:<\\S+>)|(?:@\\S+))(?:\\s+(?:(?:<\\S+>)|(?:@\\S+)))*\\s*")
+fileprivate let inputPattern = try! Regex(from: "(?:(?:<\\S+>)|(?:@\\S+))(?:\\s+(?:(?:<\\S+>)|(?:@\\S+)))*\\s*")
 
-class RevokePermissionCommand: Command {
+class RevokePermissionCommand: StringCommand {
 	let description = "Resets the permission level of one or more users"
 	let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
@@ -11,8 +11,8 @@ class RevokePermissionCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
-		if argsPattern.matchCount(in: args) > 0 {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		if inputPattern.matchCount(in: input) > 0 {
 			var response = ""
 			var changedPermissions = false
 			

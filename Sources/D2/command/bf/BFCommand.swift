@@ -3,12 +3,12 @@ import Dispatch
 
 fileprivate let maxExecutionSeconds = 3
 
-class BFCommand: Command {
+class BFCommand: StringCommand {
 	let description = "Interprets BF code"
 	let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
 			output.append("Whoa, not so fast. Wait for the program to finish!")
 			return
@@ -22,7 +22,7 @@ class BFCommand: Command {
 		let task = DispatchWorkItem {
 			var response: String
 			
-			if let program = bfCodePattern.firstGroups(in: args)?[1] {
+			if let program = bfCodePattern.firstGroups(in: input)?[1] {
 				do {
 					let output = try interpreter.interpret(program: program)
 					

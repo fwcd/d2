@@ -1,15 +1,15 @@
 import SwiftDiscord
 import Foundation
 
-class RedditCommand: Command {
+class RedditCommand: StringCommand {
 	let description = "Fetches a post from a subreddit"
 	let requiredPermissionLevel = PermissionLevel.vip
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "www.reddit.com"
-		components.path = "/r/\(args)/top.json"
+		components.path = "/r/\(input)/top.json"
 		
 		guard let url = components.url else {
 			output.append("Error while creating URL.")

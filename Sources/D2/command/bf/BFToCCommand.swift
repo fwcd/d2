@@ -1,12 +1,12 @@
 import SwiftDiscord
 
-class BFToCCommand: Command {
+class BFToCCommand: StringCommand {
 	let description = "Transpiles a BF program to C code"
 	let requiredPermissionLevel = PermissionLevel.basic
 	let splitToMultipleMessages = true
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
-		if let bfProgram = bfCodePattern.firstGroups(in: args)?[1] {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		if let bfProgram = bfCodePattern.firstGroups(in: input)?[1] {
 			var outputCode = ""
 			var last: String? = nil
 			var repeats: Int = 1

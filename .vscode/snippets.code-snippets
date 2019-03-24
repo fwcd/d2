@@ -16,6 +16,23 @@
 		],
 		"description": "Creates a new command implementation"
 	},
+	"String Command": {
+		"prefix": "strcommand",
+		"scope": "swift",
+		"body": [
+			"import SwiftDiscord",
+			"",
+			"class $1Command: StringCommand {",
+			"\tlet description = \"$2\"",
+			"\tlet requiredPermissionLevel = PermissionLevel.$3",
+			"\t",
+			"\tfunc invoke(withStringInput input: String, output: CommandContext, context: CommandContext) {",
+			"\t\t$0",
+			"\t}",
+			"}"
+		],
+		"description": "Creates a new command implementation"
+	},
 	"Send to message channel": {
 		"prefix": "msend",
 		"scope": "swift",

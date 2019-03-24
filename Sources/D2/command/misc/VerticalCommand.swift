@@ -1,10 +1,10 @@
 import SwiftDiscord
 
-class VerticalCommand: Command {
+class VerticalCommand: StringCommand {
 	let description = "Reads horizontally, prints vertically"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
-		output.append(args.reduce("") { "\($0)\n\($1)" })
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		output.append(input.reduce("") { "\($0)\n\($1)" })
 	}
 }

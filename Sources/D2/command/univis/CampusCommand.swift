@@ -4,15 +4,15 @@ import Foundation
 fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
 
 /** Locates locations on the University of Kiel's campus. */
-class CampusCommand: Command {
+class CampusCommand: StringCommand {
 	let description = "Locates rooms on the CAU campus"
 	let requiredPermissionLevel = PermissionLevel.basic
 	let geocoder = MapQuestGeocoder()
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			try UnivISQuery(search: .rooms, params: [
-				.name: args
+				.name: input
 			]).start { response in
 				guard case let .ok(queryOutput) = response else {
 					output.append("An error occurred while querying.")

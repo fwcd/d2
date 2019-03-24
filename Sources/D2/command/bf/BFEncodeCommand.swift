@@ -1,7 +1,7 @@
 import SwiftDiscord
 import Foundation
 
-class BFEncodeCommand: Command {
+class BFEncodeCommand: StringCommand {
 	let description = "Encodes strings to BF code"
 	let requiredPermissionLevel = PermissionLevel.basic
 	private let maxStringLength: Int
@@ -10,13 +10,13 @@ class BFEncodeCommand: Command {
 		self.maxStringLength = maxStringLength
 	}
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
-		guard args.count <= maxStringLength else {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		guard input.count <= maxStringLength else {
 			output.append("Your string needs to be shorter than \(maxStringLength) characters!")
 			return
 		}
 		
-		let encoded = args.map { encode($0) ?? "" }.reduce("") { "\($0)>\($1)." }
+		let encoded = input.map { encode($0) ?? "" }.reduce("") { "\($0)>\($1)." }
 		output.append("```\(encoded)```")
 	}
 	

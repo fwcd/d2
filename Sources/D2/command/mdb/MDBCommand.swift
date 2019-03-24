@@ -1,17 +1,17 @@
 import SwiftDiscord
 
-class MDBCommand: Command {
+class MDBCommand: StringCommand {
 	let description = "Queries the Computer Science module database of the CAU"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			let query: MDBQuery
 			
-			if args.isEmpty {
+			if input.isEmpty {
 				query = try MDBQuery()
 			} else {
-				query = try MDBQuery(moduleCode: args)
+				query = try MDBQuery(moduleCode: input)
 			}
 			
 			query.start { response in
