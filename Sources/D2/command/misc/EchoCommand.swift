@@ -17,7 +17,7 @@ class EchoCommand: Command {
 		if let groups = argPattern.firstGroups(in: args) {
 			// Extract parsed values
 			let n = groups[safe: 1].flatMap { Int($0) } ?? 1
-			guard let value = groups[safe: 2] else { return }
+			guard let value = (groups[safe: 2]?.nilIfEmpty.map { DiscordMessage(content: $0) } ?? input) else { return }
 			
 			timer.schedule(nTimes: n) { _, _ in
 				output.append(value)
