@@ -11,7 +11,7 @@ class BinaryIntOperationCommand: ArgListCommand {
 	init(name: String, operation: @escaping (Int, Int) -> Int) {
 		self.name = name
 		self.operation = operation
-		description = "Performs the binary integer operation `\(name)`"
+		description = "Performs the binary int operation '\(name)'"
 	}
 	
 	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {

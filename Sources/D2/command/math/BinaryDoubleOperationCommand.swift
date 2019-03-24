@@ -11,7 +11,7 @@ class BinaryDoubleOperationCommand: ArgListCommand {
 	init(name: String, operation: @escaping (Double, Double) -> Double) {
 		self.name = name
 		self.operation = operation
-		description = "Performs the binary operation `\(name)`"
+		description = "Performs the binary operation '\(name)'"
 	}
 	
 	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {

@@ -28,7 +28,7 @@ func register(commandsFor handler: CommandHandler) {
 		let helpText = Dictionary(grouping: handler.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { handler.permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
-			.map { group in ":star: \(group.key):\n```\n\(group.value.map { "\($0.key): \($0.value.description)" }.joined(separator: "\n"))\n```" }
+			.map { group in ":star: \(group.key):\n```\n\(group.value.sorted { $0.key < $1.key }.map { "\($0.key): \($0.value.description)" }.joined(separator: "\n"))\n```" }
 			.joined(separator: "\n")
 		output.append(helpText)
 	}
