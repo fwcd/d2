@@ -31,7 +31,7 @@ class CommandHandler: DiscordClientDelegate {
 		
 		// The first group matches the command name,
 		// the second matches the arguments (the rest of the message content)
-		commandPattern = try Regex(from: "(\\w+)(?:\\s+([\\s\\S]*))?")
+		commandPattern = try Regex(from: "(\\S+)(?:\\s+([\\s\\S]*))?")
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
@@ -42,8 +42,9 @@ class CommandHandler: DiscordClientDelegate {
 		
 		if !fromBot && message.content.starts(with: msgPrefix) {
 			// Precedence: Chain < Pipe
+			let slicedMessage = message.content[msgPrefix.index(msgPrefix.startIndex, offsetBy: msgPrefix.count)...]
 			
-			for rawPipeCommand in message.content.components(separatedBy: chainSeparator) {
+			for rawPipeCommand in slicedMessage.components(separatedBy: chainSeparator) {
 				var pipe = [PipeComponent]()
 				var pipeConstructionSuccessful = true
 				

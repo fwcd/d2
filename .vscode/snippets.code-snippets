@@ -14,9 +14,9 @@
 			"\t}",
 			"}"
 		],
-		"description": "Creates a new command implementation"
+		"description": "Creates a new Command implementation"
 	},
-	"String Command": {
+	"String command": {
 		"prefix": "strcommand",
 		"scope": "swift",
 		"body": [
@@ -31,7 +31,25 @@
 			"\t}",
 			"}"
 		],
-		"description": "Creates a new command implementation"
+		"description": "Creates a new StringCommand implementation"
+	},
+	"Argument list command": {
+		"prefix": "argcommand",
+		"scope": "swift",
+		"body": [
+			"import SwiftDiscord",
+			"",
+			"class $1Command: ArgListCommand {",
+			"\tlet description = \"$2\"",
+			"\tlet requiredPermissionLevel = PermissionLevel.$3",
+			"\tlet expectedArgCount: Int = $4",
+			"\t",
+			"\tfunc invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {",
+			"\t\t$0",
+			"\t}",
+			"}"
+		],
+		"description": "Creates a new ArgListCommand implementation"
 	},
 	"Send to message channel": {
 		"prefix": "msend",

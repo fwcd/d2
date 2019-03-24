@@ -27,8 +27,13 @@ extension ArgListCommand {
 				.split(separator: " ")
 				.prefix(expectedArgCount - splitArgs.count)
 				.map { String($0) }
+			let totalArgs = splitArgs + splitInputs
 			
-			invoke(withInputArgs: splitArgs + splitInputs, output: output, context: context)
+			if totalArgs.count < expectedArgCount {
+				output.append("`\(self)` received too few arguments: Expected \(expectedArgCount), but got only \(totalArgs.count)")
+			} else {
+				invoke(withInputArgs: totalArgs, output: output, context: context)
+			}
 		}
 	}
 }
