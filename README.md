@@ -1,6 +1,8 @@
 # D2
 General-purpose virtual assistant for Discord.
 
+In addition to suporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
+
 ## Installation
 
 ### on Linux

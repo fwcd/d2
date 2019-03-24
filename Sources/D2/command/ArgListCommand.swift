@@ -1,0 +1,34 @@
+import SwiftDiscord
+
+/**
+ * A command that takes input in the form of whitespace-separated
+ * arguments with a fixed number of arguments. Missing direct arguments
+ * (those provided in the "args" parameter) are substituted with the input.
+ * 
+ * This conveniently enables partial application in command execution pipes.
+ */
+protocol ArgListCommand: Command {
+	var expectedArgCount: Int { get }
+	
+	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
+}
+
+extension ArgListCommand {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+		let splitArgs = args.split(separator: " ")
+			.prefix(expectedArgCount)
+			.map { String($0) }
+		
+		if splitArgs.count == expectedArgCount {
+			// Skip input splitting if there are already enough arguments provided directly
+			invoke(withInputArgs: splitArgs, output: output, context: context)
+		} else {
+			let splitInputs = (input?.content ?? "")
+				.split(separator: " ")
+				.prefix(expectedArgCount - splitArgs.count)
+				.map { String($0) }
+			
+			invoke(withInputArgs: splitArgs + splitInputs, output: output, context: context)
+		}
+	}
+}
