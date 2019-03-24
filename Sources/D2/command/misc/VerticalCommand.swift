@@ -5,6 +5,6 @@ class VerticalCommand: Command {
 	let requiredPermissionLevel = PermissionLevel.basic
 	
 	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
-		message.channel?.send(args.reduce("") { "\($0)\n\($1)" })
+		output.append(args.reduce("") { "\($0)\n\($1)" })
 	}
 }

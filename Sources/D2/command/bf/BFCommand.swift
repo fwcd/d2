@@ -10,7 +10,7 @@ class BFCommand: Command {
 	
 	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		guard !running else {
-			message.channel?.send("Whoa, not so fast. Wait for the program to finish!")
+			output.append("Whoa, not so fast. Wait for the program to finish!")
 			return
 		}
 		
@@ -49,10 +49,10 @@ class BFCommand: Command {
 			
 			if interpreter.cancelled {
 				print("Cancelled BF task finished running")
-				message.channel?.send("Your program took longer than \(maxExecutionSeconds) seconds. The output was:\n\(response)")
+				output.append("Your program took longer than \(maxExecutionSeconds) seconds. The output was:\n\(response)")
 			} else {
 				print("BF task finished running")
-				message.channel?.send(response)
+				output.append(response)
 			}
 		}
 		

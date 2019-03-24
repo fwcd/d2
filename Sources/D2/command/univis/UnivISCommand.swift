@@ -25,11 +25,11 @@ class UnivISCommand: Command {
 	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		do {
 			guard let parsedArgs = argsPattern.firstGroups(in: args) else {
-				message.channel?.send("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
+				output.append("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
 				return
 			}
 			guard let searchKey = UnivISSearchKey(rawValue: parsedArgs[1]) else {
-				message.channel?.send("Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
+				output.append("Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
 				return
 			}
 			
@@ -45,17 +45,17 @@ class UnivISCommand: Command {
 						.map { DiscordEmbed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
 						.prefix(self.maxResponseEntries))
 					
-					message.channel?.send(embed: embed)
+					output.append(embed)
 				} else if case let .error(error) = response {
 					print(error)
-					message.channel?.send("UnivIS query error. Check the log for more information.")
+					output.append("UnivIS query error. Check the log for more information.")
 				}
 			}
 		} catch UnivISCommandError.invalidSearchParameter(let paramName) {
-			message.channel?.send("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
+			output.append("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
 		} catch {
 			print(error)
-			message.channel?.send("An error occurred. Check the log for more information.")
+			output.append("An error occurred. Check the log for more information.")
 		}
 	}
 	

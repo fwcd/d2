@@ -12,7 +12,7 @@ class RedditCommand: Command {
 		components.path = "/r/\(args)/top.json"
 		
 		guard let url = components.url else {
-			message.channel?.send("Error while creating URL.")
+			output.append("Error while creating URL.")
 			return
 		}
 		
@@ -22,11 +22,11 @@ class RedditCommand: Command {
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
 				print(String(describing: error))
-				message.channel?.send("Error while querying URL.")
+				output.append("Error while querying URL.")
 				return
 			}
 			guard let data = data else {
-				message.channel?.send("Missing data after querying URL.")
+				output.append("Missing data after querying URL.")
 				return
 			}
 			
@@ -51,14 +51,14 @@ class RedditCommand: Command {
 						.flatMap { ($0.hasSuffix(".jpg") || $0.hasSuffix(".png")) ? $0 : nil }
 						.flatMap { URL(string: $0) }
 						.map { DiscordEmbed.Image(url: $0) }
-					message.channel?.send(embed: embed)
+					output.append(embed)
 				} else {
-					message.channel?.send("No post found.")
+					output.append("No post found.")
 					print(json)
 				}
 			} catch {
 				print(String(describing: error))
-				message.channel?.send("Error while decoding JSON.")
+				output.append("Error while decoding JSON.")
 			}
 		}.resume()
 	}

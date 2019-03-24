@@ -43,10 +43,10 @@ class BFToCCommand: Command {
 			
 			if splitToMultipleMessages {
 				for chunk in outputC.split(by: 1500) {
-					message.channel?.send("```c\n\(chunk)\n```")
+					output.append("```c\n\(chunk)\n```")
 				}
 			} else {
-				message.channel?.send("```c\n\(outputC)\n```")
+				output.append("```c\n\(outputC)\n```")
 			}
 		}
 	}

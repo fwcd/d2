@@ -15,12 +15,12 @@ class MDBCommand: Command {
 			}
 			
 			query.start { response in
-				guard case let .ok(output) = response else {
-					message.channel?.send("An error occurred while querying.")
+				guard case let .ok(result) = response else {
+					output.append("An error occurred while querying.")
 					return
 				}
 				
-				if let module = output.first {
+				if let module = result.first {
 					var embed = DiscordEmbed()
 					
 					embed.title = module.nameEnglish
@@ -35,14 +35,14 @@ class MDBCommand: Command {
 						DiscordEmbed.Field(name: "Duration", value: "\(module.duration ?? 0)", inline: true)
 					]
 					
-					message.channel?.send(embed: embed)
+					output.append(embed)
 				} else {
-					message.channel?.send("No such module found.")
+					output.append("No such module found.")
 				}
 			}
 		} catch {
 			print(error)
-			message.channel?.send("An error occurred. Check the log for more information.")
+			output.append("An error occurred. Check the log for more information.")
 		}
 	}
 }

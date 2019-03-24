@@ -16,20 +16,20 @@ class RevokePermissionCommand: Command {
 			var response = ""
 			var changedPermissions = false
 			
-			for mentionedUser in mentionedUsers(in: message, on: context.guild) {
+			for mentionedUser in mentionedUsers(in: context.message, on: context.guild) {
 				permissionManager.remove(permissionsFrom: mentionedUser)
 				response += ":x: Revoked permissions from `\(mentionedUser.username)`\n"
 				changedPermissions = true
 			}
 			
 			if changedPermissions {
-				message.channel?.send(response)
+				output.append(response)
 				permissionManager.writeToDisk()
 			} else {
-				message.channel?.send("Did not change any permissions.")
+				output.append("Did not change any permissions.")
 			}
 		} else {
-			message.channel?.send("Syntax error: The arguments need to match `[@user or role]*`")
+			output.append("Syntax error: The arguments need to match `[@user or role]*`")
 		}
 	}
 }

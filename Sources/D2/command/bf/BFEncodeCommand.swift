@@ -12,12 +12,12 @@ class BFEncodeCommand: Command {
 	
 	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		guard args.count <= maxStringLength else {
-			message.channel?.send("Your string needs to be shorter than \(maxStringLength) characters!")
+			output.append("Your string needs to be shorter than \(maxStringLength) characters!")
 			return
 		}
 		
 		let encoded = args.map { encode($0) ?? "" }.reduce("") { "\($0)>\($1)." }
-		message.channel?.send("```\(encoded)```")
+		output.append("```\(encoded)```")
 	}
 	
 	private func encode(_ character: Character) -> String? {

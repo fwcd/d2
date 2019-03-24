@@ -14,17 +14,17 @@ class CampusCommand: Command {
 			try UnivISQuery(search: .rooms, params: [
 				.name: args
 			]).start { response in
-				guard case let .ok(output) = response else {
-					message.channel?.send("An error occurred while querying.")
+				guard case let .ok(queryOutput) = response else {
+					output.append("An error occurred while querying.")
 					return
 				}
 				// Successfully received and parsed UnivIS query output
-				guard let room = (output.childs.first { $0 is UnivISRoom }.map { $0 as! UnivISRoom }) else {
-					message.channel?.send("No room was found!")
+				guard let room = (queryOutput.childs.first { $0 is UnivISRoom }.map { $0 as! UnivISRoom }) else {
+					output.append("No room was found!")
 					return
 				}
 				guard let rawAddress = room.address else {
-					message.channel?.send("Room has no address!")
+					output.append("Room has no address!")
 					return
 				}
 				
@@ -38,7 +38,7 @@ class CampusCommand: Command {
 				
 				self.geocoder.geocode(location: address) { geocodeResponse in
 					guard case let .ok(coords) = geocodeResponse else {
-						message.channel?.send(rawAddress)
+						output.append(rawAddress)
 						return
 					}
 					let mapURL = MapQuestStaticMap(
@@ -48,15 +48,15 @@ class CampusCommand: Command {
 					
 					URLSession.shared.dataTask(with: URL(string: mapURL)!) { data, response, error in
 						guard error == nil else {
-							message.channel?.send("An error occurred while fetching image.")
+							output.append("An error occurred while fetching image.")
 							return
 						}
 						guard let data = data else {
-							message.channel?.send("Missing data while fetching image.")
+							output.append("Missing data while fetching image.")
 							return
 						}
 						
-						message.channel?.send(DiscordMessage(
+						output.append(DiscordMessage(
 							content: rawAddress,
 							files: [DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")]
 						))
@@ -65,7 +65,7 @@ class CampusCommand: Command {
 			}
 		} catch {
 			print(error)
-			message.channel?.send("An error occurred. Check the log for more information.")
+			output.append("An error occurred. Check the log for more information.")
 		}
 	}
 }

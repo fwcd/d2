@@ -25,33 +25,17 @@ class ForCommand: Command {
 			let rawCode = parsedArgs[3]
 			let loopVariablePattern = try! Regex(from: "\\b\(Regex.escape(loopVariable))\\b")
 			
-			if let range = parseIntRange(from: rawRange) {
-				schedule(
-					nTimes: range.count,
-					lowerBound: range.lowerBound,
-					loopVariablePattern: loopVariablePattern,
-					rawCode: rawCode,
-					message: message,
-					context: context
-				)
-			} else if let closedRange = parseClosedIntRange(from: rawRange) {
-				schedule(
-					nTimes: closedRange.count,
-					lowerBound: closedRange.lowerBound,
-					loopVariablePattern: loopVariablePattern,
-					rawCode: rawCode,
-					message: message,
-					context: context
-				)
+			if let range: LowBoundedIntRange = parseIntRange(from: rawRange) ?? parseClosedIntRange(from: rawRange) {
+				schedule(forEachIn: range, withPattern: loopVariablePattern, rawCode: rawCode, input: input, output: output, context: context)
 			}
 		} else {
-			message.channel?.send("Syntax error: For arguments need to match `[variable] in [number](...|..<)[number] [command invocation]`")
+			output.append("Syntax error: For arguments need to match `[variable] in [number](...|..<)[number] [command invocation]`")
 		}
 	}
 	
-	private func schedule(nTimes n: Int, lowerBound: Int, loopVariablePattern: Regex, rawCode: String, message: DiscordMessage, context: CommandContext) {
-		timer.schedule(nTimes: n) { i, timerCtx in
-			let iInRange = lowerBound + i
+	private func schedule(forEachIn range: LowBoundedIntRange, withPattern loopVariablePattern: Regex, rawCode: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
+		timer.schedule(nTimes: range.count) { i, timerCtx in
+			let iInRange = range.lowerBound + i
 			let code = loopVariablePattern.replace(in: rawCode, with: String(iInRange))
 			
 			if let parsedCommand = innerCommandPattern.firstGroups(in: code) {
@@ -59,13 +43,13 @@ class ForCommand: Command {
 				let commandArgs = parsedCommand[2]
 				
 				if let subcommand = context.registry[commandName] {
-					subcommand.invoke(withMessage: message, context: context, args: commandArgs)
+					subcommand.invoke(withInput: input, output: output, context: context, args: commandArgs)
 				} else {
-					message.channel?.send("Unknown subcommand `\(commandName)`")
+					output.append("Unknown subcommand `\(commandName)`")
 					timerCtx.cancel()
 				}
 			} else {
-				message.channel?.send("Inner syntax error: `\(code)` could not be parsed as a command invocation")
+				output.append("Inner syntax error: `\(code)` could not be parsed as a command invocation")
 			}
 		}
 	}

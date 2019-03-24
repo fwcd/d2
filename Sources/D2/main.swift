@@ -18,13 +18,13 @@ func register(commandsFor handler: CommandHandler) {
 	handler["revoke"] = RevokePermissionCommand(permissionManager: handler.permissionManager)
 	handler["permissions"] = ShowPermissionsCommand(permissionManager: handler.permissionManager)
 	handler["for"] = ForCommand()
-	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] message, _ in
+	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] _, output, context, _ in
 		let helpText = Dictionary(grouping: handler.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
-			.filter { handler.permissionManager[message.author].rawValue >= $0.key.rawValue }
+			.filter { handler.permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 			.map { group in ":star: \(group.key):\n```\n\(group.value.map { "\($0.key): \($0.value.description)" }.joined(separator: "\n"))\n```" }
 			.joined(separator: "\n")
-		message.channel?.send(helpText)
+		output.append(helpText)
 	}
 }
 

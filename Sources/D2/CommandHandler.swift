@@ -66,7 +66,7 @@ class CommandHandler: DiscordClientDelegate {
 									message: message
 								)
 								
-								pipe.append(PipeComponents(command: command, context: context, args: args))
+								pipe.append(PipeComponent(command: command, context: context, args: args))
 							} else {
 								print("Rejected '\(name)' due to insufficient permissions")
 								message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
@@ -90,7 +90,7 @@ class CommandHandler: DiscordClientDelegate {
 				
 				// Execute the pipe
 				if let pipeSource = pipe.first {
-					pipeSource.command.invoke(withInput: nil, output: pipeSource.output, context: pipeSource.context, args: pipeSource.args)
+					pipeSource.command.invoke(withInput: nil, output: pipeSource.output!, context: pipeSource.context, args: pipeSource.args)
 				}
 			}
 		}

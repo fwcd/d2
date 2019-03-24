@@ -20,7 +20,7 @@ class EchoCommand: Command {
 			guard let value = groups[safe: 2] else { return }
 			
 			timer.schedule(nTimes: n) { _, _ in
-				message.channel?.send(value)
+				output.append(value)
 			}
 		}
 	}
