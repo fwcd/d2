@@ -16,6 +16,8 @@ class RedditCommand: StringCommand {
 			return
 		}
 		
+		print("Querying \(url)")
+		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		request.addValue("Discord application D2", forHTTPHeaderField: "User-Agent")
