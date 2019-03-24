@@ -22,7 +22,7 @@ class UnivISCommand: Command {
 		self.maxResponseEntries = maxResponseEntries
 	}
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		do {
 			guard let parsedArgs = argsPattern.firstGroups(in: args) else {
 				message.channel?.send("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")

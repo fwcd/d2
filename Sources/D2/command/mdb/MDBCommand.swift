@@ -4,7 +4,7 @@ class MDBCommand: Command {
 	let description = "Queries the Computer Science module database of the CAU"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		do {
 			let query: MDBQuery
 			

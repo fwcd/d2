@@ -5,7 +5,7 @@ class RedditCommand: Command {
 	let description = "Fetches a post from a subreddit"
 	let requiredPermissionLevel = PermissionLevel.vip
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "www.reddit.com"

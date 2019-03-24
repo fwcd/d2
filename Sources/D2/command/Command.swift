@@ -5,7 +5,7 @@ protocol Command {
 	var requiredPermissionLevel: PermissionLevel { get }
 	var hidden: Bool { get }
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String)
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String)
 }
 
 extension Command {

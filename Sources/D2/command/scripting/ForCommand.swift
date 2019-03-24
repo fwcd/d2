@@ -18,7 +18,7 @@ class ForCommand: Command {
 		timer = RepeatingTimer(intervalSeconds: intervalSeconds)
 	}
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		if let parsedArgs = argsPattern.firstGroups(in: args) {
 			let loopVariable = parsedArgs[1]
 			let rawRange = parsedArgs[2]

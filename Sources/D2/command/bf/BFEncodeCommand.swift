@@ -10,7 +10,7 @@ class BFEncodeCommand: Command {
 		self.maxStringLength = maxStringLength
 	}
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		guard args.count <= maxStringLength else {
 			message.channel?.send("Your string needs to be shorter than \(maxStringLength) characters!")
 			return

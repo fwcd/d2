@@ -8,7 +8,7 @@ class BFCommand: Command {
 	let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		guard !running else {
 			message.channel?.send("Whoa, not so fast. Wait for the program to finish!")
 			return

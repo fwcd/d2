@@ -11,7 +11,7 @@ class GrantPermissionCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		if let parsedArgs = argsPattern.firstGroups(in: args) {
 			let rawLevel = parsedArgs[1]
 			if let level = PermissionLevel.of(rawLevel) {

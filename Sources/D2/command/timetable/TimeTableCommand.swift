@@ -5,7 +5,7 @@ class TimeTableCommand: Command {
 	let requiredPermissionLevel = PermissionLevel.basic
 	let hidden = true
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		// TODO
 	}
 }

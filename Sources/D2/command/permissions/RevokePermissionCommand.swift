@@ -11,7 +11,7 @@ class RevokePermissionCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withMessage message: DiscordMessage, context: CommandContext, args: String) {
+	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
 		if argsPattern.matchCount(in: args) > 0 {
 			var response = ""
 			var changedPermissions = false
