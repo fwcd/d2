@@ -1,6 +1,9 @@
 import SwiftDiscord
 
-/** A command that only expects text-based input (as opposed to e.g. an input embed). */
+/**
+ * A command that only expects text-based input (as opposed to e.g. an input embed).
+ * Usually, these are commands that expect exactly one argument.
+ */
 protocol StringCommand: Command {
 	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext)
 }
