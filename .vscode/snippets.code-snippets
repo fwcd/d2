@@ -26,7 +26,7 @@
 			"\tlet description = \"$2\"",
 			"\tlet requiredPermissionLevel = PermissionLevel.$3",
 			"\t",
-			"\tfunc invoke(withStringInput input: String, output: CommandContext, context: CommandContext) {",
+			"\tfunc invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {",
 			"\t\t$0",
 			"\t}",
 			"}"

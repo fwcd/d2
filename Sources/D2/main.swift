@@ -19,6 +19,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["permissions"] = ShowPermissionsCommand(permissionManager: handler.permissionManager)
 	handler["for"] = ForCommand()
 	handler["void"] = VoidCommand()
+	handler["grep"] = GrepCommand()
 	handler["+"] = BinaryDoubleOperationCommand(name: "addition", operation: +)
 	handler["-"] = BinaryDoubleOperationCommand(name: "subtraction", operation: -)
 	handler["*"] = BinaryDoubleOperationCommand(name: "multiplication", operation: *)
