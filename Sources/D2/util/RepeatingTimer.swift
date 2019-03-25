@@ -6,6 +6,7 @@ class RepeatingTimer {
 	let intervalSeconds: Int
 	private var timer: DispatchSourceTimer? = nil
 	private var context: TimerContext
+	var isRunning: Bool { return timer != nil }
 	
 	init(intervalSeconds: Int = 1) {
 		self.intervalSeconds = intervalSeconds

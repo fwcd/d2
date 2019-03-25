@@ -19,8 +19,18 @@ class EchoCommand: Command {
 			let n = groups[safe: 1].flatMap { Int($0) } ?? 1
 			guard let value = (groups[safe: 2]?.nilIfEmpty.map { DiscordMessage(content: $0) } ?? input) else { return }
 			
-			timer.schedule(nTimes: n) { _, _ in
+			if n == 1 {
+				// Output synchronously
 				output.append(value)
+			} else {
+				guard !timer.isRunning else {
+					output.append("Cannot run multiple asynchronous `echo`s concurrently")
+					return
+				}
+				
+				timer.schedule(nTimes: n) { _, _ in
+					output.append(value)
+				}
 			}
 		}
 	}
