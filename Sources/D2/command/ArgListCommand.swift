@@ -14,7 +14,7 @@ protocol ArgListCommand: Command {
 }
 
 extension ArgListCommand {
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		let splitArgs = args.split(separator: " ")
 			.prefix(expectedArgCount)
 			.map { String($0) }

@@ -4,7 +4,7 @@ class TriggerTypingCommand: Command {
 	let description = "Begins to type"
 	let requiredPermissionLevel = PermissionLevel.vip
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		context.channel?.triggerTyping()
 	}
 }

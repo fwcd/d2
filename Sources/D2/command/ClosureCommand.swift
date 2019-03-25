@@ -15,7 +15,7 @@ class ClosureCommand: Command {
 		self.closure = closure
 	}
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		self.closure(input, output, context, args)
 	}
 }

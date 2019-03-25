@@ -4,7 +4,7 @@ class PingCommand: Command {
 	let description = "Replies with 'Pong!'"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		output.append("Pong!")
 	}
 }

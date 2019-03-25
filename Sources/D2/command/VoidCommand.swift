@@ -4,7 +4,7 @@ class VoidCommand: Command {
 	let description = "Does nothing."
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withInput input: DiscordMessage?, output: CommandOutput, context: CommandContext, args: String) {
+	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		// Do nothing
 	}
 }
