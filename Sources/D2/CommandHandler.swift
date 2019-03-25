@@ -1,6 +1,7 @@
 import SwiftDiscord
 import Foundation
 
+/** A segment of an invocation pipe that transfers outputs from one command to another. */
 fileprivate class PipeComponent {
 	let command: Command
 	let context: CommandContext
@@ -14,6 +15,7 @@ fileprivate class PipeComponent {
 	}
 }
 
+/** A client delegate that dispatches commands. */
 class CommandHandler: DiscordClientDelegate {
 	private let chainSeparator: String
 	private let pipeSeparator: String

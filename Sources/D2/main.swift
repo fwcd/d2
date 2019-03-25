@@ -1,6 +1,7 @@
 import Foundation
 import SwiftDiscord
 
+/** Registers all available commands. */
 func register(commandsFor handler: CommandHandler) {
 	handler["ping"] = PingCommand()
 	handler["vertical"] = VerticalCommand()
