@@ -25,6 +25,7 @@ class CommandHandler: DiscordClientDelegate {
 	private var maxPipeLengthForUsers: Int = 3
 	
 	private(set) var registry = CommandRegistry()
+	private var subscribedCommands = [Command]()
 	let permissionManager = PermissionManager()
 	
 	init(withPrefix msgPrefix: String, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
@@ -47,71 +48,94 @@ class CommandHandler: DiscordClientDelegate {
 		
 		currentIndex += 1
 		
-		if !fromBot && message.content.starts(with: msgPrefix) {
-			// Precedence: Chain < Pipe
-			let slicedMessage = message.content[msgPrefix.index(msgPrefix.startIndex, offsetBy: msgPrefix.count)...]
+		if !fromBot {
+			if message.content.starts(with: msgPrefix) {
+				handleInvocationMessage(client: client, message: message, msgIndex: msgIndex)
+			} else if !subscribedCommands.isEmpty {
+				handleSubscriptionMessage(client: client, message: message)
+			}
+		}
+	}
+	
+	private func handleInvocationMessage(client: DiscordClient, message: DiscordMessage, msgIndex: Int) {
+		let context = CommandContext(
+			guild: client.guildForChannel(message.channelId),
+			registry: registry,
+			message: message
+		)
+		
+		// Precedence: Chain < Pipe
+		let slicedMessage = message.content[msgPrefix.index(msgPrefix.startIndex, offsetBy: msgPrefix.count)...]
+		
+		for rawPipeCommand in slicedMessage.components(separatedBy: chainSeparator) {
+			var pipe = [PipeComponent]()
+			var pipeConstructionSuccessful = true
 			
-			for rawPipeCommand in slicedMessage.components(separatedBy: chainSeparator) {
-				var pipe = [PipeComponent]()
-				var pipeConstructionSuccessful = true
+			// Construct the pipe
+			for rawCommand in rawPipeCommand.components(separatedBy: pipeSeparator) {
+				let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 				
-				// Construct the pipe
-				for rawCommand in rawPipeCommand.components(separatedBy: pipeSeparator) {
-					let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
+				if let groups = commandPattern.firstGroups(in: trimmedCommand) {
+					print("Got command #\(msgIndex): \(groups)")
+					let name = groups[1]
+					let args = groups[2]
 					
-					if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-						print("Got command #\(msgIndex): \(groups)")
-						let name = groups[1]
-						let args = groups[2]
-						
-						if let command = registry[name] {
-							let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
-							if hasPermission {
-								print("Invoking '\(name)'")
-								
-								let context = CommandContext(
-									guild: client.guildForChannel(message.channelId),
-									registry: registry,
-									message: message
-								)
-								
-								pipe.append(PipeComponent(command: command, context: context, args: args))
-							} else {
-								print("Rejected '\(name)' due to insufficient permissions")
-								message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
-								pipeConstructionSuccessful = false
-								break
-							}
+					if let command = registry[name] {
+						let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
+						if hasPermission {
+							print("Invoking '\(name)'")
+							pipe.append(PipeComponent(command: command, context: context, args: args))
 						} else {
-							print("Did not recognize command '\(name)'")
-							message.channel?.send("Sorry, I do not know the command `\(name)`.")
+							print("Rejected '\(name)' due to insufficient permissions")
+							message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
 							pipeConstructionSuccessful = false
 							break
 						}
+					} else {
+						print("Did not recognize command '\(name)'")
+						message.channel?.send("Sorry, I do not know the command `\(name)`.")
+						pipeConstructionSuccessful = false
+						break
 					}
+				}
+			}
+			
+			if pipeConstructionSuccessful {
+				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
+					message.channel?.send("Your pipe is too long.")
+					return
 				}
 				
-				if pipeConstructionSuccessful {
-					guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
-						message.channel?.send("Your pipe is too long.")
-						return
-					}
-					
-					// Setup the pipe outputs
-					if let pipeSink = pipe.last {
-						pipeSink.output = DiscordChannelOutput(channel: message.channel)
-					}
-					
-					for i in stride(from: pipe.count - 2, through: 0, by: -1) {
-						let pipeNext = pipe[i + 1]
-						pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
-					}
-					
-					// Execute the pipe
-					if let pipeSource = pipe.first {
-						pipeSource.command.invoke(withInput: nil, output: pipeSource.output!, context: pipeSource.context, args: pipeSource.args)
-					}
+				// Setup the pipe outputs
+				if let pipeSink = pipe.last {
+					pipeSink.output = DiscordChannelOutput(channel: message.channel)
 				}
+				
+				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
+					let pipeNext = pipe[i + 1]
+					pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
+				}
+				
+				// Execute the pipe
+				if let pipeSource = pipe.first {
+					pipeSource.command.invoke(withInput: nil, output: pipeSource.output!, context: pipeSource.context, args: pipeSource.args)
+				}
+			}
+		}
+	}
+	
+	private func handleSubscriptionMessage(client: DiscordClient, message: DiscordMessage) {
+		let output = DiscordChannelOutput(channel: message.channel)
+		let context = CommandContext(
+			guild: client.guildForChannel(message.channelId),
+			registry: registry,
+			message: message
+		)
+		
+		for (i, command) in subscribedCommands.enumerated().reversed() {
+			let response = command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
+			if response == .cancelSubscription {
+				subscribedCommands.remove(at: i)
 			}
 		}
 	}
