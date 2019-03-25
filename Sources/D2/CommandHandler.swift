@@ -20,6 +20,7 @@ class CommandHandler: DiscordClientDelegate {
 	private let msgPrefix: String
 	private let commandPattern: Regex
 	private var currentIndex = 0
+	private var maxPipeLengthForUsers: Int = 3
 	
 	private(set) var registry = CommandRegistry()
 	let permissionManager = PermissionManager()
@@ -85,6 +86,11 @@ class CommandHandler: DiscordClientDelegate {
 				}
 				
 				if pipeConstructionSuccessful {
+					guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
+						message.channel?.send("Your pipe is too long.")
+						return
+					}
+					
 					// Setup the pipe outputs
 					if let pipeSink = pipe.last {
 						pipeSink.output = DiscordChannelOutput(channel: message.channel)
