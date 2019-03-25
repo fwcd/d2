@@ -83,7 +83,7 @@ class CommandHandler: DiscordClientDelegate {
 					if let command = registry[name] {
 						let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
 						if hasPermission {
-							print("Invoking '\(name)'")
+							print("Appending '\(name)' to pipe")
 							pipe.append(PipeComponent(command: command, context: context, args: args))
 						} else {
 							print("Rejected '\(name)' due to insufficient permissions")
@@ -120,6 +120,9 @@ class CommandHandler: DiscordClientDelegate {
 				if let pipeSource = pipe.first {
 					pipeSource.command.invoke(withArgs: pipeSource.args, input: nil, output: pipeSource.output!, context: pipeSource.context)
 				}
+				
+				// Add subscriptions
+				subscribedCommands.append(contentsOf: pipe.map { $0.command }.filter { $0.subscribesToNextMessages })
 			}
 		}
 	}
