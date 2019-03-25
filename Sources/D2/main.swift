@@ -20,6 +20,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["for"] = ForCommand()
 	handler["void"] = VoidCommand()
 	handler["grep"] = GrepCommand()
+	handler["last"] = LastMessageCommand()
 	handler["+"] = BinaryDoubleOperationCommand(name: "addition", operation: +)
 	handler["-"] = BinaryDoubleOperationCommand(name: "subtraction", operation: -)
 	handler["*"] = BinaryDoubleOperationCommand(name: "multiplication", operation: *)

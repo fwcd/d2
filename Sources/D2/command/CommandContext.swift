@@ -7,4 +7,5 @@ struct CommandContext {
 	
 	var author: DiscordUser { return message.author }
 	var channel: DiscordTextChannel? { return message.channel }
+	var client: DiscordClient? { return message.client }
 }
