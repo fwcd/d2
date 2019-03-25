@@ -35,6 +35,10 @@ class CommandHandler: DiscordClientDelegate {
 		commandPattern = try Regex(from: "(\\S+)(?:\\s+([\\s\\S]*))?")
 	}
 	
+	func client(_ client: DiscordClient, didConnect connected: Bool) {
+		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: "%help", type: .listening)))
+	}
+	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
 		let msgIndex = currentIndex
 		let fromBot = message.author.bot
