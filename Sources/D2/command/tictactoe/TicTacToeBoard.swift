@@ -2,6 +2,12 @@
 struct TicTacToeBoard {
 	let fields: [[TicTacToeRole]]
 	
+	var discordEncoded: String {
+		return fields.map { row in
+			row.map { $0.discordEncoded }.joined()
+		}.joined(separator: "\n")
+	}
+	
 	/** Creates an empty board of the given size. */
 	init(rows: Int = 3, cols: Int = 3) {
 		fields = Array(repeating: Array(repeating: .empty, count: cols), count: rows)
