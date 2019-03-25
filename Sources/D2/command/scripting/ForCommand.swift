@@ -15,14 +15,19 @@ class ForCommand: StringCommand {
 	}
 	
 	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		if let parsedArgs = inputPattern.firstGroups(in: input) {
-			let rawRange = parsedArgs[1]
-			
-			if let range: LowBoundedIntRange = parseIntRange(from: rawRange) ?? parseClosedIntRange(from: rawRange) {
-				schedule(forEachIn: range, output: output)
-			}
-		} else {
+		guard let parsedArgs = inputPattern.firstGroups(in: input) else {
 			output.append("Syntax error: For arguments need to match `[number](...|..<)[number]`")
+			return
+		}
+		
+		let rawRange = parsedArgs[1]
+		
+		if let range: LowBoundedIntRange = parseIntRange(from: rawRange) ?? parseClosedIntRange(from: rawRange) {
+			if range.count < 4 {
+				schedule(forEachIn: range, output: output)
+			} else {
+				output.append("Your range is too long!")
+			}
 		}
 	}
 	
