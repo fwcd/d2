@@ -11,7 +11,7 @@ class ForCommand: StringCommand {
 	private let timer: RepeatingTimer
 	
 	init(intervalSeconds: Int = 1) {
-		timer = RepeatingTimer(intervalSeconds: intervalSeconds)
+		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 	}
 	
 	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

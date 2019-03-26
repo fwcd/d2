@@ -3,13 +3,13 @@ import Dispatch
 fileprivate var globalTimerIndex: Int = 0
 
 class RepeatingTimer {
-	let intervalSeconds: Int
+	let interval: DispatchTimeInterval
 	private var timer: DispatchSourceTimer? = nil
 	private var context: TimerContext
 	var isRunning: Bool { return timer != nil }
 	
-	init(intervalSeconds: Int = 1) {
-		self.intervalSeconds = intervalSeconds
+	init(interval: DispatchTimeInterval = .seconds(1)) {
+		self.interval = interval
 		context = TimerContext()
 		context.cancel = { [unowned self] in
 			self.timer?.cancel()
@@ -26,7 +26,7 @@ class RepeatingTimer {
 		timer?.cancel()
 		
 		timer = DispatchSource.makeTimerSource(queue: queue)
-		timer!.schedule(deadline: .now(), repeating: .seconds(intervalSeconds), leeway: .milliseconds(100))
+		timer!.schedule(deadline: .now(), repeating: interval, leeway: .milliseconds(100))
 		timer!.setEventHandler { [unowned self] in
 			if count >= n {
 				self.context.cancel()

@@ -10,7 +10,7 @@ class EchoCommand: Command {
 	private let timer: RepeatingTimer
 	
 	init(intervalSeconds: Int = 1) {
-		timer = RepeatingTimer(intervalSeconds: intervalSeconds)
+		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 	}
 	
 	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
