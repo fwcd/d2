@@ -8,9 +8,17 @@ struct TicTacToeBoard {
 		}.joined(separator: "\n")
 	}
 	
-	/** Creates an empty board of the given size. */
-	init(rows: Int = 3, cols: Int = 3) {
-		fields = Array(repeating: Array(repeating: .empty, count: cols), count: rows)
+	var sideLength: Int { return fields.count }
+	var winner: TicTacToeRole? { return (horizontalWinner ?? verticalWinner) ?? diagonalWinner }
+	private var horizontalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(row: $0) }.first }
+	private var verticalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(column: $0) }.first }
+	private var diagonalWinner: TicTacToeRole? { return risingDiagonalWinner ?? fallingDiagonalWinner }
+	private var risingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
+	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allCases.first { role in (0..<sideLength).allSatisfy { fields[sideLength - $0][$0] == role } } }
+	
+	/** Creates an empty board of the given (square-shaped) size. */
+	init(sideLength: Int = 3) {
+		fields = Array(repeating: Array(repeating: .empty, count: sideLength), count: sideLength)
 	}
 	
 	/** Initializes the board using the given fields. */
@@ -24,13 +32,24 @@ struct TicTacToeBoard {
 	}
 	
 	/** Creates a new board applying the given move or returns nil if the move is invalid. */
-	func with(_ field: TicTacToeRole, atRow row: Int, col: Int) -> TicTacToeBoard? {
+	func with(_ field: TicTacToeRole, atRow row: Int, col: Int) throws -> TicTacToeBoard {
 		var newFields = fields
-		if newFields[row][col] == .empty {
-			return nil
+		
+		if row < 0 || row >= sideLength || col < 0 || col >= sideLength {
+			throw TicTacToeError.outOfBounds(row, col)
+		} else if newFields[row][col] == .empty {
+			throw TicTacToeError.invalidMove(field, row, col)
 		} else {
 			newFields[row][col] = field
 			return TicTacToeBoard(fields: newFields)
 		}
+	}
+	
+	private func winnerIn(row: Int) -> TicTacToeRole? {
+		return TicTacToeRole.allCases.first { role in fields[row].allSatisfy { $0 == role } }
+	}
+	
+	private func winnerIn(column: Int) -> TicTacToeRole? {
+		return TicTacToeRole.allCases.first { role in (0..<sideLength).allSatisfy { fields[$0][column] == role } }
 	}
 }
