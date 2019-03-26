@@ -1,6 +1,7 @@
 import SwiftDiscord
 
 fileprivate let setMessageRegex = try! Regex(from: "set\\s+(\\S+)\\s+(\\S+)")
+fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
 
 class TicTacToeCommand: StringCommand {
 	let description = "Plays tic-tac-toe against someone"
@@ -50,16 +51,18 @@ class TicTacToeCommand: StringCommand {
 		
 		let playerX = context.author
 		let playerO = opponent
+		let match = TicTacToeMatch(playerX: playerX, playerO: playerO)
 		
-		currentMatch = TicTacToeMatch(playerX: playerX, playerO: playerO)
-		
-		output.append("Playing new match: `\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:\n\(currentMatch!.board.discordEncoded)")
+		currentMatch = match
+		output.append("Playing new match: \(match.description)\n\(match.board.discordEncoded)")
 	}
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		if let match = currentMatch {
 			if let setArgs = setMessageRegex.firstGroups(in: content) {
 				return handleSetMessage(withMatch: match, setArgs: setArgs, output: output, context: context)
+			} else if let cancelArgs = cancelMessageRegex.firstGroups(in: content) {
+				return handleCancelMessage(withMatch: match, cancelArgs: cancelArgs, output: output, context: context)
 			}
 		}
 		return .continueSubscription
@@ -99,11 +102,12 @@ class TicTacToeCommand: StringCommand {
 			if let winner = match.board.winner {
 				// Game over
 				if let winnerPlayer = match.playerOf(role: winner) {
-					output.append("\(winner.discordEncoded) aka. `\(winnerPlayer.username)` won the game!")
+					output.append(":crown::crown::crown:\n\(winner.discordEncoded) aka. `\(winnerPlayer.username)` won the game!\n:crown::crown::crown:")
 				} else {
 					output.append("Invalid winner: \(winner.discordEncoded)")
 				}
 				
+				currentMatch = nil
 				return .cancelSubscription
 			}
 		} catch TicTacToeError.invalidMove(let role, let row, let col) {
@@ -113,6 +117,23 @@ class TicTacToeCommand: StringCommand {
 		} catch {
 			output.append("Error while attempting move")
 			print(error)
+		}
+		return .continueSubscription
+	}
+	
+	func handleCancelMessage(withMatch match: TicTacToeMatch, cancelArgs: [String], output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+		let arg = cancelArgs[1]
+		switch arg {
+			case "match":
+				if let match = currentMatch {
+					currentMatch = nil
+					output.append("Cancelled match: \(match.description)")
+					return .cancelSubscription
+				} else {
+					output.append("No match is running currently")
+				}
+			default:
+				output.append("Sorry, I do not know how to cancel `\(arg)`")
 		}
 		return .continueSubscription
 	}
