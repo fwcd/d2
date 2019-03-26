@@ -3,6 +3,8 @@ enum TicTacToeRole: String, CaseIterable {
 	case o = "o"
 	case empty = " "
 	
+	static var allPlayerCases: [TicTacToeRole] { return allCases.filter { $0.isPlayerRole } }
+	
 	var discordEncoded: String {
 		switch self {
 			case .x: return ":x:"

@@ -13,8 +13,8 @@ struct TicTacToeBoard {
 	private var horizontalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(row: $0) }.first }
 	private var verticalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(column: $0) }.first }
 	private var diagonalWinner: TicTacToeRole? { return risingDiagonalWinner ?? fallingDiagonalWinner }
-	private var risingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
-	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allCases.first { role in (0..<sideLength).allSatisfy { fields[sideLength - $0][$0] == role } } }
+	private var risingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
+	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[sideLength - $0][$0] == role } } }
 	
 	/** Creates an empty board of the given (square-shaped) size. */
 	init(sideLength: Int = 3) {
@@ -46,10 +46,10 @@ struct TicTacToeBoard {
 	}
 	
 	private func winnerIn(row: Int) -> TicTacToeRole? {
-		return TicTacToeRole.allCases.first { role in fields[row].allSatisfy { $0 == role } }
+		return TicTacToeRole.allPlayerCases.first { role in fields[row].allSatisfy { $0 == role } }
 	}
 	
 	private func winnerIn(column: Int) -> TicTacToeRole? {
-		return TicTacToeRole.allCases.first { role in (0..<sideLength).allSatisfy { fields[$0][column] == role } }
+		return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[$0][column] == role } }
 	}
 }
