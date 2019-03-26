@@ -81,6 +81,7 @@ class TicTacToeCommand: StringCommand {
 					try match.perform(moveBy: role, atRow: rowIndex, col: colIndex)
 					
 					if let winner = match.board.winner {
+						// Game over
 						if let winnerPlayer = match.playerOf(role: winner) {
 							output.append("\(winner.discordEncoded) aka. `\(winnerPlayer.username)` won the game!")
 						} else {
@@ -88,6 +89,8 @@ class TicTacToeCommand: StringCommand {
 						}
 						
 						return .cancelSubscription
+					} else {
+						output.append(match.board.discordEncoded)
 					}
 				} catch TicTacToeError.invalidMove(let role, let row, let col) {
 					output.append("Invalid move by \(role.discordEncoded): Could not place at `[row = \(row), col = \(col)]`")

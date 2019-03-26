@@ -14,7 +14,7 @@ struct TicTacToeBoard {
 	private var verticalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(column: $0) }.first }
 	private var diagonalWinner: TicTacToeRole? { return risingDiagonalWinner ?? fallingDiagonalWinner }
 	private var risingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
-	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[sideLength - $0][$0] == role } } }
+	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[(sideLength - 1) - $0][$0] == role } } }
 	
 	/** Creates an empty board of the given (square-shaped) size. */
 	init(sideLength: Int = 3) {
