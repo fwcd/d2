@@ -9,7 +9,10 @@ struct TicTacToeBoard {
 	}
 	
 	var sideLength: Int { return fields.count }
-	var winner: TicTacToeRole? { return (horizontalWinner ?? verticalWinner) ?? diagonalWinner }
+	
+	/** The winner of this board if there is one. A draw is represented as TicTacToeRole.empty. */
+	var winner: TicTacToeRole? { return ((horizontalWinner ?? verticalWinner) ?? diagonalWinner) ?? (boardFilled ? .empty : nil) }
+	private var boardFilled: Bool { return fields.allSatisfy { row in row.allSatisfy { $0 != .empty } } }
 	private var horizontalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(row: $0) }.first }
 	private var verticalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(column: $0) }.first }
 	private var diagonalWinner: TicTacToeRole? { return risingDiagonalWinner ?? fallingDiagonalWinner }

@@ -100,16 +100,18 @@ class TicTacToeCommand: StringCommand {
 			output.append(match.board.discordEncoded)
 			
 			if let winner = match.board.winner {
+				var embed = DiscordEmbed()
+				
 				// Game over
 				if let winnerPlayer = match.playerOf(role: winner) {
-					var embed = DiscordEmbed()
 					embed.title = ":crown: Winner"
 					embed.description = "\(winner.discordEncoded) aka. `\(winnerPlayer.username)` won the game!"
-					output.append(embed)
 				} else {
-					output.append("Invalid winner: \(winner.discordEncoded)")
+					embed.title = ":crown: Game Over"
+					embed.description = "The game resulted in a draw!"
 				}
 				
+				output.append(embed)
 				currentMatch = nil
 				return .cancelSubscription
 			}
