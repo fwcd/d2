@@ -65,6 +65,15 @@
         }
       },
       {
+        "package": "PNG",
+        "repositoryURL": "https://github.com/kelvin13/png.git",
+        "state": {
+          "branch": null,
+          "revision": "beb4c9b6e6abacf01cc4d278f3731f0ed0ea3497",
+          "version": "3.0.0"
+        }
+      },
+      {
         "package": "Random",
         "repositoryURL": "https://github.com/vapor/random.git",
         "state": {
