@@ -37,7 +37,7 @@ struct TicTacToeBoard {
 		
 		if row < 0 || row >= sideLength || col < 0 || col >= sideLength {
 			throw TicTacToeError.outOfBounds(row, col)
-		} else if newFields[row][col] == .empty {
+		} else if newFields[row][col] != .empty {
 			throw TicTacToeError.invalidMove(field, row, col)
 		} else {
 			newFields[row][col] = field
