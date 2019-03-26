@@ -7,7 +7,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ### on Linux
 * Install the required system dependencies:
-	* Swift 5.0
+	* Swift 4.2
     * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
 * Create a file named `authkeys.swift` in `Sources/D2` containing the API keys:
 
