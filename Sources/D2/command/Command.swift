@@ -1,7 +1,7 @@
 import SwiftDiscord
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
-protocol Command {
+protocol Command: class {
 	var description: String { get }
 	var requiredPermissionLevel: PermissionLevel { get }
 	var hidden: Bool { get }

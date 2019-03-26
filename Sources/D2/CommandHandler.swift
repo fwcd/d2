@@ -122,7 +122,8 @@ class CommandHandler: DiscordClientDelegate {
 				}
 				
 				// Add subscriptions
-				subscribedCommands.append(contentsOf: pipe.map { $0.command }.filter { $0.subscribesToNextMessages })
+				let added = pipe.map { $0.command }.filter { cmd in cmd.subscribesToNextMessages && !subscribedCommands.contains { cmd === $0 } }
+				subscribedCommands.append(contentsOf: added)
 			}
 		}
 	}

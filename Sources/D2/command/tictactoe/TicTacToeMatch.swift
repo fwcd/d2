@@ -33,11 +33,12 @@ class TicTacToeMatch {
 		}
 	}
 	
-	func roleOf(player: DiscordUser) -> TicTacToeRole? {
-		switch player.id {
-			case playerX.id: return .x
-			case playerO.id: return .o
-			default: return nil
-		}
+	func rolesOf(player: DiscordUser) -> [TicTacToeRole] {
+		var roles = [TicTacToeRole]()
+		
+		if playerX.id == player.id { roles.append(.x) }
+		if playerO.id == player.id { roles.append(.o) }
+		
+		return roles
 	}
 }

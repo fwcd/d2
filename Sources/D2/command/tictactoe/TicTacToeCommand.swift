@@ -48,18 +48,26 @@ class TicTacToeCommand: StringCommand {
 			return
 		}
 		
-		currentMatch = TicTacToeMatch(playerX: context.author, playerO: opponent)
-		output.append("Playing new match against `\(opponent.username)`")
+		let playerX = context.author
+		let playerO = opponent
+		
+		currentMatch = TicTacToeMatch(playerX: playerX, playerO: playerO)
+		
+		output.append("Playing new match: `\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:\n\(currentMatch!.board.discordEncoded)")
 	}
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		if let match = currentMatch {
-			if let role = match.roleOf(player: context.author), let setArgs = setMessageRegex.firstGroups(in: content) {
-				guard role == match.currentPlayer else {
-					output.append("It is not your turn, `\(role)`")
+			if let setArgs = setMessageRegex.firstGroups(in: content) {
+				let roles = match.rolesOf(player: context.author)
+				
+				guard roles.contains(match.currentPlayer) else {
+					print("Current player: \(match.currentPlayer), roles: \(roles)")
+					output.append("It is not your turn, `\(context.author.username)`")
 					return .continueSubscription
 				}
 				
+				let role = match.currentPlayer
 				let rowIndex: Int
 				let colIndex: Int
 				
@@ -79,6 +87,7 @@ class TicTacToeCommand: StringCommand {
 				
 				do {
 					try match.perform(moveBy: role, atRow: rowIndex, col: colIndex)
+					output.append(match.board.discordEncoded)
 					
 					if let winner = match.board.winner {
 						// Game over
@@ -89,8 +98,6 @@ class TicTacToeCommand: StringCommand {
 						}
 						
 						return .cancelSubscription
-					} else {
-						output.append(match.board.discordEncoded)
 					}
 				} catch TicTacToeError.invalidMove(let role, let row, let col) {
 					output.append("Invalid move by \(role.discordEncoded): Could not place at `[row = \(row), col = \(col)]`")
