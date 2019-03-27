@@ -3,9 +3,10 @@ import Foundation
 
 struct Image {
 	var pixels: [PNG.RGBA<UInt8>]
-	let width: Int
-	let height: Int
+	let size: Vec2<Int>
 	
+	var width: Int { return size.x }
+	var height: Int { return size.y }
 	var uncompressed: Result<PNG.Data.Uncompressed> { return .wrap { try .convert(rgba: pixels, size: (width, height), to: .rgba16) } }
 	var encoded: Result<Foundation.Data> {
 		return uncompressed.map { output in
