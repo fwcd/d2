@@ -1,4 +1,4 @@
-struct Vec2<T: Addable & Subtractable & Multipliable>: Addable, Subtractable {
+struct Vec2<T: Addable & Subtractable & Multipliable & Divisible>: Addable, Subtractable {
 	let x: T
 	let y: T
 	
@@ -13,6 +13,14 @@ struct Vec2<T: Addable & Subtractable & Multipliable>: Addable, Subtractable {
 	
 	static func -(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
 		return Vec2(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+	}
+	
+	static func *(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
+		return Vec2(x: lhs.x * rhs, y: lhs.y * rhs)
+	}
+	
+	static func /(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
+		return Vec2(x: lhs.x / rhs, y: lhs.y / rhs)
 	}
 	
 	func dot(other: Vec2<T>) -> T {
