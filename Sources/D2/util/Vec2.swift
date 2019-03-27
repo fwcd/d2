@@ -1,4 +1,6 @@
-struct Vec2<T: Addable & Subtractable & Multipliable & Divisible>: Addable, Subtractable {
+typealias VecComponent = Addable & Subtractable & Multipliable & Divisible
+
+struct Vec2<T: VecComponent>: Addable, Subtractable {
 	let x: T
 	let y: T
 	
