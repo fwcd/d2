@@ -14,6 +14,11 @@ class CycleThroughCommand: StringCommand {
 		
 		let frames = input.split(separator: " ")
 		
+		guard frames.count < 4 else {
+			output.append("Too many frames.")
+			return
+		}
+		
 		guard let firstFrame = frames.first else {
 			output.append("Cannot create empty animation.")
 			return
