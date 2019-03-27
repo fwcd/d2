@@ -19,3 +19,7 @@ struct Vec2<T: Addable & Subtractable & Multipliable>: Addable, Subtractable {
 		return (x * other.x) + (y * other.y)
 	}
 }
+
+extension Vec2 where T: FloatingPoint {
+	var length: T { return ((x * x) + (y * y)).squareRoot() }
+}
