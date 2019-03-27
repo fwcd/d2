@@ -19,11 +19,11 @@ class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
 		let rawRHS = inputArgs[1]
 		
 		guard let lhs = T.init(rawLHS) else {
-			output.append("Left-hand side `\(rawLHS)` is not a number")
+			output.append("Left-hand side `\(rawLHS)` could not be parsed")
 			return
 		}
 		guard let rhs = T.init(rawRHS) else {
-			output.append("Right-hand side `\(rawRHS)` is not a number")
+			output.append("Right-hand side `\(rawRHS)` could not be parsed")
 			return
 		}
 		
