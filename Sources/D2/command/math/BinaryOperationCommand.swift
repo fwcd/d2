@@ -1,14 +1,14 @@
 import SwiftDiscord
 
-class BinaryDoubleOperationCommand: ArgListCommand {
+class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
 	let name: String
 	let description: String
 	let requiredPermissionLevel = PermissionLevel.basic
 	let expectedArgCount: Int = 2
 	
-	private let operation: (Double, Double) -> Double
+	private let operation: (T, T) -> T
 	
-	init(name: String, operation: @escaping (Double, Double) -> Double) {
+	init(name: String, operation: @escaping (T, T) -> T) {
 		self.name = name
 		self.operation = operation
 		description = "Performs the binary operation '\(name)'"
@@ -18,11 +18,11 @@ class BinaryDoubleOperationCommand: ArgListCommand {
 		let rawLHS = inputArgs[0]
 		let rawRHS = inputArgs[1]
 		
-		guard let lhs = Double(rawLHS) else {
+		guard let lhs = T.init(rawLHS) else {
 			output.append("Left-hand side `\(rawLHS)` is not a number")
 			return
 		}
-		guard let rhs = Double(rawRHS) else {
+		guard let rhs = T.init(rawRHS) else {
 			output.append("Right-hand side `\(rawRHS)` is not a number")
 			return
 		}
