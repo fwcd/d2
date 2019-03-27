@@ -3,15 +3,15 @@ protocol Graphics {
 	
 	func draw(_ rectangle: Rectangle<Int>)
 	
-	func draw(_ image: Image, position: Vec2<Int>, size: Vec2<Int>)
+	func draw(_ image: Image, at position: Vec2<Int>, withSize size: Vec2<Int>)
 }
 
 extension Graphics {
 	func draw(_ image: Image) {
-		draw(image, position: Vec2(x: 0, y: 0))
+		draw(image, at: Vec2(x: 0, y: 0))
 	}
 	
-	func draw(_ image: Image, position: Vec2<Int>) {
-		draw(image, position: position, size: image.size)
+	func draw(_ image: Image, at position: Vec2<Int>) {
+		draw(image, at: position, withSize: image.size)
 	}
 }
