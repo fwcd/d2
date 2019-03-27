@@ -28,8 +28,17 @@ struct Vec2<T: VecComponent>: Addable, Subtractable {
 	func dot(other: Vec2<T>) -> T {
 		return (x * other.x) + (y * other.y)
 	}
+	
+	func map<R: VecComponent>(mapper: (T) -> R) -> Vec2<R> {
+		return Vec2<R>(x: mapper(x), y: mapper(y))
+	}
 }
 
 extension Vec2 where T: FloatingPoint {
 	var length: T { return ((x * x) + (y * y)).squareRoot() }
+	var normalized: Vec2<T> { return self / length }
+}
+
+extension Vec2 where T: BinaryInteger {
+	var asDouble: Vec2<Double> { return map { Double($0) } }
 }
