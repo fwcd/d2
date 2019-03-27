@@ -34,9 +34,10 @@ struct Vec2<T: VecComponent>: Addable, Subtractable {
 	}
 }
 
-extension Vec2 where T: FloatingPoint {
+extension Vec2 where T: BinaryFloatingPoint {
 	var length: T { return ((x * x) + (y * y)).squareRoot() }
 	var normalized: Vec2<T> { return self / length }
+	var floored: Vec2<Int> { return Vec2<Int>(x: Int(x.rounded(.down)), y: Int(y.rounded(.down))) }
 }
 
 extension Vec2 where T: BinaryInteger {

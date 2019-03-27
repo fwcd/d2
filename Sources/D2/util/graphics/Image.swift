@@ -16,13 +16,13 @@ struct Image {
 		}
 	}
 	
-	subscript(y: Int, x: Int) -> Color {
-		get { return Color(from: pixels[index(ofY: y, x: x)]) }
-		set(newValue) { pixels[index(ofY: y, x: x)] = newValue.pngRGBA }
+	subscript(pos: Vec2<Int>) -> Color {
+		get { return Color(from: pixels[index(of: pos)]) }
+		set(newValue) { pixels[index(of: pos)] = newValue.pngRGBA }
 	}
 	
-	private func index(ofY y: Int, x: Int) -> Int {
-		return (y * width) + x
+	private func index(of pos: Vec2<Int>) -> Int {
+		return (pos.y * width) + pos.x
 	}
 }
 
