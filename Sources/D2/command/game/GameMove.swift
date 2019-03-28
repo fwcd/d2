@@ -1,3 +1,3 @@
 protocol GameMove {
-	init(fromString str: String)
+	init(fromString str: String) throws
 }

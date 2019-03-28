@@ -56,7 +56,7 @@ class TwoPlayerGameCommand<Match: GameMatch>: StringCommand {
 		}
 		
 		do {
-			try match.perform(move: Match.Move.init(fromString: moveArgs[1]))
+			try match.perform(move: try Match.Move.init(fromString: moveArgs[1]))
 			output.append(match.board.discordEncoded)
 			
 			if let winner = match.board.winner {

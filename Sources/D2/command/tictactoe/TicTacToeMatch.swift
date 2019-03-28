@@ -1,7 +1,7 @@
 import Foundation
 import SwiftDiscord
 
-class TicTacToeMatch: CustomStringConvertible {
+final class TicTacToeMatch: GameMatch, CustomStringConvertible {
 	private let startTime: Date
 	private let playerX: DiscordUser
 	private let playerO: DiscordUser
@@ -9,13 +9,17 @@ class TicTacToeMatch: CustomStringConvertible {
 	private(set) var currentRole: TicTacToeRole = .x
 	var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
 	
+	typealias Role = TicTacToeRole
+	typealias Board = TicTacToeBoard
+	typealias Move = TicTacToeMove
+	
 	var elapsedTime: TimeInterval {
 		return -startTime.timeIntervalSinceNow
 	}
 	
-	init(playerX: DiscordUser, playerO: DiscordUser) {
-		self.playerX = playerX
-		self.playerO = playerO
+	init(firstPlayer: DiscordUser, secondPlayer: DiscordUser) {
+		playerX = firstPlayer
+		playerO = secondPlayer
 		startTime = Date()
 		board = TicTacToeBoard()
 	}
