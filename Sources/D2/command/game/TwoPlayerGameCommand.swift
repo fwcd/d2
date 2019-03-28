@@ -64,7 +64,7 @@ class TwoPlayerGameCommand<Match: GameMatch>: StringCommand {
 				
 				var embed = DiscordEmbed()
 				embed.title = ":crown: Winner"
-				embed.description = "\(winner.discordEncoded)\(match.playerOf(role: winner).map { " aka. `\($0)`" } ?? "") won the game!"
+				embed.description = "\(winner.discordEncoded)\(match.playerOf(role: winner).map { " aka. `\($0.username)`" } ?? "") won the game!"
 				
 				output.append(embed)
 				currentMatch = nil
