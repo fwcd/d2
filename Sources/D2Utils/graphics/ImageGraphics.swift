@@ -21,7 +21,14 @@ public struct ImageGraphics: Graphics {
 	}
 	
 	public mutating func draw(_ rectangle: Rectangle<Int>) {
-		// TODO
+		if rectangle.isFilled {
+			draw(LineSegment(from: rectangle.topLeft, to: rectangle.topRight))
+			draw(LineSegment(from: rectangle.topRight, to: rectangle.bottomRight))
+			draw(LineSegment(from: rectangle.topLeft, to: rectangle.bottomLeft))
+			draw(LineSegment(from: rectangle.bottomLeft, to: rectangle.bottomRight))
+		} else {
+			// TODO
+		}
 	}
 	
 	public mutating func draw(_ image: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
