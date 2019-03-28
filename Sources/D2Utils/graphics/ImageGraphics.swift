@@ -21,6 +21,10 @@ public struct ImageGraphics: Graphics {
 			}
 			pos = pos + step
 		}
+		
+		if image.isInBounds(line.end) {
+			image[line.end] = line.color
+		}
 	}
 	
 	public mutating func draw(_ rectangle: Rectangle<Int>) {
