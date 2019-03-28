@@ -91,5 +91,31 @@
 			"\t}",
 			"}"
 		]
+	},
+	"Game role implementation": {
+		"prefix": "gamerole",
+		"scope": "swift",
+		"body": [
+			"import D2Utils",
+			"",
+			"enum $1Role: CaseIterable, DiscordEncodable {",
+			"\tcase $2",
+			"\tcase $3",
+			"\t",
+			"\tvar discordEncoded: String {",
+			"\t\tswitch self {",
+			"\t\t\tcase .$2: return \"$4\"",
+			"\t\t\tcase .$3: return \"$5\"",
+			"\t\t}",
+			"\t}",
+			"\t",
+			"\tvar opponent: $1Role {",
+			"\t\tswitch self {",
+			"\t\t\tcase .$2: return .$3",
+			"\t\t\tcase .$3: return .$2",
+			"\t\t}",
+			"\t}",
+			"}"
+		]
 	}
 }
