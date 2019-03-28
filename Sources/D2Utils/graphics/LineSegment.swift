@@ -9,7 +9,7 @@ public struct LineSegment<T: VecComponent> {
 		self.color = color
 	}
 	
-	public init(startX: T, startY: T, endX: T, endY: T) {
+	public init(fromX startX: T, y startY: T, toX endX: T, y endY: T) {
 		self.init(start: Vec2(x: startX, y: startY), end: Vec2(x: endX, y: endY))
 	}
 }
