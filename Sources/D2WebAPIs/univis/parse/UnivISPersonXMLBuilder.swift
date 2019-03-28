@@ -11,7 +11,6 @@ class UnivISPersonXMLBuilder: UnivISObjectNodeXMLBuilder {
 	}
 	
 	func enter(childWithName elementName: String, attributes: [String: String]) throws {
-		let previousName = nameStack.last
 		nameStack.append(elementName)
 	}
 	
