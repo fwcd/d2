@@ -1,4 +1,5 @@
 import Foundation
+import D2Utils
 
 struct UnivISQuery {
 	let url: URL

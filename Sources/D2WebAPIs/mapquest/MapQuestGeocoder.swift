@@ -1,4 +1,5 @@
 import Foundation
+import D2Utils
 
 struct MapQuestGeocoder {
 	func geocode(location: String, then: @escaping (Result<GeoCoordinates>) -> Void) {
