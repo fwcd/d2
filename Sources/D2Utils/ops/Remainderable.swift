@@ -1,4 +1,4 @@
-protocol Remainderable {
+public protocol Remainderable {
 	static func %(lhs: Self, rhs: Self) -> Self
 }
 

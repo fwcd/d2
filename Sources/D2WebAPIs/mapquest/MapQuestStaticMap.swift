@@ -1,9 +1,9 @@
 import Foundation
 
-struct MapQuestStaticMap {
-	let url: String
+public struct MapQuestStaticMap {
+	public let url: String
 	
-	init(
+	public init(
 		latitude: Double,
 		longitude: Double,
 		width: Int = 300,

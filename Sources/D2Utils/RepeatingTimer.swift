@@ -2,13 +2,13 @@ import Dispatch
 
 fileprivate var globalTimerIndex: Int = 0
 
-class RepeatingTimer {
-	let interval: DispatchTimeInterval
+public class RepeatingTimer {
+	public let interval: DispatchTimeInterval
 	private var timer: DispatchSourceTimer? = nil
 	private var context: TimerContext
-	var isRunning: Bool { return timer != nil }
+	public var isRunning: Bool { return timer != nil }
 	
-	init(interval: DispatchTimeInterval = .seconds(1)) {
+	public init(interval: DispatchTimeInterval = .seconds(1)) {
 		self.interval = interval
 		context = TimerContext()
 		context.cancel = { [unowned self] in
@@ -17,7 +17,7 @@ class RepeatingTimer {
 		}
 	}
 	
-	func schedule(nTimes n: Int, action: @escaping (Int, TimerContext) -> Void) {
+	public func schedule(nTimes n: Int, action: @escaping (Int, TimerContext) -> Void) {
 		// (Re)start timer
 		let queue = DispatchQueue(label: "RepeatingTimer #\(globalTimerIndex)")
 		var count = 0

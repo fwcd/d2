@@ -1,8 +1,8 @@
 import Foundation
 import D2Utils
 
-struct MapQuestGeocoder {
-	func geocode(location: String, then: @escaping (Result<GeoCoordinates, Error>) -> Void) {
+public struct MapQuestGeocoder {
+	public func geocode(location: String, then: @escaping (Result<GeoCoordinates, Error>) -> Void) {
 		let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
 		guard let url = URL(string: "https://www.mapquestapi.com/geocoding/v1/address?key=\(mapQuestKey)&location=\(encodedLocation)") else {
 			then(.failure(MapQuestError.urlError("Error while constructing url from location '\(encodedLocation)'")))

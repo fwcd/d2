@@ -1,3 +1,3 @@
-struct TimerContext {
-	var cancel: (() -> Void)!
+public struct TimerContext {
+	public var cancel: (() -> Void)!
 }

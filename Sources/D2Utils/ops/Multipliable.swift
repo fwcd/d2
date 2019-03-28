@@ -1,4 +1,4 @@
-protocol Multipliable {
+public protocol Multipliable {
 	static func *(lhs: Self, rhs: Self) -> Self
 }
 

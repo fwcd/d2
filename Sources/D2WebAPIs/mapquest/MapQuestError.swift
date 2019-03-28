@@ -1,4 +1,4 @@
-enum MapQuestError: Error {
+public enum MapQuestError: Error {
 	case urlError(String)
 	case httpError(Error?)
 	case jsonIOError(Error)

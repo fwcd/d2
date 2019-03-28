@@ -1,24 +1,24 @@
-struct MDBModule {
-	var code: String? = nil
-	var url: String? = nil
-	var person: String? = nil
-	var nameGerman: String? = nil
-	var nameEnglish: String? = nil
-	var ects: UInt? = nil
-	var workload: String? = nil
-	var teachingLanguage: String? = nil
-	var summary: String? = nil
-	var objectives: String? = nil
-	var contents: String? = nil
-	var prerequisites: String? = nil
-	var exam: String? = nil
-	var methods: String? = nil
-	var literature: String? = nil
-	var references: String? = nil
-	var comment: String? = nil
-	var studyPrograms = [MDBStudyProgram]()
-	var categories = [MDBCategory]()
-	var presence: String? = nil
-	var cycle: String? = nil
-	var duration: UInt? = nil
+public struct MDBModule {
+	public var code: String? = nil
+	public var url: String? = nil
+	public var person: String? = nil
+	public var nameGerman: String? = nil
+	public var nameEnglish: String? = nil
+	public var ects: UInt? = nil
+	public var workload: String? = nil
+	public var teachingLanguage: String? = nil
+	public var summary: String? = nil
+	public var objectives: String? = nil
+	public var contents: String? = nil
+	public var prerequisites: String? = nil
+	public var exam: String? = nil
+	public var methods: String? = nil
+	public var literature: String? = nil
+	public var references: String? = nil
+	public var comment: String? = nil
+	public var studyPrograms = [MDBStudyProgram]()
+	public var categories = [MDBCategory]()
+	public var presence: String? = nil
+	public var cycle: String? = nil
+	public var duration: UInt? = nil
 }

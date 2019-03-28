@@ -1,8 +1,8 @@
-struct UnivISTerm: Hashable {
-	var enddate: String? = nil
-	var endtime: String? = nil
-	var room: UnivISRef? = nil
-	var startdate: String? = nil
-	var starttime: String? = nil
-	var repeatPattern: String? = nil
+public struct UnivISTerm: Hashable {
+	public var enddate: String? = nil
+	public var endtime: String? = nil
+	public var room: UnivISRef? = nil
+	public var startdate: String? = nil
+	public var starttime: String? = nil
+	public var repeatPattern: String? = nil
 }

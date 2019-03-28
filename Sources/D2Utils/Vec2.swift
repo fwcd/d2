@@ -1,35 +1,35 @@
-typealias VecComponent = Addable & Subtractable & Multipliable & Divisible
+public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible
 
-struct Vec2<T: VecComponent>: Addable, Subtractable {
-	let x: T
-	let y: T
+public struct Vec2<T: VecComponent>: Addable, Subtractable {
+	public let x: T
+	public let y: T
 	
-	init(x: T, y: T) {
+	public init(x: T, y: T) {
 		self.x = x
 		self.y = y
 	}
 	
-	static func +(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
+	public static func +(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
 		return Vec2(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 	}
 	
-	static func -(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
+	public static func -(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
 		return Vec2(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
 	}
 	
-	static func *(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
+	public static func *(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
 		return Vec2(x: lhs.x * rhs, y: lhs.y * rhs)
 	}
 	
-	static func /(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
+	public static func /(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
 		return Vec2(x: lhs.x / rhs, y: lhs.y / rhs)
 	}
 	
-	func dot(other: Vec2<T>) -> T {
+	public func dot(other: Vec2<T>) -> T {
 		return (x * other.x) + (y * other.y)
 	}
 	
-	func map<R: VecComponent>(mapper: (T) -> R) -> Vec2<R> {
+	public func map<R: VecComponent>(mapper: (T) -> R) -> Vec2<R> {
 		return Vec2<R>(x: mapper(x), y: mapper(y))
 	}
 }

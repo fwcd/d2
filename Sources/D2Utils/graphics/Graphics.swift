@@ -1,4 +1,4 @@
-protocol Graphics {
+public protocol Graphics {
 	mutating func draw(_ line: LineSegment<Int>)
 	
 	mutating func draw(_ rectangle: Rectangle<Int>)

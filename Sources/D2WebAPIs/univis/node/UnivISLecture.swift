@@ -1,33 +1,33 @@
-struct UnivISLecture: UnivISObjectNode, Hashable {
-	let nodeType = "Lecture"
-	let key: String
-	var classification: UnivISRef? = nil
-	var dozs = [UnivISRef]()
-	var id: Int? = nil
-	var name: String? = nil
-	var number: Int? = nil
-	var ordernr: Int? = nil
-	var orgname: String? = nil
-	var orgunits = [String]()
-	var sws: Int? = nil
-	var terms = [UnivISTerm]()
-	var type: String? = nil
-	var parentLv: UnivISRef?
-	var short: String? = nil
-	var startdate: String? = nil
-	var enddate: String? = nil
-	var turnout: Int? = nil
-	var ects: Bool? = nil
-	var ectsCred: Int? = nil
-	var literature: String? = nil
-	var organizational: String? = nil
-	var evaluation: Bool? = nil
-	var summary: String? = nil
-	var shortDescription: String {
+public struct UnivISLecture: UnivISObjectNode, Hashable {
+	public let nodeType = "Lecture"
+	public let key: String
+	public var classification: UnivISRef? = nil
+	public var dozs = [UnivISRef]()
+	public var id: Int? = nil
+	public var name: String? = nil
+	public var number: Int? = nil
+	public var ordernr: Int? = nil
+	public var orgname: String? = nil
+	public var orgunits = [String]()
+	public var sws: Int? = nil
+	public var terms = [UnivISTerm]()
+	public var type: String? = nil
+	public var parentLv: UnivISRef?
+	public var short: String? = nil
+	public var startdate: String? = nil
+	public var enddate: String? = nil
+	public var turnout: Int? = nil
+	public var ects: Bool? = nil
+	public var ectsCred: Int? = nil
+	public var literature: String? = nil
+	public var organizational: String? = nil
+	public var evaluation: Bool? = nil
+	public var summary: String? = nil
+	public var shortDescription: String {
 		return "\(name ?? "?"): \(startdate.map { "\($0) " } ?? "")\(enddate.map { "-> \($0)" } ?? "")"
 	}
 	
-	init(key: String) {
+	public init(key: String) {
 		self.key = key
 	}
 }

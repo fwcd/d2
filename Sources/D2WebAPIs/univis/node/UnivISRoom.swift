@@ -1,33 +1,33 @@
-struct UnivISRoom: UnivISObjectNode, Hashable {
-	let nodeType = "Room"
-	let key: String
-	var address: String? = nil
-	var chtab: Bool? = nil
-	var contacts = [UnivISRef]()
-	var description: String? = nil
-	var id: UInt? = nil
-	var inet: Bool? = nil
-	var beam: Bool? = nil
-	var dark: Bool? = nil
-	var lose: Bool? = nil
-	var ohead: Bool? = nil
-	var wlan: Bool? = nil
-	var tafel: Bool? = nil
-	var laptopton: Bool? = nil
-	var fest: Bool? = nil
-	var tel: String? = nil
-	var name: String? = nil
-	var orgname: String? = nil
-	var orgunits = [String]()
-	var rolli: Bool? = nil
-	var short: String? = nil
-	var size: Int? = nil
-	var wb: Bool? = nil
-	var shortDescription: String {
+public struct UnivISRoom: UnivISObjectNode, Hashable {
+	public let nodeType = "Room"
+	public let key: String
+	public var address: String? = nil
+	public var chtab: Bool? = nil
+	public var contacts = [UnivISRef]()
+	public var description: String? = nil
+	public var id: UInt? = nil
+	public var inet: Bool? = nil
+	public var beam: Bool? = nil
+	public var dark: Bool? = nil
+	public var lose: Bool? = nil
+	public var ohead: Bool? = nil
+	public var wlan: Bool? = nil
+	public var tafel: Bool? = nil
+	public var laptopton: Bool? = nil
+	public var fest: Bool? = nil
+	public var tel: String? = nil
+	public var name: String? = nil
+	public var orgname: String? = nil
+	public var orgunits = [String]()
+	public var rolli: Bool? = nil
+	public var short: String? = nil
+	public var size: Int? = nil
+	public var wb: Bool? = nil
+	public var shortDescription: String {
 		return "\(name ?? "?"): \(address ?? "?")"
 	}
 	
-	init(key: String) {
+	public init(key: String) {
 		self.key = key
 	}
 }

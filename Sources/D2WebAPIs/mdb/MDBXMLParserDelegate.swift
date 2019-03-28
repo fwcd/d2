@@ -5,25 +5,25 @@ import D2Utils
 fileprivate let htmlParagraphPattern = try! Regex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")
 
 class MDBXMLParserDelegate: XMLParserDelegate {
-	let then: (Result<[MDBModule], Error>) -> Void
+	private let then: (Result<[MDBModule], Error>) -> Void
 	
-	var modules = [MDBModule]()
+	private var modules = [MDBModule]()
 	
-	var parsingName = false
-	var parsingStudyPrograms = false
-	var parsingCategories = false
+	private var parsingName = false
+	private var parsingStudyPrograms = false
+	private var parsingCategories = false
 	
-	var stackHeight = 0
-	var currentKey: String? = nil
-	var currentModule: MDBModule? = nil
-	var currentCharacters = ""
-	var hasErrored = false
+	private var stackHeight = 0
+	private var currentKey: String? = nil
+	private var currentModule: MDBModule? = nil
+	private var currentCharacters = ""
+	private var hasErrored = false
 	
-	init(then: @escaping (Result<[MDBModule], Error>) -> Void) {
+	public init(then: @escaping (Result<[MDBModule], Error>) -> Void) {
 		self.then = then
 	}
 	
-	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
+	public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
 		stackHeight += 1
 		switch elementName {
 			case "modul": currentModule = MDBModule()
@@ -36,11 +36,11 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 		}
 	}
 	
-	func parser(_ parser: XMLParser, foundCharacters string: String) {
+	public func parser(_ parser: XMLParser, foundCharacters string: String) {
 		currentCharacters += string
 	}
 	
-	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+	public func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
 		let str = currentCharacters.trimmingCharacters(in: .whitespacesAndNewlines)
 		
 		if currentModule != nil {
@@ -73,7 +73,7 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 					case "workload": currentModule!.workload = str
 					case "lehrsprache": currentModule!.teachingLanguage = str
 					case "kurzfassung":
-						if let contents = (htmlParagraphPattern.firstGroups(in: str).flatMap { $0[safe: 1] }) {
+						if let contents = (htmlParagraphPattern.firstGroups(in: str).flatMap { $0[safely: 1] }) {
 							currentModule!.summary = contents
 						} else {
 							currentModule!.summary = str
@@ -105,14 +105,14 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 		}
 	}
 	
-	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+	public func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
 		if !hasErrored {
 			then(.failure(parseError))
 			hasErrored = true
 		}
 	}
 	
-	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+	public func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
 		if !hasErrored {
 			then(.failure(validationError))
 			hasErrored = true

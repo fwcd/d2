@@ -1,6 +1,6 @@
 import Foundation
 
-enum UnivISError: Error {
+public enum UnivISError: Error {
 	case missingData
 	case urlError(URLComponents)
 	case httpError(Error)

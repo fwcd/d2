@@ -1,11 +1,11 @@
-struct ImageGraphics: Graphics {
+public struct ImageGraphics: Graphics {
 	private(set) var image: Image
 	
-	init(image: Image) {
+	public init(image: Image) {
 		self.image = image
 	}
 	
-	mutating func draw(_ line: LineSegment<Int>) {
+	public mutating func draw(_ line: LineSegment<Int>) {
 		var pos = line.start.asDouble
 		let end = line.end.asDouble
 		let step = (end - pos).normalized
@@ -16,11 +16,11 @@ struct ImageGraphics: Graphics {
 		}
 	}
 	
-	mutating func draw(_ rectangle: Rectangle<Int>) {
+	public mutating func draw(_ rectangle: Rectangle<Int>) {
 		// TODO
 	}
 	
-	mutating func draw(_ image: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
+	public mutating func draw(_ image: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
 		// TODO
 	}
 }

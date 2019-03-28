@@ -1,10 +1,10 @@
 import Foundation
 import D2Utils
 
-struct UnivISQuery {
-	let url: URL
+public struct UnivISQuery {
+	private let url: URL
 	
-	init(
+	public init(
 		search: UnivISSearchKey,
 		params: [UnivISSearchParameter: String],
 		scheme: String = "http",
@@ -24,7 +24,7 @@ struct UnivISQuery {
 		self.url = url
 	}
 	
-	func start(then: @escaping (Result<UnivISOutputNode, Error>) -> Void) {
+	public func start(then: @escaping (Result<UnivISOutputNode, Error>) -> Void) {
 		print("Querying \(url)")
 		
 		var request = URLRequest(url: url)

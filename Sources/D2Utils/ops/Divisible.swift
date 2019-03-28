@@ -1,4 +1,4 @@
-protocol Divisible {
+public protocol Divisible {
 	static func /(lhs: Self, rhs: Self) -> Self
 }
 

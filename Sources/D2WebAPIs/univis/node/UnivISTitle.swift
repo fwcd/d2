@@ -1,16 +1,16 @@
-struct UnivISTitle: UnivISObjectNode, Hashable {
-	let nodeType = "Title"
-	let key: String
-	var title: String? = nil
-	var titleEn: String? = nil
-	var ordernr: Int? = nil
-	var parentTitle: UnivISRef? = nil
-	var text: String? = nil
-	var shortDescription: String {
+public struct UnivISTitle: UnivISObjectNode, Hashable {
+	public let nodeType = "Title"
+	public let key: String
+	public var title: String? = nil
+	public var titleEn: String? = nil
+	public var ordernr: Int? = nil
+	public var parentTitle: UnivISRef? = nil
+	public var text: String? = nil
+	public var shortDescription: String {
 		return "\(title ?? "?"): \(text ?? "?")"
 	}
 	
-	init(key: String) {
+	public init(key: String) {
 		self.key = key
 	}
 }

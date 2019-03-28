@@ -1,9 +1,9 @@
-struct UnivISLocation: Hashable {
-	var email: String? = nil
-	var fax: String? = nil
-	var ort: String? = nil
-	var office: String? = nil
-	var street: String? = nil
-	var tel: String? = nil
-	var url: String? = nil
+public struct UnivISLocation: Hashable {
+	public var email: String? = nil
+	public var fax: String? = nil
+	public var ort: String? = nil
+	public var office: String? = nil
+	public var street: String? = nil
+	public var tel: String? = nil
+	public var url: String? = nil
 }

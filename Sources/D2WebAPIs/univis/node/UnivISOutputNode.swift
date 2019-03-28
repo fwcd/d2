@@ -1,7 +1,7 @@
-struct UnivISOutputNode {
-	let childs: [UnivISObjectNode]
+public struct UnivISOutputNode {
+	public let childs: [UnivISObjectNode]
 	
-	func resolve(ref: UnivISRef) -> UnivISObjectNode? {
+	public func resolve(ref: UnivISRef) -> UnivISObjectNode? {
 		return childs.first { $0.key == ref.key }
 	}
 }

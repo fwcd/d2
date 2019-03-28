@@ -1,9 +1,9 @@
 extension String {
-	var nilIfEmpty: String? {
+	public var nilIfEmpty: String? {
 		return isEmpty ? nil : self
 	}
 	
-	func split(by length: Int) -> [String] {
+	public func split(by length: Int) -> [String] {
 		var start = startIndex
 		var output = [String]()
 		

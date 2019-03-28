@@ -16,8 +16,8 @@ class EchoCommand: Command {
 	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		if let groups = argPattern.firstGroups(in: args) {
 			// Extract parsed values
-			let n = groups[safe: 1].flatMap { Int($0) } ?? 1
-			guard let value = (groups[safe: 2]?.nilIfEmpty.map { DiscordMessage(content: $0) } ?? input) else { return }
+			let n = groups[safely: 1].flatMap { Int($0) } ?? 1
+			guard let value = (groups[safely: 2]?.nilIfEmpty.map { DiscordMessage(content: $0) } ?? input) else { return }
 			
 			if n == 1 {
 				// Output synchronously

@@ -1,10 +1,10 @@
 import Foundation
 import D2Utils
 
-struct MDBQuery {
-	let url: URL
+public struct MDBQuery {
+	public let url: URL
 	
-	init(
+	public init(
 		moduleCode: String? = nil,
 		scheme: String = "https",
 		host: String = "mdb.ps.informatik.uni-kiel.de",
@@ -20,7 +20,7 @@ struct MDBQuery {
 		self.url = url
 	}
 	
-	func start(then: @escaping (Result<[MDBModule], Error>) -> Void) {
+	public func start(then: @escaping (Result<[MDBModule], Error>) -> Void) {
 		print("Querying \(url)")
 		
 		var request = URLRequest(url: url)

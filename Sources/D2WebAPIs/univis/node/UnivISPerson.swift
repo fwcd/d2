@@ -1,22 +1,22 @@
-struct UnivISPerson: UnivISObjectNode, Hashable {
-	let nodeType = "Person"
-	let key: String
-	var atitle: String? = nil
-	var title: String? = nil
-	var firstname: String? = nil
-	var lastname: String? = nil
-	var id: UInt? = nil
-	var lehr: Bool? = nil
-	var locations = [UnivISLocation]()
-	var officehours = [UnivISOfficeHour]()
-	var orgname: String? = nil
-	var orgunits = [String]()
-	var visible: Bool? = nil
-	var shortDescription: String {
+public struct UnivISPerson: UnivISObjectNode, Hashable {
+	public let nodeType = "Person"
+	public let key: String
+	public var atitle: String? = nil
+	public var title: String? = nil
+	public var firstname: String? = nil
+	public var lastname: String? = nil
+	public var id: UInt? = nil
+	public var lehr: Bool? = nil
+	public var locations = [UnivISLocation]()
+	public var officehours = [UnivISOfficeHour]()
+	public var orgname: String? = nil
+	public var orgunits = [String]()
+	public var visible: Bool? = nil
+	public var shortDescription: String {
 		return "\(title.map { "\($0) " } ?? "")\(firstname ?? "") \(lastname ?? "")"
 	}
 	
-	init(key: String) {
+	public init(key: String) {
 		self.key = key
 	}
 }

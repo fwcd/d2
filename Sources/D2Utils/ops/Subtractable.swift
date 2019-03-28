@@ -1,4 +1,4 @@
-protocol Subtractable {
+public protocol Subtractable {
 	static func -(lhs: Self, rhs: Self) -> Self
 }
 

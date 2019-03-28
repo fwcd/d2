@@ -1,7 +1,7 @@
 fileprivate let intRangePattern = try! Regex(from: "(\\d+)\\.\\.<(\\d+)")
 fileprivate let closedIntRangePattern = try! Regex(from: "(\\d+)\\.\\.\\.(\\d+)")
 
-func parseIntRange(from str: String) -> Range<Int>? {
+public func parseIntRange(from str: String) -> Range<Int>? {
 	if let rawBounds = intRangePattern.firstGroups(in: str) {
 		return Int(rawBounds[1])!..<Int(rawBounds[2])!
 	} else {
@@ -9,7 +9,7 @@ func parseIntRange(from str: String) -> Range<Int>? {
 	}
 }
 
-func parseClosedIntRange(from str: String) -> ClosedRange<Int>? {
+public func parseClosedIntRange(from str: String) -> ClosedRange<Int>? {
 	if let rawBounds = closedIntRangePattern.firstGroups(in: str) {
 		return Int(rawBounds[1])!...Int(rawBounds[2])!
 	} else {
@@ -17,7 +17,7 @@ func parseClosedIntRange(from str: String) -> ClosedRange<Int>? {
 	}
 }
 
-protocol LowBoundedIntRange {
+public protocol LowBoundedIntRange {
 	var count: Int { get }
 	var lowerBound: Int { get }
 }

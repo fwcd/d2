@@ -1,4 +1,4 @@
-protocol Addable {
+public protocol Addable {
 	static func +(lhs: Self, rhs: Self) -> Self
 }
 

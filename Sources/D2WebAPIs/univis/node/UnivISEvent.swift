@@ -1,20 +1,20 @@
-struct UnivISEvent: UnivISObjectNode, Hashable {
-	let nodeType = "Event"
-	let key: String
-	var contact: UnivISRef? = nil
-	var dbref: UnivISRef? = nil
-	var enddate: String? = nil
-	var id: UInt? = nil
-	var orgname: String? = nil
-	var orgunits = [String]()
-	var startdate: String? = nil
-	var terms = [UnivISTerm]()
-	var title: String? = nil
-	var shortDescription: String {
+public struct UnivISEvent: UnivISObjectNode, Hashable {
+	public let nodeType = "Event"
+	public let key: String
+	public var contact: UnivISRef? = nil
+	public var dbref: UnivISRef? = nil
+	public var enddate: String? = nil
+	public var id: UInt? = nil
+	public var orgname: String? = nil
+	public var orgunits = [String]()
+	public var startdate: String? = nil
+	public var terms = [UnivISTerm]()
+	public var title: String? = nil
+	public var shortDescription: String {
 		return "\(title ?? "?"): \(startdate.map { "\($0) " } ?? "")\(enddate.flatMap { startdate == $0 ? nil : self }.map { "-> \($0)" } ?? "")"
 	}
 	
-	init(key: String) {
+	public init(key: String) {
 		self.key = key
 	}
 }
