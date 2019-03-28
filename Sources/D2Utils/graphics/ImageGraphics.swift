@@ -29,10 +29,10 @@ public struct ImageGraphics: Graphics {
 	
 	public mutating func draw(_ rectangle: Rectangle<Int>) {
 		if rectangle.isFilled {
-			draw(LineSegment(from: rectangle.topLeft, to: rectangle.topRight))
-			draw(LineSegment(from: rectangle.topRight, to: rectangle.bottomRight))
-			draw(LineSegment(from: rectangle.topLeft, to: rectangle.bottomLeft))
-			draw(LineSegment(from: rectangle.bottomLeft, to: rectangle.bottomRight))
+			draw(LineSegment(from: rectangle.topLeft, to: rectangle.topRight, color: rectangle.color))
+			draw(LineSegment(from: rectangle.topRight, to: rectangle.bottomRight, color: rectangle.color))
+			draw(LineSegment(from: rectangle.topLeft, to: rectangle.bottomLeft, color: rectangle.color))
+			draw(LineSegment(from: rectangle.bottomLeft, to: rectangle.bottomRight, color: rectangle.color))
 		} else {
 			// TODO: Clip rectangle to bounds before iterating
 			for pos in rectangle {
