@@ -27,7 +27,9 @@ public struct ImageGraphics: Graphics {
 			draw(LineSegment(from: rectangle.topLeft, to: rectangle.bottomLeft))
 			draw(LineSegment(from: rectangle.bottomLeft, to: rectangle.bottomRight))
 		} else {
-			// TODO
+			for pos in rectangle {
+				image[pos] = rectangle.color
+			}
 		}
 	}
 	
