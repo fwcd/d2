@@ -4,6 +4,10 @@ import D2Utils
 fileprivate let moveMessageRegex = try! Regex(from: "move\\s+(.+)")
 fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
 
+/**
+ * Provides a base layer of functionality for a turn-based 
+ * two-player game.
+ */
 class TwoPlayerGameCommand<Match: GameMatch>: StringCommand {
 	let requiredPermissionLevel = PermissionLevel.basic
 	let subscribesToNextMessages = true
