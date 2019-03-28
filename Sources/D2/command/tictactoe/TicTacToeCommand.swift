@@ -55,7 +55,7 @@ class TicTacToeCommand: StringCommand {
 		let match = TicTacToeMatch(playerX: playerX, playerO: playerO)
 		
 		currentMatch = match
-		output.append("Playing new match: \(match.description)\n\(match.board.discordEncoded)")
+		output.append("Playing new match: \(match)\n\(match.board.discordEncoded)")
 	}
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
@@ -72,13 +72,13 @@ class TicTacToeCommand: StringCommand {
 	func handleSetMessage(withMatch match: TicTacToeMatch, setArgs: [String], output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		let roles = match.rolesOf(player: context.author)
 		
-		guard roles.contains(match.currentPlayer) else {
-			print("Current player: \(match.currentPlayer), roles: \(roles)")
+		guard roles.contains(match.currentRole) else {
+			print("Current player: \(match.currentRole), roles: \(roles)")
 			output.append("It is not your turn, `\(context.author.username)`")
 			return .continueSubscription
 		}
 		
-		let role = match.currentPlayer
+		let role = match.currentRole
 		let rowIndex: Int
 		let colIndex: Int
 		
@@ -132,7 +132,7 @@ class TicTacToeCommand: StringCommand {
 		switch arg {
 			case "match":
 				currentMatch = nil
-				output.append("Cancelled match: \(match.description)")
+				output.append("Cancelled match: \(match)")
 				return .cancelSubscription
 			default:
 				output.append("Sorry, I do not know how to cancel `\(arg)`")

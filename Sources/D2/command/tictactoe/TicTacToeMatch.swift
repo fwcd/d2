@@ -6,7 +6,7 @@ class TicTacToeMatch: CustomStringConvertible {
 	private let playerX: DiscordUser
 	private let playerO: DiscordUser
 	private(set) var board: TicTacToeBoard
-	private(set) var currentPlayer: TicTacToeRole = .x
+	private(set) var currentRole: TicTacToeRole = .x
 	var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
 	
 	var elapsedTime: TimeInterval {
@@ -23,7 +23,7 @@ class TicTacToeMatch: CustomStringConvertible {
 	func perform(moveBy role: TicTacToeRole, atRow row: Int, col: Int) throws {
 		let next = try board.with(role, atRow: row, col: col)
 		board = next
-		currentPlayer = currentPlayer.opponent
+		currentRole = currentRole.opponent
 	}
 	
 	func playerOf(role: TicTacToeRole) -> DiscordUser? {
