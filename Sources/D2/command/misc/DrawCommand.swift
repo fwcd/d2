@@ -7,9 +7,9 @@ class DrawCommand: StringCommand {
 	
 	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			var graphics = ImageGraphics(width: 300, height: 300)
+			var graphics = ImageGraphics(width: 150, height: 150)
 			
-			graphics.draw(LineSegment(fromX: 0, y: 10, toX: 20, y: 20))
+			graphics.draw(LineSegment(fromX: 20, y: 20, toX: 50, y: 30))
 			
 			try output.append(graphics.image)
 		} catch {
