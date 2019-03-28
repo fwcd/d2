@@ -7,14 +7,6 @@ public struct Image {
 	
 	public var width: Int { return size.x }
 	public var height: Int { return size.y }
-	public var uncompressed: Result<PNG.Data.Uncompressed, Error> { return Result { try .convert(rgba: pixels, size: (width, height), to: .rgba16) } }
-	public var encoded: Result<Foundation.Data, Error> {
-		return uncompressed.flatMap { output in Result {
-			var destination = FoundationDataDestination(data: Foundation.Data(capacity: width * height * 4))
-			try output.compress(to: &destination, level: 8)
-			return destination.data
-		} }
-	}
 	
 	public init(size: Vec2<Int>) {
 		self.size = size
@@ -34,10 +26,19 @@ public struct Image {
 		return (pos.y * width) + pos.x
 	}
 	
+	public func uncompressed(format: PNG.Properties.Format.Code = .rgba8) throws -> PNG.Data.Uncompressed {
+		return try .convert(rgba: pixels, size: (width, height), to: .rgba8)
+	}
+	
+	public func encoded(format: PNG.Properties.Format.Code = .rgba8) throws -> Foundation.Data {
+		var destination = FoundationDataDestination(data: Foundation.Data(capacity: width * height * 4))
+		try uncompressed().compress(to: &destination, level: 8)
+		return destination.data
+	}
+	
 	public func encode(to sink: @escaping ([UInt8]) -> Void) throws {
 		var destination = ClosureDataDestination(sink: sink)
-		try PNG.Data.Uncompressed.convert(rgba: pixels, size: (width, height), to: .rgba16)
-			.compress(to: &destination, level: 8)
+		try uncompressed().compress(to: &destination, level: 8)
 	}
 }
 
