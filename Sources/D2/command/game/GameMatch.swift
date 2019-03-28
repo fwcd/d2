@@ -11,7 +11,7 @@ protocol GameMatch {
 	associatedtype Move: GameMove
 	
 	var board: Board { get }
-	var currentRole: Role { get set }
+	var currentRole: Role { get }
 	
 	init(firstPlayer: DiscordUser, secondPlayer: DiscordUser)
 	

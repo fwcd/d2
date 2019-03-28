@@ -52,7 +52,7 @@ class TicTacToeCommand: StringCommand {
 		
 		let playerX = context.author
 		let playerO = opponent
-		let match = TicTacToeMatch(playerX: playerX, playerO: playerO)
+		let match = TicTacToeMatch(firstPlayer: playerX, secondPlayer: playerO)
 		
 		currentMatch = match
 		output.append("Playing new match: \(match)\n\(match.board.discordEncoded)")
@@ -97,7 +97,7 @@ class TicTacToeCommand: StringCommand {
 		}
 		
 		do {
-			try match.perform(moveBy: role, atRow: rowIndex, col: colIndex)
+			try match.performMoveAt(row: rowIndex, col: colIndex)
 			output.append(match.board.discordEncoded)
 			
 			if let winner = match.board.winner {

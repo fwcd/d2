@@ -1,5 +1,5 @@
 /** An immutable tic-tac-toe board. */
-struct TicTacToeBoard {
+struct TicTacToeBoard: GameBoard {
 	let fields: [[TicTacToeRole]]
 	
 	var discordEncoded: String {
@@ -11,13 +11,16 @@ struct TicTacToeBoard {
 	var sideLength: Int { return fields.count }
 	
 	/** The winner of this board if there is one. A draw is represented as TicTacToeRole.empty. */
-	var winner: TicTacToeRole? { return ((horizontalWinner ?? verticalWinner) ?? diagonalWinner) ?? (boardFilled ? .empty : nil) }
+	var winner: TicTacToeRole? { return (horizontalWinner ?? verticalWinner) ?? diagonalWinner }
+	var isDraw: Bool { return boardFilled && (winner == nil) }
 	private var boardFilled: Bool { return fields.allSatisfy { row in row.allSatisfy { $0 != .empty } } }
 	private var horizontalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(row: $0) }.first }
 	private var verticalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(column: $0) }.first }
 	private var diagonalWinner: TicTacToeRole? { return risingDiagonalWinner ?? fallingDiagonalWinner }
 	private var risingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
 	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[(sideLength - 1) - $0][$0] == role } } }
+	
+	typealias Role = TicTacToeRole
 	
 	/** Creates an empty board of the given (square-shaped) size. */
 	init(sideLength: Int = 3) {

@@ -24,8 +24,12 @@ final class TicTacToeMatch: GameMatch, CustomStringConvertible {
 		board = TicTacToeBoard()
 	}
 	
-	func perform(moveBy role: TicTacToeRole, atRow row: Int, col: Int) throws {
-		let next = try board.with(role, atRow: row, col: col)
+	func perform(move: TicTacToeMove) throws {
+		try performMoveAt(row: move.row, col: move.column)
+	}
+	
+	func performMoveAt(row: Int, col: Int) throws {
+		let next = try board.with(currentRole, atRow: row, col: col)
 		board = next
 		currentRole = currentRole.opponent
 	}

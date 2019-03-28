@@ -3,8 +3,8 @@ import D2Utils
 fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 
 struct TicTacToeMove: GameMove {
-	private let row: Int
-	private let column: Int
+	let row: Int
+	let column: Int
 	
 	init(fromString str: String) throws {
 		if let parsedArgs = argsRegex.firstGroups(in: str) {
