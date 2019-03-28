@@ -30,6 +30,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["rpn"] = RPNCommand()
 	handler["tictactoe"] = TicTacToeCommand()
 	handler["cyclethrough"] = CycleThroughCommand()
+	handler["draw"] = DrawCommand()
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] _, output, context, _ in
 		let helpText = Dictionary(grouping: handler.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { handler.permissionManager[context.author].rawValue >= $0.key.rawValue }

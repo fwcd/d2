@@ -16,6 +16,15 @@ public struct Image {
 		} }
 	}
 	
+	public init(size: Vec2<Int>) {
+		self.size = size
+		pixels = Array(repeating: PNG.RGBA<UInt8>(0), count: size.x * size.y)
+	}
+	
+	public init(width: Int, height: Int) {
+		self.init(size: Vec2(x: width, y: height))
+	}
+	
 	public subscript(pos: Vec2<Int>) -> Color {
 		get { return Color(from: pixels[index(of: pos)]) }
 		set(newValue) { pixels[index(of: pos)] = newValue.pngRGBA }

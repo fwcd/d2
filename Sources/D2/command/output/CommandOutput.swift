@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 protocol CommandOutput {
 	func append(_ message: DiscordMessage)
@@ -10,6 +11,10 @@ extension CommandOutput {
 	}
 	
 	func append(_ embed: DiscordEmbed) {
-		append(DiscordMessage(content: "", embed: embed))
+		append(DiscordMessage(fromEmbed: embed))
+	}
+	
+	func append(_ image: Image) throws {
+		append(try DiscordMessage(fromImage: image))
 	}
 }
