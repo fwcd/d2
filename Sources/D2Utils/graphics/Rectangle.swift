@@ -1,3 +1,8 @@
+public struct RectangleDefaults {
+	public static let color = Colors.white
+	public static let isFilled = true
+}
+
 public struct Rectangle<T: VecComponent> {
 	public let topLeft: Vec2<T>
 	public let size: Vec2<T>
@@ -8,19 +13,19 @@ public struct Rectangle<T: VecComponent> {
 	public var bottomLeft: Vec2<T> { return topLeft + Vec2(x: 0, y: size.y) }
 	public var bottomRight: Vec2<T> { return topLeft + size }
 	
-	public init(topLeft: Vec2<T>, size: Vec2<T>, color: Color = Colors.white, isFilled: Bool = true) {
+	public init(topLeft: Vec2<T>, size: Vec2<T>, color: Color = RectangleDefaults.color, isFilled: Bool = RectangleDefaults.isFilled) {
 		self.topLeft = topLeft
 		self.size = size
 		self.color = color
 		self.isFilled = isFilled
 	}
 	
-	public init(x: T, y: T, width: T, height: T) {
-		self.init(topLeft: Vec2(x: x, y: y), size: Vec2(x: x, y: y))
+	public init(fromX x: T, y: T, width: T, height: T, color: Color = RectangleDefaults.color, isFilled: Bool = RectangleDefaults.isFilled) {
+		self.init(topLeft: Vec2(x: x, y: y), size: Vec2(x: width, y: height), color: color, isFilled: isFilled)
 	}
 }
 
-extension Rectangle where T: Comparable {
+extension Rectangle: Sequence where T: Comparable {
 	public typealias Element = Vec2<T>
 	
 	public func makeIterator() -> Iterator {

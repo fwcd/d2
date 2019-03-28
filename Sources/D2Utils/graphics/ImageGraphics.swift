@@ -15,7 +15,10 @@ public struct ImageGraphics: Graphics {
 		let step = (end - pos).normalized
 		
 		while (pos - end).length > 1 {
-			image[pos.floored] = line.color
+			let pixelPos = pos.floored
+			if image.isInBounds(pixelPos) {
+				image[pixelPos] = line.color
+			}
 			pos = pos + step
 		}
 	}
@@ -27,8 +30,11 @@ public struct ImageGraphics: Graphics {
 			draw(LineSegment(from: rectangle.topLeft, to: rectangle.bottomLeft))
 			draw(LineSegment(from: rectangle.bottomLeft, to: rectangle.bottomRight))
 		} else {
+			// TODO: Clip rectangle to bounds before iterating
 			for pos in rectangle {
-				image[pos] = rectangle.color
+				if image.isInBounds(pos) {
+					image[pos] = rectangle.color
+				}
 			}
 		}
 	}

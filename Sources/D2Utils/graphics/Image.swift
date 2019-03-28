@@ -22,6 +22,10 @@ public struct Image {
 		set(newValue) { pixels[index(of: pos)] = newValue.pngRGBA }
 	}
 	
+	func isInBounds(_ pos: Vec2<Int>) -> Bool {
+		return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height
+	}
+	
 	private func index(of pos: Vec2<Int>) -> Int {
 		return (pos.y * width) + pos.x
 	}
