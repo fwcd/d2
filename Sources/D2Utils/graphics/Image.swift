@@ -17,6 +17,12 @@ public struct Image {
 		self.init(size: Vec2(x: width, y: height))
 	}
 	
+	public init(fromFile file: String) throws {
+		let (pixels, (x: width, y: height)) = try PNG.rgba(path: file, of: UInt8.self)
+		self.pixels = pixels
+		size = Vec2(x: width, y: height)
+	}
+	
 	public subscript(pos: Vec2<Int>) -> Color {
 		get { return Color(from: pixels[index(of: pos)]) }
 		set(newValue) { pixels[index(of: pos)] = newValue.pngRGBA }
