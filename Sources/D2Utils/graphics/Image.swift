@@ -33,6 +33,12 @@ public struct Image {
 	private func index(of pos: Vec2<Int>) -> Int {
 		return (pos.y * width) + pos.x
 	}
+	
+	public func encode(to sink: @escaping ([UInt8]) -> Void) throws {
+		var destination = ClosureDataDestination(sink: sink)
+		try PNG.Data.Uncompressed.convert(rgba: pixels, size: (width, height), to: .rgba16)
+			.compress(to: &destination, level: 8)
+	}
 }
 
 extension Color {
