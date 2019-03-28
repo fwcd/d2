@@ -7,7 +7,7 @@ class DrawCommand: StringCommand {
 	
 	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			let graphics = ImageGraphics(Image(width: 300, height: 300))
+			let graphics = ImageGraphics(width: 300, height: 300)
 			// TODO
 			try output.append(graphics.image)
 		} catch {

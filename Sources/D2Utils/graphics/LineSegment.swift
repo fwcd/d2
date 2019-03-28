@@ -3,7 +3,7 @@ public struct LineSegment<T: VecComponent> {
 	public let end: Vec2<T>
 	public let color: Color
 	
-	public init(start: Vec2<T>, end: Vec2<T>, color: Color = .white) {
+	public init(start: Vec2<T>, end: Vec2<T>, color: Color = Colors.white) {
 		self.start = start
 		self.end = end
 		self.color = color

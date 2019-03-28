@@ -1,8 +1,12 @@
 public struct ImageGraphics: Graphics {
-	private(set) var image: Image
+	public private(set) var image: Image
 	
 	public init(image: Image) {
 		self.image = image
+	}
+	
+	public init(width: Int, height: Int) {
+		self.init(image: Image(width: width, height: height))
 	}
 	
 	public mutating func draw(_ line: LineSegment<Int>) {
