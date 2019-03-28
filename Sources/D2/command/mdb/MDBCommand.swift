@@ -15,7 +15,7 @@ class MDBCommand: StringCommand {
 			}
 			
 			query.start { response in
-				guard case let .ok(result) = response else {
+				guard case let .success(result) = response else {
 					output.append("An error occurred while querying.")
 					return
 				}

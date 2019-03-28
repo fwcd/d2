@@ -2,7 +2,7 @@ import Foundation
 import D2Utils
 
 class UnivISXMLParserDelegate: XMLParserDelegate {
-	let then: (Result<UnivISOutputNode>) -> Void
+	let then: (Result<UnivISOutputNode, Error>) -> Void
 	let registeredBuilderFactories: [String: () -> UnivISObjectNodeXMLBuilder] = [
 		"Event": { UnivISEventXMLBuilder() },
 		"Room": { UnivISRoomXMLBuilder() },
@@ -16,7 +16,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 	var currentCharacters = ""
 	var hasErrored = false
 	
-	init(then: @escaping (Result<UnivISOutputNode>) -> Void) {
+	init(then: @escaping (Result<UnivISOutputNode, Error>) -> Void) {
 		self.then = then
 	}
 	
@@ -38,7 +38,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 				currentName = elementName
 			} // else ignore unrecognized element
 		} catch {
-			then(.error(error))
+			then(.failure(error))
 		}
 	}
 	
@@ -52,7 +52,7 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 		do {
 			if elementName == "UnivIS" {
 				print("Ending parsing")
-				then(.ok(UnivISOutputNode(childs: nodes)))
+				then(.success(UnivISOutputNode(childs: nodes)))
 			} else if let builder = nodeBuilder {
 				if elementName == currentName {
 					// Exit object node
@@ -73,20 +73,20 @@ class UnivISXMLParserDelegate: XMLParserDelegate {
 			
 			currentCharacters = ""
 		} catch {
-			then(.error(error))
+			then(.failure(error))
 		}
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
 		if !hasErrored {
-			then(.error(parseError))
+			then(.failure(parseError))
 			hasErrored = true
 		}
 	}
 	
 	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
 		if !hasErrored {
-			then(.error(validationError))
+			then(.failure(validationError))
 			hasErrored = true
 		}
 	}

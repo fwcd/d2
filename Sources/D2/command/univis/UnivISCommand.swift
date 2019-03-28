@@ -36,7 +36,7 @@ class UnivISCommand: StringCommand {
 			let queryParams = try queryParameterDict(of: kvArgPattern.allGroups(in: input))
 			
 			try UnivISQuery(search: searchKey, params: queryParams).start { response in
-				if case let .ok(result) = response {
+				if case let .success(result) = response {
 					let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
 					var embed = DiscordEmbed()
 					
@@ -46,7 +46,7 @@ class UnivISCommand: StringCommand {
 						.prefix(self.maxResponseEntries))
 					
 					output.append(embed)
-				} else if case let .error(error) = response {
+				} else if case let .failure(error) = response {
 					print(error)
 					output.append("UnivIS query error. Check the log for more information.")
 				}

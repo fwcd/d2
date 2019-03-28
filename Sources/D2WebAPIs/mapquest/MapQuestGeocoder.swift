@@ -2,10 +2,10 @@ import Foundation
 import D2Utils
 
 struct MapQuestGeocoder {
-	func geocode(location: String, then: @escaping (Result<GeoCoordinates>) -> Void) {
+	func geocode(location: String, then: @escaping (Result<GeoCoordinates, Error>) -> Void) {
 		let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
 		guard let url = URL(string: "https://www.mapquestapi.com/geocoding/v1/address?key=\(mapQuestKey)&location=\(encodedLocation)") else {
-			then(.error(MapQuestError.urlError("Error while constructing url from location '\(encodedLocation)'")))
+			then(.failure(MapQuestError.urlError("Error while constructing url from location '\(encodedLocation)'")))
 			return
 		}
 		
@@ -16,7 +16,7 @@ struct MapQuestGeocoder {
 		
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard let data = data, error == nil else {
-				then(.error(MapQuestError.httpError(error)))
+				then(.failure(MapQuestError.httpError(error)))
 				return
 			}
 			do {
@@ -34,16 +34,16 @@ struct MapQuestGeocoder {
 					.flatMap { $0 as? [String: Double] }
 				
 				guard let location = latLng else {
-					then(.error(MapQuestError.jsonParseError(json, "Could not locate results -> locations -> latLng")))
+					then(.failure(MapQuestError.jsonParseError(json, "Could not locate results -> locations -> latLng")))
 					return
 				}
 				guard let lat = location["lat"], let lng = location["lng"] else {
-					then(.error(MapQuestError.jsonParseError(location, "No 'lat'/'lng' keys found")))
+					then(.failure(MapQuestError.jsonParseError(location, "No 'lat'/'lng' keys found")))
 					return
 				}
-				then(.ok(GeoCoordinates(latitude: lat, longitude: lng)))
+				then(.success(GeoCoordinates(latitude: lat, longitude: lng)))
 			} catch {
-				then(.error(MapQuestError.jsonIOError(error)))
+				then(.failure(MapQuestError.jsonIOError(error)))
 			}
 		}.resume()
 	}

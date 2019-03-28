@@ -24,18 +24,18 @@ struct UnivISQuery {
 		self.url = url
 	}
 	
-	func start(then: @escaping (Result<UnivISOutputNode>) -> Void) {
+	func start(then: @escaping (Result<UnivISOutputNode, Error>) -> Void) {
 		print("Querying \(url)")
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				then(.error(UnivISError.httpError(error!)))
+				then(.failure(UnivISError.httpError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.error(UnivISError.missingData))
+				then(.failure(UnivISError.missingData))
 				return
 			}
 			

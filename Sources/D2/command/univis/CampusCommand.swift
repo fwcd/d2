@@ -14,7 +14,7 @@ class CampusCommand: StringCommand {
 			try UnivISQuery(search: .rooms, params: [
 				.name: input
 			]).start { response in
-				guard case let .ok(queryOutput) = response else {
+				guard case let .success(queryOutput) = response else {
 					output.append("An error occurred while querying.")
 					return
 				}
@@ -37,7 +37,7 @@ class CampusCommand: StringCommand {
 				}
 				
 				self.geocoder.geocode(location: address) { geocodeResponse in
-					guard case let .ok(coords) = geocodeResponse else {
+					guard case let .success(coords) = geocodeResponse else {
 						output.append(rawAddress)
 						return
 					}

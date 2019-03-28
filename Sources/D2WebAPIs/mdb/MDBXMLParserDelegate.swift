@@ -5,7 +5,7 @@ import D2Utils
 fileprivate let htmlParagraphPattern = try! Regex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")
 
 class MDBXMLParserDelegate: XMLParserDelegate {
-	let then: (Result<[MDBModule]>) -> Void
+	let then: (Result<[MDBModule], Error>) -> Void
 	
 	var modules = [MDBModule]()
 	
@@ -19,7 +19,7 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 	var currentCharacters = ""
 	var hasErrored = false
 	
-	init(then: @escaping (Result<[MDBModule]>) -> Void) {
+	init(then: @escaping (Result<[MDBModule], Error>) -> Void) {
 		self.then = then
 	}
 	
@@ -101,20 +101,20 @@ class MDBXMLParserDelegate: XMLParserDelegate {
 		stackHeight -= 1
 		
 		if stackHeight <= 0 {
-			then(.ok(modules))
+			then(.success(modules))
 		}
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
 		if !hasErrored {
-			then(.error(parseError))
+			then(.failure(parseError))
 			hasErrored = true
 		}
 	}
 	
 	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
 		if !hasErrored {
-			then(.error(validationError))
+			then(.failure(validationError))
 			hasErrored = true
 		}
 	}

@@ -7,13 +7,13 @@ struct Image {
 	
 	var width: Int { return size.x }
 	var height: Int { return size.y }
-	var uncompressed: Result<PNG.Data.Uncompressed> { return .wrap { try .convert(rgba: pixels, size: (width, height), to: .rgba16) } }
-	var encoded: Result<Foundation.Data> {
-		return uncompressed.map { output in
+	var uncompressed: Result<PNG.Data.Uncompressed, Error> { return Result { try .convert(rgba: pixels, size: (width, height), to: .rgba16) } }
+	var encoded: Result<Foundation.Data, Error> {
+		return uncompressed.flatMap { output in Result {
 			var destination = FoundationDataDestination(data: Foundation.Data(capacity: width * height * 4))
 			try output.compress(to: &destination, level: 8)
 			return destination.data
-		}
+		} }
 	}
 	
 	subscript(pos: Vec2<Int>) -> Color {

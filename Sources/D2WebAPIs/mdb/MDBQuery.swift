@@ -20,18 +20,18 @@ struct MDBQuery {
 		self.url = url
 	}
 	
-	func start(then: @escaping (Result<[MDBModule]>) -> Void) {
+	func start(then: @escaping (Result<[MDBModule], Error>) -> Void) {
 		print("Querying \(url)")
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				then(.error(MDBError.httpError(error!)))
+				then(.failure(MDBError.httpError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.error(MDBError.missingData))
+				then(.failure(MDBError.missingData))
 				return
 			}
 			
