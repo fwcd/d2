@@ -19,3 +19,37 @@ public struct Rectangle<T: VecComponent> {
 		self.init(topLeft: Vec2(x: x, y: y), size: Vec2(x: x, y: y))
 	}
 }
+
+extension Rectangle where T: Comparable {
+	public typealias Element = Vec2<T>
+	
+	public func makeIterator() -> Iterator {
+		return Iterator(from: topLeft, to: bottomRight)
+	}
+	
+	public struct Iterator: IteratorProtocol {
+		private let start: Vec2<T>
+		private let end: Vec2<T>
+		private var current: Vec2<T>?
+		
+		init(from start: Vec2<T>, to end: Vec2<T>) {
+			self.start = start
+			self.end = end
+			current = start
+		}
+		
+		public mutating func next() -> Vec2<T>? {
+			guard let pos = current else { return nil }
+			
+			if pos.x < end.x {
+				current = Vec2(x: pos.x + 1, y: pos.y)
+			} else if pos.y < end.y {
+				current = Vec2(x: start.x, y: pos.y + 1)
+			} else {
+				current = nil
+			}
+			
+			return pos
+		}
+	}
+}

@@ -10,6 +10,6 @@ public struct LineSegment<T: VecComponent> {
 	}
 	
 	public init(fromX startX: T, y startY: T, toX endX: T, y endY: T) {
-		self.init(start: Vec2(x: startX, y: startY), end: Vec2(x: endX, y: endY))
+		self.init(from: Vec2(x: startX, y: startY), to: Vec2(x: endX, y: endY))
 	}
 }

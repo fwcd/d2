@@ -1,4 +1,4 @@
-public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible
+public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible & ExpressibleByIntegerLiteral
 
 public struct Vec2<T: VecComponent>: Addable, Subtractable {
 	public let x: T
