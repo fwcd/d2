@@ -1,5 +1,4 @@
 import SwiftDiscord
-import D2Utils
 
 /**
  * Represents a game match. It is strongly recommended

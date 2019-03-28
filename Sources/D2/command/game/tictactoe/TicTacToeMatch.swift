@@ -2,16 +2,16 @@ import Foundation
 import SwiftDiscord
 
 final class TicTacToeMatch: GameMatch, CustomStringConvertible {
+	typealias Role = TicTacToeRole
+	typealias Board = TicTacToeBoard
+	typealias Move = TicTacToeMove
+	
 	private let startTime: Date
 	private let playerX: DiscordUser
 	private let playerO: DiscordUser
 	private(set) var board: TicTacToeBoard
 	private(set) var currentRole: TicTacToeRole = .x
 	var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
-	
-	typealias Role = TicTacToeRole
-	typealias Board = TicTacToeBoard
-	typealias Move = TicTacToeMove
 	
 	var elapsedTime: TimeInterval {
 		return -startTime.timeIntervalSinceNow
