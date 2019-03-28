@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 fileprivate let setMessageRegex = try! Regex(from: "set\\s+(\\S+)\\s+(\\S+)")
 fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")

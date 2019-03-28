@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 class CycleThroughCommand: StringCommand {
 	let description = "Animates a sequence of characters"

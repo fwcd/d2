@@ -1,4 +1,6 @@
 import SwiftDiscord
+import D2Utils
+import D2WebAPIs
 
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"

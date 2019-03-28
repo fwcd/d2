@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 class GrepCommand: ArgListCommand {
 	let description = "Filters and prints lines that match a regular expression"

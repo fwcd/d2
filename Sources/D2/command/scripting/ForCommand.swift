@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 fileprivate let rawRangePattern = "\\d+\\.\\.[\\.<]\\d+"
 

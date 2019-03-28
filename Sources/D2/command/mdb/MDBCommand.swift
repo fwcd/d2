@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2WebAPIs
 
 class MDBCommand: StringCommand {
 	let description = "Queries the Computer Science module database of the CAU"

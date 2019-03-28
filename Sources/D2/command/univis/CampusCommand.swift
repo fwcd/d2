@@ -1,5 +1,7 @@
 import SwiftDiscord
 import Foundation
+import D2Utils
+import D2WebAPIs
 
 fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
 

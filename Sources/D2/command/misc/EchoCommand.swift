@@ -1,6 +1,7 @@
 import SwiftDiscord
 import Foundation
 import Dispatch
+import D2Utils
 
 fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 
