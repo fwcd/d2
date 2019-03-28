@@ -28,7 +28,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["/"] = BinaryOperationCommand<Double>(name: "division", operation: /)
 	handler["%"] = BinaryOperationCommand<Int>(name: "remainder", operation: %)
 	handler["rpn"] = RPNCommand()
-	handler["tictactoe"] = TicTacToeCommand()
+	handler["tictactoe"] = TwoPlayerGameCommand<TicTacToeMatch>(withName: "tic tac toe")
 	handler["cyclethrough"] = CycleThroughCommand()
 	handler["draw"] = DrawCommand()
 	handler["help"] = ClosureCommand(description: "Helps", level: .basic) { [unowned handler] _, output, context, _ in
