@@ -131,13 +131,9 @@ class TicTacToeCommand: StringCommand {
 		let arg = cancelArgs[1]
 		switch arg {
 			case "match":
-				if let match = currentMatch {
-					currentMatch = nil
-					output.append("Cancelled match: \(match.description)")
-					return .cancelSubscription
-				} else {
-					output.append("No match is running currently")
-				}
+				currentMatch = nil
+				output.append("Cancelled match: \(match.description)")
+				return .cancelSubscription
 			default:
 				output.append("Sorry, I do not know how to cancel `\(arg)`")
 		}
