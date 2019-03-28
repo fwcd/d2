@@ -117,5 +117,26 @@
 			"\t}",
 			"}"
 		]
+	},
+	"Game move implementation": {
+		"prefix": "gamemove",
+		"scope": "swift",
+		"body": [
+			"import D2Utils",
+			"",
+			"fileprivate let argsRegex = try! Regex(from: \"$2\")",
+			"",
+			"struct $1Move: GameMove {",
+			"\t$3",
+			"\t",
+			"\tinit(fromString str: String) throws {",
+			"\t\tif let parsedArgs = argsRegex.firstGroups(in: str) {",
+			"\t\t\t$0",
+			"\t\t} else {",
+			"\t\t\tthrow GameError.invalidMove(\"Your move `\\(str)` is invalid.\")",
+			"\t\t}",
+			"\t}",
+			"}"
+		]
 	}
 }
