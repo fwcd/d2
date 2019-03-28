@@ -1,5 +1,7 @@
 /** An immutable tic-tac-toe board. */
 struct TicTacToeBoard: GameBoard {
+	typealias Role = TicTacToeRole
+	
 	let fields: [[TicTacToeRole]]
 	
 	var discordEncoded: String {
@@ -19,8 +21,6 @@ struct TicTacToeBoard: GameBoard {
 	private var diagonalWinner: TicTacToeRole? { return risingDiagonalWinner ?? fallingDiagonalWinner }
 	private var risingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
 	private var fallingDiagonalWinner: TicTacToeRole? { return TicTacToeRole.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[(sideLength - 1) - $0][$0] == role } } }
-	
-	typealias Role = TicTacToeRole
 	
 	/** Creates an empty board of the given (square-shaped) size. */
 	init(sideLength: Int = 3) {

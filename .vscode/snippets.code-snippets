@@ -56,7 +56,7 @@
 		"scope": "swift",
 		"body": "message.channel?.send($0)"
 	},
-	"GameMatch implementation": {
+	"Game match implementation": {
 		"prefix": "gamematch",
 		"scope": "swift",
 		"body": [
@@ -136,6 +136,23 @@
 			"\t\t\tthrow GameError.invalidMove(\"Your move `\\(str)` is invalid.\")",
 			"\t\t}",
 			"\t}",
+			"}"
+		]
+	},
+	"Game board implementation": {
+		"prefix": "gameboard",
+		"scope": "swift",
+		"body": [
+			"struct $1Board: GameBoard {",
+			"\ttypealias Role = $1Role",
+			"\t",
+			"\t$2",
+			"\t",
+			"\tvar discordEncoded: String { return $3 }",
+			"\tvar winner: Role? { return $4 }",
+			"\tvar isDraw: Bool { return $5 }",
+			"\t",
+			"\t$0",
 			"}"
 		]
 	}
