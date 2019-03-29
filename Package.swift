@@ -35,7 +35,7 @@ let package = Package(
             dependencies: ["SwiftDiscord", "PNG"]
         ),
         .testTarget(
-            name: "D2Tests",
+            name: "D2CommandTests",
             dependencies: ["SwiftDiscord", "D2TestUtils", "D2Commands"]
         ),
         .testTarget(

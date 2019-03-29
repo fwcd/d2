@@ -12,6 +12,6 @@ final class EchoCommandTests: XCTestCase {
 		let output = CommandTestOutput()
 		
 		command.testInvoke(withArgs: "demo", output: output)
-		XCTAssertEqual(output.lastContents, "demo")
+		XCTAssertEqual(output.lastContent, "demo")
 	}
 }

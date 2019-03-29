@@ -1,7 +1,7 @@
 import XCTest
 
-import D2Tests
+import D2CommandTests
 
 var tests = [XCTestCaseEntry]()
-tests += D2Tests.allTests()
+tests += D2CommandTests.allTests()
 XCTMain(tests)
