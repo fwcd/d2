@@ -1,11 +1,17 @@
 import SwiftDiscord
 
-struct CommandContext {
-	let guild: DiscordGuild?
-	let registry: CommandRegistry
-	let message: DiscordMessage
+public struct CommandContext {
+	public let guild: DiscordGuild?
+	public let registry: CommandRegistry
+	public let message: DiscordMessage
 	
-	var author: DiscordUser { return message.author }
-	var channel: DiscordTextChannel? { return message.channel }
-	var client: DiscordClient? { return message.client }
+	public var author: DiscordUser { return message.author }
+	public var channel: DiscordTextChannel? { return message.channel }
+	public var client: DiscordClient? { return message.client }
+	
+	init(guild: DiscordGuild?, registry: CommandRegistry, message: DiscordMessage) {
+		self.guild = guild
+		self.registry = registry
+		self.message = message
+	}
 }

@@ -1,10 +1,10 @@
 /** An immutable tic-tac-toe board. */
-struct TicTacToeBoard: GameBoard {
-	typealias Role = TicTacToeRole
+public struct TicTacToeBoard: GameBoard {
+	public typealias Role = TicTacToeRole
 	
 	let fields: [[TicTacToeRole]]
 	
-	var discordStringEncoded: String {
+	public var discordStringEncoded: String {
 		return fields.map { row in
 			row.map { $0.discordStringEncoded }.joined()
 		}.joined(separator: "\n")
@@ -13,8 +13,8 @@ struct TicTacToeBoard: GameBoard {
 	var sideLength: Int { return fields.count }
 	
 	/** The winner of this board if there is one. A draw is represented as TicTacToeRole.empty. */
-	var winner: TicTacToeRole? { return (horizontalWinner ?? verticalWinner) ?? diagonalWinner }
-	var isDraw: Bool { return boardFilled && (winner == nil) }
+	public var winner: TicTacToeRole? { return (horizontalWinner ?? verticalWinner) ?? diagonalWinner }
+	public var isDraw: Bool { return boardFilled && (winner == nil) }
 	private var boardFilled: Bool { return fields.allSatisfy { row in row.allSatisfy { $0 != .empty } } }
 	private var horizontalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(row: $0) }.first }
 	private var verticalWinner: TicTacToeRole? { return (0..<sideLength).compactMap { winnerIn(column: $0) }.first }

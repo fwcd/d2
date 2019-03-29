@@ -10,7 +10,7 @@ public protocol StringCommand: Command {
 }
 
 extension StringCommand {
-	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
+	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		invoke(withStringInput: (args.nilIfEmpty ?? input?.content) ?? "", output: output, context: context)
 	}
 }

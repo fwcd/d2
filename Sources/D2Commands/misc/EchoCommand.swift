@@ -15,7 +15,7 @@ public class EchoCommand: Command {
 		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 	}
 	
-	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
+	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		if let groups = argPattern.firstGroups(in: args) {
 			// Extract parsed values
 			let n = groups[safely: 1].flatMap { Int($0) } ?? 1

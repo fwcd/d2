@@ -2,11 +2,11 @@ import D2Utils
 
 fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 
-struct TicTacToeMove: GameMove {
+public struct TicTacToeMove: GameMove {
 	let row: Int
 	let column: Int
 	
-	init(fromString str: String) throws {
+	public init(fromString str: String) throws {
 		if let parsedArgs = argsRegex.firstGroups(in: str) {
 			if let row = Row(rawValue: parsedArgs[1]), let column = Column(rawValue: parsedArgs[2]) {
 				self.row = row.index

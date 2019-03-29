@@ -2,10 +2,10 @@ import SwiftDiscord
 import D2Permissions
 
 public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
-	let name: String
-	let description: String
+	public let name: String
+	public let description: String
 	public let requiredPermissionLevel = PermissionLevel.basic
-	let expectedArgCount: Int = 2
+	public let expectedArgCount: Int = 2
 	
 	private let operation: (T, T) -> T
 	
@@ -15,7 +15,7 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListComman
 		description = "Performs the binary operation '\(name)'"
 	}
 	
-	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
+	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
 		let rawLHS = inputArgs[0]
 		let rawRHS = inputArgs[1]
 		

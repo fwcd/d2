@@ -5,9 +5,9 @@ import D2Utils
 public class GrepCommand: ArgListCommand {
 	public let description = "Filters and prints lines that match a regular expression"
 	public let requiredPermissionLevel = PermissionLevel.vip
-	let expectedArgCount: Int = 2
+	public let expectedArgCount: Int = 2
 	
-	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
+	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
 		do {
 			let regex = try Regex(from: inputArgs[0])
 			var result = ""

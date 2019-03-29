@@ -40,7 +40,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		output.append("Playing new match: \(state)\n\(state.board.discordStringEncoded)\nType `move [...]` to begin!")
 	}
 	
-	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		if let state = currentState {
 			if let moveArgs = moveMessageRegex.firstGroups(in: content) {
 				return handleMoveMessage(withState: state, moveArgs: moveArgs, output: output, context: context)

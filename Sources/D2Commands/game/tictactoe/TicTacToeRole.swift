@@ -1,13 +1,13 @@
 import D2Utils
 
-enum TicTacToeRole: String, CaseIterable, DiscordEncodable {
+public enum TicTacToeRole: String, CaseIterable, DiscordEncodable {
 	case x = "x"
 	case o = "o"
 	case empty = " "
 	
 	static var allPlayerCases: [TicTacToeRole] { return allCases.filter { $0.isPlayerRole } }
 	
-	var discordStringEncoded: String {
+	public var discordStringEncoded: String {
 		switch self {
 			case .x: return ":x:"
 			case .o: return ":o:"

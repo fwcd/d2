@@ -1,23 +1,23 @@
 import Foundation
 import SwiftDiscord
 
-struct TicTacToeState: GameState, CustomStringConvertible {
-	typealias Role = TicTacToeRole
-	typealias Board = TicTacToeBoard
-	typealias Move = TicTacToeMove
+public struct TicTacToeState: GameState, CustomStringConvertible {
+	public typealias Role = TicTacToeRole
+	public typealias Board = TicTacToeBoard
+	public typealias Move = TicTacToeMove
 	
 	private let playerX: DiscordUser
 	private let playerO: DiscordUser
-	private(set) var board = Board()
-	private(set) var currentRole: Role = .x
-	var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
+	public private(set) var board = Board()
+	public private(set) var currentRole: Role = .x
+	public var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
 	
-	init(firstPlayer: DiscordUser, secondPlayer: DiscordUser) {
+	public init(firstPlayer: DiscordUser, secondPlayer: DiscordUser) {
 		playerX = firstPlayer
 		playerO = secondPlayer
 	}
 	
-	mutating func perform(move: Move) throws {
+	public mutating func perform(move: Move) throws {
 		try performMoveAt(row: move.row, col: move.column)
 	}
 	
@@ -27,7 +27,7 @@ struct TicTacToeState: GameState, CustomStringConvertible {
 		currentRole = currentRole.opponent
 	}
 	
-	func playerOf(role: Role) -> DiscordUser? {
+	public func playerOf(role: Role) -> DiscordUser? {
 		switch role {
 			case .x: return playerX
 			case .o: return playerO
@@ -35,7 +35,7 @@ struct TicTacToeState: GameState, CustomStringConvertible {
 		}
 	}
 	
-	func rolesOf(player: DiscordUser) -> [Role] {
+	public func rolesOf(player: DiscordUser) -> [Role] {
 		var roles = [Role]()
 		
 		if playerX.id == player.id { roles.append(.x) }

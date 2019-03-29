@@ -10,7 +10,7 @@ public class ShowPermissionsCommand: Command {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
+	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		output.append("```\n\(permissionManager.description)\n```")
 	}
 }

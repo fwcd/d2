@@ -1,3 +1,3 @@
-enum GameError: Error {
+public enum GameError: Error {
 	case invalidMove(String)
 }

@@ -1,4 +1,4 @@
-enum CommandSubscriptionAction {
+public enum CommandSubscriptionAction {
 	case continueSubscription
 	case cancelSubscription
 }

@@ -6,7 +6,7 @@ import D2Utils
  * required to use a value type (struct/enum/immutable class).
  * It is strongly recommended that implementors also adopt CustomStringConvertible.
  */
-protocol GameState {
+public protocol GameState {
 	/** A role is a logical player in the game (such as "white" or "black"). */
 	associatedtype Role
 	/** A hand encapsulates a role's private cards/pieces/... in games with imperfect information. */
@@ -30,9 +30,9 @@ protocol GameState {
 }
 
 extension GameState {
-	var hands: [Role: Hand] { return [:] }
+	public var hands: [Role: Hand] { return [:] }
 	
-	func childState(after move: Move) throws -> Self {
+	public func childState(after move: Move) throws -> Self {
 		var next = self
 		try next.perform(move: move)
 		return next

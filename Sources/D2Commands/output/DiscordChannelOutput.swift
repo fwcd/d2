@@ -1,13 +1,13 @@
 import SwiftDiscord
 
-class DiscordChannelOutput: CommandOutput {
+public class DiscordChannelOutput: CommandOutput {
 	private let channel: DiscordTextChannel?
 	
-	init(channel: DiscordTextChannel?) {
+	public init(channel: DiscordTextChannel?) {
 		self.channel = channel
 	}
 	
-	func append(_ message: DiscordMessage) {
+	public func append(_ message: DiscordMessage) {
 		channel?.send(message)
 	}
 }
