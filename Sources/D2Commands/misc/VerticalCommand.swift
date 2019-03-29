@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class VerticalCommand: StringCommand {
 	let description = "Reads horizontally, prints vertically"

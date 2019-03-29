@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 import D2Utils
 
 fileprivate let moveMessageRegex = try! Regex(from: "move\\s+(.+)")

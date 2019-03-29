@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
 	let name: String

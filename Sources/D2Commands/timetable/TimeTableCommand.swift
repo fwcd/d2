@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class TimeTableCommand: StringCommand {
 	let description = "Generates a TimeTable from CAU modules"

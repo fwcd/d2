@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class VoidCommand: Command {
 	let description = "Does nothing."

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 fileprivate let binaryOperators: [String: (Double, Double) -> Double] = [
 	"+": { $0 + $1 },

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 import Foundation
 import Dispatch
 import D2Utils

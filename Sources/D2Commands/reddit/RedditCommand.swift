@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 import Foundation
 
 class RedditCommand: StringCommand {

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class PingCommand: Command {
 	let description = "Replies with 'Pong!'"

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 /**
  * A command that only expects text-based input (as opposed to e.g. an input embed).

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class ClosureCommand: Command {
 	let description: String

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class HelpCommand: StringCommand {
 	let description = "Helps the user"

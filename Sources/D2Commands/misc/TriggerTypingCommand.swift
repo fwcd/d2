@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class TriggerTypingCommand: Command {
 	let description = "Begins to type"

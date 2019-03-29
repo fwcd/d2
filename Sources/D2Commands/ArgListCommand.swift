@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 /**
  * A command that takes input in the form of whitespace-separated

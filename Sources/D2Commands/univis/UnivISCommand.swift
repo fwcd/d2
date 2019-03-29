@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 import D2Utils
 import D2WebAPIs
 

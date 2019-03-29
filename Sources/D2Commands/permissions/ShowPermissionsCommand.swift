@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class ShowPermissionsCommand: Command {
 	let description = "Displays the configured permissions"

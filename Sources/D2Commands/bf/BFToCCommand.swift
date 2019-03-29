@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class BFToCCommand: StringCommand {
 	let description = "Transpiles a BF program to C code"

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 class LastMessageCommand: Command {
 	let description = "Retrieves and outputs the last message"
