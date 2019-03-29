@@ -7,7 +7,7 @@ public class BFEncodeCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let maxStringLength: Int
 	
-	init(maxStringLength: Int = 30) {
+	public init(maxStringLength: Int = 30) {
 		self.maxStringLength = maxStringLength
 	}
 	

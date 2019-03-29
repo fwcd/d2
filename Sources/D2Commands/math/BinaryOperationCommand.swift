@@ -9,7 +9,7 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListComman
 	
 	private let operation: (T, T) -> T
 	
-	init(name: String, operation: @escaping (T, T) -> T) {
+	public init(name: String, operation: @escaping (T, T) -> T) {
 		self.name = name
 		self.operation = operation
 		description = "Performs the binary operation '\(name)'"

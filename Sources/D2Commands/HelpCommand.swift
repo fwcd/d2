@@ -6,7 +6,7 @@ public class HelpCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let permissionManager: PermissionManager
 	
-	init(permissionManager: PermissionManager) {
+	public init(permissionManager: PermissionManager) {
 		self.permissionManager = permissionManager
 	}
 	

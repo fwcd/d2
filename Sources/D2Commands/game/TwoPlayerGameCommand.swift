@@ -17,7 +17,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 	
 	private var currentState: State? = nil
 	
-	init(withName name: String) {
+	public init(withName name: String) {
 		self.name = name
 	}
 	

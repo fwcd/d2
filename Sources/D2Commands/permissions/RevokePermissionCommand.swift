@@ -9,7 +9,7 @@ public class RevokePermissionCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
 	
-	init(permissionManager: PermissionManager) {
+	public init(permissionManager: PermissionManager) {
 		self.permissionManager = permissionManager
 	}
 	

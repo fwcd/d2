@@ -21,7 +21,7 @@ public class UnivISCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	let maxResponseEntries: Int
 	
-	init(maxResponseEntries: Int = 15) {
+	public init(maxResponseEntries: Int = 15) {
 		self.maxResponseEntries = maxResponseEntries
 	}
 	

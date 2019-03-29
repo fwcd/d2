@@ -12,7 +12,7 @@ public class ForCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
 	
-	init(intervalSeconds: Int = 1) {
+	public init(intervalSeconds: Int = 1) {
 		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 	}
 	
