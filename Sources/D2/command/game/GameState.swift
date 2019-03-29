@@ -2,10 +2,11 @@ import SwiftDiscord
 import D2Utils
 
 /**
- * Represents a mutable game state. It is strongly recommended
- * for implementors to also adopt CustomStringConvertible.
+ * Represents a mutable game state. Implementing classes are
+ * required to use a value type (struct/enum/immutable class).
+ * It is strongly recommended that implementors also adopt CustomStringConvertible.
  */
-protocol GameMatch {
+protocol GameState {
 	/** A role is a logical player in the game (such as "white" or "black"). */
 	associatedtype Role
 	/** A hand encapsulates a role's private cards/pieces/... in games with imperfect information. */
@@ -25,9 +26,15 @@ protocol GameMatch {
 	
 	func playerOf(role: Role) -> DiscordUser?
 	
-	func perform(move: Move) throws
+	mutating func perform(move: Move) throws
 }
 
-extension GameMatch {
+extension GameState {
 	var hands: [Role: Hand] { return [:] }
+	
+	func childState(after move: Move) throws -> Self {
+		var next = self
+		try next.perform(move: move)
+		return next
+	}
 }

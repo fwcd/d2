@@ -56,13 +56,13 @@
 		"scope": "swift",
 		"body": "message.channel?.send($0)"
 	},
-	"Game match implementation": {
-		"prefix": "gamematch",
+	"Game state implementation": {
+		"prefix": "gamestate",
 		"scope": "swift",
 		"body": [
 			"import SwiftDiscord",
 			"",
-			"final class $1Match: GameMatch, CustomStringConvertible {",
+			"struct $1State: GameState, CustomStringConvertible {",
 			"\ttypealias Role = $1Role",
 			"\ttypealias Board = $1Board",
 			"\ttypealias Move = $1Move",
@@ -78,7 +78,7 @@
 			"\t\tself.$3 = secondPlayer",
 			"\t}",
 			"\t",
-			"\tfunc perform(move: Move) throws {",
+			"\tmutating func perform(move: Move) throws {",
 			"\t\t$6",
 			"\t}",
 			"\t",
