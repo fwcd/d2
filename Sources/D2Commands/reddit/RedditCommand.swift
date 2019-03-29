@@ -3,7 +3,7 @@ import D2Permissions
 import Foundation
 
 class RedditCommand: StringCommand {
-	let description = "Fetches a post from a subreddit"
+	public let description = "Fetches a post from a subreddit"
 	let requiredPermissionLevel = PermissionLevel.vip
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

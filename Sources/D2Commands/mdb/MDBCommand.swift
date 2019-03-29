@@ -3,7 +3,7 @@ import D2Permissions
 import D2WebAPIs
 
 class MDBCommand: StringCommand {
-	let description = "Queries the Computer Science module database of the CAU"
+	public let description = "Queries the Computer Science module database of the CAU"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

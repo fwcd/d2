@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 
 class TimeTableCommand: StringCommand {
-	let description = "Generates a TimeTable from CAU modules"
+	public let description = "Generates a TimeTable from CAU modules"
 	let requiredPermissionLevel = PermissionLevel.basic
 	let hidden = true
 	

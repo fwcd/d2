@@ -7,7 +7,7 @@ import D2Utils
 fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 
 class EchoCommand: Command {
-	let description = "Prints something n times"
+	public let description = "Prints something n times"
 	let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
 	

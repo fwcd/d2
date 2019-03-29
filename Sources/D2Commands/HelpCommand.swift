@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 
 class HelpCommand: StringCommand {
-	let description = "Helps the user"
+	public let description = "Helps the user"
 	let requiredPermissionLevel = PermissionLevel.basic
 	private let permissionManager: PermissionManager
 	

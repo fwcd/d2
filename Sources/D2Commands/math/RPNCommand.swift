@@ -9,7 +9,7 @@ fileprivate let binaryOperators: [String: (Double, Double) -> Double] = [
 ]
 
 class RPNCommand: StringCommand {
-	let description = "Evaluates an expression in Reverse Polish Notation"
+	public let description = "Evaluates an expression in Reverse Polish Notation"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

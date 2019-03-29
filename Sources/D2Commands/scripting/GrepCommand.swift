@@ -3,7 +3,7 @@ import D2Permissions
 import D2Utils
 
 class GrepCommand: ArgListCommand {
-	let description = "Filters and prints lines that match a regular expression"
+	public let description = "Filters and prints lines that match a regular expression"
 	let requiredPermissionLevel = PermissionLevel.vip
 	let expectedArgCount: Int = 2
 	
