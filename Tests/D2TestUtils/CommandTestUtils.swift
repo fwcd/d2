@@ -10,4 +10,12 @@ extension Command {
 	) {
 		invoke(withArgs: args, input: input, output: output, context: context)
 	}
+	
+	public func testSubscriptionMessage(
+		withContent content: String,
+		output: CommandOutput,
+		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""))
+	) {
+		onSubscriptionMessage(withContent: content, output: output, context: context)
+	}
 }
