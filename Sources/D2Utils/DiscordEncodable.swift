@@ -1,3 +1,12 @@
+import SwiftDiscord
+
 public protocol DiscordEncodable {
-	var discordEncoded: String { get }
+	var discordMessageEncoded: DiscordMessage { get }
+	var discordStringEncoded: String { get }
+}
+
+extension DiscordEncodable {
+	public var discordMessageEncoded: DiscordMessage {
+		return DiscordMessage(content: discordStringEncoded)
+	}
 }

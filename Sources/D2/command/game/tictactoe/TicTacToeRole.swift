@@ -7,7 +7,7 @@ enum TicTacToeRole: String, CaseIterable, DiscordEncodable {
 	
 	static var allPlayerCases: [TicTacToeRole] { return allCases.filter { $0.isPlayerRole } }
 	
-	var discordEncoded: String {
+	var discordStringEncoded: String {
 		switch self {
 			case .x: return ":x:"
 			case .o: return ":o:"

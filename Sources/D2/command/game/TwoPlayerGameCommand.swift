@@ -36,7 +36,7 @@ class TwoPlayerGameCommand<Match: GameMatch>: StringCommand {
 		let match = Match.init(firstPlayer: playerX, secondPlayer: playerO)
 		
 		currentMatch = match
-		output.append("Playing new match: \(match)\n\(match.board.discordEncoded)\nType `move [...]` to begin!")
+		output.append("Playing new match: \(match)\n\(match.board.discordStringEncoded)\nType `move [...]` to begin!")
 	}
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
@@ -61,14 +61,14 @@ class TwoPlayerGameCommand<Match: GameMatch>: StringCommand {
 		
 		do {
 			try match.perform(move: try Match.Move.init(fromString: moveArgs[1]))
-			output.append(match.board.discordEncoded)
+			output.append(match.board.discordMessageEncoded)
 			
 			if let winner = match.board.winner {
 				// Game won
 				
 				var embed = DiscordEmbed()
 				embed.title = ":crown: Winner"
-				embed.description = "\(winner.discordEncoded)\(match.playerOf(role: winner).map { " aka. `\($0.username)`" } ?? "") won the game!"
+				embed.description = "\(winner.discordStringEncoded)\(match.playerOf(role: winner).map { " aka. `\($0.username)`" } ?? "") won the game!"
 				
 				output.append(embed)
 				currentMatch = nil
@@ -85,7 +85,7 @@ class TwoPlayerGameCommand<Match: GameMatch>: StringCommand {
 				return .cancelSubscription
 			}
 		} catch GameError.invalidMove(let msg) {
-			output.append("Invalid move by \(match.currentRole.discordEncoded): \(msg)")
+			output.append("Invalid move by \(match.currentRole.discordStringEncoded): \(msg)")
 		} catch {
 			output.append("Error while attempting move")
 			print(error)

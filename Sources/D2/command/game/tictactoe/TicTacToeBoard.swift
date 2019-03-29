@@ -4,9 +4,9 @@ struct TicTacToeBoard: GameBoard {
 	
 	let fields: [[TicTacToeRole]]
 	
-	var discordEncoded: String {
+	var discordStringEncoded: String {
 		return fields.map { row in
-			row.map { $0.discordEncoded }.joined()
+			row.map { $0.discordStringEncoded }.joined()
 		}.joined(separator: "\n")
 	}
 	
