@@ -9,6 +9,8 @@ public class BFCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	
+	public init() {}
+	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
 			output.append("Whoa, not so fast. Wait for the program to finish!")

@@ -6,6 +6,8 @@ public class TimeTableCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let hidden = true
 	
+	public init() {}
+	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		// TODO
 	}

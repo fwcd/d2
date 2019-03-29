@@ -3,6 +3,8 @@ import SwiftDiscord
 public struct CommandRegistry: Sequence {
 	private var commands = [String: Command]()
 	
+	public init() {}
+	
 	public subscript(name: String) -> Command? {
 		get { return commands[name] }
 		set(newValue) { commands[name] = newValue }

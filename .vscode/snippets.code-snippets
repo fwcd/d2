@@ -47,6 +47,8 @@
 			"\tpublic let requiredPermissionLevel = PermissionLevel.$3",
 			"\tpublic let expectedArgCount: Int = $4",
 			"\t",
+			"\tpublic init() {}",
+			"\t",
 			"\tpublic func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {",
 			"\t\t$0",
 			"\t}",

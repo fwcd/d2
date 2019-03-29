@@ -6,6 +6,8 @@ public class RedditCommand: StringCommand {
 	public let description = "Fetches a post from a subreddit"
 	public let requiredPermissionLevel = PermissionLevel.vip
 	
+	public init() {}
+	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		var components = URLComponents()
 		components.scheme = "https"

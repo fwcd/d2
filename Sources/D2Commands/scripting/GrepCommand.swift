@@ -7,6 +7,8 @@ public class GrepCommand: ArgListCommand {
 	public let requiredPermissionLevel = PermissionLevel.vip
 	public let expectedArgCount: Int = 2
 	
+	public init() {}
+	
 	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
 		do {
 			let regex = try Regex(from: inputArgs[0])

@@ -12,6 +12,8 @@ public class RPNCommand: StringCommand {
 	public let description = "Evaluates an expression in Reverse Polish Notation"
 	public let requiredPermissionLevel = PermissionLevel.basic
 	
+	public init() {}
+	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			let tokens = input.split(separator: " ").map { String($0) }

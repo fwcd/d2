@@ -9,7 +9,7 @@ public struct CommandContext {
 	public var channel: DiscordTextChannel? { return message.channel }
 	public var client: DiscordClient? { return message.client }
 	
-	init(guild: DiscordGuild?, registry: CommandRegistry, message: DiscordMessage) {
+	public init(guild: DiscordGuild?, registry: CommandRegistry, message: DiscordMessage) {
 		self.guild = guild
 		self.registry = registry
 		self.message = message
