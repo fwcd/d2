@@ -34,3 +34,43 @@ let mapQuestKey = "YOUR_MAP_QUEST_KEY"
 
 ## Running
 * `swift run`
+
+## Architecture
+The program consists of three modules:
+
+* `D2`, the executable
+* `D2Utils`, a collection of useful utilities
+* `D2WebAPIs`, client implementations of various web APIs
+
+### D2
+The executable application. The base functionality is provided by `CommandHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.
+
+At a basic level, the protocol consists of a single method named `invoke` that carries information about the user's request:
+
+```swift
+protocol Command: class {
+	...
+	
+	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext)
+	
+	...
+}
+```
+
+These arguments each represent a part of the invocation context. Given a request such as `%commandname arg1 arg2`, the implementor would receive:
+
+| Parameter | Value |
+| --------- | ----- |
+| `args` | `"arg1 arg2"` |
+| `input` | `nil` |
+| `output` | `DiscordChannelOutput` |
+| `context` | `CommandContext` containing the message, the client and the command registry |
+
+It should be noted that `input` is `nil` because the user did not attach a pipe to his request. If he would send `%firstcommand | secondcommand arg1`, the `input` field of the second invocation would contain the piped message:
+
+| Parameter | Value |
+| --------- | ----- |
+| `args` | `"arg1"`
+| `input` | `DiscordMessage` representing the output of the first invocation |
+| `output` | `DiscordChannelOutput` |
+| `context` | `CommandContext` |
