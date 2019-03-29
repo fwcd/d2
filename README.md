@@ -74,3 +74,46 @@ It should be noted that `input` is `nil` because the user did not attach a pipe 
 | `input` | `DiscordMessage` representing the output of the first invocation |
 | `output` | `DiscordChannelOutput` |
 | `context` | `CommandContext` |
+
+Since `output: CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordChannelOutput`. Both the first and the second command call a `PipeOutput` instead that passes any messages to the next command:
+
+```swift
+class PipeOutput: CommandOutput {
+	private let sink: Command
+	private let context: CommandContext
+	private let args: String
+	private let next: CommandOutput?
+	
+	init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
+		self.sink = sink
+		self.args = args
+		self.context = context
+		self.next = next
+	}
+	
+	func append(_ message: DiscordMessage) {
+		print("Piping to \(sink)")
+		sink.invoke(withArgs: args, input: message, output: next ?? DiscordChannelOutput(channel: message.channel), context: context)
+	}
+}
+```
+
+Often, the `Command` protocol is too low-level to be adopted directly, since direct arguments and pipe inputs have to be handled separately. Instead, there are subprotocols that provide a simpler template interface for implementors:
+
+```swift
+protocol StringCommand: Command {
+	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext)
+}
+```
+
+`StringCommand` is useful when the command accepts a single string as an argument or if a custom argument parser is used. Its default implementation of `Command.invoke` passes either `args`, if not empty, or otherwise `input.content` to `StringCommand.invoke`.
+
+```swift
+protocol ArgListCommand: Command {
+	var expectedArgCount: Int { get }
+	
+	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
+}
+```
+
+`ArgListCommand` should be adopted if the command excepts a fixed number of arguments. It allows the user to partially apply the command's arguments and then pipe the rest.
