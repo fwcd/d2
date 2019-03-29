@@ -4,12 +4,12 @@ import Dispatch
 
 fileprivate let maxExecutionSeconds = 3
 
-class BFCommand: StringCommand {
-	let description = "Interprets BF code"
-	let requiredPermissionLevel = PermissionLevel.basic
+public class BFCommand: StringCommand {
+	public let description = "Interprets BF code"
+	public let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
 			output.append("Whoa, not so fast. Wait for the program to finish!")
 			return

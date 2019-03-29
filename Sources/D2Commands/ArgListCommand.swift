@@ -8,14 +8,14 @@ import D2Permissions
  * 
  * This conveniently enables partial application in command execution pipes.
  */
-protocol ArgListCommand: Command {
+public protocol ArgListCommand: Command {
 	var expectedArgCount: Int { get }
 	
 	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
 }
 
 extension ArgListCommand {
-	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
+	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		let splitArgs = args.split(separator: " ")
 			.prefix(expectedArgCount)
 			.map { String($0) }

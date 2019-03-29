@@ -6,7 +6,7 @@ class BFToCCommand: StringCommand {
 	let requiredPermissionLevel = PermissionLevel.basic
 	let splitToMultipleMessages = true
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if let bfProgram = bfCodePattern.firstGroups(in: input)?[1] {
 			var outputCode = ""
 			var last: String? = nil

@@ -6,7 +6,7 @@ class DrawCommand: StringCommand {
 	let description = "Creates a demo image"
 	let requiredPermissionLevel = PermissionLevel.basic
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			var graphics = ImageGraphics(width: 150, height: 150)
 			

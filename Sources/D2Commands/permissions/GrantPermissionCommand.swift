@@ -13,7 +13,7 @@ class GrantPermissionCommand: StringCommand {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if let parsedArgs = inputPattern.firstGroups(in: input) {
 			let rawLevel = parsedArgs[1]
 			if let level = PermissionLevel.of(rawLevel) {

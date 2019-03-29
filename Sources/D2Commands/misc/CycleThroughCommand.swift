@@ -8,7 +8,7 @@ class CycleThroughCommand: StringCommand {
 	private let loops = 4
 	private let timer = RepeatingTimer(interval: .milliseconds(500))
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !timer.isRunning else {
 			output.append("Animation is already running.")
 			return

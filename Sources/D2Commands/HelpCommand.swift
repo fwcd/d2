@@ -10,7 +10,7 @@ class HelpCommand: StringCommand {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		let helpText = Dictionary(grouping: context.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }

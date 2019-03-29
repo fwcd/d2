@@ -25,7 +25,7 @@ class UnivISCommand: StringCommand {
 		self.maxResponseEntries = maxResponseEntries
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			guard let parsedArgs = inputPattern.firstGroups(in: input) else {
 				output.append("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")

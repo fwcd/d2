@@ -12,7 +12,7 @@ class CampusCommand: StringCommand {
 	let requiredPermissionLevel = PermissionLevel.basic
 	let geocoder = MapQuestGeocoder()
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			try UnivISQuery(search: .rooms, params: [
 				.name: input

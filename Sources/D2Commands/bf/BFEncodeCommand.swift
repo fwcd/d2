@@ -11,7 +11,7 @@ class BFEncodeCommand: StringCommand {
 		self.maxStringLength = maxStringLength
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard input.count <= maxStringLength else {
 			output.append("Your string needs to be shorter than \(maxStringLength) characters!")
 			return

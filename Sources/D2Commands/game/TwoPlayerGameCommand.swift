@@ -21,7 +21,7 @@ class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		self.name = name
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard currentState == nil else {
 			output.append("Wait for the current match to finish before creating a new one.")
 			return

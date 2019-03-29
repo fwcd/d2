@@ -1,12 +1,12 @@
 import SwiftDiscord
 import D2Permissions
 
-class ClosureCommand: Command {
-	let description: String
-	let requiredPermissionLevel: PermissionLevel
+public class ClosureCommand: Command {
+	public let description: String
+	public let requiredPermissionLevel: PermissionLevel
 	private let closure: (DiscordMessage?, CommandOutput, CommandContext, String) -> Void
 	
-	init(
+	public init(
 		description: String,
 		level requiredPermissionLevel: PermissionLevel,
 		closure: @escaping (DiscordMessage?, CommandOutput, CommandContext, String) -> Void

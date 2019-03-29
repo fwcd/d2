@@ -13,7 +13,7 @@ class RevokePermissionCommand: StringCommand {
 		self.permissionManager = permissionManager
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if inputPattern.matchCount(in: input) > 0 {
 			var response = ""
 			var changedPermissions = false

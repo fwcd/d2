@@ -16,7 +16,7 @@ class ForCommand: StringCommand {
 		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 	}
 	
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !timer.isRunning else {
 			output.append("Cannot run multiple `for`-loops concurrently")
 			return
