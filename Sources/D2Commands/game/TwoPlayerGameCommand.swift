@@ -11,11 +11,11 @@ fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
  */
 class TwoPlayerGameCommand<State: GameState>: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
-	let subscribesToNextMessages = true
-	let name: String
-	var description: String { return "Plays \(name) against someone" }
+	public let subscribesToNextMessages = true
+	public let name: String
+	public var description: String { return "Plays \(name) against someone" }
 	
-	var currentState: State? = nil
+	private var currentState: State? = nil
 	
 	init(withName name: String) {
 		self.name = name
