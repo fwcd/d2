@@ -161,5 +161,44 @@
 			"\t$0",
 			"}"
 		]
+	},
+	"Test case": {
+		"prefix": "testcase",
+		"scope": "swift",
+		"body": [
+			"import XCTest",
+			"",
+			"final class $1Tests: XCTestCase {",
+			"\tstatic var allTests = [",
+			"\t\t(\"test$2\", test$2)",
+			"\t]",
+			"\t",
+			"\tfunc test$2() throws {",
+			"\t\t$0",
+			"\t}",
+			"}"
+		]
+	},
+	"Command test case": {
+		"prefix": "commandtest",
+		"scope": "swift",
+		"body": [
+			"import XCTest",
+			"import D2TestUtils",
+			"@testable import D2Commands",
+			"",
+			"final class $1CommandTests: XCTestCase {",
+			"\tstatic var allTests = [",
+			"\t\t(\"testInvocation\", testInvocation)",
+			"\t]",
+			"\t",
+			"\tfunc testInvocation() throws {",
+			"\t\tlet command = $1Command($2)",
+			"\t\tlet output = CommandTestOutput()",
+			"\t\t",
+			"\t\tcommand.testInvoke(withArgs: $3, output: output)$0",
+			"\t}",
+			"}"
+		]
 	}
 }
