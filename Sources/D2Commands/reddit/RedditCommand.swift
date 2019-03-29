@@ -4,7 +4,7 @@ import Foundation
 
 class RedditCommand: StringCommand {
 	public let description = "Fetches a post from a subreddit"
-	let requiredPermissionLevel = PermissionLevel.vip
+	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		var components = URLComponents()

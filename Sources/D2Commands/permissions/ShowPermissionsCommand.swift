@@ -3,7 +3,7 @@ import D2Permissions
 
 class ShowPermissionsCommand: Command {
 	public let description = "Displays the configured permissions"
-	let requiredPermissionLevel = PermissionLevel.admin
+	public let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
 	
 	init(permissionManager: PermissionManager) {

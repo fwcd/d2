@@ -4,7 +4,7 @@ import D2Utils
 
 class DrawCommand: StringCommand {
 	public let description = "Creates a demo image"
-	let requiredPermissionLevel = PermissionLevel.basic
+	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {

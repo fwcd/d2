@@ -3,7 +3,7 @@ import D2Permissions
 
 class TriggerTypingCommand: Command {
 	public let description = "Begins to type"
-	let requiredPermissionLevel = PermissionLevel.vip
+	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		context.channel?.triggerTyping()

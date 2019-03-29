@@ -9,7 +9,7 @@ fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\
 /** Locates locations on the University of Kiel's campus. */
 class CampusCommand: StringCommand {
 	public let description = "Locates rooms on the CAU campus"
-	let requiredPermissionLevel = PermissionLevel.basic
+	public let requiredPermissionLevel = PermissionLevel.basic
 	let geocoder = MapQuestGeocoder()
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

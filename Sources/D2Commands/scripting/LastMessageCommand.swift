@@ -3,7 +3,7 @@ import D2Permissions
 
 class LastMessageCommand: Command {
 	public let description = "Retrieves and outputs the last message"
-	let requiredPermissionLevel = PermissionLevel.vip
+	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		context.client?.getMessages(for: context.channel!.id, limit: 2) { result, _ in

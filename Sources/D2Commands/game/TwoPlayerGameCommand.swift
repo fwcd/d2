@@ -10,7 +10,7 @@ fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
  * two-player game.
  */
 class TwoPlayerGameCommand<State: GameState>: StringCommand {
-	let requiredPermissionLevel = PermissionLevel.basic
+	public let requiredPermissionLevel = PermissionLevel.basic
 	let subscribesToNextMessages = true
 	let name: String
 	var description: String { return "Plays \(name) against someone" }

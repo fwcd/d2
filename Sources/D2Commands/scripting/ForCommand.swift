@@ -9,7 +9,7 @@ fileprivate let inputPattern = try! Regex(from: "^(\(rawRangePattern))")
 
 class ForCommand: StringCommand {
 	public let description = "Iterates through a range and prints the loop indices."
-	let requiredPermissionLevel = PermissionLevel.vip
+	public let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
 	
 	init(intervalSeconds: Int = 1) {

@@ -3,7 +3,7 @@ import D2Permissions
 
 class HelpCommand: StringCommand {
 	public let description = "Helps the user"
-	let requiredPermissionLevel = PermissionLevel.basic
+	public let requiredPermissionLevel = PermissionLevel.basic
 	private let permissionManager: PermissionManager
 	
 	init(permissionManager: PermissionManager) {

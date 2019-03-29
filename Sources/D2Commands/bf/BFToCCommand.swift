@@ -3,7 +3,7 @@ import D2Permissions
 
 class BFToCCommand: StringCommand {
 	public let description = "Transpiles a BF program to C code"
-	let requiredPermissionLevel = PermissionLevel.basic
+	public let requiredPermissionLevel = PermissionLevel.basic
 	let splitToMultipleMessages = true
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

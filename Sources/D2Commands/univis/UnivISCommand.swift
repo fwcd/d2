@@ -18,7 +18,7 @@ fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\
 
 class UnivISCommand: StringCommand {
 	public let description = "Queries the UnivIS of the CAU"
-	let requiredPermissionLevel = PermissionLevel.basic
+	public let requiredPermissionLevel = PermissionLevel.basic
 	let maxResponseEntries: Int
 	
 	init(maxResponseEntries: Int = 15) {

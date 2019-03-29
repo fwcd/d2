@@ -4,7 +4,7 @@ import D2Utils
 
 class CycleThroughCommand: StringCommand {
 	public let description = "Animates a sequence of characters"
-	let requiredPermissionLevel = PermissionLevel.vip
+	public let requiredPermissionLevel = PermissionLevel.vip
 	private let loops = 4
 	private let timer = RepeatingTimer(interval: .milliseconds(500))
 	
