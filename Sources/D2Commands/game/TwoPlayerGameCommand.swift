@@ -32,9 +32,11 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 			return
 		}
 		
-		let playerX = context.author
-		let playerO = opponent
-		let state = State.init(firstPlayer: playerX, secondPlayer: playerO)
+		startMatch(between: context.author, and: opponent, output: output)
+	}
+	
+	func startMatch(between firstPlayer: DiscordUser, and secondPlayer: DiscordUser, output: CommandOutput) {
+		let state = State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
 		
 		currentState = state
 		output.append("Playing new match: \(state)\n\(state.board.discordStringEncoded)\nType `move [...]` to begin!")
