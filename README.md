@@ -15,7 +15,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 let discordToken = "YOUR_DISCORD_API_TOKEN"
 ```
 
-* Create a file named `userwhitelist.swift` in `Sources/D2Permissions/permission` containing a list of Discord usernames that have full permissions:
+* Create a file named `userwhitelist.swift` in `Sources/D2Permissions` containing a list of Discord usernames that have full permissions:
 
 ```swift
 let whitelistedDiscordUsers: Set<String> = [
