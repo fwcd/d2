@@ -32,6 +32,9 @@ let mapQuestKey = "YOUR_MAP_QUEST_KEY"
 ## Building
 * `swift build`
 
+## Testing
+* `swift test`
+
 ## Running
 * `swift run`
 
