@@ -4,6 +4,7 @@
 		"scope": "swift",
 		"body": [
 			"import SwiftDiscord",
+			"import D2Permissions",
 			"",
 			"class $1Command: Command {",
 			"\tlet description = \"$2\"",
@@ -21,6 +22,7 @@
 		"scope": "swift",
 		"body": [
 			"import SwiftDiscord",
+			"import D2Permissions",
 			"",
 			"class $1Command: StringCommand {",
 			"\tlet description = \"$2\"",
@@ -38,6 +40,7 @@
 		"scope": "swift",
 		"body": [
 			"import SwiftDiscord",
+			"import D2Permissions",
 			"",
 			"class $1Command: ArgListCommand {",
 			"\tlet description = \"$2\"",
@@ -61,6 +64,7 @@
 		"scope": "swift",
 		"body": [
 			"import SwiftDiscord",
+			"import D2Permissions",
 			"",
 			"struct $1State: GameState, CustomStringConvertible {",
 			"\ttypealias Role = $1Role",

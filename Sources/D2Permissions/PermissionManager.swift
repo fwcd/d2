@@ -1,13 +1,15 @@
 import SwiftDiscord
 import Foundation
 
-fileprivate let defaultStorageURL = URL(fileURLWithPath: "local/discordUserPermissions.json")
-
-class PermissionManager: CustomStringConvertible {
+public class PermissionManager: CustomStringConvertible {
 	private var userPermissions = [String: PermissionLevel]()
-	var description: String { return userPermissions.description }
+	public var description: String { return userPermissions.description }
 	
-	init() {
+	public struct Defaults {
+		public static let storageURL = URL(fileURLWithPath: "local/discordUserPermissions.json")
+	}
+	
+	public init() {
 		tryReadingFromDisk()
 	}
 	
@@ -15,7 +17,7 @@ class PermissionManager: CustomStringConvertible {
 		return "\(user.username)#\(user.discriminator)"
 	}
 	
-	func writeToDisk(url: URL = defaultStorageURL) {
+	public func writeToDisk(url: URL = Defaults.storageURL) {
 		do {
 			let fileManager = FileManager.default
 			let data = try JSONEncoder().encode(userPermissions)
@@ -30,7 +32,7 @@ class PermissionManager: CustomStringConvertible {
 		}
 	}
 	
-	func tryReadingFromDisk(url: URL = defaultStorageURL) {
+	public func tryReadingFromDisk(url: URL = Defaults.storageURL) {
 		do {
 			let fileManager = FileManager.default
 			guard fileManager.fileExists(atPath: url.path) else { return }
@@ -43,36 +45,36 @@ class PermissionManager: CustomStringConvertible {
 		}
 	}
 	
-	func user(_ theUser: DiscordUser, hasPermission requiredLevel: PermissionLevel) -> Bool {
+	public func user(_ theUser: DiscordUser, hasPermission requiredLevel: PermissionLevel) -> Bool {
 		return user(theUser, hasPermission: requiredLevel.rawValue)
 	}
 	
-	func user(_ theUser: DiscordUser, hasPermission requiredLevel: Int) -> Bool {
+	public func user(_ theUser: DiscordUser, hasPermission requiredLevel: Int) -> Bool {
 		return nameWithTag(encode(user: theUser), hasPermission: requiredLevel)
 	}
 	
-	func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: PermissionLevel) -> Bool {
+	public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: PermissionLevel) -> Bool {
 		return nameWithTag(theNameWithTag, hasPermission: requiredLevel.rawValue)
 	}
 	
-	func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: Int) -> Bool {
+	public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: Int) -> Bool {
 		return self[theNameWithTag].rawValue >= requiredLevel
 	}
 	
-	func remove(permissionsFrom user: DiscordUser) {
+	public func remove(permissionsFrom user: DiscordUser) {
 		remove(permissionsFrom: encode(user: user))
 	}
 	
-	func remove(permissionsFrom nameWithTag: String) {
+	public func remove(permissionsFrom nameWithTag: String) {
 		userPermissions.removeValue(forKey: nameWithTag)
 	}
 	
-	subscript(user: DiscordUser) -> PermissionLevel {
+	public subscript(user: DiscordUser) -> PermissionLevel {
 		get { return self[encode(user: user)] }
 		set(newValue) { self[encode(user: user)] = newValue }
 	}
 	
-	subscript(nameWithTag: String) -> PermissionLevel {
+	public subscript(nameWithTag: String) -> PermissionLevel {
 		get {
 			if whitelistedDiscordUsers.contains(nameWithTag) {
 				return .admin

@@ -1,6 +1,7 @@
 import SwiftDiscord
 import Foundation
 import D2Utils
+import D2Commands
 
 /** A segment of an invocation pipe that transfers outputs from one command to another. */
 fileprivate class PipeComponent {

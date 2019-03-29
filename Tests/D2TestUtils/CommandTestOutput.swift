@@ -1,5 +1,5 @@
 import SwiftDiscord
-@testable import D2
+@testable import D2Commands
 
 /**
  * An implementation of CommandOutput that writes

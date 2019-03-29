@@ -15,7 +15,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 let discordToken = "YOUR_DISCORD_API_TOKEN"
 ```
 
-* Create a file named `userwhitelist.swift` in `Sources/D2/permission` containing a list of Discord usernames that have full permissions:
+* Create a file named `userwhitelist.swift` in `Sources/D2Permissions/permission` containing a list of Discord usernames that have full permissions:
 
 ```swift
 let whitelistedDiscordUsers: Set<String> = [
@@ -42,13 +42,16 @@ let mapQuestKey = "YOUR_MAP_QUEST_KEY"
 The program consists of three modules:
 
 * `D2`, the executable
+* `D2Commands`, the command framework and the implementations
+* `D2Permissions`, the permission manager
 * `D2Utils`, a collection of useful utilities
 * `D2WebAPIs`, client implementations of various web APIs
 
 ### D2
 The executable application. The base functionality is provided by `CommandHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.
 
-At a basic level, the protocol consists of a single method named `invoke` that carries information about the user's request:
+### D2Commands
+At a basic level, the `Command` protocol consists of a single method named `invoke` that carries information about the user's request:
 
 ```swift
 protocol Command: class {

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftDiscord
+import D2Commands
 
 /** Registers all available commands. */
 func register(commandsFor handler: CommandHandler) {

@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Permissions
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
 protocol Command: class {
