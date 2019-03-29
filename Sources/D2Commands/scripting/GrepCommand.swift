@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
-class GrepCommand: ArgListCommand {
+public class GrepCommand: ArgListCommand {
 	public let description = "Filters and prints lines that match a regular expression"
 	public let requiredPermissionLevel = PermissionLevel.vip
 	let expectedArgCount: Int = 2

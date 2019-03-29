@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-class PingCommand: Command {
+public class PingCommand: Command {
 	public let description = "Replies with 'Pong!'"
 	public let requiredPermissionLevel = PermissionLevel.basic
 	

@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-class VerticalCommand: StringCommand {
+public class VerticalCommand: StringCommand {
 	public let description = "Reads horizontally, prints vertically"
 	public let requiredPermissionLevel = PermissionLevel.basic
 	

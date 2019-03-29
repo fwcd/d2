@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
+public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
 	let name: String
 	let description: String
 	public let requiredPermissionLevel = PermissionLevel.basic

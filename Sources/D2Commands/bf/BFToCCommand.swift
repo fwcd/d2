@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-class BFToCCommand: StringCommand {
+public class BFToCCommand: StringCommand {
 	public let description = "Transpiles a BF program to C code"
 	public let requiredPermissionLevel = PermissionLevel.basic
 	let splitToMultipleMessages = true

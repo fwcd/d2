@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import Foundation
 
-class RedditCommand: StringCommand {
+public class RedditCommand: StringCommand {
 	public let description = "Fetches a post from a subreddit"
 	public let requiredPermissionLevel = PermissionLevel.vip
 	

@@ -16,7 +16,7 @@ fileprivate let inputPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\
 // key, the second (or third) group captures the value.
 fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
 
-class UnivISCommand: StringCommand {
+public class UnivISCommand: StringCommand {
 	public let description = "Queries the UnivIS of the CAU"
 	public let requiredPermissionLevel = PermissionLevel.basic
 	let maxResponseEntries: Int

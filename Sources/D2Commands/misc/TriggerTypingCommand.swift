@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-class TriggerTypingCommand: Command {
+public class TriggerTypingCommand: Command {
 	public let description = "Begins to type"
 	public let requiredPermissionLevel = PermissionLevel.vip
 	

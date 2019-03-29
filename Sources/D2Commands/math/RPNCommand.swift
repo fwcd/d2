@@ -8,7 +8,7 @@ fileprivate let binaryOperators: [String: (Double, Double) -> Double] = [
 	"/": { $0 / $1 }
 ]
 
-class RPNCommand: StringCommand {
+public class RPNCommand: StringCommand {
 	public let description = "Evaluates an expression in Reverse Polish Notation"
 	public let requiredPermissionLevel = PermissionLevel.basic
 	

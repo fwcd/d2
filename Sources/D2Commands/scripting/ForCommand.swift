@@ -7,7 +7,7 @@ fileprivate let rawRangePattern = "\\d+\\.\\.[\\.<]\\d+"
 // Matches the arguments, capturing the range
 fileprivate let inputPattern = try! Regex(from: "^(\(rawRangePattern))")
 
-class ForCommand: StringCommand {
+public class ForCommand: StringCommand {
 	public let description = "Iterates through a range and prints the loop indices."
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer

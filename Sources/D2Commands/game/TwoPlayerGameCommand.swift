@@ -9,7 +9,7 @@ fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
  * Provides a base layer of functionality for a turn-based 
  * two-player game.
  */
-class TwoPlayerGameCommand<State: GameState>: StringCommand {
+public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
 	public let name: String
