@@ -3,6 +3,7 @@ public typealias VecComponent = Addable & Subtractable & Multipliable & Divisibl
 public struct Vec2<T: VecComponent>: Addable, Subtractable {
 	public let x: T
 	public let y: T
+	public var asTuple: (x: T, y: T) { return (x: x, y: y) }
 	
 	public init(x: T, y: T) {
 		self.x = x

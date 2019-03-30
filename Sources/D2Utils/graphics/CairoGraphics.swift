@@ -11,15 +11,22 @@ public struct CairoGraphics: Graphics {
 		self.init(surface: image.surface)
 	}
 	
-	public mutating func draw(_ line: LineSegment<Int>) {
-		// TODO
+	public mutating func draw(_ line: LineSegment<Double>) {
+		context.move(to: line.start.asTuple)
+		context.line(to: line.end.asTuple)
+		context.stroke()
 	}
 	
-	public mutating func draw(_ rectangle: Rectangle<Int>) {
-		// TODO
+	public mutating func draw(_ rectangle: Rectangle<Double>) {
+		context.addRectangle(x: rectangle.topLeft.x, y: rectangle.topLeft.y, width: rectangle.width, height: rectangle.height)
+		if rectangle.isFilled {
+			context.fill()
+		} else {
+			context.stroke()
+		}
 	}
 	
-	public mutating func draw(_ image: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
+	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
 		// TODO
 	}
 }
