@@ -2,29 +2,29 @@ import Cairo
 import Foundation
 
 public struct Image {
-	private let surface: Surface
+	let surface: Surface.Image
 	
 	public var width: Int { return surface.width }
 	public var height: Int { return surface.height }
 	public var size: Vec2<Int> { return Vec2(x: width, y: height) }
 	
-	public init(from surface: Surface) {
+	init(from surface: Surface.Image) {
 		self.surface = surface
 	}
 	
-	public init(fromPng data: Data) {
-		self.init(from: Surface.Image(png: data))
+	public init(fromPng data: Data) throws {
+		self.init(from: try Surface.Image(png: data))
 	}
 	
-	public init?(fromPngFile filePath: String) {
+	public init(fromPngFile filePath: String) throws {
 		let url = URL(fileURLWithPath: filePath)
 		let fileManager = FileManager.default
-		guard fileManager.fileExists(atPath: url.path) else { return nil }
+		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(filePath) }
 		
 		if let data = fileManager.contents(atPath: url.path) {
-			self = Image(fromPng: data)
+			try self.init(fromPng: data)
 		} else {
-			return nil
+			throw DiskFileError.noData("Image at \(filePath) contained no data")
 		}
 	}
 	
