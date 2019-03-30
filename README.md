@@ -5,12 +5,15 @@ General-purpose virtual assistant for Discord.
 
 In addition to suporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
 
-## Installation
+## System Dependencies
+* Swift 5
 
 ### on Linux
-* Install the required system dependencies:
-	* Swift 5
-    * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
+
+### on macOS
+* `brew tap vapor/tap`
+* `brew install opus libsodium ctls`
 
 ## Setup
 
