@@ -13,20 +13,25 @@ In addition to suporting various web APIs, it features basic scripting capabilit
     * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
 
 ## Setup
-* Create a folder named `local` in the repository
-* Create a file named `discordtoken.swift` in `Sources/D2` containing the API keys:
 
-```swift
-let discordToken = "YOUR_DISCORD_API_TOKEN"
+### Required
+* Create a folder named `local` in the repository
+* Create a file named `discordToken.json` in `local` containing the API key:
+
+```json
+{
+    "token": "YOUR_DISCORD_API_TOKEN"
+}
 ```
 
+### Optional
 * Create a file named `adminWhitelist.json` in `local` containing a list of Discord usernames that have full permissions:
 
 ```json
 {
-	"users": [
-		"YOUR_USERNAME#1234"
-	]
+    "users": [
+        "YOUR_USERNAME#1234"
+    ]
 }
 ```
 

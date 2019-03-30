@@ -1,6 +1,7 @@
 import Foundation
 import SwiftDiscord
 import D2Commands
+import D2Utils
 
 /** Registers all available commands. */
 func register(commandsFor handler: CommandHandler) {
@@ -36,9 +37,9 @@ func register(commandsFor handler: CommandHandler) {
 }
 
 func main() throws {
-	// 'discordToken' should be declared in 'authkeys.swift'
 	let handler = try CommandHandler(withPrefix: "%")
-	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(discordToken)"), delegate: handler, configuration: [.log(.info)])
+	let token = try DiskStorage().readJson(as: Token.self, fromFile: "local/discordToken.json").token
+	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [.log(.info)])
 	
 	register(commandsFor: handler)
 	
