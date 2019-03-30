@@ -20,7 +20,7 @@ let package = Package(
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["SwiftDiscord", "D2Utils", "D2Permissions", "D2WebAPIs"]
+            dependencies: ["SwiftDiscord", "D2Utils", "D2Permissions", "D2Graphics", "D2WebAPIs"]
         ),
         .target(
             name: "D2Permissions",
@@ -31,8 +31,12 @@ let package = Package(
             dependencies: ["D2Utils"]
         ),
         .target(
+            name: "D2Graphics",
+            dependencies: ["SwiftDiscord", "D2Utils", "Cairo"]
+        ),
+        .target(
             name: "D2Utils",
-            dependencies: ["SwiftDiscord", "Cairo"]
+            dependencies: ["SwiftDiscord"]
         ),
         .testTarget(
             name: "D2CommandTests",

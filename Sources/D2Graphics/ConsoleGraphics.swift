@@ -1,3 +1,5 @@
+import D2Utils
+
 public struct ConsoleGraphics: Graphics {
 	public func draw(_ line: LineSegment<Double>) {
 		print("Drawed line \(line)")

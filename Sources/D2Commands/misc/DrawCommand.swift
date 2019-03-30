@@ -1,6 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 import D2Utils
+import D2Graphics
 
 public class DrawCommand: StringCommand {
 	public let description = "Creates a demo image"

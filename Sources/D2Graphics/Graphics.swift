@@ -1,3 +1,5 @@
+import D2Utils
+
 public protocol Graphics {
 	mutating func draw(_ line: LineSegment<Double>)
 	

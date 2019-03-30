@@ -1,5 +1,6 @@
 import Cairo
 import Foundation
+import D2Utils
 
 public struct Image {
 	let surface: Surface.Image

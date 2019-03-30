@@ -1,5 +1,6 @@
 import SwiftDiscord
 import D2Utils
+import D2Graphics
 
 public protocol CommandOutput {
 	func append(_ message: DiscordMessage)

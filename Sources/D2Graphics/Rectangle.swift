@@ -1,3 +1,5 @@
+import D2Utils
+
 public struct RectangleDefaults {
 	public static let color = Colors.white
 	public static let isFilled = true

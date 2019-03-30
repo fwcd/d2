@@ -1,4 +1,5 @@
 import Cairo
+import D2Utils
 
 public struct CairoGraphics: Graphics {
 	private let context: Cairo.Context
