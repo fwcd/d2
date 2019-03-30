@@ -11,9 +11,19 @@ final class TicTacToeCommandTests: XCTestCase {
 		let command = TwoPlayerGameCommand<TicTacToeState>(withName: "tic tac toe")
 		let output = CommandTestOutput()
 		
-		let playerX = GamePlayer(username: "Mr. X")
-		let playerO = GamePlayer(username: "Mr. O")
+		let nameX = "Mr. X"
+		let nameO = "Mr. O"
+		let playerX = GamePlayer(username: nameX)
+		let playerO = GamePlayer(username: nameO)
 		
 		command.startMatch(between: playerX, and: playerO, output: output)
+		
+		let x = ":x:"
+		let o = ":o:"
+		let empty = ":white_large_square:"
+		
+		let header = "Playing new match: `\(nameX)` as \(x) vs `\(nameO)` as \(o)"
+		let board = "\(empty)\(empty)\(empty)\n\(empty)\(empty)\(empty)\n\(empty)\(empty)\(empty)"
+		XCTAssertEqual(output.lastContent, "\(header)\n\(board)\nType `move [...]` to begin!")
 	}
 }

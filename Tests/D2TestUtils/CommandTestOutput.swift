@@ -6,8 +6,14 @@ import SwiftDiscord
  * all messages into an array.
  */
 public class CommandTestOutput: CommandOutput {
-	public private(set) var messages = [DiscordMessage]()
+	private var internalMessages = [DiscordMessage]()
 	
+	/** Whether the output changed since the last read. */
+	public private(set) var changed = false
+	public var messages: [DiscordMessage] {
+		changed = false
+		return internalMessages
+	}
 	public var contents: [String] { return messages.map { $0.content } }
 	public var last: DiscordMessage? { return messages.last }
 	public var lastContent: String? { return last?.content }
@@ -15,6 +21,7 @@ public class CommandTestOutput: CommandOutput {
 	public init() {}
 	
 	public func append(_ message: DiscordMessage) {
-		messages.append(message)
+		internalMessages.append(message)
+		changed = true
 	}
 }
