@@ -1,6 +1,6 @@
 language: generic
 sudo: required
-dist: trusty
+dist: xenial
 osx_image: xcode10.2
 env: SWIFT_VERSION=5.0
 before_install:
