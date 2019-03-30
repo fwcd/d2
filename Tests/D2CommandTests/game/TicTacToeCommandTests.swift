@@ -8,7 +8,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	]
 	
 	func testInvocation() throws {
-		let command = TwoPlayerGameCommand<TicTacToeMatch>()
+		let command = TwoPlayerGameCommand<TicTacToeState>(withName: "tic tac toe")
 		let output = CommandTestOutput()
 		
 		// TODO
