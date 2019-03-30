@@ -1,7 +1,7 @@
 import Foundation
 import D2Utils
 
-class UnivISXMLParserDelegate: XMLParserDelegate {
+class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
 	let then: (Result<UnivISOutputNode, Error>) -> Void
 	let registeredBuilderFactories: [String: () -> UnivISObjectNodeXMLBuilder] = [
 		"Event": { UnivISEventXMLBuilder() },

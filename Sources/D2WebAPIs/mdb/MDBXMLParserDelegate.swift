@@ -4,7 +4,7 @@ import D2Utils
 // Matches the contents of an HTML paragraph
 fileprivate let htmlParagraphPattern = try! Regex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")
 
-class MDBXMLParserDelegate: XMLParserDelegate {
+class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
 	private let then: (Result<[MDBModule], Error>) -> Void
 	
 	private var modules = [MDBModule]()
