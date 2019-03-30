@@ -43,7 +43,11 @@ public struct ImageGraphics: Graphics {
 		}
 	}
 	
-	public mutating func draw(_ image: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
-		// TODO
+	public mutating func draw(_ drawnImage: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
+		for y in 0..<size.y {
+			for x in 0..<size.x {
+				image[Vec2(x: position.x + x, y: position.y + y)] = drawnImage[Vec2(x: (x * drawnImage.width) / size.x, y: (y * drawnImage.height) / size.y)]
+			}
+		}
 	}
 }
