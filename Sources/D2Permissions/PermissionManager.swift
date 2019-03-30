@@ -17,34 +17,6 @@ public class PermissionManager: CustomStringConvertible {
 		return "\(user.username)#\(user.discriminator)"
 	}
 	
-	public func writeToDisk(url: URL = Defaults.storageURL) {
-		do {
-			let fileManager = FileManager.default
-			let data = try JSONEncoder().encode(userPermissions)
-			
-			if fileManager.fileExists(atPath: url.path) {
-				try fileManager.removeItem(at: url)
-			}
-			
-			fileManager.createFile(atPath: url.path, contents: data, attributes: nil)
-		} catch {
-			print(error)
-		}
-	}
-	
-	public func tryReadingFromDisk(url: URL = Defaults.storageURL) {
-		do {
-			let fileManager = FileManager.default
-			guard fileManager.fileExists(atPath: url.path) else { return }
-			
-			if let data = fileManager.contents(atPath: url.path) {
-				userPermissions = try JSONDecoder().decode([String: PermissionLevel].self, from: data)
-			}
-		} catch {
-			print(String(describing: error))
-		}
-	}
-	
 	public func user(_ theUser: DiscordUser, hasPermission requiredLevel: PermissionLevel) -> Bool {
 		return user(theUser, hasPermission: requiredLevel.rawValue)
 	}
