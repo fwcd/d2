@@ -6,7 +6,7 @@ fileprivate let userPermissionsFilePath = "local/discordUserPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
 public class PermissionManager: CustomStringConvertible {
-	private let storage = DiskStorage()
+	private let storage = DiskJsonSerializer()
 	private var adminWhitelist: AdminWhitelist
 	private var userPermissions: [String: PermissionLevel]
 	public var description: String { return userPermissions.description }

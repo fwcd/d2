@@ -1,6 +1,6 @@
 import Foundation
 
-public struct DiskStorage {
+public struct DiskJsonSerializer {
 	private let encoder = JSONEncoder()
 	private let decoder = JSONDecoder()
 	
