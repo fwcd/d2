@@ -32,10 +32,10 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 			return
 		}
 		
-		startMatch(between: context.author, and: opponent, output: output)
+		startMatch(between: GamePlayer(from: context.author), and: GamePlayer(from: opponent), output: output)
 	}
 	
-	func startMatch(between firstPlayer: DiscordUser, and secondPlayer: DiscordUser, output: CommandOutput) {
+	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
 		let state = State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
 		
 		currentState = state
@@ -43,22 +43,24 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 	}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
-		if let state = currentState {
-			if let moveArgs = moveMessageRegex.firstGroups(in: content) {
-				return handleMoveMessage(withState: state, moveArgs: moveArgs, output: output, context: context)
-			} else if let cancelArgs = cancelMessageRegex.firstGroups(in: content) {
-				return handleCancelMessage(withState: state, cancelArgs: cancelArgs, output: output, context: context)
-			}
+		let author = GamePlayer(from: context.author)
+		
+		if let moveArgs = moveMessageRegex.firstGroups(in: content) {
+			return handleMoveMessage(withArgs: moveArgs, output: output, author: author)
+		} else if let cancelArgs = cancelMessageRegex.firstGroups(in: content) {
+			return handleCancelMessage(withArgs: cancelArgs, output: output, author: author)
 		}
+		
 		return .continueSubscription
 	}
 	
-	func handleMoveMessage(withState state: State, moveArgs: [String], output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
-		let roles = state.rolesOf(player: context.author)
+	func handleMoveMessage(withArgs moveArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+		guard let state = currentState else { return .continueSubscription }
+		let roles = state.rolesOf(player: author)
 		
 		guard roles.contains(state.currentRole) else {
 			print("Current player: \(state.currentRole), roles: \(roles)")
-			output.append("It is not your turn, `\(context.author.username)`")
+			output.append("It is not your turn, `\(author.username)`")
 			return .continueSubscription
 		}
 		
@@ -101,8 +103,10 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		return .continueSubscription
 	}
 	
-	func handleCancelMessage(withState state: State, cancelArgs: [String], output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+	func handleCancelMessage(withArgs cancelArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+		guard let state = currentState else { return .continueSubscription }
 		let arg = cancelArgs[1]
+		
 		switch arg {
 			case "match":
 				currentState = nil

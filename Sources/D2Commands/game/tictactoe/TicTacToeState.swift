@@ -6,13 +6,13 @@ public struct TicTacToeState: GameState, CustomStringConvertible {
 	public typealias Board = TicTacToeBoard
 	public typealias Move = TicTacToeMove
 	
-	private let playerX: DiscordUser?
-	private let playerO: DiscordUser?
+	private let playerX: GamePlayer
+	private let playerO: GamePlayer
 	public private(set) var board = Board()
 	public private(set) var currentRole: Role = .x
-	public var description: String { return "`\(playerX?.username ?? "?")` as :x: vs. `\(playerO?.username ?? "?")` as :o:" }
+	public var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
 	
-	public init(firstPlayer: DiscordUser?, secondPlayer: DiscordUser?) {
+	public init(firstPlayer: GamePlayer, secondPlayer: GamePlayer) {
 		playerX = firstPlayer
 		playerO = secondPlayer
 	}
@@ -27,7 +27,7 @@ public struct TicTacToeState: GameState, CustomStringConvertible {
 		currentRole = currentRole.opponent
 	}
 	
-	public func playerOf(role: Role) -> DiscordUser? {
+	public func playerOf(role: Role) -> GamePlayer? {
 		switch role {
 			case .x: return playerX
 			case .o: return playerO
@@ -35,11 +35,11 @@ public struct TicTacToeState: GameState, CustomStringConvertible {
 		}
 	}
 	
-	public func rolesOf(player: DiscordUser) -> [Role] {
+	public func rolesOf(player: GamePlayer) -> [Role] {
 		var roles = [Role]()
 		
-		if playerX?.id == player.id { roles.append(.x) }
-		if playerO?.id == player.id { roles.append(.o) }
+		if playerX == player { roles.append(.x) }
+		if playerO == player { roles.append(.o) }
 		
 		return roles
 	}

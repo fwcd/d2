@@ -20,11 +20,11 @@ public protocol GameState {
 	var currentRole: Role { get }
 	var hands: [Role: Hand] { get }
 	
-	init(firstPlayer: DiscordUser?, secondPlayer: DiscordUser?)
+	init(firstPlayer: GamePlayer, secondPlayer: GamePlayer)
 	
-	func rolesOf(player: DiscordUser) -> [Role]
+	func rolesOf(player: GamePlayer) -> [Role]
 	
-	func playerOf(role: Role) -> DiscordUser?
+	func playerOf(role: Role) -> GamePlayer?
 	
 	mutating func perform(move: Move) throws
 }
