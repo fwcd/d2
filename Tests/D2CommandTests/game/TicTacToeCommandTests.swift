@@ -2,25 +2,24 @@ import XCTest
 import D2TestUtils
 @testable import D2Commands
 
+fileprivate let x = ":x:"
+fileprivate let o = ":o:"
+fileprivate let e = ":white_large_square:"
+fileprivate let nameX = "Mr. X"
+fileprivate let nameO = "Mr. O"
+
 final class TicTacToeCommandTests: XCTestCase {
 	static var allTests = [
-		("testInvocation", testInvocation)
+		("testXWin", testXWin),
+		("testDraw", testDraw)
 	]
+	private let playerX = GamePlayer(username: nameX)
+	private let playerO = GamePlayer(username: nameO)
 	
-	func testInvocation() throws {
+	func testXWin() throws {
 		let command = TwoPlayerGameCommand<TicTacToeState>(withName: "tic tac toe")
 		let output = CommandTestOutput()
-		
-		let nameX = "Mr. X"
-		let nameO = "Mr. O"
-		let playerX = GamePlayer(username: nameX)
-		let playerO = GamePlayer(username: nameO)
-		
 		command.startMatch(between: playerX, and: playerO, output: output)
-		
-		let x = ":x:"
-		let o = ":o:"
-		let e = ":white_large_square:"
 		
 		let header = "Playing new match: `\(nameX)` as \(x) vs. `\(nameO)` as \(o)"
 		let board = "\(e)\(e)\(e)\n\(e)\(e)\(e)\n\(e)\(e)\(e)"
@@ -47,8 +46,28 @@ final class TicTacToeCommandTests: XCTestCase {
 		command.move(withArgs: ["1 0"], output: output, author: playerX)
 		XCTAssertEqual(output.nthLastContent(2), "\(x)\(e)\(o)\n\(x)\(o)\(e)\n\(x)\(e)\(e)")
 		
-		let embed = output.last?.embeds.first
-		XCTAssertEqual(embed?.title, ":crown: Winner")
-		XCTAssertEqual(embed?.description, "\(x) aka. `\(nameX)` won the game!")
+		let result = output.last?.embeds.first
+		XCTAssertEqual(result?.title, ":crown: Winner")
+		XCTAssertEqual(result?.description, "\(x) aka. `\(nameX)` won the game!")
+	}
+	
+	func testDraw() throws {
+		let command = TwoPlayerGameCommand<TicTacToeState>(withName: "tic tac toe")
+		let output = CommandTestOutput()
+		command.startMatch(between: playerX, and: playerO, output: output)
+		
+		command.move(withArgs: ["0 0"], output: output, author: playerX)
+		command.move(withArgs: ["1 1"], output: output, author: playerO)
+		command.move(withArgs: ["2 2"], output: output, author: playerX)
+		command.move(withArgs: ["0 1"], output: output, author: playerO)
+		command.move(withArgs: ["2 1"], output: output, author: playerX)
+		command.move(withArgs: ["2 0"], output: output, author: playerO)
+		command.move(withArgs: ["1 0"], output: output, author: playerX)
+		command.move(withArgs: ["1 2"], output: output, author: playerO)
+		command.move(withArgs: ["0 2"], output: output, author: playerX)
+		
+		let result = output.last?.embeds.first
+		XCTAssertEqual(result?.title, ":crown: Game Over")
+		XCTAssertEqual(result?.description, "The game resulted in a draw!")
 	}
 }
