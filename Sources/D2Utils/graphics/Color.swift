@@ -14,4 +14,14 @@ public struct Color {
 		self.blue = blue
 		self.alpha = alpha
 	}
+	
+	public func alphaBlend(over bottomLayer: Color) -> Color {
+		let floatAlpha = Double(alpha) / 255.0
+		let invAlpha = 1.0 - floatAlpha
+		return Color(
+			red: (red * floatAlpha) + (bottomLayer.red * invAlpha),
+			green: (green * floatAlpha) + (bottomLayer.green * invAlpha),
+			blue: (blue * floatAlpha) + bottomLayer.blue * invAlpha
+		)
+	}
 }

@@ -46,7 +46,9 @@ public struct ImageGraphics: Graphics {
 	public mutating func draw(_ drawnImage: Image, at position: Vec2<Int>, withSize size: Vec2<Int>) {
 		for y in 0..<size.y {
 			for x in 0..<size.x {
-				image[Vec2(x: position.x + x, y: position.y + y)] = drawnImage[Vec2(x: (x * drawnImage.width) / size.x, y: (y * drawnImage.height) / size.y)]
+				let source = Vec2(x: position.x + x, y: position.y + y)
+				let dest = Vec2(x: (x * drawnImage.width) / size.x, y: (y * drawnImage.height) / size.y)
+				image[source] = drawnImage[dest].alphaBlend(over: image[source])
 			}
 		}
 	}
