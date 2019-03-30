@@ -16,7 +16,9 @@ public class DrawCommand: StringCommand {
 			graphics.draw(LineSegment(fromX: 20, y: 20, toX: 50, y: 30))
 			graphics.draw(Rectangle(fromX: 50, y: 50, width: 10, height: 35, color: Colors.yellow))
 			graphics.draw(Rectangle(fromX: 80, y: 90, width: 10, height: 35, isFilled: false))
-			graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"))
+			graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 20, y: 20))
+			graphics.draw(Rectangle(fromX: 150, y: 150, width: 120, height: 120))
+			graphics.draw(try Image(fromPngFile: "Resources/chess/whiteQueen.png"), at: Vec2(x: 150, y: 10), withSize: Vec2(x: 100, y: 40))
 			
 			try output.append(image)
 		} catch {
