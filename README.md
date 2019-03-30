@@ -11,18 +11,23 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * Install the required system dependencies:
 	* Swift 5
     * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
+
+## Setup
+* Create a folder named `local` in the repository
 * Create a file named `discordtoken.swift` in `Sources/D2` containing the API keys:
 
 ```swift
 let discordToken = "YOUR_DISCORD_API_TOKEN"
 ```
 
-* Create a file named `userwhitelist.swift` in `Sources/D2Permissions` containing a list of Discord usernames that have full permissions:
+* Create a file named `adminWhitelist.json` in `local` containing a list of Discord usernames that have full permissions:
 
-```swift
-let whitelistedDiscordUsers: Set<String> = [
-	"YOUR_USERNAME#1234"
-]
+```json
+{
+	"users": [
+		"YOUR_USERNAME#1234"
+	]
+}
 ```
 
 * Create a file named `authkeys.swift` in `Sources/D2WebAPIs` containing the API keys:

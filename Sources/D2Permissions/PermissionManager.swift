@@ -72,7 +72,7 @@ public class PermissionManager: CustomStringConvertible {
 	
 	public subscript(nameWithTag: String) -> PermissionLevel {
 		get {
-			if whitelistedDiscordUsers.contains(nameWithTag) {
+			if adminWhitelist.users.contains(nameWithTag) {
 				return .admin
 			} else {
 				return userPermissions[nameWithTag] ?? .basic
