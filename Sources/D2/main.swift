@@ -32,7 +32,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["rpn"] = RPNCommand()
 	handler["tictactoe"] = TwoPlayerGameCommand<TicTacToeState>(withName: "tic tac toe")
 	handler["cyclethrough"] = CycleThroughCommand()
-	handler["draw"] = DrawCommand()
+	handler["demoimage"] = DemoImageCommand()
 	handler["help"] = HelpCommand(permissionManager: handler.permissionManager)
 }
 
