@@ -24,4 +24,12 @@ public class CommandTestOutput: CommandOutput {
 		internalMessages.append(message)
 		changed = true
 	}
+	
+	public func nthLast(_ n: Int = 1) -> DiscordMessage? {
+		return messages[safely: messages.count - n]
+	}
+	
+	public func nthLastContent(_ n: Int = 1) -> String? {
+		return nthLast(n)?.content
+	}
 }

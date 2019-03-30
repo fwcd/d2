@@ -46,14 +46,16 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		let author = GamePlayer(from: context.author)
 		
 		if let moveArgs = moveMessageRegex.firstGroups(in: content) {
-			return move(withArgs: moveArgs, output: output, author: author)
+			return move(withArgs: Array(moveArgs.dropFirst()), output: output, author: author)
 		} else if let cancelArgs = cancelMessageRegex.firstGroups(in: content) {
-			return cancel(withArgs: cancelArgs, output: output, author: author)
+			return cancel(withArgs: Array(cancelArgs.dropFirst()), output: output, author: author)
 		}
 		
 		return .continueSubscription
 	}
 	
+	@discardableResult
+	/** Performs a move. The arguments are zero-indexed. */
 	func move(withArgs moveArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
 		let roles = state.rolesOf(player: author)
@@ -65,7 +67,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		}
 		
 		do {
-			let next = try state.childState(after: try State.Move.init(fromString: moveArgs[1]))
+			let next = try state.childState(after: try State.Move.init(fromString: moveArgs[0]))
 			output.append(next.board.discordMessageEncoded)
 			
 			if let winner = next.board.winner {
@@ -103,9 +105,11 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		return .continueSubscription
 	}
 	
+	@discardableResult
+	/** Cancels the current match. The arguments are zero-indexed. */
 	func cancel(withArgs cancelArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
-		let arg = cancelArgs[1]
+		let arg = cancelArgs[0]
 		
 		switch arg {
 			case "match":
