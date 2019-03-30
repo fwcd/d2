@@ -9,11 +9,11 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * Swift 5
 
 ### on Linux
-* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev`
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev`
 
 ### on macOS
 * `brew tap vapor/tap`
-* `brew install opus libsodium ctls`
+* `brew install opus libsodium ctls cairo`
 
 ## Setup
 
