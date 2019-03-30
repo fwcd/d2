@@ -12,13 +12,16 @@ public struct CairoGraphics: Graphics {
 	}
 	
 	public mutating func draw(_ line: LineSegment<Double>) {
+		context.setSource(color: line.color.asDoubleTuple)
 		context.move(to: line.start.asTuple)
 		context.line(to: line.end.asTuple)
 		context.stroke()
 	}
 	
 	public mutating func draw(_ rectangle: Rectangle<Double>) {
+		context.setSource(color: rectangle.color.asDoubleTuple)
 		context.addRectangle(x: rectangle.topLeft.x, y: rectangle.topLeft.y, width: rectangle.width, height: rectangle.height)
+		
 		if rectangle.isFilled {
 			context.fill()
 		} else {
