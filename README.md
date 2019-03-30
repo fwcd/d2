@@ -35,10 +35,12 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 }
 ```
 
-* Create a file named `authkeys.swift` in `Sources/D2WebAPIs` containing the API keys:
+* Create a file named `webApiKeys.json` in `local` containing various API keys:
 
-```swift
-let mapQuestKey = "YOUR_MAP_QUEST_KEY"
+```json
+{
+	"mapQuest": "YOUR_MAP_QUEST_KEY"
+}
 ```
 
 ## Building

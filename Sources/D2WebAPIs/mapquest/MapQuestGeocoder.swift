@@ -6,6 +6,9 @@ public struct MapQuestGeocoder {
 	
 	public func geocode(location: String, then: @escaping (Result<GeoCoordinates, Error>) -> Void) {
 		let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+		
+		// TODO: Output a more detailed error message
+		let mapQuestKey = storedWebApiKeys!.mapQuest!
 		guard let url = URL(string: "https://www.mapquestapi.com/geocoding/v1/address?key=\(mapQuestKey)&location=\(encodedLocation)") else {
 			then(.failure(MapQuestError.urlError("Error while constructing url from location '\(encodedLocation)'")))
 			return
