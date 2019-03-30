@@ -11,6 +11,42 @@
         }
       },
       {
+        "package": "Cairo",
+        "repositoryURL": "https://github.com/PureSwift/Cairo.git",
+        "state": {
+          "branch": null,
+          "revision": "2e0a981dbe8d7599edd86fcc5544d66d1fd7e0ad",
+          "version": null
+        }
+      },
+      {
+        "package": "CCairo",
+        "repositoryURL": "https://github.com/PureSwift/CCairo.git",
+        "state": {
+          "branch": null,
+          "revision": "2051a137b52995d7795c0dc9c08cd2ea2a2b570c",
+          "version": null
+        }
+      },
+      {
+        "package": "CFontConfig",
+        "repositoryURL": "https://github.com/PureSwift/CFontConfig.git",
+        "state": {
+          "branch": null,
+          "revision": "f47c3ea87307478428df762dc2e181c12643a884",
+          "version": null
+        }
+      },
+      {
+        "package": "CFreeType",
+        "repositoryURL": "https://github.com/PureSwift/CFreeType.git",
+        "state": {
+          "branch": null,
+          "revision": "a8c830218999af31691e154cecae783bae1f0ab9",
+          "version": null
+        }
+      },
+      {
         "package": "COPUS",
         "repositoryURL": "https://github.com/nuclearace/copus",
         "state": {
@@ -62,15 +98,6 @@
           "branch": null,
           "revision": "e44822c7516676d8bcb0141a6e248a88847b110c",
           "version": "2.2.5"
-        }
-      },
-      {
-        "package": "PNG",
-        "repositoryURL": "https://github.com/kelvin13/png.git",
-        "state": {
-          "branch": null,
-          "revision": "beb4c9b6e6abacf01cc4d278f3731f0ed0ea3497",
-          "version": "3.0.0"
         }
       },
       {

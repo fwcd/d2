@@ -1,64 +1,38 @@
-import PNG
+import Cairo
 import Foundation
 
 public struct Image {
-	private var pixels: [PNG.RGBA<UInt8>]
-	public let size: Vec2<Int>
+	let surface: Surface.Image
 	
-	public var width: Int { return size.x }
-	public var height: Int { return size.y }
+	public var width: Int { return surface.width }
+	public var height: Int { return surface.height }
+	public var size: Vec2<Int> { return Vec2(x: width, y: height) }
 	
-	public init(size: Vec2<Int>) {
-		self.size = size
-		pixels = Array(repeating: PNG.RGBA<UInt8>(0), count: size.x * size.y)
+	init(from surface: Surface.Image) {
+		self.surface = surface
 	}
 	
-	public init(width: Int, height: Int) {
-		self.init(size: Vec2(x: width, y: height))
+	public init(width: Int, height: Int) throws {
+		self.init(from: try Surface.Image(format: .argb32, width: width, height: height))
 	}
 	
-	public init(fromFile file: String) throws {
-		let (pixels, (x: width, y: height)) = try PNG.rgba(path: file, of: UInt8.self)
-		self.pixels = pixels
-		size = Vec2(x: width, y: height)
+	public init(fromPng data: Data) throws {
+		self.init(from: try Surface.Image(png: data))
 	}
 	
-	public subscript(pos: Vec2<Int>) -> Color {
-		get { return Color(from: pixels[index(of: pos)]) }
-		set(newValue) { pixels[index(of: pos)] = newValue.pngRGBA }
+	public init(fromPngFile filePath: String) throws {
+		let url = URL(fileURLWithPath: filePath)
+		let fileManager = FileManager.default
+		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(filePath) }
+		
+		if let data = fileManager.contents(atPath: url.path) {
+			try self.init(fromPng: data)
+		} else {
+			throw DiskFileError.noData("Image at \(filePath) contained no data")
+		}
 	}
 	
-	func isInBounds(_ pos: Vec2<Int>) -> Bool {
-		return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height
-	}
-	
-	private func index(of pos: Vec2<Int>) -> Int {
-		return (pos.y * width) + pos.x
-	}
-	
-	public func uncompressed(format: PNG.Properties.Format.Code = .rgba8) throws -> PNG.Data.Uncompressed {
-		return try .convert(rgba: pixels, size: (width, height), to: .rgba8)
-	}
-	
-	public func encoded(format: PNG.Properties.Format.Code = .rgba8) throws -> Foundation.Data {
-		var destination = FoundationDataDestination(data: Foundation.Data(capacity: width * height * 4))
-		try uncompressed().compress(to: &destination, level: 8)
-		return destination.data
-	}
-	
-	public func encode(to sink: @escaping ([UInt8]) -> Void) throws {
-		var destination = ClosureDataDestination(sink: sink)
-		try uncompressed().compress(to: &destination, level: 8)
-	}
-}
-
-extension Color {
-	public var pngRGBA: PNG.RGBA<UInt8> { return PNG.RGBA(red, green, blue, alpha) }
-	
-	public init(from source: PNG.RGBA<UInt8>) {
-		red = source.r
-		green = source.g
-		blue = source.b
-		alpha = source.a
+	public func pngEncoded() throws -> Data {
+		return try surface.writePNG()
 	}
 }

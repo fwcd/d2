@@ -3,6 +3,8 @@ public struct LineSegment<T: VecComponent> {
 	public let end: Vec2<T>
 	public let color: Color
 	
+	// TODO: Stroke thickness
+	
 	public init(from start: Vec2<T>, to end: Vec2<T>, color: Color = Colors.white) {
 		self.start = start
 		self.end = end

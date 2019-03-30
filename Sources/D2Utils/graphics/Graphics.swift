@@ -1,9 +1,9 @@
 public protocol Graphics {
-	mutating func draw(_ line: LineSegment<Int>)
+	mutating func draw(_ line: LineSegment<Double>)
 	
-	mutating func draw(_ rectangle: Rectangle<Int>)
+	mutating func draw(_ rectangle: Rectangle<Double>)
 	
-	mutating func draw(_ img: Image, at position: Vec2<Int>, withSize size: Vec2<Int>)
+	mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>)
 }
 
 public extension Graphics {
@@ -11,7 +11,7 @@ public extension Graphics {
 		draw(img, at: Vec2(x: 0, y: 0))
 	}
 	
-	mutating func draw(_ img: Image, at position: Vec2<Int>) {
-		draw(img, at: position, withSize: img.size)
+	mutating func draw(_ image: Image, at position: Vec2<Double>) {
+		draw(image, at: position, withSize: image.size)
 	}
 }

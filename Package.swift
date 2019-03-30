@@ -9,7 +9,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("691787a9fa40107c5b63db6a34c524d552d64ffe")),
-        .package(url: "https://github.com/kelvin13/png.git", .upToNextMajor(from: "3.0.0"))
+        .package(url: "https://github.com/PureSwift/Cairo.git", .revision("2e0a981dbe8d7599edd86fcc5544d66d1fd7e0ad")) // Using the version introduced in https://github.com/PureSwift/Cairo/pull/3
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -32,7 +32,7 @@ let package = Package(
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["SwiftDiscord", "PNG"]
+            dependencies: ["SwiftDiscord", "Cairo"]
         ),
         .testTarget(
             name: "D2CommandTests",
