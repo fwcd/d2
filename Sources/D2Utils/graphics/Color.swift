@@ -19,9 +19,9 @@ public struct Color {
 		let floatAlpha = Double(alpha) / 255.0
 		let invAlpha = 1.0 - floatAlpha
 		return Color(
-			red: (red * floatAlpha) + (bottomLayer.red * invAlpha),
-			green: (green * floatAlpha) + (bottomLayer.green * invAlpha),
-			blue: (blue * floatAlpha) + bottomLayer.blue * invAlpha
-		)
+			red: UInt8((Double(red) * floatAlpha) + (Double(bottomLayer.red) * invAlpha)),
+			green: UInt8((Double(green) * floatAlpha) + (Double(bottomLayer.green) * invAlpha)),
+			blue: UInt8((Double(blue) * floatAlpha) + Double(bottomLayer.blue) * invAlpha
+)		)
 	}
 }
