@@ -30,6 +30,18 @@ public struct CairoGraphics: Graphics {
 	}
 	
 	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
-		// TODO
+		let originalWidth = image.width
+		let originalHeight = image.height
+		
+		context.save()
+		context.source = Pattern(surface: image.surface)
+		
+		if originalWidth != size.x || originalHeight != size.y {
+			context.scale(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
+		}
+		
+		context.translate(x: position.x, y: position.y)
+		context.paint()
+		context.restore()
 	}
 }
