@@ -32,7 +32,16 @@ let package = Package(
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["SwiftDiscord", "PNG"]
+            dependencies: ["SwiftDiscord", "PNG", "Cairo"]
+        ),
+        .systemLibrary(
+            name: "Cairo",
+            path: ".",
+            pkgConfig: "cairo",
+            providers: [
+                .brew(["cairo"]),
+                .apt(["libcairo2-dev"])
+            ]
         ),
         .testTarget(
             name: "D2CommandTests",
