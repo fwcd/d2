@@ -12,25 +12,25 @@ public struct CairoGraphics: Graphics {
 		self.init(surface: image.surface)
 	}
 	
-	public mutating func draw(_ line: LineSegment<Double>) {
+	public mutating func draw(line: LineSegment<Double>) {
 		context.setSource(color: line.color.asDoubleTuple)
 		context.move(to: line.start.asTuple)
 		context.line(to: line.end.asTuple)
 		context.stroke()
 	}
 	
-	public mutating func draw(_ rectangle: Rectangle<Double>) {
-		context.setSource(color: rectangle.color.asDoubleTuple)
-		context.addRectangle(x: rectangle.topLeft.x, y: rectangle.topLeft.y, width: rectangle.width, height: rectangle.height)
+	public mutating func draw(rect: Rectangle<Double>) {
+		context.setSource(color: rect.color.asDoubleTuple)
+		context.addRectangle(x: rect.topLeft.x, y: rect.topLeft.y, width: rect.width, height: rect.height)
 		
-		if rectangle.isFilled {
+		if rect.isFilled {
 			context.fill()
 		} else {
 			context.stroke()
 		}
 	}
 	
-	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
+	public mutating func draw(image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
 		let originalWidth = image.width
 		let originalHeight = image.height
 		
@@ -46,5 +46,11 @@ public struct CairoGraphics: Graphics {
 		context.source = Pattern(surface: image.surface)
 		context.paint()
 		context.restore()
+	}
+	
+	public mutating func draw(text: Text) {
+		context.setFont(size: text.fontSize)
+		context.move(to: text.position.asTuple)
+		context.show(text: text.value)
 	}
 }
