@@ -34,13 +34,15 @@ public struct CairoGraphics: Graphics {
 		let originalHeight = image.height
 		
 		context.save()
-		context.source = Pattern(surface: image.surface)
+		
+		let scaleFactor = Vec2(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
 		
 		if originalWidth != size.x || originalHeight != size.y {
-			context.scale(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
+			context.scale(x: scaleFactor.x, y: scaleFactor.y)
 		}
 		
-		context.translate(x: position.x, y: position.y)
+		context.translate(x: position.x / scaleFactor.x, y: position.y / scaleFactor.y)
+		context.source = Pattern(surface: image.surface)
 		context.paint()
 		context.restore()
 	}
