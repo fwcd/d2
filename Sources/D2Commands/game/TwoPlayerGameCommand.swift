@@ -46,15 +46,15 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		let author = GamePlayer(from: context.author)
 		
 		if let moveArgs = moveMessageRegex.firstGroups(in: content) {
-			return handleMoveMessage(withArgs: moveArgs, output: output, author: author)
+			return move(withArgs: moveArgs, output: output, author: author)
 		} else if let cancelArgs = cancelMessageRegex.firstGroups(in: content) {
-			return handleCancelMessage(withArgs: cancelArgs, output: output, author: author)
+			return cancel(withArgs: cancelArgs, output: output, author: author)
 		}
 		
 		return .continueSubscription
 	}
 	
-	func handleMoveMessage(withArgs moveArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+	func move(withArgs moveArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
 		let roles = state.rolesOf(player: author)
 		
@@ -103,7 +103,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		return .continueSubscription
 	}
 	
-	func handleCancelMessage(withArgs cancelArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+	func cancel(withArgs cancelArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
 		let arg = cancelArgs[1]
 		
