@@ -24,7 +24,7 @@ let package = Package(
         ),
         .target(
             name: "D2Permissions",
-            dependencies: ["SwiftDiscord"]
+            dependencies: ["SwiftDiscord", "D2Utils"]
         ),
         .target(
             name: "D2WebAPIs",

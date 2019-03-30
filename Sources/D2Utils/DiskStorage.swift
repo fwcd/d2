@@ -4,6 +4,8 @@ public struct DiskStorage {
 	private let encoder = JSONEncoder()
 	private let decoder = JSONDecoder()
 	
+	public init() {}
+	
 	public func write<T: Encodable>(_ value: T, asJsonToFile filePath: String) throws {
 		let url = URL(fileURLWithPath: filePath)
 		let fileManager = FileManager.default

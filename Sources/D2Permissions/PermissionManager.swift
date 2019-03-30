@@ -1,16 +1,40 @@
 import SwiftDiscord
 import Foundation
+import D2Utils
+
+fileprivate let userPermissionsFilePath = "local/discordUserPermissions.json"
+fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
 public class PermissionManager: CustomStringConvertible {
-	private var userPermissions = [String: PermissionLevel]()
+	private let storage = DiskStorage()
+	private var adminWhitelist: AdminWhitelist
+	private var userPermissions: [String: PermissionLevel]
 	public var description: String { return userPermissions.description }
 	
-	public struct Defaults {
-		public static let storageURL = URL(fileURLWithPath: "local/discordUserPermissions.json")
+	public init() {
+		do {
+			adminWhitelist = try storage.readJson(as: AdminWhitelist.self, fromFile: adminWhitelistFilePath)
+		} catch {
+			adminWhitelist = AdminWhitelist(users: [])
+			// TODO: Log error at a debug level
+		}
+		
+		do {
+			userPermissions = try storage.readJson(as: [String: PermissionLevel].self, fromFile: userPermissionsFilePath)
+		} catch {
+			userPermissions = [:]
+			// TODO: Log error at a debug level
+		}
 	}
 	
-	public init() {
-		tryReadingFromDisk()
+	public func writeToDisk() {
+		do {
+			try storage.write(userPermissions, asJsonToFile: userPermissionsFilePath)
+		} catch {
+			// TODO: Use logger instead
+			print("Error while writing permissions to disk:")
+			print(error)
+		}
 	}
 	
 	private func encode(user: DiscordUser) -> String {
