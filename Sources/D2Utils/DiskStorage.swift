@@ -21,12 +21,12 @@ public struct DiskStorage {
 	public func readJson<T: Decodable>(as type: T.Type, fromFile filePath: String) throws -> T {
 		let url = URL(fileURLWithPath: filePath)
 		let fileManager = FileManager.default
-		guard fileManager.fileExists(atPath: url.path) else { throw SerializationError.fileNotFound(filePath) }
+		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(filePath) }
 		
 		if let data = fileManager.contents(atPath: url.path) {
 			return try decoder.decode(type, from: data)
 		} else {
-			throw SerializationError.noData("Could not read any data from '\(filePath)'")
+			throw DiskFileError.noData("Could not read any data from '\(filePath)'")
 		}
 	}
 }
