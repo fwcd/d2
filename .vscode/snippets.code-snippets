@@ -179,7 +179,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public struct $1Hand: DiscordEncodable {",
+			"public struct $1Hand: DiscordStringEncodable {",
 			"\tpublic var cards: [$1Card]",
 			"\t",
 			"\t$0",
@@ -192,7 +192,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public enum $1Role: CaseIterable, DiscordEncodable {",
+			"public enum $1Role: CaseIterable, DiscordStringEncodable {",
 			"\tcase $2",
 			"\tcase $3",
 			"\t",

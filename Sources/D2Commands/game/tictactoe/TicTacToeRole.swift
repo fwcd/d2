@@ -1,6 +1,6 @@
 import D2Utils
 
-public enum TicTacToeRole: String, CaseIterable, DiscordEncodable {
+public enum TicTacToeRole: String, CaseIterable, DiscordStringEncodable {
 	case x = "x"
 	case o = "o"
 	case empty = " "

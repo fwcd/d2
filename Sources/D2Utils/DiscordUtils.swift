@@ -16,14 +16,14 @@ extension DiscordMessage {
 	}
 }
 
-extension Int: DiscordEncodable {
+extension Int: DiscordStringEncodable {
 	public var discordStringEncoded: String { return String(self) }
 }
 
-extension Double: DiscordEncodable {
+extension Double: DiscordStringEncodable {
 	public var discordStringEncoded: String { return String(self) }
 }
 
-extension String: DiscordEncodable {
+extension String: DiscordStringEncodable {
 	public var discordStringEncoded: String { return self }
 }
