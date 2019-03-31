@@ -47,7 +47,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 		let state = G.State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
 		
 		currentState = state
-		output.append("Playing new match: \(state)\n\(state.board.discordStringEncoded)\nType `move [...]` to begin!")
+		output.append("Playing new match: \(state)\n\(state.board.discordStringEncoded)\nAvailable game actions: `\(game.actions.keys)`\nType `[action] [...]` to begin!")
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
