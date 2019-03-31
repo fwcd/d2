@@ -12,6 +12,27 @@ public struct Color: Hashable {
 		return (red: Double(red), green: Double(green), blue: Double(blue), alpha: Double(alpha))
 	}
 	
+	public init(rgb: UInt32) {
+		red = UInt8((rgb >> 16) & 0xFF)
+		green = UInt8((rgb >> 8) & 0xFF)
+		blue = UInt8(rgb & 0xFF)
+		alpha = 255
+	}
+	
+	public init(rgba: UInt32) {
+		red = UInt8((rgba >> 24) & 0xFF)
+		green = UInt8((rgba >> 16) & 0xFF)
+		blue = UInt8((rgba >> 8) & 0xFF)
+		alpha = UInt8(rgba & 0xFF)
+	}
+	
+	public init(argb: UInt32) {
+		alpha = UInt8((argb >> 24) & 0xFF)
+		red = UInt8((argb >> 16) & 0xFF)
+		green = UInt8((argb >> 8) & 0xFF)
+		blue = UInt8(argb & 0xFF)
+	}
+	
 	public init(red: UInt8, green: UInt8, blue: UInt8, alpha: UInt8 = 255) {
 		self.red = red
 		self.green = green
