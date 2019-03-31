@@ -33,7 +33,7 @@ public struct UnoState: GameState, CustomStringConvertible {
 	}
 	
 	public mutating func perform(move: Move) throws {
-		// TODO
+		board.push(card: move.card)
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {
