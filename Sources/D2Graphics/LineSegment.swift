@@ -7,13 +7,13 @@ public struct LineSegment<T: VecComponent> {
 	
 	// TODO: Stroke thickness
 	
-	public init(from start: Vec2<T>, to end: Vec2<T>, color: Color = Colors.white) {
+	public init(from start: Vec2<T>, to end: Vec2<T>, color: Color = ShapeDefaults.color) {
 		self.start = start
 		self.end = end
 		self.color = color
 	}
 	
-	public init(fromX startX: T, y startY: T, toX endX: T, y endY: T) {
-		self.init(from: Vec2(x: startX, y: startY), to: Vec2(x: endX, y: endY))
+	public init(fromX startX: T, y startY: T, toX endX: T, y endY: T, color: Color = ShapeDefaults.color) {
+		self.init(from: Vec2(x: startX, y: startY), to: Vec2(x: endX, y: endY), color: color)
 	}
 }

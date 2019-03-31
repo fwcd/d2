@@ -1,10 +1,5 @@
 import D2Utils
 
-public struct RectangleDefaults {
-	public static let color = Colors.white
-	public static let isFilled = true
-}
-
 public struct Rectangle<T: VecComponent> {
 	public let topLeft: Vec2<T>
 	public let size: Vec2<T>
@@ -17,14 +12,14 @@ public struct Rectangle<T: VecComponent> {
 	public var width: T { return size.x }
 	public var height: T { return size.y }
 	
-	public init(topLeft: Vec2<T>, size: Vec2<T>, color: Color = RectangleDefaults.color, isFilled: Bool = RectangleDefaults.isFilled) {
+	public init(topLeft: Vec2<T>, size: Vec2<T>, color: Color = ShapeDefaults.color, isFilled: Bool = ShapeDefaults.isFilled) {
 		self.topLeft = topLeft
 		self.size = size
 		self.color = color
 		self.isFilled = isFilled
 	}
 	
-	public init(fromX x: T, y: T, width: T, height: T, color: Color = RectangleDefaults.color, isFilled: Bool = RectangleDefaults.isFilled) {
+	public init(fromX x: T, y: T, width: T, height: T, color: Color = ShapeDefaults.color, isFilled: Bool = ShapeDefaults.isFilled) {
 		self.init(topLeft: Vec2(x: x, y: y), size: Vec2(x: width, y: height), color: color, isFilled: isFilled)
 	}
 }
