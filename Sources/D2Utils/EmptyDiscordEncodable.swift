@@ -1,3 +1,3 @@
-public struct EmptyDiscordEncodable: DiscordEncodable {
+public struct EmptyDiscordEncodable: DiscordStringEncodable {
 	public let discordStringEncoded: String = ""
 }
