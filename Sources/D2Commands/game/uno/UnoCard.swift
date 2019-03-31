@@ -12,7 +12,7 @@ public struct UnoCard: Hashable {
 			let size = intSize.asDouble
 			let center = size / 2.0
 			let padding = 50.0
-			let img = try Image(width: intSize.x, height: intSize.y)
+			let img = try Image(fromSize: intSize)
 			var graphics = CairoGraphics(fromImage: img)
 			
 			graphics.draw(Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, color: color.color))

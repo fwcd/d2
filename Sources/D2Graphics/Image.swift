@@ -17,6 +17,10 @@ public struct Image {
 		self.init(from: try Surface.Image(format: .argb32, width: width, height: height))
 	}
 	
+	public init(fromSize size: Vec2<Int>) throws {
+		try self.init(width: size.x, height: size.y)
+	}
+	
 	public init(fromPng data: Data) throws {
 		self.init(from: try Surface.Image(png: data))
 	}
