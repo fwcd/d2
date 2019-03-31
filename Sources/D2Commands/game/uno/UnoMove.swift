@@ -11,15 +11,27 @@ public struct UnoMove: GameMove, Hashable {
 	
 	public init(fromString str: String) throws {
 		if let parsedArgs = argsRegex.firstGroups(in: str) {
-			if let color = UnoColor(rawValue: parsedArgs[1]), let number = Int(parsedArgs[2]) {
-				card = UnoCard(color: color, number: number)
-			} else if let color = UnoColor(rawValue: parsedArgs[2]), let number = Int(parsedArgs[1]) {
-				card = UnoCard(color: color, number: number)
+			if let card = UnoMove.parse(rawColor: parsedArgs[1], rawLabel: parsedArgs[2]) {
+				self.init(playing: card)
+			} else if let card = UnoMove.parse(rawColor: parsedArgs[2], rawLabel: parsedArgs[1]) {
+				self.init(playing: card)
 			} else {
 				throw GameError.invalidMove("Unrecognized arguments, try: `[color] [number]` or `[number] [color]`")
 			}
 		} else {
 			throw GameError.invalidMove("Your move `\(str)` is invalid.")
+		}
+	}
+	
+	private static func parse(rawColor: String, rawLabel: String) -> UnoCard? {
+		guard let color = UnoColor(rawValue: rawColor) else { return nil }
+		
+		if let n = Int(rawLabel) {
+			return UnoCard(color: color, label: .number(n))
+		} else if let label = UnoCardLabel.of(actionLabel: rawLabel) {
+			return UnoCard(color: color, label: label)
+		} else {
+			return nil
 		}
 	}
 }

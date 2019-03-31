@@ -2,7 +2,7 @@ import D2Graphics
 
 public struct UnoCard: Hashable {
 	public let color: UnoColor
-	public let number: Int
+	public let label: UnoCardLabel
 	public var image: Image? { return createImage() }
 	
 	private func createImage() -> Image? {

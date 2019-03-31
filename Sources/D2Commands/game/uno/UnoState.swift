@@ -8,7 +8,7 @@ public struct UnoState: GameState, CustomStringConvertible {
 	public typealias Hand = UnoHand
 	
 	private let players: [GamePlayer]
-	public private(set) var board = Board()
+	public private(set) var board: Board
 	public private(set) var currentRole: Role = 0
 	public var hands: [Role: Hand]
 	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
@@ -20,10 +20,11 @@ public struct UnoState: GameState, CustomStringConvertible {
 	
 	public init(players: [GamePlayer]) {
 		self.players = players
+		board = Board()
 		hands = [:]
 		
 		for i in 0..<players.count {
-			hands[i] = Hand()
+			hands[i] = Hand(cards: board.deck.drawRandomCards(count: 7))
 		}
 	}
 	

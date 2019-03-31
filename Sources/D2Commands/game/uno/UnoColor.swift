@@ -1,6 +1,6 @@
 import D2Graphics
 
-public enum UnoColor: String, Hashable {
+public enum UnoColor: String, Hashable, CaseIterable {
 	case yellow = "yellow"
 	case red = "red"
 	case green = "green"
