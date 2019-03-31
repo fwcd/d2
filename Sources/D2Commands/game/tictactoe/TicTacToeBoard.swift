@@ -1,3 +1,5 @@
+import D2Utils
+
 /** An immutable tic-tac-toe board. */
 public struct TicTacToeBoard: DiscordStringEncodable {
 	public typealias Role = TicTacToeRole

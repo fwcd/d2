@@ -1,9 +1,8 @@
 import D2Graphics
 
-public struct UnoCard: Hashable {
-	public let color: UnoColor
-	public let number: Int
-	public var image: Image? { return createImage() }
+public struct UnoBoard: DiscordImageEncodable {
+	public var discardPile = [UnoCard]()
+	public var discordImageEncoded: Image? { return createImage() }
 	
 	private func createImage() -> Image? {
 		do {

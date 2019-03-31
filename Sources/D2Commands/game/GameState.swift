@@ -8,7 +8,7 @@ import D2Utils
  */
 public protocol GameState {
 	/** A role is a logical player in the game (such as "white" or "black"). */
-	associatedtype Role: DiscordEncodable & Hashable
+	associatedtype Role: DiscordStringEncodable & Hashable
 	/** A hand encapsulates a role's private cards/pieces/... in games with imperfect information. */
 	associatedtype Hand: DiscordEncodable = EmptyDiscordEncodable
 	/** A board contains the pieces/cards that are visible to all players. */
