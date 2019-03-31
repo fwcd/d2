@@ -6,7 +6,7 @@ public enum UnoCardLabel: Hashable {
 	case wild
 	case wildDrawFour
 	
-	public var resourcePath: String? {
+	public var resourcePngPath: String? {
 		switch self {
 			case .skip: return "Resources/uno/skip.png"
 			case .reverse: return "Resources/uno/reverse.png"
