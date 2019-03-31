@@ -15,3 +15,15 @@ extension DiscordMessage {
 		self.init(content: "", embed: embed)
 	}
 }
+
+extension Int: DiscordEncodable {
+	var discordStringEncoded: String { return String(self) }
+}
+
+extension Double: DiscordEncodable {
+	var discordStringEncoded: String { return String(self) }
+}
+
+extension String: DiscordEncodable {
+	var discordStringEncoded: String { return self }
+}
