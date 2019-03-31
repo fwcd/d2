@@ -1,4 +1,4 @@
-public struct Color {
+public struct Color: Hashable {
 	public let red: UInt8
 	public let green: UInt8
 	public let blue: UInt8

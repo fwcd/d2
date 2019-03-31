@@ -2,13 +2,17 @@ import SwiftDiscord
 import D2Utils
 
 public protocol DiscordImageEncodable: DiscordEncodable {
-	var discordImageEncoded: Image { get }
+	var discordImageEncoded: Image? { get }
 }
 
 extension DiscordImageEncodable {
 	public var discordMessageEncoded: DiscordMessage {
 		do {
-			return try DiscordMessage(fromImage: discordImageEncoded)
+			if let image = discordImageEncoded {
+				return try DiscordMessage(fromImage: image)
+			} else {
+				return DiscordMessage(content: "Error: No image present")
+			}
 		} catch {
 			return DiscordMessage(content: "Error: Could not encode image")
 		}

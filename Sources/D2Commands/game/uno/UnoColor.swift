@@ -1,12 +1,12 @@
-import D2Utils
+import D2Graphics
 
-enum UnoColor: String {
+public enum UnoColor: String, Hashable {
 	case yellow = "yellow"
 	case red = "red"
 	case green = "green"
 	case blue = "blue"
 	
-	var color: Color {
+	public var color: Color {
 		switch self {
 			case .yellow: return Colors.yellow
 			case .red: return Colors.red

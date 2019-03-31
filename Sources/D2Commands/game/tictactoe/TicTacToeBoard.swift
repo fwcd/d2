@@ -1,5 +1,5 @@
 /** An immutable tic-tac-toe board. */
-public struct TicTacToeBoard {
+public struct TicTacToeBoard: DiscordStringEncodable {
 	public typealias Role = TicTacToeRole
 	
 	let fields: [[TicTacToeRole]]

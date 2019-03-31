@@ -13,18 +13,22 @@ public struct UnoState: GameState, CustomStringConvertible {
 	public var hands: [Role: Hand]
 	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 	
-	public var possibleMoves: Set<Move> { return Set(hands[currentRole]?.cards.map { Move(playing: ) } ?? [])
+	public var possibleMoves: Set<Move> { return Set(hands[currentRole]?.cards.map { Move(playing: $0) } ?? []) }
 	
-	public var winner: Role? {}
-	public var isDraw: Bool {}
+	public var winner: Role? { return hands.first { $0.1.isEmpty }?.0 }
+	public var isDraw: Bool { return hands.allSatisfy { $0.1.isEmpty } }
 	
 	public init(players: [GamePlayer]) {
 		self.players = players
-		hands = Dictionary(uniqueKeysWithValues: Array(repeating: UnoHand(), count: players.count).enumerated())
+		hands = [:]
+		
+		for i in 0..<players.count {
+			hands[i] = Hand()
+		}
 	}
 	
 	public init(firstPlayer: GamePlayer, secondPlayer: GamePlayer) {
-		self.init([firstPlayer, secondPlayer])
+		self.init(players: [firstPlayer, secondPlayer])
 	}
 	
 	public mutating func perform(move: Move) throws {
