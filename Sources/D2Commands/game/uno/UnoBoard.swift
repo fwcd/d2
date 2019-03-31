@@ -7,7 +7,7 @@ public struct UnoBoard: DiscordImageEncodable {
 	
 	private func createImage() -> Image? {
 		do {
-			let img = try Image(width: 100, height: 300)
+			let img = try Image(width: 100, height: 100)
 			var graphics = CairoGraphics(fromImage: img)
 			
 			// TODO

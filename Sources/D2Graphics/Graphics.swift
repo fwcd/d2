@@ -1,6 +1,14 @@
 import D2Utils
 
 public protocol Graphics {
+	mutating func save()
+	
+	mutating func restore()
+	
+	mutating func translate(by offset: Vec2<Double>)
+	
+	mutating func rotate(by angle: Double)
+	
 	mutating func draw(line: LineSegment<Double>)
 	
 	mutating func draw(rect: Rectangle<Double>)

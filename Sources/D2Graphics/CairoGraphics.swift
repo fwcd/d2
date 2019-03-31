@@ -12,6 +12,22 @@ public struct CairoGraphics: Graphics {
 		self.init(surface: image.surface)
 	}
 	
+	public func save() {
+		context.save()
+	}
+	
+	public func restore() {
+		context.restore()
+	}
+	
+	public func translate(by offset: Vec2<Double>) {
+		context.translate(x: offset.x, y: offset.y)
+	}
+	
+	public func rotate(by angle: Double) {
+		context.rotate(angle)
+	}
+	
 	public func draw(line: LineSegment<Double>) {
 		context.setSource(color: line.color.asDoubleTuple)
 		context.move(to: line.start.asTuple)

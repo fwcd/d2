@@ -1,6 +1,22 @@
 import D2Utils
 
 public struct ConsoleGraphics: Graphics {
+	mutating func save() {
+		print("Saved context")
+	}
+	
+	mutating func restore() {
+		print("Restored context")
+	}
+	
+	mutating func translate(by offset: Vec2<Double>) {
+		print("Translated by \(offset)")
+	}
+	
+	mutating func rotate(by angle: Double) {
+		print("Rotated by \(angle) radians")
+	}
+	
 	public func draw(line: LineSegment<Double>) {
 		print("Drawed line \(line)")
 	}
