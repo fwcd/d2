@@ -34,6 +34,8 @@ public struct UnoState: GameState, CustomStringConvertible {
 	
 	public mutating func perform(move: Move) throws {
 		board.push(card: move.card)
+		hands[currentRole]!.cards.remove(move.card)
+		currentRole = (currentRole + 1) % players.count
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {
