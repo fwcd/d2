@@ -28,14 +28,14 @@ public struct CairoGraphics: Graphics {
 		context.rotate(angle)
 	}
 	
-	public mutating func draw(line: LineSegment<Double>) {
+	public mutating func draw(_ line: LineSegment<Double>) {
 		context.setSource(color: line.color.asDoubleTuple)
 		context.move(to: line.start.asTuple)
 		context.line(to: line.end.asTuple)
 		context.stroke()
 	}
 	
-	public mutating func draw(rect: Rectangle<Double>) {
+	public mutating func draw(_ rect: Rectangle<Double>) {
 		context.setSource(color: rect.color.asDoubleTuple)
 		context.addRectangle(x: rect.topLeft.x, y: rect.topLeft.y, width: rect.width, height: rect.height)
 		
@@ -46,7 +46,7 @@ public struct CairoGraphics: Graphics {
 		}
 	}
 	
-	public mutating func draw(image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
+	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
 		let originalWidth = image.width
 		let originalHeight = image.height
 		
@@ -64,14 +64,14 @@ public struct CairoGraphics: Graphics {
 		context.restore()
 	}
 	
-	public mutating func draw(text: Text) {
+	public mutating func draw(_ text: Text) {
 		context.setSource(color: text.color.asDoubleTuple)
 		context.setFont(size: text.fontSize)
 		context.move(to: text.position.asTuple)
 		context.show(text: text.value)
 	}
 	
-	public mutating func draw(ellipse: Ellipse<Double>) {
+	public mutating func draw(_ ellipse: Ellipse<Double>) {
 		context.save()
 		context.setSource(color: ellipse.color.asDoubleTuple)
 		context.translate(x: ellipse.center.x, y: ellipse.center.y)

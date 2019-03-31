@@ -12,7 +12,7 @@ extension Array where Element == Image {
 		var pos = Vec2<Double>(x: 0.0, y: 0.0)
 		
 		for image in self {
-			graphics.draw(image: image, at: pos)
+			graphics.draw(image, at: pos)
 			pos = pos + Vec2(x: Double(image.width), y: 0.0)
 		}
 		

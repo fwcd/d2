@@ -15,16 +15,16 @@ public struct UnoCard: Hashable {
 			let img = try Image(width: intSize.x, height: intSize.y)
 			var graphics = CairoGraphics(fromImage: img)
 			
-			graphics.draw(rect: Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, color: color.color))
-			graphics.draw(ellipse: Ellipse(center: center, radius: Vec2(x: size.x * 0.8, y: center.y - padding), rotation: -Double.pi / 4.0, color: Colors.white))
+			graphics.draw(Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, color: color.color))
+			graphics.draw(Ellipse(center: center, radius: Vec2(x: size.x * 0.8, y: center.y - padding), rotation: -Double.pi / 4.0, color: Colors.white))
 			
 			switch label {
 				case .number(let n):
-					graphics.draw(text: Text(String(n), withSize: size.x * 0.8, at: Vec2(x: size.x * 0.3, y: size.y * 0.7), color: color.color))
+					graphics.draw(Text(String(n), withSize: size.x * 0.8, at: Vec2(x: size.x * 0.3, y: size.y * 0.7), color: color.color))
 				default:
 					let icon = try Image(fromPngFile: label.resourcePngPath!)
 					let iconSize = Vec2(x: intSize.x, y: intSize.x)
-					graphics.draw(image: icon, at: center - (iconSize.asDouble / 2), withSize: iconSize)
+					graphics.draw(icon, at: center - (iconSize.asDouble / 2), withSize: iconSize)
 			}
 			
 			return img
