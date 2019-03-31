@@ -63,6 +63,70 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 		return .continueSubscription
 	}
 	
+	/** Performs a game action. */
+	@discardableResult
+	func perform(_ action: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+		guard let state = currentState else { return .continueSubscription }
+		
+		do {
+			let actionResult = try game.actions[action]!(state, args)
+			
+			if actionResult.cancelsMatch {
+				currentState = nil
+				output.append("Cancelled match: \(state)")
+				return .cancelSubscription
+			}
+			
+			guard state.rolesOf(player: author).contains(state.currentRole) else {
+				output.append("It is not your turn, `\(author.username)`")
+				return .continueSubscription
+			}
+			
+			// Output next board and user's hands
+			let next = actionResult.nextState
+			output.append(next.board.discordMessageEncoded)
+			
+			if let additionalOutput = actionResult.additionalOutput {
+				output.append(additionalOutput)
+			}
+			
+			sendHandsAsDMs(fromState: next, to: output)
+			
+			if let winner = next.board.winner {
+				// Game won
+				
+				var embed = DiscordEmbed()
+				embed.title = ":crown: Winner"
+				embed.description = "\(winner.discordStringEncoded)\(state.playerOf(role: winner).map { " aka. `\($0.username)`" } ?? "") won the game!"
+				
+				output.append(embed)
+				currentState = nil
+				return .cancelSubscription
+			} else if next.board.isDraw {
+				// Game over due to a draw
+				
+				var embed = DiscordEmbed()
+				embed.title = ":crown: Game Over"
+				embed.description = "The game resulted in a draw!"
+				
+				output.append(embed)
+				currentState = nil
+				return .cancelSubscription
+			} else {
+				// Advance the game
+				
+				currentState = next
+			}
+		} catch GameError.invalidMove(let msg) {
+			output.append("Invalid move by \(state.currentRole.discordStringEncoded): \(msg)")
+		} catch {
+			output.append("Error while attempting move")
+			print(error)
+		}
+		
+		return .continueSubscription
+	}
+	
 	@discardableResult
 	/** Performs a move. The arguments are zero-indexed. */
 	func move(withArgs moveArgs: [String], output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
