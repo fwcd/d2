@@ -20,7 +20,7 @@ public class CommandTestOutput: CommandOutput {
 	
 	public init() {}
 	
-	public func append(_ message: DiscordMessage) {
+	public func append(_ message: DiscordMessage, to channel: OutputChannel) {
 		internalMessages.append(message)
 		changed = true
 	}

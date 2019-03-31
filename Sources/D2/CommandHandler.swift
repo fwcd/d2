@@ -111,7 +111,7 @@ class CommandHandler: DiscordClientDelegate {
 				
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
-					pipeSink.output = DiscordChannelOutput(channel: message.channel)
+					pipeSink.output = DiscordOutput(client: client, defaultTextChannel: message.channel)
 				}
 				
 				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
@@ -132,7 +132,7 @@ class CommandHandler: DiscordClientDelegate {
 	}
 	
 	private func handleSubscriptionMessage(client: DiscordClient, message: DiscordMessage) {
-		let output = DiscordChannelOutput(channel: message.channel)
+		let output = DiscordOutput(client: client, defaultTextChannel: message.channel)
 		let context = CommandContext(
 			guild: client.guildForChannel(message.channelId),
 			registry: registry,

@@ -13,8 +13,8 @@ public class PipeOutput: CommandOutput {
 		self.next = next
 	}
 	
-	public func append(_ message: DiscordMessage) {
+	public func append(_ message: DiscordMessage, to channel: OutputChannel) {
 		print("Piping to \(sink)")
-		sink.invoke(withArgs: args, input: message, output: next ?? DiscordChannelOutput(channel: message.channel), context: context)
+		sink.invoke(withArgs: args, input: message, output: next ?? PrintOutput(), context: context)
 	}
 }

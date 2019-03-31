@@ -86,7 +86,7 @@ These arguments each represent a part of the invocation context. Given a request
 | --------- | ----- |
 | `args` | `"arg1 arg2"` |
 | `input` | `nil` |
-| `output` | `DiscordChannelOutput` |
+| `output` | `DiscordOutput` |
 | `context` | `CommandContext` containing the message, the client and the command registry |
 
 It should be noted that `input` is `nil` because the user did not attach a pipe to his request. If he would send `%firstcommand | secondcommand arg1`, the `input` field of the second invocation would contain the piped message:
@@ -95,10 +95,10 @@ It should be noted that `input` is `nil` because the user did not attach a pipe 
 | --------- | ----- |
 | `args` | `"arg1"`
 | `input` | `DiscordMessage` representing the output of the first invocation |
-| `output` | `DiscordChannelOutput` |
+| `output` | `DiscordOutput` |
 | `context` | `CommandContext` |
 
-Since `output: CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordChannelOutput`. Both the first and the second command call a `PipeOutput` instead that passes any messages to the next command:
+Since `output: CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordOutput`. Both the first and the second command call a `PipeOutput` instead that passes any messages to the next command:
 
 ```swift
 class PipeOutput: CommandOutput {
@@ -116,7 +116,7 @@ class PipeOutput: CommandOutput {
 	
 	func append(_ message: DiscordMessage) {
 		print("Piping to \(sink)")
-		sink.invoke(withArgs: args, input: message, output: next ?? DiscordChannelOutput(channel: message.channel), context: context)
+		sink.invoke(withArgs: args, input: message, output: next ?? DiscordOutput(channel: message.channel), context: context)
 	}
 }
 ```

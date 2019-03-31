@@ -3,19 +3,23 @@ import D2Utils
 import D2Graphics
 
 public protocol CommandOutput {
-	func append(_ message: DiscordMessage)
+	func append(_ message: DiscordMessage, to channel: OutputChannel)
 }
 
-extension CommandOutput {
-	public func append(_ str: String) {
-		append(DiscordMessage(content: str))
+public extension CommandOutput {
+	func append(_ message: DiscordMessage) {
+		append(message, to: .defaultChannel)
 	}
 	
-	public func append(_ embed: DiscordEmbed) {
-		append(DiscordMessage(fromEmbed: embed))
+	func append(_ str: String, to channel: OutputChannel = .defaultChannel) {
+		append(DiscordMessage(content: str), to: channel)
 	}
 	
-	public func append(_ image: Image) throws {
-		append(try DiscordMessage(fromImage: image))
+	func append(_ embed: DiscordEmbed, to channel: OutputChannel = .defaultChannel) {
+		append(DiscordMessage(fromEmbed: embed), to: channel)
+	}
+	
+	func append(_ image: Image, to channel: OutputChannel = .defaultChannel) throws {
+		append(try DiscordMessage(fromImage: image), to: channel)
 	}
 }
