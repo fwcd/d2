@@ -3,6 +3,11 @@ public protocol Game {
 	
 	var name: String { get }
 	var actions: [String: (State, String) throws -> ActionResult<State>] { get }
+	var renderFirstBoard: Bool { get }
 	
 	init()
+}
+
+extension Game {
+	var renderFirstBoard: Bool { return true }
 }
