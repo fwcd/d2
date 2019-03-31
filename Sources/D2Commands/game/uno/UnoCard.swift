@@ -11,7 +11,7 @@ public struct UnoCard: Hashable {
 			let intSize = Vec2<Int>(x: 100, y: 140)
 			let size = intSize.asDouble
 			let center = size / 2.0
-			let padding = 50.0
+			let padding = size.x / 4
 			let img = try Image(fromSize: intSize)
 			var graphics = CairoGraphics(fromImage: img)
 			
