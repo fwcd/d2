@@ -2,8 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
-fileprivate let moveMessageRegex = try! Regex(from: "move\\s+(.+)")
-fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
+fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(\\S+))?")
 
 /**
  * Provides a base layer of functionality for a turn-based 
@@ -54,22 +53,21 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		let author = GamePlayer(from: context.author)
 		
-		if let moveArgs = moveMessageRegex.firstGroups(in: content) {
-			return move(withArgs: Array(moveArgs.dropFirst()), output: output, author: author)
-		} else if let cancelArgs = cancelMessageRegex.firstGroups(in: content) {
-			return cancel(withArgs: Array(cancelArgs.dropFirst()), output: output, author: author)
+		if let actionArgs = actionMessageRegex.firstGroups(in: content) {
+			return perform(actionArgs[1], withArgs: actionArgs[2], output: output, author: author)
+		} else {
+			return .continueSubscription
 		}
-		
-		return .continueSubscription
 	}
 	
-	/** Performs a game action. */
+	/** Performs a game action if present, otherwise does nothing. */
 	@discardableResult
-	func perform(_ action: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
+		guard let action = game.actions[actionKey] else { return .continueSubscription }
 		
 		do {
-			let actionResult = try game.actions[action]!(state, args)
+			let actionResult = try action(state, args)
 			
 			if actionResult.cancelsMatch {
 				currentState = nil
