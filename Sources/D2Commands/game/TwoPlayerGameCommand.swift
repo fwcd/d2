@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
-fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(\\S+))?")
+fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
 /**
  * Provides a base layer of functionality for a turn-based 
