@@ -1,13 +1,22 @@
 import D2Utils
 import D2Graphics
 
+fileprivate struct PileCard {
+	let card: UnoCard
+	let rotation: Double
+}
+
 public struct UnoBoard: DiscordImageEncodable {
 	public var deck = UnoDeck()
-	public private(set) var discardPile = [UnoCard]()
+	private var discardPile = [PileCard]()
 	public var discordImageEncoded: Image? { return createImage() }
 	
 	public mutating func push(card: UnoCard) {
-		discardPile.append(card)
+		let fourthPi = Double.pi / 4
+		discardPile.append(PileCard(
+			card: card,
+			rotation: Double.random(in: -fourthPi..<fourthPi)
+		))
 	}
 	
 	private func createImage() -> Image? {
@@ -17,14 +26,9 @@ public struct UnoBoard: DiscordImageEncodable {
 			let img = try Image(fromSize: intSize)
 			var graphics = CairoGraphics(fromImage: img)
 			
-			let fourthPi = Double.pi / 4
-			
 			for card in discardPile {
-				if let cardImage = card.image {
-					graphics.save()
-					graphics.rotate(by: Double.random(in: -fourthPi..<fourthPi))
-					graphics.draw(cardImage, at: center - (cardImage.size.asDouble / 2))
-					graphics.restore()
+				if let cardImage = card.card.image {
+					graphics.draw(cardImage, at: center - (cardImage.size.asDouble / 2), rotation: card.rotation)
 				}
 			}
 			

@@ -37,7 +37,7 @@ public struct CairoGraphics: Graphics {
 	
 	public mutating func draw(_ rect: Rectangle<Double>) {
 		// Floating point comparison is intended since this flag only allows potential optimizations
-		let doesRotate = rect.rotation == 0.0
+		let doesRotate = rect.rotation != 0.0
 		
 		if doesRotate {
 			context.save()
@@ -58,7 +58,7 @@ public struct CairoGraphics: Graphics {
 		}
 	}
 	
-	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
+	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation: Double) {
 		let originalWidth = image.width
 		let originalHeight = image.height
 		
@@ -66,6 +66,10 @@ public struct CairoGraphics: Graphics {
 		
 		let scaleFactor = Vec2(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
 		context.translate(x: position.x, y: position.y)
+		
+		if rotation != 0.0 {
+			context.rotate(rotation)
+		}
 		
 		if originalWidth != size.x || originalHeight != size.y {
 			context.scale(x: scaleFactor.x, y: scaleFactor.y)

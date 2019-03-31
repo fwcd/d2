@@ -25,8 +25,8 @@ public struct ConsoleGraphics: Graphics {
 		print("Drawed rectangle \(rect)")
 	}
 	
-	public func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
-		print("Drawed image \(image) at \(position) with size \(size)")
+	public func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation: Double) {
+		print("Drawed image \(image) at \(position) with size \(size) and rotation \(rotation)")
 	}
 	
 	public func draw(_ text: Text) {
