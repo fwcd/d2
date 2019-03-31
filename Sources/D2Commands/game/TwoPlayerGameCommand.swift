@@ -35,11 +35,20 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		startMatch(between: GamePlayer(from: context.author), and: GamePlayer(from: opponent), output: output)
 	}
 	
+	private func sendHandsAsDMs(fromState state: State, to output: CommandOutput) {
+		for (role, hand) in state.hands {
+			if let player = state.playerOf(role: role) {
+				output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+			}
+		}
+	}
+	
 	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
 		let state = State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
 		
 		currentState = state
 		output.append("Playing new match: \(state)\n\(state.board.discordStringEncoded)\nType `move [...]` to begin!")
+		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
@@ -69,6 +78,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		do {
 			let next = try state.childState(after: try State.Move.init(fromString: moveArgs[0]))
 			output.append(next.board.discordMessageEncoded)
+			sendHandsAsDMs(fromState: next, to: output)
 			
 			if let winner = next.board.winner {
 				// Game won
