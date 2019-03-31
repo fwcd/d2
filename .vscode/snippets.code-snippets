@@ -65,6 +65,23 @@
 		"scope": "swift",
 		"body": "message.channel?.send($0)"
 	},
+	"Game implementation": {
+		"prefix": "game",
+		"scope": "swift",
+		"body": [
+			"public struct $1Game: Game {",
+			"\tpublic typealias State = $1State",
+			"\t",
+			"\tpublic let name: String = $2",
+			"\tpublic let actions: [String: (String, State) throws -> ActionResult<State>] = [",
+			"\t\t\"move\": { ActionResult(nextState: try \\$1.childState(after: try State.Move.init(fromString: \\$0))) },",
+			"\t\t\"cancel\": { ActionResult(nextState: \\$1, cancelsMatch: true) }",
+			"\t]",
+			"\t",
+			"\tpublic init() {}",
+			"}"
+		]
+	},
 	"Game state implementation": {
 		"prefix": "gamestate",
 		"scope": "swift",

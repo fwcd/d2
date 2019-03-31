@@ -30,7 +30,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["/"] = BinaryOperationCommand<Double>(name: "division", operation: /)
 	handler["%"] = BinaryOperationCommand<Int>(name: "remainder", operation: %)
 	handler["rpn"] = RPNCommand()
-	handler["tictactoe"] = TwoPlayerGameCommand<TicTacToeState>(withName: "tic tac toe")
+	handler["tictactoe"] = TwoPlayerGameCommand<TicTacToeGame>()
 	handler["cyclethrough"] = CycleThroughCommand()
 	handler["demoimage"] = DemoImageCommand()
 	handler["dm"] = DirectMessageCommand()

@@ -9,16 +9,16 @@ fileprivate let cancelMessageRegex = try! Regex(from: "cancel\\s+(\\S+)")
  * Provides a base layer of functionality for a turn-based 
  * two-player game.
  */
-public class TwoPlayerGameCommand<State: GameState>: StringCommand {
+public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
-	public let name: String
-	public var description: String { return "Plays \(name) against someone" }
+	private let game: G
+	public var description: String { return "Plays \(game.name) against someone" }
 	
-	private var currentState: State? = nil
+	private var currentState: G.State? = nil
 	
-	public init(withName name: String) {
-		self.name = name
+	public init() {
+		game = G.init()
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -35,7 +35,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		startMatch(between: GamePlayer(from: context.author), and: GamePlayer(from: opponent), output: output)
 	}
 	
-	private func sendHandsAsDMs(fromState state: State, to output: CommandOutput) {
+	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
 		for (role, hand) in state.hands {
 			if let player = state.playerOf(role: role) {
 				output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
@@ -44,7 +44,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 	}
 	
 	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
-		let state = State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
+		let state = G.State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
 		
 		currentState = state
 		output.append("Playing new match: \(state)\n\(state.board.discordStringEncoded)\nType `move [...]` to begin!")
@@ -76,7 +76,7 @@ public class TwoPlayerGameCommand<State: GameState>: StringCommand {
 		}
 		
 		do {
-			let next = try state.childState(after: try State.Move.init(fromString: moveArgs[0]))
+			let next = try state.childState(after: try G.State.Move.init(fromString: moveArgs[0]))
 			output.append(next.board.discordMessageEncoded)
 			sendHandsAsDMs(fromState: next, to: output)
 			
