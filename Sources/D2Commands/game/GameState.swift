@@ -8,11 +8,11 @@ import D2Utils
  */
 public protocol GameState {
 	/** A role is a logical player in the game (such as "white" or "black"). */
-	associatedtype Role
+	associatedtype Role: DiscordEncodable & Hashable
 	/** A hand encapsulates a role's private cards/pieces/... in games with imperfect information. */
 	associatedtype Hand: DiscordEncodable = EmptyDiscordEncodable
 	/** A board contains the pieces/cards that are visible to all players. */
-	associatedtype Board: GameBoard where Board.Role == Role
+	associatedtype Board: DiscordEncodable
 	/** A move encapsulates the transition to another game state. */
 	associatedtype Move: GameMove & Hashable
 	
@@ -20,6 +20,9 @@ public protocol GameState {
 	var currentRole: Role { get }
 	var hands: [Role: Hand] { get }
 	var possibleMoves: Set<Move> { get }
+	
+	var winner: Role? { get }
+	var isDraw: Bool { get }
 	
 	init(firstPlayer: GamePlayer, secondPlayer: GamePlayer)
 	

@@ -17,13 +17,13 @@ extension DiscordMessage {
 }
 
 extension Int: DiscordEncodable {
-	var discordStringEncoded: String { return String(self) }
+	public var discordStringEncoded: String { return String(self) }
 }
 
 extension Double: DiscordEncodable {
-	var discordStringEncoded: String { return String(self) }
+	public var discordStringEncoded: String { return String(self) }
 }
 
 extension String: DiscordEncodable {
-	var discordStringEncoded: String { return self }
+	public var discordStringEncoded: String { return self }
 }

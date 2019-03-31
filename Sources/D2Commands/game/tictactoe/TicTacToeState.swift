@@ -12,6 +12,9 @@ public struct TicTacToeState: GameState, CustomStringConvertible {
 	public private(set) var currentRole: Role = .x
 	public var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
 	
+	public var winner: Role? { return board.winner }
+	public var isDraw: Bool { return board.isDraw }
+	
 	public var possibleMoves: Set<Move> {
 		return Set((0..<board.sideLength)
 			.flatMap { row in (0..<board.sideLength).map { column in Move(row: row, column: column) } }

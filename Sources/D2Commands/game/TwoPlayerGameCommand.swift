@@ -90,7 +90,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			
 			sendHandsAsDMs(fromState: next, to: output)
 			
-			if let winner = next.board.winner {
+			if let winner = next.winner {
 				// Game won
 				
 				var embed = DiscordEmbed()
@@ -100,7 +100,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 				output.append(embed)
 				currentState = nil
 				return .cancelSubscription
-			} else if next.board.isDraw {
+			} else if next.isDraw {
 				// Game over due to a draw
 				
 				var embed = DiscordEmbed()
@@ -142,7 +142,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			output.append(next.board.discordMessageEncoded)
 			sendHandsAsDMs(fromState: next, to: output)
 			
-			if let winner = next.board.winner {
+			if let winner = next.winner {
 				// Game won
 				
 				var embed = DiscordEmbed()
@@ -152,7 +152,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 				output.append(embed)
 				currentState = nil
 				return .cancelSubscription
-			} else if next.board.isDraw {
+			} else if next.isDraw {
 				// Game over due to a draw
 				
 				var embed = DiscordEmbed()
