@@ -40,6 +40,10 @@ public struct Color: Hashable {
 		self.alpha = alpha
 	}
 	
+	public func with(alpha newAlpha: UInt8) -> Color {
+		return Color(red: red, green: green, blue: blue, alpha: newAlpha)
+	}
+	
 	public func alphaBlend(over bottomLayer: Color) -> Color {
 		let floatAlpha = Double(alpha) / 255.0
 		let invAlpha = 1.0 - floatAlpha

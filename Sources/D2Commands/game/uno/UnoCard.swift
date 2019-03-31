@@ -10,7 +10,7 @@ public struct UnoCard: Hashable {
 		do {
 			let size = Vec2<Double>(x: 200.0, y: 280.0)
 			let center = Vec2<Double>(x: size.x / 2.0, y: size.y / 2.0)
-			let padding = 40.0
+			let padding = 50.0
 			let img = try Image(width: Int(size.x), height: Int(size.y))
 			let graphics = CairoGraphics(fromImage: img)
 			
@@ -19,7 +19,7 @@ public struct UnoCard: Hashable {
 			
 			switch label {
 				case .number(let n):
-					graphics.draw(text: Text(String(n), withSize: size.x, at: Vec2(x: size.x * 0.2, y: size.y * 0.7), color: color.color))
+					graphics.draw(text: Text(String(n), withSize: size.x * 0.8, at: Vec2(x: size.x * 0.3, y: size.y * 0.7), color: Colors.black))
 				default: break // TODO
 			}
 			
