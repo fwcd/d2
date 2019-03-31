@@ -8,6 +8,6 @@ public protocol Game {
 	init()
 }
 
-extension Game {
+public extension Game {
 	var renderFirstBoard: Bool { return true }
 }
