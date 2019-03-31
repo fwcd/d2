@@ -21,10 +21,6 @@ final class TicTacToeCommandTests: XCTestCase {
 		let output = CommandTestOutput()
 		command.startMatch(between: playerX, and: playerO, output: output)
 		
-		let header = "Playing new match: `\(nameX)` as \(x) vs. `\(nameO)` as \(o)"
-		let board = "\(e)\(e)\(e)\n\(e)\(e)\(e)\n\(e)\(e)\(e)"
-		XCTAssertEqual(output.lastContent, "\(header)\n\(board)\nType `move [...]` to begin!")
-		
 		command.move(withArgs: ["top left"], output: output, author: playerO)
 		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameO)`")
 		
