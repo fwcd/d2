@@ -1,30 +1,23 @@
 import SwiftDiscord
 
 public class DiscordOutput: CommandOutput {
-	private let client: DiscordEndpointConsumer
+	private let client: DiscordClient
 	private let defaultTextChannel: DiscordTextChannel?
 	
-	public init(client: DiscordEndpointConsumer, defaultTextChannel: DiscordTextChannel?) {
+	public init(client: DiscordClient, defaultTextChannel: DiscordTextChannel?) {
 		self.client = client
 		self.defaultTextChannel = defaultTextChannel
 	}
 	
 	public func append(_ message: DiscordMessage, to channel: OutputChannel) {
 		switch channel {
-			case .serverChannel(let id):
-				client.getChannel(id) { ch, _ in
-					if let textChannel = ch.flatMap({ $0 as? DiscordTextChannel }) {
-						textChannel.send(message)
-					} else {
-						print("Could not fetch server channel with ID \(id)")
-					}
-				}
+			case .serverChannel(let id): client.sendMessage(message, to: id)
 			case .userChannel(let id):
 				client.createDM(with: id) { ch, _ in
-					if let textChannel = ch {
-						textChannel.send(message)
+					if let channelId = ch.map({ $0.id }) {
+						self.client.sendMessage(message, to: channelId)
 					} else {
-						print("Could not fetch user channel with ID \(id)")
+						print("Could not find user channel \(id)")
 					}
 				}
 			case .defaultChannel:
