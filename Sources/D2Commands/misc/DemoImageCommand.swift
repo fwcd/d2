@@ -21,7 +21,9 @@ public class DemoImageCommand: StringCommand {
 			graphics.draw(rect: Rectangle(fromX: 150, y: 150, width: 120, height: 120))
 			graphics.draw(image: try Image(fromPngFile: "Resources/chess/whiteQueen.png"), at: Vec2(x: 120, y: 10), withSize: Vec2(x: 100, y: 100))
 			graphics.draw(text: Text("Test", at: Vec2(x: 0, y: 15)))
-					
+			graphics.draw(ellipse: Ellipse(centerX: 150, y: 80, radiusX: 40, y: 60, color: Colors.magenta, isFilled: false))
+			graphics.draw(ellipse: Ellipse(centerX: 120, y: 50, radius: 40, color: Colors.green))
+			
 			try output.append(image)
 		} catch {
 			print(error)

@@ -1,19 +1,19 @@
 import D2Utils
 
 public struct ConsoleGraphics: Graphics {
-	mutating func save() {
+	public func save() {
 		print("Saved context")
 	}
 	
-	mutating func restore() {
+	public func restore() {
 		print("Restored context")
 	}
 	
-	mutating func translate(by offset: Vec2<Double>) {
+	public func translate(by offset: Vec2<Double>) {
 		print("Translated by \(offset)")
 	}
 	
-	mutating func rotate(by angle: Double) {
+	public func rotate(by angle: Double) {
 		print("Rotated by \(angle) radians")
 	}
 	
@@ -31,5 +31,9 @@ public struct ConsoleGraphics: Graphics {
 	
 	public func draw(text: Text) {
 		print("Drawed text \(text.value) of size \(text.fontSize) at \(text.position)")
+	}
+	
+	public func draw(ellipse: Ellipse<Double>) {
+		print("Drawed ellipse \(ellipse)")
 	}
 }

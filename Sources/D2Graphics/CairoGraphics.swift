@@ -53,12 +53,12 @@ public struct CairoGraphics: Graphics {
 		context.save()
 		
 		let scaleFactor = Vec2(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
+		context.translate(x: position.x, y: position.y)
 		
 		if originalWidth != size.x || originalHeight != size.y {
 			context.scale(x: scaleFactor.x, y: scaleFactor.y)
 		}
 		
-		context.translate(x: position.x / scaleFactor.x, y: position.y / scaleFactor.y)
 		context.source = Pattern(surface: image.surface)
 		context.paint()
 		context.restore()
@@ -69,5 +69,15 @@ public struct CairoGraphics: Graphics {
 		context.setFont(size: text.fontSize)
 		context.move(to: text.position.asTuple)
 		context.show(text: text.value)
+	}
+	
+	public func draw(ellipse: Ellipse<Double>) {
+		context.save()
+		context.setSource(color: ellipse.color.asDoubleTuple)
+		context.translate(x: ellipse.center.x, y: ellipse.center.y)
+		context.scale(x: ellipse.radius.x, y: ellipse.radius.y)
+		context.addArc(center: (x: 0.0, y: 0.0), radius: 1.0, angle: (0, 2.0 * Double.pi))
+		context.fill()
+		context.restore()
 	}
 }

@@ -13,6 +13,8 @@ public protocol Graphics {
 	
 	mutating func draw(rect: Rectangle<Double>)
 	
+	mutating func draw(ellipse: Ellipse<Double>)
+	
 	mutating func draw(image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>)
 	
 	mutating func draw(text: Text)
