@@ -7,9 +7,9 @@ public struct Text {
 	public let color: Color
 	
 	public init(
-		value: String,
-		fontSize: Double = 12,
-		position: Vec2<Double> = Vec2(x: 0, y: 0),
+		_ value: String,
+		withSize fontSize: Double = 12,
+		at position: Vec2<Double> = Vec2(x: 0, y: 12),
 		color: Color = Colors.white
 	) {
 		self.value = value

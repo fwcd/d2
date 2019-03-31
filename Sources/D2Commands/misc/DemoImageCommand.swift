@@ -20,7 +20,8 @@ public class DemoImageCommand: StringCommand {
 			graphics.draw(image: try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 20, y: 20))
 			graphics.draw(rect: Rectangle(fromX: 150, y: 150, width: 120, height: 120))
 			graphics.draw(image: try Image(fromPngFile: "Resources/chess/whiteQueen.png"), at: Vec2(x: 120, y: 10), withSize: Vec2(x: 100, y: 100))
-			
+			graphics.draw(text: Text("Test", at: Vec2(x: 0, y: 15)))
+					
 			try output.append(image)
 		} catch {
 			print(error)
