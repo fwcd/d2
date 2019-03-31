@@ -4,10 +4,17 @@ public struct Text {
 	public let value: String
 	public let fontSize: Double
 	public let position: Vec2<Double>
+	public let color: Color
 	
-	public init(value: String, fontSize: Double = 12, position: Vec2<Double> = Vec2(x: 0, y: 0)) {
+	public init(
+		value: String,
+		fontSize: Double = 12,
+		position: Vec2<Double> = Vec2(x: 0, y: 0),
+		color: Color = Colors.white
+	) {
 		self.value = value
 		self.fontSize = fontSize
 		self.position = position
+		self.color = color
 	}
 }

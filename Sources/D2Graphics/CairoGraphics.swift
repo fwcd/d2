@@ -49,6 +49,7 @@ public struct CairoGraphics: Graphics {
 	}
 	
 	public mutating func draw(text: Text) {
+		context.setSource(color: text.color.asDoubleTuple)
 		context.setFont(size: text.fontSize)
 		context.move(to: text.position.asTuple)
 		context.show(text: text.value)
