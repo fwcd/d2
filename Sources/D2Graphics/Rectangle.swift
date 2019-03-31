@@ -5,6 +5,7 @@ public struct Rectangle<T: VecComponent> {
 	public let size: Vec2<T>
 	public let color: Color
 	public let isFilled: Bool
+	public let rotation: T
 	
 	public var topRight: Vec2<T> { return topLeft + Vec2(x: size.x, y: 0) }
 	public var bottomLeft: Vec2<T> { return topLeft + Vec2(x: 0, y: size.y) }
@@ -15,6 +16,7 @@ public struct Rectangle<T: VecComponent> {
 	public init(
 		topLeft: Vec2<T> = Vec2(x: 0, y: 0),
 		size: Vec2<T> = Vec2(x: 1, y: 1),
+		rotation: T = 0,
 		color: Color = ShapeDefaults.color,
 		isFilled: Bool = ShapeDefaults.isFilled
 	) {
@@ -22,10 +24,19 @@ public struct Rectangle<T: VecComponent> {
 		self.size = size
 		self.color = color
 		self.isFilled = isFilled
+		self.rotation = rotation
 	}
 	
-	public init(fromX x: T, y: T, width: T, height: T, color: Color = ShapeDefaults.color, isFilled: Bool = ShapeDefaults.isFilled) {
-		self.init(topLeft: Vec2(x: x, y: y), size: Vec2(x: width, y: height), color: color, isFilled: isFilled)
+	public init(
+		fromX x: T,
+		y: T,
+		width: T,
+		height: T,
+		rotation: T = 0,
+		color: Color = ShapeDefaults.color,
+		isFilled: Bool = ShapeDefaults.isFilled
+	) {
+		self.init(topLeft: Vec2(x: x, y: y), size: Vec2(x: width, y: height), rotation: rotation, color: color, isFilled: isFilled)
 	}
 }
 
