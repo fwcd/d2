@@ -1,9 +1,13 @@
 import D2Graphics
 
 public struct UnoBoard: DiscordImageEncodable {
-	public var deck = UnoDeck()
-	public var discardPile = [UnoCard]()
+	public private(set) var deck = UnoDeck()
+	public private(set) var discardPile = [UnoCard]()
 	public var discordImageEncoded: Image? { return createImage() }
+	
+	public mutating func push(card: UnoCard) {
+		discardPile.append(card)
+	}
 	
 	private func createImage() -> Image? {
 		do {
