@@ -8,7 +8,7 @@ public struct UnoCard: Hashable {
 	
 	private func createImage() -> Image? {
 		do {
-			let intSize = Vec2<Int>(x: 200, y: 280)
+			let intSize = Vec2<Int>(x: 100, y: 140)
 			let size = intSize.asDouble
 			let center = size / 2.0
 			let padding = 50.0

@@ -3,7 +3,7 @@ import D2Utils
 fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 
 public struct UnoMove: GameMove, Hashable {
-	private let card: UnoCard
+	public let card: UnoCard
 	
 	public init(playing card: UnoCard) {
 		self.card = card

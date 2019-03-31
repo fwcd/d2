@@ -12,7 +12,7 @@ public struct UnoBoard: DiscordImageEncodable {
 	
 	private func createImage() -> Image? {
 		do {
-			let intSize = Vec2<Int>(x: 300, y: 300)
+			let intSize = Vec2<Int>(x: 200, y: 200)
 			let center = (intSize / 2).asDouble
 			let img = try Image(fromSize: intSize)
 			var graphics = CairoGraphics(fromImage: img)
