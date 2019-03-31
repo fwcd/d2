@@ -12,10 +12,10 @@ public struct UnoBoard: DiscordImageEncodable {
 	public var discordImageEncoded: Image? { return createImage() }
 	
 	public mutating func push(card: UnoCard) {
-		let fourthPi = Double.pi / 4
+		let angle = Double.pi / 8
 		discardPile.append(PileCard(
 			card: card,
-			rotation: Double.random(in: -fourthPi..<fourthPi)
+			rotation: Double.random(in: -angle..<angle)
 		))
 	}
 	
