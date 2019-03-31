@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 public protocol DiscordImageEncodable: DiscordEncodable {
 	var discordImageEncoded: Image { get }

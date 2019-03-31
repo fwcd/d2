@@ -12,14 +12,14 @@ public struct CairoGraphics: Graphics {
 		self.init(surface: image.surface)
 	}
 	
-	public mutating func draw(line: LineSegment<Double>) {
+	public func draw(line: LineSegment<Double>) {
 		context.setSource(color: line.color.asDoubleTuple)
 		context.move(to: line.start.asTuple)
 		context.line(to: line.end.asTuple)
 		context.stroke()
 	}
 	
-	public mutating func draw(rect: Rectangle<Double>) {
+	public func draw(rect: Rectangle<Double>) {
 		context.setSource(color: rect.color.asDoubleTuple)
 		context.addRectangle(x: rect.topLeft.x, y: rect.topLeft.y, width: rect.width, height: rect.height)
 		
@@ -30,7 +30,7 @@ public struct CairoGraphics: Graphics {
 		}
 	}
 	
-	public mutating func draw(image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
+	public func draw(image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
 		let originalWidth = image.width
 		let originalHeight = image.height
 		
@@ -48,7 +48,7 @@ public struct CairoGraphics: Graphics {
 		context.restore()
 	}
 	
-	public mutating func draw(text: Text) {
+	public func draw(text: Text) {
 		context.setSource(color: text.color.asDoubleTuple)
 		context.setFont(size: text.fontSize)
 		context.move(to: text.position.asTuple)
