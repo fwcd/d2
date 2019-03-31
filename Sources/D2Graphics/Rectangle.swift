@@ -12,7 +12,12 @@ public struct Rectangle<T: VecComponent> {
 	public var width: T { return size.x }
 	public var height: T { return size.y }
 	
-	public init(topLeft: Vec2<T>, size: Vec2<T>, color: Color = ShapeDefaults.color, isFilled: Bool = ShapeDefaults.isFilled) {
+	public init(
+		topLeft: Vec2<T> = Vec2(x: 0, y: 0),
+		size: Vec2<T> = Vec2(x: 1, y: 1),
+		color: Color = ShapeDefaults.color,
+		isFilled: Bool = ShapeDefaults.isFilled
+	) {
 		self.topLeft = topLeft
 		self.size = size
 		self.color = color
