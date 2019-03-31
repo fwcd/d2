@@ -2,9 +2,14 @@ import D2Utils
 
 fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 
-public struct TicTacToeMove: GameMove {
+public struct TicTacToeMove: GameMove, Hashable {
 	let row: Int
 	let column: Int
+	
+	public init(row: Int, column: Int) {
+		self.row = row
+		self.column = column
+	}
 	
 	public init(fromString str: String) throws {
 		if let parsedArgs = argsRegex.firstGroups(in: str) {

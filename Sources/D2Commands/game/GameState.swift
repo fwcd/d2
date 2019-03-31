@@ -14,11 +14,12 @@ public protocol GameState {
 	/** A board contains the pieces/cards that are visible to all players. */
 	associatedtype Board: GameBoard where Board.Role == Role
 	/** A move encapsulates the transition to another game state. */
-	associatedtype Move: GameMove
+	associatedtype Move: GameMove & Hashable
 	
 	var board: Board { get }
 	var currentRole: Role { get }
 	var hands: [Role: Hand] { get }
+	var possibleMoves: Set<Move> { get }
 	
 	init(firstPlayer: GamePlayer, secondPlayer: GamePlayer)
 	
@@ -33,8 +34,12 @@ extension GameState {
 	public var hands: [Role: Hand] { return [:] }
 	
 	public func childState(after move: Move) throws -> Self {
-		var next = self
-		try next.perform(move: move)
-		return next
+		if possibleMoves.contains(move) {
+			var next = self
+			try next.perform(move: move)
+			return next
+		} else {
+			throw GameError.invalidMove("Move `\(move)` is not in `possibleMoves`")
+		}
 	}
 }
