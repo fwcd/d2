@@ -36,6 +36,14 @@ public struct CairoGraphics: Graphics {
 	}
 	
 	public mutating func draw(_ rect: Rectangle<Double>) {
+		// Floating point comparison is intended since this flag only allows potential optimizations
+		let doesRotate = rect.rotation == 0.0
+		
+		if doesRotate {
+			context.save()
+			context.rotate(rect.rotation)
+		}
+		
 		context.setSource(color: rect.color.asDoubleTuple)
 		context.addRectangle(x: rect.topLeft.x, y: rect.topLeft.y, width: rect.width, height: rect.height)
 		
@@ -43,6 +51,10 @@ public struct CairoGraphics: Graphics {
 			context.fill()
 		} else {
 			context.stroke()
+		}
+		
+		if doesRotate {
+			context.restore()
 		}
 	}
 	
