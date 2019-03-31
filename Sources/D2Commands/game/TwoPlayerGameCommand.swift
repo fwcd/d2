@@ -88,10 +88,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			// Output next board and user's hands
 			let next = actionResult.nextState
 			output.append(next.board.discordMessageEncoded)
-			
-			if let additionalOutput = actionResult.additionalOutput {
-				output.append(additionalOutput)
-			}
+			output.append("\(actionResult.additionalOutput ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn")
 			
 			sendHandsAsDMs(fromState: next, to: output)
 			
