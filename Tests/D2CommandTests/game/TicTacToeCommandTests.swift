@@ -25,22 +25,22 @@ final class TicTacToeCommandTests: XCTestCase {
 		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameO)`")
 		
 		command.perform("move", withArgs: "top left", output: output, author: playerX)
-		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(e)\(e)\n\(e)\(e)\(e)")
+		XCTAssertEqual(output.nthLastContent(2), "\(x)\(e)\(e)\n\(e)\(e)\(e)\n\(e)\(e)\(e)")
 		
 		command.perform("move", withArgs: "top right", output: output, author: playerX)
 		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameX)`")
 		
 		command.perform("move", withArgs: "center center", output: output, author: playerO)
-		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(e)\(e)\(e)")
+		XCTAssertEqual(output.nthLastContent(2), "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(e)\(e)\(e)")
 		
 		command.perform("move", withArgs: "left bottom", output: output, author: playerX)
-		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(x)\(e)\(e)")
+		XCTAssertEqual(output.nthLastContent(2), "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(x)\(e)\(e)")
 		
 		command.perform("move", withArgs: "0 2", output: output, author: playerO)
-		XCTAssertEqual(output.lastContent, "\(x)\(e)\(o)\n\(e)\(o)\(e)\n\(x)\(e)\(e)")
+		XCTAssertEqual(output.nthLastContent(2), "\(x)\(e)\(o)\n\(e)\(o)\(e)\n\(x)\(e)\(e)")
 		
 		command.perform("move", withArgs: "1 0", output: output, author: playerX)
-		XCTAssertEqual(output.nthLastContent(2), "\(x)\(e)\(o)\n\(x)\(o)\(e)\n\(x)\(e)\(e)")
+		XCTAssertEqual(output.nthLastContent(3), "\(x)\(e)\(o)\n\(x)\(o)\(e)\n\(x)\(e)\(e)")
 		
 		let result = output.last?.embeds.first
 		XCTAssertEqual(result?.title, ":crown: Winner")
