@@ -1,13 +1,13 @@
 import D2Utils
 
 struct ParsedChessMove {
-	let piece: ChessPiece
+	let piece: ChessPiece?
 	let originX: Int?
 	let originY: Int?
 	let destinationX: Int?
 	let destinationY: Int?
 	
-	init(piece: ChessPiece, originX: Int? = nil, originY: Int? = nil, destinationX: Int? = nil, destinationY: Int? = nil) {
+	init(piece: ChessPiece? = nil, originX: Int? = nil, originY: Int? = nil, destinationX: Int? = nil, destinationY: Int? = nil) {
 		self.piece = piece
 		self.originX = originX
 		self.originY = originY
