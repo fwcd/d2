@@ -190,7 +190,9 @@
 		"prefix": "gameboard",
 		"scope": "swift",
 		"body": [
-			"public struct $1Board {",
+			"import D2Utils",
+			"",
+			"public struct $1Board: Discord$2Encodable {",
 			"\t$0",
 			"}"
 		]

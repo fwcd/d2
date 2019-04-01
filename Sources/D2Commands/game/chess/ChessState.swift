@@ -36,10 +36,10 @@ public struct ChessState: GameState, CustomStringConvertible {
 	}
 	
 	public func rolesOf(player: GamePlayer) -> [Role] {
-		var roles = []
+		var roles = [Role]()
 		
-		if player == whitePlayer { roles.add(.white) }
-		if player == blackPlayer { roles.add(.black) }
+		if player == whitePlayer { roles.append(.white) }
+		if player == blackPlayer { roles.append(.black) }
 		
 		return roles
 	}
