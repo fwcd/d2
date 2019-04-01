@@ -35,9 +35,15 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	}
 	
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
-		for (role, hand) in state.hands {
-			if let player = state.playerOf(role: role) {
+		if game.onlySendHandToCurrentRole, let player = state.playerOf(role: state.currentRole) {
+			if let hand = state.hands[state.currentRole] {
 				output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+			}
+		} else {
+			for (role, hand) in state.hands {
+				if let player = state.playerOf(role: role) {
+					output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+				}
 			}
 		}
 	}

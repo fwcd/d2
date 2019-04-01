@@ -12,6 +12,7 @@ public struct UnoBoard: DiscordImageEncodable {
 	public var discordImageEncoded: Image? { return createImage() }
 	public var lastDiscarded: UnoCard? { return discardPile.last.map { $0.card } }
 	public var topColor: UnoColor? = nil
+	public var topColorMatchesCard: Bool { return topColor == lastDiscarded?.color }
 	
 	public mutating func push(card: UnoCard) {
 		let angle = Double.pi / 8
