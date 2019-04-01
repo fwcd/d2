@@ -68,7 +68,10 @@ public struct CairoGraphics: Graphics {
 		context.translate(x: position.x, y: position.y)
 		
 		if rotation != 0.0 {
+			let center = (size / 2).asDouble
+			context.translate(x: center.x, y: center.y)
 			context.rotate(rotation)
+			context.translate(x: -center.x, y: -center.y)
 		}
 		
 		if originalWidth != size.x || originalHeight != size.y {
