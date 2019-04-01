@@ -13,7 +13,12 @@ public struct UnoState: GameState, CustomStringConvertible {
 	public var hands: [Role: Hand]
 	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 	
-	public var possibleMoves: Set<Move> { return Set(hands[currentRole]?.cards.map { Move(playing: $0) } ?? []) }
+	public var possibleMoves: Set<Move> {
+		return Set(hands[currentRole]?.cards
+			.filter { card in board.lastDiscarded.map { card.canBePlaced(onTopOf: $0) } ?? true }
+			.map { Move(playing: $0) } 
+			?? [])
+		}
 	
 	public var winner: Role? { return hands.first { $0.1.isEmpty }?.0 }
 	public var isDraw: Bool { return hands.allSatisfy { $0.1.isEmpty } }

@@ -6,6 +6,10 @@ public struct UnoCard: Hashable {
 	public let label: UnoCardLabel
 	public var image: Image? { return createImage() }
 	
+	public func canBePlaced(onTopOf other: UnoCard) -> Bool {
+		return (color == other.color) || (label == other.label)
+	}
+	
 	private func createImage() -> Image? {
 		do {
 			let intSize = Vec2<Int>(x: 100, y: 140)

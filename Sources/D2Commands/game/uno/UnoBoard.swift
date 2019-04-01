@@ -10,6 +10,7 @@ public struct UnoBoard: DiscordImageEncodable {
 	public var deck = UnoDeck()
 	private var discardPile = [PileCard]()
 	public var discordImageEncoded: Image? { return createImage() }
+	public var lastDiscarded: UnoCard? { return discardPile.last.map { $0.card } }
 	
 	public mutating func push(card: UnoCard) {
 		let angle = Double.pi / 8
