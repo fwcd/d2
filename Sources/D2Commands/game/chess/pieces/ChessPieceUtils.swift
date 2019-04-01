@@ -6,6 +6,22 @@ func neighbors(of position: Vec2<Int>) -> [Vec2<Int>] {
 		.filter { $0.x != 0 || $0.y != 0 }
 }
 
+func moves(into direction: Vec2<Int>, from position: Vec2<Int>, board: [[ChessPiece?]]) -> [Vec2<Int>] {
+	var moves = [Vec2<Int>]()
+	var current = position + direction
+	
+	while board.isInBounds(current) && board.piece(at: current) == nil {
+		moves.append(current)
+		current = current + direction
+	}
+	
+	if board.piece(at: current) != nil {
+		moves.append(current)
+	}
+	
+	return moves
+}
+
 extension Array where Element == [ChessPiece?] {
 	func piece(at position: Vec2<Int>) -> ChessPiece? {
 		guard isInBounds(position) else { return nil }
