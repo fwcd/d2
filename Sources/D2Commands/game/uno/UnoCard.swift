@@ -27,8 +27,8 @@ public struct UnoCard: Hashable {
 					graphics.draw(Text(String(n), withSize: size.x * 0.8, at: Vec2(x: size.x * 0.3, y: size.y * 0.7), color: color.color))
 				default:
 					let icon = try Image(fromPngFile: label.resourcePngPath!)
-					let iconSize = Vec2(x: intSize.x, y: intSize.x)
-					graphics.draw(icon, at: center - (iconSize.asDouble / 2), withSize: iconSize)
+					let iconSize = Vec2(x: size.x * 0.8, y: size.x * 0.8).floored
+					graphics.draw(icon, at: center - (iconSize.asDouble * 0.7), withSize: iconSize)
 			}
 			
 			return img
