@@ -7,9 +7,13 @@ public struct Queen: ChessPiece {
 		var moves = [Vec2<Int>]()
 		var current = position + direction
 		
-		while board.piece(at: current) == nil {
+		while board.isInBounds(current) && board.piece(at: current) == nil {
 			moves.append(current)
 			current = current + direction
+		}
+		
+		if board.piece(at: current) != nil {
+			moves.append(current)
 		}
 		
 		return moves
