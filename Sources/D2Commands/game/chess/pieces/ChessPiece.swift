@@ -13,9 +13,9 @@ public protocol ChessPiece {
 	 * Fetches the possible moves of this piece. The board variable
 	 * contains all pieces *except* for the receiver.
 	 *
-	 * The implementor is responsible for checking that all moves are
-	 * in the bounds of the board, however not for testing whether
+	 * The implementor neither has to check if all moves are
+	 * in the bounds of the board, nor whether
 	 * the given move would result in a check.
 	 */
-	func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole) -> [Vec2<Int>]
+	func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>]
 }

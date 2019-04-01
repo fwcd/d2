@@ -7,7 +7,7 @@ public struct Vec2<T: VecComponent>: Addable, Subtractable, Multipliable, Divisi
 	public var xInverted: Vec2<T> { return Vec2(x: -x, y: y) }
 	public var yInverted: Vec2<T> { return Vec2(x: x, y: -y) }
 	
-	public init(x: T, y: T) {
+	public init(x: T = 0, y: T = 0) {
 		self.x = x
 		self.y = y
 	}
