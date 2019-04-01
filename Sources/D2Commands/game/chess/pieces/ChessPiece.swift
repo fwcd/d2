@@ -9,5 +9,9 @@ public protocol ChessPiece {
 	 */
 	var notationLetters: [Character] { get }
 	
-	func reachablePositions(from position: Vec2<Int>, boardSize: Vec2<Int>) -> [Vec2<Int>]
+	/**
+	 * Fetches the possible moves of this piece. The board variable
+	 * contains all pieces *except* for the receiver.
+	 */
+	func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]]) -> [Vec2<Int>]
 }
