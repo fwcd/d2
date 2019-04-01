@@ -45,10 +45,15 @@ public struct UnoState: GameState, CustomStringConvertible {
 	
 	public mutating func perform(move: Move) throws {
 		var nextHand = hands[currentRole]!
+		var opponentDrawCardCount = 0
+		var skipDistance = 0
 		
 		if let card = move.card {
 			board.push(card: card)
 			nextHand.cards.removeFirst(value: card)
+			
+			opponentDrawCardCount = card.label.drawCardCount
+			skipDistance = card.label.skipDistance
 		}
 		
 		if move.drawsCard {
@@ -57,7 +62,9 @@ public struct UnoState: GameState, CustomStringConvertible {
 		}
 		
 		hands[currentRole] = nextHand
-		currentRole = (currentRole + 1) % players.count
+		currentRole = (currentRole + 1 + skipDistance) % players.count
+		
+		hands[currentRole].cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {

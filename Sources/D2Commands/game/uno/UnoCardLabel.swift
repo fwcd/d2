@@ -17,6 +17,21 @@ public enum UnoCardLabel: Hashable {
 		}
 	}
 	
+	public var drawCardCount: Int {
+		switch self {
+			case .drawTwo: return 2
+			case .wildDrawFour: return 4
+			default: return 0
+		}
+	}
+	
+	public var skipDistance: Int {
+		switch self {
+			case .skip: return 1
+			default: return 0
+		}
+	}
+	
 	public static func of(actionLabel: String) -> UnoCardLabel? {
 		switch actionLabel {
 			case "skip": return .skip
