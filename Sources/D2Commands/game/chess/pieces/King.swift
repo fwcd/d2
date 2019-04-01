@@ -5,7 +5,7 @@ public struct King: ChessPiece {
 	
 	// TODO: Castling
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]]) -> [Vec2<Int>] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole) -> [Vec2<Int>] {
 		return neighbors(of: position)
 			.map { $0 + position }
 			.filter { board.isInBounds($0) }

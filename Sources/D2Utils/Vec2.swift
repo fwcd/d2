@@ -1,9 +1,11 @@
-public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible & ExpressibleByIntegerLiteral & Hashable
+public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible & Negatable & ExpressibleByIntegerLiteral & Hashable
 
-public struct Vec2<T: VecComponent>: Addable, Subtractable, Hashable {
+public struct Vec2<T: VecComponent>: Addable, Subtractable, Multipliable, Divisible, Negatable, Hashable {
 	public let x: T
 	public let y: T
 	public var asTuple: (x: T, y: T) { return (x: x, y: y) }
+	public var xInverted: Vec2<T> { return Vec2(x: -x, y: y) }
+	public var yInverted: Vec2<T> { return Vec2(x: x, y: -y) }
 	
 	public init(x: T, y: T) {
 		self.x = x
@@ -32,6 +34,10 @@ public struct Vec2<T: VecComponent>: Addable, Subtractable, Hashable {
 	
 	public static func /(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
 		return Vec2(x: lhs.x / rhs, y: lhs.y / rhs)
+	}
+	
+	public prefix static func -(operand: Vec2<T>) -> Vec2<T> {
+		return Vec2(x: -operand.x, y: -operand.y)
 	}
 	
 	public func dot(other: Vec2<T>) -> T {

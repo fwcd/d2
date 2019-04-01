@@ -17,5 +17,5 @@ public protocol ChessPiece {
 	 * in the bounds of the board, however not for testing whether
 	 * the given move would result in a check.
 	 */
-	func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]]) -> [Vec2<Int>]
+	func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole) -> [Vec2<Int>]
 }
