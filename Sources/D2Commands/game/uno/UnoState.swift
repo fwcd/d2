@@ -15,16 +15,20 @@ public struct UnoState: GameState, CustomStringConvertible {
 	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 	
 	public var possibleMoves: Set<Move> {
-		let moves = hands[currentRole]?.cards
-			.filter { card in board.lastDiscarded.map { card.canBePlaced(onTopOf: $0) } ?? true }
-			.map { Move(playing: $0) }
-			?? []
+		var moves = hands[currentRole]?.cards
+			.filter { card in board.lastDiscarded.map { (card.label == $0.label) || (card.color == board.topColor) } ?? true }
+			.flatMap { card in
+				return card.label.canPickColor
+					? UnoColor.allCases.map { Move(playing: card, pickingColor: $0) }
+					: [Move(playing: card)]
+			}
+			?? [Move]()
 		
-		if board.deck.isEmpty {
-			return Set(moves)
-		} else {
-			return Set(moves + [Move(drawingCard: true)])
+		if !board.deck.isEmpty {
+			moves = moves + [Move(drawingCard: true)]
 		}
+		
+		return Set(moves)
 	}
 	
 	public var winner: Role? { return hands.first { $0.1.isEmpty }?.0 }
@@ -66,10 +70,14 @@ public struct UnoState: GameState, CustomStringConvertible {
 			nextHand.cards.append(board.deck.drawRandomCard()!)
 		}
 		
+		if let nextColor = move.nextColor {
+			board.topColor = nextColor
+		}
+		
 		hands[currentRole] = nextHand
 		currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))) % players.count
 		
-		hands[currentRole].cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
+		hands[currentRole]!.cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {

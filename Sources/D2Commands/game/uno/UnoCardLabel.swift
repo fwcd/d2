@@ -32,6 +32,10 @@ public enum UnoCardLabel: Hashable {
 		}
 	}
 	
+	public var canPickColor: Bool {
+		return self == .wild || self == .wildDrawFour
+	}
+	
 	public static func of(actionLabel: String) -> UnoCardLabel? {
 		switch actionLabel {
 			case "skip": return .skip
