@@ -90,6 +90,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			output.append(next.board.discordMessageEncoded)
 			output.append("\(actionResult.additionalOutput ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn")
 			
+			print("Next possible moves: \(next.possibleMoves)")
 			sendHandsAsDMs(fromState: next, to: output)
 			
 			if let winner = next.winner {

@@ -1,22 +1,26 @@
 import D2Utils
 
-fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
+fileprivate let cardRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 
 public struct UnoMove: GameMove, Hashable {
-	public let card: UnoCard
+	public let card: UnoCard?
+	public let drawsCard: Bool
 	
-	public init(playing card: UnoCard) {
+	public init(playing card: UnoCard? = nil, drawingCard drawsCard: Bool = false) {
 		self.card = card
+		self.drawsCard = drawsCard
 	}
 	
 	public init(fromString str: String) throws {
-		if let parsedArgs = argsRegex.firstGroups(in: str) {
-			if let card = UnoMove.parse(rawColor: parsedArgs[1], rawLabel: parsedArgs[2]) {
+		if str == "draw" {
+			self.init(drawingCard: true)
+		} else if let cardArgs = cardRegex.firstGroups(in: str) {
+			if let card = UnoMove.parse(rawColor: cardArgs[1], rawLabel: cardArgs[2]) {
 				self.init(playing: card)
-			} else if let card = UnoMove.parse(rawColor: parsedArgs[2], rawLabel: parsedArgs[1]) {
+			} else if let card = UnoMove.parse(rawColor: cardArgs[2], rawLabel: cardArgs[1]) {
 				self.init(playing: card)
 			} else {
-				throw GameError.invalidMove("Unrecognized arguments, try: `[color] [number]` or `[number] [color]`")
+				throw GameError.invalidMove("Unrecognized arguments, try: `[color] [label]` or `[label] [color]` with color in `\(UnoColor.allCases.map { $0.rawValue })` and as a label either a number or `skip/reverse/drawTwo/wild/wildDrawFour`")
 			}
 		} else {
 			throw GameError.invalidMove("Your move `\(str)` is invalid.")

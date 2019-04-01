@@ -14,11 +14,17 @@ public struct UnoState: GameState, CustomStringConvertible {
 	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 	
 	public var possibleMoves: Set<Move> {
-		return Set(hands[currentRole]?.cards
+		let moves = hands[currentRole]?.cards
 			.filter { card in board.lastDiscarded.map { card.canBePlaced(onTopOf: $0) } ?? true }
-			.map { Move(playing: $0) } 
-			?? [])
+			.map { Move(playing: $0) }
+			?? []
+		
+		if board.deck.isEmpty {
+			return Set(moves)
+		} else {
+			return Set(moves + [Move(drawingCard: true)])
 		}
+	}
 	
 	public var winner: Role? { return hands.first { $0.1.isEmpty }?.0 }
 	public var isDraw: Bool { return hands.allSatisfy { $0.1.isEmpty } }
@@ -38,8 +44,19 @@ public struct UnoState: GameState, CustomStringConvertible {
 	}
 	
 	public mutating func perform(move: Move) throws {
-		board.push(card: move.card)
-		hands[currentRole]!.cards.removeFirst(value: move.card)
+		var nextHand = hands[currentRole]!
+		
+		if let card = move.card {
+			board.push(card: card)
+			nextHand.cards.removeFirst(value: card)
+		}
+		
+		if move.drawsCard {
+			guard !board.deck.isEmpty else { throw GameError.invalidMove("Encountered empty deck while drawing card") }
+			nextHand.cards.append(board.deck.drawRandomCard()!)
+		}
+		
+		hands[currentRole] = nextHand
 		currentRole = (currentRole + 1) % players.count
 	}
 	

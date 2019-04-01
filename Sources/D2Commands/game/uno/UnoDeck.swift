@@ -14,7 +14,11 @@ public struct UnoDeck: Hashable {
 		}
 	}
 	
-	public mutating func drawRandomCards(count: Int = 1) -> [UnoCard] {
+	public mutating func drawRandomCard() -> UnoCard? {
+		return drawRandomCards(count: 1).first
+	}
+	
+	public mutating func drawRandomCards(count: Int) -> [UnoCard] {
 		var removed = [UnoCard]()
 		
 		for _ in 0..<count {
