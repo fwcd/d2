@@ -2,6 +2,8 @@ import D2Utils
 
 /** Encapsulates an unpositioned chess piece. */
 public protocol ChessPiece {
+	var pieceType: ChessPieceType { get }
+	
 	/**
 	 * Contains possible notation letters. The preferred letter
 	 * (which is used for encoding) should be at the first position,

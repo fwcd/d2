@@ -1,6 +1,7 @@
 import D2Utils
 
 public struct Pawn: ChessPiece {
+	public let pieceType: ChessPieceType = .pawn
 	public let notationLetters: [Character] = []
 	
 	// TODO: En passant and promotion

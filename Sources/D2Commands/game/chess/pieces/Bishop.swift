@@ -1,7 +1,8 @@
 import D2Utils
 
 public struct Bishop: ChessPiece {
-	public let notationLetters: [Character] = []
+	public let pieceType: ChessPieceType = .bishop
+	public let notationLetters: [Character] = ["B", "L"]
 	
 	public func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>] {
 		return [Vec2(x: -1), Vec2(x: 1), Vec2(y: -1), Vec2(y: 1)]

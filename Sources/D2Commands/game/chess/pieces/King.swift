@@ -1,6 +1,7 @@
 import D2Utils
 
 public struct King: ChessPiece {
+	public let pieceType: ChessPieceType = .king
 	public let notationLetters: [Character] = ["K"]
 	
 	// TODO: Castling

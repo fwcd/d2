@@ -1,6 +1,7 @@
 import D2Utils
 
 public struct Knight: ChessPiece {
+	public let pieceType: ChessPieceType = .knight
 	public let notationLetters: [Character] = ["N", "S"]
 	
 	public func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>] {
