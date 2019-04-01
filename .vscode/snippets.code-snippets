@@ -214,6 +214,21 @@
 			"}"
 		]
 	},
+	"Chess piece": {
+		"prefix": "chesspiece",
+		"scope": "swift",
+		"body": [
+			"import D2Utils",
+			"",
+			"public struct $1: ChessPiece {",
+			"\tpublic let notationLetters: [Character] = [$2]",
+			"\t",
+			"\tpublic func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole) -> [Vec2<Int>] {",
+			"\t\t$0",
+			"\t}",
+			"}",
+		]
+	},
 	"Command test case": {
 		"prefix": "commandtest",
 		"scope": "swift",
