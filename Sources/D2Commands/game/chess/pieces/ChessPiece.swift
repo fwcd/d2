@@ -12,12 +12,11 @@ public protocol ChessPiece {
 	var notationLetters: [Character] { get }
 	
 	/**
-	 * Fetches the possible moves of this piece. The board variable
-	 * contains all pieces *except* for the receiver.
+	 * Fetches the possible moves of this piece.
 	 *
 	 * The implementor neither has to check if all moves are
 	 * in the bounds of the board, nor whether
 	 * the given move would result in a check.
 	 */
-	func possibleMoves(from position: Vec2<Int>, board: [[ChessPiece?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>]
+	func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>]
 }

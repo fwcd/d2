@@ -1,12 +1,32 @@
 import D2Utils
 
+func createPiece(_ pieceType: ChessPieceType) -> ChessPiece {
+	switch pieceType {
+		case .pawn: return Pawn()
+		case .knight: return Knight()
+		case .bishop: return Bishop()
+		case .queen: return Queen()
+		case .king: return King()
+		case .rook: return Rook()
+	}
+}
+
+func pieceOf(letter: Character) -> ChessPiece? {
+	guard let (piece, _) = (ChessPieceType.allCases
+		.map { createPiece($0) }
+		.map { ($0, $0.notationLetters.firstIndex(of: letter)) }
+		.filter { $0.1 != nil }
+		.min { $0.1! < $1.1! }) else { return nil }
+	return piece
+}
+
 func neighbors(of position: Vec2<Int>) -> [Vec2<Int>] {
 	return (0..<3)
 		.flatMap { row in (0..<3).map { Vec2(x: $0, y: row) } }
 		.filter { $0.x != 0 || $0.y != 0 }
 }
 
-func moves(into direction: Vec2<Int>, from position: Vec2<Int>, board: [[ChessPiece?]]) -> [Vec2<Int>] {
+func moves(into direction: Vec2<Int>, from position: Vec2<Int>, board: [[ColoredPieceType?]]) -> [Vec2<Int>] {
 	var moves = [Vec2<Int>]()
 	var current = position + direction
 	
@@ -22,8 +42,8 @@ func moves(into direction: Vec2<Int>, from position: Vec2<Int>, board: [[ChessPi
 	return moves
 }
 
-extension Array where Element == [ChessPiece?] {
-	func piece(at position: Vec2<Int>) -> ChessPiece? {
+extension Array where Element == [ColoredPieceType?] {
+	func piece(at position: Vec2<Int>) -> ColoredPieceType? {
 		guard isInBounds(position) else { return nil }
 		return self[position.y][position.x]
 	}
