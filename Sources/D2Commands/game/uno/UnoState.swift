@@ -12,7 +12,6 @@ public struct UnoState: GameState, Multiplayer, CustomStringConvertible {
 	public private(set) var board: Board
 	public private(set) var currentRole: Role = 0
 	public var hands: [Role: Hand]
-	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 	
 	public var possibleMoves: Set<Move> {
 		var moves = hands[currentRole]?.cards
@@ -42,10 +41,6 @@ public struct UnoState: GameState, Multiplayer, CustomStringConvertible {
 		for i in 0..<players.count {
 			hands[i] = Hand(cards: board.deck.drawRandomCards(count: 7))
 		}
-	}
-	
-	public init(firstPlayer: GamePlayer, secondPlayer: GamePlayer) {
-		self.init(players: [firstPlayer, secondPlayer])
 	}
 	
 	public mutating func perform(move: Move) throws {

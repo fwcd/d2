@@ -1,8 +1,14 @@
 public protocol Multiplayer {
 	var players: [GamePlayer] { get }
+	
+	init(players: [GamePlayer])
 }
 
-extension Multiplayer where Self: GameState, Self.Role == Int {
+extension GameState where Self: Multiplayer, Self.Role == Int {
+	public init(firstPlayer: GamePlayer, secondPlayer: GamePlayer) {
+		self.init(players: [firstPlayer, secondPlayer])
+	}
+	
 	public func playerOf(role: Role) -> GamePlayer? {
 		return players[safely: role]
 	}
@@ -10,4 +16,8 @@ extension Multiplayer where Self: GameState, Self.Role == Int {
 	public func rolesOf(player: GamePlayer) -> [Role] {
 		return players.allIndices(of: player)
 	}
+}
+
+extension GameState where Self: Multiplayer & CustomStringConvertible, Self.Role == Int {
+	public var description: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 }
