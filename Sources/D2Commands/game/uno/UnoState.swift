@@ -8,6 +8,7 @@ public struct UnoState: GameState, CustomStringConvertible {
 	public typealias Hand = UnoHand
 	
 	private let players: [GamePlayer]
+	private var advanceForward: Bool = true
 	public private(set) var board: Board
 	public private(set) var currentRole: Role = 0
 	public var hands: [Role: Hand]
@@ -54,6 +55,10 @@ public struct UnoState: GameState, CustomStringConvertible {
 			
 			opponentDrawCardCount = card.label.drawCardCount
 			skipDistance = card.label.skipDistance
+			
+			if card.label == .reverse {
+				advanceForward = !advanceForward
+			}
 		}
 		
 		if move.drawsCard {
@@ -62,7 +67,7 @@ public struct UnoState: GameState, CustomStringConvertible {
 		}
 		
 		hands[currentRole] = nextHand
-		currentRole = (currentRole + 1 + skipDistance) % players.count
+		currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))) % players.count
 		
 		hands[currentRole].cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
 	}
