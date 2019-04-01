@@ -1,13 +1,13 @@
 import SwiftDiscord
 import D2Permissions
 
-public struct UnoState: GameState, CustomStringConvertible {
+public struct UnoState: GameState, Multiplayer, CustomStringConvertible {
 	public typealias Role = Int
 	public typealias Board = UnoBoard
 	public typealias Move = UnoMove
 	public typealias Hand = UnoHand
 	
-	private let players: [GamePlayer]
+	public let players: [GamePlayer]
 	private var advanceForward: Bool = true
 	public private(set) var board: Board
 	public private(set) var currentRole: Role = 0
@@ -78,13 +78,5 @@ public struct UnoState: GameState, CustomStringConvertible {
 		currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))).clockModulo(players.count)
 		
 		hands[currentRole]!.cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
-	}
-	
-	public func playerOf(role: Role) -> GamePlayer? {
-		return players[safely: role]
-	}
-	
-	public func rolesOf(player: GamePlayer) -> [Role] {
-		return players.allIndices(of: player)
 	}
 }
