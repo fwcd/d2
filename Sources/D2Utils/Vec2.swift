@@ -1,6 +1,6 @@
-public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible & ExpressibleByIntegerLiteral
+public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible & ExpressibleByIntegerLiteral & Hashable
 
-public struct Vec2<T: VecComponent>: Addable, Subtractable {
+public struct Vec2<T: VecComponent>: Addable, Subtractable, Hashable {
 	public let x: T
 	public let y: T
 	public var asTuple: (x: T, y: T) { return (x: x, y: y) }

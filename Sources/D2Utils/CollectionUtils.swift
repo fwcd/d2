@@ -15,10 +15,3 @@ public extension Array where Element: Equatable {
 		return remove(at: index)
 	}
 }
-
-public extension Vec2 where T == Int {
-	func isInBounds<T>(of array: [[T]]) -> Bool {
-		guard !array.isEmpty else { return false }
-		return x >= 0 && y >= 0 && x < array[0].count && y < array.count
-	}
-}
