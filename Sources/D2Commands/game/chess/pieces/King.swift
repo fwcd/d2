@@ -3,6 +3,8 @@ import D2Utils
 public struct King: ChessPiece {
 	public let pieceType: ChessPieceType = .king
 	public let notationLetters: [Character] = ["K"]
+	public let blackResourcePng: String = "Resources/chess/blackKing.png"
+	public let whiteResourcePng: String = "Resources/chess/whiteKing.png"
 	
 	// TODO: Castling
 	

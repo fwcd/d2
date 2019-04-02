@@ -3,6 +3,8 @@ import D2Utils
 public struct Knight: ChessPiece {
 	public let pieceType: ChessPieceType = .knight
 	public let notationLetters: [Character] = ["N", "S"]
+	public let blackResourcePng: String = "Resources/chess/blackKnight.png"
+	public let whiteResourcePng: String = "Resources/chess/whiteKnight.png"
 	
 	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
 		return [

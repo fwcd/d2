@@ -3,6 +3,8 @@ import D2Utils
 /** Encapsulates an unpositioned chess piece. */
 public protocol ChessPiece {
 	var pieceType: ChessPieceType { get }
+	var blackResourcePng: String { get }
+	var whiteResourcePng: String { get }
 	
 	/**
 	 * Contains possible notation letters. The preferred letter

@@ -36,6 +36,10 @@ struct ChessBoardView {
 					let x = (Double(col) * fieldSize) + padding
 					
 					graphics.draw(Rectangle(fromX: x, y: y, width: fieldSize, height: fieldSize, color: color))
+					
+					if let piece = model[Vec2(x: col, y: row)] {
+						graphics.draw(try Image(fromPngFile: piece.resourcePng), at: Vec2(x: x, y: y), withSize: Vec2(x: Int(fieldSize), y: Int(fieldSize)))
+					}
 				}
 			}
 			
@@ -50,7 +54,7 @@ struct ChessBoardView {
 			
 			image = img
 		} catch {
-			print("Error while creating chess board image")
+			print("Error while creating chess board image: \(error)")
 			image = nil
 		}
 	}

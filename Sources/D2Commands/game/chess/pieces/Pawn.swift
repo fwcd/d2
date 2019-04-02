@@ -3,6 +3,8 @@ import D2Utils
 public struct Pawn: ChessPiece {
 	public let pieceType: ChessPieceType = .pawn
 	public let notationLetters: [Character] = []
+	public let blackResourcePng: String = "Resources/chess/blackPawn.png"
+	public let whiteResourcePng: String = "Resources/chess/whitePawn.png"
 	
 	// TODO: En passant and promotion
 	

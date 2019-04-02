@@ -34,6 +34,6 @@ public extension Graphics {
 	}
 	
 	mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
-		draw(image, at: position, withSize: image.size, rotation: 0)
+		draw(image, at: position, withSize: size, rotation: 0)
 	}
 }
