@@ -13,7 +13,7 @@ import D2Utils
  * 8. group: '+' if the move results in a check, '#' if the move results in a checkmate
  * 9. group: 'e. p.' if the move is an en-passant
  */
-fileprivate let notationRegex = try! Regex(from: "([A-Z]?)([a-h]?)([1-8])?(x?)([a-h])([1-8])(=?[A-Z])?([\\+#]?)(?:\\s+(e.p.))?")
+fileprivate let notationRegex = try! Regex(from: "([A-Z]?)([a-h]?)([1-8])?(x?)([a-h])([1-8])(=?[A-Z])?([\\+#]?)(?:\\s+(e.\\s*p.))?")
 fileprivate let shortCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
 fileprivate let longCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
 
