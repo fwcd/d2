@@ -33,6 +33,22 @@ public struct ChessState: GameState {
 		self.init(firstPlayer: whitePlayer, secondPlayer: blackPlayer, board: Board())
 	}
 	
+	private func locateKing(of role: ChessRole) -> Vec2<Int>? {
+		return board.model.positions.first { board.model[$0]?.piece.pieceType == .king }
+	}
+	
+	private func isInCheck(_ role: ChessRole) -> Bool {
+		guard let king = locateKing(of: role) else { fatalError("Can not test if \(role) is in check without a king") }
+		let opponent = role.opponent
+		
+		return board.model.positions
+			.compactMap {
+				let piece = board.model[$0]
+				return (piece?.color == opponent) ? $0 : nil
+			}
+			.contains { pos in findPossibleMoves(at: pos).contains { $0.destination == king } }
+	}
+	
 	private func findPossibleMoves(at position: Vec2<Int>) -> Set<Move> {
 		guard let piece = board.model[position] else { return [] }
 		let pieceTypeBoard = board.model.pieceTypes
