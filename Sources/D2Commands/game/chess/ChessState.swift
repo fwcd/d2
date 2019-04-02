@@ -18,7 +18,7 @@ public struct ChessState: GameState {
 		let pieceTypeBoard = board.model.pieceTypes
 		let firstMove = moveCount < 2
 		let boardPositions = (0..<board.model.ranks).flatMap { y in (0..<board.model.files).map { Vec2(x: $0, y: y) } }
-		let currentPieces: [(Vec2<Int>, ColoredPiece)] = boardPositions
+		let currentPieces: [(Vec2<Int>, BoardPiece)] = boardPositions
 			.map { ($0, board.model[$0]) }
 			.filter { $0.1 != nil }
 			.map { ($0.0, $0.1!) }

@@ -6,7 +6,7 @@ public struct Bishop: ChessPiece {
 	public let blackResourcePng: String = "Resources/chess/blackBishop.png"
 	public let whiteResourcePng: String = "Resources/chess/whiteBishop.png"
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
 		return [Vec2(x: -1, y: -1), Vec2(x: 1, y: 1), Vec2(x: 1, y: -1), Vec2(x: -1, y: 1)]
 			.flatMap { moves(into: $0, from: position, by: pieceType, color: role, board: board) }
 	}

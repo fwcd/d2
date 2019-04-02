@@ -25,5 +25,5 @@ public protocol ChessPiece {
 	 * required to check for captures either, though the
 	 * 'isCapture' option can be overridden if specified.
 	 */
-	func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove]
+	func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove]
 }

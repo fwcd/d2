@@ -8,7 +8,7 @@ public struct King: ChessPiece {
 	
 	// TODO: Castling
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
 		return neighborFields()
 			.map { $0 + position }
 			.map { ChessMove(

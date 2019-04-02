@@ -8,7 +8,7 @@ public struct Pawn: ChessPiece {
 	
 	// TODO: En passant and promotion
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
 		let direction: Int = (role == .black) ? 1 : -1
 		let captureMoves: [Vec2<Int>] = [position + Vec2(x: -1, y: direction), position + Vec2(x: 1, y: direction)]
 		var forwardMoves: [Vec2<Int>] = [position + Vec2(y: direction)]

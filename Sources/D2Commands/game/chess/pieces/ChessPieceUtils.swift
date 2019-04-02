@@ -26,7 +26,7 @@ func neighborFields() -> [Vec2<Int>] {
 		.filter { $0.x != 0 || $0.y != 0 }
 }
 
-func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: ChessPieceType, color: ChessRole, board: [[ColoredPieceType?]]) -> [ChessMove] {
+func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: ChessPieceType, color: ChessRole, board: [[BoardPieceType?]]) -> [ChessMove] {
 	var moves = [ChessMove]()
 	var current = position + direction
 	
@@ -59,8 +59,8 @@ func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: Ch
 	return moves
 }
 
-extension Array where Element == [ColoredPieceType?] {
-	func piece(at position: Vec2<Int>) -> ColoredPieceType? {
+extension Array where Element == [BoardPieceType?] {
+	func piece(at position: Vec2<Int>) -> BoardPieceType? {
 		guard isInBounds(position) else { return nil }
 		return self[position.y][position.x]
 	}

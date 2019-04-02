@@ -3,13 +3,13 @@ import D2Utils
 fileprivate let defaultSideLength = 8
 
 public struct ChessBoardModel {
-	public typealias Piece = ColoredPiece
+	public typealias Piece = BoardPiece
 	
 	public private(set) var pieces: [[Piece?]]
 	public var ranks: Int { return pieces.count }
 	public var files: Int { return pieces[0].count }
 	
-	public var pieceTypes: [[ColoredPieceType?]] {
+	public var pieceTypes: [[BoardPieceType?]] {
 		return pieces.map { row in row.map { $0?.asPieceType } }
 	}
 	
@@ -51,7 +51,10 @@ public struct ChessBoardModel {
 		guard originX >= 0 && originX < files else { throw GameError.moveOutOfBounds("Origin x (\(originX)) is out of bounds: `\(move)`") }
 		guard originY >= 0 && originY < ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
 		
-		pieces[destinationY][destinationX] = pieces[originY][originX]
+		let piece = pieces[originY][originX]
+		piece.moved = true
+		
+		pieces[destinationY][destinationX] = piece
 		pieces[originY][originX] = nil
 		
 		for associatedMove in move.associatedMoves {
