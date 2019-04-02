@@ -41,7 +41,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			.append(describePosition(x: destinationX, y: destinationY), withSeparator: " ")
 			.append(promotionPieceType.map { "=\($0.rawValue) " }, withSeparator: " ")
 			.append(checkType?.rawValue, withSeparator: " ")
-			.append(isEnPassant.map { _ in "e.p. " }, withSeparator: " ")
+			.append(isEnPassant.map { $0 ? "e.p." : "" }, withSeparator: " ")
 			.append(castlingType.map { "castling \($0.rawValue) " }, withSeparator: " ")
 			.trimmedValue
 	}
