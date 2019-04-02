@@ -16,7 +16,6 @@ public struct ChessState: GameState {
 	
 	public var possibleMoves: Set<Move> {
 		let pieceTypeBoard = board.model.pieceTypes
-		let firstMove = moveCount < 2
 		let boardPositions = (0..<board.model.ranks).flatMap { y in (0..<board.model.files).map { Vec2(x: $0, y: y) } }
 		let currentPieces: [(Vec2<Int>, BoardPiece)] = boardPositions
 			.map { ($0, board.model[$0]) }
@@ -25,7 +24,7 @@ public struct ChessState: GameState {
 			.filter { $0.1.color == currentRole }
 		
 		let unfilteredMoves: [Move] = currentPieces
-			.flatMap { $0.1.piece.possibleMoves(from: $0.0, board: pieceTypeBoard, role: currentRole, firstMove: firstMove) }
+			.flatMap { $0.1.piece.possibleMoves(from: $0.0, board: pieceTypeBoard, role: currentRole, moved: $0.1.moved) }
 		
 		for move in unfilteredMoves {
 			guard move.pieceType != nil else { fatalError("ChessPiece returned move without 'pieceType' (invalid according to the contract)") }
