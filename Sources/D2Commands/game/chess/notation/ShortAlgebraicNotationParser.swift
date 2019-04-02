@@ -25,7 +25,7 @@ struct ShortAlgebraicNotationParser: ChessNotationParser {
 			return ChessMove(castlingType: .short)
 		} else if let parsed = notationRegex.firstGroups(in: notation) {
 			return ChessMove(
-				pieceType: parsed[1].nilIfEmpty.flatMap { pieceOf(letter: Character($0))?.pieceType },
+				pieceType: parsed[1].nilIfEmpty.flatMap { pieceOf(letter: Character($0))?.pieceType } ?? .pawn,
 				originX: parsed[2].nilIfEmpty.flatMap { xOf(file: Character($0)) },
 				originY: parsed[3].nilIfEmpty.map { yOf(rank: Int($0)!) },
 				isCapture: !parsed[4].isEmpty,
