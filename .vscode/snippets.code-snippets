@@ -80,7 +80,7 @@
 			"\t",
 			"\tpublic init() {}",
 			"\t",
-			"\tpublic static func parse(move rawMove: String) throws -> State.Move {",
+			"\tprivate static func parse(move rawMove: String) throws -> State.Move {",
 			"\t\treturn try State.Move(fromString: rawMove)",
 			"\t}",
 			"}"

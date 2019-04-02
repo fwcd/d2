@@ -9,7 +9,7 @@ public struct ChessGame: Game {
 	
 	public init() {}
 	
-	public static func parse(move rawMove: String) throws -> State.Move {
+	private static func parse(move rawMove: String) throws -> State.Move {
 		if let move = ShortAlgebraicNotationParser().parse(rawMove) {
 			return move
 		} else {

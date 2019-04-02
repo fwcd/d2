@@ -14,7 +14,7 @@ public struct UnoGame: Game {
 	
 	public init() {}
 	
-	public static func parse(move rawMove: String) throws -> State.Move {
+	private static func parse(move rawMove: String) throws -> State.Move {
 		return try State.Move(fromString: rawMove)
 	}
 }

@@ -7,8 +7,6 @@ public protocol Game {
 	var onlySendHandToCurrentRole: Bool { get }
 	
 	init()
-	
-	static func parse(move rawMove: String) throws -> State.Move
 }
 
 public extension Game {
