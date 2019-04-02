@@ -41,12 +41,12 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
 		if game.onlySendHandToCurrentRole, let player = state.playerOf(role: state.currentRole) {
 			if let hand = state.hands[state.currentRole] {
-				output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+				output.append(hand.discordEncoded.asMessage, to: .userChannel(player.id))
 			}
 		} else {
 			for (role, hand) in state.hands {
 				if let player = state.playerOf(role: role) {
-					output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+					output.append(hand.discordEncoded.asMessage, to: .userChannel(player.id))
 				}
 			}
 		}
@@ -54,11 +54,16 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	
 	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
 		let state = G.State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
-		
 		currentState = state
 		
+		var encodedBoard: DiscordEncoded?
+		
 		if game.renderFirstBoard {
-			output.append(state.board.discordMessageEncoded)
+			encodedBoard = state.board.discordEncoded
+			
+			if encodedBoard!.embed != nil {
+				print("Warning: Embed-encoded boards are currently not supported by TwoPlayerGameCommand")
+			}
 		}
 		
 		var embed = DiscordEmbed()
@@ -69,7 +74,11 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 		]
 		embed.footer = DiscordEmbed.Footer(text: "Type `[action] [...]` to begin!")
 		
-		output.append(embed)
+		output.append(DiscordMessage(
+			content: encodedBoard?.content ?? "",
+			embed: embed,
+			files: encodedBoard?.files ?? []
+		))
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
@@ -88,6 +97,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
 		guard let action = game.actions[actionKey] ?? defaultActions[actionKey] else { return .continueSubscription }
+		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
 			let actionResult = try action(state, args)
@@ -107,8 +117,9 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			
 			if let next = actionResult.nextState {
 				// Output next board and user's hands
-				output.append(next.board.discordMessageEncoded)
-				output.append("\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn")
+				let encodedBoard = next.board.discordEncoded
+				let encodedBoardContent: String = encodedBoard.content.nilIfEmpty.map { "\n\($0)" } ?? ""
+				var embed: DiscordEmbed? = nil
 				
 				// print("Next possible moves: \(next.possibleMoves)")
 				sendHandsAsDMs(fromState: next, to: output)
@@ -116,28 +127,34 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 				if let winner = next.winner {
 					// Game won
 					
-					var embed = DiscordEmbed()
-					embed.title = ":crown: Winner"
-					embed.description = "\(describe(role: winner, in: next)) won the game!"
+					embed = DiscordEmbed(
+						title: ":crown: Winner",
+						description: "\(describe(role: winner, in: next)) won the game!"
+					)
 					
-					output.append(embed)
 					currentState = nil
-					return .cancelSubscription
+					subscriptionAction = .cancelSubscription
 				} else if next.isDraw {
 					// Game over due to a draw
 					
-					var embed = DiscordEmbed()
-					embed.title = ":crown: Game Over"
-					embed.description = "The game resulted in a draw!"
+					embed = DiscordEmbed(
+						title: ":crown: Game Over",
+						description: "The game resulted in a draw!"
+					)
 					
-					output.append(embed)
 					currentState = nil
-					return .cancelSubscription
+					subscriptionAction = .cancelSubscription
 				} else {
 					// Advance the game
 					
 					currentState = next
 				}
+				
+				output.append(DiscordMessage(
+					content: "\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn\(encodedBoardContent)",
+					embed: embed,
+					files: encodedBoard.files
+				))
 			} else if let text = actionResult.text {
 				output.append(text)
 			}
@@ -154,7 +171,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			print(error)
 		}
 		
-		return .continueSubscription
+		return subscriptionAction
 	}
 	
 	private func describe(role: G.State.Role, in state: G.State) -> String {
