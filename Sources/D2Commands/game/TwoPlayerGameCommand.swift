@@ -57,7 +57,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			output.append(state.board.discordMessageEncoded)
 		}
 		
-		output.append("Playing new match.\nAvailable game actions: `\(game.actions.keys)`\nType `[action] [...]` to begin!")
+		output.append("Playing new match: \(state)\nAvailable game actions: `\(game.actions.keys)`\nType `[action] [...]` to begin!")
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
