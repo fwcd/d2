@@ -9,7 +9,7 @@ public struct ChessState: GameState, CustomStringConvertible {
 	
 	private let whitePlayer: GamePlayer
 	private let blackPlayer: GamePlayer
-	public private(set) var board = Board()
+	public private(set) var board: Board
 	public private(set) var currentRole: Role = .white
 	public private(set) var moveCount = 0
 	public var description: String { return "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
@@ -32,9 +32,14 @@ public struct ChessState: GameState, CustomStringConvertible {
 	public var winner: Role? { return nil /* TODO */ }
 	public var isDraw: Bool { return false /* TODO */ }
 	
-	public init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer) {
+	init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer, board: Board) {
 		self.whitePlayer = whitePlayer
 		self.blackPlayer = blackPlayer
+		self.board = board
+	}
+	
+	public init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer) {
+		self.init(firstPlayer: whitePlayer, secondPlayer: blackPlayer, board: Board())
 	}
 	
 	public mutating func perform(move unresolvedMove: Move) throws {
