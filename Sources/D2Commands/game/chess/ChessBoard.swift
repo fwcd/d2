@@ -68,15 +68,14 @@ public struct ChessBoard: DiscordImageEncodable {
 			let intSize = Vec2<Int>(x: (Int(fieldSize) * files) + (Int(padding) * 2), y: (Int(fieldSize) * ranks) + (Int(padding) * 2))
 			let img = try Image(fromSize: intSize)
 			var graphics = CairoGraphics(fromImage: img)
-			var blackField = false
 			
 			for row in 0..<ranks {
 				for col in 0..<files {
-					let color = blackField ? Color(rgb: 0xefa84a) : Color(rgb: 0xffcc7a)
-					let x = (Double(row) * fieldSize) + padding
-					let y = (Double(col) * fieldSize) + padding
+					let blackField = (col % 2 == ((row % 2 == 0) ? 0 : 1))
+					let color = blackField ? Color(rgb: 0xfaccfa) : Color(rgb: 0xffcc7a)
+					let x = (Double(col) * fieldSize) + padding
+					let y = (Double(row) * fieldSize) + padding
 					graphics.draw(Rectangle(fromX: x, y: y, width: fieldSize, height: fieldSize, color: color))
-					blackField = !blackField
 				}
 			}
 			
