@@ -74,9 +74,14 @@ public struct ChessState: GameState, CustomStringConvertible {
 		moveCount += 1
 	}
 	
-	private func resolve(move: Move) -> [Move] {
+	func resolve(move: Move) -> [Move] {
 		return possibleMoves
 			.filter { $0.matches(move) }
+	}
+	
+	func unambiguouslyResolve(move: Move) throws -> Move {
+		guard let resolved = resolve(move: move).first else { throw ChessError.ambiguousMove("Move can not be unambiguously resolved", move) }
+		return resolved
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {
