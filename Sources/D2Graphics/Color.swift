@@ -4,9 +4,9 @@ public struct Color: Hashable {
 	public let blue: UInt8
 	public let alpha: UInt8
 	
-	public var rgb: UInt32 { return UInt32((red << 16) | (green << 8) | blue) }
-	public var rgba: UInt32 { return UInt32((red << 24) | (green << 16) | (blue << 8) | alpha) }
-	public var argb: UInt32 { return UInt32((alpha << 24) | (red << 16) | (green << 8) | blue) }
+	public var rgb: UInt32 { return (UInt32(red) << 16) | (UInt32(green) << 8) | UInt32(blue) }
+	public var rgba: UInt32 { return (UInt32(red) << 24) | (UInt32(green) << 16) | (UInt32(blue) << 8) | UInt32(alpha) }
+	public var argb: UInt32 { return (UInt32(alpha) << 24) | (UInt32(red) << 16) | (UInt32(green) << 8) | UInt32(blue) }
 	
 	public var asDoubleTuple: (red: Double, green: Double, blue: Double, alpha: Double) {
 		return (red: Double(red), green: Double(green), blue: Double(blue), alpha: Double(alpha))
