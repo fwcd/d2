@@ -35,6 +35,7 @@ public struct ChessState: GameState, CustomStringConvertible {
 		}
 		
 		let moves: [Move] = unfilteredMoves
+			.filter { pieceTypeBoard.isInBounds($0.destination!) }
 			.compactMap {
 				let destinationPiece = board[$0.destination!]
 				if destinationPiece?.color == currentRole {
