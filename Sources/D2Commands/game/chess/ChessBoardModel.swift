@@ -9,6 +9,8 @@ public struct ChessBoardModel {
 	public var ranks: Int { return pieces.count }
 	public var files: Int { return pieces[0].count }
 	
+	public var positions: [Vec2<Int>] { return (0..<ranks).flatMap { y in (0..<files).map { Vec2(x: $0, y: y) } } }
+	
 	public var pieceTypes: [[BoardPieceType?]] {
 		return pieces.map { row in row.map { $0?.asPieceType } }
 	}

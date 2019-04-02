@@ -15,16 +15,28 @@ public struct ChessState: GameState {
 	public var playersDescription: String { return "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
 	
 	public var possibleMoves: Set<Move> {
+		return Set(board.model.positions
+			.filter { board.model[$0]?.color == currentRole }
+			.flatMap { findPossibleMoves(at: $0) })
+	}
+	
+	public var winner: Role? { return nil /* TODO */ }
+	public var isDraw: Bool { return false /* TODO */ }
+	
+	init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer, board: Board) {
+		self.whitePlayer = whitePlayer
+		self.blackPlayer = blackPlayer
+		self.board = board
+	}
+	
+	public init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer) {
+		self.init(firstPlayer: whitePlayer, secondPlayer: blackPlayer, board: Board())
+	}
+	
+	private func findPossibleMoves(at position: Vec2<Int>) -> Set<Move> {
+		guard let piece = board.model[position] else { return [] }
 		let pieceTypeBoard = board.model.pieceTypes
-		let boardPositions = (0..<board.model.ranks).flatMap { y in (0..<board.model.files).map { Vec2(x: $0, y: y) } }
-		let currentPieces: [(Vec2<Int>, BoardPiece)] = boardPositions
-			.map { ($0, board.model[$0]) }
-			.filter { $0.1 != nil }
-			.map { ($0.0, $0.1!) }
-			.filter { $0.1.color == currentRole }
-		
-		let unfilteredMoves: [Move] = currentPieces
-			.flatMap { $0.1.piece.possibleMoves(from: $0.0, board: pieceTypeBoard, role: currentRole, moved: $0.1.moved) }
+		let unfilteredMoves: [Move] = piece.piece.possibleMoves(from: position, board: pieceTypeBoard, role: currentRole, moved: piece.moved)
 		
 		for move in unfilteredMoves {
 			guard move.pieceType != nil else { fatalError("ChessPiece returned move without 'pieceType' (invalid according to the contract)") }
@@ -47,19 +59,6 @@ public struct ChessState: GameState {
 			}
 		
 		return Set(moves)
-	}
-	
-	public var winner: Role? { return nil /* TODO */ }
-	public var isDraw: Bool { return false /* TODO */ }
-	
-	init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer, board: Board) {
-		self.whitePlayer = whitePlayer
-		self.blackPlayer = blackPlayer
-		self.board = board
-	}
-	
-	public init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer) {
-		self.init(firstPlayer: whitePlayer, secondPlayer: blackPlayer, board: Board())
 	}
 	
 	public mutating func perform(move unresolvedMove: Move) throws {
