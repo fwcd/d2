@@ -118,7 +118,6 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			if let next = actionResult.nextState {
 				// Output next board and user's hands
 				let encodedBoard = next.board.discordEncoded
-				let encodedBoardContent: String = encodedBoard.content.nilIfEmpty.map { "\n\($0)" } ?? ""
 				var embed: DiscordEmbed? = nil
 				
 				// print("Next possible moves: \(next.possibleMoves)")
@@ -147,11 +146,15 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 				} else {
 					// Advance the game
 					
+					embed = DiscordEmbed(
+						description: "\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
+					)
+					
 					currentState = next
 				}
 				
 				output.append(DiscordMessage(
-					content: "\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn\(encodedBoardContent)",
+					content: encodedBoard.content,
 					embed: embed,
 					files: encodedBoard.files
 				))
