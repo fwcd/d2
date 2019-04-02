@@ -75,7 +75,6 @@
 			"\tpublic let name: String = $2",
 			"\tpublic let actions: [String: (State, String) throws -> ActionResult<State>] = [",
 			"\t\t\"move\": { state, args in ActionResult(nextState: try state.childState(after: try $1Game.parse(move: args))) },",
-			"\t\t\"cancel\": { state, _ in ActionResult(nextState: state, cancelsMatch: true) }",
 			"\t]",
 			"\t",
 			"\tpublic init() {}",

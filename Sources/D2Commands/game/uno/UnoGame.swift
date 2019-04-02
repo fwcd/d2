@@ -8,8 +8,7 @@ public struct UnoGame: Game {
 			let next = try state.childState(after: try UnoGame.parse(move: args))
 			let text = next.board.topColorMatchesCard ? nil : "The top color is now \(next.board.topColor?.discordStringEncoded ?? "?")"
 			return ActionResult(nextState: next, text: text)
-		},
-		"cancel": { state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) }
+		}
 	]
 	
 	public init() {}
