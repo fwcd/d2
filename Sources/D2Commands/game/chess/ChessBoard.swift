@@ -37,7 +37,7 @@ public struct ChessBoard: DiscordImageEncodable {
 	}
 	
 	public subscript(position: Vec2<Int>) -> Piece? {
-		get { return pieces[position.x][position.x] }
+		get { return pieces[position.y][position.x] }
 		set(newValue) { pieces[position.y][position.x] = newValue }
 	}
 	
