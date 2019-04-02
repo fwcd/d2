@@ -9,7 +9,7 @@ public struct ChessBoard: DiscordImageEncodable {
 	public var pieces: [[Piece?]]
 	public var ranks: Int { return pieces.count }
 	public var files: Int { return pieces[0].count }
-	public var discordImageEncoded: Image? { return nil /* TODO */ }
+	public var discordImageEncoded: Image? { return createImage() }
 	
 	public var pieceTypes: [[ColoredPieceType?]] {
 		return pieces.map { row in row.map { $0?.asPieceType } }
@@ -58,6 +58,32 @@ public struct ChessBoard: DiscordImageEncodable {
 		
 		for associatedMove in move.associatedMoves {
 			try perform(move: associatedMove)
+		}
+	}
+	
+	private func createImage() -> Image? {
+		do {
+			let fieldSize = 30.0
+			let padding = 20.0
+			let intSize = Vec2<Int>(x: (Int(fieldSize) * files) + (Int(padding) * 2), y: (Int(fieldSize) * ranks) + (Int(padding) * 2))
+			let img = try Image(fromSize: intSize)
+			var graphics = CairoGraphics(fromImage: img)
+			var blackField = false
+			
+			for row in 0..<ranks {
+				for col in 0..<files {
+					let color = blackField ? Color(rgb: 0xefa84a) : Color(rgb: 0xffcc7a)
+					let x = (Double(row) * fieldSize) + padding
+					let y = (Double(col) * fieldSize) + padding
+					graphics.draw(Rectangle(fromX: x, y: y, width: fieldSize, height: fieldSize, color: color))
+					blackField = !blackField
+				}
+			}
+			
+			return img
+		} catch {
+			print("Error while creating chess board image")
+			return nil
 		}
 	}
 }
