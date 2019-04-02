@@ -32,7 +32,7 @@ final class ChessNotationParserTests: XCTestCase {
 		XCTAssertEqual(enPassantMove?.pieceType, ChessPieceType.pawn)
 		XCTAssertEqual(enPassantMove?.isCapture, true)
 		XCTAssertEqual(enPassantMove?.isEnPassant, true)
-		XCTAssertEqual(enPassantMove?.originX, 6)
+		XCTAssertEqual(enPassantMove?.originX, 5)
 		XCTAssertEqual(enPassantMove?.destinationX, 6)
 		XCTAssertEqual(enPassantMove?.destinationY, 2)
 		
