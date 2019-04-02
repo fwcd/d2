@@ -12,7 +12,7 @@ public struct ChessMove: Hashable {
 	public let isEnPassant: Bool?
 	public let castlingType: CastlingType?
 	
-	init(
+	public init(
 		pieceType: ChessPieceType? = nil,
 		originX: Int? = nil,
 		originY: Int? = nil,
