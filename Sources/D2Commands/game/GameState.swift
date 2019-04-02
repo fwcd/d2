@@ -4,7 +4,6 @@ import D2Utils
 /**
  * Represents a mutable game state. Implementing classes are
  * required to use a value type (struct/enum/immutable class).
- * It is strongly recommended that implementors also adopt CustomStringConvertible.
  */
 public protocol GameState {
 	/** A role is a logical player in the game (such as "white" or "black"). */
@@ -20,6 +19,7 @@ public protocol GameState {
 	var currentRole: Role { get }
 	var hands: [Role: Hand] { get }
 	var possibleMoves: Set<Move> { get }
+	var playersDescription: String { get }
 	
 	var winner: Role? { get }
 	var isDraw: Bool { get }

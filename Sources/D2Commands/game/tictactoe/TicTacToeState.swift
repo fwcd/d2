@@ -1,7 +1,7 @@
 import Foundation
 import SwiftDiscord
 
-public struct TicTacToeState: GameState, CustomStringConvertible {
+public struct TicTacToeState: GameState {
 	public typealias Role = TicTacToeRole
 	public typealias Board = TicTacToeBoard
 	public typealias Move = TicTacToeMove
@@ -10,7 +10,7 @@ public struct TicTacToeState: GameState, CustomStringConvertible {
 	private let playerO: GamePlayer
 	public private(set) var board = Board()
 	public private(set) var currentRole: Role = .x
-	public var description: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
+	public var playersDescription: String { return "`\(playerX.username)` as :x: vs. `\(playerO.username)` as :o:" }
 	
 	public var winner: Role? { return board.winner }
 	public var isDraw: Bool { return board.isDraw }

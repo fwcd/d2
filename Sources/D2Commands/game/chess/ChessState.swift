@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Utils
 import D2Permissions
 
-public struct ChessState: GameState, CustomStringConvertible {
+public struct ChessState: GameState {
 	public typealias Role = ChessRole
 	public typealias Board = ChessBoard
 	public typealias Move = ChessMove
@@ -12,7 +12,7 @@ public struct ChessState: GameState, CustomStringConvertible {
 	public private(set) var board: Board
 	public private(set) var currentRole: Role = .white
 	public private(set) var moveCount = 0
-	public var description: String { return "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
+	public var playersDescription: String { return "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
 	
 	public var possibleMoves: Set<Move> {
 		let pieceTypeBoard = board.model.pieceTypes
