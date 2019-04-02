@@ -228,7 +228,7 @@
 			"\tpublic let pieceType: ChessPieceType = .$2",
 			"\tpublic let notationLetters: [Character] = [$3]",
 			"\t",
-			"\tpublic func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>] {",
+			"\tpublic func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {",
 			"\t\t$0",
 			"\t}",
 			"}",

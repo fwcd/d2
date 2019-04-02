@@ -6,7 +6,7 @@ public struct Pawn: ChessPiece {
 	
 	// TODO: En passant and promotion
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [Vec2<Int>] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
 		let captureMoves: [Vec2<Int>] = [position + Vec2(x: -1, y: 1), position + Vec2(x: 1, y: 1)]
 		var forwardMoves: [Vec2<Int>] = [position + Vec2(y: 1)]
 		
@@ -14,7 +14,24 @@ public struct Pawn: ChessPiece {
 			forwardMoves.append(position + Vec2(y: 2))
 		}
 		
-		return forwardMoves.filter { board.piece(at: $0) == nil }
-			+ captureMoves.filter { board.piece(at: $0) != nil }
+		return forwardMoves.filter { board.piece(at: $0) == nil }.map { ChessMove(
+			pieceType: pieceType,
+			color: role,
+			originX: position.x,
+			originY: position.y,
+			isCapture: false,
+			destinationX: $0.x,
+			destinationY: $0.y,
+			isEnPassant: false
+		) } + captureMoves.filter { board.piece(at: $0) != nil }.map { ChessMove(
+			pieceType: pieceType,
+			color: role,
+			originX: position.x,
+			originY: position.y,
+			isCapture: true,
+			destinationX: $0.x,
+			destinationY: $0.y,
+			isEnPassant: false
+		) }
 	}
 }

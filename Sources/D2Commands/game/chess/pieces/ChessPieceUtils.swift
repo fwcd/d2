@@ -26,17 +26,35 @@ func neighbors(of position: Vec2<Int>) -> [Vec2<Int>] {
 		.filter { $0.x != 0 || $0.y != 0 }
 }
 
-func moves(into direction: Vec2<Int>, from position: Vec2<Int>, board: [[ColoredPieceType?]]) -> [Vec2<Int>] {
-	var moves = [Vec2<Int>]()
+func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: ChessPieceType, color: ChessRole, board: [[ColoredPieceType?]]) -> [ChessMove] {
+	var moves = [ChessMove]()
 	var current = position + direction
 	
 	while board.isInBounds(current) && board.piece(at: current) == nil {
-		moves.append(current)
+		moves.append(ChessMove(
+			pieceType: pieceType,
+			color: color,
+			originX: position.x,
+			originY: position.y,
+			isCapture: false,
+			destinationX: current.x,
+			destinationY: current.y,
+			isEnPassant: false
+		))
 		current = current + direction
 	}
 	
 	if board.piece(at: current) != nil {
-		moves.append(current)
+		moves.append(ChessMove(
+			pieceType: pieceType,
+			color: color,
+			originX: position.x,
+			originY: position.y,
+			isCapture: true,
+			destinationX: current.x,
+			destinationY: current.y,
+			isEnPassant: false
+		))
 	}
 	
 	return moves
