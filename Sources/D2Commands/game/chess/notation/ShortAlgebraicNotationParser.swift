@@ -18,20 +18,20 @@ fileprivate let shortCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
 fileprivate let longCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
 
 struct ShortAlgebraicNotationParser: ChessNotationParser {
-	func parse(_ notation: String) -> ParsedChessMove? {
+	func parse(_ notation: String) -> ChessMove? {
 		if longCastlingRegex.matchCount(in: notation) > 0 {
-			return ParsedChessMove(castlingType: .long)
+			return ChessMove(castlingType: .long)
 		} else if shortCastlingRegex.matchCount(in: notation) > 0 {
-			return ParsedChessMove(castlingType: .short)
+			return ChessMove(castlingType: .short)
 		} else if let parsed = notationRegex.firstGroups(in: notation) {
-			return ParsedChessMove(
-				piece: parsed[1].nilIfEmpty.flatMap { pieceOf(letter: Character($0)) },
+			return ChessMove(
+				pieceType: parsed[1].nilIfEmpty.flatMap { pieceOf(letter: Character($0))?.pieceType },
 				originX: parsed[2].nilIfEmpty.flatMap { xOf(file: Character($0)) },
 				originY: parsed[3].nilIfEmpty.map { yOf(rank: Int($0)!) },
 				isCapture: !parsed[4].isEmpty,
 				destinationX: parsed[5].nilIfEmpty.flatMap { xOf(file: Character($0)) },
 				destinationY: parsed[6].nilIfEmpty.map { yOf(rank: Int($0)!) },
-				promotionPiece: parsed[7].nilIfEmpty.flatMap { pieceOf(letter: Character($0)) },
+				promotionPieceType: parsed[7].nilIfEmpty.flatMap { pieceOf(letter: Character($0))?.pieceType },
 				checkType: parseRaw(checkType: parsed[8]),
 				isEnPassant: !parsed[9].isEmpty
 			)

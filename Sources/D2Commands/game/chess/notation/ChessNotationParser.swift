@@ -1,3 +1,3 @@
 protocol ChessNotationParser {
-	func parse(_ notation: String) -> ParsedChessMove?
+	func parse(_ notation: String) -> ChessMove?
 }

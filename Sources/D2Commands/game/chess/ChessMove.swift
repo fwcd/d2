@@ -1,36 +1,36 @@
 import D2Utils
 
-struct ParsedChessMove {
-	let piece: ChessPiece?
+struct ChessMove: Hashable {
+	let pieceType: ChessPieceType?
 	let originX: Int?
 	let originY: Int?
 	let isCapture: Bool
 	let destinationX: Int?
 	let destinationY: Int?
-	let promotionPiece: ChessPiece?
+	let promotionPieceType: ChessPieceType?
 	let checkType: CheckType?
 	let isEnPassant: Bool
 	let castlingType: CastlingType?
 	
 	init(
-		piece: ChessPiece? = nil,
+		pieceType: ChessPieceType? = nil,
 		originX: Int? = nil,
 		originY: Int? = nil,
 		isCapture: Bool = false,
 		destinationX: Int? = nil,
 		destinationY: Int? = nil,
-		promotionPiece: ChessPiece? = nil,
+		promotionPieceType: ChessPieceType? = nil,
 		checkType: CheckType? = nil,
 		isEnPassant: Bool = false,
 		castlingType: CastlingType? = nil
 	) {
-		self.piece = piece
+		self.pieceType = pieceType
 		self.originX = originX
 		self.originY = originY
 		self.isCapture = isCapture
 		self.destinationX = destinationX
 		self.destinationY = destinationY
-		self.promotionPiece = promotionPiece
+		self.promotionPieceType = promotionPieceType
 		self.checkType = checkType
 		self.isEnPassant = isEnPassant
 		self.castlingType = castlingType
