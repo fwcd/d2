@@ -28,20 +28,23 @@ public struct ChessState: GameState {
 		self.init(firstPlayer: whitePlayer, secondPlayer: blackPlayer, board: Board())
 	}
 	
-	private func locateKing(of role: ChessRole) -> Vec2<Int>? {
+	private func locateKing(of role: Role) -> Vec2<Int>? {
 		return board.model.positions.first { board.model[$0]?.piece.pieceType == .king }
 	}
 	
-	private func canMove(_ role: ChessRole) -> Bool {
+	private func canMove(_ role: Role) -> Bool {
 		return !findPossibleMoves(for: role).isEmpty
 	}
 	
-	private func isCheckmate(_ role: ChessRole) -> Bool {
+	private func isCheckmate(_ role: Role) -> Bool {
 		return isInCheck(role) && !canMove(role)
 	}
 	
-	private func isInCheck(_ role: ChessRole) -> Bool {
-		guard let king = locateKing(of: role) else { fatalError("Can not test if \(role) is in check without a king") }
+	private func isInCheck(_ role: Role) -> Bool {
+		guard let king = locateKing(of: role) else {
+			print("Could not test if \(role) is in check without a king")
+			return false
+		}
 		let opponent = role.opponent
 		
 		return board.model.positions
@@ -49,16 +52,29 @@ public struct ChessState: GameState {
 				let piece = board.model[$0]
 				return (piece?.color == opponent) ? $0 : nil
 			}
-			.contains { pos in findPossibleMoves(at: pos).contains { $0.destination == king } }
+			.contains { pos in findPossibleMoves(at: pos, testForChecks: false).contains { $0.destination == king } }
 	}
 	
-	private func findPossibleMoves(for role: ChessRole) -> Set<Move> {
+	private func findPossibleMoves(for role: Role) -> Set<Move> {
 		return Set(board.model.positions
 			.filter { board.model[$0]?.color == role }
 			.flatMap { findPossibleMoves(at: $0) })
 	}
 	
-	private func findPossibleMoves(at position: Vec2<Int>) -> Set<Move> {
+	/** Tests whether the given move leads to situation in which the given role is in check. */
+	private func causesKingInCheck(_ move: Move, for role: Role) -> Bool {
+		var stateAfterMove = self
+		do {
+			try stateAfterMove.performDirectly(move: move)
+		} catch {
+			print("Could not spawn child state while testing whether a move causes a check: \(error)")
+			return false
+		}
+		
+		return stateAfterMove.isInCheck(role)
+	}
+	
+	private func findPossibleMoves(at position: Vec2<Int>, testForChecks: Bool = true) -> Set<Move> {
 		guard let piece = board.model[position] else { return [] }
 		let pieceTypeBoard = board.model.pieceTypes
 		let unfilteredMoves: [Move] = piece.piece.possibleMoves(from: position, board: pieceTypeBoard, role: currentRole, moved: piece.moved)
@@ -82,14 +98,23 @@ public struct ChessState: GameState {
 					return move
 				}
 			}
+			.filter {
+				if testForChecks {
+					return !causesKingInCheck($0, for: currentRole)
+				} else {
+					return true
+				}
+			}
 		
 		return Set(moves)
 	}
 	
 	public mutating func perform(move unresolvedMove: Move) throws {
-		let resolvedMove = try unambiguouslyResolve(move: unresolvedMove)
-		
-		try board.model.perform(move: resolvedMove)
+		try performDirectly(move: try unambiguouslyResolve(move: unresolvedMove))
+	}
+	
+	private mutating func performDirectly(move: Move) throws {
+		try board.model.perform(move: move)
 		currentRole = currentRole.opponent
 		moveCount += 1
 	}
