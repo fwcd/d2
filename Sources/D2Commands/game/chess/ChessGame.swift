@@ -6,8 +6,8 @@ public struct ChessGame: Game {
 		"move": { state, args in ActionResult(
 			nextState: try state.childState(after: try state.unambiguouslyResolve(move: try ChessGame.parse(move: args)))
 		) },
-		"possibleMoves": { state, _ in ActionResult(nextState: state, additionalOutput: "`\(state.possibleMoves)`") },
-		"cancel": { state, _ in ActionResult(nextState: state, cancelsMatch: true) }
+		"possibleMoves": { state, _ in ActionResult(text: "`\(state.possibleMoves)`") },
+		"cancel": { state, _ in ActionResult(cancelsMatch: true) }
 	]
 	
 	public init() {}

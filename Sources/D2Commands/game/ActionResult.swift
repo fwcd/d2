@@ -1,11 +1,13 @@
 public struct ActionResult<State: GameState> {
-	public let nextState: State
-	public let additionalOutput: String?
+	public let nextState: State?
+	public let text: String?
 	public let cancelsMatch: Bool
+	public let onlyCurrentPlayer: Bool
 	
-	public init(nextState: State, additionalOutput: String? = nil, cancelsMatch: Bool = false) {
+	public init(nextState: State? = nil, text: String? = nil, cancelsMatch: Bool = false, onlyCurrentPlayer: Bool = true) {
 		self.nextState = nextState
-		self.additionalOutput = additionalOutput
+		self.text = text
 		self.cancelsMatch = cancelsMatch
+		self.onlyCurrentPlayer = onlyCurrentPlayer
 	}
 }

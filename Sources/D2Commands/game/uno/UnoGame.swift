@@ -6,10 +6,10 @@ public struct UnoGame: Game {
 	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
 		"move": { state, args in
 			let next = try state.childState(after: try UnoGame.parse(move: args))
-			let output = next.board.topColorMatchesCard ? nil : "The top color is now \(next.board.topColor?.discordStringEncoded ?? "?")"
-			return ActionResult(nextState: next, additionalOutput: output)
+			let text = next.board.topColorMatchesCard ? nil : "The top color is now \(next.board.topColor?.discordStringEncoded ?? "?")"
+			return ActionResult(nextState: next, text: text)
 		},
-		"cancel": { state, _ in ActionResult(nextState: state, cancelsMatch: true) }
+		"cancel": { state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) }
 	]
 	
 	public init() {}

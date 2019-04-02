@@ -4,7 +4,7 @@ public struct TicTacToeGame: Game {
 	public let name: String = "tic tac toe"
 	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
 		"move": { state, args in ActionResult(nextState: try state.childState(after: try TicTacToeGame.parse(move: args))) },
-		"cancel": { state, _ in ActionResult(nextState: state, cancelsMatch: true) }
+		"cancel": { state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) }
 	]
 	
 	public init() {}
