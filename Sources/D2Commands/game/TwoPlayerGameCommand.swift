@@ -61,7 +61,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			output.append(state.board.discordMessageEncoded)
 		}
 		
-		output.append("Playing new match: \(state.playersDescription)\nAvailable game actions: `\(game.actions.keys)`\nType `[action] [...]` to begin!")
+		output.append("Playing new match: \(state.playersDescription)\nAvailable game actions: `\(game.actions.keys)`\nAvailable default actions: `\(defaultActions.keys)`\nType `[action] [...]` to begin!")
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
@@ -93,7 +93,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			
 			if actionResult.cancelsMatch {
 				currentState = nil
-				output.append("Cancelled match: \(state)")
+				output.append("Cancelled match: \(state.playersDescription)")
 				return .cancelSubscription
 			}
 			
