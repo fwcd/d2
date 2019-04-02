@@ -2,7 +2,7 @@ import D2Utils
 
 public struct Queen: ChessPiece {
 	public let pieceType: ChessPieceType = .queen
-	public let notationLetters: [Character] = ["Q"]
+	public let notationLetters: [Character] = ["Q", "D"]
 	public let blackResourcePng: String = "Resources/chess/blackQueen.png"
 	public let whiteResourcePng: String = "Resources/chess/whiteQueen.png"
 	
