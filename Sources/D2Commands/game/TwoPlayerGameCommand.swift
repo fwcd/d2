@@ -11,10 +11,14 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
-	private let game: G
-	public var description: String { return "Plays \(game.name) against someone" }
 	
+	private let game: G
 	private var currentState: G.State? = nil
+	private let defaultActions: [String: (G.State, String) throws -> ActionResult<G.State>] = [
+		"cancel": { state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) }
+	]
+	
+	public var description: String { return "Plays \(game.name) against someone" }
 	
 	public init() {
 		game = G.init()
@@ -75,7 +79,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	@discardableResult
 	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
-		guard let action = game.actions[actionKey] else { return .continueSubscription }
+		guard let action = game.actions[actionKey] ?? defaultActions[actionKey] else { return .continueSubscription }
 		
 		do {
 			let actionResult = try action(state, args)
