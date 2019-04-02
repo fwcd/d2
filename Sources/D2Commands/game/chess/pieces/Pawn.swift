@@ -7,11 +7,12 @@ public struct Pawn: ChessPiece {
 	// TODO: En passant and promotion
 	
 	public func possibleMoves(from position: Vec2<Int>, board: [[ColoredPieceType?]], role: ChessRole, firstMove: Bool) -> [ChessMove] {
-		let captureMoves: [Vec2<Int>] = [position + Vec2(x: -1, y: 1), position + Vec2(x: 1, y: 1)]
-		var forwardMoves: [Vec2<Int>] = [position + Vec2(y: 1)]
+		let direction: Int = (role == .black) ? 1 : -1
+		let captureMoves: [Vec2<Int>] = [position + Vec2(x: -1, y: direction), position + Vec2(x: 1, y: direction)]
+		var forwardMoves: [Vec2<Int>] = [position + Vec2(y: direction)]
 		
 		if firstMove {
-			forwardMoves.append(position + Vec2(y: 2))
+			forwardMoves.append(position + Vec2(y: 2 * direction))
 		}
 		
 		return forwardMoves.filter { board.piece(at: $0) == nil }.map { ChessMove(

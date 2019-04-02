@@ -22,8 +22,9 @@ public struct ChessState: GameState, CustomStringConvertible {
 			.map { ($0, board[$0]) }
 			.filter { $0.1 != nil }
 			.map { ($0.0, $0.1!) }
-		let unfilteredMoves: [Move] = currentPieces
 			.filter { $0.1.color == currentRole }
+		
+		let unfilteredMoves: [Move] = currentPieces
 			.flatMap { $0.1.piece.possibleMoves(from: $0.0, board: pieceTypeBoard, role: currentRole, firstMove: firstMove) }
 		
 		for move in unfilteredMoves {

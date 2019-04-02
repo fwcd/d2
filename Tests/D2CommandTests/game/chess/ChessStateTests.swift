@@ -12,6 +12,7 @@ final class ChessStateTests: XCTestCase {
 		
 		XCTAssert(moves.allSatisfy { $0.color == .white }, "Initial moves should all be white")
 		XCTAssert(moves.allSatisfy { $0.isCapture == false }, "Initial moves should not contain captures (or unspecified 'isCapture' fields)")
+		print(moves)
 		XCTAssert(moves.contains(ChessMove(
 			pieceType: .pawn,
 			color: .white,
