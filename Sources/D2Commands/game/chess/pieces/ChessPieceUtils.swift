@@ -50,7 +50,6 @@ func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: Ch
 			color: color,
 			originX: position.x,
 			originY: position.y,
-			isCapture: true,
 			destinationX: current.x,
 			destinationY: current.y,
 			isEnPassant: false

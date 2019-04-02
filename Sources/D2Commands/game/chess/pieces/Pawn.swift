@@ -23,7 +23,7 @@ public struct Pawn: ChessPiece {
 			destinationX: $0.x,
 			destinationY: $0.y,
 			isEnPassant: false
-		) } + captureMoves.filter { board.piece(at: $0) != nil }.map { ChessMove(
+		) } + captureMoves.filter { board.piece(at: $0)?.color == role.opponent }.map { ChessMove(
 			pieceType: pieceType,
 			color: role,
 			originX: position.x,
