@@ -5,7 +5,7 @@ public struct UnoGame: Game {
 	public let renderFirstBoard: Bool = false
 	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
 		"move": { state, args in
-			let next = try state.childState(after: try State.Move.init(fromString: args))
+			let next = try state.childState(after: try UnoGame.parse(move: args))
 			let output = next.board.topColorMatchesCard ? nil : "The top color is now \(next.board.topColor?.discordStringEncoded ?? "?")"
 			return ActionResult(nextState: next, additionalOutput: output)
 		},
@@ -13,4 +13,8 @@ public struct UnoGame: Game {
 	]
 	
 	public init() {}
+	
+	public static func parse(move rawMove: String) throws -> State.Move {
+		return try State.Move(fromString: rawMove)
+	}
 }

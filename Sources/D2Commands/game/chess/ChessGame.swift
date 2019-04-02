@@ -3,9 +3,17 @@ public struct ChessGame: Game {
 	
 	public let name: String = "chess"
 	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
-		"move": { state, args in ActionResult(nextState: try state.childState(after: try State.Move.init(fromString: args))) },
+		"move": { state, args in ActionResult(nextState: try state.childState(after: try ChessGame.parse(move: args))) },
 		"cancel": { state, _ in ActionResult(nextState: state, cancelsMatch: true) }
 	]
 	
 	public init() {}
+	
+	public static func parse(move rawMove: String) throws -> State.Move {
+		if let move = ShortAlgebraicNotationParser().parse(rawMove) {
+			return move
+		} else {
+			throw GameError.invalidMove("`\(rawMove)` is not a valid chess move. Try using short algebraic notation.")
+		}
+	}
 }

@@ -1,16 +1,16 @@
 import D2Utils
 
-struct ChessMove: Hashable {
-	let pieceType: ChessPieceType?
-	let originX: Int?
-	let originY: Int?
-	let isCapture: Bool
-	let destinationX: Int?
-	let destinationY: Int?
-	let promotionPieceType: ChessPieceType?
-	let checkType: CheckType?
-	let isEnPassant: Bool
-	let castlingType: CastlingType?
+public struct ChessMove: Hashable {
+	public let pieceType: ChessPieceType?
+	public let originX: Int?
+	public let originY: Int?
+	public let isCapture: Bool
+	public let destinationX: Int?
+	public let destinationY: Int?
+	public let promotionPieceType: ChessPieceType?
+	public let checkType: CheckType?
+	public let isEnPassant: Bool
+	public let castlingType: CastlingType?
 	
 	init(
 		pieceType: ChessPieceType? = nil,

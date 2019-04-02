@@ -14,7 +14,7 @@ public protocol GameState {
 	/** A board contains the pieces/cards that are visible to all players. */
 	associatedtype Board: DiscordEncodable
 	/** A move encapsulates the transition to another game state. */
-	associatedtype Move: GameMove & Hashable
+	associatedtype Move: Hashable
 	
 	var board: Board { get }
 	var currentRole: Role { get }

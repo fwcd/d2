@@ -2,7 +2,7 @@ import D2Utils
 
 fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 
-public struct TicTacToeMove: GameMove, Hashable {
+public struct TicTacToeMove: Hashable {
 	let row: Int
 	let column: Int
 	

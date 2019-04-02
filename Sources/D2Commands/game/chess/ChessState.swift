@@ -4,7 +4,7 @@ import D2Permissions
 public struct ChessState: GameState, CustomStringConvertible {
 	public typealias Role = ChessRole
 	public typealias Board = ChessBoard
-	public typealias Move = NotationChessMove
+	public typealias Move = ChessMove
 	
 	private let whitePlayer: GamePlayer
 	private let blackPlayer: GamePlayer
