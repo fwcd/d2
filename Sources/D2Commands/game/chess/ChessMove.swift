@@ -10,7 +10,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 	public var destinationY: Int?
 	public var promotionPieceType: ChessPieceType?
 	public var checkType: CheckType?
-	public var isEnPassant: Bool?
+	public var isEnPassant: Bool
 	public var castlingType: CastlingType?
 	
 	// Contains additional moves such as the rook move after castling
@@ -29,7 +29,6 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			&& destinationX != nil
 			&& destinationY != nil
 			&& promotionPieceType != nil
-			&& isEnPassant != nil
 	}
 	
 	public var description: String {
@@ -40,7 +39,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			.append(describePosition(x: destinationX, y: destinationY), withSeparator: " ")
 			.append(promotionPieceType.map { "=\($0.rawValue) " }, withSeparator: " ")
 			.append(checkType?.rawValue, withSeparator: " ")
-			.append(isEnPassant.map { $0 ? "e.p." : "" }, withSeparator: " ")
+			.append(isEnPassant ? "e.p." : "", withSeparator: " ")
 			.append(castlingType.map { "castling \($0.rawValue) " }, withSeparator: " ")
 			.trimmedValue
 	}
@@ -55,7 +54,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 		destinationY: Int? = nil,
 		promotionPieceType: ChessPieceType? = nil,
 		checkType: CheckType? = nil,
-		isEnPassant: Bool? = nil,
+		isEnPassant: Bool = false,
 		castlingType: CastlingType? = nil,
 		associatedMoves: [ChessMove] = []
 	) {
@@ -88,7 +87,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			&& (destinationY == nil || move.destinationY == nil || destinationY == move.destinationY)
 			&& (promotionPieceType == nil || move.promotionPieceType == nil || promotionPieceType == move.promotionPieceType)
 			&& (checkType == nil || move.checkType == nil || checkType == move.checkType)
-			&& (isEnPassant == nil || move.isEnPassant == nil || isEnPassant == move.isEnPassant)
+			&& (isEnPassant == move.isEnPassant)
 			&& (castlingType == nil || move.castlingType == nil || castlingType == move.castlingType)
 			&& (associatedMoves == move.associatedMoves)
 	}
