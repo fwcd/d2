@@ -22,9 +22,28 @@ public struct ChessState: GameState, CustomStringConvertible {
 			.map { ($0, board[$0]) }
 			.filter { $0.1 != nil }
 			.map { ($0.0, $0.1!) }
-		let moves = currentPieces
+		let unfilteredMoves: [Move] = currentPieces
 			.filter { $0.1.color == currentRole }
 			.flatMap { $0.1.piece.possibleMoves(from: $0.0, board: pieceTypeBoard, role: currentRole, firstMove: firstMove) }
+		
+		for move in unfilteredMoves {
+			guard move.pieceType != nil else { fatalError("ChessPiece returned move without 'pieceType' (invalid according to the contract)") }
+			guard move.color != nil else { fatalError("ChessPiece returned move without 'color' (invalid according to the contract)") }
+			guard move.origin != nil else { fatalError("ChessPiece returned move without 'origin' (invalid according to the contract)") }
+			guard move.destination != nil else { fatalError("ChessPiece returned move without 'destination' (invalid according to the contract)") }
+		}
+		
+		let moves: [Move] = unfilteredMoves
+			.compactMap {
+				let destinationPiece = board[$0.destination!]
+				if destinationPiece?.color == currentRole {
+					return nil
+				} else {
+					var move = $0
+					move.isCapture = destinationPiece?.color == currentRole.opponent
+					return move
+				}
+			}
 		
 		return Set(moves)
 	}

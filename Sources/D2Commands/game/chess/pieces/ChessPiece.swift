@@ -14,6 +14,9 @@ public protocol ChessPiece {
 	/**
 	 * Fetches the possible moves of this piece.
 	 *
+	 * Each move is *required* to contain at least pieceType, color,
+	 * originX, originY, destinationX and destinationY.
+	 *
 	 * The implementor neither has to check if all moves are
 	 * in the bounds of the board, nor whether
 	 * the given move would result in a check. He is not

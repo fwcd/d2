@@ -1,21 +1,24 @@
 import D2Utils
 
 public struct ChessMove: Hashable {
-	public let pieceType: ChessPieceType?
-	public let color: ChessRole?
-	public let originX: Int?
-	public let originY: Int?
-	public let isCapture: Bool?
-	public let destinationX: Int?
-	public let destinationY: Int?
-	public let promotionPieceType: ChessPieceType?
-	public let checkType: CheckType?
-	public let isEnPassant: Bool?
-	public let castlingType: CastlingType?
+	public var pieceType: ChessPieceType?
+	public var color: ChessRole?
+	public var originX: Int?
+	public var originY: Int?
+	public var isCapture: Bool?
+	public var destinationX: Int?
+	public var destinationY: Int?
+	public var promotionPieceType: ChessPieceType?
+	public var checkType: CheckType?
+	public var isEnPassant: Bool?
+	public var castlingType: CastlingType?
 	
 	// Contains additional moves such as the rook move after castling
 	// that should be performed immediately after this move.
-	public let associatedMoves: [ChessMove]?
+	public var associatedMoves: [ChessMove]?
+	
+	public var origin: Vec2<Int>? { return originX.flatMap { x in originY.map { y in Vec2(x: x, y: y) } } }
+	public var destination: Vec2<Int>? { return destinationX.flatMap { x in destinationY.map { y in Vec2(x: x, y: y) } } }
 	
 	public var isFullyDefined: Bool {
 		return pieceType != nil
