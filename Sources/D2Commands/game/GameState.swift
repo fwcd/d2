@@ -30,14 +30,18 @@ public protocol GameState {
 	
 	func playerOf(role: Role) -> GamePlayer?
 	
+	func isPossible(move: Move) -> Bool
+	
 	mutating func perform(move: Move) throws
 }
 
 extension GameState {
 	public var hands: [Role: Hand] { return [:] }
 	
+	public func isPossible(move: Move) -> Bool { return possibleMoves.contains(move) }
+	
 	public func childState(after move: Move) throws -> Self {
-		if possibleMoves.contains(move) {
+		if isPossible(move: move) {
 			var next = self
 			try next.perform(move: move)
 			return next
