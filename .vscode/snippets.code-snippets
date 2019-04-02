@@ -149,7 +149,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public enum $1Role: CaseIterable, DiscordStringEncodable {",
+			"public enum $1Role: Hashable, CaseIterable, DiscordStringEncodable {",
 			"\tcase $2",
 			"\tcase $3",
 			"\t",
