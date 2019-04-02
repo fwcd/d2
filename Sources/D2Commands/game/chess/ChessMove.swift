@@ -58,7 +58,7 @@ public struct ChessMove: Hashable {
 		self.associatedMoves = associatedMoves
 	}
 	
-	func matches(move: ChessMove) -> Bool {
+	func matches(_ move: ChessMove) -> Bool {
 		return (pieceType == nil || move.pieceType == nil || pieceType == move.pieceType)
 			&& (color == nil || move.color == nil || color == move.color)
 			&& (originX == nil || move.originX == nil || originX == move.originX)

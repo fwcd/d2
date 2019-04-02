@@ -24,8 +24,18 @@ public struct ChessState: GameState, CustomStringConvertible {
 		self.blackPlayer = blackPlayer
 	}
 	
-	public mutating func perform(move: Move) throws {
-		// TODO
+	public mutating func perform(move unresolvedMove: Move) throws {
+		let resolvedMoves = resolve(move: unresolvedMove)
+		guard resolvedMoves.count != 0 else { throw ChessError.invalidMove("Move is not allowed", unresolvedMove) }
+		guard resolvedMoves.count == 1 else { throw ChessError.ambiguousMove("Move is ambiguous", unresolvedMove) }
+		let resolvedMove = resolvedMoves.first!
+		
+		try board.perform(move: resolvedMove)
+	}
+	
+	private func resolve(move: Move) -> [Move] {
+		return possibleMoves
+			.filter { $0.matches(move) }
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {
