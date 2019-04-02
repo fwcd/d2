@@ -64,10 +64,7 @@ public struct ChessState: GameState {
 	}
 	
 	public mutating func perform(move unresolvedMove: Move) throws {
-		let resolvedMoves = resolve(move: unresolvedMove)
-		guard resolvedMoves.count != 0 else { throw GameError.invalidMove("Move is not allowed: `\(unresolvedMove)`") }
-		guard resolvedMoves.count == 1 else { throw GameError.ambiguousMove("Move is ambiguous: `\(unresolvedMove)`") }
-		let resolvedMove = resolvedMoves.first!
+		let resolvedMove = try unambiguouslyResolve(move: unresolvedMove)
 		
 		try board.model.perform(move: resolvedMove)
 		currentRole = currentRole.opponent
@@ -79,9 +76,11 @@ public struct ChessState: GameState {
 			.filter { $0.matches(move) }
 	}
 	
-	func unambiguouslyResolve(move: Move) throws -> Move {
-		guard let resolved = resolve(move: move).first else { throw GameError.ambiguousMove("Move can not be unambiguously resolved: `\(move)`") }
-		return resolved
+	func unambiguouslyResolve(move unresolvedMove: Move) throws -> Move {
+		let resolvedMoves = resolve(move: unresolvedMove)
+		guard resolvedMoves.count != 0 else { throw GameError.invalidMove("Move is not allowed: `\(unresolvedMove)`") }
+		guard resolvedMoves.count == 1 else { throw GameError.ambiguousMove("Move is ambiguous: `\(unresolvedMove)`") }
+		return resolvedMoves.first!
 	}
 	
 	public func playerOf(role: Role) -> GamePlayer? {
