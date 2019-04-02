@@ -110,7 +110,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 					
 					var embed = DiscordEmbed()
 					embed.title = ":crown: Winner"
-					embed.description = "\(winner.discordStringEncoded)\(state.playerOf(role: winner).map { " aka. `\($0.username)`" } ?? "") won the game!"
+					embed.description = "\(describe(role: winner, in: next)) won the game!"
 					
 					output.append(embed)
 					currentState = nil
@@ -134,18 +134,22 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 				output.append(text)
 			}
 		} catch GameError.invalidMove(let msg) {
-			output.append("Invalid move by \(state.currentRole.discordStringEncoded): \(msg)")
+			output.append("Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.ambiguousMove(let msg) {
-			output.append("Ambiguous move by \(state.currentRole.discordStringEncoded): \(msg)")
+			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.incompleteMove(let msg) {
-			output.append("Ambiguous move by \(state.currentRole.discordStringEncoded): \(msg)")
+			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.moveOutOfBounds(let msg) {
-			output.append("Move by \(state.currentRole.discordStringEncoded) out of bounds: \(msg)")
+			output.append("Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
 		} catch {
 			output.append("Error while attempting move")
 			print(error)
 		}
 		
 		return .continueSubscription
+	}
+	
+	private func describe(role: G.State.Role, in state: G.State) -> String {
+		return "\(role.discordStringEncoded)\(state.playerOf(role: role).map { " aka. `\($0.username)`" } ?? "")"
 	}
 }
