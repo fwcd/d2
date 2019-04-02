@@ -14,14 +14,9 @@ public struct ChessState: GameState {
 	public private(set) var moveCount = 0
 	public var playersDescription: String { return "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
 	
-	public var possibleMoves: Set<Move> {
-		return Set(board.model.positions
-			.filter { board.model[$0]?.color == currentRole }
-			.flatMap { findPossibleMoves(at: $0) })
-	}
-	
-	public var winner: Role? { return nil /* TODO */ }
-	public var isDraw: Bool { return false /* TODO */ }
+	public var possibleMoves: Set<Move> { return findPossibleMoves(for: currentRole) }
+	public var winner: Role? { return ChessRole.allCases.first { isCheckmate($0.opponent) } }
+	public var isDraw: Bool { return !isInCheck(currentRole) && !canMove(currentRole) }
 	
 	init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer, board: Board) {
 		self.whitePlayer = whitePlayer
@@ -37,6 +32,14 @@ public struct ChessState: GameState {
 		return board.model.positions.first { board.model[$0]?.piece.pieceType == .king }
 	}
 	
+	private func canMove(_ role: ChessRole) -> Bool {
+		return !findPossibleMoves(for: role).isEmpty
+	}
+	
+	private func isCheckmate(_ role: ChessRole) -> Bool {
+		return isInCheck(role) && !canMove(role)
+	}
+	
 	private func isInCheck(_ role: ChessRole) -> Bool {
 		guard let king = locateKing(of: role) else { fatalError("Can not test if \(role) is in check without a king") }
 		let opponent = role.opponent
@@ -47,6 +50,12 @@ public struct ChessState: GameState {
 				return (piece?.color == opponent) ? $0 : nil
 			}
 			.contains { pos in findPossibleMoves(at: pos).contains { $0.destination == king } }
+	}
+	
+	private func findPossibleMoves(for role: ChessRole) -> Set<Move> {
+		return Set(board.model.positions
+			.filter { board.model[$0]?.color == role }
+			.flatMap { findPossibleMoves(at: $0) })
 	}
 	
 	private func findPossibleMoves(at position: Vec2<Int>) -> Set<Move> {
