@@ -1,6 +1,6 @@
 import D2Utils
 
-public struct ChessMove: Hashable {
+public struct ChessMove: Hashable, CustomStringConvertible {
 	public var pieceType: ChessPieceType?
 	public var color: ChessRole?
 	public var originX: Int?
@@ -33,6 +33,19 @@ public struct ChessMove: Hashable {
 			&& associatedMoves != nil
 	}
 	
+	public var description: String {
+		return StringBuilder()
+			.append(pieceType?.rawValue, withSeparator: " ")
+			.append(describePosition(x: originX, y: originY), withSeparator: " ")
+			.append(isCapture.map { $0 ? "x" : "-" }, or: " ", withSeparator: " ")
+			.append(describePosition(x: destinationX, y: destinationY), withSeparator: " ")
+			.append(promotionPieceType.map { "=\($0.rawValue) " }, withSeparator: " ")
+			.append(checkType?.rawValue, withSeparator: " ")
+			.append(isEnPassant.map { _ in "e.p. " }, withSeparator: " ")
+			.append(castlingType.map { "castling \($0.rawValue) " }, withSeparator: " ")
+			.trimmedValue
+	}
+	
 	public init(
 		pieceType: ChessPieceType? = nil,
 		color: ChessRole? = nil,
@@ -59,6 +72,11 @@ public struct ChessMove: Hashable {
 		self.isEnPassant = isEnPassant
 		self.castlingType = castlingType
 		self.associatedMoves = associatedMoves
+	}
+	
+	private func describePosition(x optionalX: Int?, y optionalY: Int?) -> String {
+		return (optionalX.flatMap { fileOf(x: $0).map { String($0) } } ?? "")
+			+ (optionalY.map { String(rankOf(y: $0)) } ?? "")
 	}
 	
 	func matches(_ move: ChessMove) -> Bool {

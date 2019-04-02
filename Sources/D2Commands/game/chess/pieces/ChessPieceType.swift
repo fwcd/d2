@@ -1,4 +1,4 @@
-public enum ChessPieceType: CaseIterable {
+public enum ChessPieceType: String, CaseIterable {
 	case pawn
 	case knight
 	case bishop
