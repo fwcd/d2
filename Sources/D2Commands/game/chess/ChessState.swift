@@ -16,7 +16,7 @@ public struct ChessState: GameState, CustomStringConvertible {
 	
 	public var possibleMoves: Set<Move> {
 		let pieceTypeBoard = board.pieceTypes
-		let firstMove = moveCount == 0
+		let firstMove = moveCount < 2
 		let boardPositions = (0..<board.ranks).flatMap { y in (0..<board.files).map { Vec2(x: $0, y: y) } }
 		let currentPieces: [(Vec2<Int>, ColoredPiece)] = boardPositions
 			.map { ($0, board[$0]) }
@@ -70,6 +70,7 @@ public struct ChessState: GameState, CustomStringConvertible {
 		let resolvedMove = resolvedMoves.first!
 		
 		try board.perform(move: resolvedMove)
+		currentRole = currentRole.opponent
 		moveCount += 1
 	}
 	
