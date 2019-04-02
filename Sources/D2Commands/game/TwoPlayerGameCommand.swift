@@ -135,6 +135,12 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			}
 		} catch GameError.invalidMove(let msg) {
 			output.append("Invalid move by \(state.currentRole.discordStringEncoded): \(msg)")
+		} catch GameError.ambiguousMove(let msg) {
+			output.append("Ambiguous move by \(state.currentRole.discordStringEncoded): \(msg)")
+		} catch GameError.incompleteMove(let msg) {
+			output.append("Ambiguous move by \(state.currentRole.discordStringEncoded): \(msg)")
+		} catch GameError.moveOutOfBounds(let msg) {
+			output.append("Move by \(state.currentRole.discordStringEncoded) out of bounds: \(msg)")
 		} catch {
 			output.append("Error while attempting move")
 			print(error)

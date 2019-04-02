@@ -65,8 +65,8 @@ public struct ChessState: GameState {
 	
 	public mutating func perform(move unresolvedMove: Move) throws {
 		let resolvedMoves = resolve(move: unresolvedMove)
-		guard resolvedMoves.count != 0 else { throw ChessError.invalidMove("Move is not allowed", unresolvedMove) }
-		guard resolvedMoves.count == 1 else { throw ChessError.ambiguousMove("Move is ambiguous", unresolvedMove) }
+		guard resolvedMoves.count != 0 else { throw GameError.invalidMove("Move is not allowed: `\(unresolvedMove)`") }
+		guard resolvedMoves.count == 1 else { throw GameError.ambiguousMove("Move is ambiguous: `\(unresolvedMove)`") }
 		let resolvedMove = resolvedMoves.first!
 		
 		try board.model.perform(move: resolvedMove)
@@ -80,7 +80,7 @@ public struct ChessState: GameState {
 	}
 	
 	func unambiguouslyResolve(move: Move) throws -> Move {
-		guard let resolved = resolve(move: move).first else { throw ChessError.ambiguousMove("Move can not be unambiguously resolved", move) }
+		guard let resolved = resolve(move: move).first else { throw GameError.ambiguousMove("Move can not be unambiguously resolved: `\(move)`") }
 		return resolved
 	}
 	

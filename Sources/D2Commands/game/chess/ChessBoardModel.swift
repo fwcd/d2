@@ -41,15 +41,15 @@ public struct ChessBoardModel {
 	
 	/** Performs a disambiguated move. */
 	mutating func perform(move: ChessMove) throws {
-		guard let originX = move.originX else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin file", move) }
-		guard let originY = move.originY else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin rank", move) }
-		guard let destinationX = move.destinationX else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination file", move) }
-		guard let destinationY = move.destinationY else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination rank", move) }
+		guard let originX = move.originX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin file: `\(move)`") }
+		guard let originY = move.originY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin rank: `\(move)`") }
+		guard let destinationX = move.destinationX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination file: `\(move)`") }
+		guard let destinationY = move.destinationY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination rank: `\(move)`") }
 		
-		guard destinationX >= 0 && destinationX < files else { throw ChessError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds", move) }
-		guard destinationY >= 0 && destinationY < ranks else { throw ChessError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds", move) }
-		guard originX >= 0 && originX < files else { throw ChessError.moveOutOfBounds("Origin x (\(originX)) is out of bounds", move) }
-		guard originY >= 0 && originY < ranks else { throw ChessError.moveOutOfBounds("Origin y (\(originY)) is out of bounds", move) }
+		guard destinationX >= 0 && destinationX < files else { throw GameError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds: `\(move)`") }
+		guard destinationY >= 0 && destinationY < ranks else { throw GameError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds: `\(move)`") }
+		guard originX >= 0 && originX < files else { throw GameError.moveOutOfBounds("Origin x (\(originX)) is out of bounds: `\(move)`") }
+		guard originY >= 0 && originY < ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
 		
 		pieces[destinationY][destinationX] = pieces[originY][originX]
 		pieces[originY][originX] = nil
