@@ -47,7 +47,6 @@ public struct ChessBoard: DiscordImageEncodable {
 		guard let originY = move.originY else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin rank", move) }
 		guard let destinationX = move.destinationX else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination file", move) }
 		guard let destinationY = move.destinationY else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination rank", move) }
-		guard let associatedMoves = move.associatedMoves else { throw ChessError.incompleteMove("ChessBoard.perform(move:) requires the move to have specified associatedMoves", move) }
 		
 		guard destinationX >= 0 && destinationX < files else { throw ChessError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds", move) }
 		guard destinationY >= 0 && destinationY < ranks else { throw ChessError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds", move) }
@@ -57,7 +56,7 @@ public struct ChessBoard: DiscordImageEncodable {
 		pieces[destinationY][destinationX] = pieces[originY][originX]
 		pieces[originY][originX] = nil
 		
-		for associatedMove in associatedMoves {
+		for associatedMove in move.associatedMoves {
 			try perform(move: associatedMove)
 		}
 	}

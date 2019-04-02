@@ -15,7 +15,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 	
 	// Contains additional moves such as the rook move after castling
 	// that should be performed immediately after this move.
-	public var associatedMoves: [ChessMove]?
+	public var associatedMoves: [ChessMove]
 	
 	public var origin: Vec2<Int>? { return originX.flatMap { x in originY.map { y in Vec2(x: x, y: y) } } }
 	public var destination: Vec2<Int>? { return destinationX.flatMap { x in destinationY.map { y in Vec2(x: x, y: y) } } }
@@ -30,7 +30,6 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			&& destinationY != nil
 			&& promotionPieceType != nil
 			&& isEnPassant != nil
-			&& associatedMoves != nil
 	}
 	
 	public var description: String {
@@ -58,7 +57,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 		checkType: CheckType? = nil,
 		isEnPassant: Bool? = nil,
 		castlingType: CastlingType? = nil,
-		associatedMoves: [ChessMove]? = nil
+		associatedMoves: [ChessMove] = []
 	) {
 		self.pieceType = pieceType
 		self.color = color
@@ -91,6 +90,6 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			&& (checkType == nil || move.checkType == nil || checkType == move.checkType)
 			&& (isEnPassant == nil || move.isEnPassant == nil || isEnPassant == move.isEnPassant)
 			&& (castlingType == nil || move.castlingType == nil || castlingType == move.castlingType)
-			&& (associatedMoves == nil || move.associatedMoves == nil || associatedMoves == move.associatedMoves)
+			&& (associatedMoves == move.associatedMoves)
 	}
 }
