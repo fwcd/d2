@@ -33,6 +33,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 	
 	public var description: String {
 		return StringBuilder()
+			.append(color?.rawValue, withSeparator: " ")
 			.append(pieceType?.rawValue, withSeparator: " ")
 			.append(describePosition(x: originX, y: originY), withSeparator: " ")
 			.append(isCapture.map { $0 ? "x" : "-" }, or: " ", withSeparator: " ")
