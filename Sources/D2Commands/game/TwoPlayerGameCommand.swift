@@ -61,7 +61,15 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			output.append(state.board.discordMessageEncoded)
 		}
 		
-		output.append("Playing new match: \(state.playersDescription)\nAvailable game actions: `\(game.actions.keys)`\nAvailable default actions: `\(defaultActions.keys)`\nType `[action] [...]` to begin!")
+		var embed = DiscordEmbed()
+		embed.title = "New match: \(state.playersDescription)"
+		embed.fields = [
+			DiscordEmbed.Field(name: "Game actions", value: "\(game.actions.keys)", inline: true),
+			DiscordEmbed.Field(name: "General actions", value: "\(defaultActions.keys)", inline: true)
+		]
+		embed.footer = DiscordEmbed.Footer(text: "Type `[action] [...]` to begin!")
+		
+		output.append(embed)
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
