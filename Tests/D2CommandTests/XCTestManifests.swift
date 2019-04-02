@@ -6,7 +6,8 @@ public func allTests() -> [XCTestCaseEntry] {
 		testCase(EchoCommandTests.allTests),
 		testCase(TicTacToeCommandTests.allTests),
 		testCase(ChessStateTests.allTests),
-		testCase(ChessNotationParserTests.allTests)
+		testCase(ChessNotationParserTests.allTests),
+		testCase(ChessPieceUtilsTests.allTests)
 	]
 }
 #endif

@@ -21,8 +21,8 @@ func pieceOf(letter: Character) -> ChessPiece? {
 }
 
 func neighborFields() -> [Vec2<Int>] {
-	return (0..<3)
-		.flatMap { row in (0..<3).map { Vec2(x: $0, y: row) } }
+	return (-1...1)
+		.flatMap { row in (-1...1).map { Vec2(x: $0, y: row) } }
 		.filter { $0.x != 0 || $0.y != 0 }
 }
 
