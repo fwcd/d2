@@ -17,10 +17,10 @@ final class ChessStateTests: XCTestCase {
 			pieceType: .pawn,
 			color: .white,
 			originX: xOf(file: "e"),
-			originY: yOf(rank: 4),
+			originY: yOf(rank: 2),
 			isCapture: false,
 			destinationX: xOf(file: "e"),
-			destinationY: yOf(rank: 6),
+			destinationY: yOf(rank: 4),
 			isEnPassant: false
 		)), "Possible moves should contain pawn move e4-e6")
 	}
