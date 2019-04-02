@@ -72,7 +72,7 @@ public struct ChessBoard: DiscordImageEncodable {
 			for row in 0..<ranks {
 				for col in 0..<files {
 					let blackField = (col % 2 == ((row % 2 == 0) ? 0 : 1))
-					let color = blackField ? Color(rgb: 0xfaccfa) : Color(rgb: 0xffcc7a)
+					let color = blackField ? Color(rgb: 0xaf4d11) : Color(rgb: 0xfad8aa)
 					let x = (Double(col) * fieldSize) + padding
 					let y = (Double(row) * fieldSize) + padding
 					graphics.draw(Rectangle(fromX: x, y: y, width: fieldSize, height: fieldSize, color: color))
