@@ -72,7 +72,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			embed: DiscordEmbed(
 				title: "New match: \(state.playersDescription)",
 				color: game.themeColor.map { Int($0.rgb) },
-				footer: DiscordEmbed.Footer(text: "Type '[action] [...]' to begin, for example 'help'!"),
+				footer: DiscordEmbed.Footer(text: "Type 'help' to begin!"),
 				fields: [
 					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
 					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
