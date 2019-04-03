@@ -40,7 +40,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			.append(describePosition(x: originX, y: originY), withSeparator: " ")
 			.append(isCapture.map { $0 ? "x" : "-" }, or: " ", withSeparator: " ")
 			.append(describePosition(x: destinationX, y: destinationY), withSeparator: " ")
-			.append(promotionPieceType.map { "=\($0.rawValue) " }, withSeparator: " ")
+			.append(promotionPieceType.map { "promotion to \($0.rawValue) " }, withSeparator: " ")
 			.append(checkType?.rawValue, withSeparator: " ")
 			.append(isEnPassant ? "e.p." : "", withSeparator: " ")
 			.append(castlingType.map { "castling \($0.rawValue) " }, withSeparator: " ")
