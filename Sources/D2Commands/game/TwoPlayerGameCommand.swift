@@ -17,7 +17,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	private var currentState: G.State? = nil
 	private let defaultActions: [String: (G, G.State, String) throws -> ActionResult<G.State>] = [
 		"cancel": { _, state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) },
-		"help": { game, _, _ in ActionResult(text: game.helpText) }
+		"help": { game, _, _ in ActionResult(text: game.helpText, onlyCurrentPlayer: false) }
 	]
 	
 	public var description: String { return "Plays \(game.name) against someone" }
