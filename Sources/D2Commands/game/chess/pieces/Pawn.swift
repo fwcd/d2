@@ -47,7 +47,7 @@ public struct Pawn: ChessPiece {
 	}
 	
 	private func canPerformEnPassant(at destination: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole) -> Bool {
-		let captured = board.piece(at: destination + Vec2(y: moveYDirection(for: role)))
+		let captured = board.piece(at: destination + Vec2(y: moveYDirection(for: role.opponent)))
 		return captured?.pieceType == .pawn && captured?.color == role.opponent && captured?.moveCount == 1
 	}
 }
