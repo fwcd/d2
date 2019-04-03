@@ -15,35 +15,45 @@ public struct Pawn: ChessPiece {
 			forwardMoves.append(position + Vec2(y: 2 * direction))
 		}
 		
-		return forwardMoves.filter { board.piece(at: $0) == nil }.flatMap { dest -> [ChessMove] in
-			let isPromotion = isFinalRank(y: dest.y, for: role, totalRanks: board.count)
-			let promotionPieceTypes: [ChessPieceType?] = isPromotion ? ChessPieceType.allCases : [nil]
-			return promotionPieceTypes
-				.map { ChessMove(
+		return forwardMoves.filter { board.piece(at: $0) == nil }.flatMap {
+			// Create forward moves
+			movesWithPromotions(from: position, to: $0, board: board, role: role)
+		} + captureMoves.filter { canCapture($0, board: board, role: role) }.flatMap { destination -> [ChessMove] in
+			// Create capturing moves
+			let isEnPassant = canPerformEnPassant(at: destination, board: board, role: role)
+			if isEnPassant {
+				return [ChessMove(
 					pieceType: pieceType,
 					color: role,
 					originX: position.x,
 					originY: position.y,
-					isCapture: false,
-					destinationX: dest.x,
-					destinationY: dest.y,
-					promotionPieceType: $0,
-					isEnPassant: false
-				) }
-		} + captureMoves.filter { canCapture($0, board: board, role: role) }.map {
-			let isEnPassant = canPerformEnPassant(at: $0, board: board, role: role)
-			return ChessMove(
+					isCapture: true,
+					destinationX: destination.x,
+					destinationY: destination.y,
+					isEnPassant: isEnPassant,
+					associatedCaptures: isEnPassant ? [destination + Vec2(y: -direction)] : []
+				)]
+			} else {
+				return movesWithPromotions(from: position, to: destination, board: board, role: role)
+			}
+		}
+	}
+	
+	private func movesWithPromotions(from position: Vec2<Int>, to destination: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole) -> [ChessMove] {
+		let isPromotion = isFinalRank(y: destination.y, for: role, totalRanks: board.count)
+		let promotionPieceTypes: [ChessPieceType?] = isPromotion ? ChessPieceType.allCases : [nil]
+		return promotionPieceTypes
+			.map { ChessMove(
 				pieceType: pieceType,
 				color: role,
 				originX: position.x,
 				originY: position.y,
-				isCapture: true,
-				destinationX: $0.x,
-				destinationY: $0.y,
-				isEnPassant: isEnPassant,
-				associatedCaptures: isEnPassant ? [$0 + Vec2(y: -direction)] : []
-			)
-		}
+				isCapture: false,
+				destinationX: destination.x,
+				destinationY: destination.y,
+				promotionPieceType: $0,
+				isEnPassant: false
+			) }
 	}
 	
 	private func isFinalRank(y: Int, for role: ChessRole, totalRanks: Int) -> Bool {
