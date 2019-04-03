@@ -59,7 +59,7 @@ public struct CairoGraphics: Graphics {
 		}
 	}
 	
-	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation: Double) {
+	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation optionalRotation: Double?) {
 		let originalWidth = image.width
 		let originalHeight = image.height
 		
@@ -68,7 +68,7 @@ public struct CairoGraphics: Graphics {
 		let scaleFactor = Vec2(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
 		context.translate(x: position.x, y: position.y)
 		
-		if rotation != 0.0 {
+		if let rotation = optionalRotation {
 			let center = (size / 2).asDouble
 			context.translate(x: center.x, y: center.y)
 			context.rotate(rotation)

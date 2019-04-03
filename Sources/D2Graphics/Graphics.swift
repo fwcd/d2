@@ -15,7 +15,7 @@ public protocol Graphics {
 	
 	mutating func draw(_ ellipse: Ellipse<Double>)
 	
-	mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation: Double)
+	mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation: Double?)
 	
 	mutating func draw(_ text: Text)
 }
@@ -29,11 +29,11 @@ public extension Graphics {
 		draw(image, at: position, withSize: image.size)
 	}
 	
-	mutating func draw(_ image: Image, at position: Vec2<Double>, rotation: Double) {
+	mutating func draw(_ image: Image, at position: Vec2<Double>, rotation: Double?) {
 		draw(image, at: position, withSize: image.size, rotation: rotation)
 	}
 	
 	mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>) {
-		draw(image, at: position, withSize: size, rotation: 0)
+		draw(image, at: position, withSize: size, rotation: nil)
 	}
 }
