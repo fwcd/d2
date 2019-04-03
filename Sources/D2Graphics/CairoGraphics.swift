@@ -46,7 +46,17 @@ public struct CairoGraphics: Graphics {
 		}
 		
 		context.setSource(color: rect.color.asDoubleTuple)
-		context.addRectangle(x: rect.topLeft.x, y: rect.topLeft.y, width: rect.width, height: rect.height)
+		
+		if let radius = rect.cornerRadius {
+			context.newSubpath()
+			context.addArc(center: (rect.topLeft + Vec2(x: radius, y: radius)).asTuple, radius: radius, angle: (Double.pi, (3.0 / 2.0) * Double.pi))
+			context.addArc(center: (rect.topRight + Vec2(x: -radius, y: radius)).asTuple, radius: radius, angle: (-Double.pi / 2.0, 0))
+			context.addArc(center: (rect.bottomRight + Vec2(x: -radius, y: -radius)).asTuple, radius: radius, angle: (0, Double.pi / 2.0))
+			context.addArc(center: (rect.bottomLeft + Vec2(x: radius, y: -radius)).asTuple, radius: radius, angle: (Double.pi / 2.0, Double.pi))
+			context.closePath()
+		} else {
+			context.addRectangle(x: rect.topLeft.x, y: rect.topLeft.y, width: rect.width, height: rect.height)
+		}
 		
 		if rect.isFilled {
 			context.fill()
