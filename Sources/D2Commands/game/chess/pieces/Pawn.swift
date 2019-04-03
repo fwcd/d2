@@ -6,10 +6,10 @@ public struct Pawn: ChessPiece {
 	public let blackResourcePng: String = "Resources/chess/blackPawn.png"
 	public let whiteResourcePng: String = "Resources/chess/whitePawn.png"
 	
-	// TODO: En passant and promotion
+	// TODO: Promotion
 	
 	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool) -> [ChessMove] {
-		let direction: Int = (role == .black) ? 1 : -1
+		let direction: Int = moveYDirection(for: role)
 		let captureMoves: [Vec2<Int>] = [position + Vec2(x: -1, y: direction), position + Vec2(x: 1, y: direction)]
 		var forwardMoves: [Vec2<Int>] = [position + Vec2(y: direction)]
 		
@@ -26,7 +26,7 @@ public struct Pawn: ChessPiece {
 			destinationX: $0.x,
 			destinationY: $0.y,
 			isEnPassant: false
-		) } + captureMoves.filter { board.piece(at: $0)?.color == role.opponent }.map { ChessMove(
+		) } + captureMoves.filter { canCapture($0, board: board, role: role) }.map { ChessMove(
 			pieceType: pieceType,
 			color: role,
 			originX: position.x,
@@ -34,7 +34,20 @@ public struct Pawn: ChessPiece {
 			isCapture: true,
 			destinationX: $0.x,
 			destinationY: $0.y,
-			isEnPassant: false
+			isEnPassant: canPerformEnPassant(at: $0, board: board, role: role)
 		) }
+	}
+	
+	private func moveYDirection(for role: ChessRole) -> Int {
+		return (role == .black) ? 1 : -1
+	}
+	
+	private func canCapture(_ destination: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole) -> Bool {
+		return (board.piece(at: destination)?.color == role.opponent) || canPerformEnPassant(at: destination, board: board, role: role)
+	}
+	
+	private func canPerformEnPassant(at destination: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole) -> Bool {
+		let captured = board.piece(at: destination + Vec2(y: moveYDirection(for: role)))
+		return captured?.pieceType == .pawn && captured?.color == role.opponent && captured?.moveCount == 1
 	}
 }
