@@ -6,7 +6,7 @@ public struct Knight: ChessPiece {
 	public let blackResourcePng: String = "Resources/chess/blackKnight.png"
 	public let whiteResourcePng: String = "Resources/chess/whiteKnight.png"
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool) -> [ChessMove] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {
 		return [
 			Vec2(x: -2, y: -1), Vec2(x: -1, y: -2),
 			Vec2(x: 1, y: -2), Vec2(x: 2, y: -1),

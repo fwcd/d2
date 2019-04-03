@@ -93,7 +93,15 @@ public struct ChessState: GameState {
 	private func findPossibleMoves(at position: Vec2<Int>, by role: Role, testForChecks: Bool = true) -> Set<Move> {
 		guard let piece = board.model[position] else { return [] }
 		let pieceTypeBoard = board.model.pieceTypes
-		let unfilteredMoves: [Move] = piece.piece.possibleMoves(from: position, board: pieceTypeBoard, role: role, moved: piece.moved)
+		let isInCheck: Bool
+		
+		if testForChecks {
+			isInCheck = (roleInCheck == role)
+		} else {
+			isInCheck = false
+		}
+		
+		let unfilteredMoves: [Move] = piece.piece.possibleMoves(from: position, board: pieceTypeBoard, role: role, moved: piece.moved, isInCheck: isInCheck)
 		
 		for move in unfilteredMoves {
 			guard move.pieceType != nil else { fatalError("ChessPiece returned move without 'pieceType' (invalid according to the contract)") }

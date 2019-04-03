@@ -6,7 +6,7 @@ public struct King: ChessPiece {
 	public let blackResourcePng: String = "Resources/chess/blackKing.png"
 	public let whiteResourcePng: String = "Resources/chess/whiteKing.png"
 	
-	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool) -> [ChessMove] {
+	public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {
 		var moves = neighborFields()
 			.map { $0 + position }
 			.map { ChessMove(
