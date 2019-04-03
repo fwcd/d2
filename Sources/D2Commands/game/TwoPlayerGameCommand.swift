@@ -69,8 +69,8 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 		var embed = DiscordEmbed()
 		embed.title = "New match: \(state.playersDescription)"
 		embed.fields = [
-			DiscordEmbed.Field(name: "Game actions", value: "\(game.actions.keys)", inline: true),
-			DiscordEmbed.Field(name: "General actions", value: "\(defaultActions.keys)", inline: true)
+			DiscordEmbed.Field(name: "Game actions", value: game.actions.keys.joined(separator: "\n"), inline: true),
+			DiscordEmbed.Field(name: "General actions", value: defaultActions.keys.joined(separator: "\n"), inline: true)
 		]
 		embed.footer = DiscordEmbed.Footer(text: "Type `[action] [...]` to begin!")
 		
