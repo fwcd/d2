@@ -1,4 +1,4 @@
-public struct BoardPieceType {
+public struct BoardPieceType: Codable {
 	public let color: ChessRole
 	public let pieceType: ChessPieceType
 	public let moveCount: Int

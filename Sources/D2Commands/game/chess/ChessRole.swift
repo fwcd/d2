@@ -1,6 +1,6 @@
 import D2Utils
 
-public enum ChessRole: String, Hashable, CaseIterable, DiscordStringEncodable {
+public enum ChessRole: String, Hashable, CaseIterable, Codable, DiscordStringEncodable {
 	case white
 	case black
 	

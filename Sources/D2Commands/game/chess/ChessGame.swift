@@ -1,3 +1,4 @@
+import Foundation
 import D2Graphics
 
 public struct ChessGame: Game {
@@ -9,7 +10,10 @@ public struct ChessGame: Game {
 			let nextState = try $0.state.childState(after: try $0.state.unambiguouslyResolve(move: try ChessGame.parse(move: $0.args)))
 			var text: String? = nil
 			
-			if let roleInCheck = nextState.roleInCheck {
+			if $0.apiEnabled {
+				let json = String(data: try JSONEncoder().encode(nextState.board.model.pieceTypes), encoding: .utf8)
+				text = json.map { "```json\n\($0)\n```" }
+			} else if let roleInCheck = nextState.roleInCheck {
 				text = "\(roleInCheck.discordStringEncoded) is in check"
 			}
 			
@@ -17,6 +21,7 @@ public struct ChessGame: Game {
 		},
 		"possibleMoves": { ActionResult(text: "`\($0.state.possibleMoves)`") }
 	]
+	public let apiActions: Set<String> = ["move"]
 	public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
 	public let helpText = """
 		To create new chess moves, use short Algebraic Notation (see https://en.wikipedia.org/wiki/Algebraic_notation_(chess)). In many cases, this simply means using the letter of the piece you are moving followed by its destination. Consider the following examples:
