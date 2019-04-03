@@ -19,7 +19,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	func testXWin() throws {
 		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
-		command.startMatch(between: playerX, and: playerO, output: output)
+		command.startMatch(between: [playerX, playerO], output: output)
 		
 		command.perform("move", withArgs: "top left", output: output, author: playerO)
 		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameO)`")
@@ -50,7 +50,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	func testDraw() throws {
 		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
-		command.startMatch(between: playerX, and: playerO, output: output)
+		command.startMatch(between: [playerX, playerO], output: output)
 		
 		command.perform("move", withArgs: "0 0", output: output, author: playerX)
 		command.perform("move", withArgs: "1 1", output: output, author: playerO)
