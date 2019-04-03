@@ -10,18 +10,19 @@ public struct ChessGame: Game {
 			let nextState = try $0.state.childState(after: try $0.state.unambiguouslyResolve(move: try ChessGame.parse(move: $0.args)))
 			var text: String? = nil
 			
-			if $0.apiEnabled {
-				let json = String(data: try JSONEncoder().encode(nextState.board.model.pieceTypes), encoding: .utf8)
-				text = json.map { "```json\n\($0)\n```" }
-			} else if let roleInCheck = nextState.roleInCheck {
+			if let roleInCheck = nextState.roleInCheck {
 				text = "\(roleInCheck.discordStringEncoded) is in check"
 			}
 			
 			return ActionResult(nextState: nextState, text: text)
 		},
-		"possibleMoves": { ActionResult(text: "`\($0.state.possibleMoves)`") }
+		"possibleMoves": { ActionResult(text: "`\($0.state.possibleMoves)`") },
+		"json": {
+			let json = String(data: try JSONEncoder().encode($0.state.board.model.pieceTypes), encoding: .utf8)
+			return ActionResult(text: json.map { "```json\n\($0)\n```" })
+		}
 	]
-	public let apiActions: Set<String> = ["move"]
+	public let apiActions: Set<String> = ["move", "json"]
 	public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
 	public let helpText = """
 		To create new chess moves, use short Algebraic Notation (see https://en.wikipedia.org/wiki/Algebraic_notation_(chess)). In many cases, this simply means using the letter of the piece you are moving followed by its destination. Consider the following examples:
