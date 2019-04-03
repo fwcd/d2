@@ -15,7 +15,7 @@ import D2Utils
  */
 fileprivate let notationRegex = try! Regex(from: "([A-Z]?)([a-h]?)([1-8])?(x?)([a-h])([1-8])(=?[A-Z])?([\\+#]?)(?:\\s+(e.\\s*p.))?")
 fileprivate let shortCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
-fileprivate let longCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
+fileprivate let longCastlingRegex = try! Regex(from: "(?:0-0-0)|(?:O-O-O)")
 
 struct ShortAlgebraicNotationParser: ChessNotationParser {
 	func parse(_ notation: String) -> ChessMove? {
