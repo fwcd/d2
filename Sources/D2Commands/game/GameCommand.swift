@@ -112,7 +112,7 @@ public class GameCommand<G: Game>: StringCommand {
 	/** Performs a game action if present, otherwise does nothing. */
 	@discardableResult
 	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
-		guard let state = currentState else { return .continueSubscription }
+		guard let state = currentState, (author.isUser || game.apiActions.contains(actionKey)) else { return .continueSubscription }
 		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
