@@ -28,7 +28,7 @@ class CommandHandler: DiscordClientDelegate {
 	private var maxPipeLengthForUsers: Int = 3
 	
 	private(set) var registry = CommandRegistry()
-	private var subscribedCommands = [Command]()
+	private var subscribedCommands = [CommandSubscription]()
 	let permissionManager = PermissionManager()
 	
 	init(withPrefix msgPrefix: String, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
@@ -125,8 +125,11 @@ class CommandHandler: DiscordClientDelegate {
 				}
 				
 				// Add subscriptions
-				let added = pipe.map { $0.command }.filter { cmd in cmd.subscribesToNextMessages && !subscribedCommands.contains { cmd === $0 } }
-				subscribedCommands.append(contentsOf: added)
+				let added = pipe
+					.map { $0.command }
+					.filter { cmd in cmd.subscribesToNextMessages && !subscribedCommands.contains { cmd === $0.command } }
+					.map { CommandSubscription(channel: message.channelId, command: $0) }
+				subscribedCommands += added
 			}
 		}
 	}
@@ -139,10 +142,12 @@ class CommandHandler: DiscordClientDelegate {
 			message: message
 		)
 		
-		for (i, command) in subscribedCommands.enumerated().reversed() {
-			let response = command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
-			if response == .cancelSubscription {
-				subscribedCommands.remove(at: i)
+		for (i, subscription) in subscribedCommands.enumerated().reversed() {
+			if subscription.channel == message.channelId {
+				let response = subscription.command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
+				if response == .cancelSubscription {
+					subscribedCommands.remove(at: i)
+				}
 			}
 		}
 	}
