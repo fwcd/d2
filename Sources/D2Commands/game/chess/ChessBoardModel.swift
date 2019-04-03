@@ -54,7 +54,7 @@ public struct ChessBoardModel {
 		guard originY >= 0 && originY < ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
 		
 		var piece = pieces[originY][originX]
-		piece?.moved = true
+		piece?.moveCount += 1
 		
 		pieces[destinationY][destinationX] = piece
 		pieces[originY][originX] = nil
