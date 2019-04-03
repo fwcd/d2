@@ -4,9 +4,9 @@ public struct ChessGame: Game {
 	public typealias State = ChessState
 	
 	public let name: String = "chess"
-	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
-		"move": { state, args in
-			let nextState = try state.childState(after: try state.unambiguouslyResolve(move: try ChessGame.parse(move: args)))
+	public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
+		"move": {
+			let nextState = try $0.state.childState(after: try $0.state.unambiguouslyResolve(move: try ChessGame.parse(move: $0.args)))
 			var text: String? = nil
 			
 			if let roleInCheck = nextState.roleInCheck {
@@ -15,7 +15,7 @@ public struct ChessGame: Game {
 			
 			return ActionResult(nextState: nextState, text: text)
 		},
-		"possibleMoves": { state, _ in ActionResult(text: "`\(state.possibleMoves)`") }
+		"possibleMoves": { ActionResult(text: "`\($0.state.possibleMoves)`") }
 	]
 	public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
 	public let helpText = """

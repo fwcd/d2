@@ -2,8 +2,8 @@ public struct TicTacToeGame: Game {
 	public typealias State = TicTacToeState
 	
 	public let name: String = "tic-tac-toe"
-	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
-		"move": { state, args in ActionResult(nextState: try state.childState(after: try TicTacToeGame.parse(move: args))) }
+	public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
+		"move": { ActionResult(nextState: try $0.state.childState(after: try TicTacToeGame.parse(move: $0.args))) }
 	]
 	public let helpText = """
 		Tic-Tac-Toe moves can be written either as array indices with x and y in (0..<2) or in english:

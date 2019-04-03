@@ -2,6 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
+fileprivate let flagRegex = try! Regex(from: "--(\\s+)")
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
 /**
@@ -11,15 +12,18 @@ public class GameCommand<G: Game>: StringCommand {
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
+	public let userOnly = false
 	
 	private let game: G
-	private var currentState: G.State? = nil
-	private let defaultActions: [String: (G, G.State, String) throws -> ActionResult<G.State>] = [
-		"cancel": { _, state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) },
-		"help": { game, _, _ in ActionResult(text: game.helpText, onlyCurrentPlayer: false) }
+	private let defaultActions: [String: (G, ActionParameters<G.State>) throws -> ActionResult<G.State>] = [
+		"cancel": { _, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) },
+		"help": { game, _ in ActionResult(text: game.helpText, onlyCurrentPlayer: false) }
 	]
 	
 	public var description: String { return "Plays \(game.name) against someone" }
+	
+	private var currentState: G.State? = nil
+	private var apiEnabled: Bool = false
 	
 	public init() {
 		game = G.init()
@@ -36,8 +40,14 @@ public class GameCommand<G: Game>: StringCommand {
 			return
 		}
 		
+		let flags = parseFlags(from: input)
 		let players = ([context.author] + context.message.mentions).map { GamePlayer(from: $0) }
-		startMatch(between: players, output: output)
+		
+		startMatch(between: players, output: output, flags: flags)
+	}
+	
+	private func parseFlags(from input: String) -> Set<String> {
+		return Set(flagRegex.allGroups(in: input).map { $0[1] })
 	}
 	
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
@@ -54,9 +64,10 @@ public class GameCommand<G: Game>: StringCommand {
 		}
 	}
 	
-	func startMatch(between players: [GamePlayer], output: CommandOutput) {
+	func startMatch(between players: [GamePlayer], output: CommandOutput, flags: Set<String> = []) {
 		let state = G.State.init(players: players)
 		currentState = state
+		apiEnabled = flags.contains("api")
 		
 		var encodedBoard: DiscordEncoded?
 		
@@ -105,7 +116,12 @@ public class GameCommand<G: Game>: StringCommand {
 		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
-			guard let actionResult = try game.actions[actionKey]?(state, args) ?? defaultActions[actionKey]?(game, state, args) else { return .continueSubscription }
+			let params = ActionParameters(
+				args: args,
+				state: state,
+				apiEnabled: apiEnabled
+			)
+			guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return .continueSubscription }
 			
 			if actionResult.onlyCurrentPlayer {
 				guard state.rolesOf(player: author).contains(state.currentRole) else {

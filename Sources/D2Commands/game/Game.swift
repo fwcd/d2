@@ -4,7 +4,7 @@ public protocol Game {
 	associatedtype State: GameState
 	
 	/** Actions define ways of interacting with the game. */
-	var actions: [String: (State, String) throws -> ActionResult<State>] { get }
+	var actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] { get }
 	/** API actions can be invoked by other applications and not just users. */
 	var apiActions: Set<String> { get }
 	
