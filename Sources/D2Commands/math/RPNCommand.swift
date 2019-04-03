@@ -10,6 +10,7 @@ fileprivate let binaryOperators: [String: (Double, Double) -> Double] = [
 
 public class RPNCommand: StringCommand {
 	public let description = "Evaluates an expression in Reverse Polish Notation"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public init() {}

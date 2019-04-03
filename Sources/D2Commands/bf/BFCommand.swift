@@ -6,6 +6,7 @@ fileprivate let maxExecutionSeconds = 3
 
 public class BFCommand: StringCommand {
 	public let description = "Interprets BF code"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private var running = false
 	

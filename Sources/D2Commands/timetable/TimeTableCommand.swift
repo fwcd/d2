@@ -3,6 +3,7 @@ import D2Permissions
 
 public class TimeTableCommand: StringCommand {
 	public let description = "Generates a TimeTable from CAU modules"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let hidden = true
 	

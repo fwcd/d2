@@ -3,6 +3,7 @@ import D2Permissions
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
 public protocol Command: class {
+	var sourceFile: String { get }
 	var description: String { get }
 	var requiredPermissionLevel: PermissionLevel { get }
 	var hidden: Bool { get }

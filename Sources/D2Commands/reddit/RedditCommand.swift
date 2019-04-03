@@ -4,6 +4,7 @@ import Foundation
 
 public class RedditCommand: StringCommand {
 	public let description = "Fetches a post from a subreddit"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	public init() {}

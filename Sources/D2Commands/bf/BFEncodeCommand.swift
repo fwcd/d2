@@ -4,6 +4,7 @@ import Foundation
 
 public class BFEncodeCommand: StringCommand {
 	public let description = "Encodes strings to BF code"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let maxStringLength: Int
 	

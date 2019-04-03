@@ -6,6 +6,7 @@ fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+
 
 public class GrantPermissionCommand: StringCommand {
 	public let description = "Sets the permission level of one or more users"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
 	

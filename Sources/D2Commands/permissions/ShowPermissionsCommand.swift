@@ -3,6 +3,7 @@ import D2Permissions
 
 public class ShowPermissionsCommand: Command {
 	public let description = "Displays the configured permissions"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin
 	private let permissionManager: PermissionManager
 	

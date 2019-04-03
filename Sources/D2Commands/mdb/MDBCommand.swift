@@ -4,6 +4,7 @@ import D2WebAPIs
 
 public class MDBCommand: StringCommand {
 	public let description = "Queries the Computer Science module database of the CAU"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public init() {}

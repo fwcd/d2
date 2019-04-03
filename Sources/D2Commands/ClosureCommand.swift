@@ -3,6 +3,7 @@ import D2Permissions
 
 public class ClosureCommand: Command {
 	public let description: String
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel: PermissionLevel
 	private let closure: (DiscordMessage?, CommandOutput, CommandContext, String) -> Void
 	

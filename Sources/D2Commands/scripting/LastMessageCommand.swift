@@ -3,6 +3,7 @@ import D2Permissions
 
 public class LastMessageCommand: Command {
 	public let description = "Retrieves and outputs the last message"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	public init() {}

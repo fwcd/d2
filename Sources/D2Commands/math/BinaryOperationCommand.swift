@@ -4,6 +4,7 @@ import D2Permissions
 public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
 	public let name: String
 	public let description: String
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let expectedArgCount: Int = 2
 	

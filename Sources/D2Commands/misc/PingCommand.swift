@@ -3,6 +3,7 @@ import D2Permissions
 
 public class PingCommand: Command {
 	public let description = "Replies with 'Pong!'"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public init() {}

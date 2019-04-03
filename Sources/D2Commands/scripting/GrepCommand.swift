@@ -4,6 +4,7 @@ import D2Utils
 
 public class GrepCommand: ArgListCommand {
 	public let description = "Filters and prints lines that match a regular expression"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	public let expectedArgCount: Int = 2
 	

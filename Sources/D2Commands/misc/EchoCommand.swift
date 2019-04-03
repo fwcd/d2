@@ -8,6 +8,7 @@ fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 
 public class EchoCommand: Command {
 	public let description = "Prints something n times"
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
 	

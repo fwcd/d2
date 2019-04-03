@@ -9,6 +9,7 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
  * two-player game.
  */
 public class TwoPlayerGameCommand<G: Game>: StringCommand {
+	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
 	private let game: G
