@@ -8,6 +8,7 @@ public protocol Command: class {
 	var requiredPermissionLevel: PermissionLevel { get }
 	var hidden: Bool { get }
 	var subscribesToNextMessages: Bool { get }
+	var userOnly: Bool { get }
 	
 	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext)
 	
@@ -17,6 +18,7 @@ public protocol Command: class {
 extension Command {
 	public var hidden: Bool { return false }
 	public var subscribesToNextMessages: Bool { return false }
+	public var userOnly: Bool { return true }
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		return .continueSubscription

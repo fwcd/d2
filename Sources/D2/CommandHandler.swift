@@ -47,16 +47,12 @@ class CommandHandler: DiscordClientDelegate {
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
 		let msgIndex = currentIndex
-		let fromBot = message.author.bot
-		
 		currentIndex += 1
 		
-		if !fromBot {
-			if message.content.starts(with: msgPrefix) {
-				handleInvocationMessage(client: client, message: message, msgIndex: msgIndex)
-			} else if !subscribedCommands.isEmpty {
-				handleSubscriptionMessage(client: client, message: message)
-			}
+		if message.content.starts(with: msgPrefix) {
+			handleInvocationMessage(client: client, message: message, msgIndex: msgIndex)
+		} else if !subscribedCommands.isEmpty {
+			handleSubscriptionMessage(client: client, message: message)
 		}
 	}
 	
@@ -66,6 +62,7 @@ class CommandHandler: DiscordClientDelegate {
 			registry: registry,
 			message: message
 		)
+		let isBot = message.author.bot
 		
 		// Precedence: Chain < Pipe
 		let slicedMessage = message.content[msgPrefix.index(msgPrefix.startIndex, offsetBy: msgPrefix.count)...]
@@ -73,6 +70,7 @@ class CommandHandler: DiscordClientDelegate {
 		for rawPipeCommand in slicedMessage.components(separatedBy: chainSeparator) {
 			var pipe = [PipeComponent]()
 			var pipeConstructionSuccessful = true
+			var userOnly = false
 			
 			// Construct the pipe
 			for rawCommand in rawPipeCommand.components(separatedBy: pipeSeparator) {
@@ -94,16 +92,20 @@ class CommandHandler: DiscordClientDelegate {
 							pipeConstructionSuccessful = false
 							break
 						}
+						
+						userOnly |= command.userOnly
 					} else {
 						print("Did not recognize command '\(name)'")
-						message.channel?.send("Sorry, I do not know the command `\(name)`.")
+						if !isBot {
+							message.channel?.send("Sorry, I do not know the command `\(name)`.")
+						}
 						pipeConstructionSuccessful = false
 						break
 					}
 				}
 			}
 			
-			if pipeConstructionSuccessful {
+			if pipeConstructionSuccessful && !(userOnly && isBot) {
 				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
 					message.channel?.send("Your pipe is too long.")
 					return
@@ -141,9 +143,10 @@ class CommandHandler: DiscordClientDelegate {
 			registry: registry,
 			message: message
 		)
+		let isBot = message.author.bot
 		
 		for (i, subscription) in subscribedCommands.enumerated().reversed() {
-			if subscription.channel == message.channelId {
+			if (subscription.channel == message.channelId) && !(subscription.command.userOnly && isBot) {
 				let response = subscription.command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
 				if response == .cancelSubscription {
 					subscribedCommands.remove(at: i)
