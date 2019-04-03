@@ -20,7 +20,7 @@ public struct King: ChessPiece {
 				isEnPassant: false
 			) }
 		
-		if !moved {
+		if !moved && !isInCheck {
 			// Find castling moves
 			moves += RookSide.allCases
 				.compactMap { side in
