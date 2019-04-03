@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
-fileprivate let flagRegex = try! Regex(from: "--(\\s+)")
+fileprivate let flagRegex = try! Regex(from: "--(\\S+)")
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
 /**
