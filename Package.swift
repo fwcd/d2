@@ -40,7 +40,11 @@ let package = Package(
         ),
         .testTarget(
             name: "D2CommandTests",
-            dependencies: ["SwiftDiscord", "D2TestUtils", "D2Commands"]
+            dependencies: ["SwiftDiscord", "D2Utils", "D2TestUtils", "D2Commands"]
+        ),
+        .testTarget(
+            name: "D2GraphicsTests",
+            dependencies: ["SwiftDiscord", "D2TestUtils", "D2Graphics"]
         ),
         .testTarget(
             name: "D2TestUtils",

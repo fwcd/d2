@@ -3,7 +3,7 @@ import D2Utils
 fileprivate let cardRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
 fileprivate let cardWithColorRegex = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+(\\S+)")
 
-public struct UnoMove: GameMove, Hashable {
+public struct UnoMove: Hashable {
 	public let card: UnoCard?
 	public let drawsCard: Bool
 	public let nextColor: UnoColor?

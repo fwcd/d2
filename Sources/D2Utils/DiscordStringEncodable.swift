@@ -5,7 +5,7 @@ public protocol DiscordStringEncodable: DiscordEncodable {
 }
 
 extension DiscordStringEncodable {
-	public var discordMessageEncoded: DiscordMessage {
-		return DiscordMessage(content: discordStringEncoded)
+	public var discordEncoded: DiscordEncoded {
+		return DiscordEncoded(content: discordStringEncoded)
 	}
 }

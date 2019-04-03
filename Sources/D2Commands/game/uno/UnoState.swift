@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-public struct UnoState: GameState, Multiplayer, CustomStringConvertible {
+public struct UnoState: GameState, Multiplayer {
 	public typealias Role = Int
 	public typealias Board = UnoBoard
 	public typealias Move = UnoMove

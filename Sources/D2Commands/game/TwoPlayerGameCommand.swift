@@ -12,10 +12,15 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
-	private let game: G
-	public var description: String { return "Plays \(game.name) against someone" }
 	
+	private let game: G
 	private var currentState: G.State? = nil
+	private let defaultActions: [String: (G, G.State, String) throws -> ActionResult<G.State>] = [
+		"cancel": { _, state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) },
+		"help": { game, _, _ in ActionResult(text: game.helpText) }
+	]
+	
+	public var description: String { return "Plays \(game.name) against someone" }
 	
 	public init() {
 		game = G.init()
@@ -38,12 +43,12 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
 		if game.onlySendHandToCurrentRole, let player = state.playerOf(role: state.currentRole) {
 			if let hand = state.hands[state.currentRole] {
-				output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+				output.append(hand.discordEncoded.asMessage, to: .userChannel(player.id))
 			}
 		} else {
 			for (role, hand) in state.hands {
 				if let player = state.playerOf(role: role) {
-					output.append(hand.discordMessageEncoded, to: .userChannel(player.id))
+					output.append(hand.discordEncoded.asMessage, to: .userChannel(player.id))
 				}
 			}
 		}
@@ -51,15 +56,36 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	
 	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
 		let state = G.State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
-		
 		currentState = state
 		
+		var encodedBoard: DiscordEncoded?
+		
 		if game.renderFirstBoard {
-			output.append(state.board.discordMessageEncoded)
+			encodedBoard = state.board.discordEncoded
+			
+			if encodedBoard!.embed != nil {
+				print("Warning: Embed-encoded boards are currently not supported by TwoPlayerGameCommand")
+			}
 		}
 		
-		output.append("Playing new match.\nAvailable game actions: `\(game.actions.keys)`\nType `[action] [...]` to begin!")
+		output.append(DiscordMessage(
+			content: encodedBoard?.content ?? "",
+			embed: DiscordEmbed(
+				title: "New match: \(state.playersDescription)",
+				color: game.themeColor.map { Int($0.rgb) },
+				footer: DiscordEmbed.Footer(text: "Type 'help' to begin!"),
+				fields: [
+					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
+					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
+				]
+			),
+			files: encodedBoard?.files ?? []
+		))
 		sendHandsAsDMs(fromState: state, to: output)
+	}
+	
+	private func listFormat<T: Sequence>(_ sequence: T) -> String where T.Element: StringProtocol {
+		return sequence.joined(separator: "\n")
 	}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
@@ -76,62 +102,87 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	@discardableResult
 	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
-		guard let action = game.actions[actionKey] else { return .continueSubscription }
+		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
-			let actionResult = try action(state, args)
+			guard let actionResult = try game.actions[actionKey]?(state, args) ?? defaultActions[actionKey]?(game, state, args) else { return .continueSubscription }
+			
+			if actionResult.onlyCurrentPlayer {
+				guard state.rolesOf(player: author).contains(state.currentRole) else {
+					output.append("It is not your turn, `\(author.username)`")
+					return .continueSubscription
+				}
+			}
 			
 			if actionResult.cancelsMatch {
 				currentState = nil
-				output.append("Cancelled match: \(state)")
+				output.append("Cancelled match: \(state.playersDescription)")
 				return .cancelSubscription
 			}
 			
-			guard state.rolesOf(player: author).contains(state.currentRole) else {
-				output.append("It is not your turn, `\(author.username)`")
-				return .continueSubscription
-			}
-			
-			// Output next board and user's hands
-			let next = actionResult.nextState
-			output.append(next.board.discordMessageEncoded)
-			output.append("\(actionResult.additionalOutput ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn")
-			
-			// print("Next possible moves: \(next.possibleMoves)")
-			sendHandsAsDMs(fromState: next, to: output)
-			
-			if let winner = next.winner {
-				// Game won
+			if let next = actionResult.nextState {
+				// Output next board and user's hands
+				let encodedBoard = next.board.discordEncoded
+				var embed: DiscordEmbed? = nil
 				
-				var embed = DiscordEmbed()
-				embed.title = ":crown: Winner"
-				embed.description = "\(winner.discordStringEncoded)\(state.playerOf(role: winner).map { " aka. `\($0.username)`" } ?? "") won the game!"
+				// print("Next possible moves: \(next.possibleMoves)")
+				sendHandsAsDMs(fromState: next, to: output)
 				
-				output.append(embed)
-				currentState = nil
-				return .cancelSubscription
-			} else if next.isDraw {
-				// Game over due to a draw
+				if let winner = next.winner {
+					// Game won
+					
+					embed = DiscordEmbed(
+						title: ":crown: Winner",
+						description: "\(describe(role: winner, in: next)) won the game!"
+					)
+					
+					currentState = nil
+					subscriptionAction = .cancelSubscription
+				} else if next.isDraw {
+					// Game over due to a draw
+					
+					embed = DiscordEmbed(
+						title: ":crown: Game Over",
+						description: "The game resulted in a draw!"
+					)
+					
+					currentState = nil
+					subscriptionAction = .cancelSubscription
+				} else {
+					// Advance the game
+					
+					embed = DiscordEmbed(
+						description: "\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
+					)
+					
+					currentState = next
+				}
 				
-				var embed = DiscordEmbed()
-				embed.title = ":crown: Game Over"
-				embed.description = "The game resulted in a draw!"
-				
-				output.append(embed)
-				currentState = nil
-				return .cancelSubscription
-			} else {
-				// Advance the game
-				
-				currentState = next
+				output.append(DiscordMessage(
+					content: encodedBoard.content,
+					embed: embed,
+					files: encodedBoard.files
+				))
+			} else if let text = actionResult.text {
+				output.append(text)
 			}
 		} catch GameError.invalidMove(let msg) {
-			output.append("Invalid move by \(state.currentRole.discordStringEncoded): \(msg)")
+			output.append("Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
+		} catch GameError.ambiguousMove(let msg) {
+			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+		} catch GameError.incompleteMove(let msg) {
+			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+		} catch GameError.moveOutOfBounds(let msg) {
+			output.append("Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
 		} catch {
 			output.append("Error while attempting move")
 			print(error)
 		}
 		
-		return .continueSubscription
+		return subscriptionAction
+	}
+	
+	private func describe(role: G.State.Role, in state: G.State) -> String {
+		return "\(role.discordStringEncoded)\(state.playerOf(role: role).map { " aka. `\($0.username)`" } ?? "")"
 	}
 }

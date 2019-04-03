@@ -77,11 +77,17 @@
 			"\t",
 			"\tpublic let name: String = $2",
 			"\tpublic let actions: [String: (State, String) throws -> ActionResult<State>] = [",
-			"\t\t\"move\": { state, args in ActionResult(nextState: try state.childState(after: try State.Move.init(fromString: args))) },",
-			"\t\t\"cancel\": { state, _ in ActionResult(nextState: state, cancelsMatch: true) }",
+			"\t\t\"move\": { state, args in ActionResult(nextState: try state.childState(after: try $1Game.parse(move: args))) },",
 			"\t]",
+			"\tpublic let helpText = \"\"\"",
+			"\t\t$3",
+			"\t\t\"\"\"",
 			"\t",
 			"\tpublic init() {}",
+			"\t",
+			"\tprivate static func parse(move rawMove: String) throws -> State.Move {",
+			"\t\treturn try State.Move(fromString: rawMove)",
+			"\t}",
 			"}"
 		]
 	},
@@ -92,7 +98,7 @@
 			"import SwiftDiscord",
 			"import D2Permissions",
 			"",
-			"public struct $1State: GameState, CustomStringConvertible {",
+			"public struct $1State: GameState {",
 			"\tpublic typealias Role = $1Role",
 			"\tpublic typealias Board = $1Board",
 			"\tpublic typealias Move = $1Move",
@@ -101,7 +107,7 @@
 			"\tprivate let ${3:secondPlayer}: GamePlayer",
 			"\tpublic private(set) var board = Board()",
 			"\tpublic private(set) var currentRole: Role = $4",
-			"\tpublic var description: String { return ${5:\"`\\($2.username)` vs. `\\($3.username)`\"} }",
+			"\tpublic var playersDescription: String { return ${5:\"`\\($2.username)` vs. `\\($3.username)`\"} }",
 			"\t",
 			"\tpublic var possibleMoves: Set<Move> {",
 			"\t\treturn $6",
@@ -148,7 +154,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public enum $1Role: CaseIterable, DiscordStringEncodable {",
+			"public enum $1Role: Hashable, CaseIterable, DiscordStringEncodable {",
 			"\tcase $2",
 			"\tcase $3",
 			"\t",
@@ -176,7 +182,7 @@
 			"",
 			"fileprivate let argsRegex = try! Regex(from: \"$2\")",
 			"",
-			"public struct $1Move: GameMove, Hashable {",
+			"public struct $1Move: Hashable {",
 			"\t$3",
 			"\t",
 			"\tpublic init(fromString str: String) throws {",
@@ -193,7 +199,9 @@
 		"prefix": "gameboard",
 		"scope": "swift",
 		"body": [
-			"public struct $1Board {",
+			"import D2Utils",
+			"",
+			"public struct $1Board: Discord$2Encodable {",
 			"\t$0",
 			"}"
 		]
@@ -213,6 +221,22 @@
 			"\t\t$0",
 			"\t}",
 			"}"
+		]
+	},
+	"Chess piece": {
+		"prefix": "chesspiece",
+		"scope": "swift",
+		"body": [
+			"import D2Utils",
+			"",
+			"public struct $1: ChessPiece {",
+			"\tpublic let pieceType: ChessPieceType = .$2",
+			"\tpublic let notationLetters: [Character] = [$3]",
+			"\t",
+			"\tpublic func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {",
+			"\t\t$0",
+			"\t}",
+			"}",
 		]
 	},
 	"Command test case": {

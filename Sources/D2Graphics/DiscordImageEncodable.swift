@@ -6,15 +6,15 @@ public protocol DiscordImageEncodable: DiscordEncodable {
 }
 
 extension DiscordImageEncodable {
-	public var discordMessageEncoded: DiscordMessage {
+	public var discordEncoded: DiscordEncoded {
 		do {
 			if let image = discordImageEncoded {
-				return try DiscordMessage(fromImage: image)
+				return try DiscordEncoded(fromImage: image)
 			} else {
-				return DiscordMessage(content: "Error: No image present")
+				return DiscordEncoded(content: "Error: No image present")
 			}
 		} catch {
-			return DiscordMessage(content: "Error: Could not encode image")
+			return DiscordEncoded(content: "Error: Could not encode image")
 		}
 	}
 }
