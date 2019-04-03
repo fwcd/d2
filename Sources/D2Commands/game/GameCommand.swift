@@ -19,6 +19,7 @@ public class GameCommand<G: Game>: StringCommand {
 		"cancel": { _, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) },
 		"help": { game, _ in ActionResult(text: game.helpText, onlyCurrentPlayer: false) }
 	]
+	private let defaultApiActions: Set<String> = ["cancel"]
 	
 	public var description: String { return "Plays \(game.name) against someone" }
 	
@@ -112,7 +113,7 @@ public class GameCommand<G: Game>: StringCommand {
 	/** Performs a game action if present, otherwise does nothing. */
 	@discardableResult
 	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
-		guard let state = currentState, (author.isUser || game.apiActions.contains(actionKey)) else { return .continueSubscription }
+		guard let state = currentState, (author.isUser || game.apiActions.contains(actionKey) || game.defaultApiActions.contains(actionKey)) else { return .continueSubscription }
 		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
