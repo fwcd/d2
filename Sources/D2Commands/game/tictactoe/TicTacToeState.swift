@@ -21,9 +21,13 @@ public struct TicTacToeState: GameState {
 			.filter { move in board[move.row, move.column] == .empty })
 	}
 	
-	public init(firstPlayer: GamePlayer, secondPlayer: GamePlayer) {
-		playerX = firstPlayer
-		playerO = secondPlayer
+	public init(playerX: GamePlayer, playerO: GamePlayer) {
+		self.playerX = playerX
+		self.playerO = playerO
+	}
+	
+	public init(players: [GamePlayer]) {
+		self.init(playerX: players[0], playerO: players[1])
 	}
 	
 	public mutating func perform(move: Move) throws {

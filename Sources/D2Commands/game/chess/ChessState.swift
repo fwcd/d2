@@ -19,14 +19,14 @@ public struct ChessState: GameState {
 	public var roleInCheck: Role? { return ChessRole.allCases.first { isInCheck($0) } }
 	public var isDraw: Bool { return !isInCheck(currentRole) && !canMove(currentRole) }
 	
-	init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer, board: Board) {
+	init(whitePlayer: GamePlayer, blackPlayer: GamePlayer, board: Board = Board()) {
 		self.whitePlayer = whitePlayer
 		self.blackPlayer = blackPlayer
 		self.board = board
 	}
 	
-	public init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer) {
-		self.init(firstPlayer: whitePlayer, secondPlayer: blackPlayer, board: Board())
+	public init(players: [GamePlayer]) {
+		self.init(whitePlayer: players[0], blackPlayer: players[1])
 	}
 	
 	private func locateKing(of role: Role) -> Vec2<Int>? {

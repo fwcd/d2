@@ -1,14 +1,14 @@
+/**
+ * A protocol that is intended for games with
+ * more than two players where storing each
+ * player in an individual field does not make
+ * sense.
+ */
 public protocol Multiplayer {
 	var players: [GamePlayer] { get }
-	
-	init(players: [GamePlayer])
 }
 
 extension GameState where Self: Multiplayer, Self.Role == Int {
-	public init(firstPlayer: GamePlayer, secondPlayer: GamePlayer) {
-		self.init(players: [firstPlayer, secondPlayer])
-	}
-	
 	public func playerOf(role: Role) -> GamePlayer? {
 		return players[safely: role]
 	}

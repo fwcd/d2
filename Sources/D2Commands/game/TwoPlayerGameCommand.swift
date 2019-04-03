@@ -55,7 +55,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	}
 	
 	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
-		let state = G.State.init(firstPlayer: firstPlayer, secondPlayer: secondPlayer)
+		let state = G.State.init(players: [firstPlayer, secondPlayer])
 		currentState = state
 		
 		var encodedBoard: DiscordEncoded?
