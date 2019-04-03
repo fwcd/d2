@@ -156,7 +156,7 @@ public struct ChessState: GameState {
 	func unambiguouslyResolve(move unresolvedMove: Move) throws -> Move {
 		let resolvedMoves = resolve(move: unresolvedMove)
 		guard resolvedMoves.count != 0 else { throw GameError.invalidMove("Move is not allowed: `\(unresolvedMove)`") }
-		guard resolvedMoves.count == 1 else { throw GameError.ambiguousMove("Move is ambiguous: `\(unresolvedMove)`") }
+		guard resolvedMoves.count == 1 else { throw GameError.ambiguousMove("Move is ambiguous: `\(unresolvedMove)` could be one of `\(resolvedMoves)`") }
 		return resolvedMoves.first!
 	}
 	
