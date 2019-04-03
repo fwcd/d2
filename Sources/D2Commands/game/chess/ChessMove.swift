@@ -90,6 +90,5 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			&& (checkType == nil || move.checkType == nil || checkType == move.checkType)
 			&& (isEnPassant == move.isEnPassant)
 			&& (castlingType == nil || move.castlingType == nil || castlingType == move.castlingType)
-			&& (associatedMoves == move.associatedMoves)
 	}
 }
