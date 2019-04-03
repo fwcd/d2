@@ -1,6 +1,6 @@
 public struct BoardPiece {
 	public let color: ChessRole
-	public let piece: ChessPiece
+	public var piece: ChessPiece
 	public var moveCount: Int
 	public var moved: Bool { return moveCount > 0 }
 	

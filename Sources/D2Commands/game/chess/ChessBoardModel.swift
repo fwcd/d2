@@ -56,6 +56,10 @@ public struct ChessBoardModel {
 		var piece = pieces[originY][originX]
 		piece?.moveCount += 1
 		
+		if let promotionPieceType = move.promotionPieceType {
+			piece?.piece = createPiece(promotionPieceType)
+		}
+		
 		pieces[destinationY][destinationX] = piece
 		pieces[originY][originX] = nil
 		
