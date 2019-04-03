@@ -17,7 +17,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	private let playerO = GamePlayer(username: nameO)
 	
 	func testXWin() throws {
-		let command = TwoPlayerGameCommand<TicTacToeGame>()
+		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
 		command.startMatch(between: playerX, and: playerO, output: output)
 		
@@ -48,7 +48,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	}
 	
 	func testDraw() throws {
-		let command = TwoPlayerGameCommand<TicTacToeGame>()
+		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
 		command.startMatch(between: playerX, and: playerO, output: output)
 		

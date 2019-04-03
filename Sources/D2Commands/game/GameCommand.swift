@@ -5,10 +5,9 @@ import D2Utils
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
 /**
- * Provides a base layer of functionality for a turn-based 
- * two-player game.
+ * Provides a base layer of functionality for a turn-based games.
  */
-public class TwoPlayerGameCommand<G: Game>: StringCommand {
+public class GameCommand<G: Game>: StringCommand {
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true
@@ -32,12 +31,13 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			return
 		}
 		
-		guard let opponent = context.message.mentions.first else {
-			output.append("Mention an opponent to play against.")
+		guard !context.message.mentions.isEmpty else {
+			output.append("Mention one or more users to play against.")
 			return
 		}
 		
-		startMatch(between: GamePlayer(from: context.author), and: GamePlayer(from: opponent), output: output)
+		let players = ([context.author] + context.message.mentions).map { GamePlayer(from: $0) }
+		startMatch(between: players, output: output)
 	}
 	
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
@@ -54,8 +54,8 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 		}
 	}
 	
-	func startMatch(between firstPlayer: GamePlayer, and secondPlayer: GamePlayer, output: CommandOutput) {
-		let state = G.State.init(players: [firstPlayer, secondPlayer])
+	func startMatch(between players: [GamePlayer], output: CommandOutput) {
+		let state = G.State.init(players: players)
 		currentState = state
 		
 		var encodedBoard: DiscordEncoded?
@@ -64,7 +64,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			encodedBoard = state.board.discordEncoded
 			
 			if encodedBoard!.embed != nil {
-				print("Warning: Embed-encoded boards are currently not supported by TwoPlayerGameCommand")
+				print("Warning: Embed-encoded boards are currently not supported by GameCommand")
 			}
 		}
 		
