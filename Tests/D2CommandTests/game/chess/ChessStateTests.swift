@@ -7,7 +7,7 @@ final class ChessStateTests: XCTestCase {
 	]
 	
 	func testPossibleMoves() throws {
-		let state = ChessState(firstPlayer: GamePlayer(username: "Mr. White"), secondPlayer: GamePlayer(username: "Mr. Black"))
+		let state = ChessState(players: [GamePlayer(username: "Mr. White"), GamePlayer(username: "Mr. Black")])
 		let initialMoves = state.possibleMoves
 		
 		XCTAssert(initialMoves.allSatisfy { $0.color == .white }, "Initial moves should all be white")
