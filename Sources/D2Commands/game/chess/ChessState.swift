@@ -78,6 +78,18 @@ public struct ChessState: GameState {
 		return stateAfterMove.isInCheck(role)
 	}
 	
+	/** Tests whether the given move leads to situation in which the given role is checkmate/loses the game. */
+	private func causesCheckmate(_ move: Move, for role: Role) -> Bool {
+		var stateAfterMove = self
+		do {
+			try stateAfterMove.performDirectly(move: move)
+		} catch {
+			print("Could not spawn child state while testing whether a move causes a checkmate: \(error)")
+			return false
+		}
+		return stateAfterMove.isCheckmate(role)
+	}
+	
 	private func findPossibleMoves(at position: Vec2<Int>, by role: Role, testForChecks: Bool = true) -> Set<Move> {
 		guard let piece = board.model[position] else { return [] }
 		let pieceTypeBoard = board.model.pieceTypes
@@ -92,7 +104,7 @@ public struct ChessState: GameState {
 		
 		let moves: [Move] = unfilteredMoves
 			.filter { pieceTypeBoard.isInBounds($0.destination!) }
-			.compactMap {
+			.compactMap { // Captures
 				let destinationPiece = board.model[$0.destination!]
 				if destinationPiece?.color == role {
 					return nil
@@ -108,6 +120,19 @@ public struct ChessState: GameState {
 				} else {
 					return true
 				}
+			}
+			.map { (it: Move) -> Move in // Checks/checkmates
+				var move: Move = it
+				
+				if testForChecks {
+					if causesCheckmate(move, for: role.opponent) {
+						move.checkType = .checkmate
+					} else if causesKingInCheck(move, for: role.opponent) {
+						move.checkType = .check
+					}
+				}
+				
+				return move
 			}
 		
 		return Set(moves)
