@@ -93,7 +93,7 @@ class CommandHandler: DiscordClientDelegate {
 							break
 						}
 						
-						userOnly |= command.userOnly
+						userOnly = userOnly || command.userOnly
 					} else {
 						print("Did not recognize command '\(name)'")
 						if !isBot {
