@@ -25,6 +25,7 @@ public class GameCommand<G: Game>: StringCommand {
 	
 	private var currentState: G.State? = nil
 	private var apiEnabled: Bool = false
+	private var silent: Bool = false
 	
 	public init() {
 		game = G.init()
@@ -69,6 +70,7 @@ public class GameCommand<G: Game>: StringCommand {
 		let state = G.State.init(players: players)
 		currentState = state
 		apiEnabled = flags.contains("api")
+		silent = flags.contains("silent")
 		
 		var encodedBoard: DiscordEncoded?
 		
@@ -139,7 +141,6 @@ public class GameCommand<G: Game>: StringCommand {
 			
 			if let next = actionResult.nextState {
 				// Output next board and user's hands
-				let encodedBoard = next.board.discordEncoded
 				var embed: DiscordEmbed? = nil
 				
 				// print("Next possible moves: \(next.possibleMoves)")
@@ -175,11 +176,14 @@ public class GameCommand<G: Game>: StringCommand {
 					currentState = next
 				}
 				
-				output.append(DiscordMessage(
-					content: encodedBoard.content,
-					embed: embed,
-					files: encodedBoard.files
-				))
+				if !silent || subscriptionAction == .cancelSubscription {
+					let encodedBoard = next.board.discordEncoded
+					output.append(DiscordMessage(
+						content: encodedBoard.content,
+						embed: embed,
+						files: encodedBoard.files
+					))
+				}
 			} else if let text = actionResult.text {
 				output.append(text)
 			}
