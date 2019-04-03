@@ -32,6 +32,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["rpn"] = RPNCommand()
 	handler["tictactoe"] = TwoPlayerGameCommand<TicTacToeGame>()
 	handler["uno"] = TwoPlayerGameCommand<UnoGame>()
+	handler["sourcefile"] = SourceFileCommand()
 	handler["cyclethrough"] = CycleThroughCommand()
 	handler["demoimage"] = DemoImageCommand()
 	handler["dm"] = DirectMessageCommand()
