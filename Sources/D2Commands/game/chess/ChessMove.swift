@@ -16,6 +16,8 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 	// Contains additional moves such as the rook move after castling
 	// that should be performed immediately after this move.
 	public var associatedMoves: [ChessMove]
+	// Other captures, currently only used for en passant
+	public var associatedCaptures: [Vec2<Int>]
 	
 	public var origin: Vec2<Int>? { return originX.flatMap { x in originY.map { y in Vec2(x: x, y: y) } } }
 	public var destination: Vec2<Int>? { return destinationX.flatMap { x in destinationY.map { y in Vec2(x: x, y: y) } } }
@@ -57,7 +59,8 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 		checkType: CheckType? = nil,
 		isEnPassant: Bool = false,
 		castlingType: CastlingType? = nil,
-		associatedMoves: [ChessMove] = []
+		associatedMoves: [ChessMove] = [],
+		associatedCaptures: [Vec2<Int>] = []
 	) {
 		self.pieceType = pieceType
 		self.color = color
@@ -71,6 +74,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 		self.isEnPassant = isEnPassant
 		self.castlingType = castlingType
 		self.associatedMoves = associatedMoves
+		self.associatedCaptures = associatedCaptures
 	}
 	
 	private func describePosition(x optionalX: Int?, y optionalY: Int?) -> String {
@@ -88,7 +92,6 @@ public struct ChessMove: Hashable, CustomStringConvertible {
 			&& (destinationY == nil || move.destinationY == nil || destinationY == move.destinationY)
 			&& (promotionPieceType == nil || move.promotionPieceType == nil || promotionPieceType == move.promotionPieceType)
 			&& (checkType == nil || move.checkType == nil || checkType == move.checkType)
-			&& (isEnPassant == move.isEnPassant)
 			&& (castlingType == move.castlingType)
 	}
 }

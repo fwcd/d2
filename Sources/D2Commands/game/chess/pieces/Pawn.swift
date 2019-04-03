@@ -26,16 +26,20 @@ public struct Pawn: ChessPiece {
 			destinationX: $0.x,
 			destinationY: $0.y,
 			isEnPassant: false
-		) } + captureMoves.filter { canCapture($0, board: board, role: role) }.map { ChessMove(
-			pieceType: pieceType,
-			color: role,
-			originX: position.x,
-			originY: position.y,
-			isCapture: true,
-			destinationX: $0.x,
-			destinationY: $0.y,
-			isEnPassant: canPerformEnPassant(at: $0, board: board, role: role)
-		) }
+		) } + captureMoves.filter { canCapture($0, board: board, role: role) }.map {
+			let isEnPassant = canPerformEnPassant(at: $0, board: board, role: role)
+			return ChessMove(
+				pieceType: pieceType,
+				color: role,
+				originX: position.x,
+				originY: position.y,
+				isCapture: true,
+				destinationX: $0.x,
+				destinationY: $0.y,
+				isEnPassant: isEnPassant,
+				associatedCaptures: isEnPassant ? [$0 + Vec2(y: -direction)] : []
+			)
+		}
 	}
 	
 	private func moveYDirection(for role: ChessRole) -> Int {

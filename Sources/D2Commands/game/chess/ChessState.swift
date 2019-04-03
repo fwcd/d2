@@ -106,13 +106,13 @@ public struct ChessState: GameState {
 			.filter { pieceTypeBoard.isInBounds($0.destination!) }
 			.compactMap { // Captures
 				let destinationPiece = board.model[$0.destination!]
-				if destinationPiece?.color == role {
-					return nil
-				} else {
+				let hasAssociatedCaptures = !$0.associatedCaptures.isEmpty
+				if (destinationPiece?.color != role) || hasAssociatedCaptures {
 					var move = $0
-					move.isCapture = destinationPiece?.color == role.opponent
+					move.isCapture = (destinationPiece?.color == role.opponent) || hasAssociatedCaptures
 					return move
 				}
+				return nil
 			}
 			.filter {
 				if testForChecks {

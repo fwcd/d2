@@ -59,6 +59,10 @@ public struct ChessBoardModel {
 		pieces[destinationY][destinationX] = piece
 		pieces[originY][originX] = nil
 		
+		for associatedCapture in move.associatedCaptures {
+			self[associatedCapture] = nil
+		}
+		
 		for associatedMove in move.associatedMoves {
 			try perform(move: associatedMove)
 		}
