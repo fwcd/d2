@@ -6,6 +6,7 @@ struct ChessBoardView {
 	
 	init(model: ChessBoardModel) {
 		do {
+			let theme = ChessTheme.defaultTheme
 			let fieldSize = 30.0
 			let halfFieldSize = fieldSize / 2
 			let padding = 20.0
@@ -31,8 +32,8 @@ struct ChessBoardView {
 				graphics.draw(Text(letter, withSize: fontSize, at: Vec2(x: rightTextX, y: textY)))
 				
 				for col in 0..<model.files {
-					let blackField = (col % 2 == ((row % 2 == 0) ? 0 : 1))
-					let color = blackField ? Color(rgb: 0xaf4d11) : Color(rgb: 0xfad8aa)
+					let whiteField = (col % 2 == ((row % 2 == 0) ? 0 : 1))
+					let color = whiteField ? theme.lightColor : theme.darkColor
 					let x = (Double(col) * fieldSize) + padding
 					
 					graphics.draw(Rectangle(fromX: x, y: y, width: fieldSize, height: fieldSize, color: color))

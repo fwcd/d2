@@ -1,3 +1,5 @@
+import D2Graphics
+
 public struct ChessGame: Game {
 	public typealias State = ChessState
 	
@@ -15,6 +17,7 @@ public struct ChessGame: Game {
 		},
 		"possibleMoves": { state, _ in ActionResult(text: "`\(state.possibleMoves)`") }
 	]
+	public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
 	
 	public init() {}
 	
