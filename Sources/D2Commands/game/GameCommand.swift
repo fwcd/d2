@@ -181,7 +181,7 @@ public class GameCommand<G: Game>: StringCommand {
 					output.append(DiscordMessage(
 						content: encodedBoard.content,
 						embed: embed,
-						files: encodedBoard.files
+						files: encodedBoard.files + actionResult.files
 					))
 				}
 			} else if let text = actionResult.text {
