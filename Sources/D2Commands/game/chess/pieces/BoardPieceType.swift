@@ -9,4 +9,10 @@ public struct BoardPieceType: Codable {
 		self.pieceType = pieceType
 		self.moveCount = moveCount
 	}
+	
+	public enum CodingKeys: String, CodingKey {
+		case color = "c"
+		case pieceType = "p"
+		case moveCount = "m"
+	}
 }
