@@ -73,13 +73,17 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 				color: game.themeColor.map { Int($0.rgb) },
 				footer: DiscordEmbed.Footer(text: "Type '[action] [...]' to begin or 'help'!"),
 				fields: [
-					DiscordEmbed.Field(name: "Game actions", value: game.actions.keys.joined(separator: "\n"), inline: true),
-					DiscordEmbed.Field(name: "General actions", value: defaultActions.keys.joined(separator: "\n"), inline: true)
+					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
+					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
 				]
 			),
 			files: encodedBoard?.files ?? []
 		))
 		sendHandsAsDMs(fromState: state, to: output)
+	}
+	
+	private func listFormat<T: Sequence>(_ sequence: T) -> String {
+		return sequence.joined(separator: "\n")
 	}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
