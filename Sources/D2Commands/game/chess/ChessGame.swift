@@ -3,9 +3,16 @@ public struct ChessGame: Game {
 	
 	public let name: String = "chess"
 	public let actions: [String: (State, String) throws -> ActionResult<State>] = [
-		"move": { state, args in ActionResult(
-			nextState: try state.childState(after: try state.unambiguouslyResolve(move: try ChessGame.parse(move: args)))
-		) },
+		"move": { state, args in
+			let nextState = try state.childState(after: try state.unambiguouslyResolve(move: try ChessGame.parse(move: args)))
+			var text: String? = nil
+			
+			if let roleInCheck = nextState.roleInCheck {
+				text = "\(roleInCheck.discordStringEncoded) is in check"
+			}
+			
+			return ActionResult(nextState: nextState, text: text)
+		},
 		"possibleMoves": { state, _ in ActionResult(text: "`\(state.possibleMoves)`") }
 	]
 	

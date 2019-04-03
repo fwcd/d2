@@ -16,6 +16,7 @@ public struct ChessState: GameState {
 	
 	public var possibleMoves: Set<Move> { return findPossibleMoves(by: currentRole) }
 	public var winner: Role? { return ChessRole.allCases.first { isCheckmate($0.opponent) } }
+	public var roleInCheck: Role? { return ChessRole.allCases.first { isInCheck($0) } }
 	public var isDraw: Bool { return !isInCheck(currentRole) && !canMove(currentRole) }
 	
 	init(firstPlayer whitePlayer: GamePlayer, secondPlayer blackPlayer: GamePlayer, board: Board) {
@@ -29,7 +30,10 @@ public struct ChessState: GameState {
 	}
 	
 	private func locateKing(of role: Role) -> Vec2<Int>? {
-		return board.model.positions.first { board.model[$0]?.piece.pieceType == .king }
+		return board.model.positions.first {
+			let boardPiece = board.model[$0]
+			return boardPiece?.piece.pieceType == .king && boardPiece?.color == role
+		}
 	}
 	
 	private func canMove(_ role: Role) -> Bool {
