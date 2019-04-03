@@ -14,8 +14,9 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	
 	private let game: G
 	private var currentState: G.State? = nil
-	private let defaultActions: [String: (G.State, String) throws -> ActionResult<G.State>] = [
-		"cancel": { state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) }
+	private let defaultActions: [String: (G, G.State, String) throws -> ActionResult<G.State>] = [
+		"cancel": { _, state, _ in ActionResult(cancelsMatch: true, onlyCurrentPlayer: false) },
+		"help": { game, _, _ in ActionResult(text: game.helpText) }
 	]
 	
 	public var description: String { return "Plays \(game.name) against someone" }
@@ -71,7 +72,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 			embed: DiscordEmbed(
 				title: "New match: \(state.playersDescription)",
 				color: game.themeColor.map { Int($0.rgb) },
-				footer: DiscordEmbed.Footer(text: "Type '[action] [...]' to begin or 'help'!"),
+				footer: DiscordEmbed.Footer(text: "Type '[action] [...]' to begin, for example 'help'!"),
 				fields: [
 					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
 					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
@@ -82,7 +83,7 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
-	private func listFormat<T: Sequence>(_ sequence: T) -> String {
+	private func listFormat<T: Sequence>(_ sequence: T) -> String where T.Element: StringProtocol {
 		return sequence.joined(separator: "\n")
 	}
 	
@@ -100,11 +101,10 @@ public class TwoPlayerGameCommand<G: Game>: StringCommand {
 	@discardableResult
 	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
 		guard let state = currentState else { return .continueSubscription }
-		guard let action = game.actions[actionKey] ?? defaultActions[actionKey] else { return .continueSubscription }
 		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
-			let actionResult = try action(state, args)
+			guard let actionResult = try game.actions[actionKey]?(state, args) ?? defaultActions[actionKey]?(game, state, args) else { return .continueSubscription }
 			
 			if actionResult.onlyCurrentPlayer {
 				guard state.rolesOf(player: author).contains(state.currentRole) else {
