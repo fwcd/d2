@@ -34,13 +34,7 @@ public class CampusCommand: StringCommand {
 					return
 				}
 				
-				let address: String
-				
-				if addressWithCityPattern.matchCount(in: rawAddress) > 0 {
-					address = rawAddress
-				} else {
-					address = rawAddress + ", 24118 Kiel"
-				}
+				let address = self.format(rawAddress: rawAddress)
 				
 				self.geocoder.geocode(location: address) { geocodeResponse in
 					guard case let .success(coords) = geocodeResponse else {
@@ -85,5 +79,15 @@ public class CampusCommand: StringCommand {
 	private func matchRatingFor(room: UnivISRoom, name: String) -> Int {
 		return ((room.short?.starts(with: "\(name) ") ?? false) ? 1 : 0)
 			+ ((room.address != nil) ? 2 : 0)
+	}
+	
+	private func format(rawAddress: String) -> String {
+		var address: String = rawAddress.replacingOccurrences(of: "str.", with: "straße")
+		
+		if addressWithCityPattern.matchCount(in: rawAddress) == 0 {
+			address = address.split(separator: ",").first! + ", 24118 Kiel"
+		}
+		
+		return address
 	}
 }
