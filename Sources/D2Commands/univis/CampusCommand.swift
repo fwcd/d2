@@ -25,7 +25,7 @@ public class CampusCommand: StringCommand {
 					return
 				}
 				// Successfully received and parsed UnivIS query output
-				guard let room = (queryOutput.childs.first { $0 is UnivISRoom }.map { $0 as! UnivISRoom }) else {
+				guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
 					output.append("No room was found!")
 					return
 				}
@@ -73,5 +73,17 @@ public class CampusCommand: StringCommand {
 			print(error)
 			output.append("An error occurred. Check the log for more information.")
 		}
+	}
+	
+	private func findBestMatchFor(name: String, in output: UnivISOutputNode) -> UnivISRoom? {
+		return output.childs
+			.compactMap { $0 as? UnivISRoom }
+			.sorted { matchRatingFor(room: $0, name: name) > matchRatingFor(room: $1, name: name) }
+			.first
+	}
+	
+	private func matchRatingFor(room: UnivISRoom, name: String) -> Int {
+		return ((room.short?.starts(with: "\(name) ") ?? false) ? 1 : 0)
+			+ ((room.address != nil) ? 2 : 0)
 	}
 }
