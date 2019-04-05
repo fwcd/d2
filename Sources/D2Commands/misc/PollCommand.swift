@@ -16,7 +16,7 @@ public class PollCommand: StringCommand {
 			return
 		}
 		
-		let options = components.dropFirst()
+		let options = Array(components.dropFirst())
 		
 		guard options.count < 10 else {
 			output.append("Too many options!")
@@ -34,11 +34,13 @@ public class PollCommand: StringCommand {
 		let reactions: [String]
 		var text: String = "Poll: \(components.first!)"
 		
-		if components.isEmpty {
-			reactions = ["thumbsup", "thumbsdown", "shrug"]
+		print("Creating poll `\(text)` with options \(options)")
+		
+		if options.isEmpty {
+			reactions = ["👍", "👎", "🤷"]
 		} else {
 			let range = 0..<options.count
-			text += "\n\(range.map { "\n:\(numberEmojiOf(digit: $0) ?? "?"):: \(options[$0]))" }.joined())"
+			text += "\n\(range.map { "\n:\(numberEmojiStringOf(digit: $0) ?? "?"):: \(options[$0])" }.joined())"
 			reactions = range.compactMap { numberEmojiOf(digit: $0) }
 		}
 		
@@ -54,7 +56,7 @@ public class PollCommand: StringCommand {
 		}
 	}
 	
-	private func numberEmojiOf(digit: Int) -> String? {
+	private func numberEmojiStringOf(digit: Int) -> String? {
 		switch digit {
 			case 0: return "zero"
 			case 1: return "one"
@@ -66,6 +68,22 @@ public class PollCommand: StringCommand {
 			case 7: return "seven"
 			case 8: return "eight"
 			case 9: return "nine"
+			default: return nil
+		}
+	}
+	
+	private func numberEmojiOf(digit: Int) -> String? {
+		switch digit {
+			case 0: return "0⃣"
+			case 1: return "1⃣"
+			case 2: return "2⃣"
+			case 3: return "3⃣"
+			case 4: return "4⃣"
+			case 5: return "5⃣"
+			case 6: return "6⃣"
+			case 7: return "7⃣"
+			case 8: return "8⃣"
+			case 9: return "9⃣"
 			default: return nil
 		}
 	}

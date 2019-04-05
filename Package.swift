@@ -8,7 +8,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("48b68b470da3a14a19fd737be1dbf5613eb65a23")), // Using the version introduced in https://github.com/nuclearace/SwiftDiscord/pull/79
+        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("7b0b894eee5a3549a28abf04578043b263561ceb")), // Using the version introduced in https://github.com/nuclearace/SwiftDiscord/pull/79
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("2e0a981dbe8d7599edd86fcc5544d66d1fd7e0ad")) // Using the version introduced in https://github.com/PureSwift/Cairo/pull/3
     ],
     targets: [
