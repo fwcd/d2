@@ -17,6 +17,9 @@ public class HelpCommand: StringCommand {
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 			.map { group in ":star: \(group.key):\n```\n\(group.value.sorted { $0.key < $1.key }.map { "\($0.key): \($0.value.description)" }.joined(separator: "\n"))\n```" }
 			.joined(separator: "\n")
-		output.append(helpText)
+		output.append(DiscordEmbed(
+			title: "Available Commands",
+			description: helpText
+		))
 	}
 }
