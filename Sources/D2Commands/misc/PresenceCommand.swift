@@ -7,10 +7,10 @@ fileprivate let activityTypes: [String: DiscordActivityType] = [
 	"streaming": .stream,
 	"listening": .listening
 ]
-fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(.+)")
+fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(idle|offline|online|dnd)\\s+)?(.+)")
 
-public class ActivityCommand: StringCommand {
-	public let description = "Updates the game activity"
+public class PresenceCommand: StringCommand {
+	public let description = "Updates the game activity and status"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin
 	
@@ -19,14 +19,15 @@ public class ActivityCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if let parsedArgs = argsPattern.firstGroups(in: input) {
 			let activityType = activityTypes[parsedArgs[1]]!
-			let customText = parsedArgs[2]
+			let status = parsedArgs[2].nilIfEmpty.flatMap { DiscordPresenceStatus(rawValue: $0) } ?? .online
+			let customText = parsedArgs[3]
 			
 			guard let client = context.client else {
 				output.append("No client found")
 				return
 			}
 			
-			client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: customText, type: activityType)))
+			client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: customText, type: activityType), status: status))
 		} else {
 			output.append("Syntax: [\(activityTypes.keys.joined(separator: "|"))] [custom text]")
 		}
