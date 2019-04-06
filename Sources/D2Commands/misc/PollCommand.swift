@@ -45,13 +45,16 @@ public class PollCommand: StringCommand {
 		}
 		
 		client.sendMessage(DiscordMessage(content: text), to: channelId) { sentMessage, _ in
-			guard let messageId = sentMessage?.id else {
-				print("Could not add reactions since the sent message has no id")
-				return
+			if let nextMessage = sentMessage {
+				self.react(to: nextMessage, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
 			}
-			
-			for reaction in reactions {
-				client.createReaction(for: messageId, on: channelId, emoji: reaction)
+		}
+	}
+	
+	private func react(to message: DiscordMessage, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: DiscordClient) {
+		if let reaction = remainingReactions.first {
+			client.createReaction(for: message.id, on: channelId, emoji: reaction) { sentMessage, _ in
+				self.react(to: message, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)
 			}
 		}
 	}
