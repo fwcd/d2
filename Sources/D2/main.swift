@@ -37,6 +37,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["cyclethrough"] = CycleThroughCommand()
 	handler["demoimage"] = DemoImageCommand()
 	handler["poll"] = PollCommand()
+	handler["activity"] = ActivityCommand()
 	handler["dm"] = DirectMessageCommand()
 	handler["help"] = HelpCommand(permissionManager: handler.permissionManager)
 }
