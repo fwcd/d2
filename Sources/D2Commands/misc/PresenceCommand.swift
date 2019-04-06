@@ -7,7 +7,8 @@ fileprivate let activityTypes: [String: DiscordActivityType] = [
 	"streaming": .stream,
 	"listening": .listening
 ]
-fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(idle|offline|online|dnd)\\s+)?(.+)")
+fileprivate let availableStatusTypes = "idle|offline|online|dnd"
+fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(\(availableStatusTypes))\\s+)?(.+)")
 
 public class PresenceCommand: StringCommand {
 	public let description = "Updates the game activity and status"
@@ -29,7 +30,7 @@ public class PresenceCommand: StringCommand {
 			
 			client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: customText, type: activityType), status: status))
 		} else {
-			output.append("Syntax: [\(activityTypes.keys.joined(separator: "|"))] [custom text]")
+			output.append("Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
 		}
 	}
 }
