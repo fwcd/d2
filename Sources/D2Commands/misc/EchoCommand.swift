@@ -41,7 +41,7 @@ public class EchoCommand: Command {
 	private func append(_ msg: DiscordMessage, to output: CommandOutput) {
 		let lengthLimit = output.messageLengthLimit ?? 0
 		
-		if msg.content.length > lengthLimit {
+		if msg.content.count > lengthLimit {
 			output.append("Can not echo message that is longer than \(lengthLimit) characters")
 		} else {
 			output.append(msg)
