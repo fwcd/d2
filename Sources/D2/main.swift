@@ -36,6 +36,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["chess"] = GameCommand<ChessGame>()
 	handler["cyclethrough"] = CycleThroughCommand()
 	handler["demoimage"] = DemoImageCommand()
+	handler["piglatin"] = PigLatinCommand()
 	handler["poll"] = PollCommand()
 	handler["presence"] = PresenceCommand()
 	handler["dm"] = DirectMessageCommand()
