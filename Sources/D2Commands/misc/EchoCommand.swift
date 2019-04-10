@@ -24,7 +24,7 @@ public class EchoCommand: Command {
 			
 			if n == 1 {
 				// Output synchronously
-				output.append(value)
+				append(value, to: output)
 			} else {
 				guard !timer.isRunning else {
 					output.append("Cannot run multiple asynchronous `echo`s concurrently")
@@ -32,9 +32,19 @@ public class EchoCommand: Command {
 				}
 				
 				timer.schedule(nTimes: n) { _, _ in
-					output.append(value)
+					self.append(value, to: output)
 				}
 			}
+		}
+	}
+	
+	private func append(_ msg: DiscordMessage, to output: CommandOutput) {
+		let lengthLimit = output.messageLengthLimit ?? 0
+		
+		if msg.content.length > lengthLimit {
+			output.append("Can not echo message that is longer than \(lengthLimit) characters")
+		} else {
+			output.append(msg)
 		}
 	}
 }
