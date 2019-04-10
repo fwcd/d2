@@ -39,6 +39,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["poll"] = PollCommand()
 	handler["presence"] = PresenceCommand()
 	handler["dm"] = DirectMessageCommand()
+	handler["tofile"] = ToFileCommand()
 	handler["help"] = HelpCommand(permissionManager: handler.permissionManager)
 }
 

@@ -22,4 +22,8 @@ public extension CommandOutput {
 	func append(_ image: Image, to channel: OutputChannel = .defaultChannel) throws {
 		append(try DiscordMessage(fromImage: image), to: channel)
 	}
+	
+	func append(_ files: [DiscordFileUpload], to channel: OutputChannel = .defaultChannel) {
+		append(DiscordMessage(content: "", files: files))
+	}
 }
