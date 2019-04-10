@@ -3,6 +3,7 @@ import SwiftDiscord
 public class DiscordOutput: CommandOutput {
 	private let client: DiscordClient
 	private let defaultTextChannel: DiscordTextChannel?
+	public let messageLengthLimit: Int? = 1800
 	
 	public init(client: DiscordClient, defaultTextChannel: DiscordTextChannel?) {
 		self.client = client

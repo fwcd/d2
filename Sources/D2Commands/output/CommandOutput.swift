@@ -3,10 +3,14 @@ import D2Utils
 import D2Graphics
 
 public protocol CommandOutput {
+	var messageLengthLimit: Int? { get }
+	
 	func append(_ message: DiscordMessage, to channel: OutputChannel)
 }
 
 public extension CommandOutput {
+	var messageLengthLimit: Int? { return nil }
+	
 	func append(_ message: DiscordMessage) {
 		append(message, to: .defaultChannel)
 	}
