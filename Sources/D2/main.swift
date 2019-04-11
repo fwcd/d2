@@ -38,6 +38,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["demoimage"] = DemoImageCommand()
 	handler["piglatin"] = PigLatinCommand()
 	handler["poll"] = PollCommand()
+	handler["concat"] = ConcatCommand()
 	handler["presence"] = PresenceCommand()
 	handler["dm"] = DirectMessageCommand()
 	handler["tofile"] = ToFileCommand()
