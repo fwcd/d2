@@ -12,9 +12,11 @@ public class ForCommand: StringCommand {
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer
+	private let maxRangeLength: Int
 	
-	public init(intervalSeconds: Int = 1) {
+	public init(intervalSeconds: Int = 1, maxRangeLength: Int = 6) {
 		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
+		self.maxRangeLength = maxRangeLength
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -31,7 +33,7 @@ public class ForCommand: StringCommand {
 		let rawRange = parsedArgs[1]
 		
 		if let range: LowBoundedIntRange = parseIntRange(from: rawRange) ?? parseClosedIntRange(from: rawRange) {
-			if range.count < 4 {
+			if range.count <= maxRangeLength {
 				timer.schedule(nTimes: range.count) { i, _ in
 					output.append(String(range.lowerBound + i))
 				}
