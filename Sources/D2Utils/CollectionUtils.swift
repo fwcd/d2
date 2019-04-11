@@ -5,6 +5,10 @@ public extension Collection {
 }
 
 public extension Array where Element: Equatable {
+	func chunks(ofLength chunkLength: Int) -> [[Element]] {
+		return stride(from: 0, to: count, by: chunkLength).map { Array(self[$0..<Swift.min($0 + chunkLength, count)]) }
+	}
+	
 	func allIndices(of element: Element) -> [Index] {
 		return enumerated().filter { $0.1 == element }.map { $0.0 }
 	}

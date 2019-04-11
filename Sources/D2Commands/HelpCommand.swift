@@ -16,12 +16,14 @@ public class HelpCommand: StringCommand {
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 		let helpFields = helpGroups
-			.map { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> DiscordEmbed.Field in
-				let commandDescriptions = group.value
+			.flatMap { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> [DiscordEmbed.Field] in
+				let splitGroups = group.value
 					.sorted { $0.key < $1.key }
 					.map { "**\($0.key)**:  \($0.value.description)" }
-					.joined(separator: "\n")
-				return DiscordEmbed.Field(name: ":star: \(group.key)", value: commandDescriptions)
+					.chunks(ofLength: 14)
+				return splitGroups
+					.enumerated()
+					.map { DiscordEmbed.Field(name: ":star: \(group.key) (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
 			}
 		output.append(DiscordEmbed(
 			title: "Available Commands",
