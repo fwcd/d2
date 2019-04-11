@@ -13,7 +13,7 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListComman
 	public init(name: String, operation: @escaping (T, T) -> T) {
 		self.name = name
 		self.operation = operation
-		description = "Performs the binary operation '\(name)'"
+		description = name
 	}
 	
 	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
