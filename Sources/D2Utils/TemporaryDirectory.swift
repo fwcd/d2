@@ -10,7 +10,16 @@ public class TemporaryDirectory {
 	public var exists: Bool { return FileManager.default.fileExists(atPath: url.path) }
 	
 	public init() {
-		url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		let fileManager = FileManager.default
+		let temporaryDirectory: URL
+		
+		if #available(macOS 10.12, *) {
+			temporaryDirectory = fileManager.temporaryDirectory
+		} else {
+			temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory())
+		}
+		
+		url = temporaryDirectory.appendingPathComponent(UUID().uuidString)
 	}
 	
 	public func create(withIntermediateDirectories: Bool = true) throws {
