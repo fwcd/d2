@@ -19,9 +19,11 @@ public class MarkovCommand: StringCommand {
 			output.append("MarkovCommand can not be invoked without a client")
 			return
 		}
+		let mentioned = context.message.mentions.first
 		
 		client.getMessages(for: channelId, selection: nil, limit: 80) { messages, _ in
 			let words = messages
+				.filter { msg in mentioned.map { msg.author.id == $0.id } ?? true }
 				.map { $0.content }
 				.flatMap { $0.split(separator: " ") }
 			guard let startWord = words.randomElement() else {
