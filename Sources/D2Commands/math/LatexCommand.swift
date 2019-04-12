@@ -6,6 +6,7 @@ public class LatexCommand: StringCommand {
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let latexRenderer: LatexRenderer?
+	private var running = false
 	
 	public init() {
 		do {
@@ -17,6 +18,12 @@ public class LatexCommand: StringCommand {
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		guard !running else {
+			output.append("Wait for the first LaTeX command to finish")
+			return
+		}
+		running = true
+		
 		guard let renderer = latexRenderer else {
 			output.append("No LaTeX renderer present")
 			return
@@ -26,6 +33,7 @@ public class LatexCommand: StringCommand {
 			try renderer.renderPNG(from: input, onError: { self.handle(error: $0, output: output) }) {
 				do {
 					try output.append($0)
+					self.running = false
 				} catch {
 					output.append("Error while appending image to output")
 					print("Error while appending image to output: \(error)")
