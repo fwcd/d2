@@ -16,7 +16,7 @@ struct LatexRenderer {
 		self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder)
 	}
 	
-	public func renderPNG(from formula: String, then: @escaping (Image) throws -> Void) throws {
+	func renderPNG(from formula: String, then: @escaping (Image) throws -> Void) throws {
 		try renderPDF(from: formula) { name, _ in
 			let pngName = "\(name).png"
 			let pdfName = "\(name).pdf"
