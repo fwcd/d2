@@ -3,6 +3,7 @@ public struct CircularArray<T>: Sequence {
 	let capacity: Int
 	private var insertPos = 0
 	
+	public var isEmpty: Bool { return values.isEmpty }
 	public var count: Int { return values.count }
 	
 	public init(capacity: Int) {
