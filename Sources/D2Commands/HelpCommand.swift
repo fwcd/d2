@@ -11,6 +11,8 @@ public class HelpCommand: StringCommand {
 		self.permissionManager = permissionManager
 	}
 	
+	// TODO: Integrate new 'helpText' API
+	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
