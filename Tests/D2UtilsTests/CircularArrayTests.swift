@@ -11,14 +11,20 @@ final class CircularArrayTests: XCTestCase {
 		XCTAssert(a.isEmpty, "\(a) should be empty after initialization")
 		
 		a.push("test")
+		XCTAssertEqual(a.insertPos, 1)
 		a.push("demo")
+		XCTAssertEqual(a.insertPos, 2)
 		XCTAssertEqual(Array(a), ["test", "demo"])
 		
 		a.push("1")
+		XCTAssertEqual(a.insertPos, 3)
 		a.push("2")
+		XCTAssertEqual(a.insertPos, 4)
 		a.push("3")
+		XCTAssertEqual(a.insertPos, 0)
 		a.push("4")
-		XCTAssertEqual(Array(a), ["4", "demo", "1", "2", "3"])
+		XCTAssertEqual(a.insertPos, 1)
+		XCTAssertEqual(Array(a), ["demo", "1", "2", "3", "4"])
 		
 		for _ in 0..<10 {
 			a.push("...")

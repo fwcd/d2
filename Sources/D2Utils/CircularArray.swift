@@ -1,7 +1,7 @@
 public struct CircularArray<T>: Sequence {
-	private(set) var values = [T]()
-	let capacity: Int
-	private var insertPos = 0
+	private var values = [T]()
+	public let capacity: Int
+	private(set) var insertPos = 0
 	
 	public var isEmpty: Bool { return values.isEmpty }
 	public var count: Int { return values.count }
@@ -21,7 +21,7 @@ public struct CircularArray<T>: Sequence {
 		} else {
 			values[insertPos] = value
 		}
-		insertPos = (insertPos + 1) % count
+		insertPos = (insertPos + 1) % capacity
 	}
 	
 	public func makeIterator() -> Iterator {
@@ -29,21 +29,39 @@ public struct CircularArray<T>: Sequence {
 	}
 	
 	public struct Iterator: IteratorProtocol {
-		private var values: [T]
+		private let values: [T]
 		private let capacity: Int
-		private var insertPos: Int
-		private var index = 0
+		private let insertPos: Int
+		private let destinationPos: Int
+		private let checkFirstIteration: Bool
+		private var isFirstIteration: Bool = true
+		private var index: Int
 		
 		public init(values: [T], capacity: Int, insertPos: Int) {
 			self.values = values
 			self.capacity = capacity
 			self.insertPos = insertPos
+			
+			if values.count >= capacity {
+				// Circular array is filled, wrap around while iterating
+				index = insertPos
+				destinationPos = insertPos
+				checkFirstIteration = false
+			} else {
+				// Circular array is not filled, iterate normally
+				index = 0
+				destinationPos = values.count
+				checkFirstIteration = true
+			}
 		}
 		
 		public mutating func next() -> T? {
-			guard index != insertPos else { return nil }
+			guard (isFirstIteration && !checkFirstIteration) || (index != destinationPos) else { return nil }
+			
 			let element = values[index]
-			index = (index + 1) % values.count
+			index = (index + 1) % capacity
+			isFirstIteration = false
+			
 			return element
 		}
 	}
