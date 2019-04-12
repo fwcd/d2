@@ -7,7 +7,7 @@ struct MarkovTransitionMatrix<T: Hashable> {
 		order = 1
 	}
 	
-	init(fromElements elements: [T], order: Int) {
+	init<C: RandomAccessCollection>(fromElements elements: C, order: Int) where C.Element == T, C.Index == Int {
 		self.order = order
 		
 		for i in 0..<(elements.count - order) {
