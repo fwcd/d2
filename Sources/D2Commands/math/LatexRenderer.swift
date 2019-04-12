@@ -1,5 +1,6 @@
 import Foundation
 import D2Utils
+import D2Graphics
 
 struct LatexRenderer {
 	private let templateURL: URL
@@ -15,7 +16,19 @@ struct LatexRenderer {
 		self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder)
 	}
 	
-	private func renderPDF(from formula: String, then: @escaping (TemporaryFile) -> Void) throws {
+	public func renderPNG(from formula: String, then: @escaping (Image) throws -> Void) throws {
+		try renderPDF(from: formula) { name, _ in
+			let pngName = "\(name).png"
+			let pdfName = "\(name).pdf"
+			let pngFile = self.tempDir.childFile(named: pngName)
+			
+			try self.shellInvoke("pdftocairo", in: self.tempDir.url, args: [pdfName, pngName]) {
+				try then(try Image(fromPngURL: pngFile.url))
+			}
+		}
+	}
+	
+	private func renderPDF(from formula: String, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) throws -> Void) throws {
 		let timestamp = Date().timeIntervalSince1970
 		let filename = "latex-\(timestamp)"
 		let texFile = tempDir.childFile(named: "\(filename).tex")
@@ -23,12 +36,12 @@ struct LatexRenderer {
 		texFile.deleteAutomatically = false
 		try texFile.write(utf8: try template(appliedTo: formula))
 		
-		try invokePDFLatex(at: tempDir.url, with: [filename]) {
+		try shellInvoke("pdflatex", in: tempDir.url, args: [filename]) {
 			let pdfFile = self.tempDir.childFile(named: "\(filename).pdf")
 			var latexError: LatexError? = nil
 			
 			if pdfFile.exists {
-				then(pdfFile)
+				try then(filename, pdfFile)
 			} else {
 				let logFile = self.tempDir.childFile(named: "\(filename).log")
 				latexError = .noPDFGenerated(log: logFile.readUTF8() ?? "Could not read log file")
@@ -48,20 +61,20 @@ struct LatexRenderer {
 		}
 	}
 	
-	private func invokePDFLatex(at url: URL, with args: [String], then: @escaping () throws -> Void) throws {
+	private func shellInvoke(_ executable: String, in dirURL: URL, args: [String], then: @escaping () throws -> Void) throws {
 		let process = Process()
-		process.executableURL = URL(fileURLWithPath: "pdflatex")
-		process.currentDirectoryURL = url
+		process.executableURL = URL(fileURLWithPath: executable)
+		process.currentDirectoryURL = dirURL
 		process.arguments = args
 		process.terminationHandler = { _ in
 			do {
 				try then()
 			} catch {
-				print("A latex error occurred while running pdflatex's termination callback: \(error)")
+				print("A latex error occurred while running \(executable)'s termination callback: \(error)")
 			}
 		}
 		try process.run()
-		print("Finished 'pdflatex' process")
+		print("Finished '\(executable)' process")
 	}
 	
 	private func readTemplate() throws -> String {

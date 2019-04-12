@@ -9,12 +9,12 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * Swift 5
 
 ### Installation on Linux
-* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base`
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base poppler-utils`
 
 ### Installation on macOS
 * Install a LaTeX distribution containing `pdflatex`
 * `brew tap vapor/tap`
-* `brew install opus libsodium ctls cairo`
+* `brew install opus libsodium ctls cairo poppler`
 
 ## Setup
 

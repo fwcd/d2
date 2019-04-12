@@ -1,4 +1,6 @@
+import Foundation
+
 public enum DiskFileError: Error {
-	case fileNotFound(String)
+	case fileNotFound(URL)
 	case noData(String)
 }

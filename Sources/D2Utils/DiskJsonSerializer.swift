@@ -21,7 +21,7 @@ public struct DiskJsonSerializer {
 	public func readJson<T: Decodable>(as type: T.Type, fromFile filePath: String) throws -> T {
 		let url = URL(fileURLWithPath: filePath)
 		let fileManager = FileManager.default
-		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(filePath) }
+		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(url) }
 		
 		if let data = fileManager.contents(atPath: url.path) {
 			return try decoder.decode(type, from: data)
