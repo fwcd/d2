@@ -29,8 +29,8 @@ class LatexRenderer {
 		cleanUp()
 	}
 	
-	func renderPNG(from formula: String, then: @escaping (Image) -> Void) throws {
-		try renderPDF(from: formula) { name, _ in
+	func renderPNG(from formula: String, onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
+		try renderPDF(from: formula, onError: onError) { name, _ in
 			let pngFile = self.tempDir.childFile(named: "\(name)-1.png")
 			
 			do {
@@ -38,16 +38,16 @@ class LatexRenderer {
 					do {
 						then(try Image(fromPngURL: pngFile.url))
 					} catch {
-						print("Error while creating image from rendered LaTeX PNG: \(error)")
+						onError(error)
 					}
 				}
 			} catch {
-				print("Error while invoking 'pdftocairo': \(error)")
+				onError(error)
 			}
 		}
 	}
 	
-	private func renderPDF(from formula: String, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) -> Void) throws {
+	private func renderPDF(from formula: String, onError: @escaping (Error) -> Void, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) -> Void) throws {
 		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
 		let filename = "latex-\(timestamp)"
 		let texName = "\(filename).tex"
@@ -72,7 +72,7 @@ class LatexRenderer {
 			}
 			
 			if let error = resultingError {
-				print("Error after invoking pdflatex: \(error)")
+				onError(error)
 			}
 		}
 	}

@@ -23,7 +23,7 @@ public class LatexCommand: StringCommand {
 		}
 		
 		do {
-			try renderer.renderPNG(from: input) {
+			try renderer.renderPNG(from: input, onError: { self.handle(error: $0, output: output) }) {
 				do {
 					try output.append($0)
 				} catch {
@@ -38,6 +38,25 @@ public class LatexCommand: StringCommand {
 			output.append("Error while rendering LaTeX")
 			print("Error while rendering LaTeX to PNG: \(error)")
 		}
+	}
+	
+	private func handle(error: Error, output: CommandOutput) {
+		if case let LatexError.pdfError(log) = error {
+			output.append("A LaTeX PDF error occurred:\n```\n\(extractError(from: log))\n```")
+			print("LaTeX PDF error:")
+			print(log)
+		} else {
+			output.append("An asynchronous LaTeX error occurred")
+			print("Asynchronous LaTeX error: \(error)")
+		}
+	}
+	
+	private func extractError(from log: String) -> String {
+		return log.components(separatedBy: "\n")
+			.filter { $0.starts(with: "!") }
+			.joined(separator: "\n")
+			.nilIfEmpty
+			?? "Unknown error"
 	}
 	
 	public func onSuccessfullySent(message: DiscordMessage) {
