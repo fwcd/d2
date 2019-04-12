@@ -1,18 +1,18 @@
 import Foundation
 
-fileprivate let whichURL = URL(fileURLWithPath: "/usr/bin/which")
-
 public struct Shell {
 	public init() {}
 	
 	public func run(_ executable: String, in directory: URL, args: [String], then: @escaping (Process) -> Void) throws {
 		let process = Process()
 		let path = findPath(of: executable)
+		
 		print("Running \(path) in \(directory) with \(args)")
-		process.executableURL = URL(fileURLWithPath: path)
-		process.currentDirectoryURL = directory
+		setExecutable(for: process, toPath: path)
+		setCurrentDirectory(for: process, toURL: directory)
 		process.arguments = args
 		process.terminationHandler = then
+		
 		try execute(process: process)
 	}
 	
@@ -23,7 +23,7 @@ public struct Shell {
 			let pipe = Pipe()
 			
 			let process = Process()
-			process.executableURL = whichURL
+			setExecutable(for: process, toPath: "/usr/bin/which")
 			process.arguments = [executable]
 			process.standardOutput = pipe
 			
@@ -41,6 +41,22 @@ public struct Shell {
 				print("Warning: Shell.findPath could not read 'which' output to find \(executable)")
 				return executable
 			}
+		}
+	}
+	
+	private func setExecutable(for process: Process, toPath filePath: String) {
+		if #available(macOS 10.13, *) {
+			process.executableURL = URL(fileURLWithPath: filePath)
+		} else {
+			process.launchPath = filePath
+		}
+	}
+	
+	private func setCurrentDirectory(for process: Process, toURL url: URL) {
+		if #available(macOS 10.13, *) {
+			process.currentDirectoryURL = url
+		} else {
+			process.currentDirectoryPath = url.path
 		}
 	}
 	
