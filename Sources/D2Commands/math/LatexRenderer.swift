@@ -34,7 +34,7 @@ class LatexRenderer {
 			let pngFile = self.tempDir.childFile(named: "\(name)-1.png")
 			
 			do {
-				try self.shellInvoke("pdftocairo", in: self.tempDir.url, args: ["\(name).pdf", "-png", "\(name)"]) { _ in
+				try self.shellInvoke("pdftocairo", in: self.tempDir.url, args: ["\(name).pdf", "-transp", "-png", "\(name)"]) { _ in
 					do {
 						then(try Image(fromPngURL: pngFile.url))
 					} catch {
