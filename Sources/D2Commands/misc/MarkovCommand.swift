@@ -27,14 +27,25 @@ public class MarkovCommand: StringCommand {
 		
 		let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
 		let mentioned = context.message.mentions.first
-		let channels: Set<ChannelID>
 		
-		if flags.contains("all"), let guild = context.guild {
-			channels = Set(guild.channels.keys)
+		if flags.contains("all"), let guild = context.guild, let user = client.user {
+			guild.getGuildMember(user.id) { optionalMe, _ in
+				guard let me = optionalMe else {
+					output.append("Could not fetch guild member for myself")
+					return
+				}
+				
+				let channels = Set(guild.channels
+					.filter { $0.value.canMember(me, .readMessages) }
+					.map { $0.key })
+				self.markovGenerate(using: channels, output: output, flags: flags, mentioned: mentioned, client: client)
+			}
 		} else {
-			channels = [channelId]
+			markovGenerate(using: [channelId], output: output, flags: flags, mentioned: mentioned, client: client)
 		}
-		
+	}
+	
+	private func markovGenerate(using channels: Set<ChannelID>, output: CommandOutput, flags: Set<String>, mentioned: DiscordUser?, client: DiscordClient) {
 		var queriedChannels = 0
 		var allMessages = [DiscordMessage]()
 		
