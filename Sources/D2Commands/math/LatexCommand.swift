@@ -39,4 +39,10 @@ public class LatexCommand: StringCommand {
 			print("Error while rendering LaTeX to PNG: \(error)")
 		}
 	}
+	
+	public func onSuccessfullySent(message: DiscordMessage) {
+		if let renderer = latexRenderer {
+			renderer.cleanUp()
+		}
+	}
 }
