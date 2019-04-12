@@ -5,6 +5,8 @@ public class MarkovCommand: StringCommand {
 	public let description = "Generates a natural language response using a Markov chain"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
+	private let order = 3
+	private let maxWords = 60
 	
 	public init() {}
 	
@@ -18,8 +20,24 @@ public class MarkovCommand: StringCommand {
 			return
 		}
 		
-		client.getMessages(for: channelId, selection: nil, limit: 80) { _, _ in
+		client.getMessages(for: channelId, selection: nil, limit: 80) { messages, _ in
+			let words = messages
+				.map { $0.content }
+				.flatMap { $0.split(separator: " ") }
+			guard let startWord = words.randomElement() else {
+				output.append("Did not find any words in this channel")
+				return
+			}
 			
+			let matrix = MarkovTransitionMatrix(fromElements: words, order: self.order)
+			let stateMachine = MarkovStateMachine(matrix: matrix, startValue: startWord, maxLength: self.maxWords)
+			var result = [Substring]()
+			
+			for word in stateMachine {
+				result.append(word)
+			}
+			
+			output.append(result.joined(separator: " "))
 		}
 	}
 }
