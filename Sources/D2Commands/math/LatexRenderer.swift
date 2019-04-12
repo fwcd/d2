@@ -5,18 +5,24 @@ import D2Graphics
 class LatexRenderer {
 	private let templateURL: URL
 	private let textPlaceholder: String
+	private let colorPlaceholder: String
 	private let tempDir = TemporaryDirectory() // Will be automatically deleted when deinitialized
 	private var lastFilename: String? = nil
 	
-	init(templateURL: URL, textPlaceholder: String) throws {
+	init(templateURL: URL, textPlaceholder: String, colorPlaceholder: String) throws {
 		self.templateURL = templateURL
 		self.textPlaceholder = textPlaceholder
+		self.colorPlaceholder = colorPlaceholder
 		
 		try tempDir.create()
 	}
 	
-	convenience init(templateFilePath: String = "Resources/latex/LatexTemplate.tex", textPlaceholder: String = "TextPlaceholder") throws {
-		try self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder)
+	convenience init(
+		templateFilePath: String = "Resources/latex/LatexTemplate.tex",
+		textPlaceholder: String = "TextPlaceholder",
+		colorPlaceholder: String = "TextColorPlaceholder"
+	) throws {
+		try self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder, colorPlaceholder: colorPlaceholder)
 	}
 	
 	deinit {
@@ -109,7 +115,9 @@ class LatexRenderer {
 		return contents
 	}
 	
-	private func template(appliedTo formula: String) throws -> String {
-		return try readTemplate().replacingOccurrences(of: textPlaceholder, with: formula)
+	private func template(appliedTo formula: String, color: String = "white") throws -> String {
+		return try readTemplate()
+			.replacingOccurrences(of: textPlaceholder, with: formula)
+			.replacingOccurrences(of: colorPlaceholder, with: color)
 	}
 }
