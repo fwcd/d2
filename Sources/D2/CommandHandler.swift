@@ -113,7 +113,12 @@ class CommandHandler: DiscordClientDelegate {
 				
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
-					pipeSink.output = DiscordOutput(client: client, defaultTextChannel: message.channel)
+					let sinkCommand = pipeSink.command
+					pipeSink.output = DiscordOutput(client: client, defaultTextChannel: message.channel) { sentMessage, _ in
+						if let sent = sentMessage {
+							sinkCommand.onSuccessfullySent(message: sent)
+						}
+					}
 				}
 				
 				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
