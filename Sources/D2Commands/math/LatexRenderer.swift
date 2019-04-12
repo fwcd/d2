@@ -26,13 +26,7 @@ class LatexRenderer {
 	}
 	
 	deinit {
-		if let lastName = lastFilename {
-			do {
-				try self.cleanUpTexFiles(name: lastName)
-			} catch {
-				print("Error while cleaning up tex files in the process of deinitializing LatexRenderer: \(error)")
-			}
-		}
+		cleanUp()
 	}
 	
 	func renderPNG(from formula: String, then: @escaping (Image) -> Void) throws {
@@ -60,10 +54,7 @@ class LatexRenderer {
 		let texFile = tempDir.childFile(named: texName)
 		let logFile = self.tempDir.childFile(named: "\(filename).log")
 		
-		if let lastName = lastFilename {
-			// Clean up previous temp files
-			try self.cleanUpTexFiles(name: lastName)
-		}
+		cleanUp()
 		lastFilename = filename
 		
 		print("Writing TeX file")
@@ -82,6 +73,16 @@ class LatexRenderer {
 			
 			if let error = resultingError {
 				print("Error after invoking pdflatex: \(error)")
+			}
+		}
+	}
+	
+	func cleanUp() {
+		if let lastName = lastFilename {
+			do {
+				try self.cleanUpTexFiles(name: lastName)
+			} catch {
+				print("Error while cleaning up tex files: \(error)")
 			}
 		}
 	}

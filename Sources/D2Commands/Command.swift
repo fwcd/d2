@@ -12,6 +12,8 @@ public protocol Command: class {
 	
 	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext)
 	
+	func onSuccessfullySent(message: DiscordMessage)
+	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction
 }
 
@@ -23,4 +25,6 @@ extension Command {
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		return .continueSubscription
 	}
+	
+	public func onSuccessfullySent(message: DiscordMessage) {}
 }
