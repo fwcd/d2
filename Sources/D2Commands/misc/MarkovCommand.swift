@@ -19,7 +19,7 @@ public class MarkovCommand: StringCommand {
 		}
 		
 		client.getMessages(for: channelId, selection: nil, limit: 80) { _, _ in
-			// TODO
+			
 		}
 	}
 }
