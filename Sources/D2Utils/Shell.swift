@@ -13,7 +13,7 @@ public struct Shell {
 		process.currentDirectoryURL = directory
 		process.arguments = args
 		process.terminationHandler = then
-		try process.run()
+		try execute(process: process)
 	}
 	
 	private func findPath(of executable: String) -> String {
@@ -28,7 +28,7 @@ public struct Shell {
 			process.standardOutput = pipe
 			
 			do {
-				try process.run()
+				try execute(process: process)
 				process.waitUntilExit()
 			} catch {
 				print("Warning: Shell.findPath could launch 'which' to find \(executable)")
@@ -41,6 +41,14 @@ public struct Shell {
 				print("Warning: Shell.findPath could not read 'which' output to find \(executable)")
 				return executable
 			}
+		}
+	}
+	
+	private func execute(process: Process) throws {
+		if #available(macOS 10.13, *) {
+			try process.run()
+		} else {
+			process.launch()
 		}
 	}
 }
