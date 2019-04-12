@@ -4,5 +4,6 @@ enum LatexError: Error {
 	case templateFileNotFound(URL)
 	case noTemplateFileData(URL)
 	case invalidTemplateFileEncoding(URL)
-	case noPDFGenerated(log: String)
+	case pdfError(log: String)
+	case processError(executable: String, cause: Error)
 }

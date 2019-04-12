@@ -6,7 +6,7 @@ import Foundation
  */
 public class TemporaryFile {
 	public let url: URL
-	public var deleteAutomatically: Bool = true
+	public var deleteAutomatically: Bool = false
 	public var exists: Bool { return FileManager.default.fileExists(atPath: url.path) }
 	
 	public init(url: URL) {

@@ -13,6 +13,10 @@ public class TemporaryDirectory {
 		url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 	}
 	
+	public func create(withIntermediateDirectories: Bool = true) throws {
+		try FileManager.default.createDirectory(at: url, withIntermediateDirectories: withIntermediateDirectories)
+	}
+	
 	public func childFile(named name: String) -> TemporaryFile {
 		return TemporaryFile(url: url.appendingPathComponent(name))
 	}

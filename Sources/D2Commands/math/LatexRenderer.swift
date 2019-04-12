@@ -2,79 +2,101 @@ import Foundation
 import D2Utils
 import D2Graphics
 
-struct LatexRenderer {
+class LatexRenderer {
 	private let templateURL: URL
 	private let textPlaceholder: String
 	private let tempDir = TemporaryDirectory() // Will be automatically deleted when deinitialized
+	private var lastFilename: String? = nil
 	
-	init(templateURL: URL, textPlaceholder: String) {
+	init(templateURL: URL, textPlaceholder: String) throws {
 		self.templateURL = templateURL
 		self.textPlaceholder = textPlaceholder
+		
+		try tempDir.create()
 	}
 	
-	init(templateFilePath: String = "Resources/latex/LatexTemplate.tex", textPlaceholder: String = "TextPlaceholder") {
-		self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder)
+	convenience init(templateFilePath: String = "Resources/latex/LatexTemplate.tex", textPlaceholder: String = "TextPlaceholder") throws {
+		try self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder)
 	}
 	
-	func renderPNG(from formula: String, then: @escaping (Image) throws -> Void) throws {
-		try renderPDF(from: formula) { name, _ in
-			let pngName = "\(name).png"
-			let pdfName = "\(name).pdf"
-			let pngFile = self.tempDir.childFile(named: pngName)
-			
-			try self.shellInvoke("pdftocairo", in: self.tempDir.url, args: [pdfName, pngName]) {
-				try then(try Image(fromPngURL: pngFile.url))
+	deinit {
+		if let lastName = lastFilename {
+			do {
+				try self.cleanUpTexFiles(name: lastName)
+			} catch {
+				print("Error while cleaning up tex files in the process of deinitializing LatexRenderer: \(error)")
 			}
 		}
 	}
 	
-	private func renderPDF(from formula: String, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) throws -> Void) throws {
-		let timestamp = Date().timeIntervalSince1970
+	func renderPNG(from formula: String, then: @escaping (Image) -> Void) throws {
+		try renderPDF(from: formula) { name, _ in
+			let pngFile = self.tempDir.childFile(named: "\(name)-1.png")
+			
+			do {
+				try self.shellInvoke("pdftocairo", in: self.tempDir.url, args: ["\(name).pdf", "-png", "\(name)"]) { _ in
+					do {
+						then(try Image(fromPngURL: pngFile.url))
+					} catch {
+						print("Error while creating image from rendered LaTeX PNG: \(error)")
+					}
+				}
+			} catch {
+				print("Error while invoking 'pdftocairo': \(error)")
+			}
+		}
+	}
+	
+	private func renderPDF(from formula: String, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) -> Void) throws {
+		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
 		let filename = "latex-\(timestamp)"
-		let texFile = tempDir.childFile(named: "\(filename).tex")
+		let texName = "\(filename).tex"
+		let texFile = tempDir.childFile(named: texName)
+		let logFile = self.tempDir.childFile(named: "\(filename).log")
 		
-		texFile.deleteAutomatically = false
+		if let lastName = lastFilename {
+			// Clean up previous temp files
+			try self.cleanUpTexFiles(name: lastName)
+		}
+		lastFilename = filename
+		
+		print("Writing TeX file")
 		try texFile.write(utf8: try template(appliedTo: formula))
 		
-		try shellInvoke("pdflatex", in: tempDir.url, args: [filename]) {
+		print("Invoking pdflatex")
+		try shellInvoke("pdflatex", in: tempDir.url, args: ["-halt-on-error", texName]) { _ in
 			let pdfFile = self.tempDir.childFile(named: "\(filename).pdf")
-			var latexError: LatexError? = nil
+			var resultingError: Error? = nil
 			
 			if pdfFile.exists {
-				try then(filename, pdfFile)
+				then(filename, pdfFile)
 			} else {
-				let logFile = self.tempDir.childFile(named: "\(filename).log")
-				latexError = .noPDFGenerated(log: logFile.readUTF8() ?? "Could not read log file")
+				resultingError = LatexError.pdfError(log: logFile.readUTF8() ?? "Could not read TeX log")
 			}
 			
-			// Clean up generated files
-			let fileManager = FileManager.default
-			for file in try fileManager.contentsOfDirectory(at: self.tempDir.url, includingPropertiesForKeys: nil) {
-				if file.lastPathComponent.starts(with: filename) {
-					try fileManager.removeItem(at: file)
-				}
-			}
-			
-			if let error = latexError {
-				throw error
+			if let error = resultingError {
+				print("Error after invoking pdflatex: \(error)")
 			}
 		}
 	}
 	
-	private func shellInvoke(_ executable: String, in dirURL: URL, args: [String], then: @escaping () throws -> Void) throws {
-		let process = Process()
-		process.executableURL = URL(fileURLWithPath: executable)
-		process.currentDirectoryURL = dirURL
-		process.arguments = args
-		process.terminationHandler = { _ in
-			do {
-				try then()
-			} catch {
-				print("A latex error occurred while running \(executable)'s termination callback: \(error)")
+	private func cleanUpTexFiles(name: String) throws {
+		let fileManager = FileManager.default
+		for file in try fileManager.contentsOfDirectory(at: self.tempDir.url, includingPropertiesForKeys: nil) {
+			if file.lastPathComponent.starts(with: name) {
+				try fileManager.removeItem(at: file)
 			}
 		}
-		try process.run()
-		print("Finished '\(executable)' process")
+	}
+	
+	private func shellInvoke(_ executable: String, in dirURL: URL, args: [String], then: @escaping (Process) -> Void) throws {
+		let shell = Shell()
+		
+		do {
+			try shell.run(executable, in: dirURL, args: args, then: then)
+		} catch {
+			throw LatexError.processError(executable: executable, cause: error)
+		}
 	}
 	
 	private func readTemplate() throws -> String {
