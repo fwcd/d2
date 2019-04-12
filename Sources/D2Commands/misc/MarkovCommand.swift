@@ -10,7 +10,7 @@ public class MarkovCommand: StringCommand {
 	public let helpText = "Syntax: markov [--all]? [--noping]? [@user]?"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
-	private let order = 3
+	private let order = 2
 	private let maxWords = 60
 	
 	public init() {}
