@@ -57,6 +57,7 @@ public class LatexCommand: StringCommand {
 			output.append("An asynchronous LaTeX error occurred")
 			print("Asynchronous LaTeX error: \(error)")
 		}
+		running = false
 	}
 	
 	private func extractError(from log: String) -> String {
