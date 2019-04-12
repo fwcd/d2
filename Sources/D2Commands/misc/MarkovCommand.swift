@@ -3,10 +3,11 @@ import D2Permissions
 import D2Utils
 
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
+fileprivate let pingPattern = try! Regex(from: "<@&?.+?>")
 
 public class MarkovCommand: StringCommand {
 	public let description = "Generates a natural language response using a Markov chain"
-	public let helpText = "Syntax: markov [--all]? [@user]?"
+	public let helpText = "Syntax: markov [--all]? [--noping]? [@user]?"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let order = 3
@@ -45,10 +46,15 @@ public class MarkovCommand: StringCommand {
 				if channels.count == queriedChannels {
 					// Resolved all channels, generate Markov text now
 					
-					let words = allMessages
+					var words = allMessages
 						.filter { msg in mentioned.map { msg.author.id == $0.id } ?? !msg.author.bot }
 						.map { $0.content }
 						.flatMap { $0.split(separator: " ") }
+					
+					if flags.contains("noping") {
+						words = words.map { pingPattern.replace(in: String($0), with: ":ping_pong:")[...] }
+					}
+					
 					guard let startWord = words.randomElement() else {
 						output.append("Did not find any words in this channel")
 						return
