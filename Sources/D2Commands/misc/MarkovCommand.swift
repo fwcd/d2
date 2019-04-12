@@ -46,7 +46,7 @@ public class MarkovCommand: StringCommand {
 					// Resolved all channels, generate Markov text now
 					
 					let words = allMessages
-						.filter { msg in mentioned.map { msg.author.id == $0.id } ?? true }
+						.filter { msg in mentioned.map { msg.author.id == $0.id } ?? !msg.author.bot }
 						.map { $0.content }
 						.flatMap { $0.split(separator: " ") }
 					guard let startWord = words.randomElement() else {
