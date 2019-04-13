@@ -4,5 +4,5 @@ struct QuotientNode: ExpressionASTNode {
 	let lhs: ExpressionASTNode
 	let rhs: ExpressionASTNode
 	
-	var value: Double { return lhs.value / rhs.value }
+	func evaluate(with feedDict: [String: Double]) throws -> Double { return (try lhs.evaluate()) / (try rhs.evaluate()) }
 }

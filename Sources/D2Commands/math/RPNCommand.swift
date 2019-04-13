@@ -10,7 +10,7 @@ public class RPNCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			output.append(String(try RPNExpressionParser().parse(input).value))
+			output.append(String(try RPNExpressionParser().parse(input).evaluate()))
 		} catch ExpressionParseError.invalidOperator(let op) {
 			output.append("Found invalid operator: `\(op)`")
 		} catch ExpressionParseError.tooFewOperands(let op) {
