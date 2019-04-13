@@ -4,13 +4,15 @@ import D2Utils
 struct FunctionGraphRenderer {
 	private let width: Int
 	private let height: Int
-	private let pixelToFunctionX = 
-	private let pixelToFunctionY = 
+	private let pixelToFunctionX: ClosureBijection<Double>
+	private let pixelToFunctionY: ClosureBijection<Double>
 	
 	public init(width: Int = 200, height: Int = 200, scale: Double = 10.0) {
 		self.width = width
 		self.height = height
-		self.scale = scale
+		
+		pixelToFunctionX = Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale)))
+		pixelToFunctionY = Scaling(by: -1.0).then(Translation(by: Double(height)))
 	}
 	
 	func render(ast: ExpressionASTNode) throws -> Image {
@@ -34,10 +36,10 @@ struct FunctionGraphRenderer {
 	}
 	
 	private func pixelPos(of functionPos: Vec2<Double>) -> Vec2<Double> {
-		return Vec2<Double>(x: (functionPos.x + (Double(width) / (2 * scale))) * scale, y: Double(height) - functionPos.y)
+		return Vec2(x: pixelToFunctionX.apply(functionPos.x), y: pixelToFunctionY.apply(functionPos.y))
 	}
 	
 	private func functionPos(of pixelPos: Vec2<Double>) -> Vec2<Double> {
-		return Vec2<Double>(x: (Double(pixelPos.x) / scale) - (Double(width) / (2 * scale)), y: Double(height) - pixelPos.y)
+		return Vec2(x: pixelToFunctionX.inverseApply(pixelPos.x), y: pixelToFunctionY.inverseApply(pixelPos.y))
 	}
 }
