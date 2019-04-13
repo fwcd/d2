@@ -69,12 +69,13 @@ struct FunctionGraphRenderer {
 			let funcX = pixelToFunctionX.apply(Double(x))
 			if let funcY = try? ast.evaluate(with: ["x": funcX]) {
 				let pos = pixelPos(of: Vec2(x: funcX, y: funcY))
+				let clampedPos = pos.with(y: max(-5.0, min(Double(height + 5), pos.y)))
 				
 				if let last = lastPos {
-					graphics.draw(LineSegment(from: last, to: pos))
+					graphics.draw(LineSegment(from: last, to: clampedPos))
 				}
 				
-				lastPos = pos
+				lastPos = clampedPos
 			} else {
 				lastPos = nil
 			}
