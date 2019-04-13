@@ -20,8 +20,16 @@ struct FunctionGraphRenderer {
 		var graphics = CairoGraphics(fromImage: image)
 		var lastPos: Vec2<Double>? = nil
 		
+		// Draw axes
+		let xAxisY = pixelToFunctionY.inverseApply(0)
+		let yAxisX = pixelToFunctionX.inverseApply(0)
+		
+		graphics.draw(LineSegment(fromX: 0, y: xAxisY, toX: Double(width), y: xAxisY, color: Colors.gray))
+		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX, y: Double(height), color: Colors.gray))
+		
+		// Draw graph of function
 		for x in 0..<width {
-			let funcX = functionPos(of: Vec2(x: Double(x))).x
+			let funcX = pixelToFunctionX.apply(Double(x))
 			let funcY = try ast.evaluate(with: ["x": funcX])
 			let pos = pixelPos(of: Vec2(x: funcX, y: funcY))
 			
