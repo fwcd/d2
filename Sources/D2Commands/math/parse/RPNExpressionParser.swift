@@ -2,7 +2,8 @@ fileprivate let binaryOperators: [String: (ExpressionASTNode, ExpressionASTNode)
 	"+": { SumNode(lhs: $0, rhs: $1) },
 	"-": { DifferenceNode(lhs: $0, rhs: $1) },
 	"*": { ProductNode(lhs: $0, rhs: $1) },
-	"/": { QuotientNode(lhs: $0, rhs: $1) }
+	"/": { QuotientNode(lhs: $0, rhs: $1) },
+	"^": { ExponentiationNode(lhs: $0, rhs: $1) }
 ]
 
 public struct RPNExpressionParser: ExpressionParser {
