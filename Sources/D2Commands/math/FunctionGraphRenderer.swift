@@ -11,8 +11,8 @@ struct FunctionGraphRenderer {
 	private let pixelToFunctionY: ClosureBijection<Double>
 	
 	public init(
-		width: Int = 200,
-		height: Int = 200,
+		width: Int = 300,
+		height: Int = 300,
 		scale: Double = 10.0,
 		axisArrowSize: Double = 6.0,
 		axisLabelSpacing: Int = 45,
@@ -25,7 +25,7 @@ struct FunctionGraphRenderer {
 		self.axisColor = axisColor
 		
 		pixelToFunctionX = Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale)))
-		pixelToFunctionY = Scaling(by: -1.0).then(Translation(by: Double(height / 2)))
+		pixelToFunctionY = Scaling(by: -1.0 / scale).then(Translation(by: Double(height) / (2 * scale)))
 	}
 	
 	func render(ast: ExpressionASTNode) throws -> Image {
