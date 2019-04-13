@@ -27,10 +27,10 @@ struct FunctionGraphRenderer {
 	}
 	
 	private func pixelPos(of functionPos: Vec2<Double>) -> Vec2<Double> {
-		return Vec2<Double>(x: (functionPos.x + (Double(width) / (2 * scale))) * scale, y: functionPos.y + Double(height))
+		return Vec2<Double>(x: (functionPos.x + (Double(width) / (2 * scale))) * scale, y: functionPos.y - Double(height))
 	}
 	
 	private func functionPos(of pixelPos: Vec2<Double>) -> Vec2<Double> {
-		return Vec2<Double>(x: (Double(pixelPos.x) / scale) - (Double(width) / (2 * scale)), y: Double(height) - pixelPos.y)
+		return Vec2<Double>(x: (Double(pixelPos.x) / scale) - (Double(width) / (2 * scale)), y: Double(height) + pixelPos.y)
 	}
 }
