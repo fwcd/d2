@@ -2,9 +2,15 @@ import D2Graphics
 import D2Utils
 
 struct FunctionGraphRenderer {
-	private let width = 200
-	private let height = 200
-	private let scale = 10.0
+	private let width: Int
+	private let height: Int
+	private let scale: Double
+	
+	public init(width: Int = 200, height: Int = 200, scale: Double = 10.0) {
+		self.width = width
+		self.height = height
+		self.scale = scale
+	}
 	
 	func render(ast: ExpressionASTNode) throws -> Image {
 		let image = try Image(width: width, height: height)
