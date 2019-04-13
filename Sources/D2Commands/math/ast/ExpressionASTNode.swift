@@ -1,4 +1,6 @@
 public protocol ExpressionASTNode {
+	var isConstant: Bool { get }
+	
 	func evaluate(with feedDict: [String: Double]) throws -> Double
 }
 
