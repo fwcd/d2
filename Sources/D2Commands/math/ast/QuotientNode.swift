@@ -6,6 +6,9 @@ struct QuotientNode: ExpressionASTNode {
 	var isConstant: Bool { return lhs.isConstant && rhs.isConstant }
 	
 	func evaluate(with feedDict: [String: Double]) throws -> Double {
-		return (try lhs.evaluate(with: feedDict)) / (try rhs.evaluate(with: feedDict))
+		let numerator = try lhs.evaluate(with: feedDict)
+		let denominator = try rhs.evaluate(with: feedDict)
+		guard denominator != 0.0 else { throw ExpressionError.divisionByZero(numerator, denominator) }
+		return numerator / denominator
 	}
 }

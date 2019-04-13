@@ -67,14 +67,17 @@ struct FunctionGraphRenderer {
 		// Draw graph of function
 		for x in 0..<width {
 			let funcX = pixelToFunctionX.apply(Double(x))
-			let funcY = try ast.evaluate(with: ["x": funcX])
-			let pos = pixelPos(of: Vec2(x: funcX, y: funcY))
-			
-			if let last = lastPos {
-				graphics.draw(LineSegment(from: last, to: pos))
+			if let funcY = try? ast.evaluate(with: ["x": funcX]) {
+				let pos = pixelPos(of: Vec2(x: funcX, y: funcY))
+				
+				if let last = lastPos {
+					graphics.draw(LineSegment(from: last, to: pos))
+				}
+				
+				lastPos = pos
+			} else {
+				lastPos = nil
 			}
-			
-			lastPos = pos
 		}
 		
 		return image
