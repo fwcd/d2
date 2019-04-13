@@ -36,10 +36,10 @@ struct FunctionGraphRenderer {
 	}
 	
 	private func pixelPos(of functionPos: Vec2<Double>) -> Vec2<Double> {
-		return Vec2(x: pixelToFunctionX.apply(functionPos.x), y: pixelToFunctionY.apply(functionPos.y))
+		return Vec2(x: pixelToFunctionX.inverseApply(functionPos.x), y: pixelToFunctionY.inverseApply(functionPos.y))
 	}
 	
 	private func functionPos(of pixelPos: Vec2<Double>) -> Vec2<Double> {
-		return Vec2(x: pixelToFunctionX.inverseApply(pixelPos.x), y: pixelToFunctionY.inverseApply(pixelPos.y))
+		return Vec2(x: pixelToFunctionX.apply(pixelPos.x), y: pixelToFunctionY.apply(pixelPos.y))
 	}
 }
