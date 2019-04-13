@@ -7,7 +7,7 @@ struct PlaceholderNode: ExpressionASTNode {
 		if let value = feedDict[name] {
 			return value
 		} else {
-			throw ExpressionParseError.noValueForPlaceholder(name)
+			throw ExpressionError.noValueForPlaceholder(name)
 		}
 	}
 }

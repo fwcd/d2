@@ -11,11 +11,11 @@ public class RPNCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			output.append(String(try RPNExpressionParser().parse(input).evaluate()))
-		} catch ExpressionParseError.invalidOperator(let op) {
+		} catch ExpressionError.invalidOperator(let op) {
 			output.append("Found invalid operator: `\(op)`")
-		} catch ExpressionParseError.tooFewOperands(let op) {
+		} catch ExpressionError.tooFewOperands(let op) {
 			output.append("Operator `\(op)` has too few operands")
-		} catch ExpressionParseError.emptyResult {
+		} catch ExpressionError.emptyResult {
 			output.append("The expression yielded no result")
 		} catch {
 			print(error)

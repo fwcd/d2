@@ -18,18 +18,18 @@ struct RPNExpressionParser: ExpressionParser {
 			if let number = Double(token) {
 				operandStack.append(ConstantNode(value: number))
 			} else if let op = binaryOperators[token] {
-				guard let rhs = operandStack.popLast() else { throw ExpressionParseError.tooFewOperands(token) }
-				guard let lhs = operandStack.popLast() else { throw ExpressionParseError.tooFewOperands(token) }
+				guard let rhs = operandStack.popLast() else { throw ExpressionError.tooFewOperands(token) }
+				guard let lhs = operandStack.popLast() else { throw ExpressionError.tooFewOperands(token) }
 				operandStack.append(op(lhs, rhs))
 			} else {
-				throw ExpressionParseError.invalidOperator(token)
+				throw ExpressionError.invalidOperator(token)
 			}
 		}
 		
 		if let result = operandStack.popLast() {
 			return result
 		} else {
-			throw ExpressionParseError.emptyResult
+			throw ExpressionError.emptyResult
 		}
 	}
 }
