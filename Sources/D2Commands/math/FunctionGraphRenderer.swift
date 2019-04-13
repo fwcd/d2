@@ -12,7 +12,7 @@ struct FunctionGraphRenderer {
 		self.height = height
 		
 		pixelToFunctionX = Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale)))
-		pixelToFunctionY = Scaling(by: -1.0).then(Translation(by: Double(height)))
+		pixelToFunctionY = Scaling(by: -1.0).then(Translation(by: Double(height / 2)))
 	}
 	
 	func render(ast: ExpressionASTNode) throws -> Image {
