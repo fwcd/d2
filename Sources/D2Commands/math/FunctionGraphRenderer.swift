@@ -6,13 +6,22 @@ struct FunctionGraphRenderer {
 	private let height: Int
 	private let axisArrowSize: Double
 	private let axisColor: Color
+	private let axisLabelSpacing: Int
 	private let pixelToFunctionX: ClosureBijection<Double>
 	private let pixelToFunctionY: ClosureBijection<Double>
 	
-	public init(width: Int = 200, height: Int = 200, scale: Double = 10.0, axisArrowSize: Double = 6.0, axisColor: Color = Colors.gray) {
+	public init(
+		width: Int = 200,
+		height: Int = 200,
+		scale: Double = 10.0,
+		axisArrowSize: Double = 6.0,
+		axisLabelSpacing: Int = 45,
+		axisColor: Color = Colors.gray
+	) {
 		self.width = width
 		self.height = height
 		self.axisArrowSize = axisArrowSize
+		self.axisLabelSpacing = axisLabelSpacing
 		self.axisColor = axisColor
 		
 		pixelToFunctionX = Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale)))
@@ -37,6 +46,22 @@ struct FunctionGraphRenderer {
 		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX, y: Double(height), color: axisColor))
 		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX - axisArrowSize, y: axisArrowSize, color: axisColor))
 		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX + axisArrowSize, y: axisArrowSize, color: axisColor))
+		
+		let center = Vec2(x: width, y: height).asDouble / 2.0
+		
+		// Draw x-axis labels
+		for x in stride(from: 0, to: width, by: axisLabelSpacing) {
+			let funcX = pixelToFunctionX.apply(Double(x))
+			let pos = Vec2(x: Double(x), y: xAxisY + 18)
+			graphics.draw(Text(String(format: "%.1f", funcX), withSize: 10, at: pos, color: axisColor))
+		}
+		
+		// Draw y-axis labels
+		for y in stride(from: 0, to: height, by: axisLabelSpacing) {
+			let funcY = pixelToFunctionY.apply(Double(y))
+			let pos = Vec2(x: yAxisX - 30, y: Double(y))
+			graphics.draw(Text(String(format: "%.1f", funcY), withSize: 10, at: pos, color: axisColor))
+		}
 		
 		// Draw graph of function
 		for x in 0..<width {
