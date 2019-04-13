@@ -19,4 +19,11 @@ public extension Bijection {
 			inverseApply: { self.inverseApply(next.inverseApply($0)) }
 		)
 	}
+	
+	func compose<B: Bijection>(_ previous: B) -> ClosureBijection<Value> where B.Value == Value {
+		return ClosureBijection(
+			apply: { self.apply(previous.apply($0)) },
+			inverseApply: { previous.inverseApply(self.inverseApply($0)) }
+		)
+	}
 }
