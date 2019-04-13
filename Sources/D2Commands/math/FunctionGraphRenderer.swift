@@ -47,17 +47,18 @@ struct FunctionGraphRenderer {
 		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX - axisArrowSize, y: axisArrowSize, color: axisColor))
 		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX + axisArrowSize, y: axisArrowSize, color: axisColor))
 		
-		let center = Vec2(x: width, y: height).asDouble / 2.0
+		let center = Vec2<Int>(x: width, y: height) / 2
+		let trimmedHalfSize = (Vec2<Int>(x: width, y: height) / (2 * axisLabelSpacing)) * axisLabelSpacing
 		
 		// Draw x-axis labels
-		for x in stride(from: 0, to: width, by: axisLabelSpacing) {
+		for x in stride(from: center.x - trimmedHalfSize.x, through: center.x + trimmedHalfSize.x, by: axisLabelSpacing) {
 			let funcX = pixelToFunctionX.apply(Double(x))
 			let pos = Vec2(x: Double(x), y: xAxisY + 18)
 			graphics.draw(Text(String(format: "%.1f", funcX), withSize: 10, at: pos, color: axisColor))
 		}
 		
 		// Draw y-axis labels
-		for y in stride(from: 0, to: height, by: axisLabelSpacing) {
+		for y in stride(from: center.y - trimmedHalfSize.y, through: center.y + trimmedHalfSize.y, by: axisLabelSpacing) {
 			let funcY = pixelToFunctionY.apply(Double(y))
 			let pos = Vec2(x: yAxisX - 30, y: Double(y))
 			graphics.draw(Text(String(format: "%.1f", funcY), withSize: 10, at: pos, color: axisColor))
