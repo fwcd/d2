@@ -4,12 +4,16 @@ import D2Utils
 struct FunctionGraphRenderer {
 	private let width: Int
 	private let height: Int
+	private let axisArrowSize: Double
+	private let axisColor: Color
 	private let pixelToFunctionX: ClosureBijection<Double>
 	private let pixelToFunctionY: ClosureBijection<Double>
 	
-	public init(width: Int = 200, height: Int = 200, scale: Double = 10.0) {
+	public init(width: Int = 200, height: Int = 200, scale: Double = 10.0, axisArrowSize: Double = 6.0, axisColor: Color = Colors.gray) {
 		self.width = width
 		self.height = height
+		self.axisArrowSize = axisArrowSize
+		self.axisColor = axisColor
 		
 		pixelToFunctionX = Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale)))
 		pixelToFunctionY = Scaling(by: -1.0).then(Translation(by: Double(height / 2)))
@@ -24,8 +28,15 @@ struct FunctionGraphRenderer {
 		let xAxisY = pixelToFunctionY.inverseApply(0)
 		let yAxisX = pixelToFunctionX.inverseApply(0)
 		
-		graphics.draw(LineSegment(fromX: 0, y: xAxisY, toX: Double(width), y: xAxisY, color: Colors.gray))
-		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX, y: Double(height), color: Colors.gray))
+		// x-axis
+		graphics.draw(LineSegment(fromX: 0, y: xAxisY, toX: Double(width), y: xAxisY, color: axisColor))
+		graphics.draw(LineSegment(fromX: Double(width), y: xAxisY, toX: Double(width) - axisArrowSize, y: xAxisY - axisArrowSize, color: axisColor))
+		graphics.draw(LineSegment(fromX: Double(width), y: xAxisY, toX: Double(width) - axisArrowSize, y: xAxisY + axisArrowSize, color: axisColor))
+		
+		// y-axis
+		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX, y: Double(height), color: axisColor))
+		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX - axisArrowSize, y: axisArrowSize, color: axisColor))
+		graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX + axisArrowSize, y: axisArrowSize, color: axisColor))
 		
 		// Draw graph of function
 		for x in 0..<width {
