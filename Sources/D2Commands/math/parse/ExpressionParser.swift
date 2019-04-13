@@ -1,3 +1,3 @@
 protocol ExpressionParser {
-	func parse(_ str: String) throws -> ExpressionASTNode
+	func parse(_ input: String) throws -> ExpressionASTNode
 }

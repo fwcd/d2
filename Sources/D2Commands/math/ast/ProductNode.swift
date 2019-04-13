@@ -1,8 +1,8 @@
 import D2Utils
 
-struct ProductNode<T: Multipliable> {
-	let lhs: T
-	let rhs: T
+struct ProductNode: ExpressionASTNode {
+	let lhs: ExpressionASTNode
+	let rhs: ExpressionASTNode
 	
-	var value: T { return lhs * rhs }
+	var value: Double { return lhs.value * rhs.value }
 }

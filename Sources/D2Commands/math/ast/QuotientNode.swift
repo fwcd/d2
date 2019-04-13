@@ -1,8 +1,8 @@
 import D2Utils
 
-struct QuotientNode<T: Divisible> {
-	let lhs: T
-	let rhs: T
+struct QuotientNode: ExpressionASTNode {
+	let lhs: ExpressionASTNode
+	let rhs: ExpressionASTNode
 	
-	var value: T { return lhs / rhs }
+	var value: Double { return lhs.value / rhs.value }
 }

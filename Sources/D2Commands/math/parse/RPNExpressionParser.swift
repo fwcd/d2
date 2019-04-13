@@ -1,0 +1,35 @@
+fileprivate let binaryOperators: [String: (ExpressionASTNode, ExpressionASTNode) -> ExpressionASTNode] = [
+	"+": { SumNode(lhs: $0, rhs: $1) },
+	"-": { DifferenceNode(lhs: $0, rhs: $1) },
+	"*": { ProductNode(lhs: $0, rhs: $1) },
+	"/": { QuotientNode(lhs: $0, rhs: $1) }
+]
+
+struct RPNExpressionParser: ExpressionParser {
+	func parse(_ input: String) throws -> ExpressionASTNode {
+		let tokens = input.split(separator: " ").map { String($0) }
+		return try parseRPNTree(tokens: tokens)
+	}
+	
+	private func parseRPNTree(tokens: [String]) throws -> ExpressionASTNode {
+		var operandStack = [ExpressionASTNode]()
+		
+		for token in tokens {
+			if let number = Double(token) {
+				operandStack.append(ConstantNode(value: number))
+			} else if let op = binaryOperators[token] {
+				guard let rhs = operandStack.popLast() else { throw ExpressionParseError.tooFewOperands(token) }
+				guard let lhs = operandStack.popLast() else { throw ExpressionParseError.tooFewOperands(token) }
+				operandStack.append(op(lhs, rhs))
+			} else {
+				throw ExpressionParseError.invalidOperator(token)
+			}
+		}
+		
+		if let result = operandStack.popLast() {
+			return result
+		} else {
+			throw ExpressionParseError.emptyResult
+		}
+	}
+}
