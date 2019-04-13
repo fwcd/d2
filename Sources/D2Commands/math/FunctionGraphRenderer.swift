@@ -4,7 +4,8 @@ import D2Utils
 struct FunctionGraphRenderer {
 	private let width: Int
 	private let height: Int
-	private let scale: Double
+	private let pixelToFunctionX = 
+	private let pixelToFunctionY = 
 	
 	public init(width: Int = 200, height: Int = 200, scale: Double = 10.0) {
 		self.width = width
