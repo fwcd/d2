@@ -6,6 +6,11 @@ fileprivate let binaryOperators: [String: (ExpressionASTNode, ExpressionASTNode)
 	"^": { ExponentiationNode(lhs: $0, rhs: $1) }
 ]
 
+fileprivate let mathConstants: [String: ExpressionASTNode] = [
+	"e": ConstantNode(value: 2.71828182845904523536),
+	"pi": ConstantNode(value: .pi)
+]
+
 public struct RPNExpressionParser: ExpressionParser {
 	public init() {}
 	
@@ -24,6 +29,8 @@ public struct RPNExpressionParser: ExpressionParser {
 				guard let rhs = operandStack.popLast() else { throw ExpressionError.tooFewOperands(token) }
 				guard let lhs = operandStack.popLast() else { throw ExpressionError.tooFewOperands(token) }
 				operandStack.append(op(lhs, rhs))
+			} else if let constant = mathConstants[token] {
+				operandStack.append(constant)
 			} else if token.isAlphabetic {
 				operandStack.append(PlaceholderNode(name: token))
 			} else {
