@@ -14,15 +14,19 @@ public class EvaluateExpressionCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			output.append(String(try parser.parse(input).evaluate()))
+			let ast = try parser.parse(input)
+			let graph = try FunctionGraphRenderer().render(ast: ast)
+			
+			output.append(DiscordMessage(
+				content: (try? ast.evaluate()).map { String($0) } ?? "Could not evaluate directly",
+				files: [DiscordFileUpload(data: try graph.pngEncoded(), filename: "graph.png", mimeType: "image/png")]
+			))
 		} catch ExpressionError.invalidOperator(let op) {
 			output.append("Found invalid operator: `\(op)`")
 		} catch ExpressionError.tooFewOperands(let op) {
 			output.append("Operator `\(op)` has too few operands")
 		} catch ExpressionError.emptyResult {
 			output.append("The expression yielded no result")
-		} catch ExpressionError.noValueForPlaceholder(let name) {
-			output.append("The value of the placeholder `\(name)` is unknown. Perhaps you wanted to use an operator or a constant instead?")
 		} catch {
 			print(error)
 			output.append("Error while parsing/evaluating expression")
