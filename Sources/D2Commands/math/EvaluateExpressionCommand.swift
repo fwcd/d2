@@ -21,6 +21,8 @@ public class EvaluateExpressionCommand: StringCommand {
 			output.append("Operator `\(op)` has too few operands")
 		} catch ExpressionError.emptyResult {
 			output.append("The expression yielded no result")
+		} catch ExpressionError.noValueForPlaceholder(let name) {
+			output.append("The value of the placeholder `\(name)` is unknown. Perhaps you wanted to use an operator or a constant instead?")
 		} catch {
 			print(error)
 			output.append("Error while parsing/evaluating expression")
