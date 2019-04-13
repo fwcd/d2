@@ -5,8 +5,10 @@ fileprivate let binaryOperators: [String: (ExpressionASTNode, ExpressionASTNode)
 	"/": { QuotientNode(lhs: $0, rhs: $1) }
 ]
 
-struct RPNExpressionParser: ExpressionParser {
-	func parse(_ input: String) throws -> ExpressionASTNode {
+public struct RPNExpressionParser: ExpressionParser {
+	public init() {}
+	
+	public func parse(_ input: String) throws -> ExpressionASTNode {
 		let tokens = input.split(separator: " ").map { String($0) }
 		return try parseRPNTree(tokens: tokens)
 	}

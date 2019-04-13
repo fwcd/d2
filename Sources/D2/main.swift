@@ -29,7 +29,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["*"] = BinaryOperationCommand<Double>(name: "multiplication", operation: *)
 	handler["/"] = BinaryOperationCommand<Double>(name: "division", operation: /)
 	handler["%"] = BinaryOperationCommand<Int>(name: "remainder", operation: %)
-	handler["rpn"] = RPNCommand()
+	handler["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
 	handler["tictactoe"] = GameCommand<TicTacToeGame>()
 	handler["uno"] = GameCommand<UnoGame>()
 	handler["sourcefile"] = SourceFileCommand()

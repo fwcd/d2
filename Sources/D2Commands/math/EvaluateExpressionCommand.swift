@@ -1,16 +1,20 @@
 import SwiftDiscord
 import D2Permissions
 
-public class RPNCommand: StringCommand {
-	public let description = "Evaluates an expression in Reverse Polish Notation"
+public class EvaluateExpressionCommand: StringCommand {
+	public let description: String
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
+	private let parser: ExpressionParser
 	
-	public init() {}
+	public init(parser: ExpressionParser, name: String) {
+		self.parser = parser
+		description = "Evaluates an expression in \(name)"
+	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			output.append(String(try RPNExpressionParser().parse(input).evaluate()))
+			output.append(String(try parser.parse(input).evaluate()))
 		} catch ExpressionError.invalidOperator(let op) {
 			output.append("Found invalid operator: `\(op)`")
 		} catch ExpressionError.tooFewOperands(let op) {
@@ -19,7 +23,7 @@ public class RPNCommand: StringCommand {
 			output.append("The expression yielded no result")
 		} catch {
 			print(error)
-			output.append("Error while computing RPN")
+			output.append("Error while parsing/evaluating expression")
 		}
 	}
 }
