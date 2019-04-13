@@ -21,6 +21,8 @@ struct RPNExpressionParser: ExpressionParser {
 				guard let rhs = operandStack.popLast() else { throw ExpressionError.tooFewOperands(token) }
 				guard let lhs = operandStack.popLast() else { throw ExpressionError.tooFewOperands(token) }
 				operandStack.append(op(lhs, rhs))
+			} else if token.isAlphabetic {
+				operandStack.append(PlaceholderNode(name: token))
 			} else {
 				throw ExpressionError.invalidOperator(token)
 			}

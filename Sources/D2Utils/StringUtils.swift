@@ -1,6 +1,17 @@
+import Foundation
+
 extension String {
 	public var nilIfEmpty: String? {
 		return isEmpty ? nil : self
+	}
+	
+	public var isAlphabetic: Bool {
+		for scalar in unicodeScalars {
+			if !CharacterSet.letters.contains(scalar) {
+				return false
+			}
+		}
+		return true
 	}
 	
 	public func split(by length: Int) -> [String] {
