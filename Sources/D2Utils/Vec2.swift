@@ -48,6 +48,14 @@ public struct Vec2<T: VecComponent>: Addable, Subtractable, Multipliable, Divisi
 	public func map<R: VecComponent>(mapper: (T) -> R) -> Vec2<R> {
 		return Vec2<R>(x: mapper(x), y: mapper(y))
 	}
+	
+	public func with(x newX: T) -> Vec2<T> {
+		return Vec2(x: newX, y: y)
+	}
+	
+	public func with(y newY: T) -> Vec2<T> {
+		return Vec2(x: x, y: newY)
+	}
 }
 
 extension Vec2 where T: BinaryFloatingPoint {
