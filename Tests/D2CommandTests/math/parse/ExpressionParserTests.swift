@@ -1,13 +1,15 @@
 import XCTest
 @testable import D2Commands
 
+fileprivate let eps = 0.00001
+
 final class ExpressionParserTests: XCTestCase {
 	static var allTests = [
-		("testRPNExpressionParser", testRPNExpressionParser)
+		("testRPNExpressionParser", testRPNExpressionParser),
+		("testInfixExpressionParser", testInfixExpressionParser)
 	]
 	
 	private func testRPNExpressionParser() throws {
-		let eps = 0.00001
 		let parser = RPNExpressionParser()
 		
 		let rawProduct = "3 4 *"
@@ -27,5 +29,11 @@ final class ExpressionParserTests: XCTestCase {
 		XCTAssertEqual(try sumLeft.evaluate(), -51.09, accuracy: eps)
 		XCTAssertEqual(try sumRight.evaluate(), Double.pi, accuracy: eps)
 		XCTAssertEqual(try differenceRight.evaluate(), 1.0, accuracy: eps)
+	}
+	
+	private func testInfixExpressionParser() throws {
+		let parser = InfixExpressionParser()
+		
+		
 	}
 }

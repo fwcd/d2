@@ -1,9 +1,9 @@
-let expressionBinaryOperators: [String: (ExpressionASTNode, ExpressionASTNode) -> ExpressionASTNode] = [
-	"+": { SumNode(lhs: $0, rhs: $1) },
-	"-": { DifferenceNode(lhs: $0, rhs: $1) },
-	"*": { ProductNode(lhs: $0, rhs: $1) },
-	"/": { QuotientNode(lhs: $0, rhs: $1) },
-	"^": { ExponentiationNode(lhs: $0, rhs: $1) }
+let expressionBinaryOperators: [String: BinaryOperatorEntry] = [
+	"+": BinaryOperatorEntry(precedence: 1, associativity: .left) { SumNode(lhs: $0, rhs: $1) },
+	"-": BinaryOperatorEntry(precedence: 1, associativity: .left) { DifferenceNode(lhs: $0, rhs: $1) },
+	"*": BinaryOperatorEntry(precedence: 2, associativity: .left) { ProductNode(lhs: $0, rhs: $1) },
+	"/": BinaryOperatorEntry(precedence: 2, associativity: .left) { QuotientNode(lhs: $0, rhs: $1) },
+	"^": BinaryOperatorEntry(precedence: 3, associativity: .right) { ExponentiationNode(lhs: $0, rhs: $1) }
 ]
 
 let expressionConstants: [String: ExpressionASTNode] = [
