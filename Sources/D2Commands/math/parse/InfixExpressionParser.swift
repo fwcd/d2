@@ -1,8 +1,34 @@
+import D2Utils
+
+/**
+ * Matches a single numeric/symbolic token.
+ * 1. capture group: a digit
+ * 2. capture group: an opening parenthesis
+ * 3. capture group: a closing parenthesis
+ */
+fileprivate let numTokenPattern = try! Regex(from: "(\\d+\\(?:.\\d+)?)|(\\()|(\\))")
+
 public struct InfixExpressionParser: ExpressionParser {
 	public init() {}
 	
 	public func parse(_ input: String) throws -> ExpressionASTNode {
-		let tokens = input.split(separator: " ").map { String($0) }
+		let splitted: [Substring] = input.split(separator: " ")
+		let tokens = try splitted.map { (rawToken: Substring) -> String in
+			let token = String(rawToken)
+			if let parsedNumToken = numTokenPattern.firstGroups(in: token) {
+				if let digitToken = parsedNumToken[1].nilIfEmpty {
+					return digitToken
+				} else if let openingParenthesisToken = parsedNumToken[2].nilIfEmpty {
+					return openingParenthesisToken
+				} else if let closingParenthesisToken = parsedNumToken[3].nilIfEmpty {
+					return closingParenthesisToken
+				} else {
+					throw ExpressionError.unhandledToken(token)
+				}
+			} else {
+				return token
+			}
+		}
 		return try parseRPNTree(tokens: tokens)
 	}
 	
