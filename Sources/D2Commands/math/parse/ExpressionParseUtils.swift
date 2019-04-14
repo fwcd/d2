@@ -10,3 +10,5 @@ let expressionConstants: [String: ExpressionASTNode] = [
 	"e": ConstantNode(value: 2.71828182845904523536),
 	"pi": ConstantNode(value: .pi)
 ]
+
+let integerVariableNames: Set<String> = ["n", "m", "k"]

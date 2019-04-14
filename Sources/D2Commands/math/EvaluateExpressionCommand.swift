@@ -1,8 +1,6 @@
 import SwiftDiscord
 import D2Permissions
 
-fileprivate let integerVariableNames: [String] = ["n", "m", "k"]
-
 public class EvaluateExpressionCommand: StringCommand {
 	public let description: String
 	public let sourceFile: String = #file

@@ -32,7 +32,13 @@ public struct RPNExpressionParser: ExpressionParser {
 			} else if let constant = mathConstants[token] {
 				operandStack.append(constant)
 			} else if token.isAlphabetic {
-				operandStack.append(PlaceholderNode(name: token))
+				let node = PlaceholderNode(name: token)
+				
+				if integerVariableNames.contains(token) {
+					operandStack.append(FloorNode(value: node))
+				} else {
+					operandStack.append(node)
+				}
 			} else {
 				throw ExpressionError.invalidOperator(token)
 			}
