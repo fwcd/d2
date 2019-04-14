@@ -51,12 +51,16 @@ public struct InfixExpressionParser: ExpressionParser {
 			case .number(let value):
 				return ConstantNode(value: value)
 			case .identifier(let name):
-				let node = PlaceholderNode(name: name)
-				
-				if integerVariableNames.contains(name) {
-					return FloorNode(value: node)
+				if let constant = expressionConstants[name] {
+					return constant
 				} else {
-					return node
+					let node = PlaceholderNode(name: name)
+					
+					if integerVariableNames.contains(name) {
+						return FloorNode(value: node)
+					} else {
+						return node
+					}
 				}
 			case .openingParenthesis:
 				let value = try parseExpression(from: tokens, minPrecedence: 0)
