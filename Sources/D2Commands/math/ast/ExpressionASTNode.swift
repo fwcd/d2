@@ -1,5 +1,5 @@
 public protocol ExpressionASTNode {
-	var occurringVariables: [String] { get }
+	var occurringVariables: Set<String> { get }
 	
 	func evaluate(with feedDict: [String: Double]) throws -> Double
 }

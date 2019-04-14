@@ -3,7 +3,7 @@ import D2Utils
 struct QuotientNode: ExpressionASTNode {
 	let lhs: ExpressionASTNode
 	let rhs: ExpressionASTNode
-	var occurringVariables: [String] { return lhs.occurringVariables + rhs.occurringVariables }
+	var occurringVariables: Set<String> { return lhs.occurringVariables.union(rhs.occurringVariables) }
 	
 	func evaluate(with feedDict: [String: Double]) throws -> Double {
 		let numerator = try lhs.evaluate(with: feedDict)
