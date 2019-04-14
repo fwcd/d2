@@ -62,9 +62,15 @@ public struct InfixExpressionParser: ExpressionParser {
 				let value = try parseExpression(from: tokens, minPrecedence: 0)
 				
 				guard (tokens.peek().map { $0 == .closingParenthesis } ?? false) else { throw ExpressionError.parenthesesMismatch("Expected closing parenthesis, but was \(String(describing: tokens.peek()))") }
-				tokens.next() // consume right parenthesis
+				tokens.next() // Consume right parenthesis
 				
 				return value
+			case .operatorSymbol(let rawOperator):
+				// Parse unary operator
+				guard let op = expressionUnaryOperators[rawOperator] else { throw ExpressionError.invalidOperator(rawOperator) }
+				guard op.position == .prefixPosition else { throw ExpressionError.unsupported("Postfix operators are not supported by InfixExpressionParser yet: '\(rawOperator)'") } // TODO
+				
+				return op.factory(try parseAtom(from: tokens))
 			default:
 				throw ExpressionError.unhandledToken(token)
 		}

@@ -6,7 +6,8 @@ enum ExpressionError: Error {
 	case divisionByZero(Double, Double)
 	case unrecognizedToken(String)
 	case unhandledToken(InfixExpressionToken)
-	case unexpectedEnd
 	case parenthesesMismatch(String)
+	case unsupported(String)
+	case unexpectedEnd
 	case emptyResult
 }
