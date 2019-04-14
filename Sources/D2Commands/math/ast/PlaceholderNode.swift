@@ -2,7 +2,12 @@ import D2Utils
 
 struct PlaceholderNode: ExpressionASTNode {
 	let name: String
-	let isConstant = false
+	let occurringVariables: [String]
+	
+	init(name: String) {
+		self.name = name
+		occurringVariables = [name]
+	}
 	
 	func evaluate(with feedDict: [String: Double]) throws -> Double {
 		if let value = feedDict[name] {
