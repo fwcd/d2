@@ -63,6 +63,21 @@ public struct InfixExpressionParser: ExpressionParser {
 	
 	/** Use precedence climbing a sequence of tokens as an infix expression. */
 	private func parseExpression(from tokens: TokenIterator<InfixExpressionToken>, minPrecedence: Int) throws -> ExpressionASTNode {
-		throw ExpressionError.emptyResult
+		var result = try parseAtom(from: tokens)
+		
+		while case let .binaryOperator(rawOperator)? = tokens.current {
+			guard let op = expressionBinaryOperators[rawOperator] else { throw ExpressionError.invalidOperator(rawOperator) }
+			let nextMinPrecedence: Int
+			
+			switch op.associativity {
+				case .left: nextMinPrecedence = op.precedence + 1
+				case .right: nextMinPrecedence = op.precedence
+			}
+			
+			let rhs = try parseExpression(from: tokens, minPrecedence: nextMinPrecedence)
+			result = op.factory(result, rhs)
+		}
+		
+		return result
 	}
 }
