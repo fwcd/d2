@@ -20,7 +20,7 @@ public class EvaluateExpressionCommand: StringCommand {
 		let flags = Set<String>(flagsPattern.allGroups(in: input).map { $0[1] })
 		
 		do {
-			let ast = try parser.parse(input)
+			let ast = try parser.parse(flagsPattern.replace(in: input, with: ""))
 			
 			if flags.contains("ast") {
 				// Render AST only

@@ -8,8 +8,8 @@ struct ASTRenderer {
 	private let color: Color
 	
 	init(
-		width: Int = 300,
-		height: Int = 300,
+		width: Int = 200,
+		height: Int = 200,
 		padding: Double = 10.0,
 		color: Color = Colors.white
 	) {
