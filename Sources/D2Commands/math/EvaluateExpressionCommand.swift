@@ -15,12 +15,15 @@ public class EvaluateExpressionCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			let ast = try parser.parse(input)
-			let graph = ast.isConstant ? nil : try FunctionGraphRenderer().render(ast: ast)
+			let variables = ast.occurringVariables
 			
-			output.append(DiscordMessage(
-				content: (try? ast.evaluate()).map { String($0) } ?? "",
-				files: try graph.map { [DiscordFileUpload(data: try $0.pngEncoded(), filename: "graph.png", mimeType: "image/png")] } ?? []
-			))
+			if variables.isEmpty {
+				output.append(String(try ast.evaluate()))
+			} else if variables.count == 1 {
+				try output.append(try FunctionGraphRenderer(input: variables.first!).render(ast: ast), name: "functionGraph.png")
+			} else {
+				output.append("Too many unknown variables: `\(variables)`")
+			}
 		} catch ExpressionError.invalidOperator(let op) {
 			output.append("Found invalid operator: `\(op)`")
 		} catch ExpressionError.tooFewOperands(let op) {

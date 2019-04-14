@@ -8,9 +8,9 @@ extension DiscordTextChannel {
 }
 
 extension DiscordMessageLikeInitializable {
-	public init(fromImage image: Image) throws {
+	public init(fromImage image: Image, name: String? = nil) throws {
 		self.init(content: "", embed: nil, files: [
-			DiscordFileUpload(data: try image.pngEncoded(), filename: "image.png", mimeType: "image/png")
+			DiscordFileUpload(data: try image.pngEncoded(), filename: name ?? "image.png", mimeType: "image/png")
 		], tts: false)
 	}
 }

@@ -2,6 +2,7 @@ import D2Graphics
 import D2Utils
 
 struct FunctionGraphRenderer {
+	private let inputVariable: String
 	private let width: Int
 	private let height: Int
 	private let axisArrowSize: Double
@@ -11,6 +12,7 @@ struct FunctionGraphRenderer {
 	private let pixelToFunctionY: ClosureBijection<Double>
 	
 	public init(
+		input inputVariable: String,
 		width: Int = 300,
 		height: Int = 300,
 		scale: Double = 10.0,
@@ -18,6 +20,7 @@ struct FunctionGraphRenderer {
 		axisLabelSpacing: Int = 45,
 		axisColor: Color = Colors.gray
 	) {
+		self.inputVariable = inputVariable
 		self.width = width
 		self.height = height
 		self.axisArrowSize = axisArrowSize
@@ -67,7 +70,7 @@ struct FunctionGraphRenderer {
 		// Draw graph of function
 		for x in 0..<width {
 			let funcX = pixelToFunctionX.apply(Double(x))
-			if let funcY = try? ast.evaluate(with: ["x": funcX]) {
+			if let funcY = try? ast.evaluate(with: [inputVariable: funcX]) {
 				let pos = pixelPos(of: Vec2(x: funcX, y: funcY))
 				let clampedPos = pos.with(y: max(-5.0, min(Double(height + 5), pos.y)))
 				
