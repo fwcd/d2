@@ -12,7 +12,7 @@ fileprivate let rawOperatorPattern = allExpressionOperators
  * 4. capture group: an identifier
  * 5. capture group: an operator
  */
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawOperatorPattern))")
+fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawOperatorPattern))")
 
 public struct InfixExpressionParser: ExpressionParser {
 	public init() {}
