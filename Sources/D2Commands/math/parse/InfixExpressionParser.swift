@@ -12,7 +12,7 @@ fileprivate let rawBinaryOperatorPattern = expressionBinaryOperators.keys
  * 4. capture group: an identifier
  * 5. capture group: a binary operator
  */
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(?:\(rawBinaryOperatorPattern))")
+fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawBinaryOperatorPattern))")
 
 public struct InfixExpressionParser: ExpressionParser {
 	public init() {}
@@ -46,15 +46,15 @@ public struct InfixExpressionParser: ExpressionParser {
 	
 	/** Parses an atom (such as a parenthesized expression or a literal). */
 	private func parseAtom(from tokens: TokenIterator<InfixExpressionToken>) throws -> ExpressionASTNode {
-		guard let token = tokens.current else { throw ExpressionError.unexpectedEnd }
+		guard let token = tokens.next() else { throw ExpressionError.unexpectedEnd }
 		switch token {
 			case .number(let value):
-				tokens.next()
 				return ConstantNode(value: value)
+			case .identifier(let name):
+				return PlaceholderNode(name: name)
 			case .openingParenthesis:
 				let value = try parseExpression(from: tokens, minPrecedence: 1)
-				guard (tokens.current.map { $0 == .closingParenthesis } ?? false) else { throw ExpressionError.parenthesesMismatch }
-				tokens.next()
+				guard (tokens.peek().map { $0 == .closingParenthesis } ?? false) else { throw ExpressionError.parenthesesMismatch("Expected closing parenthesis, but was \(tokens.peek() ?? "?")") }
 				return value
 			default:
 				throw ExpressionError.unhandledToken(token)
@@ -65,9 +65,12 @@ public struct InfixExpressionParser: ExpressionParser {
 	private func parseExpression(from tokens: TokenIterator<InfixExpressionToken>, minPrecedence: Int) throws -> ExpressionASTNode {
 		var result = try parseAtom(from: tokens)
 		
-		while case let .binaryOperator(rawOperator)? = tokens.current {
+		while case let .binaryOperator(rawOperator)? = tokens.peek() {
 			guard let op = expressionBinaryOperators[rawOperator] else { throw ExpressionError.invalidOperator(rawOperator) }
+			guard op.precedence >= minPrecedence else { break }
 			let nextMinPrecedence: Int
+			
+			tokens.next()
 			
 			switch op.associativity {
 				case .left: nextMinPrecedence = op.precedence + 1

@@ -7,6 +7,6 @@ enum ExpressionError: Error {
 	case unrecognizedToken(String)
 	case unhandledToken(InfixExpressionToken)
 	case unexpectedEnd
-	case parenthesesMismatch
+	case parenthesesMismatch(String)
 	case emptyResult
 }
