@@ -18,7 +18,7 @@ public struct InfixExpressionParser: ExpressionParser {
 	public init() {}
 	
 	public func parse(_ input: String) throws -> ExpressionASTNode {
-		return try parseExpression(from: TokenIterator(try tokenize(input)), minPrecedence: 1 /* TODO */)
+		return try parseExpression(from: TokenIterator(try tokenize(input)), minPrecedence: 0)
 	}
 	
 	/** Breaks up the input string into tokens that are processed later. */
@@ -59,8 +59,11 @@ public struct InfixExpressionParser: ExpressionParser {
 					return node
 				}
 			case .openingParenthesis:
-				let value = try parseExpression(from: tokens, minPrecedence: 1)
+				let value = try parseExpression(from: tokens, minPrecedence: 0)
+				
 				guard (tokens.peek().map { $0 == .closingParenthesis } ?? false) else { throw ExpressionError.parenthesesMismatch("Expected closing parenthesis, but was \(String(describing: tokens.peek()))") }
+				tokens.next() // consume right parenthesis
+				
 				return value
 			default:
 				throw ExpressionError.unhandledToken(token)
