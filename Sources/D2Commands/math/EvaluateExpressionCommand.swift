@@ -18,7 +18,7 @@ public class EvaluateExpressionCommand: StringCommand {
 			let graph = ast.isConstant ? nil : try FunctionGraphRenderer().render(ast: ast)
 			
 			output.append(DiscordMessage(
-				content: (try? ast.evaluate()).map { String($0) } ?? "Could not evaluate directly",
+				content: (try? ast.evaluate()).map { String($0) } ?? "",
 				files: try graph.map { [DiscordFileUpload(data: try $0.pngEncoded(), filename: "graph.png", mimeType: "image/png")] } ?? []
 			))
 		} catch ExpressionError.invalidOperator(let op) {
