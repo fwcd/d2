@@ -11,7 +11,7 @@ struct FunctionGraphRenderer {
 	private let pixelToFunctionX: ClosureBijection<Double>
 	private let pixelToFunctionY: ClosureBijection<Double>
 	
-	public init(
+	init(
 		input inputVariable: String,
 		width: Int = 300,
 		height: Int = 300,
