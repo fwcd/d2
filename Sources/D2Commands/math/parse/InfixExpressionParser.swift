@@ -1,6 +1,6 @@
 import D2Utils
 
-fileprivate let rawBinaryOperatorPattern = expressionBinaryOperators.keys
+fileprivate let rawOperatorPattern = allExpressionOperators
 	.map { "(?:\(Regex.escape($0)))" }
 	.joined(separator: "|")
 
@@ -10,9 +10,9 @@ fileprivate let rawBinaryOperatorPattern = expressionBinaryOperators.keys
  * 2. capture group: an opening parenthesis
  * 3. capture group: a closing parenthesis
  * 4. capture group: an identifier
- * 5. capture group: a binary operator
+ * 5. capture group: an operator
  */
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawBinaryOperatorPattern))")
+fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawOperatorPattern))")
 
 public struct InfixExpressionParser: ExpressionParser {
 	public init() {}
@@ -35,7 +35,7 @@ public struct InfixExpressionParser: ExpressionParser {
 				} else if !$0[4].isEmpty {
 					return .identifier($0[4])
 				} else if !$0[5].isEmpty {
-					return .binaryOperator($0[5])
+					return .operatorSymbol($0[5])
 				} else {
 					throw ExpressionError.unrecognizedToken($0[0])
 				}
@@ -74,7 +74,8 @@ public struct InfixExpressionParser: ExpressionParser {
 	private func parseExpression(from tokens: TokenIterator<InfixExpressionToken>, minPrecedence: Int) throws -> ExpressionASTNode {
 		var result = try parseAtom(from: tokens)
 		
-		while case let .binaryOperator(rawOperator)? = tokens.peek() {
+		while case let .operatorSymbol(rawOperator)? = tokens.peek() {
+			// The operator symbol should be a binary operator in a well-formed string
 			guard let op = expressionBinaryOperators[rawOperator] else { throw ExpressionError.invalidOperator(rawOperator) }
 			guard op.precedence >= minPrecedence else { break }
 			let nextMinPrecedence: Int
