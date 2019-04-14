@@ -51,10 +51,16 @@ public struct InfixExpressionParser: ExpressionParser {
 			case .number(let value):
 				return ConstantNode(value: value)
 			case .identifier(let name):
-				return PlaceholderNode(name: name)
+				let node = PlaceholderNode(name: name)
+				
+				if integerVariableNames.contains(name) {
+					return FloorNode(value: node)
+				} else {
+					return node
+				}
 			case .openingParenthesis:
 				let value = try parseExpression(from: tokens, minPrecedence: 1)
-				guard (tokens.peek().map { $0 == .closingParenthesis } ?? false) else { throw ExpressionError.parenthesesMismatch("Expected closing parenthesis, but was \(tokens.peek() ?? "?")") }
+				guard (tokens.peek().map { $0 == .closingParenthesis } ?? false) else { throw ExpressionError.parenthesesMismatch("Expected closing parenthesis, but was \(String(describing: tokens.peek()))") }
 				return value
 			default:
 				throw ExpressionError.unhandledToken(token)
