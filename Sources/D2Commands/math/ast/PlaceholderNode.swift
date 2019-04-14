@@ -3,6 +3,7 @@ import D2Utils
 struct PlaceholderNode: ExpressionASTNode {
 	let name: String
 	let occurringVariables: Set<String>
+	var label: String { return name }
 	
 	init(name: String) {
 		self.name = name
