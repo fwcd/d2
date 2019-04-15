@@ -31,14 +31,15 @@ public class MaximaCommand: StringCommand {
 		}
 		
 		let processedInput: String = clearedInputChars.replace(in: input, with: "")
-		let maximaInput: String = (latexRenderer == nil) ? processedInput : "tex(\(processedInput))$"
+		let maximaInput: String = (latexRenderer == nil) ? "\(processedInput);" : "tex(\(processedInput))$"
 		
 		running = true
+		let semaphore = DispatchSemaphore(value: 0)
+		let queue = DispatchQueue(label: "Maxima runner")
 		let shell = Shell()
-		let args = ["--kill-after=\(maxExecutionSeconds)s", "\(maxExecutionSeconds)s", shell.findPath(of: "maxima"), "-q", "-r", maximaInput]
-		let (pipe, process) = shell.newProcess("timeout", args: args, withPipedOutput: true)
+		let (pipe, process) = shell.newProcess("maxima", args: ["-q", "-r", maximaInput], withPipedOutput: true)
 		
-		DispatchQueue(label: "Maxima runner").async {
+		let task = DispatchWorkItem {
 			do {
 				try shell.execute(process: process)
 				process.waitUntilExit()
@@ -54,16 +55,45 @@ public class MaximaCommand: StringCommand {
 					// output.append("`\(tex)`")
 					renderLatexPNG(with: renderer, from: tex, to: output) {
 						self.running = false
+						semaphore.signal()
 					}
 				} else {
 					// Render text output directly instead
 					output.append("```\n\(result)\n```")
 					self.running = false
+					semaphore.signal()
 				}
 			} catch {
 				print("An error occurred in MaximaCommand: \(error)")
 				self.running = false
+				semaphore.signal()
 			}
+		}
+		
+		let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
+		queue.async(execute: task)
+		
+		DispatchQueue.global(qos: .userInitiated).async {
+			let result = semaphore.wait(timeout: timeout)
+			
+			if result == .timedOut && process.isRunning {
+				output.append("Maxima took longer than \(maxExecutionSeconds) seconds")
+				process.terminate()
+			}
+			
+			self.running = false
+			
+			// Wait one additional second for the process and then kill it if it has not terminated yet
+			DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .seconds(1), execute: {
+				if process.isRunning {
+					do {
+						try shell.runSync("kill", args: ["-9", String(process.processIdentifier)])
+						print("Killed maxima process")
+					} catch {
+						print("Killing maxima process failed, try to manually kill the process: kill -9 \(process.processIdentifier)")
+					}
+				}
+			})
 		}
 	}
 }

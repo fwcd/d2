@@ -7,7 +7,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ## System Dependencies
 * Swift 5
-* `timeout` (currently only for `MaximaCommand`)
+* `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
 * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base texlive-latex-extra poppler-utils maxima`
