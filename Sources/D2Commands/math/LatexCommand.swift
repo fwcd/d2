@@ -13,7 +13,7 @@ public class LatexCommand: StringCommand {
 			latexRenderer = try LatexRenderer()
 		} catch {
 			latexRenderer = nil
-			print("Could not initialize latex renderer.")
+			print("Could not initialize latex renderer: \(error)")
 		}
 	}
 	
@@ -29,43 +29,9 @@ public class LatexCommand: StringCommand {
 			return
 		}
 		
-		do {
-			try renderer.renderPNG(from: input, onError: { self.handle(error: $0, output: output) }) {
-				do {
-					try output.append($0)
-					self.running = false
-				} catch {
-					output.append("Error while appending image to output")
-					print("Error while appending image to output: \(error)")
-				}
-			}
-		} catch LatexError.pdfError(let log) {
-			output.append("PDF Error while rendering LaTeX: ```\n\(log)\n```")
-			print("PDF Error while rendering LaTeX to PNG: \(log)")
-		} catch {
-			output.append("Error while rendering LaTeX")
-			print("Error while rendering LaTeX to PNG: \(error)")
+		renderLatexPNG(with: renderer, from: input, to: output) {
+			self.running = false
 		}
-	}
-	
-	private func handle(error: Error, output: CommandOutput) {
-		if case let LatexError.pdfError(log) = error {
-			output.append("A LaTeX PDF error occurred:\n```\n\(extractError(from: log))\n```")
-			print("LaTeX PDF error:")
-			print(log)
-		} else {
-			output.append("An asynchronous LaTeX error occurred")
-			print("Asynchronous LaTeX error: \(error)")
-		}
-		running = false
-	}
-	
-	private func extractError(from log: String) -> String {
-		return log.components(separatedBy: "\n")
-			.filter { $0.starts(with: "!") }
-			.joined(separator: "\n")
-			.nilIfEmpty
-			?? "Unknown error"
 	}
 	
 	public func onSuccessfullySent(message: DiscordMessage) {
