@@ -3,7 +3,7 @@ import D2Permissions
 import D2Utils
 
 fileprivate let clearedInputChars = try! Regex(from: "\\|&,;")
-fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*(.+)")
+fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*([\\s\\S]+)\\(%i2\\)")
 
 public class MaximaCommand: StringCommand {
 	public let description = "Transforms and solves mathematical expressions using Maxima"
@@ -38,7 +38,9 @@ public class MaximaCommand: StringCommand {
 			
 			if let renderer = latexRenderer, let maximaOutput = maximaOutputPattern.firstGroups(in: result) {
 				// Parse and render TeX output
-				renderLatexPNG(with: renderer, from: maximaOutput[1], to: output) {
+				let tex = maximaOutput[1]
+				// output.append("`\(tex)`")
+				renderLatexPNG(with: renderer, from: tex, to: output) {
 					self.running = false
 				}
 			} else {
