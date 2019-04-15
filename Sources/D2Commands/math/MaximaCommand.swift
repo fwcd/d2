@@ -34,11 +34,11 @@ public class MaximaCommand: StringCommand {
 		let maximaInput: String = (latexRenderer == nil) ? processedInput : "tex(\(processedInput))$"
 		
 		running = true
-		let queue = DispatchQueue(label: "Maxima runner")
 		let shell = Shell()
-		let (pipe, process) = shell.newProcess("maxima", args: ["-q", "-r", maximaInput], withPipedOutput: true)
+		let args = ["--kill-after=\(maxExecutionSeconds)s", "\(maxExecutionSeconds)s", shell.findPath(of: "maxima"), "-q", "-r", maximaInput]
+		let (pipe, process) = shell.newProcess("timeout", args: args, withPipedOutput: true)
 		
-		let task = DispatchWorkItem {
+		DispatchQueue(label: "Maxima runner").async {
 			do {
 				try shell.execute(process: process)
 				process.waitUntilExit()
@@ -64,20 +64,6 @@ public class MaximaCommand: StringCommand {
 				print("An error occurred in MaximaCommand: \(error)")
 				self.running = false
 			}
-		}
-		
-		let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
-		queue.async(execute: task)
-		
-		DispatchQueue.global(qos: .userInitiated).async {
-			_ = task.wait(timeout: timeout)
-			print("Timed out")
-			
-			if process.isRunning {
-				process.terminate()
-			}
-			
-			self.running = false
 		}
 	}
 }

@@ -41,7 +41,7 @@ public struct Shell {
 		try execute(process: newProcess(executable, in: directory, args: args, then: then).1)
 	}
 	
-	private func findPath(of executable: String) -> String {
+	public func findPath(of executable: String) -> String {
 		if executable.contains("/") {
 			return executable
 		} else {
