@@ -4,7 +4,8 @@ import Foundation
 public struct Shell {
 	public init() {}
 	
-	private func newProcess(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) -> Process {
+	public func newProcess(_ executable: String, in directory: URL? = nil, args: [String]? = nil, withPipedOutput: Bool = false, then: ((Process) -> Void)? = nil) -> (Pipe?, Process) {
+		var pipe: Pipe? = nil
 		let process = Process()
 		let path = findPath(of: executable)
 		
@@ -17,24 +18,27 @@ public struct Shell {
 		process.arguments = args
 		process.terminationHandler = then
 		
-		return process
+		if withPipedOutput {
+			pipe = Pipe()
+			process.standardOutput = pipe
+		}
+		
+		return (pipe, process)
 	}
 	
 	/** Synchronously runs the executable and returns the standard output. */
 	@discardableResult
 	public func runSync(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws -> String? {
-		let pipe = Pipe()
-		let process = newProcess(executable, in: directory, args: args, then: then)
+		let (pipe, process) = newProcess(executable, in: directory, args: args, withPipedOutput: true, then: then)
 		
-		process.standardOutput = pipe
 		try execute(process: process)
 		process.waitUntilExit()
 		
-		return String(data: pipe.fileHandleForReading.availableData, encoding: .utf8)
+		return String(data: pipe!.fileHandleForReading.availableData, encoding: .utf8)
 	}
 	
 	public func run(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws {
-		try execute(process: newProcess(executable, in: directory, args: args, then: then))
+		try execute(process: newProcess(executable, in: directory, args: args, then: then).1)
 	}
 	
 	private func findPath(of executable: String) -> String {
@@ -84,7 +88,7 @@ public struct Shell {
 		}
 	}
 	
-	private func execute(process: Process) throws {
+	public func execute(process: Process) throws {
 		if #available(macOS 10.13, *) {
 			try process.run()
 		} else {
