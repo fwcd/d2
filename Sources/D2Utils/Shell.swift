@@ -1,28 +1,52 @@
 import Foundation
 
+/** A wrapper that simplifies the creation of subprocesses. */
 public struct Shell {
 	public init() {}
 	
-	public func run(_ executable: String, in directory: URL, args: [String], then: @escaping (Process) -> Void) throws {
+	private func newProcess(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) -> Process {
 		let process = Process()
 		let path = findPath(of: executable)
 		
-		print("Running \(path) in \(directory) with \(args)")
 		setExecutable(for: process, toPath: path)
-		setCurrentDirectory(for: process, toURL: directory)
+		
+		if let dirURL = directory {
+			setCurrentDirectory(for: process, toURL: dirURL)
+		}
+		
 		process.arguments = args
 		process.terminationHandler = then
 		
+		return process
+	}
+	
+	/** Synchronously runs the executable and returns the standard output. */
+	@discardableResult
+	public func runSync(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws -> String? {
+		let pipe = Pipe()
+		let process = newProcess(executable, in: directory, args: args, then: then)
+		
+		process.standardOutput = pipe
 		try execute(process: process)
+		process.waitUntilExit()
+		
+		return String(data: pipe.fileHandleForReading.availableData, encoding: .utf8)
+	}
+	
+	public func run(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws {
+		try execute(process: newProcess(executable, in: directory, args: args, then: then))
 	}
 	
 	private func findPath(of executable: String) -> String {
 		if executable.contains("/") {
 			return executable
 		} else {
-			let pipe = Pipe()
+			// Find executable using 'which'. This code fragment explicitly
+			// does not invoke 'runSync' to avoid infinite recursion.
 			
+			let pipe = Pipe()
 			let process = Process()
+			
 			setExecutable(for: process, toPath: "/usr/bin/which")
 			process.arguments = [executable]
 			process.standardOutput = pipe
