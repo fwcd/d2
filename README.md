@@ -7,6 +7,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ## System Dependencies
 * Swift 5
+	* Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
