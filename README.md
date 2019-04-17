@@ -8,10 +8,12 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ## System Dependencies
 * Swift 5
 	* Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
+	* Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
 * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base texlive-latex-extra poppler-utils maxima`
+	* Note that you might need to `apt-get install clang` separately on a Raspberry Pi
 
 ### Installation on macOS
 * Install a LaTeX distribution containing `pdflatex`
