@@ -1,5 +1,5 @@
-enum Accidental {
-	case flat
-	case sharp
-	case none
+enum Accidental: String, Hashable {
+	case flat = "b"
+	case sharp = "#"
+	case none = ""
 }

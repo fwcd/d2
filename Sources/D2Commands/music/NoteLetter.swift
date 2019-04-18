@@ -1,4 +1,4 @@
-enum NoteLetter: Int, CaseIterable {
+enum NoteLetter: Int, CaseIterable, Hashable {
 	case c = 0
 	case d = 1
 	case e = 2

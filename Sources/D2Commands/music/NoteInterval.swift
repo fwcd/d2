@@ -14,4 +14,8 @@ struct NoteInterval {
 	static let minorSeventh = NoteInterval(degrees: 6, semitones: 10)
 	static let majorSeventh = NoteInterval(degrees: 6, semitones: 11)
 	static let octave = NoteInterval(degrees: 7, semitones: 12)
+	
+	prefix static func -(operand: NoteInterval) -> NoteInterval {
+		return NoteInterval(degrees: -operand.degrees, semitones: -operand.semitones)
+	}
 }
