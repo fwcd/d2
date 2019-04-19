@@ -14,7 +14,13 @@ public class GuitarChordCommand: StringCommand {
 			let chord = try Chord(of: input)
 			let image = try GuitarChordRenderer().render(chord: chord)
 			
-			try output.append(image)
+			output.append(DiscordMessage(
+				content: "",
+				embed: DiscordEmbed(
+					description: chord.description
+				),
+				files: [DiscordFileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")]
+			))
 		} catch ChordError.invalidChord(let chord) {
 			output.append("Invalid chord: `\(chord)`")
 		} catch ChordError.invalidRootNote(let root) {

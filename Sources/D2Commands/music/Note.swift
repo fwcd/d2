@@ -36,7 +36,7 @@ struct Note: Hashable, CustomStringConvertible {
 	let octave: Int? // The octave in scientific pitch notation
 	let accidental: Accidental
 	let semitone: Int // Semitones in an octave
-	var description: String { return "\(letter)\(accidental.rawValue)\(octave.map { String($0) } ?? "")" }
+	var description: String { return "\("\(letter)".uppercased())\(accidental.rawValue)\(octave.map { String($0) } ?? "")" }
 	
 	private init(letter: NoteLetter, accidental: Accidental, semitone: Int, octave: Int? = nil) {
 		self.letter = letter
