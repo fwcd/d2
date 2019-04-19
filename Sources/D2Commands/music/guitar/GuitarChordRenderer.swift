@@ -4,14 +4,16 @@ import D2Utils
 struct GuitarChordRenderer: ChordRenderer {
 	private let width: Int
 	private let height: Int
+	private let gutterHeight: Double
 	private let padding: Double
 	private let fgColor: Color
 	private let fretboard: GuitarFretboard
 	private let minFrets: Int
 	
 	init(
-		width: Int = 200,
+		width: Int = 150,
 		height: Int = 200,
+		gutterHeight: Double = 10,
 		padding: Double = 20,
 		fgColor: Color = Colors.white,
 		fretboard: GuitarFretboard = GuitarFretboard(),
@@ -19,6 +21,7 @@ struct GuitarChordRenderer: ChordRenderer {
 	) {
 		self.width = width
 		self.height = height
+		self.gutterHeight = gutterHeight
 		self.padding = padding
 		self.fgColor = fgColor
 		self.fretboard = fretboard
@@ -29,16 +32,16 @@ struct GuitarChordRenderer: ChordRenderer {
 		let image = try Image(width: width, height: height)
 		var graphics = CairoGraphics(fromImage: image)
 		let guitarChord = try GuitarChord(from: chord, on: fretboard)
-		let fretCount = max(minFrets, guitarChord.maxFret)
+		let fretCount = max(minFrets, guitarChord.maxFret + 1)
 		let stringCount = fretboard.stringCount
 		
 		let innerWidth = Double(width) - (padding * 2)
-		let innerHeight = Double(height) - (padding * 2)
+		let innerHeight = (Double(height) - (padding * 2)) - gutterHeight
 		let stringSpacing = innerWidth / Double(stringCount - 1)
 		let fretSpacing = innerHeight / Double(fretCount - 1)
-		let topLeft = Vec2(x: padding, y: padding)
+		let topLeft = Vec2(x: padding, y: padding + gutterHeight)
 		
-		graphics.draw(Rectangle(topLeft: topLeft, size: Vec2(x: innerWidth, y: 10), color: fgColor, isFilled: true))
+		graphics.draw(Rectangle(topLeft: topLeft - Vec2(y: gutterHeight), size: Vec2(x: innerWidth, y: gutterHeight), color: fgColor, isFilled: true))
 		
 		for stringIndex in 0..<stringCount {
 			let position = topLeft + Vec2(x: stringSpacing * Double(stringIndex))
@@ -48,6 +51,13 @@ struct GuitarChordRenderer: ChordRenderer {
 		for fretIndex in 0..<fretCount {
 			let position = topLeft + Vec2(y: fretSpacing * Double(fretIndex))
 			graphics.draw(LineSegment(from: position, to: position + Vec2(x: innerWidth), color: fgColor))
+		}
+		
+		for dot in guitarChord.dots {
+			if dot.fret > 0 {
+				let position = topLeft + Vec2(x: Double((stringCount - 1) - dot.guitarString) * stringSpacing, y: (Double(dot.fret - 1) + 0.5) * fretSpacing)
+				graphics.draw(Ellipse(center: position, radius: Vec2(both: fretSpacing * 0.4), color: fgColor))
+			}
 		}
 		
 		return image

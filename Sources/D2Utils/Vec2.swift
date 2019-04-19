@@ -13,6 +13,11 @@ public struct Vec2<T: VecComponent>: Addable, Subtractable, Multipliable, Divisi
 		self.y = y
 	}
 	
+	public init(both value: T) {
+		x = value
+		y = value
+	}
+	
 	public static func +(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
 		return Vec2(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 	}
