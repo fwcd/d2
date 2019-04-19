@@ -55,11 +55,12 @@ struct GuitarChordRenderer: ChordRenderer {
 		}
 		
 		for dot in guitarChord.dots {
+			let dotX = Double(dot.guitarString) * stringSpacing
 			if dot.fret > 0 {
-				let position = topLeft + Vec2(x: Double((stringCount - 1) - dot.guitarString) * stringSpacing, y: (Double(dot.fret - 1) + 0.5) * fretSpacing)
+				let position = topLeft + Vec2(x: dotX, y: (Double(dot.fret - 1) + 0.5) * fretSpacing)
 				graphics.draw(Ellipse(center: position, radius: Vec2(both: dotRadius), color: fgColor))
 			} else {
-				let position = topLeft - Vec2(y: gutterHeight + dotRadius)
+				let position = topLeft + Vec2(x: dotX, y: -gutterHeight - dotRadius)
 				graphics.draw(Ellipse(center: position, radius: Vec2(both: dotRadius), color: fgColor, isFilled: false))
 			}
 		}

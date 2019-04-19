@@ -1,4 +1,4 @@
-let standardGuitarTuning = [try! Note(of: "E4"), try! Note(of: "B3"), try! Note(of: "G3"), try! Note(of: "D3"), try! Note(of: "A2"), try! Note(of: "E2")]
+let standardGuitarTuning = ["E2", "A2", "D3", "G3", "B3", "E4"].map { try! Note(of: $0) }
 
 struct GuitarFretboard {
 	private let guitarStrings: [[Note]]
