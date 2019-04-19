@@ -7,28 +7,19 @@ final class NoteTests: XCTestCase {
 	]
 	
 	func testNote() throws {
-		guard let c4 = create(note: "C4") else { return }
-		guard let d3 = create(note: "d3") else { return }
-		guard let aSharp2 = create(note: "A#2") else { return }
-		guard let fSharp = create(note: "F#") else { return }
-		guard let gFlat1 = create(note: "Gb1") else { return }
+		let c4 = try Note(of: "C4")
+		let d3 = try Note(of: "d3")
+		let aSharp2 = try Note(of: "A#2")
+		let fSharp = try Note(of: "F#")
+		let gFlat1 = try Note(of: "Gb1")
 		
-		XCTAssertEqual(c4 + .majorSecond, create(note: "D4"))
-		XCTAssertEqual(c4 - .minorSecond, create(note: "B3"))
-		XCTAssertEqual(c4 - .majorSecond, create(note: "Bb3"))
-		XCTAssertEqual(d3 + .minorThird, create(note: "F3"))
-		XCTAssertEqual(d3 + .majorThird, create(note: "F#3"))
+		XCTAssertEqual(c4 + .majorSecond, try Note(of: "D4"))
+		XCTAssertEqual(c4 - .minorSecond, try Note(of: "B3"))
+		XCTAssertEqual(c4 - .majorSecond, try Note(of: "Bb3"))
+		XCTAssertEqual(d3 + .minorThird, try Note(of: "F3"))
+		XCTAssertEqual(d3 + .majorThird, try Note(of: "F#3"))
 		XCTAssertEqual(aSharp2 + .unison, aSharp2)
 		XCTAssertEqual(fSharp + .octave, fSharp)
-		XCTAssertEqual(gFlat1 + .octave, create(note: "Gb2"))
-	}
-	
-	private func create(note: String) -> Note? {
-		if let note = Note(of: note) {
-			return note
-		} else {
-			XCTFail("'\(note)' should be a note")
-			return nil
-		}
+		XCTAssertEqual(gFlat1 + .octave, try Note(of: "Gb2"))
 	}
 }

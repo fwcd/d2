@@ -19,7 +19,7 @@ struct Chord: Hashable {
 	
 	init(of str: String) throws {
 		guard let parsed = chordPattern.firstGroups(in: str) else { throw MusicParseError.invalidChord(str) }
-		guard let root = Note(of: parsed[1]) else { throw MusicParseError.invalidRootNote(parsed[1]) }
+		guard let root = try? Note(of: parsed[1]) else { throw MusicParseError.invalidRootNote(parsed[1]) }
 		let quality = parsed[2]
 		let number = Int(parsed[3])
 		

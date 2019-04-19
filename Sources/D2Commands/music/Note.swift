@@ -44,12 +44,12 @@ struct Note: Hashable {
 		self.semitone = semitone.clockModulo(twelveToneOctave.count)
 	}
 	
-	init?(of str: String) {
-		guard let parsed = notePattern.firstGroups(in: str) else { return nil }
-		guard let letter = NoteLetter.of(parsed[1]) else { return nil }
+	init(of str: String) throws {
+		guard let parsed = notePattern.firstGroups(in: str) else { throw MusicParseError.invalidNote(str) }
+		guard let letter = NoteLetter.of(parsed[1]) else { throw MusicParseError.invalidNoteLetter(str) }
 		let accidental = Accidental(rawValue: parsed[2]) ?? .none
 		let octave = parsed[2].nilIfEmpty.flatMap { Int($0) }
-		guard let (semitone, _) = twelveToneOctave.enumerated().first(where: { $0.1.contains(UnoctavedNote(letter: letter, accidental: accidental)) }) else { return nil }
+		guard let (semitone, _) = twelveToneOctave.enumerated().first(where: { $0.1.contains(UnoctavedNote(letter: letter, accidental: accidental)) }) else { throw MusicParseError.notInTwelveToneOctave(str) }
 		
 		self.init(letter: letter, accidental: accidental, semitone: semitone, octave: octave)
 	}
