@@ -21,7 +21,14 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String, qualifiedName qName: String?, attributes attributeDict: [String: String] = [:]) {
+		print("Entering \(elementName): \(attributeDict)")
 		switch elementName {
+			case "queryresult":
+				result = WolframAlphaOutput()
+				result.success = attributeDict["success"].flatMap { parseBool(from: $0) }
+				result.error = attributeDict["error"].flatMap { parseBool(from: $0) }
+				result.numpods = attributeDict["numpods"].flatMap { Int($0) }
+				result.timing = attributeDict["timing"].flatMap { Double($0) }
 			case "pod":
 				pod = WolframAlphaPod()
 				pod.title = attributeDict["title"]
@@ -62,6 +69,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+		print("Exiting \(elementName)")
 		if elementName == "queryresult" {
 			print("Ending parsing")
 			then(.success(result))

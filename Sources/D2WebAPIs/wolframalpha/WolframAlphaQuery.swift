@@ -39,8 +39,8 @@ public struct WolframAlphaQuery {
 				return
 			}
 			
-			let delegate = WolframAlphaParserDelegate(then: then)
 			let parser = XMLParser(data: data)
+			let delegate = WolframAlphaParserDelegate(then: then)
 			
 			parser.delegate = delegate
 			_ = parser.parse()

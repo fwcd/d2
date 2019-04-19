@@ -23,7 +23,8 @@ public class WolframAlphaCommand: StringCommand {
 					title: "Query Output",
 					author: DiscordEmbed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
 					image: (result.pods.first?.subpods.first?.img?.src).flatMap { URL(string: $0) }.map { DiscordEmbed.Image(url: $0) },
-					footer: DiscordEmbed.Footer(text: "success: \(result.success), error: \(result.error)"),
+					color: 0xfdc81a,
+					footer: DiscordEmbed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
 					fields: result.pods.map { pod in DiscordEmbed.Field(
 						name: pod.title ?? "Untitled pod",
 						value: pod.subpods.map { "**\($0.title ?? "Untitled subpod")**\n\($0.plaintext ?? "")" }.joined(separator: "\n")

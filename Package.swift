@@ -51,6 +51,10 @@ let package = Package(
             dependencies: ["SwiftDiscord", "D2TestUtils", "D2Graphics"]
         ),
         .testTarget(
+            name: "D2WebAPITests",
+            dependencies: ["SwiftDiscord", "D2TestUtils", "D2WebAPIs"]
+        ),
+        .testTarget(
             name: "D2TestUtils",
             dependencies: ["SwiftDiscord", "D2Commands"]
         )
