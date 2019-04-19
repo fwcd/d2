@@ -23,7 +23,7 @@ struct GuitarChordRenderer: ChordRenderer {
 		var graphics = CairoGraphics(fromImage: image)
 		let guitarChord = try GuitarChord(from: chord, on: fretboard)
 		
-		graphics.draw(Text("Chord"))
+		graphics.draw(Text(String(describing: chord)))
 		
 		return image
 	}

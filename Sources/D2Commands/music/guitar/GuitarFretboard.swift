@@ -2,6 +2,7 @@ let standardGuitarTuning = [try! Note(of: "E4"), try! Note(of: "B3"), try! Note(
 
 struct GuitarFretboard {
 	private let guitarStrings: [[Note]]
+	var stringCount: Int { return guitarStrings.count }
 	
 	init(fretCount: Int = 12, tuning: [Note] = standardGuitarTuning) {
 		guitarStrings = tuning.map {

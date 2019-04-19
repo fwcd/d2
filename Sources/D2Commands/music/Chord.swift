@@ -14,8 +14,9 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "(?:\
  */
 fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(7)?")
 
-struct Chord: Hashable {
+struct Chord: Hashable, CustomStringConvertible {
 	let notes: [Note]
+	var description: String { return notes.description }
 	
 	init(of str: String) throws {
 		guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }

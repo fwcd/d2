@@ -31,11 +31,12 @@ fileprivate let twelveToneOctave: [[UnoctavedNote]] = [
  */
 fileprivate let notePattern = try! Regex(from: "([a-zA-Z])([b#]?)(\\d+)?")
 
-struct Note: Hashable {
+struct Note: Hashable, CustomStringConvertible {
 	let letter: NoteLetter
 	let octave: Int? // The octave in scientific pitch notation
 	let accidental: Accidental
 	let semitone: Int // Semitones in an octave
+	var description: String { return "\(letter)\(accidental.rawValue)\(octave.map { String($0) } ?? "")" }
 	
 	private init(letter: NoteLetter, accidental: Accidental, semitone: Int, octave: Int? = nil) {
 		self.letter = letter
@@ -71,9 +72,7 @@ struct Note: Hashable {
 	}
 	
 	func matches(_ rhs: Note) -> Bool {
-		return (letter == rhs.letter)
+		return (semitone == rhs.semitone)
 			&& (octave == nil || rhs.octave == nil || octave == rhs.octave)
-			&& (accidental == rhs.accidental)
-			&& (semitone == rhs.semitone)
 	}
 }
