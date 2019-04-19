@@ -5,5 +5,6 @@ public struct WolframAlphaPod {
 	var position: Int? = nil
 	var error: Bool? = nil
 	var numsubpods: Int? = nil
+	var subpods: [WolframAlphaSubpod] = []
 	var states: [WolframAlphaState] = []
 }
