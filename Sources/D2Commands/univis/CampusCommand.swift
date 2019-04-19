@@ -41,26 +41,31 @@ public class CampusCommand: StringCommand {
 						output.append(rawAddress)
 						return
 					}
-					let mapURL = MapQuestStaticMap(
-						latitude: coords.latitude,
-						longitude: coords.longitude
-					).url
-					
-					URLSession.shared.dataTask(with: URL(string: mapURL)!) { data, response, error in
-						guard error == nil else {
-							output.append("An error occurred while fetching image.")
-							return
-						}
-						guard let data = data else {
-							output.append("Missing data while fetching image.")
-							return
-						}
+					do {
+						let mapURL = try MapQuestStaticMap(
+							latitude: coords.latitude,
+							longitude: coords.longitude
+						).url
 						
-						output.append(DiscordMessage(
-							content: rawAddress,
-							files: [DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")]
-						))
-					}.resume()
+						URLSession.shared.dataTask(with: URL(string: mapURL)!) { data, response, error in
+							guard error == nil else {
+								output.append("An error occurred while fetching image.")
+								return
+							}
+							guard let data = data else {
+								output.append("Missing data while fetching image.")
+								return
+							}
+							
+							output.append(DiscordMessage(
+								content: rawAddress,
+								files: [DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")]
+							))
+						}.resume()
+					} catch {
+						output.append("Could not create static map, see console for more details")
+						print(error)
+					}
 				}
 			}
 		} catch {
