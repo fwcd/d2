@@ -24,10 +24,16 @@ struct Chord: Hashable, CustomStringConvertible {
 		let quality = parsed[2]
 		let number = Int(parsed[3])
 		
-		if minorSymbols.contains(quality) {
+		if number == 7 {
+			if minorSymbols.contains(quality) {
+				self.init(minorSeventh: root)
+			} else if majorSymbols.contains(quality) {
+				self.init(majorSeventh: root)
+			} else {
+				self.init(dominantSeventh: root)
+			}
+		} else if minorSymbols.contains(quality) {
 			self.init(minorTriad: root)
-		} else if majorSymbols.contains(quality) && number == 7 {
-			self.init(dominantSeventh: root)
 		} else { // assume major
 			self.init(majorTriad: root)
 		}
@@ -39,6 +45,14 @@ struct Chord: Hashable, CustomStringConvertible {
 	
 	init(minorTriad root: Note) {
 		notes = [root, root + .minorThird, root + .perfectFifth]
+	}
+	
+	init(minorSeventh root: Note) {
+		notes = [root, root + .minorSeventh, root + .perfectFifth, root + .minorSeventh]
+	}
+	
+	init(majorSeventh root: Note) {
+		notes = [root, root + .majorThird, root + .perfectFifth, root + .majorSeventh]
 	}
 	
 	init(dominantSeventh root: Note) {
