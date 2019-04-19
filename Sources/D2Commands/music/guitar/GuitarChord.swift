@@ -15,6 +15,7 @@ fileprivate func findDots<C: Collection>(remainingNotes: C, usedStrings: [Int] =
 
 struct GuitarChord {
 	let dots: [GuitarFretboard.Location]
+	var maxFret: Int { return dots.map { $0.fret }.max() ?? 0 }
 	
 	init(dots: [GuitarFretboard.Location]) {
 		self.dots = dots
