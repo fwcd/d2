@@ -18,4 +18,8 @@ struct NoteInterval {
 	prefix static func -(operand: NoteInterval) -> NoteInterval {
 		return NoteInterval(degrees: -operand.degrees, semitones: -operand.semitones)
 	}
+	
+	static func octaves(_ count: Int) -> NoteInterval {
+		return NoteInterval(degrees: 7 * count, semitones: 12 * count)
+	}
 }

@@ -56,7 +56,14 @@ struct Note: Hashable, CustomStringConvertible {
 	}
 	
 	static func +(lhs: Note, rhs: NoteInterval) -> Note {
-		let octavesDelta = rhs.degrees / 8
+		let octavesDelta: Int
+		
+		if rhs.degrees >= 0 {
+			octavesDelta = rhs.degrees / 7
+		} else {
+			octavesDelta = (rhs.degrees - 6) / 7
+		}
+		
 		let nextSemitone = (lhs.semitone + rhs.semitones).clockModulo(twelveToneOctave.count)
 		let nextLetter = lhs.letter + rhs.degrees
 		let candidates = twelveToneOctave[nextSemitone]
