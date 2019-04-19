@@ -17,7 +17,8 @@ public class GuitarChordCommand: StringCommand {
 			output.append(DiscordMessage(
 				content: "",
 				embed: DiscordEmbed(
-					description: chord.description
+					title: "Guitar Chord \(input)",
+					description: "This was the closest match for \(chord)"
 				),
 				files: [DiscordFileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")]
 			))

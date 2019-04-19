@@ -17,7 +17,7 @@ struct GuitarChordRenderer: ChordRenderer {
 		padding: Double = 20,
 		fgColor: Color = Colors.white,
 		fretboard: GuitarFretboard = GuitarFretboard(),
-		minFrets: Int = 5
+		minFrets: Int = 7
 	) {
 		self.width = width
 		self.height = height
