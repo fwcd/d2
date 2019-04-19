@@ -13,8 +13,8 @@ final class NoteLetterTests: XCTestCase {
 		XCTAssertEqual(c.previous, .b)
 		XCTAssertEqual(NoteLetter.a + 3, .d)
 		XCTAssertEqual(NoteLetter.e - 5, .g)
-		XCTAssertEqual(NoteLetter.f + 8, .f)
-		XCTAssertEqual(NoteLetter.a + 15, .g)
+		XCTAssertEqual(NoteLetter.f + 7, .f)
+		XCTAssertEqual(NoteLetter.a + 15, .b)
 		
 		XCTAssertEqual(NoteLetter.of("C"), .c)
 		XCTAssertEqual(NoteLetter.of("d"), .d)
