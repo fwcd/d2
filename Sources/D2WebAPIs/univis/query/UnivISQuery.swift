@@ -20,7 +20,7 @@ public struct UnivISQuery {
 			URLQueryItem(name: "show", value: "xml")
 		] + params.map { URLQueryItem(name: $0.key.rawValue, value: $0.value) }
 		
-		guard let url = components.url else { throw UnivISError.urlError(components) }
+		guard let url = components.url else { throw WebApiError.urlError(components) }
 		self.url = url
 	}
 	
@@ -31,11 +31,11 @@ public struct UnivISQuery {
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				then(.failure(UnivISError.httpError(error!)))
+				then(.failure(WebApiError.httpError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.failure(UnivISError.missingData))
+				then(.failure(WebApiError.missingData))
 				return
 			}
 			

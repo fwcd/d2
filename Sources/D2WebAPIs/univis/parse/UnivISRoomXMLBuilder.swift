@@ -7,7 +7,7 @@ class UnivISRoomXMLBuilder: UnivISObjectNodeXMLBuilder {
 	// TODO: Parse orgunits
 	
 	func enter(selfWithName elementName: String, attributes: [String: String]) throws {
-		guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
+		guard let key = attributes["key"] else { throw WebApiError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		room = UnivISRoom(key: key)
 	}
 	
@@ -17,7 +17,7 @@ class UnivISRoomXMLBuilder: UnivISObjectNodeXMLBuilder {
 		
 		if parsingRef {
 			if elementName == "UnivISRef" {
-				guard let key = attributes["key"] else { throw UnivISError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
+				guard let key = attributes["key"] else { throw WebApiError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 				switch previousName {
 					case "contact": room.contacts.append(UnivISRef(key: key))
 					default: break

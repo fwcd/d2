@@ -12,7 +12,7 @@ public struct MapQuestStaticMap {
 		zoomLevel: Int = 16
 	) throws {
 		var formattedURL: String? = nil
-		guard let mapQuestKey = storedWebApiKeys?.mapQuest else { throw MapQuestError.missingApiKey("No API key for MapQuest found") }
+		guard let mapQuestKey = storedWebApiKeys?.mapQuest else { throw WebApiError.missingApiKey("No API key for MapQuest found") }
 		
 		// TODO: Output a more detailed error message
 		mapQuestKey.withCString { key in

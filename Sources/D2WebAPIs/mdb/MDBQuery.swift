@@ -16,7 +16,7 @@ public struct MDBQuery {
 		components.path = path
 		components.query = "xml\(moduleCode.map { "=\($0)" } ?? "")"
 		
-		guard let url = components.url else { throw MDBError.urlError(components) }
+		guard let url = components.url else { throw WebApiError.urlError(components) }
 		self.url = url
 	}
 	
@@ -27,11 +27,11 @@ public struct MDBQuery {
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				then(.failure(MDBError.httpError(error!)))
+				then(.failure(WebApiError.httpError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.failure(MDBError.missingData))
+				then(.failure(WebApiError.missingData))
 				return
 			}
 			

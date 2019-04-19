@@ -4,4 +4,5 @@ let storedWebApiKeys = try? DiskJsonSerializer().readJson(as: WebApiKeys.self, f
 
 struct WebApiKeys: Codable {
 	var mapQuest: String? = nil
+	var wolframAlpha: String? = nil
 }

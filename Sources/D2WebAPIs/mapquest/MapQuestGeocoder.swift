@@ -7,12 +7,12 @@ public struct MapQuestGeocoder {
 	public func geocode(location: String, then: @escaping (Result<GeoCoordinates, Error>) -> Void) {
 		let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
 		guard let mapQuestKey = storedWebApiKeys?.mapQuest else {
-			then(.failure(MapQuestError.missingApiKey("No API key for MapQuest found")))
+			then(.failure(WebApiError.missingApiKey("No API key for MapQuest found")))
 			return
 		}
 		
 		guard let url = URL(string: "https://www.mapquestapi.com/geocoding/v1/address?key=\(mapQuestKey)&location=\(encodedLocation)") else {
-			then(.failure(MapQuestError.urlError("Error while constructing url from location '\(encodedLocation)'")))
+			then(.failure(WebApiError.urlStringError("Error while constructing url from location '\(encodedLocation)'")))
 			return
 		}
 		
@@ -23,7 +23,9 @@ public struct MapQuestGeocoder {
 		
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard let data = data, error == nil else {
-				then(.failure(MapQuestError.httpError(error)))
+				if let unwrappedError = error {
+					then(.failure(WebApiError.httpError(unwrappedError)))
+				}
 				return
 			}
 			do {
@@ -41,16 +43,16 @@ public struct MapQuestGeocoder {
 					.flatMap { $0 as? [String: Double] }
 				
 				guard let location = latLng else {
-					then(.failure(MapQuestError.jsonParseError(json, "Could not locate results -> locations -> latLng")))
+					then(.failure(WebApiError.jsonParseError(json, "Could not locate results -> locations -> latLng")))
 					return
 				}
 				guard let lat = location["lat"], let lng = location["lng"] else {
-					then(.failure(MapQuestError.jsonParseError(location, "No 'lat'/'lng' keys found")))
+					then(.failure(WebApiError.jsonParseError(location, "No 'lat'/'lng' keys found")))
 					return
 				}
 				then(.success(GeoCoordinates(latitude: lat, longitude: lng)))
 			} catch {
-				then(.failure(MapQuestError.jsonIOError(error)))
+				then(.failure(WebApiError.jsonIOError(error)))
 			}
 		}.resume()
 	}
