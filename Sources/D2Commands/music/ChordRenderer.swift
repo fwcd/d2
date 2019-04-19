@@ -1,5 +1,5 @@
 import D2Graphics
 
 protocol ChordRenderer {
-	func render(chord: Chord) -> Image
+	func render(chord: Chord) throws -> Image
 }

@@ -46,7 +46,7 @@ struct Note: Hashable {
 	
 	init(of str: String) throws {
 		guard let parsed = notePattern.firstGroups(in: str) else { throw MusicParseError.invalidNote(str) }
-		guard let letter = NoteLetter.of(parsed[1]) else { throw MusicParseError.invalidNoteLetter(str) }
+		guard let letter = NoteLetter.of(parsed[1]) else { throw MusicParseError.invalidNoteLetter(parsed[1]) }
 		let accidental = Accidental(rawValue: parsed[2]) ?? .none
 		let octave = parsed[2].nilIfEmpty.flatMap { Int($0) }
 		guard let (semitone, _) = twelveToneOctave.enumerated().first(where: { $0.1.contains(UnoctavedNote(letter: letter, accidental: accidental)) }) else { throw MusicParseError.notInTwelveToneOctave(str) }
