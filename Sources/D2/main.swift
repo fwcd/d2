@@ -32,6 +32,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
 	handler["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
 	handler["maxima"] = MaximaCommand()
+	handler["wolframalpha"] = WolframAlphaCommand()
 	handler["tictactoe"] = GameCommand<TicTacToeGame>()
 	handler["uno"] = GameCommand<UnoGame>()
 	handler["sourcefile"] = SourceFileCommand()

@@ -1,8 +1,8 @@
 public struct WolframAlphaOutput {
-	var success: Bool? = nil
-	var error: Bool? = nil
-	var numpods: Int? = nil
-	var datatypes: String? = nil
-	var timing: Double? = nil
-	var pods: [WolframAlphaPod] = []
+	public var success: Bool? = nil
+	public var error: Bool? = nil
+	public var numpods: Int? = nil
+	public var datatypes: String? = nil
+	public var timing: Double? = nil
+	public var pods: [WolframAlphaPod] = []
 }

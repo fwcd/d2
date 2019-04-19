@@ -1,5 +1,5 @@
 public struct WolframAlphaLink {
-	var url: String? = nil
-	var text: String? = nil
-	var title: String? = nil
+	public var url: String? = nil
+	public var text: String? = nil
+	public var title: String? = nil
 }

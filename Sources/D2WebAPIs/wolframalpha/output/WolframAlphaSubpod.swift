@@ -1,5 +1,5 @@
 public struct WolframAlphaSubpod {
-	var title: String? = nil
-	var plaintext: String? = nil
-	var img: WolframAlphaImage? = nil
+	public var title: String? = nil
+	public var plaintext: String? = nil
+	public var img: WolframAlphaImage? = nil
 }
