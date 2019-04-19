@@ -68,4 +68,11 @@ struct Note: Hashable {
 	static func -(lhs: Note, rhs: NoteInterval) -> Note {
 		return lhs + (-rhs)
 	}
+	
+	func matches(_ rhs: Note) -> Bool {
+		return (letter == rhs.letter)
+			&& (octave == nil || rhs.octave == nil || octave == rhs.octave)
+			&& (accidental == rhs.accidental)
+			&& (semitone == rhs.semitone)
+	}
 }
