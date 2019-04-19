@@ -37,7 +37,7 @@ struct Note: Hashable {
 	let accidental: Accidental
 	let semitone: Int // Semitones in an octave
 	
-	init(letter: NoteLetter, accidental: Accidental, semitone: Int, octave: Int? = nil) {
+	private init(letter: NoteLetter, accidental: Accidental, semitone: Int, octave: Int? = nil) {
 		self.letter = letter
 		self.octave = octave
 		self.accidental = accidental
@@ -48,7 +48,7 @@ struct Note: Hashable {
 		guard let parsed = notePattern.firstGroups(in: str) else { throw NoteError.invalidNote(str) }
 		guard let letter = NoteLetter.of(parsed[1]) else { throw NoteError.invalidNoteLetter(parsed[1]) }
 		let accidental = Accidental(rawValue: parsed[2]) ?? .none
-		let octave = parsed[2].nilIfEmpty.flatMap { Int($0) }
+		let octave = parsed[3].nilIfEmpty.flatMap { Int($0) }
 		guard let (semitone, _) = twelveToneOctave.enumerated().first(where: { $0.1.contains(UnoctavedNote(letter: letter, accidental: accidental)) }) else { throw NoteError.notInTwelveToneOctave(str) }
 		
 		self.init(letter: letter, accidental: accidental, semitone: semitone, octave: octave)
@@ -58,8 +58,9 @@ struct Note: Hashable {
 		let octavesDelta = rhs.degrees / 8
 		let nextSemitone = (lhs.semitone + rhs.semitones).clockModulo(twelveToneOctave.count)
 		let nextLetter = lhs.letter + rhs.degrees
-		guard let twelveToneNote = twelveToneOctave[nextSemitone].first(where: { $0.letter == nextLetter }) else {
-			fatalError("Could not locate note with semitone \(nextSemitone) and letter \(nextLetter) in twelve-tone octave")
+		let candidates = twelveToneOctave[nextSemitone]
+		guard let twelveToneNote = candidates.first(where: { $0.letter == nextLetter }) ?? candidates.first else {
+			fatalError("Could not locate note with semitone \(nextSemitone) and letter \(nextLetter) in twelve-tone octave (from: \(lhs) with interval: \(rhs))")
 		}
 		
 		return Note(letter: nextLetter, accidental: twelveToneNote.accidental, semitone: nextSemitone, octave: lhs.octave.map { $0 + octavesDelta })
