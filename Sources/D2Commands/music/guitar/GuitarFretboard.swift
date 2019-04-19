@@ -17,16 +17,20 @@ struct GuitarFretboard {
 		}
 	}
 	
-	struct NoteResult {
-		let note: Note
+	struct Location {
 		let guitarString: Int // The string index is zero-indexed
 		let fret: Int // The fret is zero-indexed
+	}
+	
+	struct NoteResult {
+		let note: Note
+		let location: Location
 	}
 	
 	func find(note: Note, on guitarString: Int) -> NoteResult? {
 		return guitarStrings[safely: guitarString]?
 			.enumerated()
-			.map { NoteResult(note: $0.1, guitarString: guitarString, fret: $0.0) }
+			.map { NoteResult(note: $0.1, location: Location(guitarString: guitarString, fret: $0.0)) }
 			.first { note.matches($0.note) }
 	}
 	

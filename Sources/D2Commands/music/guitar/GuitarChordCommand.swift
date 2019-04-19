@@ -15,15 +15,17 @@ public class GuitarChordCommand: StringCommand {
 			let image = try GuitarChordRenderer().render(chord: chord)
 			
 			try output.append(image)
-		} catch MusicParseError.invalidChord(let chord) {
+		} catch ChordError.invalidChord(let chord) {
 			output.append("Invalid chord: `\(chord)`")
-		} catch MusicParseError.invalidRootNote(let root) {
+		} catch ChordError.invalidRootNote(let root) {
 			output.append("Invalid root note: `\(root)`")
-		} catch MusicParseError.invalidNote(let note) {
+		} catch ChordError.notOnGuitarFretboard(let chord) {
+			output.append("Could not find chord on guitar fretboard: `\(chord)`")
+		} catch NoteError.invalidNote(let note) {
 			output.append("Invalid note: `\(note)`")
-		} catch MusicParseError.notInTwelveToneOctave(let note) {
+		} catch NoteError.notInTwelveToneOctave(let note) {
 			output.append("Not in the standard twelve-tone octave: `\(note)`")
-		} catch MusicParseError.invalidNoteLetter(let noteLetter) {
+		} catch NoteError.invalidNoteLetter(let noteLetter) {
 			output.append("Invalid note letter: `\(noteLetter)`")
 		} catch {
 			print(error)
