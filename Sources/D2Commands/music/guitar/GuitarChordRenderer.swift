@@ -39,6 +39,7 @@ struct GuitarChordRenderer: ChordRenderer {
 		let innerHeight = (Double(height) - (padding * 2)) - gutterHeight
 		let stringSpacing = innerWidth / Double(stringCount - 1)
 		let fretSpacing = innerHeight / Double(fretCount - 1)
+		let dotRadius = fretSpacing * 0.4
 		let topLeft = Vec2(x: padding, y: padding + gutterHeight)
 		
 		graphics.draw(Rectangle(topLeft: topLeft - Vec2(y: gutterHeight), size: Vec2(x: innerWidth, y: gutterHeight), color: fgColor, isFilled: true))
@@ -56,7 +57,10 @@ struct GuitarChordRenderer: ChordRenderer {
 		for dot in guitarChord.dots {
 			if dot.fret > 0 {
 				let position = topLeft + Vec2(x: Double((stringCount - 1) - dot.guitarString) * stringSpacing, y: (Double(dot.fret - 1) + 0.5) * fretSpacing)
-				graphics.draw(Ellipse(center: position, radius: Vec2(both: fretSpacing * 0.4), color: fgColor))
+				graphics.draw(Ellipse(center: position, radius: Vec2(both: dotRadius), color: fgColor))
+			} else {
+				let position = topLeft - Vec2(y: gutterHeight + dotRadius)
+				graphics.draw(Ellipse(center: position, radius: Vec2(both: dotRadius), color: fgColor, isFilled: false))
 			}
 		}
 		

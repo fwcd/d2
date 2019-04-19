@@ -103,12 +103,21 @@ public struct CairoGraphics: Graphics {
 	
 	public mutating func draw(_ ellipse: Ellipse<Double>) {
 		context.save()
-		context.setSource(color: ellipse.color.asDoubleTuple)
 		context.translate(x: ellipse.center.x, y: ellipse.center.y)
 		context.rotate(ellipse.rotation)
 		context.scale(x: ellipse.radius.x, y: ellipse.radius.y)
 		context.addArc(center: (x: 0.0, y: 0.0), radius: 1.0, angle: (0, 2.0 * Double.pi))
-		context.fill()
+		context.restore()
+		
+		context.save()
+		context.setSource(color: ellipse.color.asDoubleTuple)
+		
+		if ellipse.isFilled {
+			context.fill()
+		} else {
+			context.stroke()
+		}
+		
 		context.restore()
 	}
 }
