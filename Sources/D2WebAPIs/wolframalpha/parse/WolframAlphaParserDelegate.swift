@@ -80,7 +80,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 					}
 				case "img":
 					if parsingInfo {
-						info.img = img
+						info.img = image
 					} else {
 						subpod.img = image
 					}
