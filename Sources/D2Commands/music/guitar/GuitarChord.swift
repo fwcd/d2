@@ -1,7 +1,9 @@
+/** Assigns a value to a finger placement. Lower frets, higher strings and more dots are better (thus results in a lower value). */
 fileprivate func cost<C: Collection>(of dots: C) -> Int where C.Element == GuitarFretboard.Location {
-	return dots.map { ($0.fret * $0.fret) - $0.guitarString }.reduce(0, +)
+	return dots.map { ($0.fret * $0.fret) - $0.guitarString }.reduce(0, +) + dots.count
 }
 
+/** Finds the best finger placement for a given chord (described by the remaining notes). */
 fileprivate func findDots<C: Collection>(remainingNotes: C, usedStrings: [Int] = [], on fretboard: GuitarFretboard) -> [GuitarFretboard.Location]? where C.Element == Note {
 	guard let firstNote = remainingNotes.first else { return [] }
 	var bestResult: [GuitarFretboard.Location]? = nil
@@ -24,6 +26,19 @@ fileprivate func findDots<C: Collection>(remainingNotes: C, usedStrings: [Int] =
 	return bestResult
 }
 
+/** Adds additional notes to the chord, provided they are not too unconveniently located. */
+fileprivate func extend<C: Collection, D: Collection>(dots: C, notes: D, on fretboard: GuitarFretboard, fretThreshold: Int = 5) -> [GuitarFretboard.Location] where C.Element == GuitarFretboard.Location, D.Element == Note {
+	var unusedStrings = Set(0..<fretboard.stringCount)
+	
+	for dot in dots {
+		unusedStrings.remove(dot.guitarString)
+	}
+	
+	return dots + unusedStrings
+		.flatMap { stringIndex in notes.compactMap { fretboard.find(note: $0, on: stringIndex)?.location } }
+		.filter { $0.fret < fretThreshold }
+}
+
 struct GuitarChord {
 	let dots: [GuitarFretboard.Location]
 	var maxFret: Int { return dots.map { $0.fret }.max() ?? 0 }
@@ -33,7 +48,7 @@ struct GuitarChord {
 	}
 	
 	init(from chord: Chord, on fretboard: GuitarFretboard) throws {
-		guard let dots = findDots(remainingNotes: chord.notes, on: fretboard) else { throw GuitarError.noGuitarChordFound(chord) }
-		self.dots = dots
+		guard let baseDots = findDots(remainingNotes: chord.notes, on: fretboard) else { throw GuitarError.noGuitarChordFound(chord) }
+		dots = extend(dots: baseDots, notes: chord.notes, on: fretboard)
 	}
 }
