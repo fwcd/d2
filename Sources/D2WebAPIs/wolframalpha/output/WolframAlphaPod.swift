@@ -7,4 +7,5 @@ public struct WolframAlphaPod {
 	var numsubpods: Int? = nil
 	var subpods: [WolframAlphaSubpod] = []
 	var states: [WolframAlphaState] = []
+	var infos: [WolframAlphaInfo] = []
 }

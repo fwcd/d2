@@ -9,6 +9,9 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	private var subpod = WolframAlphaSubpod()
 	private var state = WolframAlphaState()
 	private var image = WolframAlphaImage()
+	private var link = WolframAlphaLink()
+	private var info = WolframAlphaInfo()
+	private var parsingInfo = false
 	
 	private var currentCharacters = ""
 	private var hasErrored = false
@@ -17,7 +20,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 		self.then = then
 	}
 	
-	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
+	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String, qualifiedName qName: String?, attributes attributeDict: [String: String] = [:]) {
 		switch elementName {
 			case "pod":
 				pod = WolframAlphaPod()
@@ -41,6 +44,15 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 				image.title = attributeDict["title"]
 				image.width = attributeDict["width"].flatMap { Int($0) }
 				image.height = attributeDict["height"].flatMap { Int($0) }
+			case "link":
+				link = WolframAlphaLink()
+				link.url = attributeDict["url"]
+				link.text = attributeDict["text"]
+				link.title = attributeDict["title"]
+				parsingInfo = true
+			case "info":
+				info = WolframAlphaInfo()
+				info.text = attributeDict["text"]
 			default: break
 		}
 	}
@@ -59,7 +71,19 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 				case "subpod": pod.subpods.append(subpod)
 				case "state": pod.states.append(state)
 				case "plaintext": subpod.plaintext = currentCharacters
-				case "img": subpod.img = image
+				case "info":
+					pod.infos.append(info)
+					parsingInfo = false
+				case "link":
+					if parsingInfo {
+						info.links.append(link)
+					}
+				case "img":
+					if parsingInfo {
+						info.img = img
+					} else {
+						subpod.img = image
+					}
 				default: break
 			}
 		}
