@@ -1,6 +1,10 @@
+fileprivate func cost(ofLocation location: GuitarFretboard.Location) -> Int {
+	return (location.fret * location.fret) - location.guitarString
+}
+
 /** Assigns a value to a finger placement. Lower frets, higher strings and more dots are better (thus results in a lower value). */
 fileprivate func cost<C: Collection>(of dots: C) -> Int where C.Element == GuitarFretboard.Location {
-	return dots.map { ($0.fret * $0.fret) - $0.guitarString }.reduce(0, +) + dots.count
+	return dots.map { cost(ofLocation: $0) }.reduce(0, +) + dots.count
 }
 
 /** Finds the best finger placement for a given chord (described by the remaining notes). */
@@ -35,7 +39,7 @@ fileprivate func extend<C: Collection, D: Collection>(dots: C, notes: D, on fret
 	}
 	
 	return dots + unusedStrings
-		.flatMap { stringIndex in notes.compactMap { fretboard.find(note: $0, on: stringIndex)?.location } }
+		.compactMap { stringIndex in notes.compactMap { fretboard.find(note: $0, on: stringIndex)?.location }.min { cost(ofLocation: $0) < cost(ofLocation: $1) } }
 		.filter { $0.fret < fretThreshold }
 }
 
