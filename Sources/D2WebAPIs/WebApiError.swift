@@ -8,6 +8,7 @@ public enum WebApiError: Error {
 	case urlError(URLComponents)
 	case httpError(Error)
 	case xmlError(String, Any)
+	case imageError(String)
 	case jsonIOError(Error)
 	case jsonParseError(Any, String)
 	case foundNoMatches(String)

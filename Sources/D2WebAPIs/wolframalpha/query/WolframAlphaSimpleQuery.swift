@@ -1,14 +1,14 @@
 import Foundation
 import D2Utils
 
-public struct WolframAlphaQuery {
+public struct WolframAlphaSimpleQuery {
 	private let url: URL
 	
 	public init(
 		input: String,
 		scheme: String = "https",
 		host: String = "api.wolframalpha.com",
-		path: String = "/v2/query"
+		path: String = "/v1/simple"
 	) throws {
 		guard let appid = storedWebApiKeys?.wolframAlpha else { throw WebApiError.missingApiKey("No WolframAlpha API key found") }
 		
@@ -25,7 +25,7 @@ public struct WolframAlphaQuery {
 		self.url = url
 	}
 	
-	public func start(then: @escaping (Result<WolframAlphaOutput, Error>) -> Void) {
+	public func start(then: @escaping (Result<Data, Error>) -> Void) {
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		
@@ -38,12 +38,7 @@ public struct WolframAlphaQuery {
 				then(.failure(WebApiError.missingData))
 				return
 			}
-			// print(String(data: data, encoding: .utf8)!)
-			let parser = XMLParser(data: data)
-			let delegate = WolframAlphaParserDelegate(then: then)
-			
-			parser.delegate = delegate
-			_ = parser.parse()
+			then(.success(data))
 		}.resume()
 	}
 }
