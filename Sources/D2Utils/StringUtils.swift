@@ -1,6 +1,12 @@
 import Foundation
 
+fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+
 extension String {
+	public var asciiOnly: String? {
+		return components(separatedBy: asciiCharacters).joined()
+	}
+	
 	public var nilIfEmpty: String? {
 		return isEmpty ? nil : self
 	}
@@ -12,6 +18,14 @@ extension String {
 			}
 		}
 		return true
+	}
+	
+	public func truncate(_ length: Int, appending trailing: String = "") -> String {
+		if count > length {
+			return prefix(length) + trailing
+		} else {
+			return self
+		}
 	}
 	
 	public func split(by length: Int) -> [String] {

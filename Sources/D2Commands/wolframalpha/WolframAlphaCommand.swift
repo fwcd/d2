@@ -19,16 +19,17 @@ public class WolframAlphaCommand: StringCommand {
 					return
 				}
 				
+				result.pods.map { pod in print(pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)**\n" } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...")) }
 				output.append(DiscordEmbed(
 					title: "Query Output",
 					author: DiscordEmbed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
-					image: (result.pods.first?.subpods.first?.img?.src).flatMap { URL(string: $0) }.map { DiscordEmbed.Image(url: $0) },
+					thumbnail: (result.pods.first?.subpods.first?.img?.src).flatMap { URL(string: $0) }.map { DiscordEmbed.Thumbnail(url: $0) },
 					color: 0xfdc81a,
 					footer: DiscordEmbed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
 					fields: result.pods.map { pod in DiscordEmbed.Field(
-						name: pod.title ?? "Untitled pod",
-						value: pod.subpods.map { "**\($0.title ?? "Untitled subpod")**\n\($0.plaintext ?? "")" }.joined(separator: "\n")
-					) }
+						name: pod.title?.truncate(100, appending: "...") ?? "Untitled pod",
+						value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)**\n" } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...") ?? ""
+					) }.truncate(5)
 				))
 			}
 		} catch {

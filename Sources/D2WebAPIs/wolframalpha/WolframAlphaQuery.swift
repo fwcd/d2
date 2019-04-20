@@ -38,7 +38,7 @@ public struct WolframAlphaQuery {
 				then(.failure(WebApiError.missingData))
 				return
 			}
-			
+			// print(String(data: data, encoding: .utf8)!)
 			let parser = XMLParser(data: data)
 			let delegate = WolframAlphaParserDelegate(then: then)
 			
