@@ -55,10 +55,14 @@ public class WolframAlphaCommand: StringCommand {
 				return
 			}
 			
+			let images = result.pods.flatMap { pod in pod.subpods.compactMap { self.extractImageURL(from: $0) } }
+			let plot = result.pods.filter { $0.title?.lowercased().contains("plot") ?? false }.first?.subpods.first.flatMap { self.extractImageURL(from: $0) }
+			
 			output.append(DiscordEmbed(
 				title: "Query Output",
 				author: DiscordEmbed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
-				thumbnail: (result.pods.first?.subpods.first?.img?.src).flatMap { URL(string: $0) }.map { DiscordEmbed.Thumbnail(url: $0) },
+				image: (plot ?? images.last).map { DiscordEmbed.Image(url: $0) },
+				thumbnail: images.first.map { DiscordEmbed.Thumbnail(url: $0) },
 				color: 0xfdc81a,
 				footer: DiscordEmbed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
 				fields: result.pods.map { pod in DiscordEmbed.Field(
@@ -71,5 +75,9 @@ public class WolframAlphaCommand: StringCommand {
 				) }.truncate(10)
 			))
 		}
+	}
+	
+	private func extractImageURL(from subpod: WolframAlphaSubpod) -> URL? {
+		return (subpod.img?.src).flatMap { URL(string: $0) }
 	}
 }

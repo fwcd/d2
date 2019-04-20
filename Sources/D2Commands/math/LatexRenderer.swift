@@ -36,7 +36,7 @@ class LatexRenderer {
 			do {
 				try self.shellInvoke("pdftocairo", in: self.tempDir.url, args: ["\(name).pdf", "-transp", "-png", "\(name)"]) { _ in
 					do {
-						then(try Image(fromPngURL: pngFile.url))
+						then(try Image(fromPngFile: pngFile.url))
 					} catch {
 						onError(error)
 					}

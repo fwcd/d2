@@ -25,7 +25,7 @@ public struct Image {
 		self.init(from: try Surface.Image(png: data))
 	}
 	
-	public init(fromPngURL url: URL) throws {
+	public init(fromPngFile url: URL) throws {
 		let fileManager = FileManager.default
 		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(url) }
 		
@@ -37,7 +37,7 @@ public struct Image {
 	}
 	
 	public init(fromPngFile filePath: String) throws {
-		try self.init(fromPngURL: URL(fileURLWithPath: filePath))
+		try self.init(fromPngFile: URL(fileURLWithPath: filePath))
 	}
 	
 	public func pngEncoded() throws -> Data {
