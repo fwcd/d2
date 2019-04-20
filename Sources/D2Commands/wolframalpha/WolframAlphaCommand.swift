@@ -12,10 +12,17 @@ public class WolframAlphaCommand: StringCommand {
 	public let helpText = "[--image]? [query input]"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
+	private var isRunning = false
 	
 	public init() {}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		guard !isRunning else {
+			output.append("Wait for the first input to finish!")
+			return
+		}
+		isRunning = true
+		
 		do {
 			let flags = Set(flagPattern.allGroups(in: input).map { $0[1] })
 			let processedInput = flagPattern.replace(in: input, with: "")
@@ -44,6 +51,7 @@ public class WolframAlphaCommand: StringCommand {
 				content: "",
 				files: [DiscordFileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]
 			))
+			self.isRunning = false
 		}
 	}
 	
@@ -74,6 +82,7 @@ public class WolframAlphaCommand: StringCommand {
 						?? "No content"
 				) }.truncate(10)
 			))
+			self.isRunning = false
 		}
 	}
 	
