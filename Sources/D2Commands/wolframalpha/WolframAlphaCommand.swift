@@ -9,6 +9,7 @@ fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
 	public let description = "Queries Wolfram Alpha"
+	public let helpText = "[--image]? [query input]"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	
@@ -19,12 +20,12 @@ public class WolframAlphaCommand: StringCommand {
 			let flags = Set(flagPattern.allGroups(in: input).map { $0[1] })
 			let processedInput = flagPattern.replace(in: input, with: "")
 			
-			if flags.contains("full") {
-				// Performs a full query and outputs an embed
-				try performFullQuery(input: processedInput, output: output)
-			} else {
+			if flags.contains("image") {
 				// Performs a "simple" query and outputs a static image
 				try performSimpleQuery(input: processedInput, output: output)
+			} else {
+				// Performs a full query and outputs an embed
+				try performFullQuery(input: processedInput, output: output)
 			}
 		} catch {
 			output.append("An error occurred. Check the log for more information.")
@@ -63,7 +64,7 @@ public class WolframAlphaCommand: StringCommand {
 				fields: result.pods.map { pod in DiscordEmbed.Field(
 					// TODO: Investigate why Discord sends 400s for certain queries
 					name: pod.title?.nilIfEmpty?.truncate(50, appending: "...") ?? "Untitled pod",
-					value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)**\n" } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(500, appending: "...")
+					value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(500, appending: "...")
 						.trimmingCharacters(in: .whitespacesAndNewlines)
 						.nilIfEmpty
 						?? "No content"
