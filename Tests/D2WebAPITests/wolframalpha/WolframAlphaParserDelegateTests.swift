@@ -82,11 +82,15 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
 			</assumption>
 			</assumptions>
 			</queryresult>
-		"""
+			"""
 		let parser = XMLParser(data: xml.data(using: .utf8)!)
 		let delegate = WolframAlphaParserDelegate {
 			guard case let .success(result) = $0 else {
-				XCTFail("WolframAlpha parser delegate failed")
+				if case let .failure(error) = $0 {
+					XCTFail("WolframAlpha parser delegate throwed \(error)")
+				} else {
+					XCTFail("WolframAlpha parser delegate failed")
+				}
 				return
 			}
 			
@@ -98,7 +102,13 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
 			
 			// TODO: More detailed testing
 		}
+		
 		parser.delegate = delegate
-		_ = parser.parse()
+		
+		print("Starting to parse")
+		let result = parser.parse()
+		print("Done")
+		
+		XCTAssert(result, "XML parser should succeed")
 	}
 }

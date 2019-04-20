@@ -20,8 +20,8 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 		self.then = then
 	}
 	
-	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String, qualifiedName qName: String?, attributes attributeDict: [String: String] = [:]) {
-		print("Entering \(elementName): \(attributeDict)")
+	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
+		// print("Entering \(elementName): \(attributeDict)")
 		switch elementName {
 			case "queryresult":
 				result = WolframAlphaOutput()
@@ -69,7 +69,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-		print("Exiting \(elementName)")
+		// print("Exiting \(elementName)")
 		if elementName == "queryresult" {
 			print("Ending parsing")
 			then(.success(result))
@@ -100,6 +100,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+		print(parseError)
 		if !hasErrored {
 			then(.failure(parseError))
 			hasErrored = true
@@ -107,6 +108,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+		print(validationError)
 		if !hasErrored {
 			then(.failure(validationError))
 			hasErrored = true
