@@ -9,7 +9,7 @@ fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
 	public let description = "Queries Wolfram Alpha"
-	public let helpText = "[--image]? [query input]"
+	public let helpText = "[--image]? [--steps]? [query input]"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private var isRunning = false
@@ -32,7 +32,7 @@ public class WolframAlphaCommand: StringCommand {
 				try performSimpleQuery(input: processedInput, output: output)
 			} else {
 				// Performs a full query and outputs an embed
-				try performFullQuery(input: processedInput, output: output)
+				try performFullQuery(input: processedInput, output: output, showSteps: flags.contains("steps"))
 			}
 		} catch {
 			output.append("An error occurred. Check the log for more information.")
@@ -55,8 +55,8 @@ public class WolframAlphaCommand: StringCommand {
 		}
 	}
 	
-	private func performFullQuery(input: String, output: CommandOutput) throws {
-		let query = try WolframAlphaFullQuery(input: input)
+	private func performFullQuery(input: String, output: CommandOutput, showSteps: Bool = false) throws {
+		let query = try WolframAlphaFullQuery(input: input, showSteps: showSteps)
 		query.start {
 			guard case let .success(result) = $0 else {
 				output.append("An error occurred while querying WolframAlpha.")
@@ -76,11 +76,11 @@ public class WolframAlphaCommand: StringCommand {
 				fields: result.pods.map { pod in DiscordEmbed.Field(
 					// TODO: Investigate why Discord sends 400s for certain queries
 					name: pod.title?.nilIfEmpty?.truncate(50, appending: "...") ?? "Untitled pod",
-					value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(500, appending: "...")
+					value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...")
 						.trimmingCharacters(in: .whitespacesAndNewlines)
 						.nilIfEmpty
 						?? "No content"
-				) }.truncate(10)
+				) }.truncate(6)
 			))
 			self.isRunning = false
 		}

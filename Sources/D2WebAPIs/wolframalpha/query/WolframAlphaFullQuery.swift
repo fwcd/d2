@@ -8,7 +8,8 @@ public struct WolframAlphaFullQuery {
 		input: String,
 		scheme: String = "https",
 		host: String = "api.wolframalpha.com",
-		path: String = "/v2/query"
+		path: String = "/v2/query",
+		showSteps: Bool = false
 	) throws {
 		guard let appid = storedWebApiKeys?.wolframAlpha else { throw WebApiError.missingApiKey("No WolframAlpha API key found") }
 		
@@ -20,6 +21,10 @@ public struct WolframAlphaFullQuery {
 			URLQueryItem(name: "input", value: input),
 			URLQueryItem(name: "appid", value: appid)
 		]
+		
+		if showSteps {
+			components.queryItems?.append(URLQueryItem(name: "podstate", value: "Result__Step-by-step+solution"))
+		}
 		
 		guard let url = components.url else { throw WebApiError.urlError(components) }
 		self.url = url
