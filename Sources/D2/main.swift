@@ -53,7 +53,8 @@ func register(commandsFor handler: CommandHandler) {
 }
 
 func main() throws {
-	let handler = try CommandHandler(withPrefix: "%")
+	let args = CommandLine.arguments
+	let handler = try CommandHandler(withPrefix: "%", initialPresence: args[safely: 1])
 	let token = try DiskJsonSerializer().readJson(as: Token.self, fromFile: "local/discordToken.json").token
 	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [.log(.info)])
 	

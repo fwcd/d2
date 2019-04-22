@@ -24,6 +24,8 @@ class CommandHandler: DiscordClientDelegate {
 	private let pipeSeparator: String
 	private let msgPrefix: String
 	private let commandPattern: Regex
+	private let initialPresence: String?
+	
 	private var currentIndex = 0
 	private var maxPipeLengthForUsers: Int = 3
 	
@@ -31,10 +33,11 @@ class CommandHandler: DiscordClientDelegate {
 	private var subscribedCommands = [CommandSubscription]()
 	let permissionManager = PermissionManager()
 	
-	init(withPrefix msgPrefix: String, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
+	init(withPrefix msgPrefix: String, initialPresence: String? = nil, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
 		self.msgPrefix = msgPrefix
 		self.chainSeparator = chainSeparator
 		self.pipeSeparator = pipeSeparator
+		self.initialPresence = initialPresence
 		
 		// The first group matches the command name,
 		// the second matches the arguments (the rest of the message content)
@@ -42,7 +45,7 @@ class CommandHandler: DiscordClientDelegate {
 	}
 	
 	func client(_ client: DiscordClient, didConnect connected: Bool) {
-		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: "%help", type: .listening)))
+		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "%help", type: .listening)))
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
