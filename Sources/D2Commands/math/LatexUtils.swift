@@ -27,6 +27,7 @@ func renderLatexPNG(with renderer: LatexRenderer, from input: String, to output:
 		}
 	} catch {
 		handleLatex(error: error, output: output)
+		then()
 	}
 }
 
