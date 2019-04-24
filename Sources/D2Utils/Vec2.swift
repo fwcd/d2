@@ -1,8 +1,8 @@
 public typealias VecComponent = Addable & Subtractable & Multipliable & Divisible & Negatable & ExpressibleByIntegerLiteral & Hashable
 
 public struct Vec2<T: VecComponent>: Addable, Subtractable, Multipliable, Divisible, Negatable, Hashable, CustomStringConvertible {
-	public let x: T
-	public let y: T
+	public var x: T
+	public var y: T
 	public var asTuple: (x: T, y: T) { return (x: x, y: y) }
 	public var xInverted: Vec2<T> { return Vec2(x: -x, y: y) }
 	public var yInverted: Vec2<T> { return Vec2(x: x, y: -y) }
