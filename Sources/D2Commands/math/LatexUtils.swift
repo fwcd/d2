@@ -19,11 +19,11 @@ func renderLatexPNG(with renderer: LatexRenderer, from input: String, to output:
 			// Render output
 			do {
 				try output.append($0)
-				then()
 			} catch {
 				output.append("Error while appending image to output")
 				print("Error while appending image to output: \(error)")
 			}
+			then()
 		}
 	} catch {
 		handleLatex(error: error, output: output)

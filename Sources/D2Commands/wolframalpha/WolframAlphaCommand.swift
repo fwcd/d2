@@ -43,7 +43,9 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaSimpleQuery(input: input)
 		query.start {
 			guard case let .success(data) = $0 else {
+				if case let .failure(error) = $0 { print(error) }
 				output.append("An error occurred while querying WolframAlpha.")
+				self.isRunning = false
 				return
 			}
 			
@@ -59,7 +61,9 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaFullQuery(input: input, showSteps: showSteps)
 		query.start {
 			guard case let .success(result) = $0 else {
+				if case let .failure(error) = $0 { print(error) }
 				output.append("An error occurred while querying WolframAlpha.")
+				self.isRunning = false
 				return
 			}
 			
