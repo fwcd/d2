@@ -137,6 +137,15 @@
         }
       },
       {
+        "package": "SwiftSoup",
+        "repositoryURL": "https://github.com/scinfu/SwiftSoup",
+        "state": {
+          "branch": null,
+          "revision": "aeb5b4249c273d1783a5299e05be1b26e061ea81",
+          "version": "2.0.0"
+        }
+      },
+      {
         "package": "TLS",
         "repositoryURL": "https://github.com/vapor/tls.git",
         "state": {

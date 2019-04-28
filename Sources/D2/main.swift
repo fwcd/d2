@@ -49,6 +49,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["dm"] = DirectMessageCommand()
 	handler["tofile"] = ToFileCommand()
 	handler["chord"] = GuitarChordCommand()
+	handler["web"] = WebCommand()
 	handler["help"] = HelpCommand(permissionManager: handler.permissionManager)
 }
 
