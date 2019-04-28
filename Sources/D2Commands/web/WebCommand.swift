@@ -1,7 +1,10 @@
 import SwiftDiscord
 import D2Permissions
+import D2Utils
 import Foundation
 import SwiftSoup
+
+fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")
 
 public class WebCommand: StringCommand {
 	public let description = "Renders a web page"
@@ -12,7 +15,7 @@ public class WebCommand: StringCommand {
 	public init() {}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		guard let url = URL(string: input) else {
+		guard let url = urlPattern.firstGroups(in: input).flatMap({ URL(string: $0[1]) }) else {
 			output.append("Not a valid URL: `\(input)`")
 			return
 		}
@@ -39,9 +42,7 @@ public class WebCommand: StringCommand {
 					description: try document.body().map { try self.converter.convert($0).truncate(1500) } ?? "Empty body",
 					author: DiscordEmbed.Author(
 						name: url.host ?? input,
-						iconUrl: (try? document.select("link[rel*=apple-touch-icon]").first()?.attr("href"))
-							.flatMap { $0 } // Flatten nested optional from try?
-							.flatMap { URL(string: $0, relativeTo: url) }
+						iconUrl: self.findFavicon(in: document).flatMap { URL(string: $0, relativeTo: url) }
 					)
 				))
 			} catch {
@@ -49,5 +50,10 @@ public class WebCommand: StringCommand {
 				print(error)
 			}
 		}.resume()
+	}
+	
+	private func findFavicon(in document: Document) -> String? {
+		return (try? document.select("link[rel*=icon][href*=png]").first()?.attr("href"))
+			.flatMap { $0 } // Flatten nested optional from try?
 	}
 }
