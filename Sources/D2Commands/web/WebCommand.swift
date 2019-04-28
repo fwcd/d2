@@ -1,6 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 import Foundation
+import SwiftSoup
 
 public class WebCommand: StringCommand {
 	public let description = "Renders a web page"
@@ -31,10 +32,16 @@ public class WebCommand: StringCommand {
 				return
 			}
 			
-			output.append(DiscordEmbed(
-				title: "Web Result",
-				description: html
-			))
+			do {
+				let document: Document = try SwiftSoup.parse(html)
+				output.append(DiscordEmbed(
+					title: try document.title().nilIfEmpty ?? "Untitled Web Result",
+					description: try document.body()?.text() ?? "Empty body"
+				))
+			} catch {
+				output.append("An error occurred while parsing the HTML")
+				print(error)
+			}
 		}.resume()
 	}
 }
