@@ -7,6 +7,7 @@ struct DocumentToMarkdownConverter {
 	func convert(_ element: Element) throws -> String {
 		let mdPrefix: String
 		let mdPostfix: String
+		var trimContent: Bool = false
 		
 		switch element.tagName() {
 			case "a":
@@ -29,23 +30,35 @@ struct DocumentToMarkdownConverter {
 			case "p":
 				mdPrefix = "\n\n"
 				mdPostfix = "\n\n"
+				trimContent = true
 			case "h1", "h2", "h3", "h4", "h5", "h6":
 				mdPrefix = "\n**"
 				mdPostfix = "**\n"
+			case "img":
+				mdPrefix = (try? element.attr("alt")) ?? defaultPrefix
+				mdPostfix = defaultPostfix
 			default:
 				mdPrefix = defaultPrefix
 				mdPostfix = defaultPostfix
 		}
 		
-		let content = try element.getChildNodes().map {
+		var content = try element.getChildNodes().map {
 			if let childElement = $0 as? Element {
 				return try convert(childElement)
-			} else if let childText = $0 as? TextNode {
-				return childText.getWholeText()
+			} else if let childText = ($0 as? TextNode)?.getWholeText() {
+				var trimmed = childText.trimmingCharacters(in: .whitespacesAndNewlines)
+				if childText.hasPrefix(" ") { trimmed = " \(trimmed)" }
+				if childText.hasSuffix(" ") { trimmed += " " }
+				return trimmed
 			} else {
 				return ""
 			}
 		}.joined()
+		
+		if trimContent {
+			content = content.trimmingCharacters(in: .whitespacesAndNewlines)
+		}
+		
 		return "\(mdPrefix)\(content)\(mdPostfix)"
 	}
 }
