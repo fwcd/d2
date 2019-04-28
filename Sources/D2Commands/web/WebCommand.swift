@@ -37,19 +37,35 @@ public class WebCommand: StringCommand {
 			
 			do {
 				let document: Document = try SwiftSoup.parse(html)
+				let formattedOutput = try document.body().map { try self.converter.convert($0, baseURL: url) } ?? "Empty body"
+				let splitOutput: [String] = self.splitForEmbed(formattedOutput)
+				
 				output.append(DiscordEmbed(
 					title: try document.title().nilIfEmpty ?? "Web Result",
-					description: try document.body().map { try self.converter.convert($0).truncate(1500) } ?? "Empty body",
+					description: splitOutput[safely: 0] ?? "Empty output",
 					author: DiscordEmbed.Author(
 						name: url.host ?? input,
 						iconUrl: self.findFavicon(in: document).flatMap { URL(string: $0, relativeTo: url) }
-					)
+					),
+					fields: splitOutput.dropFirst().enumerated().map { DiscordEmbed.Field(name: "Page \($0.0 + 1)", value: $0.1) }
 				))
 			} catch {
 				output.append("An error occurred while parsing the HTML")
 				print(error)
 			}
 		}.resume()
+	}
+	
+	private func splitForEmbed(_ str: String) -> [String] {
+		let descriptionLength = 2000
+		let fieldLength = 900
+		var result = [String(str.prefix(descriptionLength))]
+		
+		if str.count > descriptionLength {
+			result += str.dropFirst(descriptionLength).split(by: fieldLength).prefix(4)
+		}
+		print(result)
+		return result
 	}
 	
 	private func findFavicon(in document: Document) -> String? {

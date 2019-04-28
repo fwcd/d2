@@ -2,12 +2,25 @@ import Foundation
 
 fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 
-extension String {
+extension StringProtocol {
+	public func split(by length: Int) -> [String] {
+		var start = startIndex
+		var output = [String]()
+		
+		while start < endIndex {
+			let end = index(start, offsetBy: length, limitedBy: endIndex) ?? endIndex
+			output.append(String(self[start..<end]))
+			start = end
+		}
+		
+		return output
+	}
+	
 	public var asciiOnly: String? {
 		return components(separatedBy: asciiCharacters).joined()
 	}
 	
-	public var nilIfEmpty: String? {
+	public var nilIfEmpty: Self? {
 		return isEmpty ? nil : self
 	}
 	
@@ -24,20 +37,7 @@ extension String {
 		if count > length {
 			return prefix(length) + trailing
 		} else {
-			return self
+			return String(self)
 		}
-	}
-	
-	public func split(by length: Int) -> [String] {
-		var start = startIndex
-		var output = [String]()
-		
-		while start < endIndex {
-			let end = index(start, offsetBy: length, limitedBy: endIndex) ?? endIndex
-			output.append(String(self[start..<end]))
-			start = end
-		}
-		
-		return output
 	}
 }

@@ -1,10 +1,11 @@
+import Foundation
 import SwiftSoup
 
 struct DocumentToMarkdownConverter {
 	private let defaultPrefix = ""
 	private let defaultPostfix = ""
 	
-	func convert(_ element: Element) throws -> String {
+	func convert(_ element: Element, baseURL: URL) throws -> String {
 		let mdPrefix: String
 		let mdPostfix: String
 		var trimContent: Bool = false
@@ -13,7 +14,7 @@ struct DocumentToMarkdownConverter {
 			case "a":
 				if let href = try? element.attr("href") {
 					mdPrefix = "["
-					mdPostfix = "](\(href))"
+					mdPostfix = "](\(URL(string: href, relativeTo: baseURL)?.absoluteString ?? href))"
 				} else {
 					mdPrefix = defaultPrefix
 					mdPostfix = defaultPostfix
@@ -44,7 +45,7 @@ struct DocumentToMarkdownConverter {
 		
 		var content = try element.getChildNodes().map {
 			if let childElement = $0 as? Element {
-				return try convert(childElement)
+				return try convert(childElement, baseURL: baseURL)
 			} else if let childText = ($0 as? TextNode)?.getWholeText() {
 				var trimmed = childText.trimmingCharacters(in: .whitespacesAndNewlines)
 				if childText.hasPrefix(" ") { trimmed = " \(trimmed)" }
@@ -59,6 +60,10 @@ struct DocumentToMarkdownConverter {
 			content = content.trimmingCharacters(in: .whitespacesAndNewlines)
 		}
 		
-		return "\(mdPrefix)\(content)\(mdPostfix)"
+		if content.isEmpty {
+			return ""
+		} else {
+			return "\(mdPrefix)\(content)\(mdPostfix)"
+		}
 	}
 }
