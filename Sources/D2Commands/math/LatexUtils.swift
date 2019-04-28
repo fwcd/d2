@@ -10,12 +10,12 @@ func handleLatex(error: Error, output: CommandOutput) {
 	}
 }
 
-func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from input: String, to output: CommandOutput, then: @escaping () -> Void) {
+func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from input: String, to output: CommandOutput, then: (() -> Void)? = nil) {
 	do {
 		try renderer.renderImage(from: input, color: color, onError: {
 			// Catch asynchronous errors
 			handleLatex(error: $0, output: output)
-			then()
+			then?()
 		}) {
 			// Render output
 			do {
@@ -23,11 +23,11 @@ func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from 
 			} catch {
 				output.append(error, errorText: "Error while appending image to output")
 			}
-			then()
+			then?()
 		}
 	} catch {
 		handleLatex(error: error, output: output)
-		then()
+		then?()
 	}
 }
 

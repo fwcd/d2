@@ -58,6 +58,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
 		registry["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
 		registry["maxima"] = MaximaCommand()
+		registry["integral"] = WebIntegralCalculatorCommand()
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
