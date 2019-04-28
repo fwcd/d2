@@ -64,7 +64,7 @@ public class WebCommand: StringCommand {
 		if str.count > descriptionLength {
 			result += str.dropFirst(descriptionLength).split(by: fieldLength).prefix(4)
 		}
-		print(result)
+		
 		return result
 	}
 	
