@@ -35,8 +35,9 @@ public class LatexCommand: StringCommand {
 		
 		let flags = flagPattern.allGroups(in: input).reduce(into: [String: String]()) { $0[$1[1]] = $1[2] }
 		let color = flags["color"] ?? "white"
+		let processedInput = flagPattern.replace(in: input, with: "")
 		
-		renderLatexPNG(with: renderer, color: color, from: input, to: output) {
+		renderLatexPNG(with: renderer, color: color, from: processedInput, to: output) {
 			self.running = false
 		}
 	}
