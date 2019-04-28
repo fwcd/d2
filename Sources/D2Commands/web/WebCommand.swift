@@ -35,8 +35,8 @@ public class WebCommand: StringCommand {
 			do {
 				let document: Document = try SwiftSoup.parse(html)
 				output.append(DiscordEmbed(
-					title: try document.title().nilIfEmpty ?? "Untitled Web Result",
-					description: try document.body()?.text() ?? "Empty body"
+					title: try document.title().nilIfEmpty ?? "Web Result",
+					description: try document.body().map { try self.converter.convert($0) } ?? "Empty body"
 				))
 			} catch {
 				output.append("An error occurred while parsing the HTML")
