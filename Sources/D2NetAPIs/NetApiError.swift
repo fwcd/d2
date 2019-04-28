@@ -13,4 +13,5 @@ public enum NetApiError: Error {
 	case jsonParseError(String, String)
 	case foundNoMatches(String)
 	case noResults(String)
+	case apiError(String)
 }

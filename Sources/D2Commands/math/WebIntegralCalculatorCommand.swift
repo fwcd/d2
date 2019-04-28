@@ -33,8 +33,10 @@ public class WebIntegralCalculatorCommand: StringCommand {
 				intVar: integrationVariable
 			)).start {
 				guard case let .success(result) = $0 else {
-					if case let .failure(err) = $0 { print(err) }
-					output.append("An asynchronous error occurred while querying the integral calculator")
+					if case let .failure(err) = $0 {
+						print(err)
+						output.append("An asynchronous error occurred while querying the integral calculator: \(err)")
+					}
 					return
 				}
 				
@@ -46,6 +48,9 @@ public class WebIntegralCalculatorCommand: StringCommand {
 					output.append(result.steps.joined(separator: "\n"))
 				}
 			}
+		} catch WebApiError.apiError(let msg) {
+			print(msg)
+			output.append("A web API error occurred: \(msg)")
 		} catch {
 			print(error)
 			output.append("An error occurred while parsing or performing the query")

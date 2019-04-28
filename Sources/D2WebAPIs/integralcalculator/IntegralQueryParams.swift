@@ -9,8 +9,10 @@ public struct IntegralQueryParams: Codable {
 	public var intVar: String
 	public var complexMode: Bool = false
 	public var keepDecimals: Bool = false
+	public var alternatives: [String: String] = [:]
 	public var f: String = "F"
-	public var maximaFoundElementaryAntiderivative: Bool = false
+	public var shareURL: String = "https://www.integral-calculator.com"
+	public var maximaFoundAnElementaryAntiderivative: Bool = false
 	
 	public init(expression: String, expressionCanonical: String, intVar: String) {
 		self.expression = expression

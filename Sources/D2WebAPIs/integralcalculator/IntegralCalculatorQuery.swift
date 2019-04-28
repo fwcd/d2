@@ -17,7 +17,8 @@ public struct IntegralCalculatorQuery {
 		components.host = host
 		components.path = path
 		components.queryItems = [
-			URLQueryItem(name: "q", value: String(data: try JSONEncoder().encode(params), encoding: .utf8))
+			URLQueryItem(name: "q", value: String(data: try JSONEncoder().encode(params), encoding: .utf8)),
+			URLQueryItem(name: "v", value: "1554468795")
 		]
 		
 		guard let url = components.url else { throw WebApiError.urlError(components) }
@@ -29,6 +30,8 @@ public struct IntegralCalculatorQuery {
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
+		request.addValue("Something", forHTTPHeaderField: "X-Requested-With")
+		
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
 				then(.failure(WebApiError.httpError(error!)))
@@ -42,7 +45,11 @@ public struct IntegralCalculatorQuery {
 			do {
 				let document = try SwiftSoup.parse(rawHTML)
 				let steps = try document.getElementsByClass("calc-math").map { try $0.text() }
-				then(.success(IntegralQueryOutput(steps: steps)))
+				if steps.isEmpty {
+					then(.failure(WebApiError.apiError(try document.text())))
+				} else {
+					then(.success(IntegralQueryOutput(steps: steps)))
+				}
 			} catch {
 				then(.failure(error))
 				return
