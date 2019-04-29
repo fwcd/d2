@@ -4,22 +4,24 @@ import SwiftSoup
 
 public struct IntegralCalculatorQuery {
 	public let url: URL
+	private let queryString: String
 	
-	public init(
-		params: IntegralQueryParams,
+	public init<P: Encodable>(
+		params: P,
 		moduleCode: String? = nil,
 		scheme: String = "https",
 		host: String = "www.integral-calculator.com",
-		path: String = "/manualint.php"
+		path: String = "/int.php"
 	) throws {
 		var components = URLComponents()
 		components.scheme = scheme
 		components.host = host
 		components.path = path
-		components.queryItems = [
-			URLQueryItem(name: "q", value: String(data: try JSONEncoder().encode(params), encoding: .utf8)),
-			URLQueryItem(name: "v", value: "1554468795")
-		]
+		
+		queryString = [
+			"q": String(data: try JSONEncoder().encode(params), encoding: .utf8) ?? "",
+			"v": "1554468795"
+		].urlQueryEncoded
 		
 		guard let url = components.url else { throw WebApiError.urlError(components) }
 		self.url = url
@@ -29,8 +31,9 @@ public struct IntegralCalculatorQuery {
 		print("Querying \(url)")
 		
 		var request = URLRequest(url: url)
-		request.httpMethod = "GET"
-		request.addValue("Something", forHTTPHeaderField: "X-Requested-With")
+		request.httpMethod = "POST"
+		request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+		request.httpBody = queryString.data(using: .utf8)
 		
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {

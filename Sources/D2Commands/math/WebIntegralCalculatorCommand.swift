@@ -28,7 +28,7 @@ public class WebIntegralCalculatorCommand: StringCommand {
 			}
 			
 			try IntegralCalculatorQuery(params: IntegralQueryParams(
-				expression: input,
+				expression: parsedInput.infixICNotation,
 				expressionCanonical: parsedInput.prefixFunctionNotation,
 				intVar: integrationVariable
 			)).start {
