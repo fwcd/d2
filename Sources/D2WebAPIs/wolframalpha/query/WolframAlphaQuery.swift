@@ -1,14 +1,14 @@
 import Foundation
 import D2Utils
 
-public struct WolframAlphaFullQuery {
+public struct WolframAlphaQuery {
 	private let url: URL
 	
 	public init(
 		input: String,
+		endpoint: WolframAlphaQueryEndpoint,
 		scheme: String = "https",
 		host: String = "api.wolframalpha.com",
-		path: String = "/v2/query",
 		showSteps: Bool = false
 	) throws {
 		guard let appid = storedWebApiKeys?.wolframAlpha else { throw WebApiError.missingApiKey("No WolframAlpha API key found") }
@@ -16,11 +16,11 @@ public struct WolframAlphaFullQuery {
 		var components = URLComponents()
 		components.scheme = scheme
 		components.host = host
-		components.path = path
-		components.queryItems = [
-			URLQueryItem(name: "input", value: input),
-			URLQueryItem(name: "appid", value: appid)
-		]
+		components.path = endpoint.rawValue
+		components.percentEncodedQuery = [
+			"input": input,
+			"appid": appid
+		].urlQueryEncoded
 		
 		if showSteps {
 			components.queryItems?.append(URLQueryItem(name: "podstate", value: "Result__Step-by-step+solution"))
@@ -30,7 +30,8 @@ public struct WolframAlphaFullQuery {
 		self.url = url
 	}
 	
-	public func start(then: @escaping (Result<WolframAlphaOutput, Error>) -> Void) {
+	/** Starts a query and returns the data. */
+	public func start(then: @escaping (Result<Data, Error>) -> Void) {
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		
@@ -43,12 +44,19 @@ public struct WolframAlphaFullQuery {
 				then(.failure(WebApiError.missingData))
 				return
 			}
-			// print(String(data: data, encoding: .utf8)!)
-			let parser = XMLParser(data: data)
-			let delegate = WolframAlphaParserDelegate(then: then)
-			
-			parser.delegate = delegate
-			_ = parser.parse()
+			then(.success(data))
 		}.resume()
+	}
+	
+	public func startAndParse(then: @escaping (Result<WolframAlphaOutput, Error>) -> Void) {
+		start {
+			if case let .success(data) = $0 {
+				let parser = XMLParser(data: data)
+				let delegate = WolframAlphaParserDelegate(then: then)
+				
+				parser.delegate = delegate
+				_ = parser.parse()
+			}
+		}
 	}
 }

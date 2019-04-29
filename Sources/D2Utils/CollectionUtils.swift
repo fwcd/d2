@@ -1,3 +1,10 @@
+public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
+	var urlQueryEncoded: String {
+		return map { "\($0.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($0))=\($1.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($1))" }
+			.joined(separator: "&")
+	}
+}
+
 public extension Collection {
 	subscript(safely index: Index) -> Element? {
 		return indices.contains(index) ? self[index] : nil

@@ -40,7 +40,7 @@ public class WolframAlphaCommand: StringCommand {
 	}
 	
 	private func performSimpleQuery(input: String, output: CommandOutput) throws {
-		let query = try WolframAlphaSimpleQuery(input: input)
+		let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
 		query.start {
 			guard case let .success(data) = $0 else {
 				if case let .failure(error) = $0 { print(error) }
@@ -58,8 +58,8 @@ public class WolframAlphaCommand: StringCommand {
 	}
 	
 	private func performFullQuery(input: String, output: CommandOutput, showSteps: Bool = false) throws {
-		let query = try WolframAlphaFullQuery(input: input, showSteps: showSteps)
-		query.start {
+		let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
+		query.startAndParse {
 			guard case let .success(result) = $0 else {
 				if case let .failure(error) = $0 { print(error) }
 				output.append("An error occurred while querying WolframAlpha.")
