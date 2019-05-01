@@ -16,7 +16,7 @@ public class StatsCommand: StringCommand {
 		))
 	}
 	
-	private func computeStats(context: CommandContext) -> [String: String] {
+	private func computeStats(context: CommandContext) -> [(String, String)] {
 		var memberCount: Int = 0
 		var userCount: Int = 0
 		var botCount: Int = 0
@@ -73,15 +73,15 @@ public class StatsCommand: StringCommand {
 			.max { $0.1.count < $1.1.count }
 		
 		return [
-			":tophat: Members": String(memberCount),
-			":speaking_head: Users": String(userCount),
-			":robot: Bots": String(botCount),
-			":speaker: Voice Channels": String(voiceChannelCount),
-			":pencil2: Text Channels": String(textChannelCount),
-			":straight_ruler: Longest Username": longestUsername,
-			":triangular_flag_on_post: Most Roles": "\(mostRoles.joined(separator: ", ")) by \(mostRolesUsername)",
-			":stopwatch: Longest Play Time": "\(longestPlayTimeUsername) playing \(longestPlayTimeGame) for \(longestPlayTime)s",
-			":video_game: Currently Most Played Game": "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players"
+			(":tophat: Members", String(memberCount)),
+			(":speaking_head: Users", String(userCount)),
+			(":robot: Bots", String(botCount)),
+			(":speaker: Voice Channels", String(voiceChannelCount)),
+			(":pencil2: Text Channels", String(textChannelCount)),
+			(":straight_ruler: Longest Username", "`\(longestUsername)`"),
+			(":triangular_flag_on_post: Most Roles", "\(mostRoles.joined(separator: ", ")) by `\(mostRolesUsername)`"),
+			(":stopwatch: Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime)s"),
+			(":video_game: Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players")
 		]
 	}
 }
