@@ -12,4 +12,5 @@ public enum WebApiError: Error {
 	case jsonIOError(Error)
 	case jsonParseError(Any, String)
 	case foundNoMatches(String)
+	case noResults(String)
 }
