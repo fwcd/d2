@@ -33,6 +33,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
 	handler["maxima"] = MaximaCommand()
 	handler["wolframalpha"] = WolframAlphaCommand()
+	handler["stackoverflow"] = StackOverflowCommand()
 	handler["tictactoe"] = GameCommand<TicTacToeGame>()
 	handler["uno"] = GameCommand<UnoGame>()
 	handler["sourcefile"] = SourceFileCommand()

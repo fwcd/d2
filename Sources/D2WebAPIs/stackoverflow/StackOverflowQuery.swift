@@ -28,9 +28,9 @@ public struct StackOverflowQuery {
 				guard let questionId = questions.first(where: { $0.questionId != nil })?.questionId else { throw WebApiError.noResults("No answer with a question ID found") }
 				try HTTPRequest(host: self.host, path: "/\(self.apiVersion)/questions/\(questionId)/answers", query: [
 					"order": "desc",
-					"sort": "activity",
+					"sort": "votes",
 					"site": "stackoverflow",
-					"filter": "!bLf7X*Y(*jsKBz" // Only include title and Markdown body for each answer
+					"filter": "!4-(9avC4E*qssXR4f" // Only include owner, title and Markdown body for each answer
 				]).fetchJSONAsync(as: StackOverflowResults<StackOverflowAnswer>.self, then: then)
 			} catch {
 				then(.failure(error))

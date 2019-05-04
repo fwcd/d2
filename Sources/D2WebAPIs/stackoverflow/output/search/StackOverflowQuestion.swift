@@ -2,7 +2,7 @@ public struct StackOverflowQuestion: Codable {
 	public var body: String?
 	public var bodyMarkdown: String?
 	public var tags: [String]?
-	public var owner: StackOverflowOwner?
+	public var owner: StackOverflowShallowUser?
 	public var isAnswered: String?
 	public var viewCount: String?
 	public var acceptedAnswerId: Int?
