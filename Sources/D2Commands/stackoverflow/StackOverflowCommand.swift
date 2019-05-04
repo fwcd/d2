@@ -22,7 +22,8 @@ public class StackOverflowCommand: StringCommand {
 					output.append(DiscordEmbed(
 						title: "StackOverflow Answer",
 						description: answer.bodyMarkdown,
-						author: answer.owner.map { DiscordEmbed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) }
+						author: answer.owner.map { DiscordEmbed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
+						color: 0xffad0a
 					))
 				} catch WebApiError.noResults(let msg) {
 					output.append(msg)
