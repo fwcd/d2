@@ -8,11 +8,11 @@ struct FunctionGraphRenderer {
 	private let axisArrowSize: Double
 	private let axisColor: Color
 	private let axisLabelSpacing: Int
-	private let pixelToFunctionX: ClosureBijection<Double>
-	private let pixelToFunctionY: ClosureBijection<Double>
+	let pixelToFunctionX: ClosureBijection<Double>
+	let pixelToFunctionY: ClosureBijection<Double>
 	
 	init(
-		input inputVariable: String,
+		input inputVariable: String = "x",
 		width: Int = 300,
 		height: Int = 300,
 		scale: Double = 10.0,
@@ -33,7 +33,14 @@ struct FunctionGraphRenderer {
 	
 	func render(ast: ExpressionASTNode) throws -> Image {
 		let image = try Image(width: width, height: height)
-		var graphics = CairoGraphics(fromImage: image)
+		var graphics: Graphics = CairoGraphics(fromImage: image)
+		
+		render(to: &graphics) { try? ast.evaluate(with: [inputVariable: $0]) }
+		
+		return image
+	}
+	
+	func render(to graphics: inout Graphics, _ plottedFunction: (Double) -> Double?) {
 		var lastPos: Vec2<Double>? = nil
 		
 		// Draw axes
@@ -70,7 +77,7 @@ struct FunctionGraphRenderer {
 		// Draw graph of function
 		for x in 0..<width {
 			let funcX = pixelToFunctionX.apply(Double(x))
-			if let funcY = try? ast.evaluate(with: [inputVariable: funcX]) {
+			if let funcY = plottedFunction(funcX) {
 				let pos = pixelPos(of: Vec2(x: funcX, y: funcY))
 				let clampedPos = pos.with(y: max(-5.0, min(Double(height + 5), pos.y)))
 				
@@ -83,8 +90,6 @@ struct FunctionGraphRenderer {
 				lastPos = nil
 			}
 		}
-		
-		return image
 	}
 	
 	private func pixelPos(of functionPos: Vec2<Double>) -> Vec2<Double> {

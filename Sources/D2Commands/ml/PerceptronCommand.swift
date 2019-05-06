@@ -25,6 +25,7 @@ public class PerceptronCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	private let defaultInputCount: Int
+	private let renderer = PerceptronRenderer()
 	private var model: SingleLayerPerceptron
 	private var subcommands: [String: (String, CommandOutput) throws -> Void] = [:]
 	
@@ -58,6 +59,8 @@ public class PerceptronCommand: StringCommand {
 			} else {
 				output.append("Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands.keys)`")
 			}
+		} else {
+			output.append(helpText)
 		}
 	}
 	
@@ -73,7 +76,9 @@ public class PerceptronCommand: StringCommand {
 			guard let learningRate = Double(parsedArgs[2]) else { throw MLError.invalidFormat("Not a number: \(parsedArgs[2])") }
 			
 			try model.learn(expected: expected, rate: learningRate)
-			outputModel(to: output)
+			try outputModel(to: output)
+		} else {
+			output.append("Unrecognized syntax, try: learn [expected output value] [learning rate]")
 		}
 	}
 	
@@ -82,15 +87,15 @@ public class PerceptronCommand: StringCommand {
 		guard !inputs.isEmpty else { throw MLError.invalidFormat("Please specify space-separated input values") }
 		
 		try model.compute(inputs)
-		outputModel(to: output)
+		try outputModel(to: output)
 	}
 	
-	private func outputModel(to output: CommandOutput) {
+	private func outputModel(to output: CommandOutput) throws {
 		output.append(DiscordMessage(
 			content: model.formula,
-			files: [
-				// TODO: Plot perceptron
-			]
+			files: try renderer.render(model: model).map { [
+				DiscordFileUpload(data: try $0.pngEncoded(), filename: "perceptron.png", mimeType: "image/png")
+			] } ?? []
 		))
 	}
 }
