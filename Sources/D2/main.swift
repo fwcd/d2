@@ -34,6 +34,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["maxima"] = MaximaCommand()
 	handler["wolframalpha"] = WolframAlphaCommand()
 	handler["stackoverflow"] = StackOverflowCommand()
+	handler["perceptron"] = PerceptronCommand()
 	handler["tictactoe"] = GameCommand<TicTacToeGame>()
 	handler["uno"] = GameCommand<UnoGame>()
 	handler["sourcefile"] = SourceFileCommand()
