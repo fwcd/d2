@@ -22,10 +22,11 @@ struct PerceptronRenderer {
 		
 		plotter.render(to: &graphics) { try? model.boundaryY(atX: $0) }
 		
-		for point in model.inputHistory {
+		for (point, output) in model.dataset {
+			guard point.count == 2 else { throw MLError.sizeMismatch("Dataset contains point that is not of dimension 2: \(point)") }
 			let x = plotter.pixelToFunctionX.inverseApply(point[0])
 			let y = plotter.pixelToFunctionY.inverseApply(point[1])
-			let color = try model.compute(point) > 0.5 ? Colors.yellow : Colors.cyan
+			let color = output > 0.5 ? Colors.yellow : Colors.cyan
 			graphics.draw(Ellipse(centerX: x, y: y, radius: 3, color: color, isFilled: true))
 		}
 		

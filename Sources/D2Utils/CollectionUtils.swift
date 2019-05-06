@@ -6,6 +6,10 @@ public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
 }
 
 public extension Collection {
+	var nilIfEmpty: Self? {
+		return isEmpty ? nil : self
+	}
+	
 	subscript(safely index: Index) -> Element? {
 		return indices.contains(index) ? self[index] : nil
 	}
