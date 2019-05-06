@@ -8,18 +8,18 @@ import D2Utils
  * 1. group: subcommand name
  * 2. group: subcommand args
  */
-fileprivate let subcommandPattern = try! Regex(from: "(\\S+)(?:\\s+(\\S+))?")
+fileprivate let subcommandPattern = try! Regex(from: "(\\S+)(?:\\s+(.+))?")
 fileprivate let learnPattern = try! Regex(from: "(\\S+)\\s*(\\S+)")
 
 public class PerceptronCommand: StringCommand {
-	public let description = "Creates a trains a perceptron"
+	public let description = "Creates and trains a single-layered perceptron"
 	public let helpText = """
 		Syntax: [subcommand] [args]
 		
 		Subcommand patterns:
 		- reset [dimensions, 2 if not specified]?
 		- learn [expected output value] [learning rate]
-		- compute [input value 1], [input value 2], ...
+		- compute [input value 1] [input value 2], ...
 		"""
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
@@ -62,7 +62,9 @@ public class PerceptronCommand: StringCommand {
 	}
 	
 	private func reset(args: String, output: CommandOutput) {
-		model = SingleLayerPerceptron(inputCount: defaultInputCount)
+		let dimensions = Int(args) ?? defaultInputCount
+		model = SingleLayerPerceptron(inputCount: dimensions)
+		output.append("Created a new \(dimensions)-dimensional perceptron")
 	}
 	
 	private func learn(args: String, output: CommandOutput) throws {
@@ -76,8 +78,8 @@ public class PerceptronCommand: StringCommand {
 	}
 	
 	private func compute(args: String, output: CommandOutput) throws {
-		let inputs = args.split(separator: ",").compactMap { Double($0) }
-		guard !inputs.isEmpty else { throw MLError.invalidFormat("Please specify comma-separated input values") }
+		let inputs = args.split(separator: " ").compactMap { Double($0.trimmingCharacters(in: .whitespacesAndNewlines)) }
+		guard !inputs.isEmpty else { throw MLError.invalidFormat("Please specify space-separated input values") }
 		
 		try model.compute(inputs)
 		outputModel(to: output)

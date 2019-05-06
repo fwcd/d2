@@ -5,8 +5,9 @@ struct SingleLayerPerceptron {
 	private var lastInputs: [Double]? = nil
 	private var lastOutput: Double? = nil
 	var formula: String {
-		let weightsStr = weights.enumerated().map { "\($0.1)x\($0.0)" }.joined(separator: " + ")
-		return "Θ(\(weightsStr) + \(bias))\(lastOutput.map { "= \($0)" } ?? "")"
+		let weightsStr = weights.enumerated().map { String(format: "%.03f x%d", $0.1, $0.0) }.joined(separator: " + ")
+		let biasStr = String(format: "%.03f", bias)
+		return "Θ(\(weightsStr) + \(biasStr))\(lastOutput.map { String(format: " = %.3f", $0) } ?? "")"
 	}
 	
 	/** Creates a new single-layered Perceptron with randomly initialized weights. */
@@ -18,7 +19,7 @@ struct SingleLayerPerceptron {
 	@discardableResult
 	mutating func compute(_ inputs: [Double]) throws -> Double {
 		guard inputs.count == weights.count else {
-			throw MLError.sizeMismatch("Input count (\(inputs.count)) should match dimensions (\(weights.count))")
+			throw MLError.sizeMismatch("Input count of \(inputs) (\(inputs.count)) should match dimensions (\(weights.count))")
 		}
 		
 		let output = heaviside(zip(inputs, weights).map(*).reduce(0, +))
