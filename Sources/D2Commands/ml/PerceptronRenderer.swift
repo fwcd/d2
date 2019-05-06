@@ -14,7 +14,7 @@ struct PerceptronRenderer {
 		plotter = FunctionGraphRenderer(width: width, height: height)
 	}
 	
-	func render(model: SingleLayerPerceptron) throws -> Image? {
+	func render(model: inout SingleLayerPerceptron) throws -> Image? {
 		guard model.dimensions == 2 else { return nil }
 		
 		let image = try Image(width: width, height: height)
@@ -25,7 +25,8 @@ struct PerceptronRenderer {
 		for point in model.inputHistory {
 			let x = plotter.pixelToFunctionX.inverseApply(point[0])
 			let y = plotter.pixelToFunctionY.inverseApply(point[1])
-			graphics.draw(Ellipse(centerX: x, y: y, radius: 3, color: Colors.white, isFilled: true))
+			let color = try model.compute(point) > 0.5 ? Colors.yellow : Colors.cyan
+			graphics.draw(Ellipse(centerX: x, y: y, radius: 3, color: color, isFilled: true))
 		}
 		
 		return image

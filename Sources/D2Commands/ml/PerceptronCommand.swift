@@ -18,7 +18,7 @@ public class PerceptronCommand: StringCommand {
 		
 		Subcommand patterns:
 		- reset [dimensions, 2 if not specified]?
-		- learn [expected output value] [learning rate]
+		- learn [expected output value] [learning rate]?
 		- compute [input value 1] [input value 2], ...
 		"""
 	public let sourceFile: String = #file
@@ -73,7 +73,7 @@ public class PerceptronCommand: StringCommand {
 	private func learn(args: String, output: CommandOutput) throws {
 		if let parsedArgs = learnPattern.firstGroups(in: args) {
 			guard let expected = Double(parsedArgs[1]) else { throw MLError.invalidFormat("Not a number: \(parsedArgs[1])") }
-			guard let learningRate = Double(parsedArgs[2]) else { throw MLError.invalidFormat("Not a number: \(parsedArgs[2])") }
+			let learningRate = Double(parsedArgs[2]) ?? 0.1
 			
 			try model.learn(expected: expected, rate: learningRate)
 			try outputModel(to: output)
@@ -93,7 +93,7 @@ public class PerceptronCommand: StringCommand {
 	private func outputModel(to output: CommandOutput) throws {
 		output.append(DiscordMessage(
 			content: model.formula,
-			files: try renderer.render(model: model).map { [
+			files: try renderer.render(model: &model).map { [
 				DiscordFileUpload(data: try $0.pngEncoded(), filename: "perceptron.png", mimeType: "image/png")
 			] } ?? []
 		))
