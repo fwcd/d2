@@ -33,7 +33,8 @@ public class PerceptronCommand: StringCommand {
 		model = SingleLayerPerceptron(inputCount: defaultInputCount)
 		subcommands = [
 			"reset": { [unowned self] in self.reset(args: $0, output: $1) },
-			"learn": { [unowned self] in try self.learn(args: $0, output: $1) }
+			"learn": { [unowned self] in try self.learn(args: $0, output: $1) },
+			"compute": { [unowned self] in try self.compute(args: $0, output: $1) }
 		]
 	}
 	
@@ -55,7 +56,7 @@ public class PerceptronCommand: StringCommand {
 					output.append("An error occurred: \(error)")
 				}
 			} else {
-				output.append("Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands)`")
+				output.append("Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands.keys)`")
 			}
 		}
 	}
