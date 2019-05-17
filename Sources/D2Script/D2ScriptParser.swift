@@ -1,5 +1,5 @@
 public struct D2ScriptParser {
-	public func parse(_ input: String) throws -> D2ScriptTopLevelScope {
+	public func parse(_ input: String) throws -> D2Script {
 		return try parse(tokens: try tokenize(input))
 	}
 	
@@ -8,8 +8,8 @@ public struct D2ScriptParser {
 		return []
 	}
 	
-	private func parse(tokens: [D2ScriptToken]) throws -> D2ScriptTopLevelScope {
+	private func parse(tokens: [D2ScriptToken]) throws -> D2Script {
 		// TODO
-		return D2ScriptTopLevelScope()
+		return D2Script()
 	}
 }
