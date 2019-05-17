@@ -2,17 +2,17 @@
  * An iterator wrapper for a sequence of tokens
  * that explicitly uses reference semantics.
  */
-class TokenIterator<T>: IteratorProtocol {
+public class TokenIterator<T>: IteratorProtocol {
 	private var iterator: Array<T>.Iterator
 	private var lastPeeked: T? = nil
-	private(set) var current: T? = nil
+	public private(set) var current: T? = nil
 	
-	init(_ array: [T]) {
+	public init(_ array: [T]) {
 		iterator = array.makeIterator()
 	}
 	
 	@discardableResult
-	func next() -> T? {
+	public func next() -> T? {
 		if let peeked = lastPeeked {
 			lastPeeked = nil
 			current = peeked
@@ -24,7 +24,7 @@ class TokenIterator<T>: IteratorProtocol {
 		}
 	}
 	
-	func peek() -> T? {
+	public func peek() -> T? {
 		if let peeked = lastPeeked {
 			return peeked
 		} else {
