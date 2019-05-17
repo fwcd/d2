@@ -17,13 +17,14 @@ fileprivate let rawOperatorPattern = operators
  * 3.  capture group: a closing parenthesis
  * 4.  capture group: an opening curly bracket
  * 5.  capture group: a closing curly bracket
- * 6.  capture group: a line break
- * 7.  capture group: an operator
- * 8.  capture group: a keyword
- * 9.  capture group: a string literal
- * 10. capture group: an identifier
+ * 6.  capture group: a comma
+ * 7.  capture group: a line break
+ * 8.  capture group: an operator
+ * 9.  capture group: a keyword
+ * 10. & 11.   group: a string literal (first part matches the string in quotes, second part matches the content)
+ * 12. capture group: an identifier
  */
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(?:\"([^\"]*)\")|([a-zA-Z]+)")
+fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|(,)|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\"([^\"]*)\")|([a-zA-Z]+)")
 
 public struct D2ScriptParser {
 	public func parse(_ input: String) throws -> D2Script {
@@ -45,14 +46,16 @@ public struct D2ScriptParser {
 				} else if !$0[5].isEmpty {
 					return .rightCurlyBracket
 				} else if !$0[6].isEmpty {
+					return .comma
+				} else if !$0[7].isEmpty {
 					return .linebreak
-				} else if let rawOperator = $0[7].nilIfEmpty {
+				} else if let rawOperator = $0[8].nilIfEmpty {
 					return .anyOperator(rawOperator)
-				} else if let keyword = $0[8].nilIfEmpty {
+				} else if let keyword = $0[9].nilIfEmpty {
 					return .keyword(keyword)
-				} else if let stringLiteral = $0[9].nilIfEmpty {
-					return .stringLiteral(stringLiteral)
-				} else if let identifier = $0[10].nilIfEmpty {
+				} else if !$0[10].isEmpty {
+					return .stringLiteral($0[11])
+				} else if let identifier = $0[12].nilIfEmpty {
 					return .identifier(identifier)
 				} else {
 					throw D2ScriptError.unrecognizedToken($0[0])

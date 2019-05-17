@@ -9,4 +9,5 @@ public enum D2ScriptToken: Hashable {
 	case leftParenthesis
 	case rightParenthesis
 	case linebreak
+	case comma
 }

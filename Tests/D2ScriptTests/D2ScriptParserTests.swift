@@ -9,6 +9,23 @@ final class D2ScriptParserTests: XCTestCase {
 	private let parser = D2ScriptParser()
 	
 	func testTokenization() throws {
+		assertTokensEqual(try parser.tokenize("4.645"), [.numberLiteral(4.645)])
+		assertTokensEqual(try parser.tokenize("\"\""), [.stringLiteral("")])
+		assertTokensEqual(try parser.tokenize("(({}, {}), ())"), [
+			.leftParenthesis,
+			.leftParenthesis,
+			.leftCurlyBracket,
+			.rightCurlyBracket,
+			.comma,
+			.leftCurlyBracket,
+			.rightCurlyBracket,
+			.rightParenthesis,
+			.comma,
+			.leftParenthesis,
+			.rightParenthesis,
+			.rightParenthesis
+		])
+		
 		let simpleProgram = """
 			command test {
 				a = 4.3
