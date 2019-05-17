@@ -1,6 +1,15 @@
 public struct D2ScriptParser {
-	func parse(_ input: String) -> D2ScriptASTNode {
+	func parse(_ input: String) throws -> D2ScriptTopLevelScope {
+		return try parse(tokens: try tokenize(input))
+	}
+	
+	func tokenize(_ input: String) throws -> [D2ScriptToken] {
 		// TODO
-		return D2ScriptCommandDeclaration()
+		return []
+	}
+	
+	func parse(tokens: [D2ScriptToken]) throws -> D2ScriptTopLevelScope {
+		// TODO
+		return D2ScriptTopLevelScope()
 	}
 }
