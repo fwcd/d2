@@ -264,5 +264,14 @@
 			"\t}",
 			"}"
 		]
+	},
+	"D2 script AST node": {
+		"prefix": "d2ast",
+		"scope": "swift",
+		"body": [
+			"public struct D2Script$1: D2ScriptASTNode {",
+			"\tpublic let label = \"$1\" // TODO",
+			"}"
+		]
 	}
 }
