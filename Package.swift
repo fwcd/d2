@@ -48,6 +48,10 @@ let package = Package(
             dependencies: ["SwiftDiscord", "D2Utils", "D2TestUtils", "D2Commands"]
         ),
         .testTarget(
+            name: "D2ScriptTests",
+            dependencies: ["D2Utils", "D2Script"]
+        ),
+        .testTarget(
             name: "D2UtilsTests",
             dependencies: ["SwiftDiscord", "D2Utils", "D2TestUtils"]
         ),

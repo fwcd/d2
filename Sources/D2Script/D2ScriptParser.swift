@@ -12,17 +12,18 @@ fileprivate let rawOperatorPattern = operators
 
 /**
  * Matches a single token.
- * 1. capture group: a number literal
- * 2. capture group: an opening parenthesis
- * 3. capture group: a closing parenthesis
- * 4. capture group: an opening curly bracket
- * 5. capture group: a closing curly bracket
- * 6. capture group: an operator
- * 7. capture group: a keyword
- * 8. capture group: a string literal
- * 9. capture group: an identifier
+ * 1.  capture group: a number literal
+ * 2.  capture group: an opening parenthesis
+ * 3.  capture group: a closing parenthesis
+ * 4.  capture group: an opening curly bracket
+ * 5.  capture group: a closing curly bracket
+ * 6.  capture group: a line break
+ * 7.  capture group: an operator
+ * 8.  capture group: a keyword
+ * 9.  capture group: a string literal
+ * 10. capture group: an identifier
  */
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|({)|(})|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\\(\".+?\"\\))|([a-zA-Z]+)")
+fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(?:\"([^\"]*)\")|([a-zA-Z]+)")
 
 public struct D2ScriptParser {
 	public func parse(_ input: String) throws -> D2Script {
@@ -43,13 +44,15 @@ public struct D2ScriptParser {
 					return .leftCurlyBracket
 				} else if !$0[5].isEmpty {
 					return .rightCurlyBracket
-				} else if let rawOperator = $0[6].nilIfEmpty {
+				} else if !$0[6].isEmpty {
+					return .linebreak
+				} else if let rawOperator = $0[7].nilIfEmpty {
 					return .anyOperator(rawOperator)
-				} else if let keyword = $0[7].nilIfEmpty {
+				} else if let keyword = $0[8].nilIfEmpty {
 					return .keyword(keyword)
-				} else if let stringLiteral = $0[8].nilIfEmpty {
+				} else if let stringLiteral = $0[9].nilIfEmpty {
 					return .stringLiteral(stringLiteral)
-				} else if let identifier = $0[9].nilIfEmpty {
+				} else if let identifier = $0[10].nilIfEmpty {
 					return .identifier(identifier)
 				} else {
 					throw D2ScriptError.unrecognizedToken($0[0])
