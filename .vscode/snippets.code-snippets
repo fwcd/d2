@@ -265,12 +265,22 @@
 			"}"
 		]
 	},
-	"D2 script AST node": {
+	"D2Script AST node": {
 		"prefix": "d2ast",
 		"scope": "swift",
 		"body": [
 			"public struct D2Script$1: D2ScriptASTNode {",
 			"\tpublic let label = \"$1\" // TODO",
+			"\t$0",
+			"}"
+		]
+	},
+	"D2Script rule parser": {
+		"prefix": "d2rule",
+		"scope": "swift",
+		"body": [
+			"private func parse$1(from tokens: TokenIterator<D2ScriptToken>) throws -> D2Script$1? {",
+			"\t$0",
 			"}"
 		]
 	}

@@ -64,7 +64,34 @@ public struct D2ScriptParser {
 	}
 	
 	private func parse(tokens: [D2ScriptToken]) throws -> D2Script {
+		return try parseScript(from: TokenIterator(tokens))
+	}
+	
+	// Recursive descent parsing methods for the production rules of D2Script
+	
+	private func parseScript(from tokens: TokenIterator<D2ScriptToken>) throws -> D2Script {
+		guard let commandDeclaration = try parseCommandDeclaration(from: tokens) else {
+			throw D2ScriptError.syntaxError("No top-level command declaration")
+		}
+		return D2Script(topLevelNodes: [commandDeclaration])
+	}
+	
+	private func parseCommandDeclaration(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptCommandDeclaration? {
+		guard case let .keyword(commandKeyword)? = tokens.peek() else { return nil }
+		guard commandKeyword == "command" else { return nil }
+		tokens.next()
+		guard case let .identifier(commandName)? = tokens.next() else { throw D2ScriptError.syntaxError("Command declaration requires identifier after the keyword") }
+		guard tokens.next() == .leftCurlyBracket else { throw D2ScriptError.syntaxError("Command declaration needs opening bracket: {") }
+		if tokens.peek() == .linebreak {
+			tokens.next()
+		}
+		guard let statementList = try parseStatementList(from: tokens) else { throw D2ScriptError.syntaxError("Command declaration should contain statement list") }
+		guard tokens.next() == .rightCurlyBracket else { throw D2ScriptError.syntaxError("Command declaration needs closing bracket: {") }
+		return D2ScriptCommandDeclaration()
+	}
+	
+	private func parseStatementList(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptStatementList? {
 		// TODO
-		return D2Script()
+		return nil
 	}
 }
