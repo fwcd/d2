@@ -3,7 +3,8 @@ import XCTest
 
 final class D2ScriptParserTests: XCTestCase {
 	static var allTests = [
-		("testTokenization", testTokenization)
+		("testTokenization", testTokenization),
+		("testParsing", testParsing)
 	]
 	private let eps = 0.01
 	private let parser = D2ScriptParser()
@@ -12,18 +13,9 @@ final class D2ScriptParserTests: XCTestCase {
 		assertTokensEqual(try parser.tokenize("4.645"), [.numberLiteral(4.645)])
 		assertTokensEqual(try parser.tokenize("\"\""), [.stringLiteral("")])
 		assertTokensEqual(try parser.tokenize("(({}, {}), ())"), [
-			.leftParenthesis,
-			.leftParenthesis,
-			.leftCurlyBracket,
-			.rightCurlyBracket,
-			.comma,
-			.leftCurlyBracket,
-			.rightCurlyBracket,
-			.rightParenthesis,
-			.comma,
-			.leftParenthesis,
-			.rightParenthesis,
-			.rightParenthesis
+			.leftParenthesis, .leftParenthesis, .leftCurlyBracket, .rightCurlyBracket, .comma,
+			.leftCurlyBracket, .rightCurlyBracket, .rightParenthesis, .comma,
+			.leftParenthesis, .rightParenthesis, .rightParenthesis
 		])
 		
 		let simpleProgram = """
@@ -35,33 +27,49 @@ final class D2ScriptParserTests: XCTestCase {
 			"""
 		let tokens = try parser.tokenize(simpleProgram)
 		assertTokensEqual(tokens, [
-			.keyword("command"),
-			.identifier("test"),
-			.leftCurlyBracket,
-			.linebreak,
-			.identifier("a"),
-			.anyOperator("="),
-			.numberLiteral(4.3),
-			.linebreak,
-			.identifier("b"),
-			.anyOperator("="),
-			.stringLiteral("This is a string literal 12345"),
-			.linebreak,
-			.identifier("print"),
-			.leftParenthesis,
-			.identifier("someFunction"),
-			.leftParenthesis,
-			.identifier("b"),
-			.rightParenthesis,
-			.rightParenthesis,
-			.linebreak,
+			.keyword("command"), .identifier("test"), .leftCurlyBracket, .linebreak,
+			.identifier("a"), .anyOperator("="), .numberLiteral(4.3), .linebreak,
+			.identifier("b"), .anyOperator("="), .stringLiteral("This is a string literal 12345"), .linebreak,
+			.identifier("print"), .leftParenthesis, .identifier("someFunction"), .leftParenthesis, .identifier("b"), .rightParenthesis, .rightParenthesis, .linebreak,
 			.rightCurlyBracket
 		])
 	}
 	
+	func testParsing() throws {
+		let simpleProgram1 = """
+			command simpleProgram {
+				print("Hello world!")
+				someFunction("Test argument", "ABC")
+			}
+			"""
+		let ast = try parser.parse(simpleProgram1)
+		XCTAssertEqual(ast.topLevelNodes.count, 1, "Expected exactly one top-level declaration: The command")
+		
+		let command = ast.topLevelNodes.first as? D2ScriptCommandDeclaration
+		XCTAssertEqual(command?.commandName, "simpleProgram", "Expected a command labelled 'simpleProgram'")
+		
+		let statements = command?.statementList.statements
+		XCTAssertEqual(statements?.count, 2, "Expected two statements")
+		
+		let firstPrint = (statements?[0] as? D2ScriptExpressionStatement)?.expression as? D2ScriptFunctionCall
+		let secondCall = (statements?[1] as? D2ScriptExpressionStatement)?.expression as? D2ScriptFunctionCall
+		XCTAssertEqual(firstPrint?.functionName, "print")
+		XCTAssertEqual(secondCall?.functionName, "someFunction")
+		
+		assertExpressionsEqual(firstPrint!.arguments, [.string("Hello world!")])
+		assertExpressionsEqual(secondCall!.arguments, [.string("Test argument"), .string("ABC")])
+	}
+	
+	private func assertExpressionsEqual(_ actual: [D2ScriptExpression], _ expected: [D2ScriptValue]) {
+		guard actual.count == expected.count else {
+			XCTFail("The actual expression count \(actual.count) (\(format(actual))) does not match the expected token count \(expected.count) (\(format(expected)))")
+			return
+		}
+	}
+	
 	private func assertTokensEqual(_ actual: [D2ScriptToken], _ expected: [D2ScriptToken]) {
 		guard actual.count == expected.count else {
-			XCTFail("The actual token count \(actual.count) (\(format(tokens: actual))) does not match the expected token count \(expected.count) (\(format(tokens: expected)))")
+			XCTFail("The actual token count \(actual.count) (\(format(actual))) does not match the expected token count \(expected.count) (\(format(expected)))")
 			return
 		}
 		let count = actual.count
@@ -83,7 +91,7 @@ final class D2ScriptParserTests: XCTestCase {
 		}
 	}
 	
-	private func format(tokens: [D2ScriptToken]) -> String {
-		return "[\(tokens.map { "\($0)" }.joined(separator: "\n"))]"
+	private func format<T>(_ values: [T]) -> String {
+		return "[\(values.map { "\($0)" }.joined(separator: "\n"))]"
 	}
 }
