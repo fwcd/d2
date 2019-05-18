@@ -91,7 +91,71 @@ public struct D2ScriptParser {
 	}
 	
 	private func parseStatementList(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptStatementList? {
-		// TODO
-		return nil
+		var statements = [D2ScriptStatement]()
+		while let statement = try parseStatement(from: tokens) {
+			statements.append(statement)
+			if tokens.peek() == .linebreak {
+				tokens.next()
+			}
+		}
+		return D2ScriptStatementList(statements: statements)
+	}
+	
+	private func parseStatement(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptStatement? {
+		return try parseExpressionStatement(from: tokens) ?? parseAssignment(from: tokens)
+	}
+	
+	private func parseExpressionStatement(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptExpressionStatement? {
+		guard let expression = try parseExpression(from: tokens) else { return nil }
+		return D2ScriptExpressionStatement(expression: expression)
+	}
+	
+	private func parseAssignment(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptAssignment? {
+		guard case let .identifier(identifier)? = tokens.peek(1) else { return nil }
+		guard case let .anyOperator(assignmentOperator)? = tokens.peek(2) else { return nil }
+		guard assignmentOperator == "=" else { return nil }
+		tokens.next()
+		tokens.next()
+		guard let expression = try parseExpression(from: tokens) else { return nil }
+		return D2ScriptAssignment(identifier: identifier, expression: expression)
+	}
+	
+	private func parseExpression(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptExpression? {
+		if case let .stringLiteral(literal)? = tokens.peek() {
+			tokens.next()
+			return D2ScriptValue.string(literal)
+		} else if case let .numberLiteral(literal)? = tokens.peek() {
+			tokens.next()
+			return D2ScriptValue.number(literal)
+		} else {
+			return try parseFunctionCall(from: tokens)
+		}
+	}
+	
+	private func parseFunctionCall(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptFunctionCall? {
+		guard case let .identifier(functionName)? = tokens.peek(1) else { return nil }
+		guard tokens.peek(2) == .leftParenthesis else { return nil }
+		tokens.next()
+		tokens.next()
+		let args = try parseFunctionArgs(from: tokens)
+		guard tokens.next() == .rightParenthesis else { throw D2ScriptError.syntaxError("Function call needs to end with a closing parenthesis") }
+		return D2ScriptFunctionCall(functionName: functionName, arguments: args)
+	}
+	
+	private func parseFunctionArgs(from tokens: TokenIterator<D2ScriptToken>) throws -> [D2ScriptExpression] {
+		var expressions = [D2ScriptExpression]()
+		while let expression = try parseExpressionWithComma(from: tokens) {
+			expressions.append(expression)
+		}
+		if let expression = try parseExpression(from: tokens) {
+			expressions.append(expression)
+		}
+		return expressions
+	}
+	
+	private func parseExpressionWithComma(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptExpression? {
+		guard let expression = try parseExpression(from: tokens) else { return nil }
+		guard tokens.peek() == .comma else { return nil }
+		return expression
 	}
 }
