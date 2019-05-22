@@ -1,6 +1,13 @@
 public protocol D2ScriptASTVisitor {
 	associatedtype VisitResult = Void
 	
+	/**
+	 * Visits an unspecified node. This is the
+	 * only required method if VisitResult != Void
+	 * (otherwise no methods are required).
+	 */
+	func visit(node: D2ScriptASTNode) -> VisitResult
+	
 	// Expressions
 	
 	func visit(expression: D2ScriptExpression) -> VisitResult
@@ -27,19 +34,27 @@ public protocol D2ScriptASTVisitor {
 }
 
 public extension D2ScriptASTVisitor where Self.VisitResult == Void {
-	func visit(script: D2Script) -> VisitResult {}
-	
-	func visit(expression: D2ScriptExpression) -> VisitResult {}
-	
-	func visit(statement: D2ScriptStatement) -> VisitResult {}
-	
-	func visit(commandDeclaration: D2ScriptFunctionCall) -> VisitResult {}
+	func visit(node: D2ScriptASTNode) -> VisitResult {}
 }
 
 public extension D2ScriptASTVisitor {
+	func visit(script: D2Script) -> VisitResult { return visit(node: script) }
+	
+	func visit(expression: D2ScriptExpression) -> VisitResult { return visit(node: expression) }
+	
+	func visit(statement: D2ScriptStatement) -> VisitResult { return visit(node: statement) }
+	
+	func visit(commandDeclaration: D2ScriptCommandDeclaration) -> VisitResult { return visit(node: commandDeclaration) }
+	
+	func visit(statementList: D2ScriptStatementList) -> VisitResult { return visit(node: statementList) }
+	
+	// Expressions
+	
 	func visit(functionCall: D2ScriptFunctionCall) -> VisitResult { return visit(expression: functionCall) }
 	
 	func visit(value: D2ScriptValue) -> VisitResult { return visit(expression: value) }
+	
+	// Statements
 	
 	func visit(expressionStatement: D2ScriptExpressionStatement) -> VisitResult { return visit(statement: expressionStatement) }
 	
