@@ -271,6 +271,11 @@
 		"body": [
 			"public struct D2Script$1: D2ScriptASTNode {",
 			"\tpublic let label = \"$1\"",
+			"\t",
+			"\tpublic func accept<V: D2ScriptASTVisitor>(_ visitor: V) -> V.VisitResult {",
+			"\t\treturn visitor.visit($2: self)",
+			"\t}",
+			"\t",
 			"\t$0",
 			"}"
 		]
