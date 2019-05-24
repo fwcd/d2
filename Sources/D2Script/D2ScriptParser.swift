@@ -130,8 +130,14 @@ public struct D2ScriptParser {
 			tokens.next()
 			return D2ScriptValue.number(literal)
 		} else {
-			return try parseFunctionCall(from: tokens)
+			return try parseFunctionCall(from: tokens) ?? parseIdentifierExpression(from: tokens)
 		}
+	}
+	
+	private func parseIdentifierExpression(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptIdentifierExpression? {
+		guard case let .identifier(name)? = tokens.peek() else { return nil }
+		tokens.next()
+		return D2ScriptIdentifierExpression(name: name)
 	}
 	
 	private func parseFunctionCall(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptFunctionCall? {

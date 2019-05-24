@@ -269,7 +269,7 @@
 		"prefix": "d2ast",
 		"scope": "swift",
 		"body": [
-			"public struct D2Script$1: D2ScriptASTNode {",
+			"public struct D2Script$1: D2ScriptASTNode, Equatable {",
 			"\tpublic let label = \"$1\"",
 			"\t",
 			"\tpublic func accept<V: D2ScriptASTVisitor>(_ visitor: V) -> V.VisitResult {",

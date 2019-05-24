@@ -4,7 +4,8 @@ import XCTest
 final class D2ScriptParserTests: XCTestCase {
 	static var allTests = [
 		("testTokenization", testTokenization),
-		("testParsing", testParsing)
+		("testParsing", testParsing),
+		("testIdentifierExpressions", testIdentifierExpressions)
 	]
 	private let eps = 0.01
 	private let parser = D2ScriptParser()
@@ -56,14 +57,44 @@ final class D2ScriptParserTests: XCTestCase {
 		XCTAssertEqual(firstPrint?.functionName, "print")
 		XCTAssertEqual(secondCall?.functionName, "someFunction")
 		
-		assertExpressionsEqual(firstPrint!.arguments, [.string("Hello world!")])
-		assertExpressionsEqual(secondCall!.arguments, [.string("Test argument"), .string("ABC")])
+		assertExpressionsEqual(firstPrint!.arguments, [D2ScriptValue.string("Hello world!")])
+		assertExpressionsEqual(secondCall!.arguments, [D2ScriptValue.string("Test argument"), D2ScriptValue.string("ABC")])
 	}
 	
-	private func assertExpressionsEqual(_ actual: [D2ScriptExpression], _ expected: [D2ScriptValue]) {
+	func testIdentifierExpressions() throws {
+		let simpleProgram2 = """
+			command simpleProgram {
+				someVariable = 4.5
+				anotherVariable = "abc"
+				someFunction(someVariable)
+				anotherFunction(someVariable, anotherVariable)
+			}
+			"""
+		let ast = try parser.parse(simpleProgram2)
+		let command = ast.topLevelNodes.first as? D2ScriptCommandDeclaration
+		let statements = command?.statementList.statements
+		
+		let assignment1 = statements?[0] as? D2ScriptAssignment
+		let assignment2 = statements?[1] as? D2ScriptAssignment
+		XCTAssertEqual(assignment1.identifier, "someVariable")
+		XCTAssertEqual(assignment2.identifier, "anotherVariable")
+		XCTAssertEqual(assignment2.expression, "abc")
+		
+		let call1 = (statements?[2] as? D2ScriptExpressionStatement)?.expression as? D2ScriptFunctionCall
+		let call2 = (statements?[3] as? D2ScriptExpressionStatement)?.expression as? D2ScriptFunctionCall
+		XCTAssertEqual(call1?.functionName, "someFunction")
+		XCTAssertEqual(call2?.functionName, "anotherFunction")
+		assertExpressionsEqual(call1!.arguments, [D2ScriptIdentifierExpression(name: "someVariable")])
+		assertExpressionsEqual(call2!.arguments, [D2ScriptIdentifierExpression(name: "someVariable"), D2ScriptIdentifierExpression(name: "anotherVariable")])
+	}
+	
+	private func assertExpressionsEqual(_ actual: [D2ScriptExpression], _ expected: [D2ScriptExpression]) {
 		guard actual.count == expected.count else {
 			XCTFail("The actual expression count \(actual.count) (\(format(actual))) does not match the expected token count \(expected.count) (\(format(expected)))")
 			return
+		}
+		for i in 0..<actual.count {
+			XCTAssert(actual[i].isEqualTo(expected[i]), "Expressions mismatched first at index \(i)")
 		}
 	}
 	

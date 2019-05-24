@@ -14,7 +14,7 @@ struct D2ScriptExpressionEvaluator: D2ScriptASTVisitor {
 	}
 	
 	func visit(identifierExpression: D2ScriptIdentifierExpression) -> D2ScriptValue? {
-		return storage[identifierExpression.identifier]
+		return storage[identifierExpression.name]
 	}
 	
 	func visit(functionCall: D2ScriptFunctionCall) -> D2ScriptValue? {
