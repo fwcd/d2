@@ -27,6 +27,8 @@ fileprivate let rawOperatorPattern = operators
 fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|(,)|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\"([^\"]*)\")|([a-zA-Z]+)")
 
 public struct D2ScriptParser {
+	public init() {}
+	
 	public func parse(_ input: String) throws -> D2Script {
 		return try parse(tokens: try tokenize(input))
 	}

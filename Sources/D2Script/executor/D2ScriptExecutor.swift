@@ -1,12 +1,14 @@
 public struct D2ScriptExecutor {
 	public let topLevelStorage = D2ScriptStorage(name: "Top-level scope")
 	
+	public init() {}
+	
 	public func run(_ node: D2ScriptASTNode) {
 		run(node, storage: topLevelStorage)
 	}
 	
 	public func run(_ node: D2ScriptASTNode, storage: D2ScriptStorage) {
-		node.accept(D2ScriptExecutingVisitor(storage: storage))
+		node.accept(D2ScriptStatementRunner(storage: storage))
 	}
 	
 	/**
