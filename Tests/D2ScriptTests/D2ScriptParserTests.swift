@@ -76,9 +76,9 @@ final class D2ScriptParserTests: XCTestCase {
 		
 		let assignment1 = statements?[0] as? D2ScriptAssignment
 		let assignment2 = statements?[1] as? D2ScriptAssignment
-		XCTAssertEqual(assignment1.identifier, "someVariable")
-		XCTAssertEqual(assignment2.identifier, "anotherVariable")
-		XCTAssertEqual(assignment2.expression, "abc")
+		XCTAssertEqual(assignment1?.identifier, "someVariable")
+		XCTAssertEqual(assignment2?.identifier, "anotherVariable")
+		assertExpressionsEqual([assignment2?.expression].compactMap { $0 }, [D2ScriptValue.string("abc")])
 		
 		let call1 = (statements?[2] as? D2ScriptExpressionStatement)?.expression as? D2ScriptFunctionCall
 		let call2 = (statements?[3] as? D2ScriptExpressionStatement)?.expression as? D2ScriptFunctionCall

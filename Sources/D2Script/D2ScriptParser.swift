@@ -88,7 +88,7 @@ public struct D2ScriptParser {
 			tokens.next()
 		}
 		guard let statementList = try parseStatementList(from: tokens) else { throw D2ScriptError.syntaxError("Command declaration should contain statement list") }
-		guard tokens.next() == .rightCurlyBracket else { throw D2ScriptError.syntaxError("Command declaration needs closing bracket: {, found '\(describe(token: tokens.current))' instead") }
+		guard tokens.next() == .rightCurlyBracket else { throw D2ScriptError.syntaxError("Command declaration needs closing bracket: }, found '\(describe(token: tokens.current))' instead, maybe the statementList is too long: \(statementList)") }
 		return D2ScriptCommandDeclaration(commandName: commandName, statementList: statementList)
 	}
 	
@@ -104,7 +104,7 @@ public struct D2ScriptParser {
 	}
 	
 	private func parseStatement(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptStatement? {
-		return try parseExpressionStatement(from: tokens) ?? parseAssignment(from: tokens)
+		return try parseAssignment(from: tokens) ?? parseExpressionStatement(from: tokens)
 	}
 	
 	private func parseExpressionStatement(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptExpressionStatement? {
