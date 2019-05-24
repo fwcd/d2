@@ -24,7 +24,7 @@ public class AddD2ScriptCommand: StringCommand {
 					return
 				}
 				
-				var registry = context.registry
+				let registry = context.registry
 				registry[name] = command
 				output.append(":ballot_box_with_check: Added/updated command `\(name)`")
 			} catch {

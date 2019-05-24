@@ -1,6 +1,6 @@
 import SwiftDiscord
 
-public struct CommandRegistry: Sequence {
+public class CommandRegistry: Sequence {
 	private var commands = [String: Command]()
 	
 	public init() {}
