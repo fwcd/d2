@@ -11,6 +11,8 @@ public class D2ScriptCommand: StringCommand {
 	public let requiredPermissionLevel: PermissionLevel
 	public let name: String
 	private let script: D2Script
+	private var running = false
+	private var semaphore = DispatchSemaphore(value: 0)
 	
 	public init(script: D2Script) throws {
 		self.script = script
@@ -62,33 +64,53 @@ public class D2ScriptCommand: StringCommand {
 				return nil
 			}
 			
-			let semaphore = DispatchSemaphore(value: 0)
 			var result: String? = nil
 			
 			URLSession.shared.dataTask(with: url) { (data, response, error) in
 				guard error == nil else {
 					output.append("An error occurred while performing the HTTP request")
-					semaphore.signal()
+					self.semaphore.signal()
 					return
 				}
 				guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncate(1000) else {
 					output.append("Could not fetch data as UTF-8 string")
-					semaphore.signal()
+					self.semaphore.signal()
 					return
 				}
 				result = str
-				semaphore.signal()
+				self.semaphore.signal()
 			}.resume()
 			
-			semaphore.wait()
+			self.semaphore.wait()
 			return result.map { .string($0) }
 		}
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		guard !running else {
+			output.append("This command is already running, wait for it to finish")
+			return
+		}
+		
+		running = true
+		
 		let executor = D2ScriptExecutor()
 		executor.run(script)
 		addBuiltInFunctions(storage: executor.topLevelStorage, input: input, output: output)
-		executor.call(command: name)
+		
+		let queue = DispatchQueue(label: "D2Script command \(name)")
+		let task = DispatchWorkItem {
+			executor.call(command: self.name)
+		}
+		
+		let timeout = DispatchTime.now() + .seconds(15)
+		queue.async(execute: task)
+		
+		DispatchQueue.global(qos: .utility).async {
+			_ = task.wait(timeout: timeout)
+			self.semaphore.signal()
+			self.semaphore = DispatchSemaphore(value: 0)
+			self.running = false
+		}
 	}
 }
