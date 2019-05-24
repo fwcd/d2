@@ -1,4 +1,7 @@
+import Foundation
+import Dispatch
 import SwiftDiscord
+import D2Utils
 import D2Permissions
 import D2Script
 
@@ -24,13 +27,8 @@ public class D2ScriptCommand: StringCommand {
 		requiredPermissionLevel = executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip
 	}
 	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		let executor = D2ScriptExecutor()
-		executor.run(script)
-		
-		let storage = executor.topLevelStorage
-		
-		// Add Discord commands
+	private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: CommandOutput) {
+		// Output to Discord
 		storage[function: "output"] = {
 			guard let value = $0.first else {
 				output.append("output(...) received no arguments")
@@ -47,6 +45,50 @@ public class D2ScriptCommand: StringCommand {
 			return nil
 		}
 		
+		// Print something to the console
+		storage[function: "print"] = {
+			print($0.first.flatMap { $0 } ?? .string(""))
+			return nil
+		}
+		
+		// Perform a synchronous GET request
+		storage[function: "httpGet"] = {
+			guard case let .string(rawUrl)?? = $0.first else {
+				output.append("httpGet(...) received no arguments")
+				return nil
+			}
+			guard let url = URL(string: rawUrl) else {
+				output.append("Invalid URL: \(rawUrl)")
+				return nil
+			}
+			
+			let semaphore = DispatchSemaphore(value: 0)
+			var result: String? = nil
+			
+			URLSession.shared.dataTask(with: url) { (data, response, error) in
+				guard error == nil else {
+					output.append("An error occurred while performing the HTTP request")
+					semaphore.signal()
+					return
+				}
+				guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncate(1000) else {
+					output.append("Could not fetch data as UTF-8 string")
+					semaphore.signal()
+					return
+				}
+				result = str
+				semaphore.signal()
+			}.resume()
+			
+			semaphore.wait()
+			return result.map { .string($0) }
+		}
+	}
+	
+	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		let executor = D2ScriptExecutor()
+		executor.run(script)
+		addBuiltInFunctions(storage: executor.topLevelStorage, input: input, output: output)
 		executor.call(command: name)
 	}
 }
