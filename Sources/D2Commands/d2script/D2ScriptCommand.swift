@@ -9,13 +9,17 @@ public class D2ScriptCommand: StringCommand {
 	public let name: String
 	private let script: D2Script
 	
-	public init(script: D2Script) {
+	public init(script: D2Script) throws {
 		self.script = script
 		
 		let executor = D2ScriptExecutor()
 		executor.run(script)
-		// By default, commands will have the name 'lambda', referring to an anonymous function
-		name = executor.topLevelStorage[string: "name"] ?? "lambda"
+		
+		let commandNames = executor.topLevelStorage.commandNames
+		guard let name = commandNames.first else { throw D2ScriptCommandError.noCommandDefined("Script defines no 'command { ... }' blocks") }
+		guard commandNames.count == 1 else { throw D2ScriptCommandError.multipleCommandsDefined("Currently only one command declaration per script is supported") }
+		
+		self.name = name
 		description = executor.topLevelStorage[string: "description"] ?? "Anonymous D2Script"
 		requiredPermissionLevel = executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip
 	}
@@ -25,7 +29,6 @@ public class D2ScriptCommand: StringCommand {
 		executor.run(script)
 		
 		let storage = executor.topLevelStorage
-		let commandNames = storage.commandNames
 		
 		// Add Discord commands
 		storage[function: "output"] = {
@@ -44,12 +47,6 @@ public class D2ScriptCommand: StringCommand {
 			return nil
 		}
 		
-		if commandNames.count > 1 {
-			output.append("Ambiguous invocation, there is more than one command in the executor's storage: \(commandNames)")
-		} else if let commandName = commandNames.first {
-			executor.call(command: commandName)
-		} else {
-			output.append("No invokable command found in the executor's storage")
-		}
+		executor.call(command: name)
 	}
 }
