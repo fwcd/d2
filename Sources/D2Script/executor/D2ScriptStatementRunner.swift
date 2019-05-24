@@ -23,6 +23,10 @@ struct D2ScriptStatementRunner: D2ScriptASTVisitor {
 		let _ = expressionStatement.expression.accept(evaluator)
 	}
 	
+	func visit(assignment: D2ScriptAssignment) {
+		storage[assignment.identifier] = assignment.expression.accept(evaluator)
+	}
+	
 	func visit(commandDeclaration: D2ScriptCommandDeclaration) {
 		let parentStorage = storage
 		storage[function: commandDeclaration.commandName] = { (args: [D2ScriptValue?]) -> D2ScriptValue? in
