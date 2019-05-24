@@ -6,6 +6,7 @@ public class D2ScriptCommand: StringCommand {
 	public let description: String
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel: PermissionLevel
+	public let name: String
 	private let script: D2Script
 	
 	public init(script: D2Script) {
@@ -13,6 +14,8 @@ public class D2ScriptCommand: StringCommand {
 		
 		let executor = D2ScriptExecutor()
 		executor.run(script)
+		// By default, commands will have the name 'lambda', referring to an anonymous function
+		name = executor.topLevelStorage[string: "name"] ?? "lambda"
 		description = executor.topLevelStorage[string: "description"] ?? "Anonymous D2Script"
 		requiredPermissionLevel = executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip
 	}
