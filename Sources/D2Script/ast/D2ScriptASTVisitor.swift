@@ -16,6 +16,8 @@ public protocol D2ScriptASTVisitor {
 	
 	func visit(value: D2ScriptValue) -> VisitResult
 	
+	func visit(identifierExpression: D2ScriptIdentifierExpression) -> VisitResult
+	
 	// Statements
 	
 	func visit(statement: D2ScriptStatement) -> VisitResult
@@ -53,6 +55,8 @@ public extension D2ScriptASTVisitor {
 	func visit(functionCall: D2ScriptFunctionCall) -> VisitResult { return visit(expression: functionCall) }
 	
 	func visit(value: D2ScriptValue) -> VisitResult { return visit(expression: value) }
+	
+	func visit(identifierExpression: D2ScriptIdentifierExpression) -> VisitResult { return visit(expression: identifierExpression) }
 	
 	// Statements
 	

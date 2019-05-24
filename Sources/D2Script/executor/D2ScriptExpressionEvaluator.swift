@@ -13,6 +13,10 @@ struct D2ScriptExpressionEvaluator: D2ScriptASTVisitor {
 		return value
 	}
 	
+	func visit(identifierExpression: D2ScriptIdentifierExpression) -> D2ScriptValue? {
+		return storage[identifierExpression.identifier]
+	}
+	
 	func visit(functionCall: D2ScriptFunctionCall) -> D2ScriptValue? {
 		let evaluatedArgs = functionCall.arguments.map { $0.accept(self) }
 		return storage[function: functionCall.functionName]?(evaluatedArgs)
