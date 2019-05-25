@@ -45,7 +45,7 @@ class CommandHandler: DiscordClientDelegate {
 	}
 	
 	func client(_ client: DiscordClient, didConnect connected: Bool) {
-		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "%help", type: .listening)))
+		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(msgPrefix)help", type: .listening)))
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
