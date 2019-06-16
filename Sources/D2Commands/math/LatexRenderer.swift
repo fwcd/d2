@@ -6,13 +6,15 @@ class LatexRenderer {
 	private let templateURL: URL
 	private let textPlaceholder: String
 	private let colorPlaceholder: String
+	private let packagesPlaceholder: String
 	private let tempDir = TemporaryDirectory() // Will be automatically deleted when deinitialized
 	private var lastFilename: String? = nil
 	
-	init(templateURL: URL, textPlaceholder: String, colorPlaceholder: String) throws {
+	init(templateURL: URL, textPlaceholder: String, colorPlaceholder: String, packagesPlaceholder: String) throws {
 		self.templateURL = templateURL
 		self.textPlaceholder = textPlaceholder
 		self.colorPlaceholder = colorPlaceholder
+		self.packagesPlaceholder = packagesPlaceholder
 		
 		try tempDir.create()
 	}
@@ -20,17 +22,18 @@ class LatexRenderer {
 	convenience init(
 		templateFilePath: String = "Resources/latex/LatexTemplate.tex",
 		textPlaceholder: String = "TextPlaceholder",
-		colorPlaceholder: String = "TextColorPlaceholder"
+		colorPlaceholder: String = "TextColorPlaceholder",
+		packagesPlaceholder: String = "PackagesPlaceholder"
 	) throws {
-		try self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder, colorPlaceholder: colorPlaceholder)
+		try self.init(templateURL: URL(fileURLWithPath: templateFilePath), textPlaceholder: textPlaceholder, colorPlaceholder: colorPlaceholder, packagesPlaceholder: packagesPlaceholder)
 	}
 	
 	deinit {
 		cleanUp()
 	}
 	
-	func renderPNG(from formula: String, color: String = "white", onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
-		try renderPDF(from: formula, color: color, onError: onError) { name, _ in
+	func renderPNG(from formula: String, color: String, packages: [String], onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
+		try renderPDF(from: formula, color: color, packages: packages, onError: onError) { name, _ in
 			let pngFile = self.tempDir.childFile(named: "\(name)-1.png")
 			
 			do {
@@ -47,7 +50,7 @@ class LatexRenderer {
 		}
 	}
 	
-	private func renderPDF(from formula: String, color: String, onError: @escaping (Error) -> Void, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) -> Void) throws {
+	private func renderPDF(from formula: String, color: String, packages: [String], onError: @escaping (Error) -> Void, then: @escaping (_ name: String, _ pdfFile: TemporaryFile) -> Void) throws {
 		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
 		let filename = "latex-\(timestamp)"
 		let texName = "\(filename).tex"
@@ -58,7 +61,7 @@ class LatexRenderer {
 		lastFilename = filename
 		
 		print("Writing TeX file")
-		try texFile.write(utf8: try template(appliedTo: formula, color: color))
+		try texFile.write(utf8: try template(appliedTo: formula, color: color, packages: packages))
 		
 		print("Invoking pdflatex")
 		try shellInvoke("pdflatex", in: tempDir.url, args: ["-halt-on-error", texName]) { _ in
@@ -116,9 +119,10 @@ class LatexRenderer {
 		return contents
 	}
 	
-	private func template(appliedTo formula: String, color: String) throws -> String {
+	private func template(appliedTo formula: String, color: String, packages: [String]) throws -> String {
 		return try readTemplate()
 			.replacingOccurrences(of: textPlaceholder, with: formula)
 			.replacingOccurrences(of: colorPlaceholder, with: color)
+			.replacingOccurrences(of: packagesPlaceholder, with: packages.map { "\\usepackage{\($0)}" }.joined(separator: "\n"))
 	}
 }
