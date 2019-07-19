@@ -13,7 +13,7 @@ struct DiscordMessageClient: MessageClient {
 	}
 	
 	func guildForChannel(_ channelID: D2MessageIO.ChannelID) -> Guild? {
-		return nil // TODO: Guild conversions
+		return client.guildForChannel(channelID.usingDiscordAPI)?.usingMessageIO
 	}
 	
 	func sendMessage(_ message: Message, to channelID: D2MessageIO.ChannelID, then: @escaping ClientCallback<Message?>) {
