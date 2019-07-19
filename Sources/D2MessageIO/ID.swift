@@ -4,8 +4,10 @@ public typealias AttachmentID = ID
 public typealias UserID = ID
 public typealias RoleID = ID
 public typealias EmojiID = ID
+public typealias GuildID = ID
+public typealias OverwriteID = ID
 
-public struct ID: Codable {
+public struct ID: Hashable, Codable {
 	public let rawValue: UInt64
 	
 	public init(_ rawValue: UInt64) {
