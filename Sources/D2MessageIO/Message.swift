@@ -4,9 +4,23 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 	public let content: String
 	public let embeds: [Embed]
 	public let files: [FileUpload]
+	public let tts: Bool
+	
 	public let attachments: [Attachment]
 	public let activity: MessageActivity?
-	public let tts: Bool
+	public let application: MessageApplication?
+	public let author: User?
+	public let channelId: ChannelID?
+	public let editedTimestamp: Date?
+	public let id: MessageID?
+	public let mentionEveryone: Bool
+	public let mentionRoles: [RoleID]
+	public let mentions: [User]
+	public let nonce: ID?
+	public let pinned: Bool
+	public let reactions: [Reaction]
+	public let timestamp: Date?
+	public let type: MessageType?
 	
 	/** Initializer intended for messages that are to be sent. */
 	public init(content: String, embed: Embed? = nil, files: [FileUpload] = [], tts: Bool = false) {
@@ -14,13 +28,46 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 	}
 	
 	/** Initializer intended for received/arbitrary messages. */
-	public init(content: String, embeds: [Embed] = [], files: [FileUpload] = [], attachments: [Attachment] = [], activity: MessageActivity? = nil, tts: Bool = false) {
+	public init(
+		content: String,
+		embeds: [Embed] = [],
+		files: [FileUpload] = [],
+		tts: Bool = false,
+		attachments: [Attachment] = [],
+		activity: MessageActivity? = nil,
+		application: MessageApplication? = nil,
+		author: User? = nil,
+		channelId: ChannelID? = nil,
+		editedTimestamp: Date? = nil,
+		id: MessageID? = nil,
+		mentionEveryone: Bool = false,
+		mentionRoles: [RoleID] = [],
+		mentions: [User] = [],
+		nonce: ID? = nil,
+		pinned: Bool = false,
+		reactions: [Reaction] = [],
+		timestamp: Date? = nil,
+		type: MessageType? = nil
+	) {
 		self.content = content
 		self.embeds = embeds
 		self.files = files
+		self.tts = tts
 		self.attachments = attachments
 		self.activity = activity
-		self.tts = tts
+		self.application = application
+		self.author = author
+		self.channelId = channelId
+		self.editedTimestamp = editedTimestamp
+		self.id = id
+		self.mentionEveryone = mentionEveryone
+		self.mentionRoles = mentionRoles
+		self.mentions = mentions
+		self.nonce = nonce
+		self.pinned = pinned
+		self.reactions = reactions
+		self.timestamp = timestamp
+		self.type = type
 	}
 	
 	public init(stringLiteral value: String) {
@@ -82,4 +129,27 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 			self.name = name
 		}
 	}
+	
+	public struct Reaction: Codable {
+		public let count: Int
+		public let me: Bool
+		public let emoji: Emoji
+		
+		public init(count: Int, me: Bool, emoji: Emoji) {
+			self.count = count
+			self.me = me
+			self.emoji = emoji
+		}
+	}
+	
+	public enum MessageType: Int, Codable {
+        case `default`
+        case recipientAdd
+        case recipientRemove
+        case call
+        case channelNameChange
+        case channelIconChange
+        case channelPinnedMessage
+        case guildMemberJoin
+    }
 }

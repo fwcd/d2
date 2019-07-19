@@ -7,14 +7,14 @@ public struct PresenceUpdate: Codable {
 		self.status = status
 	}
 	
-	public enum Status: String, Codable {
+	public enum Status: Int, Codable {
 		case online
 		case afk
 		case dnd
 		case offline
 	}
 	
-	public enum ActivityType: String, Codable {
+	public enum ActivityType: Int, Codable {
 		case playing
 		case listening
 	}

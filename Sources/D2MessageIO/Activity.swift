@@ -1,4 +1,4 @@
-public enum ActivityType: String, Codable {
+public enum ActivityType: Int, Codable {
 	case join
 	case spectate
 	case listen
