@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import Foundation
 #if canImport(FoundationNetworking)
@@ -54,7 +54,7 @@ public class SourceFileCommand: StringCommand {
 				return
 			}
 			
-			output.append(DiscordEmbed(
+			output.append(Embed(
 				title: relativeFilePath.split(separator: "/").last.map { String($0) } ?? "?",
 				description: "```swift\n\(code)\n```",
 				url: url

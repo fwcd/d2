@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 
 // TODO: Use Arg API
@@ -21,11 +21,11 @@ public class GuitarChordCommand: StringCommand {
 			let image = try GuitarChordRenderer().render(chord: chord)
 			
 			output.append(.compound([
-				.embed(DiscordEmbed(
+				.embed(Embed(
 					title: "Guitar Chord \(input)",
 					description: "This was the closest match for \(chord)"
 				)),
-				.files([DiscordFileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")])
+				.files([Message.FileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")])
 			]))
 		} catch ChordError.invalidChord(let chord) {
 			output.append("Invalid chord: `\(chord)`")

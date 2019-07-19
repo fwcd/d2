@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 import D2Utils
 
@@ -37,15 +37,15 @@ public class PermissionManager: CustomStringConvertible {
 		}
 	}
 	
-	private func encode(user: DiscordUser) -> String {
+	private func encode(user: User) -> String {
 		return "\(user.username)#\(user.discriminator)"
 	}
 	
-	public func user(_ theUser: DiscordUser, hasPermission requiredLevel: PermissionLevel) -> Bool {
+	public func user(_ theUser: User, hasPermission requiredLevel: PermissionLevel) -> Bool {
 		return user(theUser, hasPermission: requiredLevel.rawValue)
 	}
 	
-	public func user(_ theUser: DiscordUser, hasPermission requiredLevel: Int) -> Bool {
+	public func user(_ theUser: User, hasPermission requiredLevel: Int) -> Bool {
 		return nameWithTag(encode(user: theUser), hasPermission: requiredLevel)
 	}
 	
@@ -57,7 +57,7 @@ public class PermissionManager: CustomStringConvertible {
 		return self[theNameWithTag].rawValue >= requiredLevel
 	}
 	
-	public func remove(permissionsFrom user: DiscordUser) {
+	public func remove(permissionsFrom user: User) {
 		remove(permissionsFrom: encode(user: user))
 	}
 	
@@ -65,7 +65,7 @@ public class PermissionManager: CustomStringConvertible {
 		userPermissions.removeValue(forKey: nameWithTag)
 	}
 	
-	public subscript(user: DiscordUser) -> PermissionLevel {
+	public subscript(user: User) -> PermissionLevel {
 		get { return self[encode(user: user)] }
 		set(newValue) { self[encode(user: user)] = newValue }
 	}

@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 
 public struct UnoState: GameState, Multiplayer {

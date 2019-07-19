@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2WebAPIs
 
@@ -29,19 +29,19 @@ public class MDBCommand: StringCommand {
 				}
 				
 				if let module = result.first {
-					var embed = DiscordEmbed()
-					
-					embed.title = module.nameEnglish
-					embed.description = module.summary
-					embed.fields = [
-						DiscordEmbed.Field(name: "Person", value: module.person ?? "?", inline: true),
-						DiscordEmbed.Field(name: "ECTS", value: "\(module.ects ?? 0)", inline: true),
-						DiscordEmbed.Field(name: "Workload", value: module.workload ?? "?", inline: true),
-						DiscordEmbed.Field(name: "Language", value: module.teachingLanguage ?? "?", inline: true),
-						DiscordEmbed.Field(name: "Presence", value: module.presence ?? "?", inline: true),
-						DiscordEmbed.Field(name: "Cycle", value: module.cycle ?? "", inline: true),
-						DiscordEmbed.Field(name: "Duration", value: "\(module.duration ?? 0)", inline: true)
-					]
+					let embed = Embed(
+						title: module.nameEnglish,
+						description: module.summary,
+						fields: [
+							Embed.Field(name: "Person", value: module.person ?? "?", inline: true),
+							Embed.Field(name: "ECTS", value: "\(module.ects ?? 0)", inline: true),
+							Embed.Field(name: "Workload", value: module.workload ?? "?", inline: true),
+							Embed.Field(name: "Language", value: module.teachingLanguage ?? "?", inline: true),
+							Embed.Field(name: "Presence", value: module.presence ?? "?", inline: true),
+							Embed.Field(name: "Cycle", value: module.cycle ?? "", inline: true),
+							Embed.Field(name: "Duration", value: "\(module.duration ?? 0)", inline: true)
+						]
+					)
 					
 					output.append(embed)
 				} else {

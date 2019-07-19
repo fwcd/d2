@@ -1,5 +1,3 @@
-import SwiftDiscord
-
 public class PipeOutput: CommandOutput {
 	private let sink: Command
 	private let context: CommandContext

@@ -1,8 +1,8 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
-fileprivate let activityTypes: [String: DiscordActivityType] = [
+fileprivate let activityTypes: [String: Presence.Activity.ActivityType] = [
 	"playing": .game,
 	"streaming": .stream,
 	"listening": .listening
@@ -23,7 +23,7 @@ public class PresenceCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if let parsedArgs = argsPattern.firstGroups(in: input) {
 			let activityType = activityTypes[parsedArgs[1]]!
-			let status = parsedArgs[2].nilIfEmpty.flatMap { DiscordPresenceStatus(rawValue: $0) } ?? .online
+			let status = parsedArgs[2].nilIfEmpty.flatMap { Presence.Status(rawValue: $0) } ?? .online
 			let customText = parsedArgs[3]
 			
 			guard let client = context.client else {
@@ -31,7 +31,7 @@ public class PresenceCommand: StringCommand {
 				return
 			}
 			
-			client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: customText, type: activityType), status: status))
+			client.setPresence(PresenceUpdate(game: Presence.Activity(name: customText, type: activityType), status: status))
 		} else {
 			output.append("Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
 		}

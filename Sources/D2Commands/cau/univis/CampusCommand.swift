@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import Foundation
 #if canImport(FoundationNetworking)
@@ -53,10 +53,10 @@ public class CampusCommand: StringCommand {
 							longitude: coords.longitude
 						).url
 
-						output.append(.embed(DiscordEmbed(
+						output.append(.embed(Embed(
 							title: address,
 							url: self.googleMapsURLFor(address: address),
-							image: DiscordEmbed.Image(url: URL(string: mapURL)!)
+							image: Embed.Image(url: URL(string: mapURL)!)
 						)))
 					} catch {
 						output.append("Could not create static map, see console for more details")

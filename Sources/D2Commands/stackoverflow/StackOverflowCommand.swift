@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 import D2Utils
 import D2Permissions
@@ -22,10 +22,10 @@ public class StackOverflowCommand: StringCommand {
 						output.append("No answers found")
 						return
 					}
-					output.append(DiscordEmbed(
+					output.append(Embed(
 						title: "StackOverflow Answer",
 						description: answer.bodyMarkdown,
-						author: answer.owner.map { DiscordEmbed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
+						author: answer.owner.map { Embed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
 						color: 0xffad0a
 					))
 				} catch WebApiError.noResults(let msg) {

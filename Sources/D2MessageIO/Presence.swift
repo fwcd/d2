@@ -1,21 +1,20 @@
 import Foundation
 
-public struct PresenceUpdate: Codable {
-	public let activity: Activity?
-	public let status: PresenceStatus
-	public let afkSince: Date?
+public struct Presence: Codable {
+	public let guildId: GuildID
+	public let user: User
+	public let game: Activity?
+	public let nick: String?
+	public let roles: [String]
+	public let status: Presence.Status
 	
-	public init(status: PresenceStatus, activity: Activity? = nil, afkSince: Date? = nil) {
-		self.activity = activity
+	public init(guildId: GuildID, user: User, game: Activity? = nil, nick: String? = nil, roles: [String] = [], status: Presence.Status) {
+		self.guildId = guildId
+		self.user = user
+		self.game = game
+		self.nick = nick
+		self.roles = roles
 		self.status = status
-		self.afkSince = afkSince
-	}
-	
-	public enum PresenceStatus: Int, Codable {
-		case idle
-		case offline
-		case online
-		case doNotDisturb
 	}
 	
 	public struct Activity: Codable {
@@ -32,5 +31,24 @@ public struct PresenceUpdate: Codable {
 			case stream
 			case listening
 		}
+	}
+	
+	public enum Status: String, Codable {
+		case idle = "idle"
+		case offline = "offline"
+		case online = "online"
+		case doNotDisturb = "doNotDisturb"
+	}
+}
+
+public struct PresenceUpdate: Codable {
+	public let game: Presence.Activity?
+	public let status: Presence.Status
+	public let afkSince: Date?
+	
+	public init(game: Presence.Activity? = nil, status: Presence.Status, afkSince: Date? = nil) {
+		self.game = game
+		self.status = status
+		self.afkSince = afkSince
 	}
 }

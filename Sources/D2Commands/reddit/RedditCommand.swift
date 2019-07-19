@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import Foundation
 #if canImport(FoundationNetworking)
@@ -57,14 +57,15 @@ public class RedditCommand: StringCommand {
 					.flatMap { $0 as? [String: Any] }
 				
 				if let post = optionalPost {
-					var embed = DiscordEmbed()
-					embed.title = post["title"].flatMap { $0 as? String }
-					embed.description = post["selftext"].flatMap { $0 as? String }
-					embed.image = post["url"]
+					let embed = Embed(
+						title: post["title"].flatMap { $0 as? String },
+						description: post["selftext"].flatMap { $0 as? String },
+						image: post["url"]
 						.flatMap { $0 as? String }
 						.flatMap { ($0.hasSuffix(".jpg") || $0.hasSuffix(".png")) ? $0 : nil }
 						.flatMap { URL(string: $0) }
-						.map { DiscordEmbed.Image(url: $0) }
+						.map { Embed.Image(url: $0) }
+					)
 					output.append(embed)
 				} else {
 					output.append("No post found.")

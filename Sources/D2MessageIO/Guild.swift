@@ -1,5 +1,6 @@
 import Foundation
 
+// TODO: Make this a protocol and add roles/members properties
 public struct Guild: Codable {
 	public let id: GuildID
 	public let large: Bool

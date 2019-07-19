@@ -3,7 +3,7 @@ import Foundation
 public struct Message: Codable, ExpressibleByStringLiteral {
 	public let content: String
 	public let embeds: [Embed]
-	public let files: [FileUpload]
+	public let files: [Message.FileUpload]
 	public let tts: Bool
 	
 	public let attachments: [Attachment]
@@ -21,6 +21,8 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 	public let reactions: [Reaction]
 	public let timestamp: Date?
 	public let type: MessageType?
+	
+	public var embed: Embed? { return embeds.first }
 	
 	/** Initializer intended for messages that are to be sent. */
 	public init(content: String, embed: Embed? = nil, files: [FileUpload] = [], tts: Bool = false) {

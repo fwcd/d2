@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -35,7 +35,7 @@ public class CycleThroughCommand: StringCommand {
 		let client = context.client!
 		let channelID = context.channel!.id
 		
-		client.sendMessage(DiscordMessage(content: String(firstFrame)), to: channelID) { sentMessage, _ in
+		client.sendMessage(Message(content: String(firstFrame)), to: channelID) { sentMessage, _ in
 			self.timer.schedule(nTimes: self.loops * frames.count) { i, _ in
 				let frame = String(frames[i % frames.count])
 				client.editMessage(sentMessage!.id, on: channelID, content: frame)

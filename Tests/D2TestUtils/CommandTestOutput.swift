@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 @testable import D2Commands
 
 /**
@@ -6,16 +6,16 @@ import SwiftDiscord
  * all messages into an array.
  */
 public class CommandTestOutput: CommandOutput {
-	private var internalMessages = [DiscordMessage]()
+	private var internalMessages = [Message]()
 	
 	/** Whether the output changed since the last read. */
 	public private(set) var changed = false
-	public var messages: [DiscordMessage] {
+	public var messages: [Message] {
 		changed = false
 		return internalMessages
 	}
 	public var contents: [String] { return messages.map { $0.content } }
-	public var last: DiscordMessage? { return messages.last }
+	public var last: Message? { return messages.last }
 	public var lastContent: String? { return last?.content }
 	
 	private let messageWriter = DiscordMessageWriter()
@@ -27,7 +27,7 @@ public class CommandTestOutput: CommandOutput {
 		changed = true
 	}
 	
-	public func nthLast(_ n: Int = 1) -> DiscordMessage? {
+	public func nthLast(_ n: Int = 1) -> Message? {
 		return messages[safely: messages.count - n]
 	}
 	

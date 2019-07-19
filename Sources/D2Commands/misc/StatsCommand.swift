@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import Foundation
 
@@ -13,7 +13,7 @@ public class StatsCommand: StringCommand {
 	public init() {}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		output.append(DiscordEmbed(
+		output.append(Embed(
 			title: ":chart_with_upwards_trend: Server Statistics",
 			description: computeStats(context: context).map { "\($0.0): \($0.1)" }.joined(separator: "\n")
 		))
@@ -28,7 +28,7 @@ public class StatsCommand: StringCommand {
 		var mostRoles: [String] = []
 		var voiceChannelCount: Int = 0
 		var textChannelCount: Int = 0
-		var presences: [DiscordPresence] = []
+		var presences: [Presence] = []
 		var longestPlayTime: Int = 0
 		var longestPlayTimeGame: String = ""
 		var longestPlayTimeUsername: String = ""
@@ -52,7 +52,7 @@ public class StatsCommand: StringCommand {
 			}
 			
 			for (_, channel) in guild.channels {
-				if channel is DiscordGuildVoiceChannel {
+				if channel is GuildVoiceChannel {
 					voiceChannelCount += 1
 				} else {
 					textChannelCount += 1

@@ -51,7 +51,7 @@ extension Embed.Footer {
 
 extension Embed.Field {
 	var usingDiscordAPI: DiscordEmbed.Field {
-		return DiscordEmbed.Field(name: name, value: value)
+		return DiscordEmbed.Field(name: name, value: value, inline: inline)
 	}
 }
 
@@ -104,6 +104,6 @@ extension DiscordEmbed.Footer {
 
 extension DiscordEmbed.Field {
 	var usingMessageIO: Embed.Field {
-		return Embed.Field(name: name, value: value)
+		return Embed.Field(name: name, value: value, inline: inline)
 	}
 }

@@ -25,11 +25,11 @@ let package = Package(
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["SwiftDiscord", "SwiftSoup", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2WebAPIs"]
+            dependencies: ["D2MessageIO", "SwiftSoup", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2WebAPIs"]
         ),
         .target(
             name: "D2Permissions",
-            dependencies: ["SwiftDiscord", "D2Utils"]
+            dependencies: ["D2MessageIO", "D2Utils"]
         ),
         .target(
             name: "D2Script",
@@ -41,18 +41,18 @@ let package = Package(
         ),
         .target(
             name: "D2Graphics",
-            dependencies: ["SwiftDiscord", "D2Utils", "Cairo"]
+            dependencies: ["D2MessageIO", "D2Utils", "Cairo"]
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["SwiftDiscord"]
+            dependencies: ["D2MessageIO"]
         ),
         .target(
             name: "D2MessageIO"
         ),
         .testTarget(
             name: "D2CommandTests",
-            dependencies: ["SwiftDiscord", "D2Utils", "D2TestUtils", "D2Commands"]
+            dependencies: ["D2MessageIO", "D2Utils", "D2TestUtils", "D2Commands"]
         ),
         .testTarget(
             name: "D2ScriptTests",
@@ -60,19 +60,19 @@ let package = Package(
         ),
         .testTarget(
             name: "D2UtilsTests",
-            dependencies: ["SwiftDiscord", "D2Utils", "D2TestUtils"]
+            dependencies: ["D2MessageIO", "D2Utils", "D2TestUtils"]
         ),
         .testTarget(
             name: "D2GraphicsTests",
-            dependencies: ["SwiftDiscord", "D2TestUtils", "D2Graphics"]
+            dependencies: ["D2MessageIO", "D2TestUtils", "D2Graphics"]
         ),
         .testTarget(
             name: "D2WebAPITests",
-            dependencies: ["SwiftDiscord", "D2TestUtils", "D2WebAPIs"]
+            dependencies: ["D2MessageIO", "D2TestUtils", "D2WebAPIs"]
         ),
         .testTarget(
             name: "D2TestUtils",
-            dependencies: ["SwiftDiscord", "D2Commands"]
+            dependencies: ["D2MessageIO", "D2Commands"]
         )
     ]
 )

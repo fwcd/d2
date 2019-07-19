@@ -1,30 +1,31 @@
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
+// TODO: Rename to MessageIOOutput
 public class DiscordOutput: CommandOutput {
 	private let messageWriter = DiscordMessageWriter()
-	private let client: DiscordClient
-	private let defaultTextChannel: DiscordTextChannel?
+	private let client: MessageClient
+	private let defaultTextChannel: TextChannel?
 	public let messageLengthLimit: Int? = 1800
-	private let onSent: ((DiscordMessage?, HTTPURLResponse?) -> Void)?
+	private let onSent: ((Message?, HTTPURLResponse?) -> Void)?
 	
-	public init(client: DiscordClient, defaultTextChannel: DiscordTextChannel?, onSent: ((DiscordMessage?, HTTPURLResponse?) -> Void)? = nil) {
+	public init(client: MessageClient, defaultTextChannel: TextChannel?, onSent: ((Message?, HTTPURLResponse?) -> Void)? = nil) {
 		self.client = client
 		self.defaultTextChannel = defaultTextChannel
 		self.onSent = onSent
 	}
 	
 	public func append(_ value: RichValue, to channel: OutputChannel) {
-		var message: DiscordMessage
+		var message: Message
 		do {
 			message = try messageWriter.write(value: value)
 		} catch {
 			print("Error while encoding message:")
 			print(error)
-			message = DiscordMessage(content: """
+			message = Message(content: """
 				An error occurred while encoding the message:
 				```
 				\(error)

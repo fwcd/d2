@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 import D2Graphics
 
@@ -19,7 +19,7 @@ public extension CommandOutput {
 		append(.text(str), to: channel)
 	}
 	
-	func append(_ embed: DiscordEmbed, to channel: OutputChannel = .defaultChannel) {
+	func append(_ embed: Embed, to channel: OutputChannel = .defaultChannel) {
 		append(.embed(embed), to: channel)
 	}
 	
@@ -27,7 +27,7 @@ public extension CommandOutput {
 		append(.image(image), to: channel)
 	}
 	
-	func append(_ files: [DiscordFileUpload], to channel: OutputChannel = .defaultChannel) {
+	func append(_ files: [Message.FileUpload], to channel: OutputChannel = .defaultChannel) {
 		append(.files(files), to: channel)
 	}
 }

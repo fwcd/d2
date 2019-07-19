@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 
 public struct TicTacToeState: GameState {
 	public typealias Role = TicTacToeRole

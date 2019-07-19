@@ -4,7 +4,7 @@ import D2Utils
 /**
  * Writes rich values into Discord messages.
  */
-public struct DiscordMessageWriter {
+public struct DiscordMessageWriter { // TODO: Update to MessageIO
 	public init() {}
 	
 	public func write<MessageLike>(value: RichValue) throws -> MessageLike where MessageLike: DiscordMessageLikeInitializable {

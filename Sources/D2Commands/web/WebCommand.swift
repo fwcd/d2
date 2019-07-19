@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 import Foundation
@@ -46,14 +46,14 @@ public class WebCommand: StringCommand {
 				let formattedOutput = try document.body().map { try self.converter.convert($0, baseURL: url) } ?? "Empty body"
 				let splitOutput: [String] = self.splitForEmbed(formattedOutput)
 				
-				output.append(DiscordEmbed(
+				output.append(Embed(
 					title: try document.title().nilIfEmpty ?? "Web Result",
 					description: splitOutput[safely: 0] ?? "Empty output",
-					author: DiscordEmbed.Author(
+					author: Embed.Author(
 						name: url.host ?? input,
 						iconUrl: self.findFavicon(in: document).flatMap { URL(string: $0, relativeTo: url) }
 					),
-					fields: splitOutput.dropFirst().enumerated().map { DiscordEmbed.Field(name: "Page \($0.0 + 1)", value: $0.1) }
+					fields: splitOutput.dropFirst().enumerated().map { Embed.Field(name: "Page \($0.0 + 1)", value: $0.1) }
 				))
 			} catch {
 				output.append("An error occurred while parsing the HTML")

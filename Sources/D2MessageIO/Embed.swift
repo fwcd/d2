@@ -75,10 +75,12 @@ public struct Embed: Codable {
 	public struct Field: Codable {
 		public let name: String
 		public let value: String
+		public let inline: Bool
 		
-		public init(name: String, value: String) {
+		public init(name: String, value: String, inline: Bool = true) {
 			self.name = name
 			self.value = value
+			self.inline = inline
 		}
 	}
 }

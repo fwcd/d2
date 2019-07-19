@@ -1,12 +1,12 @@
-import SwiftDiscord
+import D2MessageIO
 
-/** An "actual" player representing a DiscordUser. */
+/** An "actual" player representing a User. */
 public struct GamePlayer: Hashable {
 	public let username: String
 	public let id: UserID
 	public let isUser: Bool
 	
-	public init(from user: DiscordUser) {
+	public init(from user: User) {
 		self.init(username: user.username, id: user.id, isUser: !user.bot)
 	}
 	

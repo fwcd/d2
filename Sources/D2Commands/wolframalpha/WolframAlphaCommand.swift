@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 import D2Permissions
 import D2WebAPIs
@@ -70,14 +70,14 @@ public class WolframAlphaCommand: StringCommand {
 			let images = result.pods.flatMap { pod in pod.subpods.compactMap { self.extractImageURL(from: $0) } }
 			let plot = result.pods.filter { $0.title?.lowercased().contains("plot") ?? false }.first?.subpods.first.flatMap { self.extractImageURL(from: $0) }
 			
-			output.append(DiscordEmbed(
+			output.append(Embed(
 				title: "Query Output",
-				author: DiscordEmbed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
-				image: (plot ?? images.last).map { DiscordEmbed.Image(url: $0) },
-				thumbnail: images.first.map { DiscordEmbed.Thumbnail(url: $0) },
+				author: Embed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
+				image: (plot ?? images.last).map { Embed.Image(url: $0) },
+				thumbnail: images.first.map { Embed.Thumbnail(url: $0) },
 				color: 0xfdc81a,
-				footer: DiscordEmbed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
-				fields: result.pods.map { pod in DiscordEmbed.Field(
+				footer: Embed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
+				fields: result.pods.map { pod in Embed.Field(
 					// TODO: Investigate why Discord sends 400s for certain queries
 					name: pod.title?.nilIfEmpty?.truncate(50, appending: "...") ?? "Untitled pod",
 					value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...")

@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
@@ -9,7 +9,7 @@ public protocol Command: class {
 	
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
-	func onSuccessfullySent(message: DiscordMessage)
+	func onSuccessfullySent(message: Message)
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction
 	
@@ -20,7 +20,7 @@ extension Command {
 	public var inputValueType: RichValueType { return .unknown }
 	public var outputValueType: RichValueType { return .unknown }
 	
-	public func onSuccessfullySent(message: DiscordMessage) {}
+	public func onSuccessfullySent(message: Message) {}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
 		return .continueSubscription

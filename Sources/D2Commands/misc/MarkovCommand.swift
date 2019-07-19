@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -50,9 +50,9 @@ public class MarkovCommand: StringCommand {
 		}
 	}
 	
-	private func markovGenerate(using channels: Set<ChannelID>, output: CommandOutput, flags: Set<String>, mentioned: DiscordUser?, client: DiscordClient) {
+	private func markovGenerate(using channels: Set<ChannelID>, output: CommandOutput, flags: Set<String>, mentioned: User?, client: MessageClient) {
 		var queriedChannels = 0
-		var allMessages = [DiscordMessage]()
+		var allMessages = [Message]()
 		
 		for queryChannel in channels {
 			client.getMessages(for: queryChannel, selection: nil, limit: 80) { messages, _ in

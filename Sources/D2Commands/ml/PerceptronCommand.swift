@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -106,7 +106,7 @@ public class PerceptronCommand: StringCommand {
 		output.append(.compound([
 			.text("\(model.formula)\(outputValue.map { String(format: " = %.3f", $0) } ?? "")"),
 			.files(try renderer.render(model: &model).map { [
-				DiscordFileUpload(data: try $0.pngEncoded(), filename: "perceptron.png", mimeType: "image/png")
+				Message.FileUpload(data: try $0.pngEncoded(), filename: "perceptron.png", mimeType: "image/png")
 			] } ?? [])
 		]))
 	}

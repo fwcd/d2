@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 
 public class CommandRegistry: Sequence {
 	private var commands = [String: Command]()

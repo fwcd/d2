@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 
 // TODO: Use Arg API
@@ -49,14 +49,14 @@ public class PollCommand: StringCommand {
 			reactions = range.compactMap { numberEmojiOf(digit: $0) }
 		}
 		
-		client.sendMessage(DiscordMessage(content: text), to: channelId) { sentMessage, _ in
+		client.sendMessage(Message(content: text), to: channelId) { sentMessage, _ in
 			if let nextMessage = sentMessage {
 				self.react(to: nextMessage, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
 			}
 		}
 	}
 	
-	private func react(to message: DiscordMessage, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: DiscordClient) {
+	private func react(to message: Message, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: MessageClient) {
 		if let reaction = remainingReactions.first {
 			client.createReaction(for: message.id, on: channelId, emoji: reaction) { sentMessage, _ in
 				self.react(to: message, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)

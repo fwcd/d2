@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 import D2WebAPIs
@@ -47,12 +47,12 @@ public class UnivISCommand: StringCommand {
 			try UnivISQuery(search: searchKey, params: queryParams).start { response in
 				if case let .success(result) = response {
 					let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
-					var embed = DiscordEmbed()
-					
-					embed.title = "UnivIS query result"
-					embed.fields = Array(responseGroups
-						.map { DiscordEmbed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
-						.prefix(self.maxResponseEntries))
+					let embed = Embed(
+						title: "UnivIS query result",
+						fields: Array(responseGroups
+							.map { Embed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
+							.prefix(self.maxResponseEntries))
+					)
 					
 					output.append(embed)
 				} else if case let .failure(error) = response {

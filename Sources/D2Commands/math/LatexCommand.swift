@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -48,7 +48,7 @@ public class LatexCommand: StringCommand {
 		}
 	}
 	
-	public func onSuccessfullySent(message: DiscordMessage) {
+	public func onSuccessfullySent(message: Message) {
 		latexRenderer?.cleanUp()
 	}
 }

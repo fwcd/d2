@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -119,13 +119,13 @@ public class GameCommand<G: Game>: StringCommand {
 		output.append(.compound([
 			encodedBoard,
 			additionalMsg,
-			.embed(DiscordEmbed(
+			.embed(Embed(
 				title: "New match: \(state.playersDescription)",
 				color: game.themeColor.map { Int($0.rgb) },
-				footer: DiscordEmbed.Footer(text: "Type 'help' to begin!"),
+				footer: Embed.Footer(text: "Type 'help' to begin!"),
 				fields: [
-					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
-					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
+					Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
+					Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
 				]
 			))
 		]))
@@ -175,7 +175,7 @@ public class GameCommand<G: Game>: StringCommand {
 			
 			if let next = actionResult.nextState {
 				// Output next board and user's hands
-				var embed: DiscordEmbed? = nil
+				var embed: Embed? = nil
 				
 				// print("Next possible moves: \(next.possibleMoves)")
 				sendHandsAsDMs(fromState: next, to: output)
@@ -183,7 +183,7 @@ public class GameCommand<G: Game>: StringCommand {
 				if let winner = next.winner {
 					// Game won
 					
-					embed = DiscordEmbed(
+					embed = Embed(
 						title: ":crown: Winner",
 						description: "\(describe(role: winner, in: next)) won the game!"
 					)
@@ -193,7 +193,7 @@ public class GameCommand<G: Game>: StringCommand {
 				} else if next.isDraw {
 					// Game over due to a draw
 					
-					embed = DiscordEmbed(
+					embed = Embed(
 						title: ":crown: Game Over",
 						description: "The game resulted in a draw!"
 					)
@@ -203,7 +203,7 @@ public class GameCommand<G: Game>: StringCommand {
 				} else {
 					// Advance the game
 					
-					embed = DiscordEmbed(
+					embed = Embed(
 						description: """
 							\(actionResult.text ?? "")
 							\(next.handsDescription.map { "Hands: \($0)" } ?? "")

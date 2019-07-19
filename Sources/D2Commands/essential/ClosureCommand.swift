@@ -1,6 +1,3 @@
-import SwiftDiscord
-import D2Permissions
-
 public class ClosureCommand: Command {
 	public let info: CommandInfo
 	private let closure: (RichValue, CommandOutput, CommandContext) -> Void

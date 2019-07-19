@@ -1,20 +1,20 @@
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
-extension DiscordTextChannel {
+extension InteractiveTextChannel {
 	public func send(_ message: String) {
-		send(DiscordMessage(content: message))
+		send(Message(content: message))
 	}
 	
 	public func send(embed: DiscordEmbed) {
-		send(DiscordMessage(fromEmbed: embed))
+		send(Message(fromEmbed: embed))
 	}
 }
 
-extension DiscordGuild {
+extension Guild {
 	public var allUsers: [DiscordUser] { return members.map { $0.value.user } }
 	
 	public func users(with roles: [RoleID]) -> [DiscordUser] {
@@ -24,10 +24,14 @@ extension DiscordGuild {
 				.filter { $0.roleIds.contains(role) }
 				.map { $0.user }
 		}
+
+extension Message {
+	public init(fromEmbed embed: Embed) {
+		self.init(content: "", embed: embed)
 	}
 }
 
-extension DiscordMessage {
+extension Message {
 	public var allMentionedUsers: [DiscordUser] {
 		guard let guild = guildMember?.guild else { return [] }
 		if mentionEveryone {

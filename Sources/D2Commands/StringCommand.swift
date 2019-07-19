@@ -1,4 +1,3 @@
-import SwiftDiscord
 import D2Permissions
 
 /**

@@ -1,19 +1,34 @@
 import D2MessageIO
 import SwiftDiscord
 
+// FROM Discord conversions
+
+extension DiscordPresence {
+	var usingMessageIO: Presence {
+		return Presence(
+			guildId: guildId.usingMessageIO,
+			user: user.usingMessageIO,
+			game: game?.usingMessageIO,
+			nick: nick,
+			roles: roles,
+			status: status?.usingMessageIO
+		)
+	}
+}
+
 // TO Discord conversions
 
 extension PresenceUpdate {
 	var usingDiscordAPI: DiscordPresenceUpdate {
 		return DiscordPresenceUpdate(
-			game: activity?.usingDiscordAPI,
+			game: game?.usingDiscordAPI,
 			status: status.usingDiscordAPI,
 			afkSince: afkSince
 		)
 	}
 }
 
-extension PresenceUpdate.PresenceStatus {
+extension Presence.Status {
 	var usingDiscordAPI: DiscordPresenceStatus {
 		switch self {
 			case .idle: return .idle
@@ -24,13 +39,13 @@ extension PresenceUpdate.PresenceStatus {
 	}
 }
 
-extension PresenceUpdate.Activity {
+extension Presence.Activity {
 	var usingDiscordAPI: DiscordActivity {
 		return DiscordActivity(name: name, type: type.usingDiscordAPI)
 	}
 }
 
-extension PresenceUpdate.Activity.ActivityType {
+extension Presence.Activity.ActivityType {
 	var usingDiscordAPI: DiscordActivityType {
 		switch self {
 			case .game: return .game
