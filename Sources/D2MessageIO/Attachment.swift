@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Attachment {
+public struct Attachment: Codable {
 	public let data: Data
 	public let filename: String
 	public let mimeType: String

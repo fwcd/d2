@@ -1,4 +1,4 @@
-public struct PresenceUpdate {
+public struct PresenceUpdate: Codable {
 	public let activity: Activity?
 	public let status: Status?
 	
@@ -7,19 +7,19 @@ public struct PresenceUpdate {
 		self.status = status
 	}
 	
-	public enum Status {
+	public enum Status: String, Codable {
 		case online
 		case afk
 		case dnd
 		case offline
 	}
 	
-	public enum ActivityType {
+	public enum ActivityType: String, Codable {
 		case playing
 		case listening
 	}
 	
-	public struct Activity {
+	public struct Activity: Codable {
 		public let name: String
 		public let type: ActivityType
 	}

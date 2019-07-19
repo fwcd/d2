@@ -108,14 +108,17 @@ The program consists of two executables:
 * `D2`, the main Discord frontend
 * `D2Shell`, an interactive REPL mainly intended for testing
 
+Each executable uses its own implementation of message IO, e.g. `D2` uses `SwiftDiscord` to conform to `D2MessageIO`'s API.
+
 These depend on several library targets:
 * `D2Commands`, the command framework and the implementations
 * `D2Graphics`, 2D graphics and drawing
-* `D2MessageIO`, the messaging framework used by D2
+* `D2MessageIO`, the messaging framework used by D2 (abstracts over the Discord library)
 * `D2Permissions`, the permission manager
 * `D2Script`, an experimental DSL that can be used to script commands
-* `D2Utils`, a collection of useful utilities
+* `D2Graphics`, 2D graphics and drawing
 * `D2WebAPIs`, client implementations of various web APIs
+* `D2Utils`, a collection of useful utilities
 
 ### D2
 The executable application. The base functionality is provided by `D2ClientHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.
