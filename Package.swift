@@ -20,6 +20,10 @@ let package = Package(
             dependencies: ["SwiftDiscord", "D2Utils", "D2Permissions", "D2Commands"]
         ),
         .target(
+            name: "D2Shell",
+            dependencies: ["D2Utils", "D2Permissions", "D2Commands"]
+        ),
+        .target(
             name: "D2Commands",
             dependencies: ["SwiftDiscord", "SwiftSoup", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2WebAPIs"]
         ),

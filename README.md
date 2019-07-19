@@ -85,7 +85,6 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ```
 
 ## Building
-
 * Using Docker: `docker-compose build`
 * On Linux: `swift build`
 * On macOS: `swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
@@ -96,21 +95,25 @@ For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearac
 * `swift test`
 
 ## Running
-
 * Using Docker: `docker-compose up -d`
-* On Linux: `swift run`
-* On macOS: `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
+* On Linux: `swift run D2` (or D2Shell)
+* On macOS: `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include D2` (or D2Shell)
 
 ## Additional Build Flags
 To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
 
 ## Architecture
-The program consists of six modules:
+The program consists of two executables:
 
-* `D2`, the executable
+* `D2`, the main Discord frontend
+* `D2Shell`, an interactive REPL mainly intended for testing
+
+These depend on several library targets:
 * `D2Commands`, the command framework and the implementations
-* `D2Graphics`, a 2D drawing library based on Cairo
+* `D2Graphics`, 2D graphics and drawing
+* `D2MessageIO`, the messaging framework used by D2
 * `D2Permissions`, the permission manager
+* `D2Script`, an experimental DSL that can be used to script commands
 * `D2Utils`, a collection of useful utilities
 * `D2WebAPIs`, client implementations of various web APIs
 
