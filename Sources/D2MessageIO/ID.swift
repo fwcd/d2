@@ -1,2 +1,11 @@
-public typealias ChannelID = UInt64
-public typealias MessageID = UInt64
+public typealias ChannelID = ID
+public typealias MessageID = ID
+public typealias AttachmentID = ID
+
+public struct ID: Codable {
+	public let rawValue: UInt64
+	
+	public init(_ rawValue: UInt64) {
+		self.rawValue = rawValue
+	}
+}

@@ -13,7 +13,7 @@ public struct Embed: Codable {
 	public let fields: [Field]
 	
 	public init(
-		title: String,
+		title: String? = nil,
 		description: String? = nil,
 		author: Author? = nil,
 		url: URL? = nil,
@@ -65,9 +65,9 @@ public struct Embed: Codable {
 	}
 	
 	public struct Footer: Codable {
-		public let text: String
+		public let text: String?
 		
-		public init(text: String) {
+		public init(text: String? = nil) {
 			self.text = text
 		}
 	}

@@ -2,6 +2,8 @@ import D2MessageIO
 import SwiftDiscord
 import Foundation
 
+// TO Discord conversions
+
 extension Embed {
 	var usingDiscordAPI: DiscordEmbed {
 		return DiscordEmbed(
@@ -50,5 +52,58 @@ extension Embed.Footer {
 extension Embed.Field {
 	var usingDiscordAPI: DiscordEmbed.Field {
 		return DiscordEmbed.Field(name: name, value: value)
+	}
+}
+
+// FROM Discord conversions
+
+extension DiscordEmbed {
+	var usingMessageIO: Embed {
+		return Embed(
+			title: title,
+			description: description,
+			author: author?.usingMessageIO,
+			url: url,
+			image: image?.usingMessageIO,
+			timestamp: timestamp,
+			thumbnail: thumbnail?.usingMessageIO,
+			color: color,
+			footer: footer?.usingMessageIO,
+			fields: fields.map { $0.usingMessageIO }
+		)
+	}
+}
+
+extension DiscordEmbed.Author {
+	var usingMessageIO: Embed.Author {
+		return Embed.Author(
+			name: name,
+			iconUrl: iconUrl,
+			url: url
+		)
+	}
+}
+
+extension DiscordEmbed.Thumbnail {
+	var usingMessageIO: Embed.Thumbnail {
+		return Embed.Thumbnail(url: url)
+	}
+}
+
+extension DiscordEmbed.Image {
+	var usingMessageIO: Embed.Image {
+		return Embed.Image(url: url)
+	}
+}
+
+extension DiscordEmbed.Footer {
+	var usingMessageIO: Embed.Footer {
+		return Embed.Footer(text: text)
+	}
+}
+
+extension DiscordEmbed.Field {
+	var usingMessageIO: Embed.Field {
+		return Embed.Field(name: name, value: value)
 	}
 }
