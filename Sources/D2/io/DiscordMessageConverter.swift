@@ -6,8 +6,14 @@ extension Message {
 		return DiscordMessage(
 			content: content,
 			embed: embed?.usingDiscordAPI,
-			// TODO: Attachments
+			files: files.map { $0.usingDiscordAPI },
 			tts: tts
 		)
+	}
+}
+
+extension Message.FileUpload {
+	var usingDiscordAPI: DiscordFileUpload {
+		return DiscordFileUpload(data: data, filename: filename, mimeType: mimeType)
 	}
 }
