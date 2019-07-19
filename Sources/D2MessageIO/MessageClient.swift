@@ -3,6 +3,8 @@ import Foundation
 public typealias ClientCallback<T> = (T, HTTPURLResponse?) -> Void
 
 public protocol MessageClient {
+	var user: User { get } // Me
+	
 	func setPresence(_ presence: PresenceUpdate)
 	
 	func guildForChannel(_ channelID: ChannelID) -> Guild?
