@@ -112,6 +112,13 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 			self.type = type
 			self.partyId = partyId
 		}
+		
+		public enum ActivityType: Int, Codable {
+			case join
+			case spectate
+			case listen
+			case joinRequest
+		}
 	}
 	
 	public struct MessageApplication: Codable {
