@@ -3,7 +3,7 @@ import SwiftDiscord
 
 // FROM Discord conversions
 
-extension DiscordEmoji {
+extension DiscordEmoji: MessageIOConvertible {
 	var usingMessageIO: Emoji {
 		return Emoji(
 			id: id?.usingMessageIO,

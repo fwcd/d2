@@ -13,24 +13,24 @@ struct DiscordMessageClient: MessageClient {
 		client.setPresence(presence.usingDiscordAPI)
 	}
 	
-	func guildForChannel(_ channelID: D2MessageIO.ChannelID) -> Guild? {
-		return client.guildForChannel(channelID.usingDiscordAPI)?.usingMessageIO
+	func guildForChannel(_ channelId: D2MessageIO.ChannelID) -> Guild? {
+		return client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
 	}
 	
-	func sendMessage(_ message: Message, to channelID: D2MessageIO.ChannelID, then: @escaping ClientCallback<Message?>) {
-		client.sendMessage(message.usingDiscordAPI, to: channelID.usingDiscordAPI) {
+	func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID, then: @escaping ClientCallback<Message?>) {
+		client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) {
 			then($0?.usingMessageIO, $1)
 		}
 	}
 	
-	func editMessage(_ id: D2MessageIO.MessageID, on channelID: D2MessageIO.ChannelID, content: String, then: @escaping ClientCallback<Message?>) {
-		client.editMessage(id.usingDiscordAPI, on: channelID.usingDiscordAPI, content: content) {
+	func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, content: String, then: @escaping ClientCallback<Message?>) {
+		client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, content: content) {
 			then($0?.usingMessageIO, $1)
 		}
 	}
 	
-	func getMessages(for channelID: D2MessageIO.ChannelID, limit: Int, then: @escaping ClientCallback<[Message]>) {
-		client.getMessages(for: channelID.usingDiscordAPI, limit: limit) {
+	func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, then: @escaping ClientCallback<[Message]>) {
+		client.getMessages(for: channelId.usingDiscordAPI, limit: limit) {
 			then($0.map { $0.usingMessageIO }, $1)
 		}
 	}

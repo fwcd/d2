@@ -3,18 +3,18 @@ import SwiftDiscord
 
 // TO Discord conversions
 
-extension Message {
+extension Message: DiscordAPIConvertible {
 	var usingDiscordAPI: DiscordMessage {
 		return DiscordMessage(
 			content: content,
 			embed: embeds.first?.usingDiscordAPI,
-			files: files.map { $0.usingDiscordAPI },
+			files: files.usingDiscordAPI,
 			tts: tts
 		)
 	}
 }
 
-extension Message.FileUpload {
+extension Message.FileUpload: DiscordAPIConvertible {
 	var usingDiscordAPI: DiscordFileUpload {
 		return DiscordFileUpload(data: data, filename: filename, mimeType: mimeType)
 	}
@@ -22,12 +22,12 @@ extension Message.FileUpload {
 
 // FROM Discord conversions
 
-extension DiscordMessage {
+extension DiscordMessage: MessageIOConvertible {
 	var usingMessageIO: Message {
 		return Message(
 			content: content,
-			embeds: embeds.map { $0.usingMessageIO },
-			attachments: attachments.map { $0.usingMessageIO },
+			embeds: embeds.usingMessageIO,
+			attachments: attachments.usingMessageIO,
 			activity: activity?.usingMessageIO,
 			application: application?.usingMessageIO,
 			author: author.usingMessageIO,
@@ -35,18 +35,18 @@ extension DiscordMessage {
 			editedTimestamp: editedTimestamp,
 			id: id.usingMessageIO,
 			mentionEveryone: mentionEveryone,
-			mentionRoles: mentionRoles.map { $0.usingMessageIO },
-			mentions: mentions.map { $0.usingMessageIO },
+			mentionRoles: mentionRoles.usingMessageIO,
+			mentions: mentions.usingMessageIO,
 			nonce: nonce.usingMessageIO,
 			pinned: pinned,
-			reactions: reactions.map { $0.usingMessageIO },
+			reactions: reactions.usingMessageIO,
 			timestamp: timestamp,
 			type: type.usingMessageIO
 		)
 	}
 }
 
-extension DiscordAttachment {
+extension DiscordAttachment: MessageIOConvertible {
 	var usingMessageIO: Message.Attachment {
 		return Message.Attachment(
 			id: id.usingMessageIO,
@@ -59,7 +59,7 @@ extension DiscordAttachment {
 	}
 }
 
-extension DiscordMessage.MessageActivity {
+extension DiscordMessage.MessageActivity: MessageIOConvertible {
 	var usingMessageIO: Message.MessageActivity {
 		return Message.MessageActivity(
 			type: type.usingMessageIO,
@@ -68,7 +68,7 @@ extension DiscordMessage.MessageActivity {
 	}
 }
 
-extension DiscordMessage.MessageActivity.ActivityType {
+extension DiscordMessage.MessageActivity.ActivityType: MessageIOConvertible {
 	var usingMessageIO: Message.MessageActivity.ActivityType {
 		switch self {
 			case .join: return .join
@@ -79,7 +79,7 @@ extension DiscordMessage.MessageActivity.ActivityType {
 	}
 }
 
-extension DiscordMessage.MessageApplication {
+extension DiscordMessage.MessageApplication: MessageIOConvertible {
 	var usingMessageIO: Message.MessageApplication {
 		return Message.MessageApplication(
 			id: id.usingMessageIO,
@@ -91,7 +91,7 @@ extension DiscordMessage.MessageApplication {
 	}
 }
 
-extension DiscordReaction {
+extension DiscordReaction: MessageIOConvertible {
 	var usingMessageIO: Message.Reaction {
 		return Message.Reaction(
 			count: count,
@@ -101,7 +101,7 @@ extension DiscordReaction {
 	}
 }
 
-extension DiscordMessage.MessageType {
+extension DiscordMessage.MessageType: MessageIOConvertible {
 	var usingMessageIO: Message.MessageType {
 		switch self {
 			case .`default`: return .`default`

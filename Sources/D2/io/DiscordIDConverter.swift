@@ -3,7 +3,7 @@ import SwiftDiscord
 
 // TO Discord conversions
 
-extension ID {
+extension ID: DiscordAPIConvertible {
 	var usingDiscordAPI: Snowflake {
 		return Snowflake(rawValue)
 	}
@@ -11,7 +11,7 @@ extension ID {
 
 // FROM Discord conversions
 
-extension Snowflake {
+extension Snowflake: MessageIOConvertible {
 	var usingMessageIO: ID {
 		return ID(rawValue)
 	}

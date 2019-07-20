@@ -3,7 +3,7 @@ import SwiftDiscord
 
 // FROM Discord conversions
 
-extension DiscordPresence {
+extension DiscordPresence: MessageIOConvertible {
 	var usingMessageIO: Presence {
 		return Presence(
 			guildId: guildId.usingMessageIO,
@@ -18,7 +18,7 @@ extension DiscordPresence {
 
 // TO Discord conversions
 
-extension PresenceUpdate {
+extension PresenceUpdate: DiscordAPIConvertible {
 	var usingDiscordAPI: DiscordPresenceUpdate {
 		return DiscordPresenceUpdate(
 			game: game?.usingDiscordAPI,
@@ -28,7 +28,7 @@ extension PresenceUpdate {
 	}
 }
 
-extension Presence.Status {
+extension Presence.Status: DiscordAPIConvertible {
 	var usingDiscordAPI: DiscordPresenceStatus {
 		switch self {
 			case .idle: return .idle
@@ -39,13 +39,13 @@ extension Presence.Status {
 	}
 }
 
-extension Presence.Activity {
+extension Presence.Activity: DiscordAPIConvertible {
 	var usingDiscordAPI: DiscordActivity {
 		return DiscordActivity(name: name, type: type.usingDiscordAPI)
 	}
 }
 
-extension Presence.Activity.ActivityType {
+extension Presence.Activity.ActivityType: DiscordAPIConvertible {
 	var usingDiscordAPI: DiscordActivityType {
 		switch self {
 			case .game: return .game

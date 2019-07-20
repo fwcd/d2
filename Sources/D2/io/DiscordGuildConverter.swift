@@ -3,43 +3,56 @@ import D2MessageIO
 
 // FROM Discord conversions
 
-extension DiscordGuild {
+extension DiscordGuild: MessageIOConvertible {
 	var usingMessageIO: Guild {
 		return Guild(
 			id: id.usingMessageIO,
+			ownerId: ownerId.usingMessageIO,
+			region: region,
 			large: large,
+			name: name,
 			joinedAt: joinedAt,
 			splash: splash,
 			unavailable: unavailable,
 			description: description,
-			channels: Dictionary(uniqueKeysWithValues: channels.map { ($0.usingMessageIO, $1.usingMessageIO) })
+			mfaLevel: mfaLevel,
+			verificationLevel: verificationLevel,
+			embedEnabled: embedEnabled,
+			embedChannelId: embedChannelId.usingMessageIO,
+			icon: icon,
+			members: members.usingMessageIO,
+			roles: roles.usingMessageIO,
+			presences: presences.usingMessageIO,
+			voiceStates: voiceStates.usingMessageIO,
+			emojis: emojis.usingMessageIO,
+			channels: channels.usingMessageIO
 		)
 	}
 }
 
-extension DiscordGuildChannel {
-	var usingMessageIO: Guild.GuildChannel {
-		return Guild.GuildChannel(
+extension DiscordGuildChannel: MessageIOConvertible {
+	var usingMessageIO: Guild.Channel {
+		return Guild.Channel(
 			guildId: guildId.usingMessageIO,
 			name: name,
 			parentId: parentId?.usingMessageIO,
 			position: position,
-			permissionOverwrites: Dictionary(uniqueKeysWithValues: permissionOverwrites.map { ($0.usingMessageIO, $1.usingMessageIO) })
+			permissionOverwrites: permissionOverwrites.usingMessageIO
 		)
 	}
 }
 
-extension DiscordPermissionOverwrite {
-	var usingMessageIO: Guild.GuildChannel.PermissionOverwrite {
-		return Guild.GuildChannel.PermissionOverwrite(
+extension DiscordPermissionOverwrite: MessageIOConvertible {
+	var usingMessageIO: Guild.Channel.PermissionOverwrite {
+		return Guild.Channel.PermissionOverwrite(
 			id: id.usingMessageIO,
 			type: type.usingMessageIO
 		)
 	}
 }
 
-extension DiscordPermissionOverwriteType {
-	var usingMessageIO: Guild.GuildChannel.PermissionOverwrite.PermissionOverwriteType {
+extension DiscordPermissionOverwriteType: MessageIOConvertible {
+	var usingMessageIO: Guild.Channel.PermissionOverwrite.PermissionOverwriteType {
 		switch self {
 			case .role: return .role
 			case .member: return .member

@@ -33,12 +33,12 @@ public class CycleThroughCommand: StringCommand {
 		}
 		
 		let client = context.client!
-		let channelID = context.channel!.id
+		let channelId = context.channel!.id
 		
-		client.sendMessage(Message(content: String(firstFrame)), to: channelID) { sentMessage, _ in
+		client.sendMessage(Message(content: String(firstFrame)), to: channelId) { sentMessage, _ in
 			self.timer.schedule(nTimes: self.loops * frames.count) { i, _ in
 				let frame = String(frames[i % frames.count])
-				client.editMessage(sentMessage!.id, on: channelID, content: frame)
+				client.editMessage(sentMessage!.id, on: channelId, content: frame)
 			}
 		}
 	}

@@ -3,7 +3,7 @@ import SwiftDiscord
 
 // FROM Discord conversions
 
-extension DiscordUser {
+extension DiscordUser: MessageIOConvertible {
 	var usingMessageIO: User {
 		return User(
 			avatar: avatar,

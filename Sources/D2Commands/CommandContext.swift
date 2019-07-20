@@ -1,16 +1,16 @@
 import D2MessageIO
 
 public struct CommandContext {
-	public let guild: Guild?
+	public let client: MessageClient?
 	public let registry: CommandRegistry
 	public let message: Message
 	
 	public var author: User { return message.author }
 	public var channel: TextChannel? { return message.channel }
-	public var client: MessageClient? { return message.client }
+	public var guild: Guild? { return client?.guildForChannel(message.channelId) }
 	
-	public init(guild: Guild?, registry: CommandRegistry, message: Message) {
-		self.guild = guild
+	public init(client: MessageClient?, registry: CommandRegistry, message: Message) {
+		self.client = client
 		self.registry = registry
 		self.message = message
 	}

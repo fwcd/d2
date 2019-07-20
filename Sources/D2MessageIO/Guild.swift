@@ -3,24 +3,71 @@ import Foundation
 // TODO: Make this a protocol and add roles/members properties
 public struct Guild: Codable {
 	public let id: GuildID
+	public let ownerId: UserID
+	public let region: String
 	public let large: Bool
+	public let name: String
 	public let joinedAt: Date
 	public let splash: String
 	public let unavailable: Bool
 	public let description: String
-	public let channels: [ChannelID: GuildChannel]
+	public let mfaLevel: Int
+	public let verificationLevel: Int
+	public let embedEnabled: Bool
+	public let embedChannelId: ChannelID
+	public let icon: String
+	public let members: [UserID: Member]
+	public let roles: [RoleID: Role]
+	public let presences: [UserID: Presence]
+	public let voiceStates: [UserID: VoiceState]
+	public let emojis: [EmojiID: Emoji]
+	public let channels: [ChannelID: Channel]
 	
-	public init(id: GuildID, large: Bool, joinedAt: Date, splash: String, unavailable: Bool, description: String, channels: [ChannelID: GuildChannel] = [:]) {
+	public init(
+		id: GuildID,
+		ownerId: UserID,
+		region: String,
+		large: Bool,
+		name: String,
+		joinedAt: Date,
+		splash: String,
+		unavailable: Bool,
+		description: String,
+		mfaLevel: Int,
+		verificationLevel: Int,
+		embedEnabled: Bool,
+		embedChannelId: ChannelID,
+		icon: String,
+		members: [UserID: Member] = [:],
+		roles: [RoleID: Role] = [:],
+		presences: [UserID: Presence] = [:],
+		voiceStates: [UserID: VoiceState] = [:],
+		emojis: [EmojiID: Emoji] = [:],
+		channels: [ChannelID: Channel] = [:]
+	) {
 		self.id = id
+		self.ownerId = ownerId
+		self.region = region
 		self.large = large
+		self.name = name
 		self.joinedAt = joinedAt
 		self.splash = splash
 		self.unavailable = unavailable
 		self.description = description
+		self.mfaLevel = mfaLevel
+		self.verificationLevel = verificationLevel
+		self.embedEnabled = embedEnabled
+		self.embedChannelId = embedChannelId
+		self.icon = icon
+		self.members = members
+		self.roles = roles
+		self.presences = presences
+		self.voiceStates = voiceStates
+		self.emojis = emojis
 		self.channels = channels
 	}
 	
-	public struct GuildChannel: Codable {
+	public struct Channel: Codable {
 		public let guildId: GuildID
 		public let name: String
 		public let parentId: ChannelID?
@@ -48,6 +95,22 @@ public struct Guild: Codable {
 				case role
 				case member
 			}
+		}
+	}
+	
+	public struct Member: Codable {
+		public let guildId: GuildID
+		public let joinedAt: Date
+		public let user: User
+		public let deaf: Bool
+		public let roles: [Role]
+		
+		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, roles: [Role] = []) {
+			self.guildId = guildId
+			self.joinedAt = joinedAt
+			self.user = user
+			self.deaf = deaf
+			self.roles = roles
 		}
 	}
 }
