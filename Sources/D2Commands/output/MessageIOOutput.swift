@@ -4,17 +4,16 @@ import Foundation
 import FoundationNetworking
 #endif
 
-// TODO: Rename to MessageIOOutput
-public class DiscordOutput: CommandOutput {
+public class MessageIOOutput: CommandOutput {
 	private let messageWriter = DiscordMessageWriter()
 	private let client: MessageClient
-	private let defaultTextChannel: TextChannel?
+	private let defaultTextChannelId: ChannelID?
 	public let messageLengthLimit: Int? = 1800
 	private let onSent: ((Message?, HTTPURLResponse?) -> Void)?
 	
-	public init(client: MessageClient, defaultTextChannel: TextChannel?, onSent: ((Message?, HTTPURLResponse?) -> Void)? = nil) {
+	public init(client: MessageClient, defaultTextChannelId: ChannelID?, onSent: ((Message?, HTTPURLResponse?) -> Void)? = nil) {
 		self.client = client
-		self.defaultTextChannel = defaultTextChannel
+		self.defaultTextChannelId = defaultTextChannelId
 		self.onSent = onSent
 	}
 	
@@ -36,15 +35,15 @@ public class DiscordOutput: CommandOutput {
 			case .serverChannel(let id): client.sendMessage(message, to: id)
 			case .userChannel(let id):
 				client.createDM(with: id) { ch, _ in
-					if let channelId = ch.map({ $0.id }) {
-						self.client.sendMessage(message, to: channelId, callback: self.onSent)
+					if let channelId = ch {
+						self.client.sendMessage(message, to: channelId, then: self.onSent)
 					} else {
 						print("Could not find user channel \(id)")
 					}
 				}
 			case .defaultChannel:
-				if let textChannel = defaultTextChannel {
-					client.sendMessage(message, to: textChannel.id, callback: onSent)
+				if let textChannelId = defaultTextChannelId {
+					client.sendMessage(message, to: textChannelId, then: onSent)
 				} else {
 					print("No default text channel available")
 				}

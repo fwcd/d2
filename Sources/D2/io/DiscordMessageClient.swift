@@ -17,6 +17,12 @@ struct DiscordMessageClient: MessageClient {
 		return client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
 	}
 	
+	func createDM(with me: UserID, user: UserID, then: @escaping ClientCallback<D2MessageIO.ChannelID>) {
+		client.createDM(with: me, user: user) {
+			then($0?.id.usingMessageIO, $1)
+		}
+	}
+	
 	func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID, then: @escaping ClientCallback<Message?>) {
 		client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) {
 			then($0?.usingMessageIO, $1)

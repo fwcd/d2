@@ -103,14 +103,14 @@ public struct Guild: Codable {
 		public let joinedAt: Date
 		public let user: User
 		public let deaf: Bool
-		public let roles: [Role]
+		public let roleIds: [RoleID]
 		
-		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, roles: [Role] = []) {
+		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, roleIds: [RoleID] = []) {
 			self.guildId = guildId
 			self.joinedAt = joinedAt
 			self.user = user
 			self.deaf = deaf
-			self.roles = roles
+			self.roleIds = roleIds
 		}
 	}
 }

@@ -10,7 +10,7 @@ extension InteractiveTextChannel {
 	}
 	
 	public func send(embed: DiscordEmbed) {
-		send(Message(fromEmbed: embed))
+		send(Message(embed: embed))
 	}
 }
 
@@ -26,12 +26,6 @@ extension Guild {
 		}
 
 extension Message {
-	public init(fromEmbed embed: Embed) {
-		self.init(content: "", embed: embed)
-	}
-}
-
-extension Message {
 	public var allMentionedUsers: [DiscordUser] {
 		guard let guild = guildMember?.guild else { return [] }
 		if mentionEveryone {
@@ -39,20 +33,6 @@ extension Message {
 		} else {
 			return mentions + guild.users(with: mentionRoles)
 		}
-	}
-}
-
-extension DiscordMessageLikeInitializable {
-	public init(fromContent content: String) {
-		self.init(content: content, embed: nil, files: [], tts: false)
-	}
-	
-	public init(fromEmbed embed: DiscordEmbed?) {
-		self.init(content: "", embed: embed, files: [], tts: false)
-	}
-	
-	public init(fromFiles files: [DiscordFileUpload]) {
-		self.init(content: "", embed: nil, files: files, tts: false)
 	}
 }
 

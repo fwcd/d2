@@ -8,7 +8,16 @@ public struct User: Codable {
 	public let username: String
 	public let verified: Bool
 	
-	public init(avatar: String, bot: Bool, discriminator: String, email: String, id: UserID, mfaEnabled: Bool, username: String, verified: Bool) {
+	public init(
+		avatar: String = "",
+		bot: Bool = false,
+		discriminator: String = "",
+		email: String = "",
+		id: UserID = UserID(0),
+		mfaEnabled: Bool = false,
+		username: String = "",
+		verified: Bool = false
+	) {
 		self.avatar = avatar
 		self.bot = bot
 		self.discriminator = discriminator

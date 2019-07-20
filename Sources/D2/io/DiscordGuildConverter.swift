@@ -59,3 +59,15 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
 		}
 	}
 }
+
+extension DiscordGuildMember: MessageIOConvertible {
+	var usingMessageIO: Guild.Member {
+		return Guild.Member(
+			guildId: guildId.usingMessageIO,
+			joinedAt: joinedAt,
+			user: user.usingMessageIO,
+			deaf: deaf,
+			roleIds: roleIds.usingMessageIO
+		)
+	}
+}

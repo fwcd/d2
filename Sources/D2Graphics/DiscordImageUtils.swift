@@ -3,11 +3,11 @@ import D2Utils
 
 extension InteractiveTextChannel {
 	public func send(image: Image) throws {
-		send(try DiscordMessage(fromImage: image))
+		send(try Message(fromImage: image))
 	}
 	
 	public func send(gif: AnimatedGif) throws {
-		send(DiscordMessage(fromGif: gif))
+		send(Message(fromGif: gif))
 	}
 }
 
@@ -20,7 +20,7 @@ extension Message {
 	
 	public init(fromGif gif: AnimatedGif, name: String? = nil) {
 		self.init(content: "", embed: nil, files: [
-			DiscordFileUpload(data: gif.data, filename: name ?? "image.gif", mimeType: "image/gif")
+			Message.FileUpload(data: gif.data, filename: name ?? "image.gif", mimeType: "image/gif")
 		], tts: false)
 	}
 }
