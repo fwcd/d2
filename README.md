@@ -62,19 +62,32 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ```
 
 ## Building
+
+### on Linux
 * `swift build`
+
+### on macOS
+* `swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
+
+For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearace/SwiftDiscord/blob/master/README.md).
 
 ## Testing
 * `swift test`
 
 ## Running
+
+### on Linux
 * `swift run`
+
+### on macOS
+* `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
 
 ## Architecture
 The program consists of three modules:
 
 * `D2`, the executable
 * `D2Commands`, the command framework and the implementations
+* `D2Graphics`, a 2D drawing library based on Cairo
 * `D2Permissions`, the permission manager
 * `D2Utils`, a collection of useful utilities
 * `D2WebAPIs`, client implementations of various web APIs
