@@ -27,6 +27,8 @@ public class DemoGifCommand: StringCommand {
 				
 				try gif.append(frame: image, delayTime: 100)
 			}
+			
+			output.append(DiscordMessage(fromGif: gif, name: "demo.gif"))
 		} catch {
 			print(error)
 			output.append("An error occurred while encoding/sending the image")

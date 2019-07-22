@@ -3,7 +3,7 @@ import Foundation
 public struct AnimatedGif {
 	private let width: UInt16
 	private let height: UInt16
-	private var data: Data
+	public private(set) var data: Data
 	
 	private let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (n + 1) bits per pixel
 	private let colorsPerChannel: UInt8 = 6
