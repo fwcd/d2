@@ -12,6 +12,7 @@ struct LzwEncoder {
 	
 	public init(colorCount: Int) {
 		table = LzwEncoderTable(colorCount: colorCount)
+        write(code: table.clearCode)
 	}
 	
 	public mutating func encodeAndAppend(index: Int) {
@@ -27,8 +28,14 @@ struct LzwEncoder {
 			} else {
 				table.append(indices: extendedBuffer)
 			}
+            indexBuffer = [index]
 		}
 	}
+    
+    public mutating func finishEncoding() {
+        write(code: table[indexBuffer]!)
+        write(code: table.endOfInfoCode)
+    }
 	
 	private mutating func write(code: Int) {
 		let unsigned = UInt(code)

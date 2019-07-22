@@ -16,10 +16,12 @@ public class DemoGifCommand: StringCommand {
 			let height = 200
 			var gif = AnimatedGif(width: UInt16(width), height: UInt16(height))
 			
-			let angleCount = 360
-			let angle = Double.pi / 180.0
+			let angleCount = 4
+			let angle = (2.0 * Double.pi) / Double(angleCount)
 			
 			for angleIndex in 0..<angleCount {
+				print("Creating frame \(angleIndex) of \(angleCount)")
+				
 				let image = try Image(width: width, height: height)
 				var graphics = CairoGraphics(fromImage: image)
 				graphics.rotate(by: Double(angleIndex) * angle)
@@ -28,6 +30,7 @@ public class DemoGifCommand: StringCommand {
 				try gif.append(frame: image, delayTime: 100)
 			}
 			
+            gif.appendTrailer()
 			output.append(DiscordMessage(fromGif: gif, name: "demo.gif"))
 		} catch {
 			print(error)

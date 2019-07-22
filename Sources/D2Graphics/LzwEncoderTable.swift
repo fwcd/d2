@@ -14,16 +14,16 @@ struct LzwEncoderTable {
 	public init(colorCount: Int) {
 		self.colorCount = colorCount
 		
-		clearCode = colorCount
-		endOfInfoCode = colorCount + 1
-		
 		// Find the smallest power of two that is
 		// greater than the color count
 		var size = 2
-		while (1 >> size) < colorCount {
+		while (1 << size) < colorCount {
 			size += 1
 		}
 		minCodeSize = size
+        
+        clearCode = 1 << minCodeSize
+        endOfInfoCode = (1 << minCodeSize) + 1
 		count = -1 // Will be set in reset()
 		codeSize = -1 // Will be set in reset()
 		
@@ -59,6 +59,6 @@ struct LzwEncoderTable {
 	public mutating func reset() {
 		entries = [:]
 		codeSize = minCodeSize + 1
-		count = colorCount + 2
+		count = (1 << minCodeSize) + 2
 	}
 }

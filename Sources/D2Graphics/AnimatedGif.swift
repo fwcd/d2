@@ -5,7 +5,7 @@ public struct AnimatedGif {
 	private let height: UInt16
 	public private(set) var data: Data
 	
-	private let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (n + 1) bits per pixel
+	private let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as bits per pixel - 1
 	private let colorsPerChannel: UInt8 = 6
 	private let colorStride: UInt8
 	public let colorCount: Int
@@ -91,10 +91,10 @@ public struct AnimatedGif {
 		packedField.append(sizeOfGlobalColorTable, bits: 3)
 		append(byte: packedField.rawValue)
 		
-		let backgroundColorIndex: UInt16 = 0
-		let pixelAspectRatio: UInt16 = 0
-		append(short: backgroundColorIndex)
-		append(short: pixelAspectRatio)
+		let backgroundColorIndex: UInt8 = 0
+		let pixelAspectRatio: UInt8 = 0
+		append(byte: backgroundColorIndex)
+		append(byte: pixelAspectRatio)
 	}
 	
 	private mutating func appendGlobalColorTable() {
@@ -115,7 +115,8 @@ public struct AnimatedGif {
 			}
 		}
 		
-		while index < 256 {
+        let maxIndex = 256 * 3
+		while index < maxIndex {
 			append(byte: 0)
 			index += 1
 		}
@@ -124,7 +125,7 @@ public struct AnimatedGif {
 	private mutating func appendLoopingApplicationExtensionBlock(loopCount: UInt16) {
 		append(byte: 0x21) // Extension introducer
 		append(byte: 0xFF) // Application extension
-		append(byte: 0x08) // Block size
+		append(byte: 0x0B) // Block size
 		append(string: "NETSCAPE2.0")
 		append(byte: 0x03) // Block size
 		append(byte: 0x01) // Loop indicator
@@ -164,6 +165,7 @@ public struct AnimatedGif {
 		let transparentColorFlag = true
 		
 		var packedField = PackedFieldByte()
+        packedField.append(0, bits: 3)
 		packedField.append(disposalMethod, bits: 3)
 		packedField.append(userInputFlag)
 		packedField.append(transparentColorFlag)
@@ -201,7 +203,8 @@ public struct AnimatedGif {
 		var encoder = LzwEncoder(colorCount: colorCount)
 		let surface = frame.surface // The Cairo surface behind the image
 		
-		// Iterate all pixels as ARGB values
+		print("LZW-encoding the frame...")
+		// Iterate all pixels as ARGB values and encode them
 		surface.withUnsafeMutableBytes { ptr in
 			let pixelCount = surface.width * surface.height
 			var i = 0
@@ -216,7 +219,9 @@ public struct AnimatedGif {
 				i += 3
 			}
 		}
-		
+		encoder.finishEncoding()
+        
+		print("Appending the encoded frame...")
 		append(byte: UInt8(encoder.minCodeSize))
 		
 		let lzwEncoded = encoder.bits.bytes
@@ -251,4 +256,8 @@ public struct AnimatedGif {
 		appendImageDescriptor()
 		appendImageDataAsLZW(frame: frame)
 	}
+    
+    public mutating func appendTrailer() {
+        append(byte: 0x3B)
+    }
 }
