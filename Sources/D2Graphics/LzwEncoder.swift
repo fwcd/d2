@@ -4,9 +4,11 @@ import D2Utils
 fileprivate let maxCodeTableCount: Int = 1 << 12
 
 struct LzwEncoder {
-	private var table: LzwEncoderTable
-	public private(set) var bits = BitArray()
+	private(set) var table: LzwEncoderTable
 	private var indexBuffer: [Int] = []
+	
+	public private(set) var bytes: [UInt8] = [0] // The output bytes
+	private var bitIndexFromRight: Int = 0 // ...inside the current byte
 	
 	public var minCodeSize: Int { return table.minCodeSize }
 	
@@ -38,9 +40,21 @@ struct LzwEncoder {
     }
 	
 	private mutating func write(code: Int) {
-		let unsigned = UInt(code)
+		let unsignedCode = UInt(code)
 		for i in 0..<table.codeSize {
-			bits.append(bit: UInt8((unsigned >> i) & 1))
+			append(bit: UInt8((unsignedCode >> i) & 1))
+		}
+	}
+	
+	private mutating func append(bit: UInt8) {
+		let byteIndex = bytes.count - 1
+		let oldByte = bytes[byteIndex]
+		bytes[byteIndex] = oldByte | (bit << bitIndexFromRight)
+		bitIndexFromRight += 1
+		
+		if bitIndexFromRight >= 8 {
+			bytes.append(0)
+			bitIndexFromRight = 0
 		}
 	}
 }

@@ -15,7 +15,7 @@ struct LzwEncoderTable {
 		self.colorCount = colorCount
 		
 		// Find the smallest power of two that is
-		// greater than the color count
+		// greater than or equal to the color count
 		var size = 2
 		while (1 << size) < colorCount {
 			size += 1
@@ -44,7 +44,7 @@ struct LzwEncoderTable {
 	public mutating func append(indices: [Int]) {
 		entries[indices] = count
 		
-		if count != (1 << codeSize) {
+		if count == (1 << codeSize) {
 			// Increase code size
 			codeSize += 1
 		}

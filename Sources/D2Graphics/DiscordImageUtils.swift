@@ -7,7 +7,7 @@ extension DiscordTextChannel {
 	}
 	
 	public func send(gif: AnimatedGif) throws {
-		send(try DiscordMessage(fromGif: gif))
+		send(DiscordMessage(fromGif: gif))
 	}
 }
 

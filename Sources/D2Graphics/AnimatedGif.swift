@@ -224,7 +224,7 @@ public struct AnimatedGif {
 		print("Appending the encoded frame...")
 		append(byte: UInt8(encoder.minCodeSize))
 		
-		let lzwEncoded = encoder.bits.bytes
+		let lzwEncoded = encoder.bytes
 		var byteIndex = 0
 		while byteIndex < lzwEncoded.count {
 			let subBlockByteCount = min(0xFF, lzwEncoded.count - byteIndex)
