@@ -15,7 +15,7 @@ public struct AnimatedGif {
 	 * dimensions. A loop count of 0 means infinite
 	 * loops.
 	 */
-	public init(width: UInt16, height: UInt16, loopCount: UInt16) {
+	public init(width: UInt16, height: UInt16, loopCount: UInt16 = 0) {
 		data = Data()
 		self.width = width
 		self.height = height
@@ -237,7 +237,7 @@ public struct AnimatedGif {
 	 * Appends a frame with the specified delay time
 	 * (in milliseconds).
 	 */
-	private mutating func append(frame: Image, delayTime: UInt16) throws {
+	public mutating func append(frame: Image, delayTime: UInt16) throws {
 		let frameWidth = UInt16(frame.width)
 		let frameHeight = UInt16(frame.height)
 		assert(frameWidth == width)
