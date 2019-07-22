@@ -128,6 +128,15 @@
         }
       },
       {
+        "package": "Starscream",
+        "repositoryURL": "https://github.com/daltoniam/Starscream",
+        "state": {
+          "branch": null,
+          "revision": "ebdc260ea64e68f7569c62e8744b5cd15d3a49d6",
+          "version": "3.0.6"
+        }
+      },
+      {
         "package": "SwiftDiscord",
         "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
         "state": {
@@ -141,8 +150,8 @@
         "repositoryURL": "https://github.com/scinfu/SwiftSoup",
         "state": {
           "branch": null,
-          "revision": "aeb5b4249c273d1783a5299e05be1b26e061ea81",
-          "version": "2.0.0"
+          "revision": "a2b316e9574c6904e08995290a975cb16693ac24",
+          "version": "2.2.0"
         }
       },
       {
