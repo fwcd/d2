@@ -42,6 +42,14 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ```
 
 ### Optional
+* Create a file named `config.json` in `local`:
+
+```json
+{
+	"prefix": "%"
+}
+```
+
 * Create a file named `adminWhitelist.json` in `local` containing a list of Discord usernames that have full permissions:
 
 ```json
