@@ -23,7 +23,7 @@ struct LzwEncoderTable {
 		minCodeSize = size
         
         clearCode = 1 << minCodeSize
-        endOfInfoCode = (1 << minCodeSize) + 1
+        endOfInfoCode = clearCode + 1
 		count = -1 // Will be set in reset()
 		codeSize = -1 // Will be set in reset()
 		
@@ -42,6 +42,7 @@ struct LzwEncoderTable {
 	}
 	
 	public mutating func append(indices: [Int]) {
+		assert(indices.count > 1)
 		entries[indices] = count
 		
 		if count == (1 << codeSize) {

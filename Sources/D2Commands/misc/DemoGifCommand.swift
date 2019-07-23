@@ -24,7 +24,7 @@ public class DemoGifCommand: StringCommand {
 				
 				let image = try Image(width: width, height: height)
 				var graphics = CairoGraphics(fromImage: image)
-				graphics.rotate(by: Double(angleIndex) * angle)
+				// graphics.rotate(by: Double(angleIndex) * angle)
 				graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 100, y: 100))
 				
 				try gif.append(frame: image, delayTime: 100)

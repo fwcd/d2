@@ -6,7 +6,7 @@ public struct AnimatedGif {
 	public private(set) var data: Data
 	
 	private let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as bits per pixel - 1
-	private let colorsPerChannel: UInt8 = 6
+	private let colorsPerChannel: UInt8
 	private let colorStride: UInt8
 	public let colorCount: Int
 	
@@ -20,10 +20,12 @@ public struct AnimatedGif {
 		self.width = width
 		self.height = height
 		
-		let intColorsPerChannel = Int(colorsPerChannel)
-		colorStride = UInt8(256 / intColorsPerChannel)
-		
-		colorCount = intColorsPerChannel * intColorsPerChannel * intColorsPerChannel + 1
+		colorsPerChannel = 6
+		colorStride = UInt8(256 / Int(colorsPerChannel))
+		// Uncomment to use the actual color count instead
+		// of the whole table size:
+		// colorCount = Int(colorsPerChannel) * Int(colorsPerChannel) * Int(colorsPerChannel) + 1
+		colorCount = 256
 		
 		// See http://giflib.sourceforge.net/whatsinagif/bits_and_bytes.html for a detailed explanation of the format
 		appendHeader()
@@ -152,7 +154,7 @@ public struct AnimatedGif {
 	}
 	
 	private func colorTableIndexOf(r: Int, g: Int, b: Int) -> Int {
-		return (36 * r * g) + (6 * g) + b
+		return (36 * r) + (6 * g) + b
 	}
 	
 	private mutating func appendGraphicsControlExtension(delayTime: UInt16) {
@@ -206,22 +208,29 @@ public struct AnimatedGif {
 		print("LZW-encoding the frame...")
 		// Iterate all pixels as ARGB values and encode them
 		surface.withUnsafeMutableBytes { ptr in
-			let pixelCount = surface.width * surface.height
-			var i = 0
-			for _ in 0..<pixelCount {
-				let color = Color(
-					red: ptr[i + 1],
-					green: ptr[i + 2],
-					blue: ptr[i + 3],
-					alpha: ptr[i]
-				)
-				encoder.encodeAndAppend(index: encode(color: color))
-				i += 3
+			let height = surface.height
+			let width = surface.width
+			let stride = surface.stride
+			
+			assert(stride == (4 * width))
+			
+			for y in 0..<height {
+				for x in 0..<width {
+					let i = (y * stride) + (x * 4)
+					let color = Color(
+						red: ptr[i + 1],
+						green: ptr[i + 2],
+						blue: ptr[i + 3],
+						alpha: ptr[i]
+					)
+					
+					encoder.encodeAndAppend(index: encode(color: color))
+				}
 			}
 		}
 		encoder.finishEncoding()
         
-		print("Appending the encoded frame...")
+		print("Appending the encoded frame, minCodeSize: \(encoder.minCodeSize)...")
 		append(byte: UInt8(encoder.minCodeSize))
 		
 		let lzwEncoded = encoder.bytes
@@ -240,7 +249,7 @@ public struct AnimatedGif {
 	
 	/**
 	 * Appends a frame with the specified delay time
-	 * (in milliseconds).
+	 * (in hundrets of a second).
 	 */
 	public mutating func append(frame: Image, delayTime: UInt16) throws {
 		let frameWidth = UInt16(frame.width)
