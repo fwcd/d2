@@ -1,5 +1,10 @@
 import Foundation
 
+/**
+ * A GIF-encoder that supports
+ * (looping) animations written in
+ * pure Swift.
+ */
 public struct AnimatedGif {
 	private let width: UInt16
 	private let height: UInt16
@@ -7,7 +12,7 @@ public struct AnimatedGif {
 	
 	private let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as bits per pixel - 1
 	private let colorsPerChannel: UInt8
-	private let colorStride: UInt8
+	private let colorStride: Int
 	public let colorCount: Int
 	
 	/**
@@ -21,7 +26,7 @@ public struct AnimatedGif {
 		self.height = height
 		
 		colorsPerChannel = 6
-		colorStride = UInt8(256 / Int(colorsPerChannel))
+		colorStride = 256 / Int(colorsPerChannel)
 		// Uncomment to use the actual color count instead
 		// of the whole table size:
 		// colorCount = Int(colorsPerChannel) * Int(colorsPerChannel) * Int(colorsPerChannel) + 1
@@ -34,17 +39,12 @@ public struct AnimatedGif {
 		appendLoopingApplicationExtensionBlock(loopCount: loopCount)
 	}
 	
-	private mutating func append(byte: UInt8) {
-		data.append(byte)
-	}
-	
-	private mutating func append(short: UInt16) {
-		data.append(UInt8(short & 0xFF))
-		data.append(UInt8((short >> 8) & 0xFF))
-	}
-	
-	private mutating func append(string: String) {
-		data.append(string.data(using: .utf8)!)
+	// Determines how an AnimatedGIF should
+	// move on to the next frame
+	public enum DisposalMethod: UInt8 {
+		case keepCanvas = 1
+		case clearCanvas = 2
+		case restoreCanvas = 3
 	}
 	
 	struct PackedFieldByte {
@@ -72,6 +72,19 @@ public struct AnimatedGif {
 		mutating func append(_ flag: Bool) {
 			append(flag ? 1 : 0, bits: 1)
 		}
+	}
+	
+	private mutating func append(byte: UInt8) {
+		data.append(byte)
+	}
+	
+	private mutating func append(short: UInt16) {
+		data.append(UInt8(short & 0xFF))
+		data.append(UInt8((short >> 8) & 0xFF))
+	}
+	
+	private mutating func append(string: String) {
+		data.append(string.data(using: .utf8)!)
 	}
 	
 	private mutating func appendHeader() {
@@ -109,9 +122,9 @@ public struct AnimatedGif {
 		for r in 0..<colorsPerChannel {
 			for g in 0..<colorsPerChannel {
 				for b in 0..<colorsPerChannel {
-					append(byte: r * colorStride)
-					append(byte: g * colorStride)
-					append(byte: b * colorStride)
+					append(byte: r * UInt8(colorStride))
+					append(byte: g * UInt8(colorStride))
+					append(byte: b * UInt8(colorStride))
 					index += 3
 				}
 			}
@@ -141,14 +154,14 @@ public struct AnimatedGif {
 	
 	private func encode(color: Color) -> Int {
 		// Implementation is consistent with the global color table
-		if color.alpha == 0 {
+		if color.alpha < 128 {
 			// Fully transparent color is stored in the last field
 			// of the colors
 			return colorCount - 1
 		} else {
-			let r = Int(color.red / colorStride)
-			let g = Int(color.green / colorStride)
-			let b = Int(color.blue / colorStride)
+			let r = Int(color.red) / colorStride
+			let g = Int(color.green) / colorStride
+			let b = Int(color.blue) / colorStride
 			return colorTableIndexOf(r: r, g: g, b: b)
 		}
 	}
@@ -157,12 +170,12 @@ public struct AnimatedGif {
 		return (36 * r) + (6 * g) + b
 	}
 	
-	private mutating func appendGraphicsControlExtension(delayTime: UInt16) {
+	private mutating func appendGraphicsControlExtension(disposalMethod: DisposalMethod, delayTime: UInt16) {
 		append(byte: 0x21) // Extension introducer
 		append(byte: 0xF9) // Graphics control label
 		append(byte: 0x04) // Block size in bytes
 		
-		let disposalMethod: UInt8 = 0
+		let disposalMethod = DisposalMethod.clearCanvas.rawValue
 		let userInputFlag = false
 		let transparentColorFlag = true
 		
@@ -251,7 +264,7 @@ public struct AnimatedGif {
 	 * Appends a frame with the specified delay time
 	 * (in hundrets of a second).
 	 */
-	public mutating func append(frame: Image, delayTime: UInt16) throws {
+	public mutating func append(frame: Image, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws {
 		let frameWidth = UInt16(frame.width)
 		let frameHeight = UInt16(frame.height)
 		assert(frameWidth == width)
@@ -261,7 +274,7 @@ public struct AnimatedGif {
 			throw AnimatedGifError.frameSizeMismatch(frame.width, frame.height, Int(width), Int(height))
 		}
 		
-		appendGraphicsControlExtension(delayTime: delayTime)
+		appendGraphicsControlExtension(disposalMethod: disposalMethod, delayTime: delayTime)
 		appendImageDescriptor()
 		appendImageDataAsLZW(frame: frame)
 	}
