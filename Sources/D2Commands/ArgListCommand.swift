@@ -15,6 +15,8 @@ public protocol ArgListCommand: Command {
 }
 
 extension ArgListCommand {
+	public var inputValueType: String { return "text" }
+	
 	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
 		let splitArgs = args.split(separator: " ")
 			.prefix(expectedArgCount)
