@@ -159,9 +159,9 @@ public struct AnimatedGif {
 			// of the colors
 			return colorCount - 1
 		} else {
-			let r = Int(color.red) / colorStride
-			let g = Int(color.green) / colorStride
-			let b = Int(color.blue) / colorStride
+			let r = min(5, Int(color.red) / colorStride)
+			let g = min(5, Int(color.green) / colorStride)
+			let b = min(5, Int(color.blue) / colorStride)
 			return colorTableIndexOf(r: r, g: g, b: b)
 		}
 	}
