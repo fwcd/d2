@@ -1,24 +1,43 @@
 /**
  * A balanced binary search tree.
  */
-public class AvlTree<Element: Comparable>: Equatable {
+public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible {
 	private var value: Element?
 	private var left: AvlTree<Element>? = nil
 	private var right: AvlTree<Element>? = nil
-	private var balance: UInt8 = 0
-	private var height: Int = 0
-	
-	public init(value: Element? = nil) {
-		self.value = value
+	private var balance: Int8 = 0
+	private var height: Int
+	public var description: String {
+		return "[\(left?.description ?? "_") \(value.map { "\($0)" } ?? "_") \(right?.description ?? "_")]"
 	}
 	
+	public convenience init(value: Element? = nil) {
+		self.init(value: value, left: nil, right: nil)
+	}
+	
+	// Internal constructor, the left- and
+	// right-tree arguments are used solely
+	// for testing.
+	init(
+		value: Element?,
+		left: AvlTree<Element>?,
+		right: AvlTree<Element>?
+	) {
+		self.value = value
+		self.left = left
+		self.right = right
+		
+		height = (value == nil) ? 0 : 1
+	}
+	
+	@discardableResult
 	public func contains(_ element: Element) -> Bool {
 		guard let value = self.value else { return false }
 		if value == element {
 			return true
 		} else if element < value {
 			return left?.contains(element) ?? false
-		} else if element > value {
+		} else { // element > value
 			return right?.contains(element) ?? false
 		}
 	}
@@ -29,24 +48,18 @@ public class AvlTree<Element: Comparable>: Equatable {
 	 * value indicates whether the node has
 	 * been rebalanced.
 	 */
+	@discardableResult
 	public func insert(_ element: Element) -> Bool {
-		if value == nil {
-			value = element
-		} else if element < value! {
-			return insert(element, into: &left)
-		} else if element > value! {
-			return insert(element, into: &right)
+		guard let value = self.value else {
+			self.value = element
+			return false
 		}
-		return false
-	}
-	
-	private func insert(_ element: Element, into child: inout AvlTree<Element>?) -> Bool {
 		var rebalanced = false
 		
-		if let child = child {
-			rebalanced = child.insert(element)
-		} else {
-			child = AvlTree(value: element)
+		if element < value {
+			rebalanced = insert(element, into: &left)
+		} else { // element > value
+			rebalanced = insert(element, into: &right)
 		}
 		
 		if !rebalanced {
@@ -55,6 +68,15 @@ public class AvlTree<Element: Comparable>: Equatable {
 		}
 		
 		return rebalanced
+	}
+	
+	private func insert(_ element: Element, into child: inout AvlTree<Element>?) -> Bool {
+		if let child = child {
+			return child.insert(element)
+		} else {
+			child = AvlTree(value: element)
+			return false
+		}
 	}
 	
 	/**
@@ -63,24 +85,17 @@ public class AvlTree<Element: Comparable>: Equatable {
 	 * value indicates whether the node has
 	 * been rebalanced.
 	 */
+	@discardableResult
 	public func remove(_ element: Element) -> Bool {
-		if value == element {
-			value = nil
-		} else if element < value! {
-			return remove(element, from: &left)
-		} else if element > value! {
-			return remove(element, from: &right)
-		}
-		return false
-	}
-	
-	private func remove(_ element: Element, from child: inout AvlTree<Element>?) -> Bool {
+		guard let value = self.value else { return false }
 		var rebalanced = false
 		
-		if let child = child {
-			rebalanced = child.remove(element)
-		} else {
-			child = AvlTree(value: element)
+		if value == element {
+			self.value = nil
+		} else if element < value {
+			rebalanced = remove(element, from: &left)
+		} else if element > value {
+			rebalanced = remove(element, from: &right)
 		}
 		
 		if !rebalanced {
@@ -91,18 +106,28 @@ public class AvlTree<Element: Comparable>: Equatable {
 		return rebalanced
 	}
 	
+	private func remove(_ element: Element, from child: inout AvlTree<Element>?) -> Bool {
+		if let child = child {
+			return child.remove(element)
+		} else {
+			child = AvlTree(value: element)
+			return false
+		}
+	}
+	
 	private func rebalance() -> Bool {
 		if balance > 1 {
 			// Left-heavy
-			if left!.balance > 1 {
+			if left!.balance > 0 {
 				rotateRight()
 			} else {
+				print("Left-balance: \(left!.balance) of \(self)")
 				doubleRotateLeftRight()
 			}
 			return true
-		} else if balance < 1 {
+		} else if balance < -1 {
 			// Right-heavy
-			if right!.balance < 1 {
+			if right!.balance < 0 {
 				rotateLeft()
 			} else {
 				doubleRotateRightLeft()
@@ -163,9 +188,9 @@ public class AvlTree<Element: Comparable>: Equatable {
 	}
 	
 	private func updateBalanceAndHeight() {
-		let leftHeight = left!.height
-		let rightHeight = right!.height
-		balance = UInt8(leftHeight - rightHeight)
+		let leftHeight = left?.height ?? 0
+		let rightHeight = right?.height ?? 0
+		balance = Int8(leftHeight - rightHeight)
 		height = max(leftHeight, rightHeight) + 1
 	}
 	

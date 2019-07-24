@@ -57,11 +57,11 @@ final class LzwEncoderTests: XCTestCase {
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 10)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00101101]) // #4 #1 #6 #6 #2
+		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 10)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00101101]) // #4 #1 #6 #6 #2
+		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 	}
 	
 	private func encodeNext(_ encoder: inout LzwEncoder, _ i: inout Int) {
