@@ -6,6 +6,7 @@ public protocol Command: class {
 	var sourceFile: String { get }
 	var description: String { get }
 	var helpText: String? { get }
+	var outputValueType: String? { get }
 	var requiredPermissionLevel: PermissionLevel { get }
 	var hidden: Bool { get }
 	var subscribesToNextMessages: Bool { get }
@@ -23,6 +24,7 @@ extension Command {
 	public var subscribesToNextMessages: Bool { return false }
 	public var userOnly: Bool { return true }
 	public var helpText: String? { return nil }
+	public var outputValueType: String? { return nil }
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		return .continueSubscription
