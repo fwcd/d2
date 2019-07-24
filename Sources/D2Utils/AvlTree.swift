@@ -1,7 +1,7 @@
 /**
  * A balanced binary search tree.
  */
-public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible {
+public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, SearchTree {
 	private var value: Element?
 	private var left: AvlTree<Element>? = nil
 	private var right: AvlTree<Element>? = nil
