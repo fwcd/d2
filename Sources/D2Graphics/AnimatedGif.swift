@@ -230,12 +230,8 @@ public struct AnimatedGif {
 			for y in 0..<height {
 				for x in 0..<width {
 					let i = (y * stride) + (x * 4)
-					let color = Color(
-						red: ptr[i + 1],
-						green: ptr[i + 2],
-						blue: ptr[i + 3],
-						alpha: ptr[i]
-					)
+					let colorPtr = UnsafeMutableRawPointer(ptr + i)
+					let color = Color(argb: colorPtr.load(as: UInt32.self))
 					
 					encoder.encodeAndAppend(index: encode(color: color))
 				}

@@ -42,6 +42,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["cyclethrough"] = CycleThroughCommand()
 	handler["demoimage"] = DemoImageCommand()
 	handler["demogif"] = DemoGifCommand()
+	handler["invert"] = InvertCommand()
 	handler["latex"] = LatexCommand()
 	handler["piglatin"] = PigLatinCommand()
 	handler["markov"] = MarkovCommand()

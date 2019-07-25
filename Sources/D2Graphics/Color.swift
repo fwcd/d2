@@ -8,6 +8,13 @@ public struct Color: Hashable {
 	public var rgba: UInt32 { return (UInt32(red) << 24) | (UInt32(green) << 16) | (UInt32(blue) << 8) | UInt32(alpha) }
 	public var argb: UInt32 { return (UInt32(alpha) << 24) | (UInt32(red) << 16) | (UInt32(green) << 8) | UInt32(blue) }
 	
+	public var inverted: Color { return Color(
+		red: 0xFF - red,
+		green: 0xFF - green,
+		blue: 0xFF - blue,
+		alpha: alpha
+	) }
+	
 	public var asDoubleTuple: (red: Double, green: Double, blue: Double, alpha: Double) {
 		return (red: Double(red) / 255.0, green: Double(green) / 255.0, blue: Double(blue) / 255.0, alpha: Double(alpha) / 255.0)
 	}
