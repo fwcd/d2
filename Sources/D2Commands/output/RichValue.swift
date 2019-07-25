@@ -18,6 +18,17 @@ public enum RichValue {
 	var asText: String? {
 		if case let .text(txt) = self {
 			return txt
+		} else if case let .compound(values) = self {
+			return values.compactMap { $0.asText }.first
+		} else {
+			return nil
+		}
+	}
+	var asCode: String? {
+		if case .code(let code, language: _) = self {
+			return code
+		} else if case let .compound(values) = self {
+			return values.compactMap { $0.asCode }.first
 		} else {
 			return nil
 		}
