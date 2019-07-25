@@ -5,9 +5,11 @@ public class HelpCommand: StringCommand {
 	public let description = "Helps the user"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
+	private let commandPrefix: String
 	private let permissionManager: PermissionManager
 	
-	public init(permissionManager: PermissionManager) {
+	public init(commandPrefix: String, permissionManager: PermissionManager) {
+		self.commandPrefix = commandPrefix
 		self.permissionManager = permissionManager
 	}
 	
@@ -21,14 +23,18 @@ public class HelpCommand: StringCommand {
 			.flatMap { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> [DiscordEmbed.Field] in
 				let splitGroups = group.value
 					.sorted { $0.key < $1.key }
-					.map { "**\($0.key)**:  \($0.value.description)" }
+					.map { """
+						**\(commandPrefix)\($0.key)**: \($0.value.inputValueType) -> \($0.value.outputValueType)
+						    \($0.value.description)
+						
+						""" }
 					.chunks(ofLength: 14)
 				return splitGroups
 					.enumerated()
-					.map { DiscordEmbed.Field(name: ":star: \(group.key) (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
+					.map { DiscordEmbed.Field(name: ":star: \(group.key) commands (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
 			}
 		output.append(DiscordEmbed(
-			title: "Available Commands",
+			title: ":question: Available Commands",
 			fields: helpFields
 		))
 	}

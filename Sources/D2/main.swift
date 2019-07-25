@@ -55,7 +55,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["web"] = WebCommand()
 	handler["stats"] = StatsCommand()
 	handler["addscript"] = AddD2ScriptCommand()
-	handler["help"] = HelpCommand(permissionManager: handler.permissionManager)
+	handler["help"] = HelpCommand(commandPrefix: handler.commandPrefix, permissionManager: handler.permissionManager)
 }
 
 func main() throws {

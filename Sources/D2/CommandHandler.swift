@@ -22,9 +22,9 @@ fileprivate class PipeComponent {
 class CommandHandler: DiscordClientDelegate {
 	private let chainSeparator: String
 	private let pipeSeparator: String
-	private let msgPrefix: String
 	private let commandPattern: Regex
 	private let initialPresence: String?
+	let commandPrefix: String
 	
 	private var currentIndex = 0
 	private var maxPipeLengthForUsers: Int = 3
@@ -35,8 +35,8 @@ class CommandHandler: DiscordClientDelegate {
 	
 	private let msgParser = DiscordMessageParser()
 	
-	init(withPrefix msgPrefix: String, initialPresence: String? = nil, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
-		self.msgPrefix = msgPrefix
+	init(withPrefix commandPrefix: String, initialPresence: String? = nil, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
+		self.commandPrefix = commandPrefix
 		self.chainSeparator = chainSeparator
 		self.pipeSeparator = pipeSeparator
 		self.initialPresence = initialPresence
@@ -47,14 +47,14 @@ class CommandHandler: DiscordClientDelegate {
 	}
 	
 	func client(_ client: DiscordClient, didConnect connected: Bool) {
-		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(msgPrefix)help", type: .listening)))
+		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
 		let msgIndex = currentIndex
 		currentIndex += 1
 		
-		if message.content.starts(with: msgPrefix) {
+		if message.content.starts(with: commandPrefix) {
 			handleInvocationMessage(client: client, message: message, msgIndex: msgIndex)
 		} else if !subscribedCommands.isEmpty {
 			handleSubscriptionMessage(client: client, message: message)
@@ -70,7 +70,7 @@ class CommandHandler: DiscordClientDelegate {
 		let isBot = message.author.bot
 		
 		// Precedence: Chain < Pipe
-		let slicedMessage = message.content[msgPrefix.index(msgPrefix.startIndex, offsetBy: msgPrefix.count)...]
+		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		
 		for rawPipeCommand in slicedMessage.components(separatedBy: chainSeparator) {
 			var pipe = [PipeComponent]()
