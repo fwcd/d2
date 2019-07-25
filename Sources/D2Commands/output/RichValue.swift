@@ -10,8 +10,7 @@ public enum RichValue {
 	case text(String)
 	case image(Image)
 	case gif(AnimatedGif)
-	case code(String)
-	case codeWithLanguage(String, String) // Second parameter is the language
+	case code(String, language: String?)
 	case embed(DiscordEmbed?)
 	case files([DiscordFileUpload])
 	case compound([RichValue])

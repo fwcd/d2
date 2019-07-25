@@ -15,15 +15,9 @@ public struct DiscordMessageWriter {
 				return try MessageLike(fromImage: img)
 			case let .gif(gif):
 				return MessageLike(fromGif: gif)
-			case let .code(code):
+			case let .code(code, language: lang):
 				return MessageLike(fromContent: """
-					```
-					\(code)
-					```
-					""")
-			case let .codeWithLanguage(code, lang):
-				return MessageLike(fromContent: """
-					```\(lang)
+					```\(lang ?? "")
 					\(code)
 					```
 					""")
