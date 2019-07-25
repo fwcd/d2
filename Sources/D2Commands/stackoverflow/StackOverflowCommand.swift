@@ -28,10 +28,10 @@ public class StackOverflowCommand: StringCommand {
 				} catch WebApiError.noResults(let msg) {
 					output.append(msg)
 					print("WebApiError while querying StackOverflow: \(msg)")
-				} catch HTTPRequestError.ioError(let err) {
+				} catch URLRequestError.ioError(let err) {
 					output.append("An IO error while querying StackOverflow")
 					print(err)
-				} catch HTTPRequestError.jsonDecodingError(let data) {
+				} catch URLRequestError.jsonDecodingError(let data) {
 					output.append("Could not decode data as JSON")
 					print("Could not decode data from StackOverflow request as JSON: \(data)")
 				} catch {

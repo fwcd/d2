@@ -33,6 +33,8 @@ class CommandHandler: DiscordClientDelegate {
 	private var subscribedCommands = [CommandSubscription]()
 	let permissionManager = PermissionManager()
 	
+	private let msgParser = DiscordMessageParser()
+	
 	init(withPrefix msgPrefix: String, initialPresence: String? = nil, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
 		self.msgPrefix = msgPrefix
 		self.chainSeparator = chainSeparator
@@ -129,17 +131,19 @@ class CommandHandler: DiscordClientDelegate {
 					pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
 				}
 				
-				// Execute the pipe
-				if let pipeSource = pipe.first {
-					pipeSource.command.invoke(withArgs: pipeSource.args, input: .none, output: pipeSource.output!, context: pipeSource.context)
-				}
+				guard let pipeSource = pipe.first else { continue }
 				
-				// Add subscriptions
-				let added = pipe
-					.map { $0.command }
-					.filter { cmd in cmd.subscribesToNextMessages && !subscribedCommands.contains { cmd === $0.command } }
-					.map { CommandSubscription(channel: message.channelId, command: $0) }
-				subscribedCommands += added
+				msgParser.parse(pipeSource.args, message: message) { input in
+					// Execute the pipe (asynchronously)
+					pipeSource.command.invoke(withArgs: pipeSource.args, input: input, output: pipeSource.output!, context: pipeSource.context)
+					
+					// Add subscriptions
+					let added = pipe
+						.map { $0.command }
+						.filter { cmd in cmd.subscribesToNextMessages && !self.subscribedCommands.contains { cmd === $0.command } }
+						.map { CommandSubscription(channel: message.channelId, command: $0) }
+					self.subscribedCommands += added
+				}
 			}
 		}
 	}

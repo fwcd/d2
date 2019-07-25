@@ -5,6 +5,8 @@ import D2Utils
  * Writes rich values into Discord messages.
  */
 public struct DiscordMessageWriter {
+	public init() {}
+	
 	public func write<MessageLike: DiscordMessageLikeInitializable>(value: RichValue) throws -> MessageLike {
 		switch value {
 			case .none:

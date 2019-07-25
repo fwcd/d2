@@ -7,14 +7,15 @@ public class LastMessageCommand: Command {
 	public let outputValueType = "any"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
-	private let messageParser = DiscordMessageParser()
 	
 	public init() {}
 	
 	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
 		context.client?.getMessages(for: context.channel!.id, limit: 2) { result, _ in
 			if let lastMessage = result[safely: 1] {
-				output.append(self.messageParser.parse(message: lastMessage))
+				DiscordMessageParser().parse("", message: lastMessage) {
+					output.append($0)
+				}
 			} else {
 				output.append("Could not find last message.")
 			}

@@ -1,6 +1,6 @@
 import Foundation
 
-public enum HTTPRequestError: Error {
+public enum URLRequestError: Error {
 	case couldNotCreateURL(URLComponents)
 	case ioError(Error)
 	case missingData

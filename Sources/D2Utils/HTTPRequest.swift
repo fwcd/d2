@@ -20,7 +20,7 @@ public struct HTTPRequest {
 			components.percentEncodedQuery = queryString
 		}
 		
-		guard let url = components.url else { throw HTTPRequestError.couldNotCreateURL(components) }
+		guard let url = components.url else { throw URLRequestError.couldNotCreateURL(components) }
 		
 		request = URLRequest(url: url)
 		request.httpMethod = method
@@ -34,11 +34,11 @@ public struct HTTPRequest {
 	public func runAsync(then: @escaping (Result<Data, Error>) -> Void) {
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				then(.failure(HTTPRequestError.ioError(error!)))
+				then(.failure(URLRequestError.ioError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.failure(HTTPRequestError.missingData))
+				then(.failure(URLRequestError.missingData))
 				return
 			}
 			
@@ -54,7 +54,7 @@ public struct HTTPRequest {
 				return
 			}
 			guard let utf8 = String(data: data, encoding: .utf8) else {
-				then(.failure(HTTPRequestError.notUTF8(data)))
+				then(.failure(URLRequestError.notUTF8(data)))
 				return
 			}
 			then(.success(utf8))
@@ -69,7 +69,7 @@ public struct HTTPRequest {
 				return
 			}
 			guard let deserialized = try? JSONDecoder().decode(type, from: data) else {
-				then(.failure(HTTPRequestError.jsonDecodingError(data)))
+				then(.failure(URLRequestError.jsonDecodingError(data)))
 				return
 			}
 			then(.success(deserialized))

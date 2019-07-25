@@ -1,4 +1,5 @@
 import SwiftDiscord
+import Foundation
 
 extension DiscordTextChannel {
 	public func send(_ message: String) {
@@ -21,5 +22,24 @@ extension DiscordMessageLikeInitializable {
 	
 	public init(fromFiles files: [DiscordFileUpload]) {
 		self.init(content: "", embed: nil, files: files, tts: false)
+	}
+}
+
+extension DiscordAttachment {
+	/**
+	 * Downloads the attachment asynchronously.
+	 */
+	public func download(then: @escaping (Result<Data, Error>) -> Void) {
+		URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+			guard error == nil else {
+				then(.failure(URLRequestError.ioError(error!)))
+				return
+			}
+			guard let data = data else {
+				then(.failure(URLRequestError.missingData))
+				return
+			}
+			then(.success(data))
+		}.resume()
 	}
 }
