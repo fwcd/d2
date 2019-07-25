@@ -6,10 +6,10 @@ fileprivate struct PileCard {
 	let rotation: Double
 }
 
-public struct UnoBoard: DiscordImageEncodable {
+public struct UnoBoard: RichValueConvertible {
 	public var deck = UnoDeck()
 	private var discardPile = [PileCard]()
-	public var discordImageEncoded: Image? { return createImage() }
+	public var asRichValue: RichValue { return createImage().map { RichValue.image($0) } ?? .none }
 	public var lastDiscarded: UnoCard? { return discardPile.last.map { $0.card } }
 	public var topColor: UnoColor? = nil
 	public var topColorMatchesCard: Bool { return topColor == lastDiscarded?.color }

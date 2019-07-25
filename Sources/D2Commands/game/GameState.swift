@@ -7,11 +7,11 @@ import D2Utils
  */
 public protocol GameState {
 	/** A role is a logical player in the game (such as "white" or "black"). */
-	associatedtype Role: DiscordStringEncodable & Hashable
+	associatedtype Role: RichValueConvertible & Hashable
 	/** A hand encapsulates a role's private cards/pieces/... in games with imperfect information. */
-	associatedtype Hand: DiscordEncodable = EmptyDiscordEncodable
+	associatedtype Hand: RichValueConvertible = EmptyRichValueConvertible
 	/** A board contains the pieces/cards that are visible to all players. */
-	associatedtype Board: DiscordEncodable
+	associatedtype Board: RichValueConvertible
 	/** A move encapsulates the transition to another game state. */
 	associatedtype Move: Hashable
 	

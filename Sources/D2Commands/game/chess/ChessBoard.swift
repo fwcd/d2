@@ -1,9 +1,9 @@
 import D2Utils
 import D2Graphics
 
-public struct ChessBoard: DiscordImageEncodable {
+public struct ChessBoard: RichValueConvertible {
 	public var model: ChessBoardModel
-	public var discordImageEncoded: Image? { return ChessBoardView(model: model).image }
+	public var asRichValue: RichValue { return ChessBoardView(model: model).image.map { RichValue.image($0) } ?? .none }
 	
 	public init(model: ChessBoardModel = ChessBoardModel()) {
 		self.model = model

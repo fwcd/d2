@@ -1,13 +1,13 @@
 import D2Utils
 
-public enum ChessRole: String, Hashable, CaseIterable, Codable, DiscordStringEncodable {
+public enum ChessRole: String, Hashable, CaseIterable, Codable, RichValueConvertible {
 	case white
 	case black
 	
-	public var discordStringEncoded: String {
+	public var asRichValue: RichValue {
 		switch self {
-			case .white: return ":white_circle:"
-			case .black: return ":black_circle:"
+			case .white: return .text(":white_circle:")
+			case .black: return .text(":black_circle:")
 		}
 	}
 	

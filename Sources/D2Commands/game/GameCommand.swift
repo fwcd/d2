@@ -55,12 +55,12 @@ public class GameCommand<G: Game>: StringCommand {
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
 		if game.onlySendHandToCurrentRole, let player = state.playerOf(role: state.currentRole) {
 			if let hand = state.hands[state.currentRole] {
-				output.append(hand.discordEncoded.asMessage, to: .userChannel(player.id))
+				output.append(hand.asRichValue, to: .userChannel(player.id))
 			}
 		} else {
 			for (role, hand) in state.hands {
 				if let player = state.playerOf(role: role) {
-					output.append(hand.discordEncoded.asMessage, to: .userChannel(player.id))
+					output.append(hand.asRichValue, to: .userChannel(player.id))
 				}
 			}
 		}
@@ -72,18 +72,18 @@ public class GameCommand<G: Game>: StringCommand {
 		apiEnabled = flags.contains("api")
 		silent = flags.contains("silent")
 		
-		var encodedBoard: DiscordEncoded?
+		var encodedBoard: RichValue = .none
 		
 		if game.renderFirstBoard {
-			encodedBoard = state.board.discordEncoded
+			encodedBoard = state.board.asRichValue
 			
-			if encodedBoard!.embed != nil {
+			if case .embed(_) = encodedBoard {
 				print("Warning: Embed-encoded boards are currently not supported by GameCommand")
 			}
 		}
 		
 		output.append(.compound([
-			.text(encodedBoard?.content ?? ""),
+			encodedBoard,
 			.embed(DiscordEmbed(
 				title: "New match: \(state.playersDescription)",
 				color: game.themeColor.map { Int($0.rgb) },
@@ -92,8 +92,7 @@ public class GameCommand<G: Game>: StringCommand {
 					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
 					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
 				]
-			)),
-			.files(encodedBoard?.files ?? [])
+			))
 		]))
 		sendHandsAsDMs(fromState: state, to: output)
 	}
@@ -177,11 +176,11 @@ public class GameCommand<G: Game>: StringCommand {
 				}
 				
 				if !silent || subscriptionAction == .cancelSubscription {
-					let encodedBoard = next.board.discordEncoded
+					let encodedBoard: RichValue = next.board.asRichValue
 					output.append(.compound([
-						.text(encodedBoard.content),
+						encodedBoard,
 						.embed(embed),
-						.files(encodedBoard.files + actionResult.files)
+						.files(actionResult.files)
 					]))
 				}
 			} else if let text = actionResult.text {
@@ -204,6 +203,6 @@ public class GameCommand<G: Game>: StringCommand {
 	}
 	
 	private func describe(role: G.State.Role, in state: G.State) -> String {
-		return "\(role.discordStringEncoded)\(state.playerOf(role: role).map { " aka. `\($0.username)`" } ?? "")"
+		return "\(role.asRichValue.asText ?? "")\(state.playerOf(role: role).map { " aka. `\($0.username)`" } ?? "")"
 	}
 }

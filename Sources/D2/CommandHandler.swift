@@ -131,7 +131,7 @@ class CommandHandler: DiscordClientDelegate {
 				
 				// Execute the pipe
 				if let pipeSource = pipe.first {
-					pipeSource.command.invoke(withArgs: pipeSource.args, input: nil, output: pipeSource.output!, context: pipeSource.context)
+					pipeSource.command.invoke(withArgs: pipeSource.args, input: .none, output: pipeSource.output!, context: pipeSource.context)
 				}
 				
 				// Add subscriptions

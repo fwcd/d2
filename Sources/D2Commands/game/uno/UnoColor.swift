@@ -1,7 +1,7 @@
 import D2Graphics
 import D2Utils
 
-public enum UnoColor: String, Hashable, CaseIterable, DiscordStringEncodable {
+public enum UnoColor: String, Hashable, CaseIterable, RichValueConvertible {
 	case yellow = "yellow"
 	case red = "red"
 	case green = "green"
@@ -16,12 +16,12 @@ public enum UnoColor: String, Hashable, CaseIterable, DiscordStringEncodable {
 		}
 	}
 	
-	public var discordStringEncoded: String {
+	public var asRichValue: RichValue {
 		switch self {
-			case .yellow: return ":large_orange_diamond:"
-			case .red: return ":red_circle:"
-			case .green: return ":green_book:"
-			case .blue: return ":large_blue_diamond:"
+			case .yellow: return .text(":large_orange_diamond:")
+			case .red: return .text(":red_circle:")
+			case .green: return .text(":green_book:")
+			case .blue: return .text(":large_blue_diamond:")
 		}
 	}
 }

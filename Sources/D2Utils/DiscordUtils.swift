@@ -23,15 +23,3 @@ extension DiscordMessageLikeInitializable {
 		self.init(content: "", embed: nil, files: files, tts: false)
 	}
 }
-
-extension Int: DiscordStringEncodable {
-	public var discordStringEncoded: String { return String(self) }
-}
-
-extension Double: DiscordStringEncodable {
-	public var discordStringEncoded: String { return String(self) }
-}
-
-extension String: DiscordStringEncodable {
-	public var discordStringEncoded: String { return self }
-}

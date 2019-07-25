@@ -11,7 +11,7 @@ public struct ChessGame: Game {
 			var text: String? = nil
 			
 			if let roleInCheck = nextState.roleInCheck {
-				text = "\(roleInCheck.discordStringEncoded) is in check"
+				text = "\(roleInCheck.asRichValue.asText ?? "") is in check"
 			}
 			
 			return ActionResult(nextState: nextState, text: text)

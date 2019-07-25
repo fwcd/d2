@@ -1,15 +1,15 @@
 import D2Utils
 
 /** An immutable tic-tac-toe board. */
-public struct TicTacToeBoard: DiscordStringEncodable {
+public struct TicTacToeBoard: RichValueConvertible {
 	public typealias Role = TicTacToeRole
 	
 	let fields: [[TicTacToeRole]]
 	
-	public var discordStringEncoded: String {
-		return fields.map { row in
-			row.map { $0.discordStringEncoded }.joined()
-		}.joined(separator: "\n")
+	public var asRichValue: RichValue {
+		return .text(fields.map { row in
+			row.compactMap { $0.asRichValue.asText }.joined()
+		}.joined(separator: "\n"))
 	}
 	
 	var sideLength: Int { return fields.count }
