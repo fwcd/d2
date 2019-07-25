@@ -135,7 +135,7 @@ class CommandHandler: DiscordClientDelegate {
 				
 				msgParser.parse(pipeSource.args, message: message) { input in
 					// Execute the pipe (asynchronously)
-					pipeSource.command.invoke(withArgs: pipeSource.args, input: input, output: pipeSource.output!, context: pipeSource.context)
+					pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
 					
 					// Add subscriptions
 					let added = pipe

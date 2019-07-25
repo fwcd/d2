@@ -18,8 +18,8 @@ public class EchoCommand: Command {
 		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 	}
 	
-	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
-		if let groups = argPattern.firstGroups(in: args) {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+		if let groups = argPattern.firstGroups(in: input.asText ?? "") {
 			// Extract parsed values
 			let n = groups[safely: 1].flatMap { Int($0) } ?? 1
 			let value = groups[safely: 2]?.nilIfEmpty.map { .text($0) } ?? input

@@ -78,11 +78,7 @@ public struct DiscordMessageParser {
 			}
 			
 			// print("Parsed input: \(values)")
-			switch values.count {
-				case 0: then(.none)
-				case 1: then(values.first!)
-				default: then(.compound(values))
-			}
+			then(RichValue.of(values: values))
 		}
 	}
 }

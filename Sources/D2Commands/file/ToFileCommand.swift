@@ -14,7 +14,7 @@ public class ToFileCommand: Command {
 	
 	public init() {}
 	
-	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		let combinedInput = input.asText ?? input.asCode ?? ""
 		
 		if let parsedArgs = argsPattern.firstGroups(in: combinedInput) {

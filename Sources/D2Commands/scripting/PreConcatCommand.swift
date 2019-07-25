@@ -3,7 +3,7 @@ import D2Permissions
 
 public class PreConcatCommand: Command {
 	public let description = "Concatenates the arguments with the input"
-	public let inputValueType = "text"
+	public let inputValueType = "[text]"
 	public let outputValueType = "text"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
@@ -11,7 +11,7 @@ public class PreConcatCommand: Command {
 	
 	public init() {}
 	
-	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
-		output.append("\(args)\(separator)\(input.asText ?? "")")
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+		output.append(input.values.compactMap { $0.asText }.joined(separator: separator))
 	}
 }

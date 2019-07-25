@@ -10,7 +10,7 @@ public class LastMessageCommand: Command {
 	
 	public init() {}
 	
-	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		context.client?.getMessages(for: context.channel!.id, limit: 2) { result, _ in
 			if let lastMessage = result[safely: 1] {
 				DiscordMessageParser().parse(message: lastMessage) {

@@ -3,12 +3,11 @@ import D2Commands
 
 extension Command {
 	public func testInvoke(
-		withArgs args: String,
 		input: RichValue = .none,
 		output: CommandOutput,
 		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""))
 	) {
-		invoke(withArgs: args, input: input, output: output, context: context)
+		invoke(input: input, output: output, context: context)
 	}
 	
 	public func testSubscriptionMessage(

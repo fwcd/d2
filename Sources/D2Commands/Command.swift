@@ -13,7 +13,7 @@ public protocol Command: class {
 	var subscribesToNextMessages: Bool { get }
 	var userOnly: Bool { get }
 	
-	func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext)
+	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
 	func onSuccessfullySent(message: DiscordMessage)
 	

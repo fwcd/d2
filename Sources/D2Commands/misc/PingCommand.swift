@@ -10,7 +10,7 @@ public class PingCommand: Command {
 	
 	public init() {}
 	
-	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		output.append("Pong!")
 	}
 }

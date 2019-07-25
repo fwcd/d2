@@ -11,7 +11,7 @@ public class ConcatCommand: Command {
 	
 	public init() {}
 	
-	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
-		output.append("\((input.asText).map { "\($0)\(separator)" } ?? "")\(args)")
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+		output.append(input.values.reversed().compactMap { $0.asText }.joined(separator: separator))
 	}
 }

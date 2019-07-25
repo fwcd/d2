@@ -110,31 +110,21 @@ At a basic level, the `Command` protocol consists of a single method named `invo
 protocol Command: class {
 	...
 	
-	func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext)
+	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
 	...
 }
 ```
 
-These arguments each represent a part of the invocation context. Given a request such as `%commandname arg1 arg2`, the implementor would receive:
+The arguments each represent a part of the invocation context. Given a request such as `%commandname arg1 arg2`, the implementor would receive:
 
 | Parameter | Value |
 | --------- | ----- |
-| `args` | `"arg1 arg2"` |
-| `input` | `nil` |
+| `input` | `.text("arg1 arg2")` |
 | `output` | `DiscordOutput` |
 | `context` | `CommandContext` containing the message, the client and the command registry |
 
-It should be noted that `input` is `nil` because the user did not attach a pipe to his request. If he would send `%firstcommand | secondcommand arg1`, the `input` field of the second invocation would contain the piped message:
-
-| Parameter | Value |
-| --------- | ----- |
-| `args` | `"arg1"`
-| `input` | `DiscordMessage` representing the output of the first invocation |
-| `output` | `DiscordOutput` |
-| `context` | `CommandContext` |
-
-Since `output: CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordOutput`. Both the first and the second command call a `PipeOutput` instead that passes any messages to the next command:
+Since `output: CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordOutput`. Both the first and the second command call a `PipeOutput` instead that passes any values to the next command:
 
 ```swift
 class PipeOutput: CommandOutput {
@@ -150,14 +140,15 @@ class PipeOutput: CommandOutput {
 		self.next = next
 	}
 	
-	func append(_ message: DiscordMessage) {
+	func append(_ value: RichValue) {
 		print("Piping to \(sink)")
-		sink.invoke(withArgs: args, input: message, output: next ?? DiscordOutput(channel: message.channel), context: context)
+		let nextInput = args.isEmpty ? value : (.text(args) + value)
+		sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
 	}
 }
 ```
 
-Often, the `Command` protocol is too low-level to be adopted directly, since direct arguments and pipe inputs have to be handled separately. Instead, there are subprotocols that provide a simpler template interface for implementors:
+Often the `Command` protocol is too low-level to be adopted directly, since the input can be of any form (including embeds or images). To address this, there are subprotocols that provide a simpler template interface for implementors:
 
 ```swift
 protocol StringCommand: Command {

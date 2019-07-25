@@ -15,6 +15,7 @@ public class PipeOutput: CommandOutput {
 	
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		print("Piping to \(sink)")
-		sink.invoke(withArgs: args, input: value, output: next ?? PrintOutput(), context: context)
+		let nextInput = args.isEmpty ? value : (.text(args) + value)
+		sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
 	}
 }
