@@ -1,6 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 import D2Graphics
+import D2Utils
 
 public class SpinCommand: Command {
 	public let description = "Animates a rotation of the image"
@@ -26,8 +27,7 @@ public class SpinCommand: Command {
 					let rotatedImage = try Image(width: width, height: height)
 					var graphics = CairoGraphics(fromImage: rotatedImage)
 					
-					graphics.rotate(by: angle * Double(frameIndex))
-					graphics.draw(image)
+					graphics.draw(image, at: Vec2(x: 0, y: 0), rotation: angle * Double(frameIndex))
 					
 					try gif.append(frame: rotatedImage, delayTime: 10)
 				}

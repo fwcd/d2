@@ -18,10 +18,12 @@ public class CommandTestOutput: CommandOutput {
 	public var last: DiscordMessage? { return messages.last }
 	public var lastContent: String? { return last?.content }
 	
+	private let messageWriter = DiscordMessageWriter()
+	
 	public init() {}
 	
-	public func append(_ message: DiscordMessage, to channel: OutputChannel) {
-		internalMessages.append(message)
+	public func append(_ value: RichValue, to channel: OutputChannel) {
+		internalMessages.append(try! messageWriter.write(value: value))
 		changed = true
 	}
 	
