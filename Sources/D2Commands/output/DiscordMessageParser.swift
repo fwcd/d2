@@ -17,11 +17,11 @@ public struct DiscordMessageParser {
 	 * parent message and downloads
 	 * the attachments of a message.
 	 */
-	public func parse(_ str: String, message: DiscordMessage, then: @escaping (RichValue) -> Void) {
+	public func parse(_ str: String? = nil, message: DiscordMessage, then: @escaping (RichValue) -> Void) {
 		var values: [RichValue] = []
 		
 		// Parse message content
-		let content = str.nilIfEmpty ?? message.content
+		let content = str ?? message.content
 		if let codeGroups = codePattern.firstGroups(in: content) {
 			let language = codeGroups[1].nilIfEmpty
 			let code = codeGroups[2]

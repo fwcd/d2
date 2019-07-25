@@ -6,7 +6,7 @@ fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
 public class EvaluateExpressionCommand: StringCommand {
 	public let description: String
-	public let helpText = "Syntax: [--ast]? [expression]"
+	public let helpText: String? = "Syntax: [--ast]? [expression]"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let parser: ExpressionParser

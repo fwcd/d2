@@ -7,7 +7,7 @@ fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`
 
 public class AddD2ScriptCommand: StringCommand {
 	public let description = "Adds a D2 script at runtime to the command registry"
-	public let helpText = "Syntax: ```[script]```"
+	public let helpText: String? = "Syntax: ```[script]```"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin
 	private let parser = D2ScriptParser()
@@ -36,7 +36,7 @@ public class AddD2ScriptCommand: StringCommand {
 				output.append("Could not parse code.")
 			}
 		} else {
-			output.append("Did not recognize code. \(helpText)")
+			output.append("Did not recognize code. \(helpText!)")
 		}
 	}
 }

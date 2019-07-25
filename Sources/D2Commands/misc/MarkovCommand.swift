@@ -7,7 +7,7 @@ fileprivate let pingPattern = try! Regex(from: "<@&?.+?>")
 
 public class MarkovCommand: StringCommand {
 	public let description = "Generates a natural language response using a Markov chain"
-	public let helpText = "Syntax: markov [--all]? [--noping]? [@user]?"
+	public let helpText: String? = "Syntax: markov [--all]? [--noping]? [@user]?"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let order = 2

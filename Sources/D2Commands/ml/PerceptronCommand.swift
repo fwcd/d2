@@ -16,7 +16,7 @@ fileprivate let dataSamplePattern = try! Regex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\
 
 public class PerceptronCommand: StringCommand {
 	public let description = "Creates and trains a single-layered perceptron"
-	public let helpText = """
+	public let helpText: String? = """
 		Syntax: [subcommand] [args]
 		
 		Subcommand patterns:
@@ -65,7 +65,7 @@ public class PerceptronCommand: StringCommand {
 				output.append("Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands.keys)`")
 			}
 		} else {
-			output.append(helpText)
+			output.append(helpText!)
 		}
 	}
 	

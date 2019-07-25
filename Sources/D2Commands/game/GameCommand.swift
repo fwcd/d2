@@ -21,6 +21,7 @@ public class GameCommand<G: Game>: StringCommand {
 	]
 	private let defaultApiActions: Set<String> = ["cancel"]
 	
+	public var helpText: String? { return game.helpText }
 	public var description: String { return "Plays \(game.name) against someone" }
 	
 	private var currentState: G.State? = nil

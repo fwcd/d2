@@ -10,7 +10,7 @@ public struct UnoGame: Game {
 			return ActionResult(nextState: next, text: text)
 		}
 	]
-	public let helpText = """
+	public let helpText: String = """
 		Uno moves follow the general syntax
 		```
 		[card color] [card label] [optional chosen color]

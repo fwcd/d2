@@ -9,7 +9,7 @@ fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
 	public let description = "Queries Wolfram Alpha"
-	public let helpText = "[--image]? [--steps]? [query input]"
+	public let helpText: String? = "[--image]? [--steps]? [query input]"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private var isRunning = false
