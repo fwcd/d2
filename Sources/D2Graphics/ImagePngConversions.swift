@@ -1,3 +1,7 @@
+import D2Utils
+import Foundation
+import Cairo
+
 extension Image {
 	public init(fromPng data: Data) throws {
 		self.init(from: try Surface.Image(png: data))

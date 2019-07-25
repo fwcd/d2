@@ -15,34 +15,7 @@
         "repositoryURL": "https://github.com/PureSwift/Cairo.git",
         "state": {
           "branch": null,
-          "revision": "2e0a981dbe8d7599edd86fcc5544d66d1fd7e0ad",
-          "version": null
-        }
-      },
-      {
-        "package": "CCairo",
-        "repositoryURL": "https://github.com/PureSwift/CCairo.git",
-        "state": {
-          "branch": null,
-          "revision": "2051a137b52995d7795c0dc9c08cd2ea2a2b570c",
-          "version": null
-        }
-      },
-      {
-        "package": "CFontConfig",
-        "repositoryURL": "https://github.com/PureSwift/CFontConfig.git",
-        "state": {
-          "branch": null,
-          "revision": "f47c3ea87307478428df762dc2e181c12643a884",
-          "version": null
-        }
-      },
-      {
-        "package": "CFreeType",
-        "repositoryURL": "https://github.com/PureSwift/CFreeType.git",
-        "state": {
-          "branch": null,
-          "revision": "a8c830218999af31691e154cecae783bae1f0ab9",
+          "revision": "b5f867a56a20d2f0064ccb975ae4a669b374e9e0",
           "version": null
         }
       },
@@ -143,6 +116,15 @@
           "branch": null,
           "revision": "1d3748f69aaec4f01bcc89d3ae174ab76ce2b1ed",
           "version": null
+        }
+      },
+      {
+        "package": "SwiftGD",
+        "repositoryURL": "https://github.com/twostraws/SwiftGD.git",
+        "state": {
+          "branch": null,
+          "revision": "1960998971b453101e740f25bc6d9fb01e0ba225",
+          "version": "2.5.0"
         }
       },
       {

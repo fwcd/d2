@@ -13,7 +13,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
-* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base texlive-latex-extra poppler-utils maxima`
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base texlive-latex-extra poppler-utils maxima libgd-dev`
 	* Note that you might need to `apt-get install clang` separately on a Raspberry Pi
 	* Instead of using `texlive-latex-extra`, you can install the required LaTeX packages manually too:
 		* To setup `tlmgr` on a Pi you might need to run:
@@ -27,7 +27,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * Install a LaTeX distribution
 * Install `maxima`
 * `brew tap vapor/tap`
-* `brew install opus libsodium ctls cairo poppler`
+* `brew install opus libsodium ctls cairo poppler gd`
 
 ## Setup
 
