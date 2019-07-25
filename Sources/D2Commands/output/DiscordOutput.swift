@@ -2,6 +2,7 @@ import SwiftDiscord
 import Foundation
 
 public class DiscordOutput: CommandOutput {
+	private let messageWriter = DiscordMessageWriter()
 	private let client: DiscordClient
 	private let defaultTextChannel: DiscordTextChannel?
 	public let messageLengthLimit: Int? = 1800
@@ -13,7 +14,20 @@ public class DiscordOutput: CommandOutput {
 		self.onSent = onSent
 	}
 	
-	public func append(_ message: DiscordMessage, to channel: OutputChannel) {
+	public func append(_ value: RichValue, to channel: OutputChannel) {
+		var message: DiscordMessage
+		do {
+			message = try messageWriter.write(value: value)
+		} catch {
+			print("Error while encoding message:")
+			print(error)
+			message = DiscordMessage(content: """
+				An error occurred while encoding the message:
+				```
+				\(error)
+				```
+				""")
+		}
 		switch channel {
 			case .serverChannel(let id): client.sendMessage(message, to: id)
 			case .userChannel(let id):

@@ -8,13 +8,17 @@ fileprivate let trimPattern = try! Regex(from: "`(?:``(?:.+)?\n?)?([^`]+)`(?:``)
 
 public class ToFileCommand: Command {
 	public let description = "Writes text to a file"
+	public let inputValueType = "text"
+	public let outputValueType = "files"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public init() {}
 	
-	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
-		let combinedArgs = "\(args) \(input?.content ?? "")"
+	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
+		// TODO: Differentiate between raw text and
+		// code and remove the parser
+		let combinedArgs = "\(args) \(input.asText ?? "")"
 		
 		if let parsedArgs = argsPattern.firstGroups(in: combinedArgs) {
 			let filename = parsedArgs[1]
@@ -27,7 +31,7 @@ public class ToFileCommand: Command {
 				return
 			}
 			
-			output.append([DiscordFileUpload(data: data, filename: filename, mimeType: "plain/text")])
+			output.append(.files([DiscordFileUpload(data: data, filename: filename, mimeType: "plain/text")]))
 		} else {
 			output.append("Syntax error: Use `[filename] [--raw]? [content...]`")
 		}

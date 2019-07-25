@@ -10,9 +10,17 @@ extension DiscordTextChannel {
 	}
 }
 
-extension DiscordMessage {
-	public init(fromEmbed embed: DiscordEmbed) {
-		self.init(content: "", embed: embed)
+extension DiscordMessageLikeInitializable {
+	public init(fromContent content: String) {
+		self.init(content: content, embed: nil, files: [], tts: false)
+	}
+	
+	public init(fromEmbed embed: DiscordEmbed?) {
+		self.init(content: "", embed: embed, files: [], tts: false)
+	}
+	
+	public init(fromFiles files: [DiscordFileUpload]) {
+		self.init(content: "", embed: nil, files: files, tts: false)
 	}
 }
 

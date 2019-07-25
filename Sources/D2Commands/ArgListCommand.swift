@@ -17,7 +17,7 @@ public protocol ArgListCommand: Command {
 extension ArgListCommand {
 	public var inputValueType: String { return "text" }
 	
-	public func invoke(withArgs args: String, input: DiscordMessage?, output: CommandOutput, context: CommandContext) {
+	public func invoke(withArgs args: String, input: RichValue, output: CommandOutput, context: CommandContext) {
 		let splitArgs = args.split(separator: " ")
 			.prefix(expectedArgCount)
 			.map { String($0) }
@@ -26,7 +26,7 @@ extension ArgListCommand {
 			// Skip input splitting if there are already enough arguments provided directly
 			invoke(withInputArgs: splitArgs, output: output, context: context)
 		} else {
-			let splitInputs = (input?.content ?? "")
+			let splitInputs = (input.asText ?? "")
 				.split(separator: " ")
 				.prefix(expectedArgCount - splitArgs.count)
 				.map { String($0) }

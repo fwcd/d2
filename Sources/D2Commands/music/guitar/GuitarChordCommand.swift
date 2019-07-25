@@ -14,14 +14,13 @@ public class GuitarChordCommand: StringCommand {
 			let chord = try Chord(of: input)
 			let image = try GuitarChordRenderer().render(chord: chord)
 			
-			output.append(DiscordMessage(
-				content: "",
-				embed: DiscordEmbed(
+			output.append(.compound([
+				.embed(DiscordEmbed(
 					title: "Guitar Chord \(input)",
 					description: "This was the closest match for \(chord)"
-				),
-				files: [DiscordFileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")]
-			))
+				)),
+				.files([DiscordFileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")])
+			]))
 		} catch ChordError.invalidChord(let chord) {
 			output.append("Invalid chord: `\(chord)`")
 		} catch ChordError.invalidRootNote(let root) {

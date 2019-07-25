@@ -11,7 +11,16 @@ public enum RichValue {
 	case image(Image)
 	case gif(AnimatedGif)
 	case code(String)
-	case embed(DiscordEmbed)
+	case codeWithLanguage(String, String) // Second parameter is the language
+	case embed(DiscordEmbed?)
 	case files([DiscordFileUpload])
-	indirect case compound(RichValue, RichValue)
+	case compound([RichValue])
+	
+	var asText: String? {
+		if case let .text(txt) = self {
+			return txt
+		} else {
+			return nil
+		}
+	}
 }

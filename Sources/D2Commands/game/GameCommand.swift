@@ -82,9 +82,9 @@ public class GameCommand<G: Game>: StringCommand {
 			}
 		}
 		
-		output.append(DiscordMessage(
-			content: encodedBoard?.content ?? "",
-			embed: DiscordEmbed(
+		output.append(.compound([
+			.text(encodedBoard?.content ?? ""),
+			.embed(DiscordEmbed(
 				title: "New match: \(state.playersDescription)",
 				color: game.themeColor.map { Int($0.rgb) },
 				footer: DiscordEmbed.Footer(text: "Type 'help' to begin!"),
@@ -92,9 +92,9 @@ public class GameCommand<G: Game>: StringCommand {
 					DiscordEmbed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
 					DiscordEmbed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
 				]
-			),
-			files: encodedBoard?.files ?? []
-		))
+			)),
+			.files(encodedBoard?.files ?? [])
+		]))
 		sendHandsAsDMs(fromState: state, to: output)
 	}
 	
@@ -178,11 +178,11 @@ public class GameCommand<G: Game>: StringCommand {
 				
 				if !silent || subscriptionAction == .cancelSubscription {
 					let encodedBoard = next.board.discordEncoded
-					output.append(DiscordMessage(
-						content: encodedBoard.content,
-						embed: embed,
-						files: encodedBoard.files + actionResult.files
-					))
+					output.append(.compound([
+						.text(encodedBoard.content),
+						.embed(embed),
+						.files(encodedBoard.files + actionResult.files)
+					]))
 				}
 			} else if let text = actionResult.text {
 				output.append(text)

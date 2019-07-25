@@ -32,7 +32,7 @@ public class DemoGifCommand: StringCommand {
 			}
 			
             gif.appendTrailer()
-			output.append(DiscordMessage(fromGif: gif, name: "demo.gif"))
+			output.append(.gif(gif))
 		} catch {
 			print(error)
 			output.append("An error occurred while encoding/sending the image")

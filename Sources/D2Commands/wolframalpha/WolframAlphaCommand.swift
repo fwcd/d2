@@ -49,10 +49,7 @@ public class WolframAlphaCommand: StringCommand {
 				return
 			}
 			
-			output.append(DiscordMessage(
-				content: "",
-				files: [DiscordFileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]
-			))
+			output.append(.files([DiscordFileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]))
 			self.isRunning = false
 		}
 	}

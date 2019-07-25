@@ -57,10 +57,10 @@ public class CampusCommand: StringCommand {
 								return
 							}
 							
-							output.append(DiscordMessage(
-								content: rawAddress,
-								files: [DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")]
-							))
+							output.append(.compound([
+								.text(rawAddress),
+								.files([DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")])
+							]))
 						}.resume()
 					} catch {
 						output.append("Could not create static map, see console for more details")

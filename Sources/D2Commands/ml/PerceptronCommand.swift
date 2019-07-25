@@ -99,12 +99,12 @@ public class PerceptronCommand: StringCommand {
 	}
 	
 	private func outputModel(to output: CommandOutput, outputValue: Double? = nil) throws {
-		output.append(DiscordMessage(
-			content: "\(model.formula)\(outputValue.map { String(format: " = %.3f", $0) } ?? "")",
-			files: try renderer.render(model: &model).map { [
+		output.append(.compound([
+			.text("\(model.formula)\(outputValue.map { String(format: " = %.3f", $0) } ?? "")"),
+			.files(try renderer.render(model: &model).map { [
 				DiscordFileUpload(data: try $0.pngEncoded(), filename: "perceptron.png", mimeType: "image/png")
-			] } ?? []
-		))
+			] } ?? [])
+		]))
 	}
 	
 	private func addData(args: String, output: CommandOutput) throws {

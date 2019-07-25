@@ -4,7 +4,7 @@ import D2Commands
 extension Command {
 	public func testInvoke(
 		withArgs args: String,
-		input: DiscordMessage? = nil,
+		input: RichValue = .none,
 		output: CommandOutput,
 		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""))
 	) {
