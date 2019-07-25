@@ -2,6 +2,9 @@ import Cairo
 import Foundation
 import D2Utils
 
+/**
+ * An image that internally wraps a Cairo surface.
+ */
 public struct Image {
 	let surface: Surface.Image
 	
@@ -28,25 +31,6 @@ public struct Image {
 	
 	public init(fromSize size: Vec2<Int>) throws {
 		try self.init(width: size.x, height: size.y)
-	}
-	
-	public init(fromPng data: Data) throws {
-		self.init(from: try Surface.Image(png: data))
-	}
-	
-	public init(fromPngFile url: URL) throws {
-		let fileManager = FileManager.default
-		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(url) }
-		
-		if let data = fileManager.contents(atPath: url.path) {
-			try self.init(fromPng: data)
-		} else {
-			throw DiskFileError.noData("Image at \(url) contained no data")
-		}
-	}
-	
-	public init(fromPngFile filePath: String) throws {
-		try self.init(fromPngFile: URL(fileURLWithPath: filePath))
 	}
 	
 	public subscript(_ y: Int, _ x: Int) -> Color {
@@ -87,9 +71,5 @@ public struct Image {
 			default:
 				return nil
 		}
-	}
-	
-	public func pngEncoded() throws -> Data {
-		return try surface.writePNG()
 	}
 }
