@@ -4,7 +4,7 @@ dist: xenial
 osx_image: xcode10.2
 env: SWIFT_VERSION=5.0
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew tap vapor/tap && brew install opus libsodium ctls cairo; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew tap vapor/tap && brew install opus libsodium ctls; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libopus-dev libsodium-dev libcairo2-dev; fi
 install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"; fi

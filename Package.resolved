@@ -114,17 +114,8 @@
         "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
         "state": {
           "branch": null,
-          "revision": "1d3748f69aaec4f01bcc89d3ae174ab76ce2b1ed",
+          "revision": "c91d41002bb7eca125724040d73bc0c715d72fe9",
           "version": null
-        }
-      },
-      {
-        "package": "SwiftGD",
-        "repositoryURL": "https://github.com/twostraws/SwiftGD.git",
-        "state": {
-          "branch": null,
-          "revision": "1960998971b453101e740f25bc6d9fb01e0ba225",
-          "version": "2.5.0"
         }
       },
       {
