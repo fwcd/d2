@@ -1,7 +1,7 @@
 # D2
 General-purpose virtual assistant for Discord.
 
-[![Build Status](https://travis-ci.org/fwcd/D2.svg?branch=master)](https://travis-ci.org/fwcd/D2)
+[![Build Status](https://travis-ci.org/fwcd/d2.svg?branch=master)](https://travis-ci.org/fwcd/d2)
 
 In addition to suporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
 
