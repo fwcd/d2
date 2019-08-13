@@ -48,6 +48,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["latex"] = LatexCommand()
 	handler["piglatin"] = PigLatinCommand()
 	handler["markov"] = MarkovCommand()
+	handler["watch"] = WatchCommand()
 	handler["poll"] = PollCommand()
 	handler["concat"] = ConcatCommand()
 	handler["preconcat"] = PreConcatCommand()
