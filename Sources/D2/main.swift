@@ -58,6 +58,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["chord"] = GuitarChordCommand()
 	handler["web"] = WebCommand()
 	handler["stats"] = StatsCommand()
+	handler["sortby"] = SortByCommand()
 	handler["addscript"] = AddD2ScriptCommand()
 	handler["help"] = HelpCommand(commandPrefix: handler.commandPrefix, permissionManager: handler.permissionManager)
 }
