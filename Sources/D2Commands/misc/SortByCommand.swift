@@ -26,7 +26,9 @@ public class SortByCommand: StringCommand {
 			let sorted = messages.sorted(by: criterion)
 			output.append(DiscordEmbed(
 				title: ":star: Top messages",
-				fields: sorted.map { DiscordEmbed.Field(name: $0.author.username, value: $0.content.nilIfEmpty ?? "No content") }
+				fields: Array(sorted
+					.map { DiscordEmbed.Field(name: $0.author.username, value: $0.content.nilIfEmpty ?? "No content") }
+					.prefix(10))
 			))
 		}
 	}
