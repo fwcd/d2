@@ -139,8 +139,8 @@ class CommandHandler: DiscordClientDelegate {
 					
 					// Add subscriptions
 					let added = pipe
-						.map { $0.command }
-						.filter { cmd in cmd.subscribesToNextMessages && !self.subscribedCommands.contains { cmd === $0.command } }
+						.map { (it: PipeComponent) -> Command in it.command }
+						.filter { cmd in cmd.subscribesToNextMessages && !self.subscribedCommands.contains(where: { cmd.equalTo($0.command) })}
 						.map { CommandSubscription(channel: message.channelId, command: $0) }
 					self.subscribedCommands += added
 				}

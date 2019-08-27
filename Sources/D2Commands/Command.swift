@@ -18,6 +18,8 @@ public protocol Command: class {
 	func onSuccessfullySent(message: DiscordMessage)
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction
+	
+	func equalTo(_ rhs: Command) -> Bool
 }
 
 extension Command {
@@ -33,4 +35,8 @@ extension Command {
 	}
 	
 	public func onSuccessfullySent(message: DiscordMessage) {}
+
+	public func equalTo(_ rhs: Command) -> Bool {
+		return self === rhs
+	}
 }
