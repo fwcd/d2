@@ -21,8 +21,12 @@ public class SortByCommand: StringCommand {
 			output.append("Unrecognized sort criterion: \(input). Try using one of these: \(sortCriteria.keys)")
 			return
 		}
+		guard let channel = context.channel?.id else {
+			output.append("No channel found for message")
+			return
+		}
 
-		context.client?.getMessages(for: context.channel!.id, selection: nil, limit: 80) { messages, _ in
+		context.client?.getMessages(for: channel, selection: nil, limit: 80) { messages, _ in
 			let sorted = messages.sorted(by: criterion)
 			output.append(DiscordEmbed(
 				title: ":star: Top messages",
