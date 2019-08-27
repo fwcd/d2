@@ -1,5 +1,8 @@
 import SwiftDiscord
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public class DiscordOutput: CommandOutput {
 	private let messageWriter = DiscordMessageWriter()
