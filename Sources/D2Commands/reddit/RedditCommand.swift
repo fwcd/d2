@@ -1,6 +1,9 @@
 import SwiftDiscord
 import D2Permissions
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public class RedditCommand: StringCommand {
 	public let description = "Fetches a post from a subreddit"

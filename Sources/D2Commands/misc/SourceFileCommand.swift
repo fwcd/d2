@@ -1,6 +1,9 @@
 import SwiftDiscord
 import D2Permissions
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 fileprivate let repositoryUrl = "https://github.com/fwcd/D2/tree/master"
 fileprivate let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/D2/master"

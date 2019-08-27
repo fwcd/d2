@@ -2,6 +2,9 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 import SwiftSoup
 
 fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")

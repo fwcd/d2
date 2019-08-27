@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationXML)
+import FoundationXML
+#endif
 import D2Utils
 
 // Matches the contents of an HTML paragraph

@@ -7,8 +7,7 @@ let package = Package(
     name: "D2",
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("c91d41002bb7eca125724040d73bc0c715d72fe9")),
+        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("8f5c696536e3b670fc55fcc0d14518b4f841fb8d")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0")
     ],

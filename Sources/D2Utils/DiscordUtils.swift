@@ -1,5 +1,8 @@
 import SwiftDiscord
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 extension DiscordTextChannel {
 	public func send(_ message: String) {

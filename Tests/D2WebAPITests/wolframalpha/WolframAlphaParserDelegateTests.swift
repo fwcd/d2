@@ -1,5 +1,8 @@
 import XCTest
 import Foundation
+#if canImport(FoundationXML)
+import FoundationXML
+#endif
 @testable import D2WebAPIs
 
 final class WolframAlphaParserDelegateTests: XCTestCase {

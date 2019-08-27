@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationXML)
+import FoundationXML
+#endif
 
 class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	let then: (Result<WolframAlphaOutput, Error>) -> Void
