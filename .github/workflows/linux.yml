@@ -1,0 +1,20 @@
+name: Linux
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install APT dependencies
+      run: sudo apt-get install libopus-dev libsodium-dev libcairo2-dev
+    - name: Setup Swift 5
+      env:
+        swift_version: 5.0
+      run: eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
+    - name: Build
+      run: swift build
+    - name: Test
+      run: swift test
