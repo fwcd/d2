@@ -7,7 +7,8 @@ let package = Package(
     name: "D2",
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("8f5c696536e3b670fc55fcc0d14518b4f841fb8d")),
+        // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
+        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("62df10f840599a97954e524cd18b85c1466f3a4d")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0")
     ],

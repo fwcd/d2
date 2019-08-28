@@ -20,30 +20,12 @@
         }
       },
       {
-        "package": "Core",
-        "repositoryURL": "https://github.com/vapor/core.git",
+        "package": "nio-websocket-client",
+        "repositoryURL": "https://github.com/vapor/nio-websocket-client",
         "state": {
           "branch": null,
-          "revision": "c64f63cb21631010952f7abfef719d376ab6a441",
-          "version": "3.9.1"
-        }
-      },
-      {
-        "package": "Crypto",
-        "repositoryURL": "https://github.com/vapor/crypto.git",
-        "state": {
-          "branch": null,
-          "revision": "df8eb7d8ae51787b3a0628aa3975e67666da936c",
-          "version": "3.3.3"
-        }
-      },
-      {
-        "package": "HTTP",
-        "repositoryURL": "https://github.com/vapor/http.git",
-        "state": {
-          "branch": null,
-          "revision": "3808ed0401379b6e9f4a053f03090ea9d658caa9",
-          "version": "3.2.1"
+          "revision": "f9a0955dff2b6a7a466cc26db2d061b682023197",
+          "version": null
         }
       },
       {
@@ -51,8 +33,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "ba7970fe396e8198b84c6c1b44b38a1d4e2eb6bd",
-          "version": "1.14.1"
+          "revision": "32760eae40e6b7cb81d4d543bb0a9f548356d9a2",
+          "version": "2.7.1"
         }
       },
       {
@@ -60,26 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "0f3999f3e3c359cc74480c292644c3419e44a12f",
-          "version": "1.4.0"
-        }
-      },
-      {
-        "package": "swift-nio-ssl-support",
-        "repositoryURL": "https://github.com/apple/swift-nio-ssl-support.git",
-        "state": {
-          "branch": null,
-          "revision": "c02eec4e0e6d351cd092938cf44195a8e669f555",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "swift-nio-zlib-support",
-        "repositoryURL": "https://github.com/apple/swift-nio-zlib-support.git",
-        "state": {
-          "branch": null,
-          "revision": "37760e9a52030bb9011972c5213c3350fa9d41fd",
-          "version": "1.0.0"
+          "revision": "f5dd7a60ff56f501ff7bf9be753e4b1875bfaf20",
+          "version": "2.4.0"
         }
       },
       {
@@ -87,7 +51,7 @@
         "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
         "state": {
           "branch": null,
-          "revision": "8f5c696536e3b670fc55fcc0d14518b4f841fb8d",
+          "revision": "62df10f840599a97954e524cd18b85c1466f3a4d",
           "version": null
         }
       },
@@ -98,15 +62,6 @@
           "branch": null,
           "revision": "a2b316e9574c6904e08995290a975cb16693ac24",
           "version": "2.2.0"
-        }
-      },
-      {
-        "package": "WebSocket",
-        "repositoryURL": "https://github.com/vapor/websocket",
-        "state": {
-          "branch": null,
-          "revision": "149af03348f60ac8b84defdf277112d62fd8c704",
-          "version": "1.0.2"
         }
       }
     ]
