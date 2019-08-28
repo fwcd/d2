@@ -10,8 +10,8 @@ public class SortByCommand: StringCommand {
 	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	private let sortCriteria: [String: (DiscordMessage, DiscordMessage) -> Bool] = [
-		"length": comparator { $0.content.count },
-		"upvotes": comparator { $0.reactions.first { $0.emoji.name == "upvote" }?.count ?? -1000 }
+		"length": descendingComparator { $0.content.count },
+		"upvotes": descendingComparator { $0.reactions.first { $0.emoji.name == "upvote" }?.count ?? -1000 }
 	]
 	
 	public init() {}
