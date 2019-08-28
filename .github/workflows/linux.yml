@@ -10,11 +10,21 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install APT dependencies
       run: sudo apt-get install libopus-dev libsodium-dev libcairo2-dev
-    - name: Setup Swift 5
+    - name: Install Swiftenv
       env:
         swift_version: 5.0
-      run: eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
+      run: |
+        git clone --depth 1 https://github.com/kylef/swiftenv.git ~/.swiftenv
+        export SWIFTENV_ROOT="$HOME/.swiftenv"
+        export PATH="$SWIFTENV_ROOT/bin:$SWIFTENV_ROOT/shims:$PATH"
+    - name: Install Swift
+      env:
+        swiftenv_root: $HOME/.swiftenv
+        path: $SWIFTENV_ROOT/bin:$SWIFTENV_ROOT/shims:$PATH
+      run: swiftenv install -s
     - name: Build
-      run: swift build
+      run: |
+        echo "Building under Swift $SWIFT_VERSION"
+        swift build
     - name: Test
       run: swift test
