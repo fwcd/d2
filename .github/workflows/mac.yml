@@ -11,7 +11,7 @@ jobs:
     - name: Install dependencies with Homebrew
       run: |
         brew tap vapor/tap
-        brew install opus libsodium ctls
+        brew install opus libsodium ctls cairo
     - name: Build
       run: swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include
     - name: Test
