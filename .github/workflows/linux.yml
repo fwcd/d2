@@ -16,12 +16,8 @@ jobs:
       run: |
         git clone --depth 1 https://github.com/kylef/swiftenv.git ~/.swiftenv
     - name: Install Swift
-      env:
-        swiftenv_root: $HOME/.swiftenv
-      run: $SWIFTENV_ROOT/bin/swiftenv install -s
+      run: ~/.swiftenv/bin/swiftenv install -s
     - name: Build
-      run: |
-        echo "Building under Swift $SWIFT_VERSION"
-        $SWIFTENV_ROOT/shims/swift build
+      run: ~/.swiftenv/shims/swift build
     - name: Test
-      run: $SWIFTENV_ROOT/shims/swift test
+      run: ~/.swiftenv/shims/swift test
