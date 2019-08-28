@@ -15,5 +15,5 @@ jobs:
     - name: Build
       run: swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include
     - name: Test
-      run: swift test
+      run: swift test -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include
 
