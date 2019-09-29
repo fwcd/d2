@@ -2,12 +2,17 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
+// TODO: Use Arg API
+
 public class SortByCommand: StringCommand {
-	public let description = "Fetches the top messages by a certain criterion"
-	public let helpText: String? = "Syntax: sortby [criterion]"
-	public let outputValueType = "embed"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Fetches the top messages by a certain criterion",
+		longDescription: "Queries the current channel for messages matching the given criterion and returns the top n from this list",
+		requiredPermissionLevel: .basic
+	)
+	// public let helpText: String? = "Syntax: sortby [criterion]"
+	public let outputValueType = .embed
 	
 	private let sortCriteria: [String: (DiscordMessage, DiscordMessage) -> Bool] = [
 		"length": descendingComparator { $0.content.count },

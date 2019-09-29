@@ -4,13 +4,18 @@ import D2Utils
 
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s*([\\s\\S]*)")
 
+// TODO: Use Arg API
+
 public class ToFileCommand: Command {
-	public let description = "Writes text to a file"
-	public let inputValueType = "text"
-	public let outputValueType = "files"
-	public let helpText: String? = "Syntax: [filename] [content...]"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .file,
+		shortDescription: "Writes text to a file",
+		longDescription: "Responds with a text file containing the input",
+		requiredPermissionLevel: .basic
+	)
+	public let inputValueType = .text
+	public let outputValueType = .files
+	// public let helpText: String? = "Syntax: [filename] [content...]"
 	
 	public init() {}
 	

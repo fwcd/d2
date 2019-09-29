@@ -3,6 +3,12 @@ import D2Permissions
 import Foundation
 
 public class StatsCommand: StringCommand {
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Fetches server statistics",
+		longDescription: "Outputs a range of interesting statistics about the current guild",
+		requiredPermissionLevel: .basic
+	)
 	public let description = "Prints server statistics"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

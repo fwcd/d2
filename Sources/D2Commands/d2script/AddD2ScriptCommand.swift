@@ -5,11 +5,15 @@ import D2Script
 
 fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
 
+// TODO: Use code command instead of StringCommand
+
 public class AddD2ScriptCommand: StringCommand {
-	public let description = "Adds a D2 script at runtime to the command registry"
-	public let helpText: String? = "Syntax: ```[script]```"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.admin
+	public let info = CommandInfo(
+		category: .d2script,
+		shortDescription: "Adds a D2 command written in D2Script",
+		longDescription: "Dynamically adds a D2Script-based command to the command registry at runtime",
+		requiredPermissionLevel: .admin
+	)
 	private let parser = D2ScriptParser()
 	
 	public init() {}

@@ -8,9 +8,13 @@ fileprivate let rawRangePattern = "\\d+\\.\\.[\\.<]\\d+"
 fileprivate let inputPattern = try! Regex(from: "^(\(rawRangePattern))")
 
 public class ForCommand: StringCommand {
-	public let description = "Iterates through a range and prints the loop indices."
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .scripting,
+		shortDescription: "Iterates over a range",
+		longDescription: "Iterates over a range and outputs the running index at each iteration",
+		requiredPermissionLevel: .vip
+	)
+	public let outputValueType = .text
 	private let timer: RepeatingTimer
 	private let maxRangeLength: Int
 	

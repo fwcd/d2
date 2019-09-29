@@ -11,9 +11,12 @@ fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\
 
 /** Locates locations on the University of Kiel's campus. */
 public class CampusCommand: StringCommand {
-	public let description = "Locates rooms on the CAU campus"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .cau,
+		shortDescription: "Locates rooms on the CAU campus",
+		longDescription: "Looks up room abbreviations (such as 'LMS4') in this UnivIS and outputs the address together with a static street map",
+		requiredPermissionLevel: .basic
+	)
 	let geocoder = MapQuestGeocoder()
 	
 	public init() {}

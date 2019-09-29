@@ -3,9 +3,13 @@ import D2Permissions
 import D2Utils
 
 public class GrepCommand: ArgCommand {
-	public let description = "Filters and prints lines that match a regular expression"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .scripting,
+		shortDescription: "Filters using a regex",
+		longDescription: "Filters and outputs lines that match a given regular expression",
+		requiredPermissionLevel: .vip
+	)
+	public let outputValueType = .text
 	public let expectedArgCount: Int = 2
 	
 	public init() {}

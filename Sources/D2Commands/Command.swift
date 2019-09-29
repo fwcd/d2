@@ -5,7 +5,7 @@ import D2Permissions
 public protocol Command: class {
 	var inputValueType: RichValueType { get }
 	var outputValueType: RichValueType { get }
-	var info: CommandInfo
+	var info: CommandInfo { get }
 	
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	

@@ -11,9 +11,12 @@ fileprivate let availableStatusTypes = "idle|offline|online|dnd"
 fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(\(availableStatusTypes))\\s+)?(.+)")
 
 public class PresenceCommand: StringCommand {
-	public let description = "Updates the game activity and status"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.admin
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Updates D2's presence",
+		longDescription: "Updates the game activity and status",
+		requiredPermissionLevel: .admin
+	)
 	
 	public init() {}
 	

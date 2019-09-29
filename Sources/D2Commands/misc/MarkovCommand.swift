@@ -5,11 +5,16 @@ import D2Utils
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 fileprivate let pingPattern = try! Regex(from: "<@&?.+?>")
 
+// TODO: Use Arg API
+
 public class MarkovCommand: StringCommand {
-	public let description = "Generates a natural language response using a Markov chain"
-	public let helpText: String? = "Syntax: markov [--all]? [--noping]? [@user]?"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Generates a natural language response using a Markov chain",
+		longDescription: "Uses a Markov chain with data from the current channel to generate a human-like response",
+		requiredPermissionLevel: .basic
+	)
+	// public let helpText: String? = "Syntax: markov [--all]? [--noping]? [@user]?"
 	private let order = 2
 	private let maxWords = 60
 	

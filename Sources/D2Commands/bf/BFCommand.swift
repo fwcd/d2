@@ -5,9 +5,12 @@ import Dispatch
 fileprivate let maxExecutionSeconds = 3
 
 public class BFCommand: StringCommand {
-	public let description = "Interprets BF code"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .bf,
+		shortDescription: "Interprets BF code",
+		longDescription: "Asynchronously invokes a Brainf&*k interpreter",
+		requiredPermissionLevel: .basic
+	)
 	private var running = false
 	
 	public init() {}

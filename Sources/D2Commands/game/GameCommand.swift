@@ -9,10 +9,7 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
  * Provides a base layer of functionality for a turn-based games.
  */
 public class GameCommand<G: Game>: StringCommand {
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
-	public let subscribesToNextMessages = true
-	public let userOnly = false
+	public let info: CommandInfo
 	
 	private let game: G
 	private let defaultActions: [String: (G, ActionParameters<G.State>) throws -> ActionResult<G.State>] = [
@@ -21,15 +18,20 @@ public class GameCommand<G: Game>: StringCommand {
 	]
 	private let defaultApiActions: Set<String> = ["cancel"]
 	
-	public var helpText: String? { return game.helpText }
-	public var description: String { return "Plays \(game.name) against someone" }
-	
 	private var currentState: G.State? = nil
 	private var apiEnabled: Bool = false
 	private var silent: Bool = false
 	
 	public init() {
 		game = G.init()
+		info = CommandInfo(
+			category: .game,
+			shortDescription: "Plays \(game.name) against someone",
+			longDescription: game.helpText,
+			requiredPermissionLevel: .basic,
+			subscribesToNextMessages: true,
+			userOnly: false
+		)
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

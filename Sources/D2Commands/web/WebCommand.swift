@@ -10,9 +10,12 @@ import SwiftSoup
 fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")
 
 public class WebCommand: StringCommand {
-	public let description = "Renders a web page"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.admin
+	public let info = CommandInfo(
+		category: .web,
+		shortDescription: "Renders a webpage",
+		longDescription: "Fetches and renders an arbitrary HTML page using an embed",
+		requiredPermissionLevel: .admin
+	)
 	private let converter = DocumentToMarkdownConverter()
 	
 	public init() {}

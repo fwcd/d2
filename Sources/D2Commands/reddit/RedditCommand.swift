@@ -6,9 +6,12 @@ import FoundationNetworking
 #endif
 
 public class RedditCommand: StringCommand {
-	public let description = "Fetches a post from a subreddit"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .reddit,
+		shortDescription: "Fetches a post from Reddit",
+		longDescription: "Fetches a random top post from a given subreddit",
+		requiredPermissionLevel: .vip
+	)
 	
 	public init() {}
 	
@@ -24,6 +27,8 @@ public class RedditCommand: StringCommand {
 		}
 		
 		print("Querying \(url)")
+		
+		// TODO: Use HTTPRequest
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"

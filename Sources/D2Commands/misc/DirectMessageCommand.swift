@@ -4,7 +4,15 @@ import D2Utils
 
 fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
 
+// TODO: Use Arg API
+
 public class DirectMessageCommand: StringCommand {
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Sends a direct message to a user",
+		longDescription: "Sends a direct message to a mentioned user",
+		requiredPermissionLevel: .admin
+	)
 	public let description = "Sends a direct message to a user"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin

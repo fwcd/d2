@@ -14,20 +14,24 @@ fileprivate let learnPattern = try! Regex(from: "(\\S+)?")
 /** Matches a data sample of the form ($0, $1). */
 fileprivate let dataSamplePattern = try! Regex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\S+)\\s*\\)")
 
+// TODO: Use the Arg API
+
 public class PerceptronCommand: StringCommand {
-	public let description = "Creates and trains a single-layered perceptron"
-	public let helpText: String? = """
-		Syntax: [subcommand] [args]
-		
-		Subcommand patterns:
-		- reset [dimensions, 2 if not specified]?
-		- learn [learning rate]?
-		- addData ([input1] [input2], [expected output]) ([input1] [input2], [expected output]) ...
-		- compute [input1] [input2] ...
-		"""
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
-	
+	public let info = CommandInfo(
+		category: .ml,
+		shortDescription: "Creates and trains a single-layered perceptron",
+		longDescription: "Invokes a subcommand on the single-layered perceptron",
+		helpText: """
+			Syntax: [subcommand] [args]
+			
+			Subcommand patterns:
+			- reset [dimensions, 2 if not specified]?
+			- learn [learning rate]?
+			- addData ([input1] [input2], [expected output]) ([input1] [input2], [expected output]) ...
+			- compute [input1] [input2] ...
+			""",
+		requiredPermissionLevel: .vip
+	)
 	private let defaultInputCount: Int
 	private let renderer = PerceptronRenderer()
 	private var model: SingleLayerPerceptron

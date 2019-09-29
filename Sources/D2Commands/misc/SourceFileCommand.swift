@@ -9,9 +9,12 @@ fileprivate let repositoryUrl = "https://github.com/fwcd/D2/tree/master"
 fileprivate let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/D2/master"
 
 public class SourceFileCommand: StringCommand {
-	public let description = "Fetches the source code for a command"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Fetches the source file of a given command",
+		longDescription: "Looks up the source code of a command on D2's GitHub repository",
+		requiredPermissionLevel: .basic
+	)
 	
 	public init() {}
 	
@@ -31,6 +34,8 @@ public class SourceFileCommand: StringCommand {
 			output.append("Could not create URLs for command `\(input)`")
 			return
 		}
+		
+		// TODO: Use HTTPRequest from D2Utils
 		
 		var request = URLRequest(url: rawURL)
 		request.httpMethod = "GET"

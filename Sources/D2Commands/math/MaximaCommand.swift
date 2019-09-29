@@ -9,9 +9,13 @@ fileprivate let clearedInputChars = try! Regex(from: "\\|&,;")
 fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*([\\s\\S]+)\\(%i2\\)")
 
 public class MaximaCommand: StringCommand {
-	public let description = "Transforms and solves mathematical expressions using Maxima"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .math,
+		shortDescription: "Transforms and solves math expressions using Maxima",
+		longDescription: "Runs a command with Maxima and outputs the result using a LaTeX renderer",
+		requiredPermissionLevel: .basic
+	)
+	public let outputValueType = .image
 	private let latexRenderer: LatexRenderer?
 	private var running = false
 	

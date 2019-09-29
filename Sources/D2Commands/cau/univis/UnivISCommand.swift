@@ -16,10 +16,15 @@ fileprivate let inputPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\
 // key, the second (or third) group captures the value.
 fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
 
+// TODO: Use the new Arg API for this
+
 public class UnivISCommand: StringCommand {
-	public let description = "Queries the UnivIS of the CAU"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .bf,
+		shortDescription: "Queries the UnivIS",
+		longDescription: "Queries the lecture database 'UnivIS' from the CAU",
+		requiredPermissionLevel: .basic
+	)
 	let maxResponseEntries: Int
 	
 	public init(maxResponseEntries: Int = 15) {

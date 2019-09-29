@@ -1,19 +1,26 @@
 import SwiftDiscord
 import D2Permissions
 
+// TODO: Use Arg API
+
 public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
+	public let info: CommandInfo
 	public let name: String
-	public let description: String
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
 	public let expectedArgCount: Int = 2
+	public let inputValueType = .text
+	public let outputValueType = .text
 	
 	private let operation: (T, T) -> T
 	
 	public init(name: String, operation: @escaping (T, T) -> T) {
 		self.name = name
 		self.operation = operation
-		description = name
+		info = CommandInfo(
+			category: .math,
+			shortDescription: "Performs \(name)",
+			longDescription: "Performs the binary operation \(name)",
+			requiredPermissionLevel: .basic
+		)
 	}
 	
 	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {

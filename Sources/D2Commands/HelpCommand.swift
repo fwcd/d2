@@ -3,7 +3,7 @@ import D2Permissions
 
 public class HelpCommand: StringCommand {
 	public let description = "Helps the user"
-	public let outputValueType = "embed"
+	public let outputValueType = .embed
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let commandPrefix: String

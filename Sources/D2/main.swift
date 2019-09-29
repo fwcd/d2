@@ -51,7 +51,6 @@ func register(commandsFor handler: CommandHandler) {
 	handler["watch"] = WatchCommand()
 	handler["poll"] = PollCommand()
 	handler["concat"] = ConcatCommand()
-	handler["preconcat"] = PreConcatCommand()
 	handler["presence"] = PresenceCommand()
 	handler["dm"] = DirectMessageCommand()
 	handler["tofile"] = ToFileCommand()

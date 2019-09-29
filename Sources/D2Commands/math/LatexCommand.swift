@@ -4,11 +4,17 @@ import D2Utils
 
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)=(\\S+)")
 
+// TODO: Use the Arg API
+
 public class LatexCommand: StringCommand {
-	public let description = "Renders a LaTeX string"
-	public let helpText: String? = "Syntax: [--color=white|black|...]? [latex code]"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .math,
+		shortDescription: "Renders a LaTeX string",
+		longDescription: "Parses the input as LaTeX and renders it to an image",
+		requiredPermissionLevel: .basic
+	)
+	// public let helpText: String? = "Syntax: [--color=white|black|...]? [latex code]"
+	public let outputValueType = .image
 	private let latexRenderer: LatexRenderer?
 	private var running = false
 	

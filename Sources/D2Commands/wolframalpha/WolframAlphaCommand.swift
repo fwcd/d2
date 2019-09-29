@@ -8,10 +8,13 @@ import D2Utils
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
-	public let description = "Queries Wolfram Alpha"
-	public let helpText: String? = "[--image]? [--steps]? [query input]"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .wolframalpha,
+		shortDescription: "Queries Wolfram Alpha",
+		longDescription: "Sets the permission level of one or more users",
+		helpText: "[--image]? [--steps]? [query input]",
+		requiredPermissionLevel: .vip
+	)
 	private var isRunning = false
 	
 	public init() {}

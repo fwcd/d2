@@ -2,11 +2,14 @@ import SwiftDiscord
 import D2Permissions
 
 public class LastMessageCommand: Command {
-	public let description = "Retrieves and outputs the last message"
-	public let inputValueType = "()"
-	public let outputValueType = "any"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .scripting,
+		shortDescription: "Fetches the last message",
+		longDescription: "Retrieves and outputs the last message",
+		requiredPermissionLevel: .vip
+	)
+	public let inputValueType = .none
+	public let outputValueType = .any
 	
 	public init() {}
 	

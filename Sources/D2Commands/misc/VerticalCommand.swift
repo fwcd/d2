@@ -2,9 +2,12 @@ import SwiftDiscord
 import D2Permissions
 
 public class VerticalCommand: StringCommand {
-	public let description = "Reads horizontally, prints vertically"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Converts horizontal to vertical text",
+		longDescription: "Inserts newlines between the input characters",
+		requiredPermissionLevel: .basic
+	)
 	
 	public init() {}
 	

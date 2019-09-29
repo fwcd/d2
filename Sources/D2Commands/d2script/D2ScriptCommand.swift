@@ -9,9 +9,7 @@ import D2Permissions
 import D2Script
 
 public class D2ScriptCommand: StringCommand {
-	public let description: String
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel: PermissionLevel
+	public let info: CommandInfo
 	public let name: String
 	private let script: D2Script
 	private var running = false
@@ -28,8 +26,11 @@ public class D2ScriptCommand: StringCommand {
 		guard commandNames.count == 1 else { throw D2ScriptCommandError.multipleCommandsDefined("Currently only one command declaration per script is supported") }
 		
 		self.name = name
-		description = executor.topLevelStorage[string: "description"] ?? "Anonymous D2Script"
-		requiredPermissionLevel = executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip
+		info = CommandInfo(
+			shortDescription: executor.topLevelStorage[string: "description"] ?? "Anonymous D2Script",
+			longDescription: "A dynamic D2 script",
+			requiredPermissionLevel: executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip
+		)
 	}
 	
 	private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: CommandOutput) {

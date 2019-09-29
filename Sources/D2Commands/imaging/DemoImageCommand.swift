@@ -4,6 +4,12 @@ import D2Utils
 import D2Graphics
 
 public class DemoImageCommand: StringCommand {
+	public let info = CommandInfo(
+		category: .imaging,
+		shortDescription: "Creates a demo image",
+		longDescription: "Creates a rendered image for testing purposes",
+		requiredPermissionLevel: .basic
+	)
 	public let description = "Creates a demo image"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

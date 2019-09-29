@@ -4,12 +4,14 @@ import D2Graphics
 import D2Utils
 
 public class SpinCommand: Command {
-	public let description = "Animates a rotation of the image"
-	public let helpText: String? = "Produces an animated GIF where each frame contains a rotated version of the input image"
-	public let inputValueType = "image"
-	public let outputValueType = "gif"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .imaging,
+		shortDescription: "Spins an image",
+		longDescription: "Produces an animated GIF where each frame contains a rotation of the original image",
+		requiredPermissionLevel: .basic
+	)
+	public let inputValueType = .image
+	public let outputValueType = .gif
 	private let frames: Int = 12
 	
 	public init() {}

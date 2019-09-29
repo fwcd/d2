@@ -5,9 +5,12 @@ import D2Utils
 fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
 
 public class GrantPermissionCommand: StringCommand {
-	public let description = "Sets the permission level of one or more users"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.admin
+	public let info = CommandInfo(
+		category: .permissions,
+		shortDescription: "Grants a user permissions",
+		longDescription: "Sets the permission level of one or more users",
+		requiredPermissionLevel: .admin
+	)
 	private let permissionManager: PermissionManager
 	
 	public init(permissionManager: PermissionManager) {

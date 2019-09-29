@@ -3,9 +3,12 @@ import D2Permissions
 import D2Utils
 
 public class CycleThroughCommand: StringCommand {
-	public let description = "Animates a sequence of characters"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Animates a sequence of characters",
+		longDescription: "Creates a pseudo-animation by repeatedly editing the sent Discord message",
+		requiredPermissionLevel: .vip
+	)
 	private let loops = 4
 	private let timer = RepeatingTimer(interval: .milliseconds(500))
 	

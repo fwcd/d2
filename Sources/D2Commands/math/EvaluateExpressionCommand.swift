@@ -4,15 +4,20 @@ import D2Utils
 
 fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
+// TODO: Use Arg API, integrate flags into arg API
+
 public class EvaluateExpressionCommand: StringCommand {
-	public let description: String
-	public let helpText: String? = "Syntax: [--ast]? [expression]"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info: CommandInfo
+	// public let helpText: String? = "Syntax: [--ast]? [expression]"
 	private let parser: ExpressionParser
 	
 	public init(parser: ExpressionParser, name: String) {
 		self.parser = parser
+		info = CommandInfo(
+			category: .math,
+			shortDescription: "Evaluates an expression in \(name)",
+			longDescription: "Evaluates an expression written in \(name) and outputs the result"
+		)
 		description = "Evaluates an expression in \(name)"
 	}
 	

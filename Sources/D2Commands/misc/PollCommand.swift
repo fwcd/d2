@@ -1,10 +1,15 @@
 import SwiftDiscord
 import D2Permissions
 
+// TODO: Use Arg API
+
 public class PollCommand: StringCommand {
-	public let description = "Creates a simple poll"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Creates a simple poll",
+		longDescription: "Creates a message with the given options and 'reaction buttons' that allow users to vote",
+		requiredPermissionLevel: .basic
+	)
 	
 	public init() {}
 	

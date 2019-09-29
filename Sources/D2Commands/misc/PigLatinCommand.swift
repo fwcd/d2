@@ -2,9 +2,12 @@ import SwiftDiscord
 import D2Permissions
 
 public class PigLatinCommand: StringCommand {
-	public let description = "Encodes a string in pig latin"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Encodes a string in pig latin",
+		longDescription: "Encodesway away ingstray inway igpay atinlay",
+		requiredPermissionLevel: .basic
+	)
 	private let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
 	private let vowelSuffixes: [String] = ["way", "yay"]
 	

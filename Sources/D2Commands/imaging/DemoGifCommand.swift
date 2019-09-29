@@ -4,9 +4,12 @@ import D2Graphics
 import D2Utils
 
 public class DemoGifCommand: StringCommand {
-	public let description = "Creates a demo GIF"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .imaging,
+		shortDescription: "Creates a demo GIF",
+		longDescription: "Creates an animated GIF for testing purposes",
+		requiredPermissionLevel: .basic
+	)
 	
 	public init() {}
 	

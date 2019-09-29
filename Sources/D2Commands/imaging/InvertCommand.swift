@@ -3,12 +3,14 @@ import D2Permissions
 import D2Graphics
 
 public class InvertCommand: Command {
-	public let description = "Inverts an image"
-	public let helpText: String? = "Inverts the color of every pixel in the image"
-	public let inputValueType = "image"
-	public let outputValueType = "image"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .imaging,
+		shortDescription: "Inverts an image",
+		longDescription: "Inverts the color of every pixel in the image",
+		requiredPermissionLevel: .basic
+	)
+	public let inputValueType = .image
+	public let outputValueType = .image
 	
 	public init() {}
 	

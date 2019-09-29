@@ -4,11 +4,14 @@ import D2Graphics
 import Foundation
 
 public class AvatarCommand: StringCommand {
-	public let description = "Fetches the avatar of a user"
-	public let helpText: String? = "Syntax: [@user]"
-	public let outputValueType = "image"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .imaging,
+		shortDescription: "Fetches the avatar of a user",
+		longDescription: "Fetches the user's profile picture and outputs it in PNG form",
+		requiredPermissionLevel: .basic
+	)
+	// public let helpText: String? = "Syntax: [@user]"
+	public let outputValueType = .image
 	
 	public init() {}
 	

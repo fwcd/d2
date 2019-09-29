@@ -3,9 +3,12 @@ import D2Permissions
 import Foundation
 
 public class BFEncodeCommand: StringCommand {
-	public let description = "Encodes strings to BF code"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .bf,
+		shortDescription: "Encodes strings to BF code",
+		longDescription: "Encodes a string such that the output is valid BF program, printing the given string",
+		requiredPermissionLevel: .basic
+	)
 	private let maxStringLength: Int
 	
 	public init(maxStringLength: Int = 30) {

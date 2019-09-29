@@ -8,6 +8,8 @@ public struct CommandInfo {
     public var shortDescription: String
     /** A long description/help text for the command. */
     public var longDescription: String
+    /** Additional help/usage information about a command. */
+    public var helpText: String?
     /** The command's permission level. */
     public var requiredPermissionLevel: PermissionLevel
     /** Whether the commands should be hidden in lists. */
@@ -23,6 +25,7 @@ public struct CommandInfo {
         category: CommandCategory,
         shortDescription: String,
         longDescription: String,
+        helpText: String? = nil,
         requiredPermissionLevel: PermissionLevel = .admin,
         hidden: Bool = false,
         subscribesToNextMessages: Bool = false,
@@ -32,6 +35,7 @@ public struct CommandInfo {
         self.sourceFile = sourceFile
         self.shortDescription = shortDescription
         self.longDescription = longDescription
+        self.helpText = helpText
         self.requiredPermissionLevel = requiredPermissionLevel
         self.hidden = hidden
         self.subscribesToNextMessages = subscribesToNextMessages

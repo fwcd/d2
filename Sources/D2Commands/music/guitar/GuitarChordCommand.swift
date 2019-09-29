@@ -1,10 +1,16 @@
 import SwiftDiscord
 import D2Permissions
 
+// TODO: Use Arg API
+
 public class GuitarChordCommand: StringCommand {
-	public let description = "Finds a guitar chord and displays the fret pattern"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .music,
+		shortDescription: "Finds a guitar chord",
+		longDescription: "Finds a guitar chord and displays the fret pattern",
+		requiredPermissionLevel: .basic
+	)
+	public let outputValueType = .image
 	
 	public init() {}
 	

@@ -2,10 +2,13 @@ import SwiftDiscord
 import D2Permissions
 
 public class BFToCCommand: StringCommand {
-	public let description = "Transpiles a BF program to C code"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
-	
+	public let info = CommandInfo(
+		category: .bf,
+		shortDescription: "Transpiles a BF program into C code",
+		longDescription: "Outputs a C program whose functionality is equivalent to the given BF program",
+		requiredPermissionLevel: .basic
+	)
+
 	public init() {}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
