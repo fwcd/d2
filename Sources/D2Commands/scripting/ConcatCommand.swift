@@ -8,8 +8,8 @@ public class ConcatCommand: Command {
 		longDescription: "Concatenates a compound input as text",
 		requiredPermissionLevel: .basic
 	)
-	public let inputValueType = .compound
-	public let outputValueType = .text
+	public let inputValueType: RichValueType = .compound([.text])
+	public let outputValueType: RichValueType = .text
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	private let separator = " "

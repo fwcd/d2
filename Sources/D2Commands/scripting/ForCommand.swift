@@ -14,7 +14,7 @@ public class ForCommand: StringCommand {
 		longDescription: "Iterates over a range and outputs the running index at each iteration",
 		requiredPermissionLevel: .vip
 	)
-	public let outputValueType = .text
+	public let outputValueType: RichValueType = .text
 	private let timer: RepeatingTimer
 	private let maxRangeLength: Int
 	

@@ -10,8 +10,8 @@ public class SpinCommand: Command {
 		longDescription: "Produces an animated GIF where each frame contains a rotation of the original image",
 		requiredPermissionLevel: .basic
 	)
-	public let inputValueType = .image
-	public let outputValueType = .gif
+	public let inputValueType: RichValueType = .image
+	public let outputValueType: RichValueType = .gif
 	private let frames: Int = 12
 	
 	public init() {}

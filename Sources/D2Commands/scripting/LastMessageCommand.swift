@@ -8,8 +8,8 @@ public class LastMessageCommand: Command {
 		longDescription: "Retrieves and outputs the last message",
 		requiredPermissionLevel: .vip
 	)
-	public let inputValueType = .none
-	public let outputValueType = .any
+	public let inputValueType: RichValueType = .none
+	public let outputValueType: RichValueType = .any
 	
 	public init() {}
 	

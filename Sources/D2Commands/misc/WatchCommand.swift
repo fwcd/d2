@@ -8,7 +8,7 @@ public class WatchCommand: StringCommand {
 		longDescription: "Constructs the YouTube video link from an ID",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .text
+	public let outputValueType: RichValueType = .text
 
 	public init() {}
 

@@ -7,8 +7,8 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 	public let info: CommandInfo
 	public let name: String
 	public let expectedArgCount: Int = 2
-	public let inputValueType = .text
-	public let outputValueType = .text
+	public let inputValueType: RichValueType = .text
+	public let outputValueType: RichValueType = .text
 	
 	private let operation: (T, T) -> T
 	

@@ -8,8 +8,8 @@ fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 
 public class EchoCommand: Command {
 	public let description = "Prints something n times"
-	public let inputValueType = "any"
-	public let outputValueType = "any"
+	public let inputValueType: RichValueType = .any
+	public let outputValueType: RichValueType = .any
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip
 	private let timer: RepeatingTimer

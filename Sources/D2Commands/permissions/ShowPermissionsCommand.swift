@@ -8,8 +8,8 @@ public class ShowPermissionsCommand: Command {
 		longDescription: "Outputs all registered user permissions",
 		requiredPermissionLevel: .admin
 	)
-	public let inputValueType = .none
-	public let outputValueType = .text
+	public let inputValueType: RichValueType = .none
+	public let outputValueType: RichValueType = .text
 	private let permissionManager: PermissionManager
 	
 	public init(permissionManager: PermissionManager) {

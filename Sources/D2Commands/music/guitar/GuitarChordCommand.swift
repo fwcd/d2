@@ -10,7 +10,7 @@ public class GuitarChordCommand: StringCommand {
 		longDescription: "Finds a guitar chord and displays the fret pattern",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .image
+	public let outputValueType: RichValueType = .image
 	
 	public init() {}
 	

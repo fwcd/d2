@@ -12,7 +12,7 @@ public class SortByCommand: StringCommand {
 		helpText: "Syntax: sortby [criterion]",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .embed
+	public let outputValueType: RichValueType = .embed
 	
 	private let sortCriteria: [String: (DiscordMessage, DiscordMessage) -> Bool] = [
 		"length": descendingComparator { $0.content.count },

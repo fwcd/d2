@@ -14,8 +14,8 @@ public class ToFileCommand: Command {
 		helpText: "Syntax: [filename} [content]...",
 		requiredPermissionLevel: .basic
 	)
-	public let inputValueType = .text
-	public let outputValueType = .files
+	public let inputValueType: RichValueType = .text
+	public let outputValueType: RichValueType = .files
 	
 	public init() {}
 	

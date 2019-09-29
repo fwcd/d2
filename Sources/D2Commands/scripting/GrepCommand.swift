@@ -9,7 +9,7 @@ public class GrepCommand: ArgCommand {
 		longDescription: "Filters and outputs lines that match a given regular expression",
 		requiredPermissionLevel: .vip
 	)
-	public let outputValueType = .text
+	public let outputValueType: RichValueType = .text
 	public let expectedArgCount: Int = 2
 	
 	public init() {}

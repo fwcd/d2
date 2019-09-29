@@ -15,7 +15,7 @@ public class MaximaCommand: StringCommand {
 		longDescription: "Runs a command with Maxima and outputs the result using a LaTeX renderer",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .image
+	public let outputValueType: RichValueType = .image
 	private let latexRenderer: LatexRenderer?
 	private var running = false
 	

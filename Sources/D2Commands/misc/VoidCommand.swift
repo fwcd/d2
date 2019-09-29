@@ -9,8 +9,8 @@ public class VoidCommand: Command {
 		requiredPermissionLevel: .basic
 	)
 	public let description = "Does nothing."
-	public let inputValueType = .none
-	public let outputValueType = .none
+	public let inputValueType: RichValueType = .none
+	public let outputValueType: RichValueType = .none
 	
 	public init() {}
 	

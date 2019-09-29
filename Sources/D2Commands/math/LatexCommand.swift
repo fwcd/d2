@@ -14,7 +14,7 @@ public class LatexCommand: StringCommand {
 		helpText: "Syntax: [--color=white|black|...]? [latex code]",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .image
+	public let outputValueType: RichValueType = .image
 	private let latexRenderer: LatexRenderer?
 	private var running = false
 	

@@ -11,7 +11,7 @@ public class AvatarCommand: StringCommand {
 		helpText: "Syntax: [@user]",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .image
+	public let outputValueType: RichValueType = .image
 	
 	public init() {}
 	

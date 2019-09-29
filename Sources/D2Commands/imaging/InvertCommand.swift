@@ -9,8 +9,8 @@ public class InvertCommand: Command {
 		longDescription: "Inverts the color of every pixel in the image",
 		requiredPermissionLevel: .basic
 	)
-	public let inputValueType = .image
-	public let outputValueType = .image
+	public let inputValueType: RichValueType = .image
+	public let outputValueType: RichValueType = .image
 	
 	public init() {}
 	

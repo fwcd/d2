@@ -8,7 +8,7 @@ public class HelpCommand: StringCommand {
 		longDescription: "Displays a help embed showing all registered commands",
 		requiredPermissionLevel: .basic
 	)
-	public let outputValueType = .embed
+	public let outputValueType: RichValueType = .embed
 	private let commandPrefix: String
 	private let permissionManager: PermissionManager
 	
