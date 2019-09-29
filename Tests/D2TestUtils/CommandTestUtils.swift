@@ -14,7 +14,7 @@ extension Command {
 		withContent content: String,
 		output: CommandOutput,
 		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""))
-	) -> CommandEventAction {
+	) -> CommandSubscriptionAction {
 		return onSubscriptionMessage(withContent: content, output: output, context: context)
 	}
 }

@@ -9,8 +9,9 @@ public protocol Command: class {
 	
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
-	@discardableResult
-	func on(event: CommandEvent) -> CommandEventAction
+	func onSuccessfullySent(message: DiscordMessage)
+	
+	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction
 	
 	func equalTo(_ rhs: Command) -> Bool
 }
@@ -19,7 +20,11 @@ extension Command {
 	public var inputValueType: RichValueType { return .unknown }
 	public var outputValueType: RichValueType { return .unknown }
 	
-	public func on(event: CommandEvent) -> CommandEventAction { return .none }
+	func onSuccessfullySent(message: DiscordMessage) {}
+	
+	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+		return .continueSubscription
+	}
 
 	public func equalTo(_ rhs: Command) -> Bool {
 		return self === rhs
