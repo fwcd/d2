@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import Foundation
 
-public class StatsCommand: StringBasedCommand {
+public class StatsCommand: StringCommand {
 	public let description = "Prints server statistics"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
@@ -11,7 +11,7 @@ public class StatsCommand: StringBasedCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		output.append(DiscordEmbed(
-			title: ":bar_chart: Server Statistics",
+			title: ":chart_with_upwards_trend: Server Statistics",
 			description: computeStats(context: context).map { "\($0.0): \($0.1)" }.joined(separator: "\n")
 		))
 	}

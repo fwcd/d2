@@ -30,7 +30,7 @@
 			"import SwiftDiscord",
 			"import D2Permissions",
 			"",
-			"public class $1Command: StringBasedCommand {",
+			"public class $1Command: StringCommand {",
 			"\tpublic let description = \"$2\"",
 			"\tpublic let helpText: String? = \"$3\"",
 			"\tpublic let outputValueType = \"$4\"",
@@ -53,7 +53,7 @@
 			"import SwiftDiscord",
 			"import D2Permissions",
 			"",
-			"public class $1Command: ArgListCommand {",
+			"public class $1Command: ArgCommand {",
 			"\tpublic let description = \"$2\"",
 			"\tpublic let helpText: String? = \"$3\"",
 			"\tpublic let outputValueType = \"$4\"",
@@ -68,7 +68,7 @@
 			"\t}",
 			"}"
 		],
-		"description": "Creates a new ArgListCommand implementation"
+		"description": "Creates a new ArgCommand implementation"
 	},
 	"Send to message channel": {
 		"prefix": "msend",

@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import Foundation
 
-public class BFEncodeCommand: StringBasedCommand {
+public class BFEncodeCommand: StringCommand {
 	public let description = "Encodes strings to BF code"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

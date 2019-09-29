@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
-public class SortByCommand: StringBasedCommand {
+public class SortByCommand: StringCommand {
 	public let description = "Fetches the top messages by a certain criterion"
 	public let helpText: String? = "Syntax: sortby [criterion]"
 	public let outputValueType = "embed"

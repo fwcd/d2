@@ -8,7 +8,7 @@ fileprivate let maxExecutionSeconds = 5
 fileprivate let clearedInputChars = try! Regex(from: "\\|&,;")
 fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*([\\s\\S]+)\\(%i2\\)")
 
-public class MaximaCommand: StringBasedCommand {
+public class MaximaCommand: StringCommand {
 	public let description = "Transforms and solves mathematical expressions using Maxima"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

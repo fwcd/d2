@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgListCommand {
+public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 	public let name: String
 	public let description: String
 	public let sourceFile: String = #file

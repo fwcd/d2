@@ -4,7 +4,7 @@ import D2Utils
 
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)=(\\S+)")
 
-public class LatexCommand: StringBasedCommand {
+public class LatexCommand: StringCommand {
 	public let description = "Renders a LaTeX string"
 	public let helpText: String? = "Syntax: [--color=white|black|...]? [latex code]"
 	public let sourceFile: String = #file
@@ -42,9 +42,10 @@ public class LatexCommand: StringBasedCommand {
 		}
 	}
 	
-	public func onSuccessfullySent(message: DiscordMessage) {
-		if let renderer = latexRenderer {
+	public func on(event: CommandEvent) -> CommandSubscriptionAction? {
+		if case let .successfullySent = event, let renderer = latexRenderer {
 			renderer.cleanUp()
 		}
+		return nil
 	}
 }

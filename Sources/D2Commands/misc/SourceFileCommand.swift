@@ -8,7 +8,7 @@ import FoundationNetworking
 fileprivate let repositoryUrl = "https://github.com/fwcd/D2/tree/master"
 fileprivate let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/D2/master"
 
-public class SourceFileCommand: StringBasedCommand {
+public class SourceFileCommand: StringCommand {
 	public let description = "Fetches the source code for a command"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

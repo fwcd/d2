@@ -160,11 +160,13 @@ protocol StringCommand: Command {
 `StringCommand` is useful when the command accepts a single string as an argument or if a custom argument parser is used. Its default implementation of `Command.invoke` passes either `args`, if not empty, or otherwise `input.content` to `StringCommand.invoke`.
 
 ```swift
-protocol ArgListCommand: Command {
-	var expectedArgCount: Int { get }
+protocol ArgCommand: Command {
+	associatedtype Args: Arg
+
+	var argPattern: Args { get }
 	
 	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
 }
 ```
 
-`ArgListCommand` should be adopted if the command excepts a fixed number of arguments. It allows the user to partially apply the command's arguments and then pipe the rest.
+`ArgCommand` should be adopted if the command expects a fixed structure of arguments.

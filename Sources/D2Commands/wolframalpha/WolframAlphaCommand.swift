@@ -7,7 +7,7 @@ import D2Utils
 
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
-public class WolframAlphaCommand: StringBasedCommand {
+public class WolframAlphaCommand: StringCommand {
 	public let description = "Queries Wolfram Alpha"
 	public let helpText: String? = "[--image]? [--steps]? [query input]"
 	public let sourceFile: String = #file

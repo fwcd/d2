@@ -3,7 +3,7 @@ import D2Permissions
 import D2Graphics
 import D2Utils
 
-public class DemoGifCommand: StringBasedCommand {
+public class DemoGifCommand: StringCommand {
 	public let description = "Creates a demo GIF"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

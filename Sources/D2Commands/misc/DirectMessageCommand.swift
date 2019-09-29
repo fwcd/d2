@@ -4,7 +4,7 @@ import D2Utils
 
 fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
 
-public class DirectMessageCommand: StringBasedCommand {
+public class DirectMessageCommand: StringCommand {
 	public let description = "Sends a direct message to a user"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin

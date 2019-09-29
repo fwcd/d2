@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-public class TimeTableCommand: StringBasedCommand {
+public class TimeTableCommand: StringCommand {
 	public let description = "Generates a TimeTable from CAU modules"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

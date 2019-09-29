@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2Utils
 
-public class CycleThroughCommand: StringBasedCommand {
+public class CycleThroughCommand: StringCommand {
 	public let description = "Animates a sequence of characters"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip

@@ -3,7 +3,7 @@ import D2Permissions
 import D2Graphics
 import Foundation
 
-public class AvatarCommand: StringBasedCommand {
+public class AvatarCommand: StringCommand {
 	public let description = "Fetches the avatar of a user"
 	public let helpText: String? = "Syntax: [@user]"
 	public let outputValueType = "image"
