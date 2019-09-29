@@ -8,7 +8,7 @@ import D2Utils
 import D2Permissions
 import D2Script
 
-public class D2ScriptCommand: StringCommand {
+public class D2ScriptCommand: StringBasedCommand {
 	public let description: String
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel: PermissionLevel

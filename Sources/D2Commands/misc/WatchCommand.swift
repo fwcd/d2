@@ -1,10 +1,10 @@
 import SwiftDiscord
 import D2Permissions
 
-public class WatchCommand: StringCommand {
+public class WatchCommand: StringBasedCommand {
 	public let description = "Fetches a YouTube link from a provided ID"
 	public let helpText: String? = "Syntax: ID"
-	public let outputValueType = "string"
+	public let outputValueType = "text"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 

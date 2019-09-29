@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-public class PollCommand: StringCommand {
+public class PollCommand: StringBasedCommand {
 	public let description = "Creates a simple poll"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

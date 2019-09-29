@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import Foundation
 
-public class StatsCommand: StringCommand {
+public class StatsCommand: StringBasedCommand {
 	public let description = "Prints server statistics"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

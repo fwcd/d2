@@ -10,7 +10,7 @@ fileprivate let activityTypes: [String: DiscordActivityType] = [
 fileprivate let availableStatusTypes = "idle|offline|online|dnd"
 fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(\(availableStatusTypes))\\s+)?(.+)")
 
-public class PresenceCommand: StringCommand {
+public class PresenceCommand: StringBasedCommand {
 	public let description = "Updates the game activity and status"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin

@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 
-public class GuitarChordCommand: StringCommand {
+public class GuitarChordCommand: StringBasedCommand {
 	public let description = "Finds a guitar chord and displays the fret pattern"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

@@ -14,7 +14,7 @@ fileprivate let learnPattern = try! Regex(from: "(\\S+)?")
 /** Matches a data sample of the form ($0, $1). */
 fileprivate let dataSamplePattern = try! Regex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\S+)\\s*\\)")
 
-public class PerceptronCommand: StringCommand {
+public class PerceptronCommand: StringBasedCommand {
 	public let description = "Creates and trains a single-layered perceptron"
 	public let helpText: String? = """
 		Syntax: [subcommand] [args]

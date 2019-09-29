@@ -8,7 +8,7 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 /**
  * Provides a base layer of functionality for a turn-based games.
  */
-public class GameCommand<G: Game>: StringCommand {
+public class GameCommand<G: Game>: StringBasedCommand {
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
 	public let subscribesToNextMessages = true

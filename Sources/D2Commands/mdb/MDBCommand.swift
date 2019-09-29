@@ -2,7 +2,7 @@ import SwiftDiscord
 import D2Permissions
 import D2WebAPIs
 
-public class MDBCommand: StringCommand {
+public class MDBCommand: StringBasedCommand {
 	public let description = "Queries the Computer Science module database of the CAU"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

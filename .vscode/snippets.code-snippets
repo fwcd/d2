@@ -30,7 +30,7 @@
 			"import SwiftDiscord",
 			"import D2Permissions",
 			"",
-			"public class $1Command: StringCommand {",
+			"public class $1Command: StringBasedCommand {",
 			"\tpublic let description = \"$2\"",
 			"\tpublic let helpText: String? = \"$3\"",
 			"\tpublic let outputValueType = \"$4\"",

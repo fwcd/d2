@@ -4,7 +4,7 @@ import D2Utils
 
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)=(\\S+)")
 
-public class LatexCommand: StringCommand {
+public class LatexCommand: StringBasedCommand {
 	public let description = "Renders a LaTeX string"
 	public let helpText: String? = "Syntax: [--color=white|black|...]? [latex code]"
 	public let sourceFile: String = #file

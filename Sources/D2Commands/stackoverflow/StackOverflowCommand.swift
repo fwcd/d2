@@ -4,7 +4,7 @@ import D2Utils
 import D2Permissions
 import D2WebAPIs
 
-public class StackOverflowCommand: StringCommand {
+public class StackOverflowCommand: StringBasedCommand {
 	public let description = "Queries StackOverflow"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip

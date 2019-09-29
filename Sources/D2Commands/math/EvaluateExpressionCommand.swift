@@ -4,7 +4,7 @@ import D2Utils
 
 fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
-public class EvaluateExpressionCommand: StringCommand {
+public class EvaluateExpressionCommand: StringBasedCommand {
 	public let description: String
 	public let helpText: String? = "Syntax: [--ast]? [expression]"
 	public let sourceFile: String = #file

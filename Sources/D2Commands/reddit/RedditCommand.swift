@@ -5,7 +5,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public class RedditCommand: StringCommand {
+public class RedditCommand: StringBasedCommand {
 	public let description = "Fetches a post from a subreddit"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.vip

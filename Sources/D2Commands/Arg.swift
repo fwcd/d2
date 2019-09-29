@@ -2,6 +2,8 @@
 // of types to statically determine the "pattern" of arguments
 // and can automatically generate usage examples.
 
+import D2Utils
+
 /**
  * A (possibly composed) command argument.
  * 
@@ -13,6 +15,15 @@
 public protocol Arg: CustomStringConvertible {
     /** Whether this instantiation is a _pattern instantiation_. */
     var isPattern: Bool { get }
+    
+    /**
+     * Parses the argument structure from a token iterator
+     * of space-delimited words.
+     *
+     * The iterator should be considered
+     * "consumed" if this method returns `nil`.
+     */
+    static func parse(from tokens: TokenIterator<String>) -> Self?
 
     /**
      * Generates up to n usage examples.
@@ -23,7 +34,7 @@ public protocol Arg: CustomStringConvertible {
 }
 
 /** A simple value argument. */
-public struct ArgValue<T>: Arg {
+public struct ArgValue<T>: Arg where T: LosslessStringConvertible {
     public let value: T
     public let isPattern: Bool
     public let examples: [String]
@@ -34,6 +45,13 @@ public struct ArgValue<T>: Arg {
         isPattern = false
         self.value = value
         examples = []
+    }
+    
+    public static func parse(from tokens: TokenIterator<String>) -> ArgValue<T>? {
+        guard let token = tokens.peek() else { return nil }
+        guard let parsed = T.init(token) else { return nil }
+        tokens.next()
+        return ArgValue.init(value: parsed)
     }
     
     public func generateExamples(_ n: Int) -> [String] {
@@ -70,6 +88,12 @@ public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
         self.right = right
     }
     
+    public static func parse(from tokens: TokenIterator<String>) -> ArgPair<L, R>? {
+        guard let left = L.parse(from: tokens) else { return nil }
+        guard let right = R.parse(from: tokens) else { return nil }
+        return ArgPair.init(left: left, right: right)
+    }
+    
     public func generateExamples(_ n: Int) -> [String] {
         let leftExamples = left.generateExamples(n)
         let rightExamples = right.generateExamples(n)
@@ -81,44 +105,48 @@ public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
 }
 
 /** An alternation over two arguments, i.e. a "sum argument". */
-public struct ArgEither<L, R>: Arg where L: Arg, R: Arg {
-    public let left: L?
-    public let right: R?
-    public let isPattern: Bool
-    public var description: String {
-        let s = [left as Arg?, right as Arg?]
-            .compactMap { $0 }
-            .map { "\($0)" }
-            .joined(separator: " | ")
-        return "(\(s))"
-    }
+// public struct ArgEither<L, R>: Arg where L: Arg, R: Arg {
+//     public let left: L?
+//     public let right: R?
+//     public let isPattern: Bool
+//     public var description: String {
+//         let s = [left as Arg?, right as Arg?]
+//             .compactMap { $0 }
+//             .map { "\($0)" }
+//             .joined(separator: " | ")
+//         return "(\(s))"
+//     }
     
-    /** Creates a _pattern instantiation_ of this argument. */
-    public init(patternWithLeft left: L, right: R) {
-        isPattern = true
-        self.left = left
-        self.right = right
-    }
+//     /** Creates a _pattern instantiation_ of this argument. */
+//     public init(patternWithLeft left: L, right: R) {
+//         isPattern = true
+//         self.left = left
+//         self.right = right
+//     }
     
-    /** Creates a _value instantiation_ of the left side. */
-    public init(left: L) {
-        isPattern = false
-        self.left = left
-        right = nil
-    }
+//     /** Creates a _value instantiation_ of the left side. */
+//     public init(left: L) {
+//         isPattern = false
+//         self.left = left
+//         right = nil
+//     }
     
-    /** Creates a _value instantiation_ of the right side. */
-    public init(right: R) {
-        isPattern = false
-        left = nil
-        self.right = right
-    }
+//     /** Creates a _value instantiation_ of the right side. */
+//     public init(right: R) {
+//         isPattern = false
+//         left = nil
+//         self.right = right
+//     }
     
-    public func generateExamples(_ n: Int) -> [String] {
-        return (left!.generateExamples(n / 2) + right!.generateExamples(n / 2))
-            .shuffled()
-    }
-}
+//     public static func parse(from tokens: TokenIterator<String>) -> ArgEither<L, R>? {
+//         TODO
+//     }
+    
+//     public func generateExamples(_ n: Int) -> [String] {
+//         return (left!.generateExamples(n / 2) + right!.generateExamples(n / 2))
+//             .shuffled()
+//     }
+// }
 
 /** An optional argument. */
 public struct ArgOption<T>: Arg where T: Arg {
@@ -136,6 +164,10 @@ public struct ArgOption<T>: Arg where T: Arg {
     public init(value: T?) {
         isPattern = false
         self.value = value
+    }
+    
+    public static func parse(from tokens: TokenIterator<String>) -> ArgOption<T>? {
+        ArgOption.init(value: T.parse(from: tokens))
     }
     
     public func generateExamples(_ n: Int) -> [String] {
@@ -165,6 +197,14 @@ public struct ArgRepeat<T>: Arg where T: Arg {
     public init(values: [T]) {
         self.values = values
         isPattern = false
+    }
+    
+    public static func parse(from tokens: TokenIterator<String>) -> ArgRepeat<T>? {
+        var values = [T]()
+        while let token = T.parse(from: tokens) {
+            values.append(token)
+        }
+        return ArgRepeat.init(values: values)
     }
     
     public func generateExamples(_ n: Int) -> [String] {
@@ -197,6 +237,15 @@ public struct ArgRepeat1<T>: Arg where T: Arg {
         }
         self.values = values
         isPattern = false
+    }
+    
+    public static func parse(from tokens: TokenIterator<String>) -> ArgRepeat1<T>? {
+        guard let firstToken = T.parse(from: tokens) else { return nil }
+        var values = [firstToken]
+        while let token = T.parse(from: tokens) {
+            values.append(token)
+        }
+        return ArgRepeat1.init(values: values)
     }
     
     public func generateExamples(_ n: Int) -> [String] {

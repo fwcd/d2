@@ -5,7 +5,7 @@ import D2Utils
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 fileprivate let pingPattern = try! Regex(from: "<@&?.+?>")
 
-public class MarkovCommand: StringCommand {
+public class MarkovCommand: StringBasedCommand {
 	public let description = "Generates a natural language response using a Markov chain"
 	public let helpText: String? = "Syntax: markov [--all]? [--noping]? [@user]?"
 	public let sourceFile: String = #file

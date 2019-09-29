@@ -3,7 +3,7 @@ import D2Permissions
 import D2Utils
 import D2Graphics
 
-public class DemoImageCommand: StringCommand {
+public class DemoImageCommand: StringBasedCommand {
 	public let description = "Creates a demo image"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

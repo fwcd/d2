@@ -5,7 +5,7 @@ import D2Script
 
 fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
 
-public class AddD2ScriptCommand: StringCommand {
+public class AddD2ScriptCommand: StringBasedCommand {
 	public let description = "Adds a D2 script at runtime to the command registry"
 	public let helpText: String? = "Syntax: ```[script]```"
 	public let sourceFile: String = #file

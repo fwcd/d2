@@ -10,7 +10,7 @@ import D2WebAPIs
 fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
 
 /** Locates locations on the University of Kiel's campus. */
-public class CampusCommand: StringCommand {
+public class CampusCommand: StringBasedCommand {
 	public let description = "Locates rooms on the CAU campus"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic

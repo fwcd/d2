@@ -9,7 +9,7 @@ import SwiftSoup
 
 fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")
 
-public class WebCommand: StringCommand {
+public class WebCommand: StringBasedCommand {
 	public let description = "Renders a web page"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.admin
