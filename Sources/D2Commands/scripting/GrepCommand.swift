@@ -28,10 +28,13 @@ public class GrepCommand: ArgCommand {
 				}
 			}
 			
-			output.append(result)
+			if result.isEmpty {
+				output.append("Grep result is empty!")
+			} else {
+				output.append(result)
+			}
 		} catch {
-			output.append("Regex syntax error")
-			print(error)
+			output.append("Regex syntax error: \(error)")
 		}
 	}
 }

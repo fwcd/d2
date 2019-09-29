@@ -12,6 +12,9 @@ public struct DiscordMessageWriter {
 			case .none:
 				throw DiscordMessageWriterError.triedToConvertNone
 			case let .text(txt):
+				if txt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+					throw DiscordMessageWriterError.emptyMessage
+				}
 				return MessageLike(fromContent: txt)
 			case let .image(img):
 				return try MessageLike(fromImage: img)
