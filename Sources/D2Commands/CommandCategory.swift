@@ -2,6 +2,7 @@ public enum CommandCategory: CustomStringConvertible {
     case bf
     case cau
     case d2script
+    case essential
     case file
     case game
     case imaging
@@ -21,6 +22,7 @@ public enum CommandCategory: CustomStringConvertible {
             case .bf: return ":currency_exchange: BF interpreter"
             case .cau: return ":school: CAU-specific utilities"
             case .d2script: return ":scroll: D2 scripting"
+            case .essential: return ":sparkles: Fundamental commands (such as `help`)"
             case .file: return ":file_folder: File IO"
             case .game: return ":game_die: Multiplayer games"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"

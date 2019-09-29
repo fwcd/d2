@@ -2,11 +2,15 @@ import SwiftDiscord
 import D2Permissions
 
 public class VoidCommand: Command {
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Does nothing",
+		longDescription: "Does nothing",
+		requiredPermissionLevel: .basic
+	)
 	public let description = "Does nothing."
-	public let inputValueType = "()"
-	public let outputValueType = "()"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let inputValueType = .none
+	public let outputValueType = .none
 	
 	public init() {}
 	
