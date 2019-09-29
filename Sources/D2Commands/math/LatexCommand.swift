@@ -11,9 +11,9 @@ public class LatexCommand: StringCommand {
 		category: .math,
 		shortDescription: "Renders a LaTeX string",
 		longDescription: "Parses the input as LaTeX and renders it to an image",
+		helpText: "Syntax: [--color=white|black|...]? [latex code]",
 		requiredPermissionLevel: .basic
 	)
-	// public let helpText: String? = "Syntax: [--color=white|black|...]? [latex code]"
 	public let outputValueType = .image
 	private let latexRenderer: LatexRenderer?
 	private var running = false

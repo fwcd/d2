@@ -8,7 +8,6 @@ fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
 public class EvaluateExpressionCommand: StringCommand {
 	public let info: CommandInfo
-	// public let helpText: String? = "Syntax: [--ast]? [expression]"
 	private let parser: ExpressionParser
 	
 	public init(parser: ExpressionParser, name: String) {
@@ -16,7 +15,9 @@ public class EvaluateExpressionCommand: StringCommand {
 		info = CommandInfo(
 			category: .math,
 			shortDescription: "Evaluates an expression in \(name)",
-			longDescription: "Evaluates an expression written in \(name) and outputs the result"
+			longDescription: "Evaluates an expression written in \(name) and outputs the result",
+			helpText: "Syntax: [--ast]? [expression]",
+			requiredPermissionLevel: .basic
 		)
 		description = "Evaluates an expression in \(name)"
 	}

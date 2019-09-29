@@ -11,11 +11,11 @@ public class ToFileCommand: Command {
 		category: .file,
 		shortDescription: "Writes text to a file",
 		longDescription: "Responds with a text file containing the input",
+		helpText: "Syntax: [filename} [content]...",
 		requiredPermissionLevel: .basic
 	)
 	public let inputValueType = .text
 	public let outputValueType = .files
-	// public let helpText: String? = "Syntax: [filename] [content...]"
 	
 	public init() {}
 	

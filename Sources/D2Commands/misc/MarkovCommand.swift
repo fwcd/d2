@@ -12,9 +12,9 @@ public class MarkovCommand: StringCommand {
 		category: .misc,
 		shortDescription: "Generates a natural language response using a Markov chain",
 		longDescription: "Uses a Markov chain with data from the current channel to generate a human-like response",
+		helpText: "Syntax: markov [--all]? [--noping]? [@user]?",
 		requiredPermissionLevel: .basic
 	)
-	// public let helpText: String? = "Syntax: markov [--all]? [--noping]? [@user]?"
 	private let order = 2
 	private let maxWords = 60
 	

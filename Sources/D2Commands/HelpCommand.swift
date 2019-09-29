@@ -14,8 +14,6 @@ public class HelpCommand: StringCommand {
 		self.permissionManager = permissionManager
 	}
 	
-	// TODO: Integrate new 'helpText' API
-	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if input.isEmpty {
 			output.append(generalHelpEmbed(context: context))

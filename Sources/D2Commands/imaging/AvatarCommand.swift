@@ -8,9 +8,9 @@ public class AvatarCommand: StringCommand {
 		category: .imaging,
 		shortDescription: "Fetches the avatar of a user",
 		longDescription: "Fetches the user's profile picture and outputs it in PNG form",
+		helpText: "Syntax: [@user]",
 		requiredPermissionLevel: .basic
 	)
-	// public let helpText: String? = "Syntax: [@user]"
 	public let outputValueType = .image
 	
 	public init() {}

@@ -9,9 +9,9 @@ public class SortByCommand: StringCommand {
 		category: .misc,
 		shortDescription: "Fetches the top messages by a certain criterion",
 		longDescription: "Queries the current channel for messages matching the given criterion and returns the top n from this list",
+		helpText: "Syntax: sortby [criterion]",
 		requiredPermissionLevel: .basic
 	)
-	// public let helpText: String? = "Syntax: sortby [criterion]"
 	public let outputValueType = .embed
 	
 	private let sortCriteria: [String: (DiscordMessage, DiscordMessage) -> Bool] = [
