@@ -2,8 +2,8 @@ import D2Permissions
 
 /** A collection of metadata about a command. */
 public struct CommandInfo {
-    /** The source file in which the command is located. */
-    public var sourceFile: String
+    /** The command's category in the help framework. */
+    public var category: CommandCategory
     /** A short/one-lined description of the command. */
     public var shortDescription: String
     /** A long description/help text for the command. */
@@ -16,15 +16,18 @@ public struct CommandInfo {
     public var subscribesToNextMessages: Bool
     /** Whether the command can only be invoked by users (not bots). */
     public var userOnly: Bool
+    /** The source file in which the command is located. */
+    public var sourceFile: String
     
     public init(
-        sourceFile: String,
+        category: CommandCategory,
         shortDescription: String,
         longDescription: String,
         requiredPermissionLevel: PermissionLevel = .admin,
         hidden: Bool = false,
         subscribesToNextMessages: Bool = false,
-        userOnly: Bool = true
+        userOnly: Bool = true,
+        sourceFile: String = #file
     ) {
         self.sourceFile = sourceFile
         self.shortDescription = shortDescription
