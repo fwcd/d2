@@ -23,6 +23,8 @@ public class HelpCommand: StringCommand {
 		} else {
 			if let command = context.registry[input] {
 				output.append(commandHelpEmbed(for: input, command: command))
+			} else if let category = CommandCategory(rawValue: input) {
+				output.append(categoryHelpEmbed(for: category, context: context))
 			} else {
 				output.append(DiscordEmbed(
 					title: ":warning: Did not recognize command `\(input)`",
@@ -42,13 +44,13 @@ public class HelpCommand: StringCommand {
 						.filter { $0.value.info.category == category }
 						.map { "`\(commandPrefix)\($0.key)`" }
 						.joined(separator: ", ")
-						+ " (Type `\(commandPrefix)help` \(category.rawValue) for details)"
+						+ " (Type `\(commandPrefix)help \(category.rawValue)` for details)"
 				) }
 		)
 	}
 	
 	private func categoryHelpEmbed(for category: CommandCategory, context: CommandContext) -> DiscordEmbed {
-		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden }, by: { $0.value.info.requiredPermissionLevel })
+		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden && $0.value.info.category == category }, by: { $0.value.info.requiredPermissionLevel })
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 		let helpFields = helpGroups
