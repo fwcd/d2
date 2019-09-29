@@ -11,8 +11,6 @@ public class DemoImageCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	public let description = "Creates a demo image"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public init() {}
 	

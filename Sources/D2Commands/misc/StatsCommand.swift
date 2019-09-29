@@ -9,9 +9,6 @@ public class StatsCommand: StringCommand {
 		longDescription: "Outputs a range of interesting statistics about the current guild",
 		requiredPermissionLevel: .basic
 	)
-	public let description = "Prints server statistics"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
 	
 	public init() {}
 	

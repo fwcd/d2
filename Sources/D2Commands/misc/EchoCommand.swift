@@ -7,11 +7,14 @@ import D2Utils
 fileprivate let argPattern = try! Regex(from: "(?:(\\d+)\\s*)?([\\s\\S]*)")
 
 public class EchoCommand: Command {
-	public let description = "Prints something n times"
-	public let inputValueType: RichValueType = .any
-	public let outputValueType: RichValueType = .any
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Outputs something n times",
+		longDescription: "Outputs the given input n times with an interval of 1 second by default",
+		requiredPermissionLevel: .vip
+	)
+	public let inputValueType = .any
+	public let outputValueType = .any
 	private let timer: RepeatingTimer
 	
 	public init(intervalSeconds: Int = 1) {

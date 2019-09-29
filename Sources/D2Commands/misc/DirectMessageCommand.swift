@@ -13,9 +13,6 @@ public class DirectMessageCommand: StringCommand {
 		longDescription: "Sends a direct message to a mentioned user",
 		requiredPermissionLevel: .admin
 	)
-	public let description = "Sends a direct message to a user"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.admin
 	
 	public init() {}
 	

@@ -2,11 +2,14 @@ import SwiftDiscord
 import D2Permissions
 
 public class TriggerTypingCommand: Command {
-	public let description = "Begins to type"
+	public let info = CommandInfo(
+		category: .misc,
+		shortDescription: "Begins to type",
+		longDescription: "Triggers Discord's typing indicator",
+		requiredPermissionLevel: .basic
+	)
 	public let inputValueType: RichValueType = .none
 	public let outputValueType: RichValueType = .none
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.vip
 	
 	public init() {}
 	

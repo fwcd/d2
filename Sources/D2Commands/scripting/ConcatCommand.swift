@@ -10,8 +10,6 @@ public class ConcatCommand: Command {
 	)
 	public let inputValueType: RichValueType = .compound([.text])
 	public let outputValueType: RichValueType = .text
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
 	private let separator = " "
 	
 	public init() {}
