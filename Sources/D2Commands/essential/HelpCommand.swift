@@ -36,7 +36,7 @@ public class HelpCommand: StringCommand {
 	
 	private func generalHelpEmbed(context: CommandContext) -> DiscordEmbed {
 		return DiscordEmbed(
-			title: ":question: Available Command Categories",
+			title: ":question: Available Commands",
 			fields: CommandCategory.allCases
 				.map { category in DiscordEmbed.Field(
 					name: "\(category)",
