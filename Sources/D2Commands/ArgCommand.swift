@@ -16,7 +16,7 @@ extension ArgCommand {
         if let args = Args.parse(from: TokenIterator(words)) {
             invoke(withArgInput: args, output: output, context: context)
         } else {
-            output.append("Syntax: \(argPattern)")
+            output.append("Syntax: `\(argPattern)`")
         }
     }
 }
