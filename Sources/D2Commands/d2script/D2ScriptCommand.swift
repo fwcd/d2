@@ -27,6 +27,7 @@ public class D2ScriptCommand: StringCommand {
 		
 		self.name = name
 		info = CommandInfo(
+			category: .d2script,
 			shortDescription: executor.topLevelStorage[string: "description"] ?? "Anonymous D2Script",
 			longDescription: "A dynamic D2 script",
 			requiredPermissionLevel: executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip

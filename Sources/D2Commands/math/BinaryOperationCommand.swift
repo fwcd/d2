@@ -1,14 +1,15 @@
 import SwiftDiscord
 import D2Permissions
 
-// TODO: Use Arg API
-
 public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 	public let info: CommandInfo
 	public let name: String
-	public let expectedArgCount: Int = 2
 	public let inputValueType: RichValueType = .text
 	public let outputValueType: RichValueType = .text
+	public let argPattern = ArgPair(
+		patternWithLeft: ArgValue(name: "lhs", examples: []),
+		right: ArgValue(name: "rhs", examples: [])
+	)
 	
 	private let operation: (T, T) -> T
 	
@@ -23,9 +24,9 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 		)
 	}
 	
-	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
-		let rawLHS = inputArgs[0]
-		let rawRHS = inputArgs[1]
+	public func invoke(withArgInput input: Args, output: CommandOutput, context: CommandContext) {
+		let rawLHS = input.left.value
+		let rawRHS = input.right.value
 		
 		guard let lhs = T.init(rawLHS) else {
 			output.append("Left-hand side `\(rawLHS)` could not be parsed")

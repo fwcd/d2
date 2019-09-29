@@ -13,6 +13,6 @@ extension StringCommand {
 	public var inputValueType: String { return "text" }
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-		inner.invoke(withStringInput: input.asText ?? "", output: output, context: context)
+		invoke(withStringInput: input.asText ?? "", output: output, context: context)
 	}
 }

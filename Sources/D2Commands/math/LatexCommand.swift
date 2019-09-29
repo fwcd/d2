@@ -48,10 +48,7 @@ public class LatexCommand: StringCommand {
 		}
 	}
 	
-	public func on(event: CommandEvent) -> CommandSubscriptionAction {
-		if case let .successfullySent = event, let renderer = latexRenderer {
-			renderer.cleanUp()
-		}
-		return .none
+	public func onSuccessfullySent(message: DiscordMessage) {
+		latexRenderer?.cleanUp()
 	}
 }

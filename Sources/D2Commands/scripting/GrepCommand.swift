@@ -10,16 +10,19 @@ public class GrepCommand: ArgCommand {
 		requiredPermissionLevel: .vip
 	)
 	public let outputValueType: RichValueType = .text
-	public let expectedArgCount: Int = 2
+	public let argPattern = ArgPair(
+		patternWithLeft: ArgValue(name: "regex", examples: ["\\d+", "(?:test|demo)*"]),
+		right: ArgRepeat(patternWithValue: ArgValue(name: "line", examples: ["something"]))
+	)
 	
 	public init() {}
 	
-	public func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext) {
+	public func invoke(withArgInput input: Args, output: CommandOutput, context: CommandContext) {
 		do {
-			let regex = try Regex(from: inputArgs[0])
+			let regex = try Regex(from: input.left.value)
 			var result = ""
 			
-			for line in inputArgs[1].split(separator: "\n").map({ String($0) }) {
+			for line in input.right.values.map({ $0.value }) {
 				if regex.matchCount(in: line) > 0 {
 					result += line + "\n"
 				}

@@ -87,7 +87,7 @@ class CommandHandler: DiscordClientDelegate {
 					let args = groups[2]
 					
 					if let command = registry[name] {
-						let hasPermission = permissionManager.user(message.author, hasPermission: command.requiredPermissionLevel)
+						let hasPermission = permissionManager.user(message.author, hasPermission: command.info.requiredPermissionLevel)
 						if hasPermission {
 							print("Appending '\(name)' to pipe")
 							pipe.append(PipeComponent(command: command, context: context, args: args))
@@ -98,7 +98,7 @@ class CommandHandler: DiscordClientDelegate {
 							break
 						}
 						
-						userOnly = userOnly || command.userOnly
+						userOnly = userOnly || command.info.userOnly
 					} else {
 						print("Did not recognize command '\(name)'")
 						if !isBot {
@@ -140,7 +140,7 @@ class CommandHandler: DiscordClientDelegate {
 					// Add subscriptions
 					let added = pipe
 						.map { (it: PipeComponent) -> Command in it.command }
-						.filter { cmd in cmd.subscribesToNextMessages && !self.subscribedCommands.contains(where: { cmd.equalTo($0.command) })}
+						.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscribedCommands.contains(where: { cmd.equalTo($0.command) })}
 						.map { CommandSubscription(channel: message.channelId, command: $0) }
 					self.subscribedCommands += added
 				}
@@ -158,7 +158,7 @@ class CommandHandler: DiscordClientDelegate {
 		let isBot = message.author.bot
 		
 		for (i, subscription) in subscribedCommands.enumerated().reversed() {
-			if (subscription.channel == message.channelId) && !(subscription.command.userOnly && isBot) {
+			if (subscription.channel == message.channelId) && !(subscription.command.info.userOnly && isBot) {
 				let response = subscription.command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
 				if response == .cancelSubscription {
 					subscribedCommands.remove(at: i)

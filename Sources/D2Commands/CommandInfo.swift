@@ -32,7 +32,7 @@ public struct CommandInfo {
         userOnly: Bool = true,
         sourceFile: String = #file
     ) {
-        self.sourceFile = sourceFile
+        self.category = category
         self.shortDescription = shortDescription
         self.longDescription = longDescription
         self.helpText = helpText
@@ -40,5 +40,6 @@ public struct CommandInfo {
         self.hidden = hidden
         self.subscribesToNextMessages = subscribesToNextMessages
         self.userOnly = userOnly
+        self.sourceFile = sourceFile
     }
 }

@@ -3,7 +3,7 @@ import D2Permissions
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
 public protocol Command: class {
-	var inputValueType: RichValueType = { get }
+	var inputValueType: RichValueType { get }
 	var outputValueType: RichValueType { get }
 	var info: CommandInfo { get }
 	
@@ -17,12 +17,12 @@ public protocol Command: class {
 }
 
 extension Command {
-	public var inputValueType: RichValueType = { return .unknown }
+	public var inputValueType: RichValueType { return .unknown }
 	public var outputValueType: RichValueType { return .unknown }
 	
-	func onSuccessfullySent(message: DiscordMessage) {}
+	public func onSuccessfullySent(message: DiscordMessage) {}
 	
-	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		return .continueSubscription
 	}
 

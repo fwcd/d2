@@ -40,7 +40,7 @@ public class AddD2ScriptCommand: StringCommand {
 				output.append("Could not parse code.")
 			}
 		} else {
-			output.append("Did not recognize code. \(helpText!)")
+			output.append("Did not recognize code. \(info.helpText!)")
 		}
 	}
 }

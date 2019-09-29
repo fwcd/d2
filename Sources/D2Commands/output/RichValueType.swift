@@ -8,4 +8,5 @@ public enum RichValueType {
     case files
     case compound([RichValueType])
     case unknown
+    case any
 }

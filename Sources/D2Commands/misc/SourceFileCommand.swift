@@ -23,7 +23,7 @@ public class SourceFileCommand: StringCommand {
 			output.append("Unknown command `\(input)`")
 			return
 		}
-		guard let relativeFilePath = command.sourceFile.components(separatedBy: "Sources/").last else {
+		guard let relativeFilePath = command.info.sourceFile.components(separatedBy: "Sources/").last else {
 			output.append("Could not locate source file for command `\(input)`")
 			return
 		}

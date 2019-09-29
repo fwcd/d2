@@ -15,6 +15,12 @@ import D2Utils
 public protocol Arg: CustomStringConvertible {
     /** Whether this instantiation is a _pattern instantiation_. */
     var isPattern: Bool { get }
+    /**
+     * Fetches the maximum number of tokens that this arg can parse.
+     *
+     * **This property should only be fetches if `isPattern` is true.**
+     */
+    var maxTokens: Int { get }
     
     /**
      * Parses the argument structure from a token iterator
@@ -38,6 +44,7 @@ public struct ArgValue<T>: Arg where T: LosslessStringConvertible {
     public let value: T
     public let isPattern: Bool
     public let examples: [String]
+    public let maxTokens: Int = 1
     public var description: String { return "[\(value)]" }
 
     /** Creates a _value instantiation_ of this argument. */
@@ -46,7 +53,14 @@ public struct ArgValue<T>: Arg where T: LosslessStringConvertible {
         self.value = value
         examples = []
     }
-    
+
+    /** Creates a _pattern instantiation_ of this argument. */
+    public init(name: T, examples: [String]) {
+        isPattern = true
+        value = name
+        self.examples = examples
+    }
+
     public static func parse(from tokens: TokenIterator<String>) -> ArgValue<T>? {
         guard let token = tokens.peek() else { return nil }
         guard let parsed = T.init(token) else { return nil }
@@ -59,20 +73,12 @@ public struct ArgValue<T>: Arg where T: LosslessStringConvertible {
     }
 }
 
-extension ArgValue where T == String {
-    /** Creates a _pattern instantiation_ of this argument. */
-    public init(patternWithName name: String, examples: [String]) {
-        isPattern = true
-        value = "[\(name)]"
-        self.examples = examples
-    }
-}
-
 /** A concatenation of two arguments, i.e. a "product argument". */
 public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
     public let left: L
     public let right: R
     public let isPattern: Bool
+    public var maxTokens: Int { return max(left.maxTokens, right.maxTokens) }
     public var description: String { return "\(left) \(right)" }
     
     public init(patternWithLeft left: L, right: R) {
@@ -152,6 +158,7 @@ public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
 public struct ArgOption<T>: Arg where T: Arg {
     public let value: T?
     public let isPattern: Bool
+    public var maxTokens: Int { return value!.maxTokens }
     public var description: String { return "\(value?.description ?? "nil")?" }
     
     /** Creates a _pattern instantiation_ of this argument. */
@@ -167,7 +174,7 @@ public struct ArgOption<T>: Arg where T: Arg {
     }
     
     public static func parse(from tokens: TokenIterator<String>) -> ArgOption<T>? {
-        ArgOption.init(value: T.parse(from: tokens))
+        return ArgOption.init(value: T.parse(from: tokens))
     }
     
     public func generateExamples(_ n: Int) -> [String] {
@@ -179,6 +186,7 @@ public struct ArgOption<T>: Arg where T: Arg {
 public struct ArgRepeat<T>: Arg where T: Arg {
     public let values: [T]
     public let isPattern: Bool
+    public let maxTokens: Int = Int.max
     public var description: String {
         if isPattern {
             return "\(values.first!)*"
@@ -216,6 +224,7 @@ public struct ArgRepeat<T>: Arg where T: Arg {
 public struct ArgRepeat1<T>: Arg where T: Arg {
     public let values: [T]
     public let isPattern: Bool
+    public let maxTokens: Int = Int.max
     public var description: String {
         if isPattern {
             return "\(values.first!)+"

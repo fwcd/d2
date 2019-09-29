@@ -69,7 +69,7 @@ public class PerceptronCommand: StringCommand {
 				output.append("Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands.keys)`")
 			}
 		} else {
-			output.append(helpText!)
+			output.append(info.helpText!)
 		}
 	}
 	

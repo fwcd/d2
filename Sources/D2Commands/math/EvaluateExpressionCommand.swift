@@ -19,7 +19,6 @@ public class EvaluateExpressionCommand: StringCommand {
 			helpText: "Syntax: [--ast]? [expression]",
 			requiredPermissionLevel: .basic
 		)
-		description = "Evaluates an expression in \(name)"
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {

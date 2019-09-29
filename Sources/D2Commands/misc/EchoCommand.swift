@@ -13,8 +13,8 @@ public class EchoCommand: Command {
 		longDescription: "Outputs the given input n times with an interval of 1 second by default",
 		requiredPermissionLevel: .vip
 	)
-	public let inputValueType = .any
-	public let outputValueType = .any
+	public let inputValueType: RichValueType = .any
+	public let outputValueType: RichValueType = .any
 	private let timer: RepeatingTimer
 	
 	public init(intervalSeconds: Int = 1) {

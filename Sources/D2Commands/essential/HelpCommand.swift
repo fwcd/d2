@@ -36,15 +36,16 @@ public class HelpCommand: StringCommand {
 		return DiscordEmbed(
 			title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
 			description: """
-				\(command.description)
+				\(command.info.longDescription)
 				
-				\(command.helpText ?? "")
-				""".trimmingCharacters(in: .whitespaces)
+				\(command.info.helpText ?? "")
+				""".trimmingCharacters(in: .whitespaces),
+			footer: DiscordEmbed.Footer(text: "\(command.info.category)")
 		)
 	}
 	
 	private func generalHelpEmbed(context: CommandContext) -> DiscordEmbed {
-		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.hidden }, by: { $0.value.requiredPermissionLevel })
+		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden }, by: { $0.value.info.requiredPermissionLevel })
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 		let helpFields = helpGroups
@@ -53,7 +54,7 @@ public class HelpCommand: StringCommand {
 					.sorted { $0.key < $1.key }
 					.map { """
 						**\(commandPrefix)\($0.key)**: `\($0.value.inputValueType) -> \($0.value.outputValueType)`
-						    \($0.value.description)
+						    \($0.value.info.shortDescription)
 						
 						""" }
 					.chunks(ofLength: 14)
