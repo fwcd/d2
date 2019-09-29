@@ -104,7 +104,7 @@ public class GameCommand<G: Game>: StringCommand {
 		return sequence.joined(separator: "\n")
 	}
 	
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandEventAction {
 		let author = GamePlayer(from: context.author)
 		
 		if let actionArgs = actionMessageRegex.firstGroups(in: content) {
@@ -116,9 +116,9 @@ public class GameCommand<G: Game>: StringCommand {
 	
 	/** Performs a game action if present, otherwise does nothing. */
 	@discardableResult
-	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandEventAction {
 		guard let state = currentState, (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return .continueSubscription }
-		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
+		var subscriptionAction: CommandEventAction = .continueSubscription
 		
 		do {
 			let params = ActionParameters(

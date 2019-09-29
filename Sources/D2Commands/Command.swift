@@ -10,7 +10,7 @@ public protocol Command: class {
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
 	@discardableResult
-	func on(event: CommandEvent) -> CommandSubscriptionAction?
+	func on(event: CommandEvent) -> CommandEventAction
 	
 	func equalTo(_ rhs: Command) -> Bool
 }
@@ -19,7 +19,7 @@ extension Command {
 	public var inputValueType: RichValueType { return .unknown }
 	public var outputValueType: RichValueType { return .unknown }
 	
-	public func on(event: CommandEvent) -> CommandSubscriptionAction? { return nil }
+	public func on(event: CommandEvent) -> CommandEventAction { return .none }
 
 	public func equalTo(_ rhs: Command) -> Bool {
 		return self === rhs

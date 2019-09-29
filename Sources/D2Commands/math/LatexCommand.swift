@@ -48,10 +48,10 @@ public class LatexCommand: StringCommand {
 		}
 	}
 	
-	public func on(event: CommandEvent) -> CommandSubscriptionAction? {
+	public func on(event: CommandEvent) -> CommandEventAction? {
 		if case let .successfullySent = event, let renderer = latexRenderer {
 			renderer.cleanUp()
 		}
-		return nil
+		return .none
 	}
 }
