@@ -1,4 +1,4 @@
-public enum CommandCategory: CustomStringConvertible {
+public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case bf
     case cau
     case d2script

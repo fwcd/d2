@@ -32,19 +32,22 @@ public class HelpCommand: StringCommand {
 		}
 	}
 	
-	private func commandHelpEmbed(for name: String, command: Command) -> DiscordEmbed {
+	private func generalHelpEmbed(context: CommandContext) -> DiscordEmbed {
 		return DiscordEmbed(
-			title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
-			description: """
-				\(command.info.longDescription)
-				
-				\(command.info.helpText ?? "")
-				""".trimmingCharacters(in: .whitespaces),
-			footer: DiscordEmbed.Footer(text: "\(command.info.category)")
+			title: ":question: Available Command Categories",
+			fields: CommandCategory.allCases
+				.map { category in DiscordEmbed.Field(
+					name: "\(category)",
+					value: context.registry
+						.filter { $0.value.info.category == category }
+						.map { "`\(commandPrefix)\($0.key)`" }
+						.joined(separator: ", ")
+						+ " (Type `\(commandPrefix)help` \(category.rawValue) for details)"
+				) }
 		)
 	}
 	
-	private func generalHelpEmbed(context: CommandContext) -> DiscordEmbed {
+	private func categoryHelpEmbed(for category: CommandCategory, context: CommandContext) -> DiscordEmbed {
 		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden }, by: { $0.value.info.requiredPermissionLevel })
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
@@ -63,8 +66,20 @@ public class HelpCommand: StringCommand {
 					.map { DiscordEmbed.Field(name: ":star: \(group.key) commands (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
 			}
 		return DiscordEmbed(
-			title: ":question: Available Commands",
+			title: "\(category) | Available Commands",
 			fields: helpFields
+		)
+	}
+
+	private func commandHelpEmbed(for name: String, command: Command) -> DiscordEmbed {
+		return DiscordEmbed(
+			title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
+			description: """
+				\(command.info.longDescription)
+				
+				\(command.info.helpText ?? "")
+				""".trimmingCharacters(in: .whitespaces),
+			footer: DiscordEmbed.Footer(text: "\(command.info.category)")
 		)
 	}
 }
