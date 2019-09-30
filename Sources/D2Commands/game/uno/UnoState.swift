@@ -16,7 +16,7 @@ public struct UnoState: GameState, Multiplayer {
 	
 	public var possibleMoves: Set<Move> {
 		var moves = hands[currentRole]?.cards
-			.filter { card in board.lastDiscarded.map { card.canBePlaced(onTopOf: $0) } ?? true }
+			.filter { card in board.lastDiscarded.map { board.topColor == card.color || card.canBePlaced(onTopOf: $0) } ?? true }
 			.flatMap { card in
 				return card.canPickColor
 					? UnoColor.allCases.map { Move(playing: card, pickingColor: $0) }
