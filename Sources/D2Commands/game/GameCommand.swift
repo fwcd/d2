@@ -31,7 +31,7 @@ public class GameCommand<G: Game>: StringCommand {
 	public init() {
 		game = G.init()
 		subcommands = [
-			"allMatches": { [unowned self] in self.allMatches(output: $0) }
+			"matches": { [unowned self] in self.matches(output: $0) }
 		]
 		info.shortDescription = "Plays \(game.name) against someone"
 		info.longDescription = "Lets you create and play \(game.name) matches"
@@ -68,7 +68,7 @@ public class GameCommand<G: Game>: StringCommand {
 		startMatch(between: players, on: channel.id, output: output, flags: flags)
 	}
 	
-	private func allMatches(output: CommandOutput) {
+	private func matches(output: CommandOutput) {
 		output.append(.embed(DiscordEmbed(
 			title: ":video_game: Running \(game.name) matches",
 			description: matches
