@@ -20,7 +20,7 @@ fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\
 
 public class UnivISCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .bf,
+		category: .cau,
 		shortDescription: "Queries the UnivIS",
 		longDescription: "Queries the lecture database 'UnivIS' from the CAU",
 		requiredPermissionLevel: .basic
