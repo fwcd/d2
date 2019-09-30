@@ -7,10 +7,10 @@ import D2Utils
 public struct DiscordMessageWriter {
 	public init() {}
 	
-	public func write<MessageLike: DiscordMessageLikeInitializable>(value: RichValue) throws -> MessageLike {
+	public func write<MessageLike>(value: RichValue) throws -> MessageLike where MessageLike: DiscordMessageLikeInitializable {
 		switch value {
 			case .none:
-				throw DiscordMessageWriterError.triedToConvertNone
+				return MessageLike(fromContent: "")
 			case let .text(txt):
 				if txt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
 					throw DiscordMessageWriterError.emptyMessage
