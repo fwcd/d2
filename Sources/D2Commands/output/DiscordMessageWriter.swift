@@ -33,7 +33,7 @@ public struct DiscordMessageWriter {
 			case let .compound(components):
 				let encoded: [DiscordEncoded] = try components.map { try write(value: $0) }
 				return MessageLike(
-					content: encoded.compactMap { $0.content.nilIfEmpty }.joined(separator: " "),
+					content: encoded.compactMap { $0.content.nilIfEmpty }.joined(separator: "\n"),
 					embed: encoded.compactMap { $0.embed }.first,
 					files: encoded.flatMap { $0.files },
 					tts: false

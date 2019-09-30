@@ -9,7 +9,12 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
  * Provides a base layer of functionality for a turn-based games.
  */
 public class GameCommand<G: Game>: StringCommand {
-	public let info: CommandInfo
+	public private(set) var info = CommandInfo(
+		category: .game,
+		requiredPermissionLevel: .basic,
+		subscribesToNextMessages: true,
+		userOnly: false
+	) // Initialized in init
 	
 	private let game: G
 	private let defaultActions: [String: (G, ActionParameters<G.State>) throws -> ActionResult<G.State>] = [
@@ -17,29 +22,41 @@ public class GameCommand<G: Game>: StringCommand {
 		"help": { game, _ in ActionResult(text: game.helpText, onlyCurrentPlayer: false) }
 	]
 	private let defaultApiActions: Set<String> = ["cancel"]
+	private var subcommands: [String: (CommandOutput) throws -> Void] = [:]
 	
-	private var currentState: G.State? = nil
+	private var matches: [ChannelID: G.State] = [:]
 	private var apiEnabled: Bool = false
 	private var silent: Bool = false
 	
 	public init() {
 		game = G.init()
-		info = CommandInfo(
-			category: .game,
-			shortDescription: "Plays \(game.name) against someone",
-			longDescription: game.helpText,
-			requiredPermissionLevel: .basic,
-			subscribesToNextMessages: true,
-			userOnly: false
-		)
+		subcommands = [
+			"allMatches": { [unowned self] in self.allMatches(output: $0) }
+		]
+		info.shortDescription = "Plays \(game.name) against someone"
+		info.longDescription = "Lets you create and play \(game.name) matches"
+		info.helpText = game.helpText + """
+			
+			Generic subcommands (not directly related to \(game.name)):
+			\(subcommands.map { "- `\($0.key)`" }.joined(separator: "\n"))
+			"""
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		guard currentState == nil else {
-			output.append("Wait for the current match to finish before creating a new one.")
+		if let subcommand = subcommands[input] {
+			do {
+				try subcommand(output)
+			} catch {
+				output.append("Error while running subcommand: \(error)")
+			}
 			return
 		}
 		
+		guard let channel = context.channel else {
+			output.append("No channel to play on.")
+			return
+		}
+
 		guard !context.message.mentions.isEmpty else {
 			output.append("Mention one or more users to play against.")
 			return
@@ -48,7 +65,17 @@ public class GameCommand<G: Game>: StringCommand {
 		let flags = parseFlags(from: input)
 		let players = ([context.author] + context.message.mentions).map { GamePlayer(from: $0) }
 		
-		startMatch(between: players, output: output, flags: flags)
+		startMatch(between: players, on: channel.id, output: output, flags: flags)
+	}
+	
+	private func allMatches(output: CommandOutput) {
+		output.append(.embed(DiscordEmbed(
+			title: ":video_game: Running \(game.name) matches",
+			description: matches
+				.map { "\($0.key): \($0.value.playersDescription)" }
+				.joined(separator: "\n")
+				.nilIfEmpty ?? "No matches"
+		)))
 	}
 	
 	private func parseFlags(from input: String) -> Set<String> {
@@ -69,14 +96,18 @@ public class GameCommand<G: Game>: StringCommand {
 		}
 	}
 	
-	func startMatch(between players: [GamePlayer], output: CommandOutput, flags: Set<String> = []) {
+	func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: CommandOutput, flags: Set<String> = []) {
+		var additionalMsg: RichValue = .none
+		if let previousMatch = matches[channelID] {
+			additionalMsg = .text("The old match \(previousMatch.playersDescription) has been cancelled in favor of this one")
+		}
+
 		let state = G.State.init(players: players)
-		currentState = state
+		matches[channelID] = state
 		apiEnabled = flags.contains("api")
 		silent = flags.contains("silent")
 		
 		var encodedBoard: RichValue = .none
-		
 		if game.renderFirstBoard {
 			encodedBoard = state.board.asRichValue
 			
@@ -87,6 +118,7 @@ public class GameCommand<G: Game>: StringCommand {
 		
 		output.append(.compound([
 			encodedBoard,
+			additionalMsg,
 			.embed(DiscordEmbed(
 				title: "New match: \(state.playersDescription)",
 				color: game.themeColor.map { Int($0.rgb) },
@@ -107,8 +139,8 @@ public class GameCommand<G: Game>: StringCommand {
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
 		let author = GamePlayer(from: context.author)
 		
-		if let actionArgs = actionMessageRegex.firstGroups(in: content) {
-			return perform(actionArgs[1], withArgs: actionArgs[2], output: output, author: author)
+		if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel {
+			return perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, output: output, author: author)
 		} else {
 			return .continueSubscription
 		}
@@ -116,8 +148,8 @@ public class GameCommand<G: Game>: StringCommand {
 	
 	/** Performs a game action if present, otherwise does nothing. */
 	@discardableResult
-	func perform(_ actionKey: String, withArgs args: String, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
-		guard let state = currentState, (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return .continueSubscription }
+	func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> CommandSubscriptionAction {
+		guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return .continueSubscription }
 		var subscriptionAction: CommandSubscriptionAction = .continueSubscription
 		
 		do {
@@ -136,7 +168,7 @@ public class GameCommand<G: Game>: StringCommand {
 			}
 			
 			if actionResult.cancelsMatch {
-				currentState = nil
+				matches[channelID] = nil
 				output.append("Cancelled match: \(state.playersDescription)")
 				return .cancelSubscription
 			}
@@ -156,7 +188,7 @@ public class GameCommand<G: Game>: StringCommand {
 						description: "\(describe(role: winner, in: next)) won the game!"
 					)
 					
-					currentState = nil
+					matches[channelID] = nil
 					subscriptionAction = .cancelSubscription
 				} else if next.isDraw {
 					// Game over due to a draw
@@ -166,7 +198,7 @@ public class GameCommand<G: Game>: StringCommand {
 						description: "The game resulted in a draw!"
 					)
 					
-					currentState = nil
+					matches[channelID] = nil
 					subscriptionAction = .cancelSubscription
 				} else {
 					// Advance the game
@@ -175,7 +207,7 @@ public class GameCommand<G: Game>: StringCommand {
 						description: "\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
 					)
 					
-					currentState = next
+					matches[channelID] = next
 				}
 				
 				if !silent || subscriptionAction == .cancelSubscription {

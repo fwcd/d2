@@ -23,8 +23,8 @@ public struct CommandInfo {
     
     public init(
         category: CommandCategory,
-        shortDescription: String,
-        longDescription: String,
+        shortDescription: String = "No short description",
+        longDescription: String = "No long description",
         helpText: String? = nil,
         requiredPermissionLevel: PermissionLevel = .admin,
         hidden: Bool = false,
