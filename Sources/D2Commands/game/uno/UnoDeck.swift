@@ -1,17 +1,24 @@
 public struct UnoDeck: Hashable {
-	public private(set) var cards: [UnoCard]
+	public private(set) var cards: [UnoCard] = generateCards()
 	public var isEmpty: Bool { return cards.isEmpty }
 	
-	public init() {
-		cards = UnoColor.allCases.flatMap {
-			color in (1...9).map { UnoCard(color: color, label: .number($0)) } + [
+	private static func generateCards() -> [UnoCard] {
+		return UnoColor.allCases.flatMap { color in
+			(0...9).map { UnoCard(color: color, label: .number($0)) } + [
 				UnoCard(color: color, label: .skip),
 				UnoCard(color: color, label: .reverse),
 				UnoCard(color: color, label: .drawTwo),
-				UnoCard(color: color, label: .wild),
+				UnoCard(color: color, label: .wild)
+			]
+		} + UnoColor.allCases.flatMap { color in
+			(1...9).map { UnoCard(color: color, label: .number($0)) } + [
 				UnoCard(color: color, label: .wildDrawFour)
 			]
 		}
+	}
+	
+	public mutating func refill() {
+		cards = UnoDeck.generateCards()
 	}
 	
 	public mutating func drawRandomCard() -> UnoCard? {

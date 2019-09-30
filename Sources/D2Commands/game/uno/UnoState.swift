@@ -62,8 +62,12 @@ public struct UnoState: GameState, Multiplayer {
 		}
 		
 		if move.drawsCard {
-			guard !board.deck.isEmpty else { throw GameError.invalidMove("Encountered empty deck while drawing card") }
-			nextHand.cards.append(board.deck.drawRandomCard()!)
+			guard let drawnCard = board.deck.drawRandomCard() else { throw GameError.invalidMove("Encountered empty deck while drawing card") }
+			nextHand.cards.append(drawnCard)
+
+			if board.deck.isEmpty {
+				board.deck.refill()
+			}
 		}
 		
 		if let nextColor = move.nextColor {
