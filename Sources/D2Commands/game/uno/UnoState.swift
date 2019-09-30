@@ -16,9 +16,9 @@ public struct UnoState: GameState, Multiplayer {
 	
 	public var possibleMoves: Set<Move> {
 		var moves = hands[currentRole]?.cards
-			.filter { card in board.lastDiscarded.map { (card.label == $0.label) || (card.color == board.topColor) } ?? true }
+			.filter { card in board.lastDiscarded.map { card.canBePlaced(onTopOf: $0) } ?? true }
 			.flatMap { card in
-				return card.label.canPickColor
+				return card.canPickColor
 					? UnoColor.allCases.map { Move(playing: card, pickingColor: $0) }
 					: [Move(playing: card)]
 			}
@@ -53,10 +53,10 @@ public struct UnoState: GameState, Multiplayer {
 			board.push(card: card)
 			nextHand.cards.removeFirst(value: card)
 			
-			opponentDrawCardCount = card.label.drawCardCount
-			skipDistance = card.label.skipDistance
+			opponentDrawCardCount = card.drawCardCount
+			skipDistance = card.skipDistance
 			
-			if card.label == .reverse {
+			if case .action(.reverse, _) = card {
 				advanceForward = !advanceForward
 			}
 		}

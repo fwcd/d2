@@ -4,15 +4,15 @@ public struct UnoDeck: Hashable {
 	
 	private static func generateCards() -> [UnoCard] {
 		return UnoColor.allCases.flatMap { color in
-			(0...9).map { UnoCard(color: color, label: .number($0)) } + [
-				UnoCard(color: color, label: .skip),
-				UnoCard(color: color, label: .reverse),
-				UnoCard(color: color, label: .drawTwo),
-				UnoCard(color: color, label: .wild)
+			(0...9).map { UnoCard.number($0, color) } + [
+				UnoCard.action(.skip, color),
+				UnoCard.action(.reverse, color),
+				UnoCard.action(.drawTwo, color),
+				UnoCard.action(.wild, nil)
 			]
 		} + UnoColor.allCases.flatMap { color in
-			(1...9).map { UnoCard(color: color, label: .number($0)) } + [
-				UnoCard(color: color, label: .wildDrawFour)
+			(1...9).map { UnoCard.number($0, color) } + [
+				UnoCard.action(.wildDrawFour, nil)
 			]
 		}
 	}

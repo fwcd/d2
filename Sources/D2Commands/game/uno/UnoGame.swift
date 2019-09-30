@@ -16,7 +16,7 @@ public struct UnoGame: Game {
 	public let helpText: String = """
 		Uno moves follow the general syntax
 		```
-		[card color] [card label] [optional chosen color]
+		[card color]? [card label] [optional chosen color]?
 		```
 		
 		Valid colors are: `\(UnoColor.allCases.map { $0.rawValue }.joined(separator: ", "))`
@@ -25,8 +25,9 @@ public struct UnoGame: Game {
 		Examples:
 		
 		`move yellow 4`
-		`move red wild blue` (chooses the color blue)
-		`move green wildDrawFour yellow` (chooses the color yellow)
+		`move red drawTwo`
+		`move wild blue` (chooses the color blue)
+		`move wildDrawFour yellow` (chooses the color yellow)
 		"""
 	
 	public init() {}
