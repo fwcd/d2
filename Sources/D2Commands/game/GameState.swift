@@ -20,6 +20,7 @@ public protocol GameState {
 	var hands: [Role: Hand] { get }
 	var possibleMoves: Set<Move> { get }
 	var playersDescription: String { get }
+	var handsDescription: String? { get }
 	
 	var winner: Role? { get }
 	var isDraw: Bool { get }
@@ -37,6 +38,7 @@ public protocol GameState {
 
 extension GameState {
 	public var hands: [Role: Hand] { return [:] }
+	public var handsDescription: String? { return nil }
 	
 	public func isPossible(move: Move) -> Bool { return possibleMoves.contains(move) }
 	

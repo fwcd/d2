@@ -12,6 +12,7 @@ public struct UnoState: GameState, Multiplayer {
 	public private(set) var board: Board
 	public private(set) var currentRole: Role = 0
 	public var hands: [Role: Hand]
+	public var handsDescription: String? { return hands.map { "`\(playerOf(role: $0.key)?.username ?? "?")`: \($0.value.cards.count)" }.joined(separator: ",") }
 	
 	public var possibleMoves: Set<Move> {
 		var moves = hands[currentRole]?.cards

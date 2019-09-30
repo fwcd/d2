@@ -204,7 +204,11 @@ public class GameCommand<G: Game>: StringCommand {
 					// Advance the game
 					
 					embed = DiscordEmbed(
-						description: "\(actionResult.text ?? "")\nIt is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
+						description: """
+							\(actionResult.text ?? "")
+							\(next.handsDescription.map { "Hands: \($0)" } ?? "")
+							It is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn
+							""".trimmingCharacters(in: .whitespacesAndNewlines)
 					)
 					
 					matches[channelID] = next
