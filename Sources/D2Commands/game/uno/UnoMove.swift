@@ -2,7 +2,7 @@ import D2Utils
 
 fileprivate let rawColorPattern = "(?:\(UnoColor.allCases.map { $0.rawValue }.joined(separator: "|")))"
 fileprivate let rawLabelPattern = "(?:\(UnoActionLabel.allCases.map { $0.rawValue }.joined(separator: "|")))"
-fileprivate let movePattern = try! Regex(from: "\(rawColorPattern)?\\s+\(rawLabelPattern)\\s+\(rawColorPattern)+")
+fileprivate let movePattern = try! Regex(from: "(?:\(rawColorPattern)\\s+)?\(rawLabelPattern)(?:\\s+\(rawColorPattern))?")
 
 public struct UnoMove: Hashable {
 	public let card: UnoCard?
