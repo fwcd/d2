@@ -33,11 +33,7 @@ class LatexRenderer {
 				
 				for y in 0..<img.height {
 					for x in 0..<img.width {
-						img[y, x] = img[y, x].with(
-							red: 0xFF,
-							green: 0xFF,
-							blue: 0xFF
-						)
+						img[y, x] = img[y, x].inverted
 					}
 				}
 
