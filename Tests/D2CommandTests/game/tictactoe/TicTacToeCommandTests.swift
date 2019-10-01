@@ -1,4 +1,5 @@
 import XCTest
+import SwiftDiscord
 import D2TestUtils
 @testable import D2Commands
 
@@ -19,27 +20,28 @@ final class TicTacToeCommandTests: XCTestCase {
 	func testXWin() throws {
 		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
-		command.startMatch(between: [playerX, playerO], output: output)
+		let channel = ChannelID(rawValue: 0)
+		command.startMatch(between: [playerX, playerO], on: channel, output: output)
 		
-		command.perform("move", withArgs: "top left", output: output, author: playerO)
+		command.perform("move", withArgs: "top left", on: channel, output: output, author: playerO)
 		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameO)`")
 		
-		command.perform("move", withArgs: "top left", output: output, author: playerX)
+		command.perform("move", withArgs: "top left", on: channel, output: output, author: playerX)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(e)\(e)\n\(e)\(e)\(e)")
 		
-		command.perform("move", withArgs: "top right", output: output, author: playerX)
+		command.perform("move", withArgs: "top right", on: channel, output: output, author: playerX)
 		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameX)`")
 		
-		command.perform("move", withArgs: "center center", output: output, author: playerO)
+		command.perform("move", withArgs: "center center", on: channel, output: output, author: playerO)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(e)\(e)\(e)")
 		
-		command.perform("move", withArgs: "left bottom", output: output, author: playerX)
+		command.perform("move", withArgs: "left bottom", on: channel, output: output, author: playerX)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(x)\(e)\(e)")
 		
-		command.perform("move", withArgs: "0 2", output: output, author: playerO)
+		command.perform("move", withArgs: "0 2", on: channel, output: output, author: playerO)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(o)\n\(e)\(o)\(e)\n\(x)\(e)\(e)")
 		
-		command.perform("move", withArgs: "1 0", output: output, author: playerX)
+		command.perform("move", withArgs: "1 0", on: channel, output: output, author: playerX)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(o)\n\(x)\(o)\(e)\n\(x)\(e)\(e)")
 		
 		let result = output.last?.embeds.first
@@ -50,17 +52,18 @@ final class TicTacToeCommandTests: XCTestCase {
 	func testDraw() throws {
 		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
-		command.startMatch(between: [playerX, playerO], output: output)
+		let channel = ChannelID(rawValue: 0)
+		command.startMatch(between: [playerX, playerO], on: channel, output: output)
 		
-		command.perform("move", withArgs: "0 0", output: output, author: playerX)
-		command.perform("move", withArgs: "1 1", output: output, author: playerO)
-		command.perform("move", withArgs: "2 2", output: output, author: playerX)
-		command.perform("move", withArgs: "0 1", output: output, author: playerO)
-		command.perform("move", withArgs: "2 1", output: output, author: playerX)
-		command.perform("move", withArgs: "2 0", output: output, author: playerO)
-		command.perform("move", withArgs: "1 0", output: output, author: playerX)
-		command.perform("move", withArgs: "1 2", output: output, author: playerO)
-		command.perform("move", withArgs: "0 2", output: output, author: playerX)
+		command.perform("move", withArgs: "0 0", on: channel, output: output, author: playerX)
+		command.perform("move", withArgs: "1 1", on: channel, output: output, author: playerO)
+		command.perform("move", withArgs: "2 2", on: channel, output: output, author: playerX)
+		command.perform("move", withArgs: "0 1", on: channel, output: output, author: playerO)
+		command.perform("move", withArgs: "2 1", on: channel, output: output, author: playerX)
+		command.perform("move", withArgs: "2 0", on: channel, output: output, author: playerO)
+		command.perform("move", withArgs: "1 0", on: channel, output: output, author: playerX)
+		command.perform("move", withArgs: "1 2", on: channel, output: output, author: playerO)
+		command.perform("move", withArgs: "0 2", on: channel, output: output, author: playerX)
 		
 		let result = output.last?.embeds.first
 		XCTAssertEqual(result?.title, ":crown: Game Over")
