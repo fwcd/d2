@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# A small script that `npm install`s all packages
+# in this directory.
+
+pushd latex-renderer
+npm install
+popd latex-renderer

@@ -1,0 +1,14 @@
+{
+    "name": "latex-renderer",
+    "version": "0.0.1",
+    "description": "Renders LaTeX input as PNG",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "fwcd",
+    "license": "MIT",
+    "dependencies": {
+        "mathjax-node-svg2png": "^2.0.0"
+    }
+}

@@ -11,6 +11,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 	* Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
 	* Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
 		* Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
+* Node.js and npm
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
@@ -28,12 +29,14 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 			* `mkdir texmf`
 			* `tlmgr init-usertree`
 		* `tlmgr install standalone xkeyval varwidth preview xcolor`
+* `cd Node && ./install-all`
 
 ### Installation on macOS
 * Install a LaTeX distribution
 * Install `maxima`
 * `brew tap vapor/tap`
 * `brew install opus libsodium ctls cairo poppler gd`
+* `cd Node && ./install-all`
 
 ## Setup
 
