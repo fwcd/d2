@@ -5,4 +5,4 @@
 
 pushd latex-renderer
 npm install
-popd latex-renderer
+popd
