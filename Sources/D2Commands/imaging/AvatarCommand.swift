@@ -31,7 +31,11 @@ public class AvatarCommand: StringCommand {
 			).runAsync {
 				if case let .success(data) = $0 {
 					do {
-						output.append(.image(try Image(fromPng: data)))
+						if data.isEmpty {
+							output.append(.text("No avatar available"))
+						} else {
+							output.append(.image(try Image(fromPng: data)))
+						}
 					} catch {
 						output.append("Error: The image conversion failed: \(error)")
 					}
