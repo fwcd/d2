@@ -33,7 +33,7 @@ class LatexRenderer {
 				let height = 200
 				let image = try Image(width: width, height: height)
 				var graphics = CairoGraphics(fromImage: image)
-				graphics.draw(try SVG(fromSvgFile: outputFile.url.absoluteString, width: width, height: height))
+				graphics.draw(try SVG(fromSvgFile: outputFile.url.path, width: width, height: height))
 				then(image)
 			} catch {
 				onError(error)
@@ -44,7 +44,7 @@ class LatexRenderer {
 	private func renderSVG(from formula: String, to outputFile: TemporaryFile, color: String, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
 		cleanUp()
 		print("Invoking latex-renderer")
-		try shellInvoke("npm", in: rendererURL, args: ["start", formula, outputFile.url.absoluteString]) { _ in
+		try shellInvoke("npm", in: rendererURL, args: ["start", formula, outputFile.url.path]) { _ in
 			// TODO: Handle MathJax errors
 			then()
 		}
