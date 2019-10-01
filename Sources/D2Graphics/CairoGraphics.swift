@@ -70,12 +70,17 @@ public struct CairoGraphics: Graphics {
 	}
 	
 	public mutating func draw(_ image: Image, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation optionalRotation: Double?) {
-		let originalWidth = image.width
-		let originalHeight = image.height
-		
+		draw(image.surface, of: image.size, at: position, withSize: size, rotation: optionalRotation)
+	}
+	
+	public mutating func draw(_ svg: SVG, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation optionalRotation: Double?) {
+		draw(svg.surface, of: svg.size, at: position, withSize: size, rotation: optionalRotation)
+	}
+
+	private mutating func draw(_ surface: Surface, of originalSize: Vec2<Int>, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation optionalRotation: Double?) {
 		context.save()
 		
-		let scaleFactor = Vec2(x: Double(size.x) / Double(originalWidth), y: Double(size.y) / Double(originalHeight))
+		let scaleFactor = Vec2(x: Double(size.x) / Double(originalSize.x), y: Double(size.y) / Double(originalSize.y))
 		context.translate(x: position.x, y: position.y)
 		
 		if let rotation = optionalRotation {
@@ -85,11 +90,11 @@ public struct CairoGraphics: Graphics {
 			context.translate(x: -center.x, y: -center.y)
 		}
 		
-		if originalWidth != size.x || originalHeight != size.y {
+		if originalSize != size {
 			context.scale(x: scaleFactor.x, y: scaleFactor.y)
 		}
 		
-		context.source = Pattern(surface: image.surface)
+		context.source = Pattern(surface: surface)
 		context.paint()
 		context.restore()
 	}

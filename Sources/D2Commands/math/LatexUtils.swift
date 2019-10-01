@@ -9,9 +9,9 @@ func handleLatex(error: Error, output: CommandOutput) {
 	}
 }
 
-func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", packages: [String] = ["amsmath", "amssymb"], from input: String, to output: CommandOutput, then: @escaping () -> Void) {
+func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from input: String, to output: CommandOutput, then: @escaping () -> Void) {
 	do {
-		try renderer.renderPNG(from: input, color: color, packages: packages, onError: {
+		try renderer.renderPNG(from: input, color: color, onError: {
 			// Catch asynchronous errors
 			handleLatex(error: $0, output: output)
 			then()

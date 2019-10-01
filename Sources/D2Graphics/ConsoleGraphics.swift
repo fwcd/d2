@@ -29,6 +29,9 @@ public struct ConsoleGraphics: Graphics {
 		print("Drawed image \(image) at \(position) with size \(size)\(rotation.map { " and rotation \($0)" } ?? "")")
 	}
 	
+	public func draw(_ svg: SVG, at position: Vec2<Double>, withSize size: Vec2<Int>, rotation: Double?) {
+		print("Drawed svg \(svg) at \(position) with size \(size)\(rotation.map { " and rotation \($0)" } ?? "")")
+	}
 	public func draw(_ text: Text) {
 		print("Drawed text \(text.value) of size \(text.fontSize) at \(text.position)")
 	}
