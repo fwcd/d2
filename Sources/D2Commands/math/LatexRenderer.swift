@@ -29,7 +29,7 @@ class LatexRenderer {
 
 		try renderPNG(from: formula, to: outputFile, color: color, onError: onError) {
 			do {
-				let img = try Image(fromPngFile: outputFile.url)
+				var img = try Image(fromPngFile: outputFile.url)
 				
 				for y in 0..<img.height {
 					for x in 0..<img.width {
