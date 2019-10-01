@@ -13,7 +13,7 @@ public class MaximaCommand: StringCommand {
 		category: .math,
 		shortDescription: "Transforms and solves math expressions using Maxima",
 		longDescription: "Runs a command with Maxima and outputs the result using a LaTeX renderer",
-		requiredPermissionLevel: .basic
+		requiredPermissionLevel: .admin
 	)
 	public let outputValueType: RichValueType = .image
 	private let latexRenderer: LatexRenderer?
