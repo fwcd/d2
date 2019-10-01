@@ -15,24 +15,16 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
-* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev texlive-latex-base texlive-latex-extra poppler-utils maxima`
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima`
 	* Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
 	* If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
 		* `mkdir /usr/include/freetype2/freetype`
 		* `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
 		* `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
 	* Note that you might need to `apt-get install clang` separately on a Raspberry Pi
-	* Instead of using `texlive-latex-extra`, you can install the required LaTeX packages manually too:
-		* To setup `tlmgr` on a Pi you might need to run:
-			* `sudo apt-get install xzdec`
-			* `cd ~`
-			* `mkdir texmf`
-			* `tlmgr init-usertree`
-		* `tlmgr install standalone xkeyval varwidth preview xcolor`
 * `cd Node && ./install-all`
 
 ### Installation on macOS
-* Install a LaTeX distribution
 * Install `maxima`
 * `brew tap vapor/tap`
 * `brew install opus libsodium ctls cairo poppler gd`
