@@ -1,6 +1,7 @@
 import Foundation
 
 fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+fileprivate let quotes = CharacterSet(charactersIn: "\"'`")
 
 extension StringProtocol {
 	public func split(by length: Int) -> [String] {
@@ -14,6 +15,27 @@ extension StringProtocol {
 		}
 		
 		return output
+	}
+	
+	public func splitPreservingQuotes(by separator: Character) -> [String] {
+		var split = [String]()
+		var segment = ""
+		var quoteStack = [Character]()
+		for c in self {
+			if quoteStack.isEmpty && c == separator {
+				split.append(segment)
+				segment = ""
+			} else {
+				if let quote = quoteStack.last, quote == c {
+					quoteStack.removeLast()
+				} else if let scalar = c.unicodeScalars.first, quotes.contains(scalar) {
+					quoteStack.append(c)
+				}
+				segment.append(c)
+			}
+		}
+		split.append(segment)
+		return split
 	}
 	
 	public var asciiOnly: String? {

@@ -5,7 +5,8 @@ public func allTests() -> [XCTestCaseEntry] {
 	return [
 		testCase(CircularArrayTests.allTests),
 		testCase(ComplexTests.allTests),
-		testCase(TokenIteratorTests.allTests)
+		testCase(TokenIteratorTests.allTests),
+		testCase(StringUtilsTests.allTests)
 	]
 }
 #endif

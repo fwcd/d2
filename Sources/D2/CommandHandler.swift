@@ -20,8 +20,8 @@ fileprivate class PipeComponent {
 
 /** A client delegate that dispatches commands. */
 class CommandHandler: DiscordClientDelegate {
-	private let chainSeparator: String
-	private let pipeSeparator: String
+	private let chainSeparator: Character
+	private let pipeSeparator: Character
 	private let commandPattern: Regex
 	private let initialPresence: String?
 	let commandPrefix: String
@@ -35,7 +35,7 @@ class CommandHandler: DiscordClientDelegate {
 	
 	private let msgParser = DiscordMessageParser()
 	
-	init(withPrefix commandPrefix: String, initialPresence: String? = nil, chainSeparator: String = ";", pipeSeparator: String = "|") throws {
+	init(withPrefix commandPrefix: String, initialPresence: String? = nil, chainSeparator: Character = ";", pipeSeparator: Character = "|") throws {
 		self.commandPrefix = commandPrefix
 		self.chainSeparator = chainSeparator
 		self.pipeSeparator = pipeSeparator
@@ -68,17 +68,16 @@ class CommandHandler: DiscordClientDelegate {
 			message: message
 		)
 		let isBot = message.author.bot
-		
-		// Precedence: Chain < Pipe
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		
-		for rawPipeCommand in slicedMessage.components(separatedBy: chainSeparator) {
+		// Precedence: Chain < Pipe
+		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator) {
 			var pipe = [PipeComponent]()
 			var pipeConstructionSuccessful = true
 			var userOnly = false
 			
 			// Construct the pipe
-			for rawCommand in rawPipeCommand.components(separatedBy: pipeSeparator) {
+			for rawCommand in slicedMessage.splitPreservingQuotes(by: pipeSeparator) {
 				let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 				
 				if let groups = commandPattern.firstGroups(in: trimmedCommand) {
