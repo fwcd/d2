@@ -28,8 +28,16 @@ class LatexRenderer {
 		let outputFile = tempDir.childFile(named: "\(LATEX_PREFIX)-\(timestamp).svg")
 
 		try renderSVG(from: formula, to: outputFile, color: color, onError: onError) {
-			// TODO: Render SVG using Cairo context to PNG
-			// then(try Image(...))
+			do {
+				let width = 600
+				let height = 200
+				let image = try Image(width: width, height: height)
+				var graphics = CairoGraphics(fromImage: image)
+				graphics.draw(try SVG(fromSvgFile: outputFile.url.absoluteString, width: width, height: height))
+				then(image)
+			} catch {
+				onError(error)
+			}
 		}
 	}
 	
@@ -44,13 +52,13 @@ class LatexRenderer {
 	
 	func cleanUp() {
 		do {
-			try self.cleanUpTexFiles(name: lastName)
+			try self.cleanUpTexFiles()
 		} catch {
 			print("Error while cleaning up tex files: \(error)")
 		}
 	}
 	
-	private func cleanUpTexFiles(name: String) throws {
+	private func cleanUpTexFiles() throws {
 		let fileManager = FileManager.default
 		for file in try fileManager.contentsOfDirectory(at: self.tempDir.url, includingPropertiesForKeys: nil) {
 			if file.lastPathComponent.starts(with: LATEX_PREFIX) {
