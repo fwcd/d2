@@ -17,7 +17,7 @@ extension StringProtocol {
 		return output
 	}
 	
-	public func splitPreservingQuotes(by separator: Character) -> [String] {
+	public func splitPreservingQuotes(by separator: Character, omitQuotes: Bool = false) -> [String] {
 		var split = [String]()
 		var segment = ""
 		var quoteStack = [Character]()
@@ -26,12 +26,19 @@ extension StringProtocol {
 				split.append(segment)
 				segment = ""
 			} else {
-				if let quote = quoteStack.last, quote == c {
-					quoteStack.removeLast()
-				} else if let scalar = c.unicodeScalars.first, quotes.contains(scalar) {
-					quoteStack.append(c)
+				let isQuote = c.unicodeScalars.first.map { quotes.contains($0) } ?? false
+				
+				if isQuote {
+					if let quote = quoteStack.last, quote == c {
+						quoteStack.removeLast()
+					} else {
+						quoteStack.append(c)
+					}
 				}
-				segment.append(c)
+				
+				if !omitQuotes || !isQuote {
+					segment.append(c)
+				}
 			}
 		}
 		split.append(segment)
