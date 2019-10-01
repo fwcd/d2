@@ -54,7 +54,7 @@ class CommandHandler: DiscordClientDelegate {
 		let msgIndex = currentIndex
 		currentIndex += 1
 		
-		if message.content.starts(with: commandPrefix) {
+		if message.content.starts(with: commandPrefix) && !(message.channel is DiscordDMChannel) {
 			handleInvocationMessage(client: client, message: message, msgIndex: msgIndex)
 		} else if !subscribedCommands.isEmpty {
 			handleSubscriptionMessage(client: client, message: message)
