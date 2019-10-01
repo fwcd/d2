@@ -10,7 +10,6 @@
     "author": "fwcd",
     "license": "MIT",
     "dependencies": {
-        "mathjax-node": "^2.1.1",
         "mathjax-node-svg2png": "^2.0.0"
     }
 }

@@ -12,10 +12,11 @@ const fs = require("fs");
         mathjax.start();
         const res = await mathjax.typeset({
             math: args[2],
-            svg: true
+            png: true
         });
+        const base64PngData = res.png.replace(/^data:image\/png;base64,/, "");
 
-        fs.writeFile(args[3], res.svg, "utf8", e => {
+        fs.writeFile(args[3], base64PngData, "base64", e => {
             if (e) console.log("Error while writing to file: " + e);
         });
     } catch (e) {

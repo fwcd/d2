@@ -23,25 +23,32 @@ class LatexRenderer {
 		cleanUp()
 	}
 	
-	func renderPNG(from formula: String, color: String, onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
+	func renderImage(from formula: String, color: String, onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
 		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
-		let outputFile = tempDir.childFile(named: "\(LATEX_PREFIX)-\(timestamp).svg")
+		let outputFile = tempDir.childFile(named: "\(LATEX_PREFIX)-\(timestamp).png")
 
-		try renderSVG(from: formula, to: outputFile, color: color, onError: onError) {
+		try renderPNG(from: formula, to: outputFile, color: color, onError: onError) {
 			do {
-				let width = 600
-				let height = 200
-				let image = try Image(width: width, height: height)
-				var graphics = CairoGraphics(fromImage: image)
-				graphics.draw(try SVG(fromSvgFile: outputFile.url.path, width: width, height: height))
-				then(image)
+				let img = try Image(fromPngFile: outputFile.url)
+				
+				for y in 0..<img.height {
+					for x in 0..<img.width {
+						img[y, x] = img[y, x].with(
+							red: 0xFF,
+							green: 0xFF,
+							blue: 0xFF
+						)
+					}
+				}
+
+				then(img)
 			} catch {
 				onError(error)
 			}
 		}
 	}
 	
-	private func renderSVG(from formula: String, to outputFile: TemporaryFile, color: String, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
+	private func renderPNG(from formula: String, to outputFile: TemporaryFile, color: String, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
 		cleanUp()
 		print("Invoking latex-renderer")
 		try shellInvoke("npm", in: rendererURL, args: ["start", formula, outputFile.url.path]) { _ in
