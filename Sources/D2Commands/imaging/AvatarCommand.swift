@@ -1,6 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 import D2Graphics
+import D2Utils
 import Foundation
 
 public class AvatarCommand: StringCommand {
@@ -20,15 +21,26 @@ public class AvatarCommand: StringCommand {
 			output.append("Mention someone to begin!")
 			return
 		}
-		guard let data = Data(base64Encoded: user.avatar) else {
-			output.append("Could not decode Base64-encoded avatar data")
-			return 
-		}
 		
 		do {
-			output.append(.image(try Image(fromPng: data)))
+			try HTTPRequest(
+				scheme: "https",
+				host: "cdn.discordapp.com",
+				path: "/avatars/\(user.id)/\(user.avatar).png",
+				query: ["size": "256"]
+			).runAsync {
+				if case let .success(data) = $0 {
+					do {
+						output.append(.image(try Image(fromPng: data)))
+					} catch {
+						output.append("Error: The image conversion failed: \(error)")
+					}
+				} else if case let .failure(error) = $0 {
+					output.append("Error: The avatar could not be fetched \(error)")
+				}
+			}
 		} catch {
-			output.append("Error: The conversion to an image failed")
+			output.append("Error: The avatar request failed")
 		}
 	}
 }
