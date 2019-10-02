@@ -46,11 +46,11 @@ public struct MapQuestGeocoder {
 					.flatMap { $0 as? [String: Double] }
 				
 				guard let location = latLng else {
-					then(.failure(WebApiError.jsonParseError(json, "Could not locate results -> locations -> latLng")))
+					then(.failure(WebApiError.jsonParseError(String(describing: json), "Could not locate results -> locations -> latLng")))
 					return
 				}
 				guard let lat = location["lat"], let lng = location["lng"] else {
-					then(.failure(WebApiError.jsonParseError(location, "No 'lat'/'lng' keys found")))
+					then(.failure(WebApiError.jsonParseError(String(describing: location), "No 'lat'/'lng' keys found")))
 					return
 				}
 				then(.success(GeoCoordinates(latitude: lat, longitude: lng)))
