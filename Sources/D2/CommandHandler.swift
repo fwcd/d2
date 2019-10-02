@@ -77,7 +77,7 @@ class CommandHandler: DiscordClientDelegate {
 			var userOnly = false
 			
 			// Construct the pipe
-			for rawCommand in slicedMessage.splitPreservingQuotes(by: pipeSeparator, omitQuotes: true) {
+			for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: true) {
 				let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 				
 				if let groups = commandPattern.firstGroups(in: trimmedCommand) {
