@@ -5,18 +5,11 @@ import D2Graphics
 fileprivate let LATEX_PREFIX = "latex"
 
 class LatexRenderer {
-	private let rendererURL: URL
+	private let node = NodePackage(name: "latex-renderer")
 	private let tempDir = TemporaryDirectory() // Will be automatically deleted when deinitialized
 	
-	init(rendererURL: URL) throws {
-		self.rendererURL = rendererURL
+	init() throws {
 		try tempDir.create()
-	}
-	
-	convenience init(
-		templateFilePath: String = "Node/latex-renderer"
-	) throws {
-		try self.init(rendererURL: URL(fileURLWithPath: templateFilePath))
 	}
 	
 	deinit {
@@ -39,7 +32,7 @@ class LatexRenderer {
 	private func renderPNG(from formula: String, to outputFile: TemporaryFile, color: String, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
 		cleanUp()
 		print("Invoking latex-renderer")
-		try shellInvoke("npm", in: rendererURL, args: ["start", formula, color, outputFile.url.path]) { _ in
+		try node.start(withArgs: [formula, color, outputFile.url.path]) { _ in
 			// TODO: Handle MathJax errors
 			then()
 		}
@@ -59,16 +52,6 @@ class LatexRenderer {
 			if file.lastPathComponent.starts(with: LATEX_PREFIX) {
 				try fileManager.removeItem(at: file)
 			}
-		}
-	}
-	
-	private func shellInvoke(_ executable: String, in dirURL: URL, args: [String], then: @escaping (Process) -> Void) throws {
-		let shell = Shell()
-		
-		do {
-			try shell.run(executable, in: dirURL, args: args, then: then)
-		} catch {
-			throw LatexError.processError(executable: executable, cause: error)
 		}
 	}
 }
