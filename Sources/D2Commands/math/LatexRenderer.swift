@@ -29,15 +29,7 @@ class LatexRenderer {
 
 		try renderPNG(from: formula, to: outputFile, color: color, onError: onError) {
 			do {
-				var img = try Image(fromPngFile: outputFile.url)
-				
-				for y in 0..<img.height {
-					for x in 0..<img.width {
-						img[y, x] = img[y, x].inverted
-					}
-				}
-
-				then(img)
+				then(try Image(fromPngFile: outputFile.url))
 			} catch {
 				onError(error)
 			}
@@ -47,7 +39,7 @@ class LatexRenderer {
 	private func renderPNG(from formula: String, to outputFile: TemporaryFile, color: String, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
 		cleanUp()
 		print("Invoking latex-renderer")
-		try shellInvoke("npm", in: rendererURL, args: ["start", formula, outputFile.url.path]) { _ in
+		try shellInvoke("npm", in: rendererURL, args: ["start", formula, color, outputFile.url.path]) { _ in
 			// TODO: Handle MathJax errors
 			then()
 		}
