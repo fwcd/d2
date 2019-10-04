@@ -179,7 +179,7 @@ public struct AnimatedGif {
 		}
 	}
 	
-	private mutating func appendImageDataAsLZW(quantizedFrame: QuantizedImage, width: Int, height: Int) {
+	private mutating func appendImageDataAsLZW<Q>(quantizedFrame: Q, width: Int, height: Int) where Q: QuantizedImage {
 		// Convert the ARGB-encoded image first to color
 		// indices and then to LZW-compressed codes
 		var encoder = LzwEncoder(colorCount: colorCount)

@@ -1,6 +1,6 @@
 import SwiftDiscord
 import D2Permissions
-import Foundation
+import D2Utils
 
 public class BFEncodeCommand: StringCommand {
 	public let info = CommandInfo(
@@ -27,8 +27,8 @@ public class BFEncodeCommand: StringCommand {
 	
 	private func encode(_ character: Character) -> String? {
 		guard let scalar = character.unicodeScalars.first?.value else { return nil }
-		let floorLog = floor(log2(Double(scalar)))
-		let remaining = scalar - UInt32(pow(2.0, floorLog))
+		let floorLog = scalar.log2Floor()
+		let remaining = scalar - (1 << floorLog)
 		
 		return "+" + (0..<Int(floorLog)).map { _ in "/" } + (0..<remaining).map { _ in "+" }
 	}
