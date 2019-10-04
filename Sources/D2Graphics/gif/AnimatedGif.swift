@@ -216,7 +216,7 @@ public struct AnimatedGif {
 	 */
 	public mutating func append(frame: Image, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws {
 		// Workaround since Swift does not support explicit function specializations
-		let _: Phantom<UniformlyQuantizedImage> = try appendWithQuantizer(frame: frame, delayTime: delayTime, disposalMethod: disposalMethod)
+		let _: Phantom<OctreeQuantizedImage> = try appendWithQuantizer(frame: frame, delayTime: delayTime, disposalMethod: disposalMethod)
 	}
 	
 	/**
