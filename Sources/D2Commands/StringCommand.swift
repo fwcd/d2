@@ -10,7 +10,7 @@ public protocol StringCommand: Command {
 }
 
 extension StringCommand {
-	public var inputValueType: String { return "text" }
+	public var inputValueType: RichValueType { return .text }
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		invoke(withStringInput: input.asText ?? "", output: output, context: context)
