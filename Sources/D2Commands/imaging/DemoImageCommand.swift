@@ -11,6 +11,7 @@ public class DemoImageCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	public let description = "Creates a demo image"
+	public let outputValueType: RichValueType = .image
 	
 	public init() {}
 	

@@ -10,6 +10,7 @@ public class DemoGifCommand: StringCommand {
 		longDescription: "Creates an animated GIF for testing purposes",
 		requiredPermissionLevel: .basic
 	)
+	public let outputValueType: RichValueType = .gif
 	
 	public init() {}
 	
