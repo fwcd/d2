@@ -12,7 +12,7 @@ public class SpinCommand: Command {
 	)
 	public let inputValueType: RichValueType = .image
 	public let outputValueType: RichValueType = .gif
-	private let frames: Int = 12
+	private let frames: Int = 60
 	
 	public init() {}
 	
@@ -31,7 +31,7 @@ public class SpinCommand: Command {
 					
 					graphics.draw(image, at: Vec2(x: 0, y: 0), rotation: angle * Double(frameIndex))
 					
-					try gif.append(frame: rotatedImage, delayTime: 10)
+					try gif.append(frame: rotatedImage, delayTime: 2)
 				}
 				
 				gif.appendTrailer()
