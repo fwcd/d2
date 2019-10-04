@@ -7,19 +7,19 @@ fileprivate let CHANNELS = 3
  * An image where all colors are evenly
  * spaced along each channel.
  */
-public struct UniformlyQuantizedImage {
+public struct UniformlyQuantizedImage: QuantizedImage {
     public private(set) var colorTable: [Color]
     private let colorsPerChannel: Int
     private let colorStride: Int
-    private let transparentColor: Int
+    private let transparentColorIndex: Int
     private let image: Image
     
-    public init(fromImage image: Image, colorCount: Int, transparentColor: Int) {
+    public init(fromImage image: Image, colorCount: Int, transparentColorIndex: Int) {
         self.image = image
-        self.transparentColor = transparentColor
+        self.transparentColorIndex = transparentColorIndex
 
         colorTable = []
-        colorsPerChannel = Int(pow(Double(colorCount), Double(CHANNELS)))
+        colorsPerChannel = Int(pow(Double(colorCount), 1.0 / Double(CHANNELS)))
         colorStride = 256 / colorsPerChannel
         
         for r in 0..<colorsPerChannel {
@@ -41,7 +41,7 @@ public struct UniformlyQuantizedImage {
     
     private func quantize(color: Color) -> Int {
         if color.alpha < 128 {
-            return transparentColor
+            return transparentColorIndex
         } else {
             let maxChannelColorIndex = colorsPerChannel - 1
             let r = min(maxChannelColorIndex, Int(color.red) / colorStride)
@@ -51,7 +51,7 @@ public struct UniformlyQuantizedImage {
         }
     }
     
-    public subscript(_ x: Int, _ y: Int) -> Int {
+    public subscript(_ y: Int, _ x: Int) -> Int {
         return quantize(color: image[y, x])
     }
 }

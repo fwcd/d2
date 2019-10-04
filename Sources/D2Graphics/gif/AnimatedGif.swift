@@ -1,4 +1,10 @@
 import Foundation
+import D2Utils
+
+fileprivate let COLOR_COUNT = 256
+fileprivate let COLOR_CHANNELS = 3
+fileprivate let TRANSPARENT_COLOR_INDEX: UInt8 = 0xFF
+fileprivate let COLOR_RESOLUTION: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (bits per pixel - 1)
 
 /**
  * A GIF-encoder that supports
@@ -10,10 +16,7 @@ public struct AnimatedGif {
 	private let height: UInt16
 	public private(set) var data: Data
 	
-	private let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as bits per pixel - 1
-	private let colorsPerChannel: UInt8
-	private let colorStride: Int
-	public let colorCount: Int
+	public var colorCount: Int { return COLOR_COUNT }
 	
 	/**
 	 * Creates a new AnimatedGif with the specified
@@ -25,17 +28,10 @@ public struct AnimatedGif {
 		self.width = width
 		self.height = height
 		
-		colorsPerChannel = 6
-		colorStride = 256 / Int(colorsPerChannel)
-		// Uncomment to use the actual color count instead
-		// of the whole table size:
-		// colorCount = Int(colorsPerChannel) * Int(colorsPerChannel) * Int(colorsPerChannel) + 1
-		colorCount = 256
-		
 		// See http://giflib.sourceforge.net/whatsinagif/bits_and_bytes.html for a detailed explanation of the format
 		appendHeader()
 		appendLogicalScreenDescriptor()
-		appendGlobalColorTable()
+		// appendGlobalColorTable()
 		appendLoopingApplicationExtensionBlock(loopCount: loopCount)
 	}
 	
@@ -95,13 +91,13 @@ public struct AnimatedGif {
 		append(short: width)
 		append(short: height)
 		
-		let useGlobalColorTable = true
+		let globalColorTableFlag = false
 		let sortFlag = false
-		let sizeOfGlobalColorTable: UInt8 = colorResolution
+		let sizeOfGlobalColorTable: UInt8 = COLOR_RESOLUTION
 		
 		var packedField = PackedFieldByte()
-		packedField.append(useGlobalColorTable)
-		packedField.append(colorResolution, bits: 3)
+		packedField.append(globalColorTableFlag)
+		packedField.append(COLOR_RESOLUTION, bits: 3)
 		packedField.append(sortFlag)
 		packedField.append(sizeOfGlobalColorTable, bits: 3)
 		append(byte: packedField.rawValue)
@@ -110,31 +106,6 @@ public struct AnimatedGif {
 		let pixelAspectRatio: UInt8 = 0
 		append(byte: backgroundColorIndex)
 		append(byte: pixelAspectRatio)
-	}
-	
-	private mutating func appendGlobalColorTable() {
-		// Generate a standard color table of 6 colors per channel distributed uniformly
-		
-		// TODO: Use a better quantization algorithm, preferably
-		// generating a per-frame color table instead of a global one
-		var index = 0
-		
-		for r in 0..<colorsPerChannel {
-			for g in 0..<colorsPerChannel {
-				for b in 0..<colorsPerChannel {
-					append(byte: r * UInt8(colorStride))
-					append(byte: g * UInt8(colorStride))
-					append(byte: b * UInt8(colorStride))
-					index += 3
-				}
-			}
-		}
-		
-        let maxIndex = 256 * 3
-		while index < maxIndex {
-			append(byte: 0)
-			index += 1
-		}
 	}
 	
 	private mutating func appendLoopingApplicationExtensionBlock(loopCount: UInt16) {
@@ -146,28 +117,6 @@ public struct AnimatedGif {
 		append(byte: 0x01) // Loop indicator
 		append(short: loopCount)
 		append(byte: 0x00) // Block terminator
-	}
-	
-	private func encode(argb: UInt32) -> Int {
-		return encode(color: Color(argb: argb))
-	}
-	
-	private func encode(color: Color) -> Int {
-		// Implementation is consistent with the global color table
-		if color.alpha < 128 {
-			// Fully transparent color is stored in the last field
-			// of the colors
-			return colorCount - 1
-		} else {
-			let r = min(5, Int(color.red) / colorStride)
-			let g = min(5, Int(color.green) / colorStride)
-			let b = min(5, Int(color.blue) / colorStride)
-			return colorTableIndexOf(r: r, g: g, b: b)
-		}
-	}
-	
-	private func colorTableIndexOf(r: Int, g: Int, b: Int) -> Int {
-		return (36 * r) + (6 * g) + b
 	}
 	
 	private mutating func appendGraphicsControlExtension(disposalMethod: DisposalMethod, delayTime: UInt16) {
@@ -187,7 +136,7 @@ public struct AnimatedGif {
 		append(byte: packedField.rawValue)
 		
 		append(short: delayTime)
-		append(byte: 0xFF) // Transparent color index
+		append(byte: TRANSPARENT_COLOR_INDEX) // Transparent color index
 		append(byte: 0x00) // Block terminator
 	}
 	
@@ -198,10 +147,10 @@ public struct AnimatedGif {
 		append(short: width)
 		append(short: height)
 		
-		let localColorTableFlag = false
+		let localColorTableFlag = true
 		let interlaceFlag = false
 		let sortFlag = false
-		let sizeOfLocalColorTable: UInt8 = 0
+		let sizeOfLocalColorTable: UInt8 = COLOR_RESOLUTION
 		
 		var packedField = PackedFieldByte()
 		packedField.append(localColorTableFlag)
@@ -212,29 +161,34 @@ public struct AnimatedGif {
 		append(byte: packedField.rawValue)
 	}
 	
-	private mutating func appendImageDataAsLZW(frame: Image) {
+	private mutating func appendLocalColorTable(_ colorTable: [Color]) {
+		print("Appending local color table...")
+		let maxColorBytes = COLOR_COUNT * COLOR_CHANNELS
+		var i = 0
+
+		for color in colorTable {
+			append(byte: color.red)
+			append(byte: color.green)
+			append(byte: color.blue)
+			i += COLOR_CHANNELS
+		}
+		
+		while i < maxColorBytes {
+			append(byte: 0x00)
+			i += 1
+		}
+	}
+	
+	private mutating func appendImageDataAsLZW(quantizedFrame: QuantizedImage, width: Int, height: Int) {
 		// Convert the ARGB-encoded image first to color
 		// indices and then to LZW-compressed codes
 		var encoder = LzwEncoder(colorCount: colorCount)
-		let surface = frame.surface // The Cairo surface behind the image
 		
 		print("LZW-encoding the frame...")
 		// Iterate all pixels as ARGB values and encode them
-		surface.withUnsafeMutableBytes { ptr in
-			let height = surface.height
-			let width = surface.width
-			let stride = surface.stride
-			
-			assert(stride == (4 * width))
-			
-			for y in 0..<height {
-				for x in 0..<width {
-					let i = (y * stride) + (x * 4)
-					let colorPtr = UnsafeMutableRawPointer(ptr + i)
-					let color = Color(argb: colorPtr.load(as: UInt32.self))
-					
-					encoder.encodeAndAppend(index: encode(color: color))
-				}
+		for y in 0..<height {
+			for x in 0..<width {
+				encoder.encodeAndAppend(index: quantizedFrame[y, x])
 			}
 		}
 		encoder.finishEncoding()
@@ -261,6 +215,16 @@ public struct AnimatedGif {
 	 * (in hundrets of a second).
 	 */
 	public mutating func append(frame: Image, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws {
+		// Workaround since Swift does not support explicit function specializations
+		let _: Phantom<UniformlyQuantizedImage> = try appendWithQuantizer(frame: frame, delayTime: delayTime, disposalMethod: disposalMethod)
+	}
+	
+	/**
+	 * Appends a frame with the specified quantizer
+	 * and delay time (in hundrets of a second).
+	 */
+    @discardableResult
+	public mutating func appendWithQuantizer<Q>(frame: Image, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws -> PhantomWrapped<Void, Q> where Q: QuantizedImage {
 		let frameWidth = UInt16(frame.width)
 		let frameHeight = UInt16(frame.height)
 		assert(frameWidth == width)
@@ -270,9 +234,15 @@ public struct AnimatedGif {
 			throw AnimatedGifError.frameSizeMismatch(frame.width, frame.height, Int(width), Int(height))
 		}
 		
+		print("Quantizing frame...")
+		let quantized = Q.init(fromImage: frame, colorCount: colorCount, transparentColorIndex: Int(TRANSPARENT_COLOR_INDEX))
+		
 		appendGraphicsControlExtension(disposalMethod: disposalMethod, delayTime: delayTime)
 		appendImageDescriptor()
-		appendImageDataAsLZW(frame: frame)
+		appendLocalColorTable(quantized.colorTable)
+		appendImageDataAsLZW(quantizedFrame: quantized, width: frame.width, height: frame.height)
+		
+		return phantom()
 	}
     
     public mutating func appendTrailer() {

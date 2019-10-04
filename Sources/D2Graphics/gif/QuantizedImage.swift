@@ -13,11 +13,11 @@ public protocol QuantizedImage {
      * Applies the associated quantization algorithm
      * to create a quantized version of the given image.
      *
-     * The `transparentColor` defines a special index which
+     * The `transparentColorIndex` defines a special index which
      * should be used for transparent pixels instead of the
      * color table's value.
      */
-    init(fromImage image: Image, colorCount: Int, transparentColor: Int)
+    init(fromImage image: Image, colorCount: Int, transparentColorIndex: Int)
     
     /**
      * Fetches the quantized color at the
