@@ -17,7 +17,6 @@ public struct OctreeQuantization: ColorQuantization {
 
         let depth: Int
         private(set) var childs: [OctreeNode?] = Array(repeating: nil, count: 8)
-        private(set) weak var parent: OctreeNode?
         
         var refsOrOne: UInt { return (refs == 0) ? 1 : refs }
         var childRefSum: UInt { return childs.compactMap { $0?.refs }.reduce(0, +) }
@@ -41,9 +40,8 @@ public struct OctreeQuantization: ColorQuantization {
             }
         }
         
-        init(depth: Int, parent: OctreeNode? = nil) {
+        init(depth: Int) {
             self.depth = depth
-            self.parent = parent
         }
         
         private func ensureBitShiftNotNegative() {
@@ -69,7 +67,7 @@ public struct OctreeQuantization: ColorQuantization {
             } else {
                 let i = childIndex(of: insertedColor)
                 if childs[i] == nil {
-                    childs[i] = OctreeNode(depth: depth + 1, parent: self)
+                    childs[i] = OctreeNode(depth: depth + 1)
                 }
                 childs[i]!.insert(color: insertedColor)
             }
