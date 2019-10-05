@@ -1,29 +1,34 @@
+// Based on https://www.cubic.org/docs/octree.htm
+
 import D2Utils
+
+fileprivate let MAX_DEPTH = 8 // bits in a byte (of each color channel)
 
 /**
  * A quantizer that generates uses an octree
  * in RGB color space.
  */
 public struct OctreeQuantizedImage: QuantizedImage {
-    private struct OctreeNode {
+    private class OctreeNode: CustomStringConvertible {
         private let depth: Int
-        private var red: UInt
-        private var green: UInt
-        private var blue: UInt
+        private var red: UInt = 0
+        private var green: UInt = 0
+        private var blue: UInt = 0
         private var refs: UInt = 0
-        private var childs: [OctreeNode]? = nil
+        private var childs: [OctreeNode?] = Array(repeating: nil, count: 8)
         
         var refsOrOne: UInt { return (refs == 0) ? 1 : refs }
         var bitShift: Int { return 7 - depth }
         var color: Color { return Color(red: UInt8(red / refsOrOne), green: UInt8(green / refsOrOne), blue: UInt8(blue / refsOrOne)) }
-        var isLeaf: Bool { return childs == nil }
+        var isLeaf: Bool { return refs > 0 }
+        var leafCount: Int { return isLeaf ? 1 : childs.compactMap { $0?.leafCount }.reduce(0, +) }
+        var refCountWithChilds: Int { return Int(refs + childs.compactMap { $0?.refs }.reduce(0, +)) }
+        var description: String { return "(r: \(red), g: \(green), b: \(blue))<\(refs)> \(childs)" }
+
         private(set) var colorTableIndex: Int = -1
         
-        init(depth: Int, red: UInt, green: UInt, blue: UInt) {
+        init(depth: Int) {
             self.depth = depth
-            self.red = red
-            self.green = green
-            self.blue = blue
         }
         
         private func ensureBitShiftNotNegative() {
@@ -40,36 +45,18 @@ public struct OctreeQuantizedImage: QuantizedImage {
             return Int(leftRed | leftGreen | leftBlue)
         }
         
-        private mutating func ensureChildsExist() {
-            if isLeaf {
-                ensureBitShiftNotNegative()
-                childs = []
-                for i: UInt in 0..<8 {
-                    childs!.append(OctreeNode(
-                        depth: depth + 1,
-                        red: ((i >> 2) & 1) << bitShift,
-                        green: ((i >> 1) & 1) << bitShift,
-                        blue: (i & 1) << bitShift
-                    ))
-                }
-            }
-        }
-        
-        mutating func insert(color insertedColor: Color, maxDepth: Int) {
-            if depth == maxDepth {
-                if refs == 0 {
-                    red = 0
-                    green = 0
-                    blue = 0
-                }
-                red += UInt(insertedColor.red)
-                green += UInt(insertedColor.green)
-                blue += UInt(insertedColor.blue)
-                refs += 1
+        func insert(color insertedColor: Color) {
+            if depth == MAX_DEPTH {
+                red = UInt(insertedColor.red)
+                green = UInt(insertedColor.green)
+                blue = UInt(insertedColor.blue)
+                refs = 1
             } else {
-                ensureChildsExist()
                 let i = childIndex(of: insertedColor)
-                childs![i].insert(color: insertedColor, maxDepth: maxDepth)
+                if childs[i] == nil {
+                    childs[i] = OctreeNode(depth: depth + 1)
+                }
+                childs[i]!.insert(color: insertedColor)
             }
         }
         
@@ -77,17 +64,56 @@ public struct OctreeQuantizedImage: QuantizedImage {
             if isLeaf {
                 return colorTableIndex
             } else {
-                return childs![childIndex(of: lookupColor)].lookup(color: color)
+                // TODO: For debugging
+                if childs[childIndex(of: lookupColor)] == nil {
+                    print("While looking up \(lookupColor) @ depth \(depth), child index: \(childIndex(of: lookupColor))")
+                    print(self)
+                }
+                return childs[childIndex(of: lookupColor)]!.lookup(color: lookupColor)
             }
         }
         
-        mutating func fill(colorTable: inout [Color]) {
+        /** "Mixes" all child nodes in this node. This method assumes all children are leaves. */
+        func reduce() {
+            for i in 0..<8 {
+                let child = childs[i]
+                if let c = child {
+                    red += c.red
+                    green += c.green
+                    blue += c.blue
+                    refs += c.refs
+                    childs[i] = nil
+                }
+            }
+        }
+        
+        private func findNodeWithFewestChildRefs() -> (OctreeNode, Int) {
+            var bestNode = self
+            var bestCount = refCountWithChilds
+
+            for child in childs.compactMap({ $0 }) {
+                let (childBestNode, childBestCount) = child.findNodeWithFewestChildRefs()
+                if childBestCount < bestCount {
+                    bestNode = childBestNode
+                    bestCount = childBestCount
+                }
+            }
+            
+            return (bestNode, bestCount)
+        }
+        
+        func reduceBest() {
+            let (bestNode, _) = findNodeWithFewestChildRefs()
+            bestNode.reduce()
+        }
+        
+        func fill(colorTable: inout [Color]) {
             if isLeaf {
                 colorTableIndex = colorTable.count
                 colorTable.append(color)
             } else {
                 for i in 0..<8 {
-                    childs![i].fill(colorTable: &colorTable)
+                    childs[i]?.fill(colorTable: &colorTable)
                 }
             }
         }
@@ -102,16 +128,21 @@ public struct OctreeQuantizedImage: QuantizedImage {
         self.image = image
         self.transparentColorIndex = transparentColorIndex
         colorTable = []
-        octree = OctreeNode(depth: 0, red: 0, green: 0, blue: 0)
-
-        let maxDepth = UInt(colorCount).log2Floor()
-
+        octree = OctreeNode(depth: 0)
+        
+        print("Inserting colors")
         for y in 0..<image.height {
             for x in 0..<image.width {
-                octree.insert(color: image[y, x], maxDepth: maxDepth)
+                octree.insert(color: image[y, x])
             }
         }
         
+        print("Reducing octree")
+        while octree.leafCount > colorCount {
+            octree.reduceBest()
+        }
+        
+        print("Filling color table")
         octree.fill(colorTable: &colorTable)
     }
     
