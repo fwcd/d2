@@ -9,26 +9,28 @@ fileprivate let MAX_DEPTH = 8 // bits in a byte (of each color channel)
  * in RGB color space.
  */
 public struct OctreeQuantizedImage: QuantizedImage {
-    private class OctreeNode: CustomStringConvertible {
+    private class OctreeNode: Hashable, CustomStringConvertible {
         private let depth: Int
         private var red: UInt = 0
         private var green: UInt = 0
         private var blue: UInt = 0
         private var refs: UInt = 0
-        private var childs: [OctreeNode?] = Array(repeating: nil, count: 8)
+        private(set) var childs: [OctreeNode?] = Array(repeating: nil, count: 8)
+        private(set) weak var parent: OctreeNode?
         
         var refsOrOne: UInt { return (refs == 0) ? 1 : refs }
         var bitShift: Int { return 7 - depth }
         var color: Color { return Color(red: UInt8(red / refsOrOne), green: UInt8(green / refsOrOne), blue: UInt8(blue / refsOrOne)) }
         var isLeaf: Bool { return refs > 0 }
-        var leafCount: Int { return isLeaf ? 1 : childs.compactMap { $0?.leafCount }.reduce(0, +) }
+        var leaves: [OctreeNode] { return isLeaf ? [self] : childs.flatMap { $0?.leaves ?? [] } }
         var refCountWithChilds: Int { return Int(refs + childs.compactMap { $0?.refs }.reduce(0, +)) }
         var description: String { return "(r: \(red), g: \(green), b: \(blue))<\(refs)> \(childs)" }
 
         private(set) var colorTableIndex: Int = -1
         
-        init(depth: Int) {
+        init(depth: Int, parent: OctreeNode? = nil) {
             self.depth = depth
+            self.parent = parent
         }
         
         private func ensureBitShiftNotNegative() {
@@ -54,7 +56,7 @@ public struct OctreeQuantizedImage: QuantizedImage {
             } else {
                 let i = childIndex(of: insertedColor)
                 if childs[i] == nil {
-                    childs[i] = OctreeNode(depth: depth + 1)
+                    childs[i] = OctreeNode(depth: depth + 1, parent: self)
                 }
                 childs[i]!.insert(color: insertedColor)
             }
@@ -87,26 +89,6 @@ public struct OctreeQuantizedImage: QuantizedImage {
             }
         }
         
-        private func findNodeWithFewestChildRefs() -> (OctreeNode, Int) {
-            var bestNode = self
-            var bestCount = refCountWithChilds
-
-            for child in childs.compactMap({ $0 }) {
-                let (childBestNode, childBestCount) = child.findNodeWithFewestChildRefs()
-                if childBestCount < bestCount {
-                    bestNode = childBestNode
-                    bestCount = childBestCount
-                }
-            }
-            
-            return (bestNode, bestCount)
-        }
-        
-        func reduceBest() {
-            let (bestNode, _) = findNodeWithFewestChildRefs()
-            bestNode.reduce()
-        }
-        
         func fill(colorTable: inout [Color]) {
             if isLeaf {
                 colorTableIndex = colorTable.count
@@ -117,6 +99,10 @@ public struct OctreeQuantizedImage: QuantizedImage {
                 }
             }
         }
+        
+        static func ==(lhs: OctreeNode, rhs: OctreeNode) -> Bool { lhs === rhs }
+        
+        func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
     }
     
     private let image: Image
@@ -137,9 +123,13 @@ public struct OctreeQuantizedImage: QuantizedImage {
             }
         }
         
-        print("Reducing octree")
-        while octree.leafCount > colorCount {
-            octree.reduceBest()
+        var preLeaves = octree.leaves.compactMap { $0.parent }.sorted { $0.refCountWithChilds > $1.refCountWithChilds }
+        print("Reducing octree, preLeafCount = \(preLeaves)") // DEBUG
+        while preLeaves.count > colorCount {
+            let preLeaf = preLeaves.removeLast()
+            preLeaf.reduce()
+
+            print(" -> \(preLeaves.count)") // DEBUG
         }
         
         print("Filling color table")
