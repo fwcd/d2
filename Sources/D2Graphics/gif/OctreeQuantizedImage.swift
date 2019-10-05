@@ -157,7 +157,7 @@ public struct OctreeQuantizedImage: QuantizedImage {
         }
         
         var leafCount = 0
-        var reduceQueues = [StableBinaryHeap<QueuedReducibleNode>]()
+        var reduceQueues = [[QueuedReducibleNode]]()
 
         // Find reducible nodes at each depth
         octree.walk {
@@ -165,10 +165,14 @@ public struct OctreeQuantizedImage: QuantizedImage {
                 leafCount += 1
             } else {
                 while reduceQueues.count <= $0.depth {
-                    reduceQueues.append(StableBinaryHeap())
+                    reduceQueues.append([])
                 }
-                reduceQueues[$0.depth].insert(QueuedReducibleNode($0))
+                reduceQueues[$0.depth].append(QueuedReducibleNode($0))
             }
+        }
+        
+        for i in 0..<reduceQueues.count {
+            reduceQueues[i].sort(by: <)
         }
         
         print("Reducing octree, leafCount = \(leafCount)")
@@ -178,7 +182,7 @@ public struct OctreeQuantizedImage: QuantizedImage {
 
             for i in (0..<reduceQueues.count).reversed() {
                 if !reduceQueues[i].isEmpty {
-                    reducible = reduceQueues[i].popMax()
+                    reducible = reduceQueues[i].popLast()
                     break
                 }
             }
