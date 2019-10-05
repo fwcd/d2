@@ -10,20 +10,21 @@ fileprivate let MAX_DEPTH = 8 // bits in a byte (of each color channel)
  */
 public struct OctreeQuantizedImage: QuantizedImage {
     private class OctreeNode: Hashable, CustomStringConvertible {
-        private let depth: Int
         private var red: UInt = 0
         private var green: UInt = 0
         private var blue: UInt = 0
         private var refs: UInt = 0
+
+        let depth: Int
         private(set) var childs: [OctreeNode?] = Array(repeating: nil, count: 8)
         private(set) weak var parent: OctreeNode?
         
         var refsOrOne: UInt { return (refs == 0) ? 1 : refs }
+        var childRefSum: UInt { return childs.compactMap { $0?.refs }.reduce(0, +) }
         var bitShift: Int { return 7 - depth }
         var color: Color { return Color(red: UInt8(red / refsOrOne), green: UInt8(green / refsOrOne), blue: UInt8(blue / refsOrOne)) }
         var isLeaf: Bool { return refs > 0 }
         var leaves: [OctreeNode] { return isLeaf ? [self] : childs.flatMap { $0?.leaves ?? [] } }
-        var refCountWithChilds: Int { return Int(refs + childs.compactMap { $0?.refs }.reduce(0, +)) }
         var description: String { return "(r: \(red), g: \(green), b: \(blue))<\(refs)> \(childs)" }
 
         private(set) var colorTableIndex: Int = -1
@@ -75,8 +76,14 @@ public struct OctreeQuantizedImage: QuantizedImage {
             }
         }
         
-        /** "Mixes" all child nodes in this node. This method assumes all children are leaves. */
-        func reduce() {
+        /**
+         * "Mixes" all child nodes in this node. This method assumes all children are leaves
+         * and returns the number of reduced leaves.
+         */
+        @discardableResult
+        func reduce() -> Int {
+            var reduced = 0
+
             for i in 0..<8 {
                 let child = childs[i]
                 if let c = child {
@@ -85,8 +92,11 @@ public struct OctreeQuantizedImage: QuantizedImage {
                     blue += c.blue
                     refs += c.refs
                     childs[i] = nil
+                    reduced += 1
                 }
             }
+
+            return reduced
         }
         
         func fill(colorTable: inout [Color]) {
@@ -100,9 +110,32 @@ public struct OctreeQuantizedImage: QuantizedImage {
             }
         }
         
+        /** Performs a pre-order traversal on this octree. */
+        func walk(onNode: (OctreeNode) -> Void) {
+            onNode(self)
+            for child in childs {
+                child?.walk(onNode: onNode)
+            }
+        }
+        
         static func ==(lhs: OctreeNode, rhs: OctreeNode) -> Bool { lhs === rhs }
         
         func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
+    }
+    
+    /**
+     * A wrapper around a reducible octree node that
+     * defines comparability and equatability via the
+     * sum of child refs.
+     */
+    private struct QueuedReducibleNode: Comparable {
+        let inner: OctreeNode
+        
+        init(_ inner: OctreeNode) { self.inner = inner }
+        
+        static func <(lhs: QueuedReducibleNode, rhs: QueuedReducibleNode) -> Bool { return lhs.inner.childRefSum < rhs.inner.childRefSum }
+        
+        static func ==(lhs: QueuedReducibleNode, rhs: QueuedReducibleNode) -> Bool { return lhs.inner.childRefSum == rhs.inner.childRefSum }
     }
     
     private let image: Image
@@ -123,15 +156,45 @@ public struct OctreeQuantizedImage: QuantizedImage {
             }
         }
         
-        var preLeaves = octree.leaves.compactMap { $0.parent }.sorted { $0.refCountWithChilds > $1.refCountWithChilds }
-        print("Reducing octree, preLeafCount = \(preLeaves)") // DEBUG
-        while preLeaves.count > colorCount {
-            let preLeaf = preLeaves.removeLast()
-            preLeaf.reduce()
+        var leafCount = 0
+        var reduceQueues = [StableBinaryHeap<QueuedReducibleNode>]()
 
-            print(" -> \(preLeaves.count)") // DEBUG
+        // Find reducible nodes at each depth
+        octree.walk {
+            if $0.isLeaf {
+                leafCount += 1
+            } else {
+                while reduceQueues.count <= $0.depth {
+                    reduceQueues.append(StableBinaryHeap())
+                }
+                reduceQueues[$0.depth].insert(QueuedReducibleNode($0))
+            }
         }
         
+        print("Reducing octree, leafCount = \(leafCount)")
+        while leafCount > colorCount {
+            // Find deepest reducible node
+            var reducible: QueuedReducibleNode? = nil
+
+            for i in (0..<reduceQueues.count).reversed() {
+                if !reduceQueues[i].isEmpty {
+                    reducible = reduceQueues[i].popMax()
+                    break
+                }
+            }
+            
+            guard let reducibleNode = reducible?.inner else { fatalError("Too few reducible nodes") }
+            leafCount -= reducibleNode.reduce() - 1
+        }
+
+        // DEBUG:
+        // for i in (0..<reduceQueues.count).reversed() {
+        //     if !reduceQueues[i].isEmpty {
+        //         print("Reduced until depth \(i), leafCount: \(leafCount)")
+        //         break
+        //     }
+        // }
+
         print("Filling color table")
         octree.fill(colorTable: &colorTable)
     }

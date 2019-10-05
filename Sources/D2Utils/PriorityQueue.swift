@@ -20,6 +20,13 @@ public protocol PriorityQueue {
     mutating func insert(_ element: Element)
 }
 
-extension PriorityQueue {
+public extension PriorityQueue {
     var isEmpty: Bool { return count == 0 }
+    
+    init<S>(_ elements: S) where S: Sequence, S.Element == Element {
+        self.init()
+        for element in elements {
+            insert(element)
+        }
+    }
 }
