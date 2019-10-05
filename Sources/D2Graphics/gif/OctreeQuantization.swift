@@ -27,7 +27,19 @@ public struct OctreeQuantization: ColorQuantization {
         var leaves: [OctreeNode] { return isLeaf ? [self] : childs.flatMap { $0?.leaves ?? [] } }
         var description: String { return "(r: \(red), g: \(green), b: \(blue))<\(refs)> \(childs)" }
 
-        private(set) var colorTableIndex: Int = -1
+        private(set) var colorTableIndex: Int? = nil
+        var nearColorTableIndex: Int? {
+            if let index = colorTableIndex {
+                return index
+            } else {
+                for child in childs {
+                    if let index = child?.nearColorTableIndex {
+                        return index
+                    }
+                }
+                return nil
+            }
+        }
         
         init(depth: Int, parent: OctreeNode? = nil) {
             self.depth = depth
@@ -65,14 +77,18 @@ public struct OctreeQuantization: ColorQuantization {
         
         func lookup(color lookupColor: Color) -> Int {
             if isLeaf {
-                return colorTableIndex
+                return colorTableIndex!
             } else {
-                // TODO: For debugging
-                if childs[childIndex(of: lookupColor)] == nil {
-                    print("While looking up \(lookupColor) @ depth \(depth), child index: \(childIndex(of: lookupColor))")
-                    print(self)
+                if let child = childs[childIndex(of: lookupColor)] {
+                    return child.lookup(color: lookupColor)
+                } else {
+                    if let index = nearColorTableIndex {
+                        return index
+                    } else {
+                        print("Warning: Did not find color table index for \(lookupColor) @ depth \(depth), returning 0...")
+                        return 0
+                    }
                 }
-                return childs[childIndex(of: lookupColor)]!.lookup(color: lookupColor)
             }
         }
         

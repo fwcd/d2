@@ -1,7 +1,7 @@
 import Foundation
 import D2Utils
 
-fileprivate let COLOR_COUNT = 256
+public let GIF_COLOR_COUNT = 256
 fileprivate let COLOR_CHANNELS = 3
 fileprivate let TRANSPARENT_COLOR_INDEX: UInt8 = 0xFF
 fileprivate let COLOR_RESOLUTION: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (bits per pixel - 1)
@@ -16,8 +16,6 @@ public struct AnimatedGif {
 	private let height: UInt16
 	private let globalQuantization: ColorQuantization?
 	public private(set) var data: Data
-	
-	public var colorCount: Int { return COLOR_COUNT }
 	
 	/**
 	 * Creates a new AnimatedGif with the specified
@@ -167,7 +165,7 @@ public struct AnimatedGif {
 	
 	private mutating func append(colorTable: [Color]) {
 		print("Appending color table...")
-		let maxColorBytes = COLOR_COUNT * COLOR_CHANNELS
+		let maxColorBytes = GIF_COLOR_COUNT * COLOR_CHANNELS
 		var i = 0
 
 		for color in colorTable {
@@ -194,7 +192,7 @@ public struct AnimatedGif {
 	private mutating func appendImageDataAsLZW(frame: Image, quantization: ColorQuantization, width: Int, height: Int) {
 		// Convert the ARGB-encoded image first to color
 		// indices and then to LZW-compressed codes
-		var encoder = LzwEncoder(colorCount: colorCount)
+		var encoder = LzwEncoder(colorCount: GIF_COLOR_COUNT)
 		
 		print("LZW-encoding the frame...")
 		// Iterate all pixels as ARGB values and encode them
@@ -230,7 +228,7 @@ public struct AnimatedGif {
 		var localQuantization: ColorQuantization? = nil
 		
 		if globalQuantization == nil {
-			localQuantization = OctreeQuantization(fromImage: frame, colorCount: COLOR_COUNT)
+			localQuantization = OctreeQuantization(fromImage: frame, colorCount: GIF_COLOR_COUNT)
 		}
 
 		try append(frame: frame, localQuantization: localQuantization, delayTime: delayTime, disposalMethod: disposalMethod)

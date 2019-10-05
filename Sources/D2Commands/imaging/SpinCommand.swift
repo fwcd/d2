@@ -21,7 +21,11 @@ public class SpinCommand: Command {
 			do {
 				let width = image.width
 				let height = image.height
-				var gif = AnimatedGif(width: UInt16(width), height: UInt16(height))
+				var gif = AnimatedGif(
+					width: UInt16(width),
+					height: UInt16(height),
+					globalQuantization: OctreeQuantization(fromImage: image, colorCount: GIF_COLOR_COUNT)
+				)
 				
 				let angle = (2.0 * Double.pi) / Double(frames)
 				
