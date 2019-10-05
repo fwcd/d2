@@ -91,6 +91,9 @@ For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearac
 ### on macOS
 * `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
 
+## Additional Build Flags
+To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
+
 ## Architecture
 The program consists of three modules:
 

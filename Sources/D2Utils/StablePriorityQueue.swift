@@ -1,3 +1,5 @@
+public typealias StableBinaryHeap<E: Comparable> = StablePriorityQueue<BinaryHeap<StableElement<E>>, E>
+
 public struct StableElement<E>: Comparable where E: Comparable {
     public let inner: E
     public let insertion: Int
@@ -20,20 +22,21 @@ public struct StableElement<E>: Comparable where E: Comparable {
  * ensures a FIFO order for elements of the
  * same priority.
  */
-public struct Stable<Q, E>: PriorityQueue where Q: PriorityQueue, E: Comparable, Q.Element == StableElement<E> {
+public struct StablePriorityQueue<Q, E>: PriorityQueue where Q: PriorityQueue, E: Comparable, Q.Element == StableElement<E> {
     public typealias Element = E
 
     private var inner: Q = Q.init()
+    public var count: Int { return inner.count }
     private var counter: Int = 0
     
     public init() {}
     
-    public mutating func enqueue(_ element: E) {
-        inner.enqueue(StableElement(inner: element, insertion: counter))
+    public mutating func insert(_ element: E) {
+        inner.insert(StableElement(inner: element, insertion: counter))
         counter += 1
     }
     
-    public mutating func dequeue() -> E? {
-        return inner.dequeue()?.inner
+    public mutating func popMax() -> E? {
+        return inner.popMax()?.inner
     }
 }

@@ -9,12 +9,17 @@
  */
 public protocol PriorityQueue {
     associatedtype Element: Comparable
+    var count: Int { get }
     
     init()
     
     /** Removes the element with the highest priority. */
-    mutating func dequeue() -> Element?
+    mutating func popMax() -> Element?
     
     /** Inserts an element. */
-    mutating func enqueue(_ element: Element)
+    mutating func insert(_ element: Element)
+}
+
+extension PriorityQueue {
+    var isEmpty: Bool { return count == 0 }
 }
