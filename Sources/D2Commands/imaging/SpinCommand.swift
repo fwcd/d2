@@ -12,7 +12,7 @@ public class SpinCommand: Command {
 	)
 	public let inputValueType: RichValueType = .image
 	public let outputValueType: RichValueType = .gif
-	private let frames: Int = 60
+	private let frames: Int = 30
 	
 	public init() {}
 	

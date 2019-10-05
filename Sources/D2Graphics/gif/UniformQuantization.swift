@@ -4,20 +4,15 @@ import Foundation
 fileprivate let CHANNELS = 3
 
 /**
- * An image where all colors are evenly
+ * A quantization where all colors are evenly
  * spaced along each channel.
  */
-public struct UniformlyQuantizedImage: QuantizedImage {
+public struct UniformQuantization: ColorQuantization {
     public private(set) var colorTable: [Color]
     private let colorsPerChannel: Int
     private let colorStride: Int
-    private let transparentColorIndex: Int
-    private let image: Image
     
-    public init(fromImage image: Image, colorCount: Int, transparentColorIndex: Int) {
-        self.image = image
-        self.transparentColorIndex = transparentColorIndex
-
+    public init(fromImage image: Image, colorCount: Int) {
         colorTable = []
         colorsPerChannel = Int(pow(Double(colorCount), 1.0 / Double(CHANNELS)))
         colorStride = 256 / colorsPerChannel
@@ -39,19 +34,11 @@ public struct UniformlyQuantizedImage: QuantizedImage {
         return (colorsPerChannel * colorsPerChannel * r) + (colorsPerChannel * g) + b
     }
     
-    private func quantize(color: Color) -> Int {
-        if color.alpha < 128 {
-            return transparentColorIndex
-        } else {
-            let maxChannelColorIndex = colorsPerChannel - 1
-            let r = min(maxChannelColorIndex, Int(color.red) / colorStride)
-            let g = min(maxChannelColorIndex, Int(color.green) / colorStride)
-            let b = min(maxChannelColorIndex, Int(color.blue) / colorStride)
-            return tableIndexOf(r: r, g: g, b: b)
-        }
-    }
-    
-    public subscript(_ y: Int, _ x: Int) -> Int {
-        return quantize(color: image[y, x])
+    public func quantize(color: Color) -> Int {
+        let maxChannelColorIndex = colorsPerChannel - 1
+        let r = min(maxChannelColorIndex, Int(color.red) / colorStride)
+        let g = min(maxChannelColorIndex, Int(color.green) / colorStride)
+        let b = min(maxChannelColorIndex, Int(color.blue) / colorStride)
+        return tableIndexOf(r: r, g: g, b: b)
     }
 }

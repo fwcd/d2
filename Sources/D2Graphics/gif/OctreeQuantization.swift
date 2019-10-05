@@ -5,10 +5,10 @@ import D2Utils
 fileprivate let MAX_DEPTH = 8 // bits in a byte (of each color channel)
 
 /**
- * A quantizer that generates uses an octree
+ * A quantization that uses an octree
  * in RGB color space.
  */
-public struct OctreeQuantizedImage: QuantizedImage {
+public struct OctreeQuantization: ColorQuantization {
     private class OctreeNode: Hashable, CustomStringConvertible {
         private var red: UInt = 0
         private var green: UInt = 0
@@ -118,7 +118,7 @@ public struct OctreeQuantizedImage: QuantizedImage {
             }
         }
         
-        static func ==(lhs: OctreeNode, rhs: OctreeNode) -> Bool { lhs === rhs }
+        static func ==(lhs: OctreeNode, rhs: OctreeNode) -> Bool { return lhs === rhs }
         
         func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
     }
@@ -138,14 +138,10 @@ public struct OctreeQuantizedImage: QuantizedImage {
         static func ==(lhs: QueuedReducibleNode, rhs: QueuedReducibleNode) -> Bool { return lhs.inner.childRefSum == rhs.inner.childRefSum }
     }
     
-    private let image: Image
-    private let transparentColorIndex: Int
     private var octree: OctreeNode
     public private(set) var colorTable: [Color]
     
-    public init(fromImage image: Image, colorCount: Int, transparentColorIndex: Int) {
-        self.image = image
-        self.transparentColorIndex = transparentColorIndex
+    public init(fromImage image: Image, colorCount: Int) {
         colorTable = []
         octree = OctreeNode(depth: 0)
         
@@ -203,15 +199,7 @@ public struct OctreeQuantizedImage: QuantizedImage {
         octree.fill(colorTable: &colorTable)
     }
     
-    private func quantize(color: Color) -> Int {
-        if color.alpha < 128 {
-            return transparentColorIndex
-        } else {
-            return octree.lookup(color: color)
-        }
-    }
-    
-    public subscript(_ y: Int, _ x: Int) -> Int {
-        return quantize(color: image[y, x])
+    public func quantize(color: Color) -> Int {
+        return octree.lookup(color: color)
     }
 }

@@ -14,6 +14,7 @@ fileprivate let COLOR_RESOLUTION: UInt8 = 0b111 // Between 0 and 8 (exclusive) -
 public struct AnimatedGif {
 	private let width: UInt16
 	private let height: UInt16
+	private let globalQuantization: ColorQuantization?
 	public private(set) var data: Data
 	
 	public var colorCount: Int { return COLOR_COUNT }
@@ -23,15 +24,20 @@ public struct AnimatedGif {
 	 * dimensions. A loop count of 0 means infinite
 	 * loops.
 	 */
-	public init(width: UInt16, height: UInt16, loopCount: UInt16 = 0) {
+	public init(width: UInt16, height: UInt16, loopCount: UInt16 = 0, globalQuantization: ColorQuantization? = nil) {
 		data = Data()
 		self.width = width
 		self.height = height
+		self.globalQuantization = globalQuantization
 		
 		// See http://giflib.sourceforge.net/whatsinagif/bits_and_bytes.html for a detailed explanation of the format
 		appendHeader()
-		appendLogicalScreenDescriptor()
-		// appendGlobalColorTable()
+		appendLogicalScreenDescriptor(useGlobalColorTable: globalQuantization != nil)
+		
+		if let quantization = globalQuantization {
+			append(colorTable: quantization.colorTable)
+		}
+
 		appendLoopingApplicationExtensionBlock(loopCount: loopCount)
 	}
 	
@@ -87,16 +93,15 @@ public struct AnimatedGif {
 		append(string: "GIF89a")
 	}
 	
-	private mutating func appendLogicalScreenDescriptor() {
+	private mutating func appendLogicalScreenDescriptor(useGlobalColorTable: Bool = false) {
 		append(short: width)
 		append(short: height)
 		
-		let globalColorTableFlag = false
 		let sortFlag = false
 		let sizeOfGlobalColorTable: UInt8 = COLOR_RESOLUTION
 		
 		var packedField = PackedFieldByte()
-		packedField.append(globalColorTableFlag)
+		packedField.append(useGlobalColorTable)
 		packedField.append(COLOR_RESOLUTION, bits: 3)
 		packedField.append(sortFlag)
 		packedField.append(sizeOfGlobalColorTable, bits: 3)
@@ -140,20 +145,19 @@ public struct AnimatedGif {
 		append(byte: 0x00) // Block terminator
 	}
 	
-	private mutating func appendImageDescriptor() {
+	private mutating func appendImageDescriptor(useLocalColorTable: Bool = false) {
 		append(byte: 0x2C) // Image separator
 		append(short: 0) // Left position
 		append(short: 0) // Top position
 		append(short: width)
 		append(short: height)
 		
-		let localColorTableFlag = true
 		let interlaceFlag = false
 		let sortFlag = false
 		let sizeOfLocalColorTable: UInt8 = COLOR_RESOLUTION
 		
 		var packedField = PackedFieldByte()
-		packedField.append(localColorTableFlag)
+		packedField.append(useLocalColorTable)
 		packedField.append(interlaceFlag)
 		packedField.append(sortFlag)
 		packedField.append(0, bits: 2)
@@ -161,8 +165,8 @@ public struct AnimatedGif {
 		append(byte: packedField.rawValue)
 	}
 	
-	private mutating func appendLocalColorTable(_ colorTable: [Color]) {
-		print("Appending local color table...")
+	private mutating func append(colorTable: [Color]) {
+		print("Appending color table...")
 		let maxColorBytes = COLOR_COUNT * COLOR_CHANNELS
 		var i = 0
 
@@ -179,7 +183,15 @@ public struct AnimatedGif {
 		}
 	}
 	
-	private mutating func appendImageDataAsLZW<Q>(quantizedFrame: Q, width: Int, height: Int) where Q: QuantizedImage {
+	private func quantize(color: Color, with quantization: ColorQuantization) -> Int {
+		if color.alpha < 128 {
+			return Int(TRANSPARENT_COLOR_INDEX)
+		} else {
+			return quantization.quantize(color: color)
+		}
+	}
+	
+	private mutating func appendImageDataAsLZW(frame: Image, quantization: ColorQuantization, width: Int, height: Int) {
 		// Convert the ARGB-encoded image first to color
 		// indices and then to LZW-compressed codes
 		var encoder = LzwEncoder(colorCount: colorCount)
@@ -188,7 +200,7 @@ public struct AnimatedGif {
 		// Iterate all pixels as ARGB values and encode them
 		for y in 0..<height {
 			for x in 0..<width {
-				encoder.encodeAndAppend(index: quantizedFrame[y, x])
+				encoder.encodeAndAppend(index: quantize(color: frame[y, x], with: quantization))
 			}
 		}
 		encoder.finishEncoding()
@@ -215,16 +227,20 @@ public struct AnimatedGif {
 	 * (in hundrets of a second).
 	 */
 	public mutating func append(frame: Image, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws {
-		// Workaround since Swift does not support explicit function specializations
-		let _: Phantom<OctreeQuantizedImage> = try appendWithQuantizer(frame: frame, delayTime: delayTime, disposalMethod: disposalMethod)
+		var localQuantization: ColorQuantization? = nil
+		
+		if globalQuantization == nil {
+			localQuantization = OctreeQuantization(fromImage: frame, colorCount: COLOR_COUNT)
+		}
+
+		try append(frame: frame, localQuantization: localQuantization, delayTime: delayTime, disposalMethod: disposalMethod)
 	}
 	
 	/**
 	 * Appends a frame with the specified quantizer
 	 * and delay time (in hundrets of a second).
 	 */
-    @discardableResult
-	public mutating func appendWithQuantizer<Q>(frame: Image, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws -> PhantomWrapped<Void, Q> where Q: QuantizedImage {
+	public mutating func append(frame: Image, localQuantization: ColorQuantization? = nil, delayTime: UInt16, disposalMethod: DisposalMethod = .clearCanvas) throws {
 		let frameWidth = UInt16(frame.width)
 		let frameHeight = UInt16(frame.height)
 		assert(frameWidth == width)
@@ -234,15 +250,15 @@ public struct AnimatedGif {
 			throw AnimatedGifError.frameSizeMismatch(frame.width, frame.height, Int(width), Int(height))
 		}
 		
-		print("Quantizing frame...")
-		let quantized = Q.init(fromImage: frame, colorCount: colorCount, transparentColorIndex: Int(TRANSPARENT_COLOR_INDEX))
-		
 		appendGraphicsControlExtension(disposalMethod: disposalMethod, delayTime: delayTime)
-		appendImageDescriptor()
-		appendLocalColorTable(quantized.colorTable)
-		appendImageDataAsLZW(quantizedFrame: quantized, width: frame.width, height: frame.height)
+		appendImageDescriptor(useLocalColorTable: localQuantization != nil)
+
+		if let quantization = localQuantization {
+			append(colorTable: quantization.colorTable)
+		}
 		
-		return phantom()
+		guard let quantization = localQuantization ?? globalQuantization else { fatalError("No color quantization specified for GIF frame") }
+		appendImageDataAsLZW(frame: frame, quantization: quantization, width: frame.width, height: frame.height)
 	}
     
     public mutating func appendTrailer() {
