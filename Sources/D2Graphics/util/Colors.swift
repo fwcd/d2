@@ -8,4 +8,5 @@ public struct Colors {
 	public static let yellow = Color(red: 255, green: 255, blue: 0)
 	public static let magenta = Color(red: 255, green: 0, blue: 255)
 	public static let cyan = Color(red: 0, green: 255, blue: 255)
+	public static let transparent = Color(red: 0, green: 0, blue: 0, alpha: 0)
 }

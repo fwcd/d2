@@ -12,11 +12,13 @@ public struct Image {
 	public var height: Int { return surface.height }
 	public var size: Vec2<Int> { return Vec2(x: width, y: height) }
 	
+	// Source: https://www.cairographics.org/manual/cairo-Image-Surfaces.html#cairo-format-t
 	private var bytesPerPixel: Int? {
 		switch surface.format {
 			case .argb32?: return 4
-			case .rgb24?: return 3
+			case .rgb24?: return 4
 			case .a8?: return 1
+			case .rgb16565?: return 2
 			default: return nil
 		}
 	}
@@ -42,7 +44,7 @@ public struct Image {
 				pixel = readColorFrom(pixel: colorPtr)
 			}
 			
-			return pixel!
+			return pixel ?? Colors.transparent
 		}
 		set(newColor) {
 			surface.withUnsafeMutableBytes { ptr in
@@ -58,6 +60,8 @@ public struct Image {
 		switch surface.format {
 			case .argb32?:
 				ptr.storeBytes(of: color.argb, as: UInt32.self)
+			case .rgb24?:
+				ptr.storeBytes(of: color.rgb, as: UInt32.self)
 			default:
 				print("Warning: Could not store color \(color) in an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
 		}
@@ -68,7 +72,10 @@ public struct Image {
 		switch surface.format {
 			case .argb32?:
 				return Color(argb: ptr.load(as: UInt32.self))
+			case .rgb24?:
+				return Color(rgb: ptr.load(as: UInt32.self))
 			default:
+				print("Warning: Color not read color from an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
 				return nil
 		}
 	}
