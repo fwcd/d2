@@ -1,7 +1,8 @@
 public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
     public typealias Element = E
-
-    private var elements: [E] = []
+    
+    // Only accessible (internally) for testing purposes
+    private(set) var elements: [E] = []
     public var count: Int { return elements.count }
     
     public init() {}

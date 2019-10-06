@@ -24,8 +24,9 @@ public struct StableElement<E>: Comparable where E: Comparable {
  */
 public struct StablePriorityQueue<Q, E>: PriorityQueue where Q: PriorityQueue, E: Comparable, Q.Element == StableElement<E> {
     public typealias Element = E
-
-    private var inner: Q = Q.init()
+    
+    // Only accessible (internally) for testing purposes
+    private(set) var inner: Q = Q.init()
     public var count: Int { return inner.count }
     private var counter: Int = 0
     
