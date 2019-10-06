@@ -5,8 +5,7 @@ fileprivate let eps = 0.00001
 
 final class ExpressionParserTests: XCTestCase {
 	static var allTests = [
-		("testRPNExpressionParser", testRPNExpressionParser),
-		("testInfixExpressionParser", testInfixExpressionParser)
+		("testRPNExpressionParser", testRPNExpressionParser)
 	]
 	
 	private func testRPNExpressionParser() throws {
@@ -29,11 +28,5 @@ final class ExpressionParserTests: XCTestCase {
 		XCTAssertEqual(try sumLeft.evaluate(), -51.09, accuracy: eps)
 		XCTAssertEqual(try sumRight.evaluate(), Double.pi, accuracy: eps)
 		XCTAssertEqual(try differenceRight.evaluate(), 1.0, accuracy: eps)
-	}
-	
-	private func testInfixExpressionParser() throws {
-		let parser = InfixExpressionParser()
-		
-		
 	}
 }
