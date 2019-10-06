@@ -39,21 +39,23 @@ public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
     private mutating func heapifyDown(at index: Int) {
         let left = leftChild(of: index)
         let right = rightChild(of: index)
-        if right < elements.count {
-            var child: Int? = nil
-
-            if elements[left] >= elements[index] {
+        var child: Int? = nil
+        
+        if left < elements.count {
+            if elements[left] > elements[index] {
                 child = left
             }
-            
-            if elements[right] >= elements[child ?? index] {
+        }
+        
+        if right < elements.count {
+            if elements[right] > elements[child ?? index] {
                 child = right
             }
+        }
 
-            if let c = child {
-                elements.swapAt(c, index)
-                heapifyDown(at: c)
-            }
+        if let c = child {
+            elements.swapAt(c, index)
+            heapifyDown(at: c)
         }
     }
     

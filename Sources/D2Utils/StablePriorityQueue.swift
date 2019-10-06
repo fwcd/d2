@@ -1,12 +1,13 @@
 public typealias StableBinaryHeap<E: Comparable> = StablePriorityQueue<BinaryHeap<StableElement<E>>, E>
 
-public struct StableElement<E>: Comparable where E: Comparable {
+public struct StableElement<E>: Comparable, CustomStringConvertible where E: Comparable {
     public let inner: E
     public let insertion: Int
+    public var description: String { return "(\(inner))<\(insertion)>" }
     
     public static func <(lhs: StableElement<E>, rhs: StableElement<E>) -> Bool {
         if lhs.inner == rhs.inner {
-            return lhs.insertion > rhs.insertion
+            return lhs.insertion < rhs.insertion
         } else {
             return lhs.inner < rhs.inner
         }
@@ -34,7 +35,7 @@ public struct StablePriorityQueue<Q, E>: PriorityQueue where Q: PriorityQueue, E
     
     public mutating func insert(_ element: E) {
         inner.insert(StableElement(inner: element, insertion: counter))
-        counter += 1
+        counter -= 1
     }
     
     public mutating func popMax() -> E? {

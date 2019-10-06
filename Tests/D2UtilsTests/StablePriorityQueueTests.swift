@@ -6,9 +6,10 @@ final class StablePriorityQueueTests: XCTestCase {
         ("testStableBinaryHeap", testStableBinaryHeap)
     ]
     
-    private struct Item: Comparable {
+    private struct Item: Comparable, CustomStringConvertible {
         let label: String
         let id: Int
+        var description: String { return label }
         
         static func <(lhs: Item, rhs: Item) -> Bool {
             return lhs.id < rhs.id
@@ -36,20 +37,20 @@ final class StablePriorityQueueTests: XCTestCase {
         // Removals
 
         XCTAssertEqual(pq.popMax()?.label, "e")
-        assert(heap: pq, containsInOrder: ["a", "c", "b", "d"])
         XCTAssert(pq.inner.isValidHeap())
+        assert(heap: pq, containsInOrder: ["a", "c", "b", "d"])
 
         XCTAssertEqual(pq.popMax()?.label, "a")
-        assert(heap: pq, containsInOrder: ["b", "c", "d"])
         XCTAssert(pq.inner.isValidHeap())
+        assert(heap: pq, containsInOrder: ["b", "c", "d"])
 
         XCTAssertEqual(pq.popMax()?.label, "b")
-        assert(heap: pq, containsInOrder: ["c", "d"])
         XCTAssert(pq.inner.isValidHeap())
+        assert(heap: pq, containsInOrder: ["c", "d"])
 
         XCTAssertEqual(pq.popMax()?.label, "c")
-        assert(heap: pq, containsInOrder: ["d"])
         XCTAssert(pq.inner.isValidHeap())
+        assert(heap: pq, containsInOrder: ["d"])
 
         XCTAssertEqual(pq.popMax()?.label, "d")
     }
