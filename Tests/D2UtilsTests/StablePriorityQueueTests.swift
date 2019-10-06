@@ -21,6 +21,9 @@ final class StablePriorityQueueTests: XCTestCase {
     
     func testStableBinaryHeap() throws {
         var pq = StableBinaryHeap<Item>()
+        
+        // Insertions
+
         pq.insert(Item(label: "a", id: 10))
         pq.insert(Item(label: "d", id: 2))
         pq.insert(Item(label: "b", id: 10))
@@ -30,14 +33,24 @@ final class StablePriorityQueueTests: XCTestCase {
         pq.insert(Item(label: "c", id: 10))
         assert(heap: pq, containsInOrder: ["e", "a", "b", "d", "c"])
         
+        // Removals
+
         XCTAssertEqual(pq.popMax()?.label, "e")
         assert(heap: pq, containsInOrder: ["a", "c", "b", "d"])
+        XCTAssert(pq.inner.isValidHeap())
+
         XCTAssertEqual(pq.popMax()?.label, "a")
         assert(heap: pq, containsInOrder: ["b", "c", "d"])
+        XCTAssert(pq.inner.isValidHeap())
+
         XCTAssertEqual(pq.popMax()?.label, "b")
         assert(heap: pq, containsInOrder: ["c", "d"])
+        XCTAssert(pq.inner.isValidHeap())
+
         XCTAssertEqual(pq.popMax()?.label, "c")
         assert(heap: pq, containsInOrder: ["d"])
+        XCTAssert(pq.inner.isValidHeap())
+
         XCTAssertEqual(pq.popMax()?.label, "d")
     }
     
