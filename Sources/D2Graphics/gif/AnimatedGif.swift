@@ -39,6 +39,10 @@ public struct AnimatedGif {
 		appendLoopingApplicationExtensionBlock(loopCount: loopCount)
 	}
 	
+	public init(quantizingImage image: Image) {
+		self.init(width: UInt16(image.width), height: UInt16(image.height), globalQuantization: OctreeQuantization(fromImage: image, colorCount: GIF_COLOR_COUNT))
+	}
+	
 	// Determines how an AnimatedGIF should
 	// move on to the next frame
 	public enum DisposalMethod: UInt8 {

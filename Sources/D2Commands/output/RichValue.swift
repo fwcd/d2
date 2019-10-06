@@ -34,6 +34,15 @@ public enum RichValue: Addable {
 			return nil
 		}
 	}
+	public var asImage: Image? {
+		if case .image(let image) = self {
+			return image
+		} else if case let .compound(values) = self {
+			return values.compactMap { $0.asImage }.first
+		} else {
+			return nil
+		}
+	}
 	public var values: [RichValue] {
 		switch self {
 			case .none: return []
