@@ -71,7 +71,7 @@ class CommandHandler: DiscordClientDelegate {
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		
 		// Precedence: Chain < Pipe
-		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: true) {
+		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false) {
 			var pipe = [PipeComponent]()
 			var pipeConstructionSuccessful = true
 			var userOnly = false
