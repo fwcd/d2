@@ -28,7 +28,7 @@ struct BFInterpreter {
 				case "[":
 					let startIndex = i
 					if try current() == 0 {
-						// Seek to the first index AFTER the closing parenthesis
+						// Seek to the closing parenthesis
 						var stack = 0
 						while stack >= 0 && !cancelled {
 							i = program.index(after: i)
@@ -37,9 +37,7 @@ struct BFInterpreter {
 								throw BFError.parenthesesMismatch("Out of bounds while searching for closing parenthesis to [ at \(program.distance(from: program.startIndex, to: startIndex))")
 							}
 							
-							if i < program.endIndex {
-								c = program[i]
-							}
+							c = program[i]
 							
 							switch c {
 								case "[": stack += 1
@@ -60,9 +58,7 @@ struct BFInterpreter {
 								throw BFError.parenthesesMismatch("Out of bounds while searching for opening parenthesis to ] at \(program.distance(from: program.startIndex, to: startIndex))")
 							}
 							
-							if i >= program.startIndex {
-								c = program[i]
-							}
+							c = program[i]
 							
 							switch c {
 								case "[": stack -= 1
