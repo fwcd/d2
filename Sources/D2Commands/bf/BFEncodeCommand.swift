@@ -6,7 +6,7 @@ public class BFEncodeCommand: StringCommand {
 	public let info = CommandInfo(
 		category: .bf,
 		shortDescription: "Encodes strings to BF code",
-		longDescription: "Encodes a string such that the output is valid BF program, printing the given string",
+		longDescription: "Encodes a string in BF code such that the string is located beginning at the zeroth cell",
 		requiredPermissionLevel: .basic
 	)
 	private let maxStringLength: Int
@@ -21,7 +21,8 @@ public class BFEncodeCommand: StringCommand {
 			return
 		}
 		
-		let encoded = input.map { encode($0) ?? "" }.reduce("") { "\($0)>\($1)." }
+		let encodedChars = input.map { encode($0) ?? "" }
+		let encoded = encodedChars.reduce("") { "\($0)>\($1)" } + String(repeating: "<", count: max(0, encodedChars.count - 1))
 		output.append("```\(encoded)```")
 	}
 	
