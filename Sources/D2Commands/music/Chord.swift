@@ -12,7 +12,7 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "(?:\
  * 2. group: quality (lowercased m for 'minor')
  * 3. group: number of the interval: (7 for 'dominant seventh')
  */
-fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(7)?")
+fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(\\d)?")
 
 struct Chord: Hashable, CustomStringConvertible {
 	let notes: [Note]
@@ -48,7 +48,7 @@ struct Chord: Hashable, CustomStringConvertible {
 	}
 	
 	init(minorSeventh root: Note) {
-		notes = [root, root + .minorSeventh, root + .perfectFifth, root + .minorSeventh]
+		notes = [root, root + .minorThird, root + .perfectFifth, root + .minorSeventh]
 	}
 	
 	init(majorSeventh root: Note) {
