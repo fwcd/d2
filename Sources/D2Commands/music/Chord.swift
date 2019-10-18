@@ -3,7 +3,7 @@ import D2Utils
 fileprivate let majorSymbols: Set<String> = ["maj", "M"]
 fileprivate let minorSymbols: Set<String> = ["min", "m"]
 
-fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "(?:\($0))" }.joined(separator: "|")
+fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0)" }.joined(separator: "|")
 
 /**
  * Matches a chord.
@@ -12,7 +12,7 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "(?:\
  * 2. group: quality (lowercased m for 'minor')
  * 3. group: number of the interval: (7 for 'dominant seventh')
  */
-fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(\\d)?")
+fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(\\d+)?")
 
 struct Chord: Hashable, CustomStringConvertible {
 	let notes: [Note]
@@ -23,39 +23,29 @@ struct Chord: Hashable, CustomStringConvertible {
 		guard let root = try? Note(of: parsed[1]) else { throw ChordError.invalidRootNote(parsed[1]) }
 		let quality = parsed[2]
 		let number = Int(parsed[3])
+		let isMajor = majorSymbols.contains(quality)
+		let isMinor = minorSymbols.contains(quality) // otherwise assume major
+		var additionalNotes: [Note] = []
 		
-		if number == 7 {
-			if minorSymbols.contains(quality) {
-				self.init(minorSeventh: root)
-			} else if majorSymbols.contains(quality) {
-				self.init(majorSeventh: root)
-			} else {
-				self.init(dominantSeventh: root)
-			}
-		} else if minorSymbols.contains(quality) {
-			self.init(minorTriad: root)
-		} else { // assume major
-			self.init(majorTriad: root)
+		switch number {
+			case 9:
+				additionalNotes.insert(root + (isMinor ? .minorNinth : .majorNinth), at: 0)
+				fallthrough
+			case 7:
+				additionalNotes.insert(root + (isMajor ? .majorSeventh : .minorSeventh), at: 0)
+				self.init(triad: root, isMinor: isMinor, with: additionalNotes)
+			case 5:
+				self.init(powerChord: root)
+			default:
+				self.init(triad: root, isMinor: isMinor)
 		}
 	}
 	
-	init(majorTriad root: Note) {
-		notes = [root, root + .majorThird, root + .perfectFifth]
+	init(triad root: Note, isMinor: Bool = false, with additionalNotes: [Note] = []) {
+		notes = [root, root + (isMinor ? .minorThird : .majorThird), root + .perfectFifth] + additionalNotes
 	}
 	
-	init(minorTriad root: Note) {
-		notes = [root, root + .minorThird, root + .perfectFifth]
-	}
-	
-	init(minorSeventh root: Note) {
-		notes = [root, root + .minorThird, root + .perfectFifth, root + .minorSeventh]
-	}
-	
-	init(majorSeventh root: Note) {
-		notes = [root, root + .majorThird, root + .perfectFifth, root + .majorSeventh]
-	}
-	
-	init(dominantSeventh root: Note) {
-		notes = [root, root + .majorThird, root + .perfectFifth, root + .minorSeventh]
+	init(powerChord root: Note) {
+		notes = [root, root + .perfectFifth]
 	}
 }
