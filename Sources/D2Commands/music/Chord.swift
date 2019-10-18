@@ -10,9 +10,10 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0
  *
  * 1. group: root note
  * 2. group: quality (lowercased m for 'minor')
- * 3. group: number of the interval: (7 for 'dominant seventh')
+ * 3. group: 'add'
+ * 4. group: number of the interval: (7 for 'dominant seventh')
  */
-fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(\\d+)?")
+fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
 
 struct Chord: Hashable, CustomStringConvertible {
 	let notes: [Note]
@@ -22,15 +23,23 @@ struct Chord: Hashable, CustomStringConvertible {
 		guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }
 		guard let root = try? Note(of: parsed[1]) else { throw ChordError.invalidRootNote(parsed[1]) }
 		let quality = parsed[2]
-		let number = Int(parsed[3])
+		let add = !parsed[3].isEmpty
+		let number = Int(parsed[4])
 		let isMajor = majorSymbols.contains(quality)
 		let isMinor = minorSymbols.contains(quality) // otherwise assume major
 		var additionalNotes: [Note] = []
 		
 		switch number {
+			case 11:
+				additionalNotes.insert(root + .perfectEleventh, at: 0)
+				if add {
+					self.init(triad: root, isMinor: isMinor, with: additionalNotes)
+				} else { fallthrough }
 			case 9:
 				additionalNotes.insert(root + (isMinor ? .minorNinth : .majorNinth), at: 0)
-				fallthrough
+				if add {
+					self.init(triad: root, isMinor: isMinor, with: additionalNotes)
+				} else { fallthrough }
 			case 7:
 				additionalNotes.insert(root + (isMajor ? .majorSeventh : .minorSeventh), at: 0)
 				self.init(triad: root, isMinor: isMinor, with: additionalNotes)
