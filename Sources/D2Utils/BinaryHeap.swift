@@ -65,13 +65,13 @@ public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
         let right = rightChild(of: index)
 
         if left < elements.count {
-            if elements[left] > elements[index] { return false }
-            isValidHeap(at: left)
+            guard elements[left] <= elements[index] else { return false }
+            guard isValidHeap(at: left) else { return false }
         }
         
         if right < elements.count {
-            if elements[right] > elements[index] { return false }
-            isValidHeap(at: right)
+            guard elements[right] <= elements[index] else { return false }
+            guard isValidHeap(at: right) else { return false }
         }
         
         return true
