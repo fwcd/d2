@@ -41,6 +41,7 @@ public class CampusCommand: StringCommand {
 				}
 				
 				let address = self.format(rawAddress: rawAddress)
+				let googleMapsLink = self.formatGoogleMapsLink(address: address)
 				
 				self.geocoder.geocode(location: address) { geocodeResponse in
 					guard case let .success(coords) = geocodeResponse else {
@@ -64,7 +65,7 @@ public class CampusCommand: StringCommand {
 							}
 							
 							output.append(.compound([
-								.text(rawAddress+"\nhttps://www.google.com/maps/place/"+address),
+								.text(googleMapsLink),
 								.files([DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")])
 							]))
 						}.resume()
@@ -100,5 +101,9 @@ public class CampusCommand: StringCommand {
 		}
 		
 		return address
+	}
+	
+	private func formatGoogleMapsLink(address: String) -> String {
+		return "https://www.google.com/maps/place/" + address.replacingOccurrences(of: " ", with: "+"
 	}
 }
