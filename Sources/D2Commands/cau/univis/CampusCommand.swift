@@ -53,22 +53,12 @@ public class CampusCommand: StringCommand {
 							latitude: coords.latitude,
 							longitude: coords.longitude
 						).url
-						
-						URLSession.shared.dataTask(with: URL(string: mapURL)!) { data, response, error in
-							guard error == nil else {
-								output.append("An error occurred while fetching image.")
-								return
-							}
-							guard let data = data else {
-								output.append("Missing data while fetching image.")
-								return
-							}
-							
-							output.append(.compound([
-								.text(googleMapsLink),
-								.files([DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")])
-							]))
-						}.resume()
+
+						output.append(.embed(DiscordEmbed(
+							title: address,
+							url: URL(string: googleMapsLink)!,
+							image: DiscordEmbed.Image(url: URL(string: mapURL)!)
+						)))
 					} catch {
 						output.append("Could not create static map, see console for more details")
 						print(error)
@@ -104,6 +94,6 @@ public class CampusCommand: StringCommand {
 	}
 	
 	private func formatGoogleMapsLink(address: String) -> String {
-		return "https://www.google.com/maps/place/" + address.replacingOccurrences(of: " ", with: "+"
+		return "https://www.google.com/maps/place/" + address.replacingOccurrences(of: " ", with: "+")
 	}
 }
