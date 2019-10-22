@@ -64,7 +64,7 @@ public class CampusCommand: StringCommand {
 							}
 							
 							output.append(.compound([
-								.text(rawAddress),
+								.text(rawAddress+"\nhttps://www.google.com/maps/place/"+address),
 								.files([DiscordFileUpload(data: data, filename: "map.png", mimeType: "image/png")])
 							]))
 						}.resume()
