@@ -96,7 +96,7 @@ public class CampusCommand: StringCommand {
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "www.google.com"
-		components.path = "/maps/place/\(address))"
+		components.path = "/maps/place/\(address)"
 		return components.url!
 	}
 }
