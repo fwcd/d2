@@ -2,12 +2,12 @@ import D2Utils
 
 fileprivate let rawMensaPattern = "(?:[Mm]ensa\\s*)?"
 fileprivate let kielMensaIPattern = try! Regex(from: "\(rawMensaPattern)?[1Ii]")
-fileprivate let kielMensaIIPattern = try! Regex(from: "\(rawMensaPattern)?[1Ii]{2}")
+fileprivate let kielMensaIIPattern = try! Regex(from: "\(rawMensaPattern)?(?:2|[Ii]{2})")
 fileprivate let kielMensaGaardenPattern = try! Regex(from: "\(rawMensaPattern)?[Gg]aarden")
 
 public enum Mensa: Int, CustomStringConvertible {
     case kielMensaI = 411
-    case kielMensaII = 422
+    case kielMensaII = 421
     case kielMensaGaarden = 903
     
     public var description: String {

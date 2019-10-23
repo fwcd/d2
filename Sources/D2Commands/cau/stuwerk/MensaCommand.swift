@@ -30,7 +30,7 @@ public class MensaCommand: StringCommand {
                 
                 output.append(.embed(DiscordEmbed(
                     title: ":fork_knife_plate: Today's menu for \(mensa)",
-                    fields: entries.map { DiscordEmbed.Field(name: $0.title, value: $0.price) }
+                    fields: entries.map { DiscordEmbed.Field(name: "\($0.title) \($0.properties)", value: $0.price) }
                 )))
             }
         } catch {

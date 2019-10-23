@@ -29,9 +29,18 @@ public class DailyFoodMenu {
             
             do {
                 let document: Document = try SwiftSoup.parse(html)
-                let items = try document.getElementsByClass("item")
-                let entries = try items.array()
-                    .map { FoodMenuEntry(title: try $0.text(), price: "?") }
+                guard let menu = try document.getElementsByClass("menuPrint").first() else { throw FoodMenuError.noMenuPrintAvailable }
+                let rows = try menu.getElementsByTag("tr").array()
+                let entries: [FoodMenuEntry] = try rows.compactMap {
+                    guard let title = try $0.getElementsByClass("item").first() else { return nil }
+                    guard let properties = try $0.getElementsByClass("properties").first() else { return nil }
+                    guard let price = try $0.getElementsByTag("td").last() else { return nil }
+                    return FoodMenuEntry(
+                        title: try title.text(),
+                        properties: try properties.text(),
+                        price: try price.text()
+                    )
+                }
                 
                 then(.success(entries))
             } catch {
