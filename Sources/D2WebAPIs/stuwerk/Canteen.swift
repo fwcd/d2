@@ -5,7 +5,7 @@ fileprivate let kielMensaIPattern = try! Regex(from: "\(rawMensaPattern)?[1Ii]")
 fileprivate let kielMensaIIPattern = try! Regex(from: "\(rawMensaPattern)?(?:2|[Ii]{2})")
 fileprivate let kielMensaGaardenPattern = try! Regex(from: "\(rawMensaPattern)?[Gg]aarden")
 
-public enum Mensa: Int, CustomStringConvertible {
+public enum Canteen: Int, CustomStringConvertible {
     case kielMensaI = 411
     case kielMensaII = 421
     case kielMensaGaarden = 903
@@ -18,7 +18,7 @@ public enum Mensa: Int, CustomStringConvertible {
         }
     }
     
-    public static func parse(from raw: String) -> Mensa? {
+    public static func parse(from raw: String) -> Canteen? {
         if let _ = kielMensaIPattern.firstGroups(in: raw) {
             return .kielMensaI
         } else if let _ = kielMensaIIPattern.firstGroups(in: raw) {

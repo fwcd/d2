@@ -14,14 +14,14 @@ public class MensaCommand: StringCommand {
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        guard let mensa = Mensa.parse(from: input) else {
+        guard let canteen = Canteen.parse(from: input) else {
             output.append("Could not parse mensa from \(input), try `i` or `ii`")
             return
         }
         
         do {
-            try DailyFoodMenu(mensa: mensa).fetchEntriesAsync {
-                guard case let .success(entries) = $0 else {
+            try DailyFoodMenu(canteen: canteen).fetchMealsAsync {
+                guard case let .success(meals) = $0 else {
                     guard case let .failure(error) = $0 else { fatalError("Result should either be successful or not") }
                     print(error)
                     output.append("An error occurred while performing the request")
@@ -29,8 +29,8 @@ public class MensaCommand: StringCommand {
                 }
                 
                 output.append(.embed(DiscordEmbed(
-                    title: ":fork_knife_plate: Today's menu for \(mensa)",
-                    fields: entries.map { DiscordEmbed.Field(name: "\($0.title) \($0.properties)", value: $0.price) }
+                    title: ":fork_knife_plate: Today's menu for \(canteen)",
+                    fields: meals.map { DiscordEmbed.Field(name: "\($0.title) \($0.properties)", value: $0.price) }
                 )))
             }
         } catch {
