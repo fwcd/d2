@@ -8,20 +8,20 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ## System Dependencies
 * Swift 5
-	* Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
-	* Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
-		* Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
+    * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
+    * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
+        * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
 * Node.js and npm
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
 ### Installation on Linux
 * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima`
-	* Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
-	* If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
-		* `mkdir /usr/include/freetype2/freetype`
-		* `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
-		* `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
-	* Note that you might need to `apt-get install clang` separately on a Raspberry Pi
+    * Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
+    * If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
+        * `mkdir /usr/include/freetype2/freetype`
+        * `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
+        * `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
+    * Note that you might need to `apt-get install clang` separately on a Raspberry Pi
 * `cd Node && ./install-all`
 
 ### Installation on macOS
@@ -47,7 +47,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ```json
 {
-	"prefix": "%"
+    "prefix": "%"
 }
 ```
 
@@ -65,8 +65,8 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ```json
 {
-	"mapQuest": "YOUR_MAP_QUEST_KEY",
-	"wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY"
+    "mapQuest": "YOUR_MAP_QUEST_KEY",
+    "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY"
 }
 ```
 
@@ -95,7 +95,7 @@ For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearac
 To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
 
 ## Architecture
-The program consists of three modules:
+The program consists of six modules:
 
 * `D2`, the executable
 * `D2Commands`, the command framework and the implementations
@@ -112,11 +112,11 @@ At a basic level, the `Command` protocol consists of a single method named `invo
 
 ```swift
 protocol Command: class {
-	...
-	
-	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
-	
-	...
+    ...
+    
+    func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
+    
+    ...
 }
 ```
 
@@ -132,23 +132,23 @@ Since `output: CommandOutput` represents a polymorphic object, the output of an 
 
 ```swift
 class PipeOutput: CommandOutput {
-	private let sink: Command
-	private let context: CommandContext
-	private let args: String
-	private let next: CommandOutput?
-	
-	init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
-		self.sink = sink
-		self.args = args
-		self.context = context
-		self.next = next
-	}
-	
-	func append(_ value: RichValue) {
-		print("Piping to \(sink)")
-		let nextInput = args.isEmpty ? value : (.text(args) + value)
-		sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
-	}
+    private let sink: Command
+    private let context: CommandContext
+    private let args: String
+    private let next: CommandOutput?
+    
+    init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
+        self.sink = sink
+        self.args = args
+        self.context = context
+        self.next = next
+    }
+    
+    func append(_ value: RichValue) {
+        print("Piping to \(sink)")
+        let nextInput = args.isEmpty ? value : (.text(args) + value)
+        sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
+    }
 }
 ```
 
@@ -156,7 +156,7 @@ Often the `Command` protocol is too low-level to be adopted directly, since the 
 
 ```swift
 protocol StringCommand: Command {
-	func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext)
+    func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext)
 }
 ```
 
@@ -164,11 +164,11 @@ protocol StringCommand: Command {
 
 ```swift
 protocol ArgCommand: Command {
-	associatedtype Args: Arg
+    associatedtype Args: Arg
 
-	var argPattern: Args { get }
-	
-	func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
+    var argPattern: Args { get }
+    
+    func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
 }
 ```
 
