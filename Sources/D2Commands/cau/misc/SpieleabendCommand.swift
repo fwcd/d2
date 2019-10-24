@@ -7,7 +7,8 @@ public class SpieleabendCommand: StringCommand {
     public let info = CommandInfo(
         category: .cau,
         shortDescription: "Countdown to the next CAU/CS games evening",
-        longDescription: "Fetches the time remaining until the next games evening by the CAU's CS student council takes place."
+        longDescription: "Fetches the time remaining until the next games evening by the CAU's CS student council takes place.",
+        requiredPermissionLevel: .basic
     )
     
     public init() {}
