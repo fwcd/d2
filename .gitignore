@@ -8,6 +8,8 @@ Packages
 xcuserdata
 .idea
 
+*.swp
+
 authkeys.*
 discordtoken.*
 userwhitelist.*
