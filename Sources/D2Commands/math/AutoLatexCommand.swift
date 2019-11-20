@@ -6,7 +6,7 @@ import Foundation
 /** A simple heuristic for detecting "formulas" in messages. Matches a single character. */
 fileprivate let formulaPattern = try! Regex(from: "[0-9{}\\+\\-*\\/\\[\\]\\\\|]")
 /** Matches text that should be "escaped" when rendering the message as LaTeX. */
-fileprivate let textPattern = try! Regex(from: "\\s*\\p{L}[\\p{L}\\s]*")
+fileprivate let textPattern = try! Regex(from: "(?<!\\\\)\\b\\s*\\p{L}[\\p{L}\\s]*")
 
 public class AutoLatexCommand: StringCommand {
     public let info = CommandInfo(
@@ -32,7 +32,7 @@ public class AutoLatexCommand: StringCommand {
         if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
             do {
                 let formula = escapeText(in: content)
-                try renderer.renderImage(from: formula, scale: 2, onError: { print($0) }) {
+                try renderer.renderImage(from: formula, scale: 1, onError: { print($0) }) {
                     let author = context.author
 
                     output.append(.compound([
