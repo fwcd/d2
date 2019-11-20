@@ -16,11 +16,11 @@ class LatexRenderer {
 		cleanUp()
 	}
 	
-	func renderImage(from formula: String, color: String = "white", onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
+	func renderImage(from formula: String, color: String = "white", scale: Int = 6, onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
 		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
 		let outputFile = tempDir.childFile(named: "\(LATEX_PREFIX)-\(timestamp).png")
 
-		try renderPNG(from: formula, to: outputFile, color: color, onError: onError) {
+		try renderPNG(from: formula, to: outputFile, color: color, scale: scale, onError: onError) {
 			do {
 				then(try Image(fromPngFile: outputFile.url))
 			} catch {
@@ -29,10 +29,10 @@ class LatexRenderer {
 		}
 	}
 	
-	private func renderPNG(from formula: String, to outputFile: TemporaryFile, color: String, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
+	private func renderPNG(from formula: String, to outputFile: TemporaryFile, color: String, scale: Int, onError: @escaping (Error) -> Void, then: @escaping () -> Void) throws {
 		cleanUp()
 		print("Invoking latex-renderer")
-		try node.start(withArgs: [formula, color, outputFile.url.path]) { _ in
+		try node.start(withArgs: [formula, color, outputFile.url.path, String(scale)]) { _ in
 			// TODO: Handle MathJax errors
 			then()
 		}

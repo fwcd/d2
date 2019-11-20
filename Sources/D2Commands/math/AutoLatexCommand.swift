@@ -32,7 +32,7 @@ public class AutoLatexCommand: StringCommand {
         if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
             do {
                 let formula = escapeText(in: content)
-                try renderer.renderImage(from: formula, onError: { print($0) }) {
+                try renderer.renderImage(from: formula, scale: 2, onError: { print($0) }) {
                     let author = context.author
 
                     output.append(.compound([
