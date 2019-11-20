@@ -32,7 +32,8 @@ public class AutoLatexCommand: StringCommand {
         
         if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
             do {
-                try renderer.renderImage(from: escapeText(in: content), onError: { print($0) }) {
+                let formula = escapeText(in: content)
+                try renderer.renderImage(from: formula, onError: { print($0) }) {
                     let author = context.author
                     self.toBeReplaced = context.message
 
@@ -52,7 +53,7 @@ public class AutoLatexCommand: StringCommand {
     }
     
     private func escapeText(in content: String) -> String {
-        return textPattern.replace(in: content, with: "\\text{$0}")
+        return textPattern.replace(in: content, with: "\\\\text{$0}")
     }
     
     public func onSuccessfullySent(message: DiscordMessage) {
