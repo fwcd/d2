@@ -13,6 +13,7 @@ public class AutoLatexCommand: StringCommand {
         category: .math,
         shortDescription: "Automatically renders messages as LaTeX formulas",
         longDescription: "Automatically replace messages in a channel by LaTeX-rendered versions",
+        requiredPermissionLevel: .basic,
         subscribesToNextMessages: true
     )
     private let latexRenderer = try? LatexRenderer()
