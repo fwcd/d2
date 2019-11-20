@@ -16,7 +16,7 @@ class LatexRenderer {
 		cleanUp()
 	}
 	
-	func renderImage(from formula: String, color: String, onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
+	func renderImage(from formula: String, color: String = "white", onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
 		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
 		let outputFile = tempDir.childFile(named: "\(LATEX_PREFIX)-\(timestamp).png")
 

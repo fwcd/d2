@@ -1,0 +1,62 @@
+import D2Utils
+import D2Permissions
+import SwiftDiscord
+import Foundation
+
+/** A simple heuristic for detecting "formulas" in messages. Matches a single character. */
+fileprivate let formulaPattern = try! Regex(from: "[0-9{}\\+\\-*\\/\\[\\]\\\\|]")
+/** Matches text that should be "escaped" when rendering the message as LaTeX. */
+fileprivate let textPattern = try! Regex(from: "\\s*\\p{L}[\\p{L}\\s]*")
+
+public class AutoLatexCommand: StringCommand {
+    public let info = CommandInfo(
+        category: .math,
+        shortDescription: "Automatically renders messages as LaTeX formulas",
+        longDescription: "Automatically replace messages in a channel by LaTeX-rendered versions",
+        subscribesToNextMessages: true
+    )
+    private let latexRenderer = try? LatexRenderer()
+    private var toBeReplaced: DiscordMessage? = nil
+    
+    public init() {}
+    
+    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+        output.append(":pencil: Enabled automatic LaTeX-reformatting for this channel!")
+    }
+    
+    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+        if content == "cancel autolatex" {
+            output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
+            return .cancelSubscription
+        }
+        
+        if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
+            do {
+                try renderer.renderImage(from: escapeText(in: content), onError: { print($0) }) {
+                    let author = context.author
+                    self.toBeReplaced = context.message
+
+                    output.append(.compound([
+                        .image($0),
+                        .embed(DiscordEmbed(
+                            author: DiscordEmbed.Author(name: author.username, iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\(author.id)/\(author.avatar).png?size=64"))
+                        ))
+                    ]))
+                }
+            } catch {
+                print(error)
+            }
+        }
+        
+        return .continueSubscription
+    }
+    
+    private func escapeText(in content: String) -> String {
+        return textPattern.replace(in: content, with: "\\text{$0}")
+    }
+    
+    public func onSuccessfullySent(message: DiscordMessage) {
+        toBeReplaced?.delete()
+        latexRenderer?.cleanUp()
+    }
+}

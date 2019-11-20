@@ -49,6 +49,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["togif"] = ToGifCommand()
 	handler["avatar"] = AvatarCommand()
 	handler["latex"] = LatexCommand()
+	handler["autolatex"] = AutoLatexCommand()
 	handler["piglatin"] = PigLatinCommand()
 	handler["markov"] = MarkovCommand()
 	handler["watch"] = WatchCommand()
