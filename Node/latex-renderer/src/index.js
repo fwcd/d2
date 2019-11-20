@@ -17,7 +17,9 @@ const fs = require("fs");
         const res = await mathjax.typeset({
             math: "\\color{" + color + "}{" + math + "}",
             png: true,
-            scale: scale
+            scale: scale,
+            linebreaks: true,
+            width: 80
         });
         const base64PngData = res.png.replace(/^data:image\/png;base64,/, "");
 
