@@ -16,7 +16,6 @@ public class AutoLatexCommand: StringCommand {
         subscribesToNextMessages: true
     )
     private let latexRenderer = try? LatexRenderer()
-    private var toBeReplaced: DiscordMessage? = nil
     
     public init() {}
     
@@ -35,7 +34,6 @@ public class AutoLatexCommand: StringCommand {
                 let formula = escapeText(in: content)
                 try renderer.renderImage(from: formula, onError: { print($0) }) {
                     let author = context.author
-                    self.toBeReplaced = context.message
 
                     output.append(.compound([
                         .image($0),
@@ -43,6 +41,7 @@ public class AutoLatexCommand: StringCommand {
                             author: DiscordEmbed.Author(name: author.username, iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\(author.id)/\(author.avatar).png?size=64"))
                         ))
                     ]))
+                    context.message.delete()
                 }
             } catch {
                 print(error)
@@ -57,7 +56,6 @@ public class AutoLatexCommand: StringCommand {
     }
     
     public func onSuccessfullySent(message: DiscordMessage) {
-        toBeReplaced?.delete()
         latexRenderer?.cleanUp()
     }
 }
