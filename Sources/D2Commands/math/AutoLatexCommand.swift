@@ -34,15 +34,11 @@ public class AutoLatexCommand: StringCommand {
             do {
                 let formula = escapeText(in: content)
                 try renderer.renderImage(from: formula, scale: 1.5, onError: { print($0) }) {
-                    let author = context.author
-
-                    output.append(.compound([
-                        .image($0),
-                        .embed(DiscordEmbed(
-                            author: DiscordEmbed.Author(name: author.username, iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\(author.id)/\(author.avatar).png?size=64"))
-                        ))
-                    ]))
-                    context.message.delete()
+                    do {
+                        try output.append($0)
+                    } catch {
+                        print(error)
+                    }
                 }
             } catch {
                 print(error)
