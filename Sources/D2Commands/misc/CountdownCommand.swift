@@ -51,10 +51,15 @@ public class CountdownCommand: StringCommand {
                 self.show(name, as: goal, to: output)
             },
             "remove": { [unowned self] input, output in
+                guard !(self.goals[input]?.protectedFromRemoval ?? false) else {
+                    output.append(":no_entry: `\(input)` is protected from removal")
+                    return
+                }
+
                 if let goal = self.goals.removeValue(forKey: input) {
                     output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
                 } else {
-                    output.append("No goal named `\(input)` is currently running")
+                    output.append(":question: No goal named `\(input)` is currently running")
                 }
             }
         ]
