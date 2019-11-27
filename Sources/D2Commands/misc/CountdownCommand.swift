@@ -49,6 +49,13 @@ public class CountdownCommand: StringCommand {
                 let goal = FixedCountdownGoal(date: date)
                 self.goals[name] = goal
                 self.show(name, as: goal, to: output)
+            },
+            "remove": { [unowned self] input, output in
+                if let goal = self.goals.removeValue(forKey: input) {
+                    output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
+                } else {
+                    output.append("No goal named `\(input)` is currently running")
+                }
             }
         ]
         info.helpText = makeHelpText()
