@@ -15,9 +15,10 @@ fileprivate let inputDateFormatters = [
     makeDateFormatter("dd.MM.yyyy HH:mm"),
     outputDateFormatter
 ]
-fileprivate let namedDatePattern = try! Regex(from: "(\\w+)\\s*(.+)")
+fileprivate let subcommandPattern = try! Regex(from: "(\\w+)\\s*(.*)")
+fileprivate let namedDatePattern = try! Regex(from: "(\\w+)\\s+(.+)")
 
-public class CountdownCommand {
+public class CountdownCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "A date/time countdown manager",
@@ -41,7 +42,7 @@ public class CountdownCommand {
                 let rawDate = parsedInput[2]
 
                 guard let date = self.parseDate(from: rawDate) else {
-                    output.append("Could not parse date. Please use one of these formats: \(inputDateFormatters.map { $0.dateFormat })")
+                    output.append("Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
                     return
                 }
 
@@ -56,8 +57,16 @@ public class CountdownCommand {
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         if let date = parseDate(from: input) {
             show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
-        } else if let subcommand = input.split(separator: " ", maxSplits: 2).first.flatMap({ subcommands[String($0)] }) {
-            subcommand(input, output)
+        } else if let parsedArgs = subcommandPattern.firstGroups(in: input) {
+            let subcommandName = parsedArgs[1]
+            let subcommandArgs = parsedArgs[2]
+
+            guard let subcommand = subcommands[subcommandName] else {
+                output.append("Could not find subcommand with name \(subcommandName)")
+                return
+            }
+
+            subcommand(subcommandArgs, output)
         } else {
             removeCompletedGoals() // Clean up
             showRunningGoals(to: output)
@@ -97,7 +106,7 @@ public class CountdownCommand {
     }
     
     private func removeCompletedGoals() {
-        goals = goals.filter { !$0.value.hasCompleted }
+        goals = goals.filter { !$0.value.removeAfterCompletion || !$0.value.hasCompleted }
     }
     
     private func makeHelpText() -> String {
