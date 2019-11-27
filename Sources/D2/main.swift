@@ -17,7 +17,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["timetable"] = TimeTableCommand()
 	handler["univis"] = UnivISCommand()
 	handler["mensa"] = MensaCommand()
-	handler["spieleabend"] = SpieleabendCommand()
+	handler["spieleabend"] = InfoMessageCommand(text: "This command has been migrated to `\(handler.commandPrefix)countdown`")
 	handler["countdown"] = CountdownCommand(goals: ["Spieleabend": SpieleabendGoal()])
 	handler["reddit"] = RedditCommand()
 	handler["grant"] = GrantPermissionCommand(permissionManager: handler.permissionManager)
