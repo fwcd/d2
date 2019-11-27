@@ -18,7 +18,7 @@ func register(commandsFor handler: CommandHandler) {
 	handler["univis"] = UnivISCommand()
 	handler["mensa"] = MensaCommand()
 	handler["spieleabend"] = SpieleabendCommand()
-	handler["countdown"] = CountdownCommand()
+	handler["countdown"] = CountdownCommand(goals: ["Spieleabend": SpieleabendGoal()])
 	handler["reddit"] = RedditCommand()
 	handler["grant"] = GrantPermissionCommand(permissionManager: handler.permissionManager)
 	handler["revoke"] = RevokePermissionCommand(permissionManager: handler.permissionManager)

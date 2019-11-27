@@ -4,6 +4,8 @@ import Foundation
 public struct SpieleabendGoal: CountdownGoal {
     public var date: Date { return nextGamesEveningFromNow() }
     public var removeAfterCompletion: Bool { return false }
+    
+    public init() {}
 
     private func nextGamesEveningFromNow() -> Date {
         let now = Date()
