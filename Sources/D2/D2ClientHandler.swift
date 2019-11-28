@@ -4,170 +4,102 @@ import D2Utils
 import D2Commands
 import D2Permissions
 
-/** A segment of an invocation pipe that transfers outputs from one command to another. */
-fileprivate class PipeComponent {
-	let command: Command
-	let context: CommandContext
-	let args: String
-	var output: CommandOutput? = nil
-	
-	init(command: Command, context: CommandContext, args: String) {
-		self.command = command
-		self.context = context
-		self.args = args
-	}
-}
-
 /** A client delegate that dispatches commands. */
 class D2ClientHandler: DiscordClientDelegate {
-	private let chainSeparator: Character
-	private let pipeSeparator: Character
-	private let commandPattern: Regex
 	private let initialPresence: String?
-	let commandPrefix: String
-	
-	private var currentIndex = 0
-	private var maxPipeLengthForUsers: Int = 3
-	
+
+	private let commandPrefix: String
 	private(set) var registry = CommandRegistry()
-	private var subscribedCommands = [CommandSubscription]()
-	let permissionManager = PermissionManager()
+	private let permissionManager = PermissionManager()
+	private let subscriptionManager = SubscriptionManager()
+
+	private var messageHandlers: [MessageHandler]
 	
-	private let msgParser = DiscordMessageParser()
-	
-	init(withPrefix commandPrefix: String, initialPresence: String? = nil, chainSeparator: Character = ";", pipeSeparator: Character = "|") throws {
+	init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
 		self.commandPrefix = commandPrefix
-		self.chainSeparator = chainSeparator
-		self.pipeSeparator = pipeSeparator
 		self.initialPresence = initialPresence
 		
-		// The first group matches the command name,
-		// the second matches the arguments (the rest of the message content)
-		commandPattern = try Regex(from: "(\\S+)(?:\\s+([\\s\\S]*))?")
+		messageHandlers = [
+			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
+			SubscriptionHandler(registry: registry, manager: subscriptionManager)
+		]
+
+		registerCommands()
 	}
-	
+
+	/** Registers the available commands. */
+	func registerCommands() {
+		registry["ping"] = PingCommand()
+		registry["vertical"] = VerticalCommand()
+		registry["bf"] = BFCommand()
+		registry["bfencode"] = BFEncodeCommand()
+		registry["bftoc"] = BFToCCommand()
+		registry["echo"] = EchoCommand()
+		registry["campus"] = CampusCommand()
+		registry["type"] = TriggerTypingCommand()
+		registry["mdb"] = MDBCommand()
+		registry["timetable"] = TimeTableCommand()
+		registry["univis"] = UnivISCommand()
+		registry["mensa"] = MensaCommand()
+		registry["spieleabend"] = InfoMessageCommand(text: "This command has been migrated to `\(commandPrefix)countdown`")
+		registry["countdown"] = CountdownCommand(goals: ["Spieleabend": SpieleabendGoal()])
+		registry["reddit"] = RedditCommand()
+		registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
+		registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
+		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
+		registry["for"] = ForCommand()
+		registry["void"] = VoidCommand()
+		registry["grep"] = GrepCommand()
+		registry["last"] = LastMessageCommand()
+		registry["+"] = BinaryOperationCommand<Double>(name: "addition", operation: +)
+		registry["-"] = BinaryOperationCommand<Double>(name: "subtraction", operation: -)
+		registry["*"] = BinaryOperationCommand<Double>(name: "multiplication", operation: *)
+		registry["/"] = BinaryOperationCommand<Double>(name: "division", operation: /)
+		registry["%"] = BinaryOperationCommand<Int>(name: "remainder", operation: %)
+		registry["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
+		registry["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
+		registry["maxima"] = MaximaCommand()
+		registry["wolframalpha"] = WolframAlphaCommand()
+		registry["stackoverflow"] = StackOverflowCommand()
+		registry["perceptron"] = PerceptronCommand()
+		registry["tictactoe"] = GameCommand<TicTacToeGame>()
+		registry["uno"] = GameCommand<UnoGame>()
+		registry["sourcefile"] = SourceFileCommand()
+		registry["chess"] = GameCommand<ChessGame>()
+		registry["cyclethrough"] = CycleThroughCommand()
+		registry["demoimage"] = DemoImageCommand()
+		registry["demogif"] = DemoGifCommand()
+		registry["invert"] = InvertCommand()
+		registry["spin"] = SpinCommand()
+		registry["togif"] = ToGifCommand()
+		registry["avatar"] = AvatarCommand()
+		registry["latex"] = LatexCommand()
+		registry["autolatex"] = AutoLatexCommand()
+		registry["piglatin"] = PigLatinCommand()
+		registry["markov"] = MarkovCommand()
+		registry["watch"] = WatchCommand()
+		registry["poll"] = PollCommand()
+		registry["concat"] = ConcatCommand()
+		registry["presence"] = PresenceCommand()
+		registry["dm"] = DirectMessageCommand()
+		registry["tofile"] = ToFileCommand()
+		registry["chord"] = GuitarChordCommand()
+		registry["web"] = WebCommand()
+		registry["stats"] = StatsCommand()
+		registry["sortby"] = SortByCommand()
+		registry["addscript"] = AddD2ScriptCommand()
+		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
+	}
+
 	func client(_ client: DiscordClient, didConnect connected: Bool) {
 		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
-		let msgIndex = currentIndex
-		currentIndex += 1
-		
-		if message.content.starts(with: commandPrefix) && !(message.channel is DiscordDMChannel) {
-			handleInvocationMessage(client: client, message: message, msgIndex: msgIndex)
-		} else if !subscribedCommands.isEmpty {
-			handleSubscriptionMessage(client: client, message: message)
-		}
-	}
-	
-	private func handleInvocationMessage(client: DiscordClient, message: DiscordMessage, msgIndex: Int) {
-		let context = CommandContext(
-			guild: client.guildForChannel(message.channelId),
-			registry: registry,
-			message: message
-		)
-		let isBot = message.author.bot
-		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
-		
-		// Precedence: Chain < Pipe
-		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false) {
-			var pipe = [PipeComponent]()
-			var pipeConstructionSuccessful = true
-			var userOnly = false
-			
-			// Construct the pipe
-			for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: true) {
-				let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
-				
-				if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-					print("Got command #\(msgIndex): \(groups)")
-					let name = groups[1]
-					let args = groups[2]
-					
-					if let command = registry[name] {
-						let hasPermission = permissionManager.user(message.author, hasPermission: command.info.requiredPermissionLevel)
-						if hasPermission {
-							print("Appending '\(name)' to pipe")
-							pipe.append(PipeComponent(command: command, context: context, args: args))
-						} else {
-							print("Rejected '\(name)' due to insufficient permissions")
-							message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
-							pipeConstructionSuccessful = false
-							break
-						}
-						
-						userOnly = userOnly || command.info.userOnly
-					} else {
-						print("Did not recognize command '\(name)'")
-						if !isBot {
-							message.channel?.send("Sorry, I do not know the command `\(name)`.")
-						}
-						pipeConstructionSuccessful = false
-						break
-					}
-				}
-			}
-			
-			if pipeConstructionSuccessful && !(userOnly && isBot) {
-				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
-					message.channel?.send("Your pipe is too long.")
-					return
-				}
-				
-				// Setup the pipe outputs
-				if let pipeSink = pipe.last {
-					let sinkCommand = pipeSink.command
-					pipeSink.output = DiscordOutput(client: client, defaultTextChannel: message.channel) { sentMessage, _ in
-						if let sent = sentMessage {
-							sinkCommand.onSuccessfullySent(message: sent)
-						}
-					}
-				}
-				
-				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
-					let pipeNext = pipe[i + 1]
-					pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
-				}
-				
-				guard let pipeSource = pipe.first else { continue }
-				
-				msgParser.parse(pipeSource.args, message: message) { input in
-					// Execute the pipe (asynchronously)
-					pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
-					
-					// Add subscriptions
-					let added = pipe
-						.map { (it: PipeComponent) -> Command in it.command }
-						.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscribedCommands.contains(where: { cmd.equalTo($0.command) && message.channelId == $0.channel })}
-						.map { CommandSubscription(channel: message.channelId, command: $0) }
-					self.subscribedCommands += added
-				}
+		for (i, _) in messageHandlers.enumerated() {
+			if messageHandlers[i].handle(message: message, from: client) {
+				break
 			}
 		}
-	}
-	
-	private func handleSubscriptionMessage(client: DiscordClient, message: DiscordMessage) {
-		let output = DiscordOutput(client: client, defaultTextChannel: message.channel)
-		let context = CommandContext(
-			guild: client.guildForChannel(message.channelId),
-			registry: registry,
-			message: message
-		)
-		let isBot = message.author.bot
-		
-		for (i, subscription) in subscribedCommands.enumerated().reversed() {
-			if (subscription.channel == message.channelId) && !(subscription.command.info.userOnly && isBot) {
-				let response = subscription.command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
-				if response == .cancelSubscription {
-					subscribedCommands.remove(at: i)
-				}
-			}
-		}
-	}
-	
-	subscript(name: String) -> Command? {
-		get { return registry[name] }
-		set(newValue) { registry[name] = newValue }
 	}
 }

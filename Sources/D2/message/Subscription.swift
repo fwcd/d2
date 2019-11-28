@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Commands
 
-struct CommandSubscription {
+struct Subscription {
 	let channel: ChannelID
 	let command: Command
 }

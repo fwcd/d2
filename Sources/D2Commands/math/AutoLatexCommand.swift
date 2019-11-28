@@ -24,7 +24,7 @@ public class AutoLatexCommand: StringCommand {
         output.append(":pencil: Enabled automatic LaTeX-reformatting for this channel!")
     }
     
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
         if content == "cancel autolatex" {
             output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
             return .cancelSubscription

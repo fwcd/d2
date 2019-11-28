@@ -11,7 +11,7 @@ public protocol Command: class {
 	
 	func onSuccessfullySent(message: DiscordMessage)
 	
-	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction
+	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction
 	
 	func equalTo(_ rhs: Command) -> Bool
 }
@@ -22,7 +22,7 @@ extension Command {
 	
 	public func onSuccessfullySent(message: DiscordMessage) {}
 	
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> CommandSubscriptionAction {
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
 		return .continueSubscription
 	}
 
