@@ -4,7 +4,7 @@ import D2Commands
 import D2Utils
 
 /** Registers all available commands. */
-func register(commandsFor handler: CommandHandler) {
+func register(commandsFor handler: D2ClientHandler) {
 	handler["ping"] = PingCommand()
 	handler["vertical"] = VerticalCommand()
 	handler["bf"] = BFCommand()
@@ -70,7 +70,7 @@ func register(commandsFor handler: CommandHandler) {
 func main() throws {
 	let args = CommandLine.arguments
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
-	let handler = try CommandHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: args[safely: 1])
+	let handler = try D2ClientHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: args[safely: 1])
 	let token = try DiskJsonSerializer().readJson(as: Token.self, fromFile: "local/discordToken.json").token
 	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [.log(.info)])
 	

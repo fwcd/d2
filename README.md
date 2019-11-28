@@ -105,7 +105,7 @@ The program consists of six modules:
 * `D2WebAPIs`, client implementations of various web APIs
 
 ### D2
-The executable application. The base functionality is provided by `CommandHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.
+The executable application. The base functionality is provided by `D2ClientHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.
 
 ### D2Commands
 At a basic level, the `Command` protocol consists of a single method named `invoke` that carries information about the user's request:

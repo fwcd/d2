@@ -19,7 +19,7 @@ fileprivate class PipeComponent {
 }
 
 /** A client delegate that dispatches commands. */
-class CommandHandler: DiscordClientDelegate {
+class D2ClientHandler: DiscordClientDelegate {
 	private let chainSeparator: Character
 	private let pipeSeparator: Character
 	private let commandPattern: Regex
