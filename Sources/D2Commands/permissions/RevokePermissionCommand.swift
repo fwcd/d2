@@ -22,7 +22,7 @@ public class RevokePermissionCommand: StringCommand {
 			var response = ""
 			var changedPermissions = false
 			
-			for mentionedUser in mentionedUsers(in: context.message, on: context.guild) {
+			for mentionedUser in context.message.allMentionedUsers {
 				permissionManager.remove(permissionsFrom: mentionedUser)
 				response += ":x: Revoked permissions from `\(mentionedUser.username)`\n"
 				changedPermissions = true

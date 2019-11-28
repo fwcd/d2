@@ -14,6 +14,30 @@ extension DiscordTextChannel {
 	}
 }
 
+extension DiscordGuild {
+	public var allUsers: [DiscordUser] { return members.map { $0.value.user } }
+	
+	public func users(with roles: [RoleID]) -> [DiscordUser] {
+		return roles.flatMap { role in
+			members
+				.map { $0.value }
+				.filter { $0.roleIds.contains(role) }
+				.map { $0.user }
+		}
+	}
+}
+
+extension DiscordMessage {
+	public var allMentionedUsers: [DiscordUser] {
+		guard let guild = guildMember?.guild else { return [] }
+		if mentionEveryone {
+			return guild.allUsers
+		} else {
+			return mentions + guild.users(with: mentionRoles)
+		}
+	}
+}
+
 extension DiscordMessageLikeInitializable {
 	public init(fromContent content: String) {
 		self.init(content: content, embed: nil, files: [], tts: false)

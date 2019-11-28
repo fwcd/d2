@@ -24,7 +24,7 @@ public class GrantPermissionCommand: StringCommand {
 				var response = ""
 				var changedPermissions = false
 				
-				for mentionedUser in mentionedUsers(in: context.message, on: context.guild) {
+				for mentionedUser in context.message.allMentionedUsers {
 					permissionManager[mentionedUser] = level
 					response += ":white_check_mark: Granted `\(mentionedUser.username)` \(rawLevel) permissions\n"
 					changedPermissions = true
