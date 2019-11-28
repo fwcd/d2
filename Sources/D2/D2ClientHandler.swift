@@ -6,29 +6,25 @@ import D2Permissions
 
 /** A client delegate that dispatches commands. */
 class D2ClientHandler: DiscordClientDelegate {
-	private let initialPresence: String?
-
 	private let commandPrefix: String
-	private(set) var registry = CommandRegistry()
-	private let permissionManager = PermissionManager()
-	private let subscriptionManager = SubscriptionManager()
-
+	private let initialPresence: String?
 	private var messageHandlers: [MessageHandler]
 	
 	init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
 		self.commandPrefix = commandPrefix
 		self.initialPresence = initialPresence
 		
+		let registry = CommandRegistry()
+		let spamConfiguration = SpamConfiguration()
+		let permissionManager = PermissionManager()
+		let subscriptionManager = SubscriptionManager()
+
 		messageHandlers = [
+			SpamHandler(config: spamConfiguration),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
 			SubscriptionHandler(registry: registry, manager: subscriptionManager)
 		]
 
-		registerCommands()
-	}
-
-	/** Registers the available commands. */
-	func registerCommands() {
 		registry["ping"] = PingCommand()
 		registry["vertical"] = VerticalCommand()
 		registry["bf"] = BFCommand()
