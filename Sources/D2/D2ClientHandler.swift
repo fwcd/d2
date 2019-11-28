@@ -42,6 +42,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["reddit"] = RedditCommand()
 		registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
 		registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
+		registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
 		registry["for"] = ForCommand()
 		registry["void"] = VoidCommand()
