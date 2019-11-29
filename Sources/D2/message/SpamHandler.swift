@@ -52,7 +52,7 @@ struct SpamHandler: MessageHandler {
     private func penalize(spammer user: UserID, on guild: DiscordGuild, client: DiscordClient) {
         guard let member = guild.members[user] else { return }
 
-        if let role = config.value.spammerRole {
+        if let role = config.value.spammerRoles[guild.id] {
             add(role: role, to: user, on: guild, client: client) {
                 if self.config.value.removeOtherRolesFromSpammer {
                     self.remove(roles: member.roleIds, from: user, on: guild, client: client)
