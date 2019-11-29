@@ -2,6 +2,10 @@ import Foundation
 
 /**
  * A linked list of expiring elements.
+ *
+ * Note that elements are expired _lazily_, i.e.
+ * they are not freed from memory before
+ * accessing the list.
  */
 public class ExpiringList<T>: Sequence {
     public typealias Element = T
@@ -13,6 +17,7 @@ public class ExpiringList<T>: Sequence {
         removeExpired()
         return currentCount
     }
+    public var isEmpty: Bool { return count == 0 }
 
     class Node {
         let element: T
@@ -38,6 +43,8 @@ public class ExpiringList<T>: Sequence {
             return value
         }
     }
+    
+    public init() {}
 
     public func append(_ element: T, expiry: Date) {
         removeExpired()

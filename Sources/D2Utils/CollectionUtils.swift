@@ -1,3 +1,10 @@
+public extension Sequence {
+    func count(forWhich predicate: (Element) -> Bool) -> Int {
+		// TODO: Implemented in https://github.com/apple/swift-evolution/blob/master/proposals/0220-count-where.md
+        return reduce(0) { predicate($1) ? $0 + 1 : $0 }
+    }
+}
+
 public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
 	var urlQueryEncoded: String {
 		return map { "\($0.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($0))=\($1.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($1))" }
