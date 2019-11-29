@@ -13,17 +13,17 @@ fileprivate struct SpammerProfile {
  * them a spammer role (which can be configured using a command).
  */
 struct SpamHandler: MessageHandler {
-    private let config: SpamConfiguration
+    private let config: AutoSerializing<SpamConfiguration>
     private let lastSpamMessages = ExpiringList<DiscordMessage>()
     private var cautionedSpammers = Set<UserID>()
     
-    init(config: SpamConfiguration) {
+    init(config: AutoSerializing<SpamConfiguration>) {
         self.config = config
     }
 
     mutating func handle(message: DiscordMessage, from client: DiscordClient) -> Bool {
         guard isPossiblySpam(message: message) else { return false }
-        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.interval))
+        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.value.interval))
         
         guard let guild = client.guildForChannel(message.channelId) else { return false }
         let author = message.author.id
@@ -46,15 +46,15 @@ struct SpamHandler: MessageHandler {
     }
     
     private func isSpamming(user: UserID) -> Bool {
-        return lastSpamMessages.count(forWhich: { $0.author.id == user }) > config.maxSpamMessagesPerInterval
+        return lastSpamMessages.count(forWhich: { $0.author.id == user }) > config.value.maxSpamMessagesPerInterval
     }
     
     private func penalize(spammer user: UserID, on guild: DiscordGuild, client: DiscordClient) {
         guard let member = guild.members[user] else { return }
 
-        if let role = config.spammerRole {
+        if let role = config.value.spammerRole {
             add(role: role, to: user, on: guild, client: client) {
-                if self.config.removeOtherRolesFromSpammer {
+                if self.config.value.removeOtherRolesFromSpammer {
                     self.remove(roles: member.roleIds, from: user, on: guild, client: client)
                 }
             }

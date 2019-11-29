@@ -1,9 +1,10 @@
-import SwiftDiscord
 import Foundation
+import SwiftDiscord
+import D2Utils
 
-public class SpamConfiguration {
+public struct SpamConfiguration: Codable, DefaultInitializable {
     public var interval: TimeInterval = 30.0
-    public var maxSpamMessagesPerInterval: Int = 10
+    public var maxSpamMessagesPerInterval: Int = 6
 
     /** A role that is given to spammers, e.g. for muting them. */
     public var spammerRole: RoleID? = nil

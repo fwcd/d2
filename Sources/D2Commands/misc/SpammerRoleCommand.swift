@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 
 fileprivate let resetSubcommand = "reset"
 
@@ -9,9 +10,9 @@ public class SpammerRoleCommand: StringCommand {
         longDescription: "Sets the role which is automatically assigned to spammers",
         requiredPermissionLevel: .admin
     )
-    private let spamConfiguration: SpamConfiguration
+    private let spamConfiguration: AutoSerializing<SpamConfiguration>
     
-    public init(spamConfiguration: SpamConfiguration) {
+    public init(spamConfiguration: AutoSerializing<SpamConfiguration>) {
         self.spamConfiguration = spamConfiguration
     }
     
@@ -21,15 +22,20 @@ public class SpammerRoleCommand: StringCommand {
             output.append("Too many roles, please only mention one!")
             return
         }
-
-        if let role = mentions.first {
-            spamConfiguration.spammerRole = role
-            output.append(":white_check_mark: Successfully updated the spammer role")
-        } else if input == resetSubcommand {
-            spamConfiguration.spammerRole = nil
-            output.append(":white_check_mark: Successfully reset the spammer role")
-        } else {
-            output.append("Please mention a role or use the `\(resetSubcommand)` subcommand")
+        
+        do {
+            if let role = mentions.first {
+                try spamConfiguration.update { $0.spammerRole = role }
+                output.append(":white_check_mark: Successfully updated the spammer role")
+            } else if input == resetSubcommand {
+                try spamConfiguration.update { $0.spammerRole = nil }
+                output.append(":white_check_mark: Successfully reset the spammer role")
+            } else {
+                output.append("Please mention a role or use the `\(resetSubcommand)` subcommand")
+            }
+        } catch {
+            print(error)
+            output.append("Could not update spammer role")
         }
     }
 }
