@@ -33,7 +33,7 @@ let package = Package(
         ),
         .target(
             name: "D2WebAPIs",
-            dependencies: ["D2Utils"]
+            dependencies: ["D2Utils", "SwiftSoup"]
         ),
         .target(
             name: "D2Graphics",
