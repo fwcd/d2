@@ -18,6 +18,6 @@ deploy:
     entrypoint: ["/bin/sh", "-c"]
   stage: deploy
   script:
-    - docker build -t setup-d2local Scripts/setup-d2local && docker run -v d2local:/d2/local --rm setup-d2local
+    - docker build -t setup-d2local Scripts/setup-d2local && docker run -it -v d2local:/d2/local --rm setup-d2local
     - docker-compose build
     - docker-compose up -d

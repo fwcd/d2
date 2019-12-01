@@ -4,4 +4,4 @@ WORKDIR /app
 COPY . .
 RUN chmod +x envvars-to-files
 
-CMD ["./envvars-to-files"]
+CMD ["./app/envvars-to-files"]
