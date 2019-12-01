@@ -8,3 +8,4 @@ services:
 
 volumes:
   d2local:
+    external: true
