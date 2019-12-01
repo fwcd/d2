@@ -24,4 +24,6 @@ FROM swift:5.1
 # RUN swift build
 
 # CMD ["./build/debug/D2"]
+WORKDIR /app
+COPY envvars-to-files .
 CMD ["./envvars-to-files"]
