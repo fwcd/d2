@@ -1,8 +1,9 @@
 FROM swift:5.1
 
-# Install native dependencies
+# Install native dependencies (including Node)
+RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-RUN apt-get update && apt-get-install -y \
+RUN apt-get update && apt-get install -y \
     nodejs \
     libopus-dev \
     libsodium-dev \
