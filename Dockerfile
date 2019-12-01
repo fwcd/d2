@@ -26,4 +26,5 @@ FROM swift:5.1
 # CMD ["./build/debug/D2"]
 WORKDIR /app
 COPY envvars-to-files .
+RUN chmod +x envvars-to-files
 CMD ["./envvars-to-files"]
