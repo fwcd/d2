@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Root"
+ls /
+echo "D2"
+ls /d2
+echo "Local"
+ls /d2/local
+
+./.build/debug/D2

@@ -29,5 +29,6 @@ RUN ./install-all
 # Build
 WORKDIR /d2
 RUN swift build
+RUN chmod +x start-d2
 
-CMD ["ls . && ls local && ./.build/debug/D2"]
+CMD ["./start-d2"]
