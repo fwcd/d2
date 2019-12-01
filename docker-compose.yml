@@ -7,4 +7,4 @@ services:
       - d2local:/d2/local
 
 volumes:
-  d2:
+  d2local:
