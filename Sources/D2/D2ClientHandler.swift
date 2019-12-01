@@ -46,6 +46,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
 		registry["for"] = ForCommand()
 		registry["void"] = VoidCommand()
+		registry["quit"] = QuitCommand()
 		registry["grep"] = GrepCommand()
 		registry["last"] = LastMessageCommand()
 		registry["+"] = BinaryOperationCommand<Double>(name: "addition", operation: +)
