@@ -5,6 +5,7 @@ services:
     build: .
     volumes:
       - d2local:/d2/local
+    restart: always
 
 volumes:
   d2local:
