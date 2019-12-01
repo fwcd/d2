@@ -1,0 +1,24 @@
+image: "swift:5.1"
+
+stages:
+  - test
+  - deploy
+
+test:
+  stage: test
+  script:
+    - swift test
+
+volumes:
+  stage: deploy
+  script:
+    - docker volume create d2
+
+# deploy:
+#   image:
+#     name: docker/compose:1.24.1
+#     entrypoint: ["/bin/sh", "-c"]
+#   stage: deploy
+#   script:
+#     - docker-compose build
+#     - docker-compose up -d
