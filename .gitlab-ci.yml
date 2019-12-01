@@ -18,5 +18,8 @@ deploy:
     entrypoint: ["/bin/sh", "-c"]
   stage: deploy
   script:
-    - docker-compose build
-    - docker-compose up -d
+    - docker volume create d2local
+    - docker rum --rm -it -v d2:/from -v d2local:/to alpine ash -c "cd /from; cp -av . /to"
+    - docker volume rm d2local
+    # - docker-compose build
+    # - docker-compose up -d
