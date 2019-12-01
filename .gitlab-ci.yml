@@ -25,8 +25,3 @@ deploy:
     - echo $D2_WEB_API_KEYS | base64 -d > /d2/local/webApiKeys.json
     - docker-compose build
     - docker-compose up -d
-  volumes:
-    d2:
-      path: /d2/local
-      mode: rw
-      persist: true
