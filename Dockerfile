@@ -1,4 +1,4 @@
-FROM swift:5.1-xenial
+FROM swift:5.1
 
 # Install Curl and node package repository
 RUN apt-get update && apt-get install -y curl
