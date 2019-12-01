@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "Current contents of D2's local volume:"
 ls /d2/local
