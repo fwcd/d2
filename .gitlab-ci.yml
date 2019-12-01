@@ -18,10 +18,5 @@ deploy:
     entrypoint: ["/bin/sh", "-c"]
   stage: deploy
   script:
-    - echo $D2_ADMIN_WHITELIST | base64 -d > /d2/local/adminWhitelist.json
-    - echo $D2_CONFIG | base64 -d > /d2/local/config.json
-    - echo $D2_DISCORD_TOKEN | base64 -d > /d2/local/discordToken.json
-    - echo $D2_USER_PERMISSIONS | base64 -d > /d2/local/discordUserPermissions.json
-    - echo $D2_WEB_API_KEYS | base64 -d > /d2/local/webApiKeys.json
     - docker-compose build
     - docker-compose up -d
