@@ -22,4 +22,4 @@ deploy:
     - env | sed '/^DOCKER_ENV_CI_SERVER_TLS_CA_FILE=/d' > .env
     - docker run --env-file .env --rm -v d2local:/d2/local setup-d2local
     - docker-compose build
-    - docker-compose up
+    - docker-compose up -d
