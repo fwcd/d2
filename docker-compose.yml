@@ -5,3 +5,6 @@ services:
     build: .
     volumes:
       - d2:/d2/local
+
+volumes:
+  d2:
