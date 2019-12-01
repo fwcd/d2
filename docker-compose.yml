@@ -3,3 +3,5 @@ version: "3"
 services:
   d2:
     build: .
+    volumes:
+      - d2:/d2/local
