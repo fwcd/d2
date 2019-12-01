@@ -12,14 +12,15 @@ RUN apt-get update && apt-get-install -y \
     maxima
 
 # Copy application
-WORKDIR /app
+WORKDIR /d2/app
 COPY . .
 
 # Install Node dependencies
-WORKDIR /app/Node
+WORKDIR /d2/app/Node
 RUN ./install-all
 
 # Build
+WORKDIR /d2/app
 RUN swift build
 
 CMD ["./build/debug/D2"]

@@ -4,28 +4,29 @@ stages:
   - test
   - deploy
 
-# before_script:
-#   - apt-get update && apt-get install libopus-dev libsodium-dev libcairo2-dev
+before_script:
+  - apt-get update && apt-get install libopus-dev libsodium-dev libcairo2-dev
 
-# test:
-#   stage: test
-#   script:
-#     - swift test
+test:
+  stage: test
+  script:
+    - swift test
 
-volumes:
+deploy:
   image:
     name: docker/compose:1.24.1
     entrypoint: ["/bin/sh", "-c"]
   stage: deploy
   script:
-    - docker volume create d2
-
-# deploy:
-#   image:
-#     name: docker/compose:1.24.1
-#     entrypoint: ["/bin/sh", "-c"]
-#   stage: deploy
-#   script:
-#     - echo 
-#     - docker-compose build
-#     - docker-compose up -d
+    - echo $D2_ADMIN_WHITELIST | base64 -d > /d2/local/adminWhitelist.json
+    - echo $D2_CONFIG | base64 -d > /d2/local/config.json
+    - echo $D2_DISCORD_TOKEN | base64 -d > /d2/local/discordToken.json
+    - echo $D2_USER_PERMISSIONS | base64 -d > /d2/local/discordUserPermissions.json
+    - echo $D2_WEB_API_KEYS | base64 -d > /d2/local/webApiKeys.json
+    - docker-compose build
+    - docker-compose up -d
+  volumes:
+    d2:
+      path: /d2/local
+      mode: rw
+      persist: true
