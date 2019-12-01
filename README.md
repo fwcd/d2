@@ -6,7 +6,15 @@ General-purpose virtual assistant for Discord.
 
 In addition to suporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
 
-## System Dependencies
+## Installation
+
+### using Docker (for production environments)
+* Make sure to have recent versions of Docker and Docker Compose installed
+* Create a volume named `d2local` using `docker volume create d2local`
+
+### Manually (for local development)
+
+#### System Dependencies
 * Swift 5
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
@@ -14,7 +22,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * Node.js and npm
 * `timeout` and `kill` (currently only for `MaximaCommand`)
 
-### Installation on Linux
+#### Linux
 * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima`
     * Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
     * If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
@@ -24,16 +32,18 @@ In addition to suporting various web APIs, it features basic scripting capabilit
     * Note that you might need to `apt-get install clang` separately on a Raspberry Pi
 * `cd Node && ./install-all`
 
-### Installation on macOS
+#### macOS
 * Install `maxima`
 * `brew tap vapor/tap`
 * `brew install opus libsodium ctls cairo poppler gd`
 * `cd Node && ./install-all`
 
-## Setup
+## Configuration
 
 ### Required
 * Create a folder named `local` in the repository
+    * If you use Docker, the `local` folder is represented by the `d2local` volume
+    * [See here](https://stackoverflow.com/a/55683656) for instructions on how to copy files into it
 * Create a file named `discordToken.json` in `local` containing the API key:
 
 ```json
@@ -43,7 +53,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ```
 
 ### Optional
-* Create a file named `config.json` in `local`:
+* Create a file named `config.json` in `local` (or the `d2local` volume):
 
 ```json
 {
@@ -51,7 +61,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 }
 ```
 
-* Create a file named `adminWhitelist.json` in `local` containing a list of Discord usernames that have full permissions:
+* Create a file named `adminWhitelist.json` in `local` (or the `d2local` volume) containing a list of Discord usernames that have full permissions:
 
 ```json
 {
@@ -61,7 +71,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 }
 ```
 
-* Create a file named `webApiKeys.json` in `local` containing various API keys:
+* Create a file named `webApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
 
 ```json
 {
@@ -72,11 +82,9 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 
 ## Building
 
-### on Linux
-* `swift build`
-
-### on macOS
-* `swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
+* Using Docker: `docker-compose build`
+* On Linux: `swift build`
+* On macOS: `swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
 
 For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearace/SwiftDiscord/blob/master/README.md).
 
@@ -85,11 +93,9 @@ For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearac
 
 ## Running
 
-### on Linux
-* `swift run`
-
-### on macOS
-* `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
+* Using Docker: `docker-compose up -d`
+* On Linux: `swift run`
+* On macOS: `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
 
 ## Additional Build Flags
 To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.

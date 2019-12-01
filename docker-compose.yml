@@ -4,7 +4,7 @@ services:
   d2:
     build: .
     volumes:
-      - d2:/d2/local
+      - d2local:/d2/local
 
 volumes:
   d2:

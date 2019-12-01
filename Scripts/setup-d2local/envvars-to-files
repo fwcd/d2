@@ -1,4 +1,9 @@
 #!/bin/bash
+
+echo "Current contents of D2's local volume:"
+ls /d2/local
+
+echo "Now copying config data from environment variables to files..."
 echo $D2_ADMIN_WHITELIST | base64 -d > /d2/local/adminWhitelist.json
 echo $D2_CONFIG | base64 -d > /d2/local/config.json
 echo $D2_DISCORD_TOKEN | base64 -d > /d2/local/discordToken.json
