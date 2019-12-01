@@ -4,13 +4,13 @@ stages:
   - test
   - deploy
 
-# before_script:
-#   - apt-get update && apt-get install libopus-dev libsodium-dev libcairo2-dev
+before_script:
+  - apt-get update && apt-get install libopus-dev libsodium-dev libcairo2-dev
 
-# test:
-#   stage: test
-#   script:
-#     - swift test
+test:
+  stage: test
+  script:
+    - swift test
 
 deploy:
   image:
