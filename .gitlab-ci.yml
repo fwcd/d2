@@ -20,5 +20,6 @@ deploy:
   script:
     - cd Scripts/setup-d2local && docker build -t setup-d2local . && cd ../..
     - docker run --rm -v d2local:/d2/local setup-d2local
+    - docker run --rm -v=d2local:/tmp/myvolume busybox find /tmp/myvolume
     - docker-compose build
     - docker-compose up
