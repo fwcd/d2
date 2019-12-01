@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM swift:5.1
 
 # Install native dependencies (including Node)
 RUN apt-get update && apt-get install -y curl
@@ -11,8 +11,6 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev \
     poppler-utils \
     maxima
-
-FROM swift:5.1
 
 # Copy application
 WORKDIR /d2/app
