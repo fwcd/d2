@@ -30,4 +30,4 @@ RUN ./install-all
 WORKDIR /d2
 RUN swift build
 
-CMD ["./.build/debug/D2"]
+CMD ["ls . && ls local && ./.build/debug/D2"]
