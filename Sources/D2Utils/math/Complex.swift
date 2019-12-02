@@ -2,12 +2,10 @@ public struct Complex: SignedNumeric, Addable, Subtractable, Multipliable, Divis
 	public static let i = Complex(0, i: 1)
 	public var real: Double
 	public var imag: Double
-	public var description: String {
-		return "\(real) + \(imag)i"
-	}
-	public var magnitude: Double {
-		return ((real * real) + (imag * imag)).squareRoot()
-	}
+	public var description: String { return "\(real) + \(imag)i" }
+	public var magnitudeSquared: Double { return (real * real) + (imag * imag) }
+	public var magnitude: Double { return magnitudeSquared.squareRoot() }
+	public var squared: Complex { return self * self }
 	
 	public init(_ real: Double = 0, i imag: Double = 0) {
 		self.real = real

@@ -67,6 +67,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["cyclethrough"] = CycleThroughCommand()
 		registry["demoimage"] = DemoImageCommand()
 		registry["demogif"] = DemoGifCommand()
+		registry["mandelbrot"] = MandelbrotCommand()
 		registry["invert"] = InvertCommand()
 		registry["spin"] = SpinCommand()
 		registry["togif"] = ToGifCommand()
