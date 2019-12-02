@@ -22,7 +22,7 @@ public class MandelbrotCommand: StringCommand {
 
             let time = Int(Date().timeIntervalSince1970 * 10) % 256
             let userId = Int(context.author.id.rawValue) % 100
-            let paletteHash = (time * userId) / 10
+            let paletteHash = (time * userId) / 512
 
             for y in 0..<height {
                 for x in 0..<width {
@@ -40,7 +40,8 @@ public class MandelbrotCommand: StringCommand {
     
     public func color(at c: Complex, paletteHash: Int) -> Color {
         let v = convergence(at: c)
-        return Color(red: UInt8((v * paletteHash) % 256), green: UInt8((v * paletteHash * 2) % 256), blue: UInt8((v * paletteHash * 4) % 256))
+        let step = (2 - paletteHash % 2)
+        return Color(red: UInt8((v * paletteHash) % 256), green: UInt8((v * paletteHash * step) % 256), blue: UInt8((v * paletteHash * step * 2) % 256))
     }
     
     /** Tests how many iterations it takes to reach the bound (or returns iterations if it does not). */
