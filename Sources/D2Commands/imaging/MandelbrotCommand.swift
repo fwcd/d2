@@ -40,8 +40,8 @@ public class MandelbrotCommand: StringCommand {
     
     public func color(at c: Complex, paletteHash: Int) -> Color {
         let v = convergence(at: c)
-        let step = (2 - paletteHash % 2)
-        return Color(red: UInt8((v * paletteHash) % 256), green: UInt8((v * paletteHash * step) % 256), blue: UInt8((v * paletteHash * step * 2) % 256))
+        let step = (2 - paletteHash % 3)
+        return Color(red: UInt8((v * paletteHash * step) % 256), green: UInt8((v * paletteHash * (step + 1)) % 256), blue: UInt8((v * paletteHash * (step + 2)) % 256))
     }
     
     /** Tests how many iterations it takes to reach the bound (or returns iterations if it does not). */
