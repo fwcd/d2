@@ -1,6 +1,7 @@
 import SwiftDiscord
 import D2Utils
 import D2Graphics
+import Foundation
 
 public class MandelbrotCommand: StringCommand {
     public let info = CommandInfo(
@@ -18,11 +19,15 @@ public class MandelbrotCommand: StringCommand {
             let width = 400
             let height = 300
             var image = try Image(width: width, height: height)
-            
+
+            let time = Int(Date().timeIntervalSince1970 * 10) % 256
+            let userId = Int(context.author.id.rawValue) % 100
+            let paletteHash = (time * userId) / 10
+
             for y in 0..<height {
                 for x in 0..<width {
                     let c = 0.01 * Complex(Double(x - (width / 2)), i: Double(y - (height / 2)))
-                    image[y, x] = color(at: c)
+                    image[y, x] = color(at: c, paletteHash: paletteHash)
                 }
             }
             
@@ -33,9 +38,9 @@ public class MandelbrotCommand: StringCommand {
         }
     }
     
-    public func color(at c: Complex) -> Color {
+    public func color(at c: Complex, paletteHash: Int) -> Color {
         let v = convergence(at: c)
-        return Color(red: UInt8((v * 2) % 256), green: UInt8((v * 16) % 256), blue: UInt8((v * 144) % 256))
+        return Color(red: UInt8((v * paletteHash) % 256), green: UInt8((v * paletteHash * 2) % 256), blue: UInt8((v * paletteHash * 4) % 256))
     }
     
     /** Tests how many iterations it takes to reach the bound (or returns iterations if it does not). */
