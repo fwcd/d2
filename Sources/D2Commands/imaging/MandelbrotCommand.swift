@@ -6,7 +6,8 @@ public class MandelbrotCommand: StringCommand {
     public let info = CommandInfo(
         category: .imaging,
         shortDescription: "The mandelbrot set",
-        longDescription: "Renders an image of the mandelbrot set"
+        longDescription: "Renders an image of the mandelbrot set",
+        requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .image
     
@@ -34,7 +35,7 @@ public class MandelbrotCommand: StringCommand {
     
     public func color(at c: Complex) -> Color {
         let v = convergence(at: c)
-        return v < 16 ? Colors.black : Colors.white
+        return Color(red: UInt8((v * 2) % 256), green: UInt8((v * 16) % 256), blue: UInt8((v * 144) % 256))
     }
     
     /** Tests how many iterations it takes to reach the bound (or returns iterations if it does not). */
