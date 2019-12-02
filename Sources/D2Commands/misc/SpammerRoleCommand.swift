@@ -33,7 +33,7 @@ public class SpammerRoleCommand: StringCommand {
                 try spamConfiguration.update { $0.spammerRoles[guild.id] = nil }
                 output.append(":white_check_mark: Successfully reset the spammer role")
             } else {
-                output.append("Please mention a role or use the `\(resetSubcommand)` subcommand")
+                output.append("The current spammer role is `\(spamConfiguration.value.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
             }
         } catch {
             print(error)
