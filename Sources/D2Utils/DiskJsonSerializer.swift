@@ -24,7 +24,11 @@ public struct DiskJsonSerializer {
 		guard fileManager.fileExists(atPath: url.path) else { throw DiskFileError.fileNotFound(url) }
 		
 		if let data = fileManager.contents(atPath: url.path) {
-			return try decoder.decode(type, from: data)
+			do {
+				return try decoder.decode(type, from: data)
+			} catch {
+				throw DiskFileError.decodingError(String(data: data, encoding: .utf8) ?? "<Binary data>", error)
+			}
 		} else {
 			throw DiskFileError.noData("Could not read any data from '\(filePath)'")
 		}
