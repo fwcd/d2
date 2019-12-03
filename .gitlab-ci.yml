@@ -7,10 +7,10 @@ stages:
 before_script:
   - apt-get update && apt-get install -y libopus-dev libsodium-dev libcairo2-dev
 
-test:
-  stage: test
-  script:
-    - swift test
+# test:
+#   stage: test
+#   script:
+#     - swift test
 
 deploy:
   image:
@@ -19,7 +19,7 @@ deploy:
   stage: deploy
   script:
     - cd Scripts/setup-d2local && docker build -t setup-d2local . && cd ../..
-    - env | sed '/^DOCKER_ENV_CI_SERVER_TLS_CA_FILE=/d' > .env
+    - env | sed '/^DOCKER_ENV_CI_SERVER_TLS_CA_FILE=/d' | tr '\n' ' ' > .env
     - docker run --env-file .env --rm -v d2local:/d2/local setup-d2local
     - docker-compose build
     - docker-compose up -d
