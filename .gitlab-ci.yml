@@ -7,10 +7,10 @@ stages:
 before_script:
   - apt-get update && apt-get install -y libopus-dev libsodium-dev libcairo2-dev
 
-# test:
-#   stage: test
-#   script:
-#     - swift test
+test:
+  stage: test
+  script:
+    - swift test
 
 deploy:
   image:
