@@ -28,7 +28,7 @@ public struct Shell {
 	
 	/** Synchronously runs the executable and returns the standard output. */
 	@discardableResult
-	public func runSync(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws -> String? {
+	public func outputSync(for executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws -> String? {
 		let (pipe, process) = newProcess(executable, in: directory, args: args, withPipedOutput: true, then: then)
 		
 		try execute(process: process)
@@ -46,7 +46,7 @@ public struct Shell {
 			return executable
 		} else {
 			// Find executable using 'which'. This code fragment explicitly
-			// does not invoke 'runSync' to avoid infinite recursion.
+			// does not invoke 'outputSync' to avoid infinite recursion.
 			
 			let pipe = Pipe()
 			let process = Process()

@@ -19,8 +19,9 @@ In addition to suporting various web APIs, it features basic scripting capabilit
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
         * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
-* Node.js and npm
-* `timeout` and `kill` (currently only for `MaximaCommand`)
+* Haskell Stack (for GHCi, Hoogle, ...)
+* Node.js and npm (for LaTeX rendering)
+* `timeout` and `kill` (for `MaximaCommand`)
 
 #### Linux
 * `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima`
@@ -30,12 +31,15 @@ In addition to suporting various web APIs, it features basic scripting capabilit
         * `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
         * `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
     * Note that you might need to `apt-get install clang` separately on a Raspberry Pi
-* `cd Node && ./install-all`
 
 #### macOS
 * Install `maxima`
 * `brew tap vapor/tap`
 * `brew install opus libsodium ctls cairo poppler gd`
+
+#### General
+* `stack install hoogle mueval`
+* `hoogle generate`
 * `cd Node && ./install-all`
 
 ## Configuration

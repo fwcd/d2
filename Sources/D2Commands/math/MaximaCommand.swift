@@ -91,7 +91,7 @@ public class MaximaCommand: StringCommand {
 			DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .seconds(1), execute: {
 				if process.isRunning {
 					do {
-						try shell.runSync("kill", args: ["-9", String(process.processIdentifier)])
+						try shell.outputSync(for: "kill", args: ["-9", String(process.processIdentifier)])
 						print("Killed maxima process")
 					} catch {
 						print("Killing maxima process failed, try to manually kill the process: kill -9 \(process.processIdentifier)")

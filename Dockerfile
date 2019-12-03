@@ -8,7 +8,7 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 # (see also https://forums.swift.org/t/lldb-install-precludes-installing-python-in-image/24040)
 RUN mv /usr/lib/python2.7/site-packages /usr/lib/python2.7/dist-packages; ln -s dist-packages /usr/lib/python2.7/site-packages
 
-# Install native dependencie
+# Install native dependencies
 RUN apt-get update && apt-get install -y \
     nodejs \
     libopus-dev \
@@ -17,6 +17,11 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev \
     poppler-utils \
     maxima
+
+# Install Haskell and dependencies
+RUN curl -sSL https://get.haskellstack.org/ | sh
+RUN stack install hoogle mueval
+RUN hoogle generate
 
 # Copy application
 WORKDIR /d2
