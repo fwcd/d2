@@ -27,7 +27,7 @@ public struct DiskJsonSerializer {
 			do {
 				return try decoder.decode(type, from: data)
 			} catch {
-				throw DiskFileError.decodingError(String(data: data, encoding: .utf8) ?? "<Binary data>", error)
+				throw DiskFileError.decodingError(filePath, String(data: data, encoding: .utf8) ?? "<Binary data>", error)
 			}
 		} else {
 			throw DiskFileError.noData("Could not read any data from '\(filePath)'")
