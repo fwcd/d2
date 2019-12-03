@@ -75,6 +75,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["latex"] = LatexCommand()
 		registry["autolatex"] = AutoLatexCommand()
 		registry["hoogle"] = HoogleCommand()
+		registry["haskell"] = HaskellCommand()
 		registry["piglatin"] = PigLatinCommand()
 		registry["markov"] = MarkovCommand()
 		registry["watch"] = WatchCommand()
