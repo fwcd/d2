@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install Haskell and dependencies
 RUN curl -sSL https://get.haskellstack.org/ | sh
-RUN stack install hoogle mueval
+RUN stack install hoogle show mueval
 RUN hoogle generate
 
 # Copy application

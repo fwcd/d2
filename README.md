@@ -38,7 +38,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * `brew install opus libsodium ctls cairo poppler gd`
 
 #### General
-* `stack install hoogle mueval`
+* `stack install hoogle show mueval`
 * `hoogle generate`
 * `cd Node && ./install-all`
 
