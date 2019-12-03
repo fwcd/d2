@@ -16,11 +16,10 @@ RUN apt-get update && apt-get install -y \
     libssl1.0-dev \
     libcairo2-dev \
     poppler-utils \
-    maxima
+    maxima \
+    hoogle \
+    mueval
 
-# Install Haskell and dependencies
-RUN curl -sSL https://get.haskellstack.org/ | sh
-RUN stack install hoogle show mueval
 RUN hoogle generate
 
 # Copy application
