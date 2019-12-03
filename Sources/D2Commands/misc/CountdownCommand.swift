@@ -25,6 +25,7 @@ public class CountdownCommand: StringCommand {
         longDescription: "Stores a collection of dates that it counts down to",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValue = .embed
     private var goals: [String: CountdownGoal]
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
     
