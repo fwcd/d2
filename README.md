@@ -19,7 +19,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
         * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
-* Haskell Stack (for GHCi, Hoogle, ...)
+* Haskell + Cabal Install or Stack (for Hoogle, Pointfree, ...)
 * Node.js and npm (for LaTeX rendering)
 * `timeout` and `kill` (for `MaximaCommand`)
 
@@ -38,7 +38,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 * `brew install opus libsodium ctls cairo poppler gd`
 
 #### General
-* `stack install hoogle show mueval`
+* `stack install hoogle show mueval pointfree` (or `cabal-install ...`)
 * `hoogle generate`
 * `cd Node && ./install-all`
 
