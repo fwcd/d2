@@ -3,7 +3,7 @@ import D2Utils
 
 public class PointfreeCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .haskell,
         shortDescription: "Pointfree notation converter",
         longDescription: "Converts a Haskell expression into pointfree notation",
         requiredPermissionLevel: .basic
