@@ -17,9 +17,10 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev \
     poppler-utils \
     maxima \
-    cabal-install
+    cabal-install \
+    hoogle
 
-RUN cabal update && cabal install hoogle mueval pointfree
+RUN cabal update && cabal install mueval pointfree
 RUN hoogle generate
 
 # Copy application
