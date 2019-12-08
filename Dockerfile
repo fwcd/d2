@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     maxima \
     cabal-install
 
-RUN cabal update && cabal install happy mueval hoogle pointfree
+RUN cabal update && cabal install happy
+RUN cabal update && cabal install mueval hoogle pointfree
 RUN hoogle generate
 
 # Copy application
