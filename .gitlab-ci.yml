@@ -7,10 +7,10 @@ stages:
 before_script:
   - apt-get update && apt-get install -y libopus-dev libsodium-dev libcairo2-dev
 
-test:
-  stage: test
-  script:
-    - swift test
+# test:
+#   stage: test
+#   script:
+#     - swift test
 
 deploy:
   image:
@@ -22,4 +22,4 @@ deploy:
     - env | sed -n '/^D2_/p' > .env
     - docker run --env-file .env --rm -v d2local:/d2/local setup-d2local
     - docker-compose build
-    - docker-compose up -d
+    - docker-compose up
