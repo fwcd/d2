@@ -24,6 +24,9 @@ RUN cabal update && cabal install happy
 RUN cabal update && cabal install mueval pointfree-1.1.1.6
 RUN hoogle generate
 
+# Add Cabal to PATH
+ENV PATH="~/.cabal/bin:${PATH}"
+
 # Copy application
 WORKDIR /d2
 COPY . .
