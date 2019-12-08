@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     cabal-install
 
 RUN cabal update && cabal install happy
-RUN cabal update && cabal install mueval hoogle pointfree
+RUN cabal update && cabal install mueval hoogle pointfree-1.1.1.6
 RUN hoogle generate
 
 # Copy application
