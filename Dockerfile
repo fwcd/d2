@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN hoogle generate
 RUN cabal update && cabal install happy
-RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful-1.1.0.0
+RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
 
 # Add Cabal to PATH
 ENV PATH /.cabal/bin:/root/.cabal/bin:$PATH
