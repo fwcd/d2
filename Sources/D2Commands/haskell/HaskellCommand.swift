@@ -1,8 +1,6 @@
 import SwiftDiscord
 import D2Utils
 
-fileprivate let importedModules = ["Prelude"]
-
 public class HaskellCommand: StringCommand {
     public let info = CommandInfo(
         category: .haskell,
@@ -17,8 +15,7 @@ public class HaskellCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let moduleArgs = importedModules.flatMap { ["-m", $0] }
-            let value = try Shell().outputSync(for: "mueval", args: ["-n", "-e", input, "-t", String(timeout)] + moduleArgs)
+            let value = try Shell().outputSync(for: "mueval", args: ["-n", "-e", input, "-t", String(timeout)])
             output.append(.code(value ?? "No output", language: "haskell"))
         } catch {
             print(error)
