@@ -15,7 +15,7 @@ public class HaskellCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let value = try Shell().outputSync(for: "mueval", args: ["-n", "-e", input, "-t", String(timeout)])
+            let value = try Shell().outputSync(for: "mueval", args: ["-e", input, "-t", String(timeout)])
             output.append(.code(value ?? "No output", language: "haskell"))
         } catch {
             print(error)
