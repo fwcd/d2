@@ -38,7 +38,7 @@ extension StringProtocol {
 					}
 				}
 				
-				if isEscaped && omitBackslashes {
+				if isQuote && isEscaped && omitBackslashes {
 					segment.removeLast()
 				}
 
