@@ -24,7 +24,6 @@ extension StringProtocol {
 		var last: Character? = nil
 		for c in self {
 			if quoteStack.isEmpty && c == separator {
-				print("Adding \(segment)")
 				split.append(segment)
 				segment = ""
 			} else {
