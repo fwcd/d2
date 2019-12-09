@@ -17,18 +17,21 @@ extension StringProtocol {
 		return output
 	}
 	
-	public func splitPreservingQuotes(by separator: Character, omitQuotes: Bool = false) -> [String] {
+	public func splitPreservingQuotes(by separator: Character, omitQuotes: Bool = false, omitBackslashes: Bool = false) -> [String] {
 		var split = [String]()
 		var segment = ""
 		var quoteStack = [Character]()
+		var last: Character? = nil
 		for c in self {
 			if quoteStack.isEmpty && c == separator {
+				print("Adding \(segment)")
 				split.append(segment)
 				segment = ""
 			} else {
 				let isQuote = c.unicodeScalars.first.map { quotes.contains($0) } ?? false
+				let isEscaped = last == "\\"
 				
-				if isQuote {
+				if isQuote && !isEscaped {
 					if let quote = quoteStack.last, quote == c {
 						quoteStack.removeLast()
 					} else {
@@ -36,10 +39,15 @@ extension StringProtocol {
 					}
 				}
 				
-				if !omitQuotes || !isQuote {
+				if isEscaped && omitBackslashes {
+					segment.removeLast()
+				}
+
+				if !omitQuotes || !isQuote || isEscaped {
 					segment.append(c)
 				}
 			}
+			last = c
 		}
 		split.append(segment)
 		return split

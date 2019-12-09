@@ -64,13 +64,13 @@ class CommandHandler: MessageHandler {
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		
 		// Precedence: Chain < Pipe
-		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false) {
+		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
 			var pipe = [PipeComponent]()
 			var pipeConstructionSuccessful = true
 			var userOnly = false
 			
 			// Construct the pipe
-			for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: true) {
+			for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: true, omitBackslashes: true) {
 				let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 				
 				if let groups = commandPattern.firstGroups(in: trimmedCommand) {
