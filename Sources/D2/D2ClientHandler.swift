@@ -77,6 +77,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["hoogle"] = HoogleCommand()
 		registry["haskell"] = HaskellCommand()
 		registry["pointfree"] = PointfreeCommand()
+		registry["pointful"] = PointfulCommand()
 		registry["piglatin"] = PigLatinCommand()
 		registry["markov"] = MarkovCommand()
 		registry["watch"] = WatchCommand()
