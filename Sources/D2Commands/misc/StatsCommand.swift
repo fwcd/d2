@@ -47,6 +47,7 @@ public class StatsCommand: StringCommand {
 				}
 				if (member.roles?.count ?? -1) > mostRoles.count {
 					mostRolesUsername = user.username
+					// TODO: Proper roles API in MessageIO guild structures
 					mostRoles = member.roles?.map { $0.name } ?? []
 				}
 			}

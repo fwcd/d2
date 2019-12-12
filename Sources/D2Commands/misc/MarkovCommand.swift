@@ -33,7 +33,7 @@ public class MarkovCommand: StringCommand {
 		let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
 		let mentioned = context.message.mentions.first
 		
-		if flags.contains("all"), let guild = context.guild, let user = client.user {
+		if flags.contains("all"), let guild = context.guild, let user = client.me {
 			guild.getGuildMember(user.id) { optionalMe, _ in
 				guard let me = optionalMe else {
 					output.append("Could not fetch guild member for myself")

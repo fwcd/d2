@@ -50,15 +50,15 @@ public class PollCommand: StringCommand {
 		}
 		
 		client.sendMessage(Message(content: text), to: channelId) { sentMessage, _ in
-			if let nextMessage = sentMessage {
-				self.react(to: nextMessage, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
+			if let nextMessageId = sentMessage.id {
+				self.react(to: nextMessageId, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
 			}
 		}
 	}
 	
-	private func react(to message: Message, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: MessageClient) {
+	private func react(to messageId: MessageID, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: MessageClient) {
 		if let reaction = remainingReactions.first {
-			client.createReaction(for: message.id, on: channelId, emoji: reaction) { sentMessage, _ in
+			client.createReaction(for: messageId, on: channelId, emoji: reaction) { sentMessage, _ in
 				self.react(to: message, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)
 			}
 		}

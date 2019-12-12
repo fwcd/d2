@@ -31,7 +31,7 @@ public class SortByCommand: StringCommand {
 			return
 		}
 
-		context.client?.getMessages(for: channel, selection: nil, limit: 80) { messages, _ in
+		context.client?.getMessages(for: channel, limit: 80) { messages, _ in
 			let sorted = messages.sorted(by: criterion)
 			output.append(Embed(
 				title: ":star: Top messages",

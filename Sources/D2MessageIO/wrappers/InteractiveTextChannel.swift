@@ -1,3 +1,7 @@
+/**
+ * A wrapper around a channel ID holding a
+ * client reference.
+ */
 public struct InteractiveTextChannel {
 	public let id: ChannelID
 	private let client: MessageClient
@@ -8,8 +12,10 @@ public struct InteractiveTextChannel {
 	}
 	
 	public func send(_ message: Message, then: (ClientCallback<Message?>)? = nil) {
-		client.sendMessage(message, to: id) {
-			then?($0, $1)
-		}
+		client.sendMessage(message, to: id, then: then)
+	}
+	
+	public func triggerTyping(then: (ClientCallback<Bool>)? = nil) {
+		client.triggerTyping(on: id, then: then)
 	}
 }

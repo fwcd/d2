@@ -18,13 +18,17 @@ public protocol MessageClient {
 	
 	func guildForChannel(_ channelId: ChannelID) -> Guild?
 	
-	func createDM(with user: UserID, then: @escaping ClientCallback<ChannelID>)
+	func createDM(with user: UserID, then: ClientCallback<ChannelID>?)
 	
-	func sendMessage(_ message: Message, to channelId: ChannelID, then: @escaping ClientCallback<Message?>)
+	func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?)
 	
-	func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: @escaping ClientCallback<Message?>)
+	func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<Message?>?)
 	
-	func getMessages(for channelId: ChannelID, limit: Int, then: @escaping ClientCallback<[Message]>)
+	func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?)
+	
+	func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?)
+	
+	func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<Message?>?)
 }
 
 public extension MessageClient {
@@ -42,5 +46,13 @@ public extension MessageClient {
 	
 	func getMessages(for channelId: ChannelID, limit: Int) {
 		getMessages(for: channelId, limit: limit, then: defaultCallback)
+	}
+	
+	func triggerTyping(on channelId: ChannelID) {
+		triggerTyping(on: channelId, then: defaultCallback)
+	}
+	
+	func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) {
+		createReaction(for: messageId, on: channelId, emoji: emoji, then: defaultCallback)
 	}
 }

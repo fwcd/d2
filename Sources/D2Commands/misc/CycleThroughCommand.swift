@@ -38,7 +38,7 @@ public class CycleThroughCommand: StringCommand {
 		client.sendMessage(Message(content: String(firstFrame)), to: channelId) { sentMessage, _ in
 			self.timer.schedule(nTimes: self.loops * frames.count) { i, _ in
 				let frame = String(frames[i % frames.count])
-				client.editMessage(sentMessage!.id, on: channelId, content: frame)
+				client.editMessage(sentMessage!.id!, on: channelId, content: frame)
 			}
 		}
 	}
