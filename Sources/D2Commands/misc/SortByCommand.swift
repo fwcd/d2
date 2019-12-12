@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -14,7 +14,7 @@ public class SortByCommand: StringCommand {
 	)
 	public let outputValueType: RichValueType = .embed
 	
-	private let sortCriteria: [String: (DiscordMessage, DiscordMessage) -> Bool] = [
+	private let sortCriteria: [String: (Message, Message) -> Bool] = [
 		"length": descendingComparator { $0.content.count },
 		"upvotes": descendingComparator { $0.reactions.first { $0.emoji.name == "upvote" }?.count ?? -1000 }
 	]
@@ -33,10 +33,10 @@ public class SortByCommand: StringCommand {
 
 		context.client?.getMessages(for: channel, selection: nil, limit: 80) { messages, _ in
 			let sorted = messages.sorted(by: criterion)
-			output.append(DiscordEmbed(
+			output.append(Embed(
 				title: ":star: Top messages",
 				fields: Array(sorted
-					.map { DiscordEmbed.Field(name: $0.author.username, value: $0.content.nilIfEmpty ?? "No content") }
+					.map { Embed.Field(name: $0.author.username, value: $0.content.nilIfEmpty ?? "No content") }
 					.prefix(10))
 			))
 		}

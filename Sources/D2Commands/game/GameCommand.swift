@@ -69,7 +69,7 @@ public class GameCommand<G: Game>: StringCommand {
 	}
 	
 	private func matches(output: CommandOutput) {
-		output.append(.embed(DiscordEmbed(
+		output.append(.embed(Embed(
 			title: ":video_game: Running \(game.name) matches",
 			description: matches
 				.map { "\($0.key): \($0.value.playersDescription)" }

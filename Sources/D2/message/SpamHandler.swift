@@ -1,10 +1,10 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2Commands
 import D2Utils
 
 fileprivate struct SpammerProfile {
-    let lastSpamMessages = ExpiringList<DiscordMessage>()
+    let lastSpamMessages = ExpiringList<Message>()
     var cautioned: Bool = false
 }
 
@@ -14,14 +14,14 @@ fileprivate struct SpammerProfile {
  */
 struct SpamHandler: MessageHandler {
     private let config: AutoSerializing<SpamConfiguration>
-    private let lastSpamMessages = ExpiringList<DiscordMessage>()
+    private let lastSpamMessages = ExpiringList<Message>()
     private var cautionedSpammers = Set<UserID>()
     
     init(config: AutoSerializing<SpamConfiguration>) {
         self.config = config
     }
 
-    mutating func handle(message: DiscordMessage, from client: DiscordClient) -> Bool {
+    mutating func handle(message: Message, from client: MessageClient) -> Bool {
         guard isPossiblySpam(message: message) else { return false }
         lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.value.interval))
         
@@ -30,10 +30,10 @@ struct SpamHandler: MessageHandler {
 
         if isSpamming(user: author) {
             if cautionedSpammers.contains(author) {
-                client.sendMessage(DiscordMessage(content: ":octagonal_sign: Penalizing <@\(author)> for spamming!"), to: message.channelId)
+                client.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author)> for spamming!"), to: message.channelId)
                 penalize(spammer: author, on: guild, client: client)
             } else {
-                client.sendMessage(DiscordMessage(content: ":warning: Please stop spamming, <@\(author)>!"), to: message.channelId)
+                client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author)>!"), to: message.channelId)
                 cautionedSpammers.insert(author)
             }
         }
@@ -41,7 +41,7 @@ struct SpamHandler: MessageHandler {
         return true
     }
     
-    private func isPossiblySpam(message: DiscordMessage) -> Bool {
+    private func isPossiblySpam(message: Message) -> Bool {
         return message.mentions.count > 4 || message.mentionRoles.count > 1 || message.mentionEveryone
     }
     
@@ -49,7 +49,7 @@ struct SpamHandler: MessageHandler {
         return lastSpamMessages.count(forWhich: { $0.author.id == user }) > config.value.maxSpamMessagesPerInterval
     }
     
-    private func penalize(spammer user: UserID, on guild: DiscordGuild, client: DiscordClient) {
+    private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {
         guard let member = guild.members[user] else { return }
 
         if let role = config.value.spammerRoles[guild.id] {
@@ -61,7 +61,7 @@ struct SpamHandler: MessageHandler {
         }
     }
     
-    private func add(role: RoleID, to user: UserID, on guild: DiscordGuild, client: DiscordClient, then: (() -> Void)? = nil) {
+    private func add(role: RoleID, to user: UserID, on guild: Guild, client: MessageClient, then: (() -> Void)? = nil) {
         client.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming") { success, _ in
             if success {
                 then?()
@@ -71,7 +71,7 @@ struct SpamHandler: MessageHandler {
         }
     }
     
-    private func remove(roles: [RoleID], from user: UserID, on guild: DiscordGuild, client: DiscordClient, then: (() -> Void)? = nil) {
+    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: MessageClient, then: (() -> Void)? = nil) {
         var remainingRoles = roles
         guard let role = remainingRoles.popLast() else {
             then?()

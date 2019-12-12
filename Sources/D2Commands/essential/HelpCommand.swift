@@ -26,7 +26,7 @@ public class HelpCommand: StringCommand {
 			} else if let category = CommandCategory(rawValue: input) {
 				output.append(categoryHelpEmbed(for: category, context: context))
 			} else {
-				output.append(DiscordEmbed(
+				output.append(Embed(
 					title: ":warning: Did not recognize command `\(input)`",
 					description: "Could not fetch any help"
 				))
@@ -34,11 +34,11 @@ public class HelpCommand: StringCommand {
 		}
 	}
 	
-	private func generalHelpEmbed(context: CommandContext) -> DiscordEmbed {
-		return DiscordEmbed(
+	private func generalHelpEmbed(context: CommandContext) -> Embed {
+		return Embed(
 			title: ":question: Available Commands",
 			fields: CommandCategory.allCases
-				.map { category in DiscordEmbed.Field(
+				.map { category in Embed.Field(
 					name: "\(category)",
 					value: context.registry
 						.filter { $0.value.info.category == category }
@@ -49,12 +49,12 @@ public class HelpCommand: StringCommand {
 		)
 	}
 	
-	private func categoryHelpEmbed(for category: CommandCategory, context: CommandContext) -> DiscordEmbed {
+	private func categoryHelpEmbed(for category: CommandCategory, context: CommandContext) -> Embed {
 		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden && $0.value.info.category == category }, by: { $0.value.info.requiredPermissionLevel })
 			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 		let helpFields = helpGroups
-			.flatMap { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> [DiscordEmbed.Field] in
+			.flatMap { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> [Embed.Field] in
 				let splitGroups = group.value
 					.sorted { $0.key < $1.key }
 					.map { """
@@ -65,23 +65,23 @@ public class HelpCommand: StringCommand {
 					.chunks(ofLength: 14)
 				return splitGroups
 					.enumerated()
-					.map { DiscordEmbed.Field(name: ":star: \(group.key) commands (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
+					.map { Embed.Field(name: ":star: \(group.key) commands (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
 			}
-		return DiscordEmbed(
+		return Embed(
 			title: "\(category) | Available Commands",
 			fields: helpFields
 		)
 	}
 
-	private func commandHelpEmbed(for name: String, command: Command) -> DiscordEmbed {
-		return DiscordEmbed(
+	private func commandHelpEmbed(for name: String, command: Command) -> Embed {
+		return Embed(
 			title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
 			description: """
 				\(command.info.longDescription)
 				
 				\(command.info.helpText ?? "")
 				""".trimmingCharacters(in: .whitespaces),
-			footer: DiscordEmbed.Footer(text: "\(command.info.category)")
+			footer: Embed.Footer(text: "\(command.info.category)")
 		)
 	}
 }

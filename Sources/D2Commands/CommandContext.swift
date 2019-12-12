@@ -14,8 +14,6 @@ public struct CommandContext {
 		self.registry = registry
 		self.message = message
 		
-		channel = client.map {
-			InteractiveTextChannel(id: message.channelId, client: $0)
-		}
+		channel = client.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, client: c) } }
 	}
 }

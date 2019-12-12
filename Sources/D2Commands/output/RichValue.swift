@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Graphics
 import D2Utils
 
@@ -12,8 +12,8 @@ public enum RichValue: Addable {
 	case image(Image)
 	case gif(AnimatedGif)
 	case code(String, language: String?)
-	case embed(DiscordEmbed?)
-	case files([DiscordFileUpload])
+	case embed(Embed?)
+	case files([Message.FileUpload])
 	case compound([RichValue])
 	
 	public var asText: String? {

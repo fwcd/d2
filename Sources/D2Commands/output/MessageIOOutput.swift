@@ -5,7 +5,7 @@ import FoundationNetworking
 #endif
 
 public class MessageIOOutput: CommandOutput {
-	private let messageWriter = DiscordMessageWriter()
+	private let messageWriter = MessageWriter()
 	private let client: MessageClient
 	private let defaultTextChannelId: ChannelID?
 	public let messageLengthLimit: Int? = 1800

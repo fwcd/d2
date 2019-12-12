@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2WebAPIs
 
@@ -28,9 +28,9 @@ public class MensaCommand: StringCommand {
                     return
                 }
                 
-                output.append(.embed(DiscordEmbed(
+                output.append(.embed(Embed(
                     title: ":fork_knife_plate: Today's menu for \(canteen)",
-                    fields: meals.map { DiscordEmbed.Field(name: "\($0.title) \($0.properties)", value: $0.price) }
+                    fields: meals.map { Embed.Field(name: "\($0.title) \($0.properties)", value: $0.price) }
                 )))
             }
         } catch {

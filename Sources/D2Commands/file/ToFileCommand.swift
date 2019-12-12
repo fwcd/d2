@@ -31,7 +31,7 @@ public class ToFileCommand: Command {
 				return
 			}
 			
-			output.append(.files([DiscordFileUpload(data: data, filename: filename, mimeType: "plain/text")]))
+			output.append(.files([Message.FileUpload(data: data, filename: filename, mimeType: "plain/text")]))
 		} else {
 			output.append(info.helpText!)
 		}

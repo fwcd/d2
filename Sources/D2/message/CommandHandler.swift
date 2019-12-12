@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Commands
 import D2Permissions
 import D2Utils
@@ -33,7 +33,7 @@ class CommandHandler: MessageHandler {
     
     private var currentIndex = 0
 	private var maxPipeLengthForUsers: Int = 3
-    private let msgParser = DiscordMessageParser()
+    private let msgParser = MessageParser()
     
     init(
         commandPrefix: String,
@@ -51,7 +51,7 @@ class CommandHandler: MessageHandler {
 		self.pipeSeparator = pipeSeparator
     }
 
-    func handle(message: DiscordMessage, from client: DiscordClient) -> Bool {
+    func handle(message: Message, from client: DiscordClient) -> Bool {
         guard message.content.starts(with: commandPrefix) && !(message.channel is DiscordDMChannel) else { return false }
         currentIndex += 1
 

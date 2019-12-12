@@ -1,5 +1,5 @@
 import XCTest
-import SwiftDiscord
+import D2MessageIO
 import D2TestUtils
 @testable import D2Commands
 

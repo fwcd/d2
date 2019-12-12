@@ -1,6 +1,7 @@
 import Foundation
 
 public enum URLRequestError: Error {
+	case missingURL
 	case couldNotCreateURL(URLComponents)
 	case ioError(Error)
 	case missingData

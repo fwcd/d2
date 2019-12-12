@@ -1,5 +1,4 @@
 import Foundation
-import SwiftDiscord
 import D2Commands
 import D2Utils
 

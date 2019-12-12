@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 
 fileprivate let resetSubcommand = "reset"

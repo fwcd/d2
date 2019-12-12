@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 import D2Utils
 import D2Commands
@@ -98,7 +98,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	
-	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
+	func client(_ client: DiscordClient, didCreateMessage message: Message) {
 		for (i, _) in messageHandlers.enumerated() {
 			if messageHandlers[i].handle(message: message, from: client) {
 				break

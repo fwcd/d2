@@ -15,7 +15,7 @@ public class LastMessageCommand: Command {
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		context.client?.getMessages(for: context.channel!.id, limit: 2) { result, _ in
 			if let lastMessage = result[safely: 1] {
-				DiscordMessageParser().parse(message: lastMessage) {
+				MessageParser().parse(message: lastMessage) {
 					output.append($0)
 				}
 			} else {

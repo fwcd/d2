@@ -1,6 +1,6 @@
 import D2Utils
 import D2Permissions
-import SwiftDiscord
+import D2MessageIO
 import Foundation
 
 /** A simple heuristic for detecting "formulas" in messages. Matches a single character. */
@@ -52,7 +52,7 @@ public class AutoLatexCommand: StringCommand {
         return textPattern.replace(in: content, with: "\\\\text{$0}")
     }
     
-    public func onSuccessfullySent(message: DiscordMessage) {
+    public func onSuccessfullySent(message: Message) {
         latexRenderer?.cleanUp()
     }
 }

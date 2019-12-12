@@ -18,7 +18,7 @@ public class CommandTestOutput: CommandOutput {
 	public var last: Message? { return messages.last }
 	public var lastContent: String? { return last?.content }
 	
-	private let messageWriter = DiscordMessageWriter()
+	private let messageWriter = MessageWriter()
 	
 	public init() {}
 	

@@ -21,6 +21,8 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 	public let reactions: [Reaction]
 	public let timestamp: Date?
 	public let type: MessageType?
+	public let guild: Guild?
+	public let guildMember: Guild.Member?
 	
 	public var embed: Embed? { return embeds.first }
 	
@@ -49,7 +51,9 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 		pinned: Bool = false,
 		reactions: [Reaction] = [],
 		timestamp: Date? = nil,
-		type: MessageType? = nil
+		type: MessageType? = nil,
+		guild: Guild? = nil,
+		guildMember: Guild.Member? = nil
 	) {
 		self.content = content
 		self.embeds = embeds
@@ -70,6 +74,8 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 		self.reactions = reactions
 		self.timestamp = timestamp
 		self.type = type
+		self.guild = guild
+		self.guildMember = guildMember
 	}
 	
 	public init(stringLiteral value: String) {

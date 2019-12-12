@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 import D2Graphics
 import Dispatch
@@ -9,7 +9,7 @@ fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
 /**
  * Parses Discord messages into rich values.
  */
-public struct DiscordMessageParser {
+public struct MessageParser {
 	public init() {}
 	
 	/**
@@ -17,7 +17,7 @@ public struct DiscordMessageParser {
 	 * parent message and downloads
 	 * the attachments of a message.
 	 */
-	public func parse(_ str: String? = nil, message: DiscordMessage, then: @escaping (RichValue) -> Void) {
+	public func parse(_ str: String? = nil, message: Message, then: @escaping (RichValue) -> Void) {
 		var values: [RichValue] = []
 		
 		// Parse message content

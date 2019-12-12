@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 
 /**
  * Represents anything that receives/handles incoming Discord messages.
@@ -8,5 +8,5 @@ import SwiftDiscord
  */
 protocol MessageHandler {
     /** Receives the message and returns whether it was handled (successfully). */
-    mutating func handle(message: DiscordMessage, from client: DiscordClient) -> Bool
+    mutating func handle(message: Message, from client: DiscordClient) -> Bool
 }

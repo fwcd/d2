@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Commands
 
 /** Handles messages from command subscriptions. */
@@ -11,7 +11,7 @@ struct SubscriptionHandler: MessageHandler {
         self.manager = manager
     }
 
-    func handle(message: DiscordMessage, from client: DiscordClient) -> Bool {
+    func handle(message: Message, from client: DiscordClient) -> Bool {
         guard !manager.isEmpty else { return false }
 
 		let output = DiscordOutput(client: client, defaultTextChannel: message.channel)

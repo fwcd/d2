@@ -2,9 +2,9 @@ import D2MessageIO
 import D2Utils
 
 /**
- * Writes rich values into Discord messages.
+ * Writes rich values into MessageIO messages (e.g. for use with Discord).
  */
-public struct DiscordMessageWriter { // TODO: Rename to MessageIOWriter
+public struct MessageWriter {
 	public init() {}
 	
 	public func write(value: RichValue) throws -> Message {
@@ -13,7 +13,7 @@ public struct DiscordMessageWriter { // TODO: Rename to MessageIOWriter
 				return Message(content: "")
 			case let .text(txt):
 				if txt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-					throw DiscordMessageWriterError.emptyMessage
+					throw MessageWriterError.emptyMessage
 				}
 				return Message(content: txt)
 			case let .image(img):
@@ -31,7 +31,7 @@ public struct DiscordMessageWriter { // TODO: Rename to MessageIOWriter
 			case let .files(files):
 				return Message(files: files)
 			case let .compound(components):
-				let encoded: [DiscordEncoded] = try components.map { try write(value: $0) }
+				let encoded: [Message] = try components.map { try write(value: $0) }
 				return Message(
 					content: encoded.compactMap { $0.content.nilIfEmpty }.joined(separator: "\n"),
 					embed: encoded.compactMap { $0.embed }.first,

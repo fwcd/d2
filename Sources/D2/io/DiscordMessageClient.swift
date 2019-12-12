@@ -3,7 +3,7 @@ import SwiftDiscord
 
 struct DiscordMessageClient: MessageClient {
 	private let client: DiscordClient
-	var user: User { return client.user.usingMessageIO }
+	var me: User { return client.user.usingMessageIO }
 	
 	init(client: DiscordClient) {
 		self.client = client
@@ -17,8 +17,8 @@ struct DiscordMessageClient: MessageClient {
 		return client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
 	}
 	
-	func createDM(with me: UserID, user: UserID, then: @escaping ClientCallback<D2MessageIO.ChannelID>) {
-		client.createDM(with: me, user: user) {
+	func createDM(with user: UserID, then: @escaping ClientCallback<D2MessageIO.ChannelID>) {
+		client.createDM(with: user) {
 			then($0?.id.usingMessageIO, $1)
 		}
 	}

@@ -5,8 +5,8 @@ import Foundation
 // TO Discord conversions
 
 extension Embed: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordEmbed {
-		return DiscordEmbed(
+	var usingDiscordAPI: Embed {
+		return Embed(
 			title: title,
 			description: description,
 			author: author?.usingDiscordAPI,
@@ -22,8 +22,8 @@ extension Embed: DiscordAPIConvertible {
 }
 
 extension Embed.Author: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordEmbed.Author {
-		return DiscordEmbed.Author(
+	var usingDiscordAPI: Embed.Author {
+		return Embed.Author(
 			name: name,
 			iconUrl: iconUrl,
 			url: url
@@ -32,32 +32,32 @@ extension Embed.Author: DiscordAPIConvertible {
 }
 
 extension Embed.Thumbnail: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordEmbed.Thumbnail {
-		return DiscordEmbed.Thumbnail(url: url)
+	var usingDiscordAPI: Embed.Thumbnail {
+		return Embed.Thumbnail(url: url)
 	}
 }
 
 extension Embed.Image: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordEmbed.Image {
-		return DiscordEmbed.Image(url: url)
+	var usingDiscordAPI: Embed.Image {
+		return Embed.Image(url: url)
 	}
 }
 
 extension Embed.Footer: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordEmbed.Footer {
-		return DiscordEmbed.Footer(text: text)
+	var usingDiscordAPI: Embed.Footer {
+		return Embed.Footer(text: text)
 	}
 }
 
 extension Embed.Field: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordEmbed.Field {
-		return DiscordEmbed.Field(name: name, value: value, inline: inline)
+	var usingDiscordAPI: Embed.Field {
+		return Embed.Field(name: name, value: value, inline: inline)
 	}
 }
 
 // FROM Discord conversions
 
-extension DiscordEmbed: MessageIOConvertible {
+extension Embed: MessageIOConvertible {
 	var usingMessageIO: Embed {
 		return Embed(
 			title: title,
@@ -74,7 +74,7 @@ extension DiscordEmbed: MessageIOConvertible {
 	}
 }
 
-extension DiscordEmbed.Author: MessageIOConvertible {
+extension Embed.Author: MessageIOConvertible {
 	var usingMessageIO: Embed.Author {
 		return Embed.Author(
 			name: name,
@@ -84,25 +84,25 @@ extension DiscordEmbed.Author: MessageIOConvertible {
 	}
 }
 
-extension DiscordEmbed.Thumbnail: MessageIOConvertible {
+extension Embed.Thumbnail: MessageIOConvertible {
 	var usingMessageIO: Embed.Thumbnail {
 		return Embed.Thumbnail(url: url)
 	}
 }
 
-extension DiscordEmbed.Image: MessageIOConvertible {
+extension Embed.Image: MessageIOConvertible {
 	var usingMessageIO: Embed.Image {
 		return Embed.Image(url: url)
 	}
 }
 
-extension DiscordEmbed.Footer: MessageIOConvertible {
+extension Embed.Footer: MessageIOConvertible {
 	var usingMessageIO: Embed.Footer {
 		return Embed.Footer(text: text)
 	}
 }
 
-extension DiscordEmbed.Field: MessageIOConvertible {
+extension Embed.Field: MessageIOConvertible {
 	var usingMessageIO: Embed.Field {
 		return Embed.Field(name: name, value: value, inline: inline)
 	}

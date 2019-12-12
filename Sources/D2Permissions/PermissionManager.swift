@@ -2,7 +2,7 @@ import D2MessageIO
 import Foundation
 import D2Utils
 
-fileprivate let userPermissionsFilePath = "local/discordUserPermissions.json"
+fileprivate let userPermissionsFilePath = "local/UserPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
 public class PermissionManager: CustomStringConvertible {

@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2Utils
 
@@ -95,17 +95,17 @@ public class CountdownCommand: StringCommand {
     }
     
     private func show(_ name: String, as goal: CountdownGoal, to output: CommandOutput) {
-        output.append(.embed(DiscordEmbed(
+        output.append(.embed(Embed(
             title: ":hourglass: \(name) Countdown",
             description: "The next \(name) will take place in **\(describeRemainingTimeUntil(goal: goal))**",
-            footer: DiscordEmbed.Footer(text: outputDateFormatter.string(from: goal.date))
+            footer: Embed.Footer(text: outputDateFormatter.string(from: goal.date))
         )))
     }
     
     private func showRunningGoals(to output: CommandOutput) {
-        output.append(.embed(DiscordEmbed(
+        output.append(.embed(Embed(
             title: ":hourglass: Running Countdowns",
-            fields: goals.map { DiscordEmbed.Field(name: $0.key, value: "will take place in **\(describeRemainingTimeUntil(goal: $0.value))** (on \(outputDateFormatter.string(from: $0.value.date)))") }
+            fields: goals.map { Embed.Field(name: $0.key, value: "will take place in **\(describeRemainingTimeUntil(goal: $0.value))** (on \(outputDateFormatter.string(from: $0.value.date)))") }
         )))
     }
     

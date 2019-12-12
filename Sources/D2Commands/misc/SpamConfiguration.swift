@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 
 public struct SpamConfiguration: Codable, DefaultInitializable {

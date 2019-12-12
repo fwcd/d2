@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 
 public class HoogleCommand: StringCommand {
