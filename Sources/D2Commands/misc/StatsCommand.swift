@@ -45,15 +45,15 @@ public class StatsCommand: StringCommand {
 				if user.username.count > longestUsername.count {
 					longestUsername = user.username
 				}
-				if (member.roles?.count ?? -1) > mostRoles.count {
+				if member.roleIds.count > mostRoles.count {
 					mostRolesUsername = user.username
 					// TODO: Proper roles API in MessageIO guild structures
-					mostRoles = member.roles?.map { $0.name } ?? []
+					mostRoles = member.roleIds.compactMap { guild.roles[$0]?.name }
 				}
 			}
 			
 			for (_, channel) in guild.channels {
-				if channel is GuildVoiceChannel {
+				if channel.isVoiceChannel {
 					voiceChannelCount += 1
 				} else {
 					textChannelCount += 1

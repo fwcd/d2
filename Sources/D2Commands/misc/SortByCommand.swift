@@ -36,7 +36,7 @@ public class SortByCommand: StringCommand {
 			output.append(Embed(
 				title: ":star: Top messages",
 				fields: Array(sorted
-					.map { Embed.Field(name: $0.author.username, value: $0.content.nilIfEmpty ?? "No content") }
+					.map { Embed.Field(name: $0.author?.username ?? "Unknown Author", value: $0.content.nilIfEmpty ?? "No content") }
 					.prefix(10))
 			))
 		}

@@ -50,7 +50,7 @@ public class PollCommand: StringCommand {
 		}
 		
 		client.sendMessage(Message(content: text), to: channelId) { sentMessage, _ in
-			if let nextMessageId = sentMessage.id {
+			if let nextMessageId = sentMessage?.id {
 				self.react(to: nextMessageId, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
 			}
 		}
@@ -58,8 +58,8 @@ public class PollCommand: StringCommand {
 	
 	private func react(to messageId: MessageID, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: MessageClient) {
 		if let reaction = remainingReactions.first {
-			client.createReaction(for: messageId, on: channelId, emoji: reaction) { sentMessage, _ in
-				self.react(to: message, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)
+			client.createReaction(for: messageId, on: channelId, emoji: reaction) { _, _ in
+				self.react(to: messageId, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)
 			}
 		}
 	}

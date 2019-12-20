@@ -37,6 +37,7 @@ extension DiscordGuildChannel: MessageIOConvertible {
 			name: name,
 			parentId: parentId?.usingMessageIO,
 			position: position,
+			isVoiceChannel: self is GuildVoiceChannel,
 			permissionOverwrites: permissionOverwrites.usingMessageIO
 		)
 	}

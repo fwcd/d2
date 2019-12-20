@@ -16,6 +16,35 @@ extension DiscordPresence: MessageIOConvertible {
 	}
 }
 
+extension DiscordActivity: MessageIOConvertible {
+	var usingMessageIO: Presence.Activity {
+		return Presence.Activity(
+			name: name,
+			timestamps: timestamps?.usingMessageIO,
+			type: type?.usingMessageIO
+		)
+	}
+}
+
+extension DiscordActivityTimestamps: MessageIOConvertible {
+	var usingMessageIO: Presence.Activity.Timestamps {
+		return Presence.Activity.Timestamps(
+			start: start,
+			end: end
+		)
+	}
+}
+
+extension DiscordActivityType: MessageIOConvertible {
+	var usingMessageIO: Presence.Activity.ActivityType {
+		switch self {
+			case .game: return .game
+			case .stream: return .stream
+			case .listening: return .listening
+		}
+	}
+}
+
 // TO Discord conversions
 
 extension PresenceUpdate: DiscordAPIConvertible {

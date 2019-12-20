@@ -14,9 +14,8 @@ public class WatchCommand: StringCommand {
 
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		if let mention = context.message.mentions.first {
-			context.guild?.getGuildMember(mention.id) { (member, _) in
-				output.append(self.urlWith(id: member?.nick ?? ""))
-			}
+			let member = context.guild?.members[mention.id]
+			output.append(self.urlWith(id: member?.nick ?? ""))
 		} else {
 			let id = context.message.mentions.first?.username ?? input
 			output.append(urlWith(id: id))

@@ -13,7 +13,7 @@ public class MarkovCommand: StringCommand {
 		shortDescription: "Generates a natural language response using a Markov chain",
 		longDescription: "Uses a Markov chain with data from the current channel to generate a human-like response",
 		helpText: "Syntax: markov [--all]? [--noping]? [@user]?",
-		requiredPermissionLevel: .basic
+		requiredPermissionLevel: .admin // TODO: Admin-only until guild member permissions are fixed, see invoke method below
 	)
 	private let order = 2
 	private let maxWords = 60
@@ -33,18 +33,17 @@ public class MarkovCommand: StringCommand {
 		let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
 		let mentioned = context.message.mentions.first
 		
-		if flags.contains("all"), let guild = context.guild, let user = client.me {
-			guild.getGuildMember(user.id) { optionalMe, _ in
-				guard let me = optionalMe else {
-					output.append("Could not fetch guild member for myself")
-					return
-				}
-				
-				let channels = Set(guild.channels
-					.filter { $0.value.canMember(me, .readMessages) }
-					.map { $0.key })
-				self.markovGenerate(using: channels, output: output, flags: flags, mentioned: mentioned, client: client)
+		if flags.contains("all"), let guild = context.guild {
+			guard let me = guild.members[client.me.id] else {
+				output.append("Could not fetch guild member for myself")
+				return
 			}
+
+			let channels = Set(guild.channels
+				// TODO: Add an API to query for member permissions to MessageIO
+				// .filter { $0.value.canMember(me, .readMessages) }
+				.map { $0.key })
+			self.markovGenerate(using: channels, output: output, flags: flags, mentioned: mentioned, client: client)
 		} else {
 			markovGenerate(using: [channelId], output: output, flags: flags, mentioned: mentioned, client: client)
 		}
@@ -55,7 +54,7 @@ public class MarkovCommand: StringCommand {
 		var allMessages = [Message]()
 		
 		for queryChannel in channels {
-			client.getMessages(for: queryChannel, selection: nil, limit: 80) { messages, _ in
+			client.getMessages(for: queryChannel, limit: 80) { messages, _ in
 				allMessages.append(contentsOf: messages)
 				queriedChannels += 1
 				
@@ -63,7 +62,7 @@ public class MarkovCommand: StringCommand {
 					// Resolved all channels, generate Markov text now
 					
 					var words = allMessages
-						.filter { msg in mentioned.map { msg.author.id == $0.id } ?? !msg.author.bot }
+						.filter { msg in msg.author.map { author in mentioned.map { author.id == $0.id } ?? !author.bot } ?? false }
 						.map { $0.content }
 						.flatMap { $0.split(separator: " ") }
 					

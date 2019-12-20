@@ -34,12 +34,8 @@ public class MessageIOOutput: CommandOutput {
 		switch channel {
 			case .serverChannel(let id): client.sendMessage(message, to: id)
 			case .userChannel(let id):
-				client.createDM(with: id) { ch, _ in
-					if let channelId = ch {
-						self.client.sendMessage(message, to: channelId, then: self.onSent)
-					} else {
-						print("Could not find user channel \(id)")
-					}
+				client.createDM(with: id) { channelId, _ in
+					self.client.sendMessage(message, to: channelId, then: self.onSent)
 				}
 			case .defaultChannel:
 				if let textChannelId = defaultTextChannelId {

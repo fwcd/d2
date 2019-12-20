@@ -72,13 +72,15 @@ public struct Guild: Codable {
 		public let name: String
 		public let parentId: ChannelID?
 		public let position: Int
+		public let isVoiceChannel: Bool
 		public let permissionOverwrites: [OverwriteID: PermissionOverwrite]
 		
-		public init(guildId: GuildID, name: String, parentId: ChannelID? = nil, position: Int, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
+		public init(guildId: GuildID, name: String, parentId: ChannelID? = nil, position: Int, isVoiceChannel: Bool, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
 			self.guildId = guildId
 			self.name = name
 			self.parentId = parentId
 			self.position = position
+			self.isVoiceChannel = isVoiceChannel
 			self.permissionOverwrites = permissionOverwrites
 		}
 		
@@ -103,13 +105,15 @@ public struct Guild: Codable {
 		public let joinedAt: Date
 		public let user: User
 		public let deaf: Bool
+		public let nick: String?
 		public let roleIds: [RoleID]
 		
-		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, roleIds: [RoleID] = []) {
+		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, nick: String? = nil, roleIds: [RoleID] = []) {
 			self.guildId = guildId
 			self.joinedAt = joinedAt
 			self.user = user
 			self.deaf = deaf
+			self.nick = nick
 			self.roleIds = roleIds
 		}
 	}

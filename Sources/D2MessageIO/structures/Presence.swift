@@ -19,11 +19,23 @@ public struct Presence: Codable {
 	
 	public struct Activity: Codable {
 		public let name: String
+		public let timestamps: Timestamps?
 		public let type: ActivityType
 		
-		public init(name: String, type: ActivityType) {
+		public init(name: String, timestamps: Timestamps? = nil, type: ActivityType) {
 			self.name = name
+			self.timestamps = timestamps
 			self.type = type
+		}
+		
+		public struct Timestamps: Codable {
+			public let start: Int?
+			public let end: Int?
+			
+			public init(start: Int?, end: Int?) {
+				self.start = start
+				self.end = end
+			}
 		}
 		
 		public enum ActivityType: Int, Codable {
