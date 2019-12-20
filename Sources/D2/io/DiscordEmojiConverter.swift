@@ -4,7 +4,7 @@ import SwiftDiscord
 // FROM Discord conversions
 
 extension DiscordEmoji: MessageIOConvertible {
-	var usingMessageIO: Emoji {
+	public var usingMessageIO: Emoji {
 		return Emoji(
 			id: id?.usingMessageIO,
 			managed: managed,

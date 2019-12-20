@@ -12,11 +12,15 @@ fileprivate func defaultCallback<T>(_ dummy: T, error: HTTPURLResponse?) {
 }
 
 public protocol MessageClient {
-	var me: User { get } // Me
+	var me: User? { get } // Me
 	
 	func setPresence(_ presence: PresenceUpdate)
 	
 	func guildForChannel(_ channelId: ChannelID) -> Guild?
+	
+	func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
+
+	func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
 	
 	func createDM(with user: UserID, then: ClientCallback<ChannelID>?)
 	
@@ -32,6 +36,14 @@ public protocol MessageClient {
 }
 
 public extension MessageClient {
+	func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String? = nil) {
+		addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason, then: defaultCallback)
+	}
+
+	func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String? = nil) {
+		removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason, then: defaultCallback)
+	}
+
 	func createDM(with user: UserID) {
 		createDM(with: user, then: defaultCallback)
 	}

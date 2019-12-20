@@ -11,18 +11,18 @@ struct SubscriptionHandler: MessageHandler {
         self.manager = manager
     }
 
-    func handle(message: Message, from client: DiscordClient) -> Bool {
-        guard !manager.isEmpty else { return false }
+    func handle(message: Message, from client: MessageClient) -> Bool {
+        guard !manager.isEmpty, let channelId = message.channelId else { return false }
 
-		let output = DiscordOutput(client: client, defaultTextChannel: message.channel)
+		let output = MessageIOOutput(client: client, defaultTextChannelId: channelId)
 		let context = CommandContext(
-			guild: client.guildForChannel(message.channelId),
+			client: client,
 			registry: registry,
 			message: message
 		)
-		let isBot = message.author.bot
+		let isBot = message.author?.bot ?? false
 	
-        manager.notifySubscriptions(on: message.channelId, isBot: isBot) {
+        manager.notifySubscriptions(on: channelId, isBot: isBot) {
             $0.command.onSubscriptionMessage(withContent: message.content, output: output, context: context)
         }
         

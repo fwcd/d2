@@ -34,7 +34,7 @@ public class MarkovCommand: StringCommand {
 		let mentioned = context.message.mentions.first
 		
 		if flags.contains("all"), let guild = context.guild {
-			guard let me = guild.members[client.me.id] else {
+			guard let me = client.me.flatMap({ guild.members[$0.id] }) else {
 				output.append("Could not fetch guild member for myself")
 				return
 			}

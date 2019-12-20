@@ -26,6 +26,11 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 	
 	public var embed: Embed? { return embeds.first }
 	
+	/** Pure-string initializer without argument label for convenience. */
+	public init(_ content: String = "") {
+		self.init(content: content)
+	}
+	
 	/** Initializer intended for messages that are to be sent. */
 	public init(content: String = "", embed: Embed? = nil, files: [FileUpload] = [], tts: Bool = false) {
 		self.init(content: content, embeds: embed.map { [$0] } ?? [], files: files, tts: tts)

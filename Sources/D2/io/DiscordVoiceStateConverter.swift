@@ -4,7 +4,7 @@ import D2MessageIO
 // FROM Discord conversions
 
 extension DiscordVoiceState: MessageIOConvertible {
-	var usingMessageIO: VoiceState {
+	public var usingMessageIO: VoiceState {
 		return VoiceState(
 			channelId: channelId.usingMessageIO,
 			guildId: guildId.usingMessageIO,

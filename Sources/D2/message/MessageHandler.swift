@@ -8,5 +8,5 @@ import D2MessageIO
  */
 protocol MessageHandler {
     /** Receives the message and returns whether it was handled (successfully). */
-    mutating func handle(message: Message, from client: DiscordClient) -> Bool
+    mutating func handle(message: Message, from client: MessageClient) -> Bool
 }

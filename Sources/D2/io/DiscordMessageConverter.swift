@@ -4,18 +4,18 @@ import SwiftDiscord
 // TO Discord conversions
 
 extension Message: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordMessage {
+	public var usingDiscordAPI: DiscordMessage {
 		return DiscordMessage(
 			content: content,
 			embed: embeds.first?.usingDiscordAPI,
-			files: files.usingDiscordAPI,
+			files: files.map { $0.usingDiscordAPI },
 			tts: tts
 		)
 	}
 }
 
 extension Message.FileUpload: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordFileUpload {
+	public var usingDiscordAPI: DiscordFileUpload {
 		return DiscordFileUpload(data: data, filename: filename, mimeType: mimeType)
 	}
 }
@@ -23,7 +23,7 @@ extension Message.FileUpload: DiscordAPIConvertible {
 // FROM Discord conversions
 
 extension DiscordMessage: MessageIOConvertible {
-	var usingMessageIO: Message {
+	public var usingMessageIO: Message {
 		return Message(
 			content: content,
 			embeds: embeds.usingMessageIO,
@@ -47,7 +47,7 @@ extension DiscordMessage: MessageIOConvertible {
 }
 
 extension DiscordAttachment: MessageIOConvertible {
-	var usingMessageIO: Message.Attachment {
+	public var usingMessageIO: Message.Attachment {
 		return Message.Attachment(
 			id: id.usingMessageIO,
 			filename: filename,
@@ -60,7 +60,7 @@ extension DiscordAttachment: MessageIOConvertible {
 }
 
 extension DiscordMessage.MessageActivity: MessageIOConvertible {
-	var usingMessageIO: Message.MessageActivity {
+	public var usingMessageIO: Message.MessageActivity {
 		return Message.MessageActivity(
 			type: type.usingMessageIO,
 			partyId: partyId
@@ -69,7 +69,7 @@ extension DiscordMessage.MessageActivity: MessageIOConvertible {
 }
 
 extension DiscordMessage.MessageActivity.ActivityType: MessageIOConvertible {
-	var usingMessageIO: Message.MessageActivity.ActivityType {
+	public var usingMessageIO: Message.MessageActivity.ActivityType {
 		switch self {
 			case .join: return .join
 			case .spectate: return .spectate
@@ -80,7 +80,7 @@ extension DiscordMessage.MessageActivity.ActivityType: MessageIOConvertible {
 }
 
 extension DiscordMessage.MessageApplication: MessageIOConvertible {
-	var usingMessageIO: Message.MessageApplication {
+	public var usingMessageIO: Message.MessageApplication {
 		return Message.MessageApplication(
 			id: id.usingMessageIO,
 			coverImage: coverImage,
@@ -92,7 +92,7 @@ extension DiscordMessage.MessageApplication: MessageIOConvertible {
 }
 
 extension DiscordReaction: MessageIOConvertible {
-	var usingMessageIO: Message.Reaction {
+	public var usingMessageIO: Message.Reaction {
 		return Message.Reaction(
 			count: count,
 			me: me,
@@ -102,7 +102,7 @@ extension DiscordReaction: MessageIOConvertible {
 }
 
 extension DiscordMessage.MessageType: MessageIOConvertible {
-	var usingMessageIO: Message.MessageType {
+	public var usingMessageIO: Message.MessageType {
 		switch self {
 			case .`default`: return .`default`
 			case .recipientAdd: return .recipientAdd

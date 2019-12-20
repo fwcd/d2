@@ -4,7 +4,7 @@ import D2MessageIO
 // FROM Discord conversions
 
 extension DiscordGuild: MessageIOConvertible {
-	var usingMessageIO: Guild {
+	public var usingMessageIO: Guild {
 		return Guild(
 			id: id.usingMessageIO,
 			ownerId: ownerId.usingMessageIO,
@@ -30,8 +30,8 @@ extension DiscordGuild: MessageIOConvertible {
 	}
 }
 
-extension DiscordGuildChannel: MessageIOConvertible {
-	var usingMessageIO: Guild.Channel {
+extension DiscordGuildChannel /* TODO: No protocol inheritance clauses: MessageIOConvertible */ {
+	public var usingMessageIO: Guild.Channel {
 		return Guild.Channel(
 			guildId: guildId.usingMessageIO,
 			name: name,
@@ -44,7 +44,7 @@ extension DiscordGuildChannel: MessageIOConvertible {
 }
 
 extension DiscordPermissionOverwrite: MessageIOConvertible {
-	var usingMessageIO: Guild.Channel.PermissionOverwrite {
+	public var usingMessageIO: Guild.Channel.PermissionOverwrite {
 		return Guild.Channel.PermissionOverwrite(
 			id: id.usingMessageIO,
 			type: type.usingMessageIO
@@ -53,7 +53,7 @@ extension DiscordPermissionOverwrite: MessageIOConvertible {
 }
 
 extension DiscordPermissionOverwriteType: MessageIOConvertible {
-	var usingMessageIO: Guild.Channel.PermissionOverwrite.PermissionOverwriteType {
+	public var usingMessageIO: Guild.Channel.PermissionOverwrite.PermissionOverwriteType {
 		switch self {
 			case .role: return .role
 			case .member: return .member
@@ -62,7 +62,7 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
 }
 
 extension DiscordGuildMember: MessageIOConvertible {
-	var usingMessageIO: Guild.Member {
+	public var usingMessageIO: Guild.Member {
 		return Guild.Member(
 			guildId: guildId.usingMessageIO,
 			joinedAt: joinedAt,

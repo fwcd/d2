@@ -4,7 +4,7 @@ import SwiftDiscord
 // FROM Discord conversions
 
 extension DiscordPresence: MessageIOConvertible {
-	var usingMessageIO: Presence {
+	public var usingMessageIO: Presence {
 		return Presence(
 			guildId: guildId.usingMessageIO,
 			user: user.usingMessageIO,
@@ -17,7 +17,7 @@ extension DiscordPresence: MessageIOConvertible {
 }
 
 extension DiscordActivity: MessageIOConvertible {
-	var usingMessageIO: Presence.Activity {
+	public var usingMessageIO: Presence.Activity {
 		return Presence.Activity(
 			name: name,
 			timestamps: timestamps?.usingMessageIO,
@@ -27,7 +27,7 @@ extension DiscordActivity: MessageIOConvertible {
 }
 
 extension DiscordActivityTimestamps: MessageIOConvertible {
-	var usingMessageIO: Presence.Activity.Timestamps {
+	public var usingMessageIO: Presence.Activity.Timestamps {
 		return Presence.Activity.Timestamps(
 			start: start,
 			end: end
@@ -36,7 +36,7 @@ extension DiscordActivityTimestamps: MessageIOConvertible {
 }
 
 extension DiscordActivityType: MessageIOConvertible {
-	var usingMessageIO: Presence.Activity.ActivityType {
+	public var usingMessageIO: Presence.Activity.ActivityType {
 		switch self {
 			case .game: return .game
 			case .stream: return .stream
@@ -48,7 +48,7 @@ extension DiscordActivityType: MessageIOConvertible {
 // TO Discord conversions
 
 extension PresenceUpdate: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordPresenceUpdate {
+	public var usingDiscordAPI: DiscordPresenceUpdate {
 		return DiscordPresenceUpdate(
 			game: game?.usingDiscordAPI,
 			status: status.usingDiscordAPI,
@@ -58,7 +58,7 @@ extension PresenceUpdate: DiscordAPIConvertible {
 }
 
 extension Presence.Status: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordPresenceStatus {
+	public var usingDiscordAPI: DiscordPresenceStatus {
 		switch self {
 			case .idle: return .idle
 			case .offline: return .offline
@@ -69,13 +69,13 @@ extension Presence.Status: DiscordAPIConvertible {
 }
 
 extension Presence.Activity: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordActivity {
+	public var usingDiscordAPI: DiscordActivity {
 		return DiscordActivity(name: name, type: type.usingDiscordAPI)
 	}
 }
 
 extension Presence.Activity.ActivityType: DiscordAPIConvertible {
-	var usingDiscordAPI: DiscordActivityType {
+	public var usingDiscordAPI: DiscordActivityType {
 		switch self {
 			case .game: return .game
 			case .stream: return .stream

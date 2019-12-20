@@ -51,16 +51,17 @@ class CommandHandler: MessageHandler {
 		self.pipeSeparator = pipeSeparator
     }
 
-    func handle(message: Message, from client: DiscordClient) -> Bool {
+    func handle(message: Message, from client: MessageClient) -> Bool {
         guard message.content.starts(with: commandPrefix) && !(message.channel is DiscordDMChannel) else { return false }
         currentIndex += 1
-
+		
+		guard let author = message.author, let channelId = message.channelId else { return false }
         let context = CommandContext(
-			guild: client.guildForChannel(message.channelId),
+			guild: client.guildForChannel(channelId),
 			registry: registry,
 			message: message
 		)
-		let isBot = message.author.bot
+		let isBot = author.bot
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		
 		// Precedence: Chain < Pipe
@@ -85,7 +86,7 @@ class CommandHandler: MessageHandler {
 							pipe.append(PipeComponent(command: command, context: context, args: args))
 						} else {
 							print("Rejected '\(name)' due to insufficient permissions")
-							message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
+							client.sendMessage(Message("Sorry, you are not permitted to execute `\(name)`."), to: channelId)
 							pipeConstructionSuccessful = false
 							break
 						}
@@ -94,7 +95,7 @@ class CommandHandler: MessageHandler {
 					} else {
 						print("Did not recognize command '\(name)'")
 						if !isBot {
-							message.channel?.send("Sorry, I do not know the command `\(name)`.")
+							client.sendMessage(Message("Sorry, I do not know the command `\(name)`."), to: channelId)
 						}
 						pipeConstructionSuccessful = false
 						break
@@ -103,15 +104,15 @@ class CommandHandler: MessageHandler {
 			}
 			
 			if pipeConstructionSuccessful && !(userOnly && isBot) {
-				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
-					message.channel?.send("Your pipe is too long.")
+				guard (permissionManager[author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
+					client.sendMessage(Message("Your pipe is too long."), to: channelId)
 					return true
 				}
 				
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
 					let sinkCommand = pipeSink.command
-					pipeSink.output = DiscordOutput(client: client, defaultTextChannel: message.channel) { sentMessage, _ in
+					pipeSink.output = MessageIOOutput(client: client, defaultTextChannelId: channelId) { sentMessage, _ in
 						if let sent = sentMessage {
 							sinkCommand.onSuccessfullySent(message: sent)
 						}
@@ -132,8 +133,8 @@ class CommandHandler: MessageHandler {
 					// Add subscriptions
 					let added = pipe
 						.map { (it: PipeComponent) -> Command in it.command }
-						.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscriptionManager.hasSubscription(on: message.channelId, by: cmd) }
-						.map { Subscription(channel: message.channelId, command: $0) }
+						.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscriptionManager.hasSubscription(on: channelId, by: cmd) }
+						.map { Subscription(channel: channelId, command: $0) }
 					
 					self.subscriptionManager.add(subscriptions: added)
 				}

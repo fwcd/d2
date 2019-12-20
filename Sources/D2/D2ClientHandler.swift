@@ -5,7 +5,7 @@ import D2Commands
 import D2Permissions
 
 /** A client delegate that dispatches commands. */
-class D2ClientHandler: DiscordClientDelegate {
+class D2ClientHandler: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
 	private var messageHandlers: [MessageHandler]
@@ -94,11 +94,11 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
-	func client(_ client: DiscordClient, didConnect connected: Bool) {
-		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
+	func on(connect connected: Bool, client: MessageClient) {
+		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	
-	func client(_ client: DiscordClient, didCreateMessage message: Message) {
+	func on(createMessage message: Message, client: MessageClient) {
 		for (i, _) in messageHandlers.enumerated() {
 			if messageHandlers[i].handle(message: message, from: client) {
 				break

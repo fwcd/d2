@@ -25,15 +25,16 @@ struct SpamHandler: MessageHandler {
         guard isPossiblySpam(message: message) else { return false }
         lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.value.interval))
         
-        guard let guild = client.guildForChannel(message.channelId) else { return false }
-        let author = message.author.id
+        guard let channelId = message.channelId,
+            let guild = client.guildForChannel(channelId),
+            let author = message.author?.id else { return false }
 
         if isSpamming(user: author) {
             if cautionedSpammers.contains(author) {
-                client.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author)> for spamming!"), to: message.channelId)
+                client.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author)> for spamming!"), to: channelId)
                 penalize(spammer: author, on: guild, client: client)
             } else {
-                client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author)>!"), to: message.channelId)
+                client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author)>!"), to: channelId)
                 cautionedSpammers.insert(author)
             }
         }
@@ -46,7 +47,7 @@ struct SpamHandler: MessageHandler {
     }
     
     private func isSpamming(user: UserID) -> Bool {
-        return lastSpamMessages.count(forWhich: { $0.author.id == user }) > config.value.maxSpamMessagesPerInterval
+        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.value.maxSpamMessagesPerInterval
     }
     
     private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {
@@ -78,7 +79,7 @@ struct SpamHandler: MessageHandler {
             return
         }
 
-        client.removeGuildMemberRole(role, from: user, on: guild.id) { success, _ in
+        client.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming") { success, _ in
             if !success {
                 print("Could not remove role \(role) from spammer \(user)")
             }

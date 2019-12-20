@@ -1,7 +1,7 @@
 import D2MessageIO
 
-class DemoClientHandler: DiscordClientDelegate {
-	func client(_ client: DiscordClient, didCreateMessage message: Message) {
+class DemoClientHandler: MessageDelegate {
+	func on(createMessage message: Message, client: MessageClient) {
 		print("Created message \(message.content)")
 	}
 }

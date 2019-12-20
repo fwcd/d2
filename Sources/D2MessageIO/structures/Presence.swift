@@ -58,7 +58,7 @@ public struct PresenceUpdate: Codable {
 	public let status: Presence.Status
 	public let afkSince: Date?
 	
-	public init(game: Presence.Activity? = nil, status: Presence.Status, afkSince: Date? = nil) {
+	public init(game: Presence.Activity? = nil, status: Presence.Status = .online, afkSince: Date? = nil) {
 		self.game = game
 		self.status = status
 		self.afkSince = afkSince

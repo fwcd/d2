@@ -4,7 +4,7 @@ import D2MessageIO
 // FROM Discord conversions
 
 extension DiscordRole: MessageIOConvertible {
-	var usingMessageIO: Role {
+	public var usingMessageIO: Role {
 		return Role(
 			id: id.usingMessageIO,
 			color: color,
