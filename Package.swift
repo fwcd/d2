@@ -34,7 +34,7 @@ let package = Package(
         ),
         .target(
             name: "D2NetAPIs",
-            dependencies: ["D2Utils", "SwiftSoup"]
+            dependencies: ["D2Utils", "SwiftSoup", "Socket"]
         ),
         .target(
             name: "D2Graphics",
