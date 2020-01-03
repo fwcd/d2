@@ -12,9 +12,9 @@ public struct MinecraftString: MinecraftProtocolValue {
     }
     
     public static func from(_ data: Data) -> (MinecraftString, Int)? {
-        guard let (_, lengthByteCount) = MinecraftVarInt.from(data) else { return nil }
+        guard let (length, lengthByteCount) = MinecraftVarInt.from(data) else { return nil }
         let content = data.advanced(by: lengthByteCount)
         guard let value = String(data: content, encoding: .utf8) else { return nil }
-        return (MinecraftString(value), lengthByteCount + value.utf8.count)
+        return (MinecraftString(value), lengthByteCount + Int(length.value))
     }
 }
