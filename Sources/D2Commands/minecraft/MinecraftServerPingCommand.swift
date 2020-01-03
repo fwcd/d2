@@ -27,7 +27,7 @@ public class MinecraftServerPingCommand: StringCommand {
                     description: serverInfo.description.text,
                     fields: [
                         DiscordEmbed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
-                        DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample.map { $0.name }.joined(separator: "\n"))
+                        DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_")
                     ]
                 ))
             } else {

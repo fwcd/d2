@@ -17,7 +17,7 @@ public struct MinecraftServerInfo: Codable {
     public struct Players: Codable {
         public let max: Int
         public let online: Int
-        public let sample: [Player]
+        public let sample: [Player]?
         
         public struct Player: Codable {
             public let name: String
