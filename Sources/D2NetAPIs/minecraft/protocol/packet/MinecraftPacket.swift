@@ -26,7 +26,7 @@ public struct MinecraftPacket {
         content += value.data
     }
     
-    public mutating func read<V>(advance: Bool = true) -> V? where V: MinecraftProtocolValue {
+    public mutating func read<V>() -> V? where V: MinecraftProtocolValue {
         guard let (v, byteCount) = V.from(content) else { return nil }
         if byteCount < content.count {
             content = content.advanced(by: byteCount)
