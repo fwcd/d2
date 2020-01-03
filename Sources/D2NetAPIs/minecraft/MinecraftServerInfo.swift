@@ -5,6 +5,11 @@ public struct MinecraftServerInfo: Codable {
     public let favicon: String?
     
     public struct Version: Codable {
+        public enum CodingKeys: String, CodingKey {
+            case name = "name"
+            case protocolVersion = "protocol"
+        }
+
         public let name: String
         public let protocolVersion: Int
     }
