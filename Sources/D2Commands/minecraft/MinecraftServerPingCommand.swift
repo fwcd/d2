@@ -30,7 +30,8 @@ public class MinecraftServerPingCommand: StringCommand {
                     fields: [
                         DiscordEmbed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
                         DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
-                        DiscordEmbed.Field(name: "Version", value: serverInfo.version.name)
+                        DiscordEmbed.Field(name: "Version", value: serverInfo.version.name),
+                        DiscordEmbed.Field(name: "Mods", value: (serverInfo.forgeData?.mods?.map { "\($0)" } ?? serverInfo.modinfo?.modList?.map { "\($0)" } ?? [String]()).joined(separator: "\n").nilIfEmpty ?? "_vanilla_")
                     ]
                 ))
             } else {

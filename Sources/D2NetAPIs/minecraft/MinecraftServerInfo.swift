@@ -2,6 +2,8 @@ public struct MinecraftServerInfo: Codable {
     public let version: Version
     public let players: Players
     public let description: Chat
+    public let forgeData: ForgeData?
+    public let modinfo: LegacyModInfo? // deprecated (pre-1.13)
     public let favicon: String?
     
     public struct Version: Codable {
@@ -66,6 +68,35 @@ public struct MinecraftServerInfo: Codable {
             
             public let showText: String?
             public let showAchievement: String?
+        }
+    }
+    
+    public struct ForgeData: Codable {
+        public let channels: [Channel]?
+        public let mods: [Mod]?
+        public let fmlNetworkVersion: Int?
+        
+        public struct Channel: Codable {
+            public let res: String?
+            public let version: String?
+            public let required: Bool?
+        }
+        
+        public struct Mod: Codable, CustomStringConvertible {
+            public let modId: String
+            public let modmarker: String
+            public var description: String { return "\(modId) - \(modmarker)" }
+        }
+    }
+    
+    public struct LegacyModInfo: Codable {
+        public let type: String?
+        public let modList: [Mod]?
+        
+        public struct Mod: Codable, CustomStringConvertible {
+            public let modid: String
+            public let version: String
+            public var description: String { return "\(modid) - \(version)" }
         }
     }
 }
