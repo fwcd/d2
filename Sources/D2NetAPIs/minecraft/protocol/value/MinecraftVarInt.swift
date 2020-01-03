@@ -26,16 +26,15 @@ public struct MinecraftVarInt: MinecraftProtocolValue {
     }
     
     public static func from(_ data: Data) -> (MinecraftVarInt, Int)? {
-        var d = data
         var byteCount = 0
         var value: Int32 = 0
         var tmp: UInt8 = 0
         
         repeat {
-            guard let b = d.popFirst() else { return nil }
+            let b = data[byteCount]
             tmp = b
             let v = tmp & 0b01111111
-            value |= Int32(v << (7 * byteCount))
+            value |= Int32(v) << (7 * byteCount)
 
             byteCount += 1
             guard byteCount <= 5 else { return nil }
