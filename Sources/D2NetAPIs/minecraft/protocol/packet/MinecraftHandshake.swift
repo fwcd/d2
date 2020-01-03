@@ -8,7 +8,7 @@ public struct MinecraftHandshake: ToMinecraftPacket {
         var p = MinecraftPacket(id: 0x00)
 
         p.write(MinecraftVarInt(protocolVersion))
-        p.write(MinecraftString(length: 255, serverAddress))
+        p.write(MinecraftString(serverAddress))
         p.write(MinecraftInteger<UInt16>(serverPort))
         p.write(MinecraftVarInt(nextState.rawValue))
 

@@ -1,19 +1,20 @@
 import Foundation
 
 public struct MinecraftString: MinecraftProtocolValue {
-    public let length: Int32
     public let value: String
-    public var data: Data { return MinecraftVarInt(length).data + value.data(using: .utf8)! }
+    public var data: Data {
+        let data = value.data(using: .utf8)!
+        return MinecraftVarInt(Int32(data.count)).data + data
+    }
     
-    public init(length: Int32, _ value: String) {
-        self.length = length
+    public init(_ value: String) {
         self.value = value
     }
     
     public static func from(_ data: Data) -> (MinecraftString, Int)? {
-        guard let (length, lengthByteCount) = MinecraftVarInt.from(data) else { return nil }
+        guard let (_, lengthByteCount) = MinecraftVarInt.from(data) else { return nil }
         let content = data.advanced(by: lengthByteCount)
         guard let value = String(data: content, encoding: .utf8) else { return nil }
-        return (MinecraftString(length: length.value, value), lengthByteCount + value.utf8.count)
+        return (MinecraftString(value), lengthByteCount + value.utf8.count)
     }
 }
