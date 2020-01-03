@@ -8,6 +8,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case haskell
     case imaging
     case math
+    case minecraft
     case misc
     case ml
     case music
@@ -29,6 +30,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .haskell: return ":umbrella2: Haskell"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
             case .math: return ":bar_chart: Plotting and calculations"
+            case .minecraft: return ":evergreen_tree: Minecraft"
             case .misc: return ":art: Miscellaneous commands"
             case .ml: return ":bulb: Machine learning"
             case .music: return ":guitar: Chord finder and music theory"

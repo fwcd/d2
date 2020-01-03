@@ -2,7 +2,7 @@ import SwiftDiscord
 import Foundation
 import D2Utils
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
 
 public class StackOverflowCommand: StringCommand {
 	public let info = CommandInfo(
@@ -28,13 +28,13 @@ public class StackOverflowCommand: StringCommand {
 						author: answer.owner.map { DiscordEmbed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
 						color: 0xffad0a
 					))
-				} catch WebApiError.noResults(let msg) {
+				} catch NetApiError.noResults(let msg) {
 					output.append(msg)
-					print("WebApiError while querying StackOverflow: \(msg)")
-				} catch URLRequestError.ioError(let err) {
+					print("NetApiError while querying StackOverflow: \(msg)")
+				} catch NetworkError.ioError(let err) {
 					output.append("An IO error while querying StackOverflow")
 					print(err)
-				} catch URLRequestError.jsonDecodingError(let data) {
+				} catch NetworkError.jsonDecodingError(let data) {
 					output.append("Could not decode data as JSON")
 					print("Could not decode data from StackOverflow request as JSON: \(data)")
 				} catch {

@@ -75,7 +75,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 }
 ```
 
-* Create a file named `webApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
+* Create a file named `netApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
 
 ```json
 {
@@ -112,7 +112,7 @@ The program consists of six modules:
 * `D2Graphics`, a 2D drawing library based on Cairo
 * `D2Permissions`, the permission manager
 * `D2Utils`, a collection of useful utilities
-* `D2WebAPIs`, client implementations of various web APIs
+* `D2NetAPIs`, client implementations of various web APIs
 
 ### D2
 The executable application. The base functionality is provided by `D2ClientHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.

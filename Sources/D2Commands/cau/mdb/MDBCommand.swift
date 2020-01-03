@@ -1,6 +1,6 @@
 import SwiftDiscord
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
 
 public class MDBCommand: StringCommand {
 	public let info = CommandInfo(

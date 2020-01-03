@@ -24,8 +24,8 @@ public struct StackOverflowQuery {
 			"filter": "!bA1d_KuEt(8tau" // Only include title and question ID for each question
 		]).fetchJSONAsync(as: StackOverflowResults<StackOverflowQuestion>.self) {
 			do {
-				guard let questions = try $0.get().items else { throw WebApiError.noResults("No answers found") }
-				guard let questionId = questions.first(where: { $0.questionId != nil })?.questionId else { throw WebApiError.noResults("No answer with a question ID found") }
+				guard let questions = try $0.get().items else { throw NetApiError.noResults("No answers found") }
+				guard let questionId = questions.first(where: { $0.questionId != nil })?.questionId else { throw NetApiError.noResults("No answer with a question ID found") }
 				try HTTPRequest(host: self.host, path: "/\(self.apiVersion)/questions/\(questionId)/answers", query: [
 					"order": "desc",
 					"sort": "votes",

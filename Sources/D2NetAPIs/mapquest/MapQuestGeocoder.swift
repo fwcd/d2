@@ -9,13 +9,13 @@ public struct MapQuestGeocoder {
 	
 	public func geocode(location: String, then: @escaping (Result<GeoCoordinates, Error>) -> Void) {
 		let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
-		guard let mapQuestKey = storedWebApiKeys?.mapQuest else {
-			then(.failure(WebApiError.missingApiKey("No API key for MapQuest found")))
+		guard let mapQuestKey = storedNetApiKeys?.mapQuest else {
+			then(.failure(NetApiError.missingApiKey("No API key for MapQuest found")))
 			return
 		}
 		
 		guard let url = URL(string: "https://www.mapquestapi.com/geocoding/v1/address?key=\(mapQuestKey)&location=\(encodedLocation)") else {
-			then(.failure(WebApiError.urlStringError("Error while constructing url from location '\(encodedLocation)'")))
+			then(.failure(NetApiError.urlStringError("Error while constructing url from location '\(encodedLocation)'")))
 			return
 		}
 		
@@ -27,7 +27,7 @@ public struct MapQuestGeocoder {
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard let data = data, error == nil else {
 				if let unwrappedError = error {
-					then(.failure(WebApiError.httpError(unwrappedError)))
+					then(.failure(NetApiError.httpError(unwrappedError)))
 				}
 				return
 			}
@@ -46,16 +46,16 @@ public struct MapQuestGeocoder {
 					.flatMap { $0 as? [String: Double] }
 				
 				guard let location = latLng else {
-					then(.failure(WebApiError.jsonParseError(String(describing: json), "Could not locate results -> locations -> latLng")))
+					then(.failure(NetApiError.jsonParseError(String(describing: json), "Could not locate results -> locations -> latLng")))
 					return
 				}
 				guard let lat = location["lat"], let lng = location["lng"] else {
-					then(.failure(WebApiError.jsonParseError(String(describing: location), "No 'lat'/'lng' keys found")))
+					then(.failure(NetApiError.jsonParseError(String(describing: location), "No 'lat'/'lng' keys found")))
 					return
 				}
 				then(.success(GeoCoordinates(latitude: lat, longitude: lng)))
 			} catch {
-				then(.failure(WebApiError.jsonIOError(error)))
+				then(.failure(NetApiError.jsonIOError(error)))
 			}
 		}.resume()
 	}

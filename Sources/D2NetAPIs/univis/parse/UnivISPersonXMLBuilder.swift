@@ -6,7 +6,7 @@ class UnivISPersonXMLBuilder: UnivISObjectNodeXMLBuilder {
 	// TODO: Parse orgunits and locations
 	
 	func enter(selfWithName elementName: String, attributes: [String: String]) throws {
-		guard let key = attributes["key"] else { throw WebApiError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
+		guard let key = attributes["key"] else { throw NetApiError.xmlError("Missing 'key' attribute in \(elementName) node", attributes) }
 		person = UnivISPerson(key: key)
 	}
 	

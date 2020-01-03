@@ -10,7 +10,8 @@ let package = Package(
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
         .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("6f8503520e028cae17e06efd53f60b04585414a2")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
-        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0")
+        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0"),
+        .package(url: "https://github.com/IBM-Swift/BlueSocket", .upToNextMinor(from: "1.0.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -21,7 +22,7 @@ let package = Package(
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["SwiftDiscord", "SwiftSoup", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2WebAPIs"]
+            dependencies: ["SwiftDiscord", "SwiftSoup", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
         ),
         .target(
             name: "D2Permissions",
@@ -32,7 +33,7 @@ let package = Package(
             dependencies: ["D2Utils"]
         ),
         .target(
-            name: "D2WebAPIs",
+            name: "D2NetAPIs",
             dependencies: ["D2Utils", "SwiftSoup"]
         ),
         .target(
@@ -41,7 +42,7 @@ let package = Package(
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["SwiftDiscord"]
+            dependencies: ["SwiftDiscord", "Socket"]
         ),
         .testTarget(
             name: "D2CommandTests",
@@ -60,8 +61,8 @@ let package = Package(
             dependencies: ["SwiftDiscord", "D2TestUtils", "D2Graphics"]
         ),
         .testTarget(
-            name: "D2WebAPITests",
-            dependencies: ["SwiftDiscord", "D2TestUtils", "D2WebAPIs"]
+            name: "D2NetAPITests",
+            dependencies: ["SwiftDiscord", "D2TestUtils", "D2NetAPIs"]
         ),
         .testTarget(
             name: "D2TestUtils",

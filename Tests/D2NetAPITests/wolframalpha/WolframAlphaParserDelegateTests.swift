@@ -3,7 +3,7 @@ import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
-@testable import D2WebAPIs
+@testable import D2NetAPIs
 
 final class WolframAlphaParserDelegateTests: XCTestCase {
 	static var allTests = [

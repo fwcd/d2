@@ -1,6 +1,6 @@
 import Foundation
 
-public enum WebApiError: Error {
+public enum NetApiError: Error {
 	case missingApiKey(String)
 	case missingData
 	case encodingError(String)

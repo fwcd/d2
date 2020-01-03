@@ -1,7 +1,7 @@
 import SwiftDiscord
 import Foundation
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
 import D2Graphics
 import D2Utils
 

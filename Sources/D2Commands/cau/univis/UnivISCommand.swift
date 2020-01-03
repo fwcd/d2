@@ -1,7 +1,7 @@
 import SwiftDiscord
 import D2Permissions
 import D2Utils
-import D2WebAPIs
+import D2NetAPIs
 
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"

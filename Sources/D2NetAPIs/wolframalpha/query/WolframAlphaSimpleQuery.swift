@@ -13,7 +13,7 @@ public struct WolframAlphaSimpleQuery {
 		host: String = "api.wolframalpha.com",
 		path: String = "/v1/simple"
 	) throws {
-		guard let appid = storedWebApiKeys?.wolframAlpha else { throw WebApiError.missingApiKey("No WolframAlpha API key found") }
+		guard let appid = storedNetApiKeys?.wolframAlpha else { throw NetApiError.missingApiKey("No WolframAlpha API key found") }
 		
 		var components = URLComponents()
 		components.scheme = scheme
@@ -24,7 +24,7 @@ public struct WolframAlphaSimpleQuery {
 			URLQueryItem(name: "appid", value: appid)
 		]
 		
-		guard let url = components.url else { throw WebApiError.urlError(components) }
+		guard let url = components.url else { throw NetApiError.urlError(components) }
 		self.url = url
 	}
 	
@@ -34,11 +34,11 @@ public struct WolframAlphaSimpleQuery {
 		
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				then(.failure(WebApiError.httpError(error!)))
+				then(.failure(NetApiError.httpError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.failure(WebApiError.missingData))
+				then(.failure(NetApiError.missingData))
 				return
 			}
 			then(.success(data))

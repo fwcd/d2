@@ -59,11 +59,11 @@ extension DiscordAttachment {
 	public func download(then: @escaping (Result<Data, Error>) -> Void) {
 		URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
 			guard error == nil else {
-				then(.failure(URLRequestError.ioError(error!)))
+				then(.failure(NetworkError.ioError(error!)))
 				return
 			}
 			guard let data = data else {
-				then(.failure(URLRequestError.missingData))
+				then(.failure(NetworkError.missingData))
 				return
 			}
 			then(.success(data))

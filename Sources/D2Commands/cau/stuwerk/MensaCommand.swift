@@ -1,6 +1,6 @@
 import SwiftDiscord
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
 
 /** Fetches the CAU canteen's daily menu. */
 public class MensaCommand: StringCommand {
