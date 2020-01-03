@@ -22,12 +22,15 @@ public class MinecraftServerPingCommand: StringCommand {
                 let port = Int32(parsedHostPort[2]) ?? 25565
                 let serverInfo = try MinecraftServerPing(host: host, port: port, timeoutMs: 1000).perform()
                 
+                // TODO: Display server favicon in embed
+                
                 output.append(DiscordEmbed(
                     title: "Minecraft Server at `\(host):\(port)`",
-                    description: serverInfo.description.text,
+                    description: "\(serverInfo.description)",
                     fields: [
                         DiscordEmbed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
-                        DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_")
+                        DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
+                        DiscordEmbed.Field(name: "Version", value: serverInfo.version.name)
                     ]
                 ))
             } else {

@@ -25,7 +25,7 @@ public struct MinecraftServerInfo: Codable {
         }
     }
     
-    public struct Chat: Codable {
+    public struct Chat: Codable, CustomStringConvertible {
         public let text: String
         public let bold: Bool?
         public let italic: Bool?
@@ -37,6 +37,8 @@ public struct MinecraftServerInfo: Codable {
         public let clickEvent: ClickEvent?
         public let hoverEvent: HoverEvent?
         public let extra: [Chat]?
+        
+        public var description: String { return text + (extra?.map { "\($0)" }.joined() ?? "") }
         
         public struct ClickEvent: Codable {
             public enum CodingKeys: String, CodingKey {
