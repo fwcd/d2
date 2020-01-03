@@ -9,9 +9,9 @@ public struct MinecraftPacket {
         content = data[byteCount..<(byteCount + Int(length.value))]
     }
 
-    public init(packetId: Int32) {
+    public init(id: Int32) {
         content = Data()
-        write(MinecraftVarInt(packetId))
+        write(MinecraftVarInt(id))
     }
     
     public mutating func write<V>(_ value: V) where V: MinecraftProtocolValue {
