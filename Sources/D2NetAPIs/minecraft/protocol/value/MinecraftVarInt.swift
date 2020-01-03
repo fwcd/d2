@@ -26,6 +26,8 @@ public struct MinecraftVarInt: MinecraftProtocolValue {
     }
     
     public static func from(_ data: Data) -> (MinecraftVarInt, Int)? {
+        guard !data.isEmpty else { return nil }
+
         var byteCount = 0
         var value: Int32 = 0
         var tmp: UInt8 = 0

@@ -15,7 +15,6 @@ public struct MinecraftServerPing {
     public func perform() throws -> MinecraftServerInfo {
         let socket = try Socket.create()
         try socket.connect(to: host, port: port, timeout: timeoutMs)
-
         try socket.write(from: MinecraftHandshake(serverAddress: host, serverPort: UInt16(port), nextState: .status))
         try socket.write(from: MinecraftPacket(id: 0x00))
         

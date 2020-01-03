@@ -21,7 +21,7 @@ public struct MinecraftHandshake: ToMinecraftPacket {
     }
 
     public init(
-        protocolVersion: Int32 = -1,
+        protocolVersion: Int32 = 0,
         serverAddress: String = "localhost",
         serverPort: UInt16 = 25565,
         nextState: NextState = .status
