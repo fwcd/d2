@@ -20,5 +20,6 @@ public struct UDPPacket {
         let socket = try Socket.create(family: .inet, type: .datagram, proto: .udp)
         guard let address = Socket.createAddress(for: host, on: port) else { throw NetworkError.invalidAddress(host, port) }
         try socket.write(from: data, to: address)
+        socket.close()
     }
 }

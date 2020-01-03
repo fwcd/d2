@@ -20,8 +20,12 @@ public struct MinecraftServerPing {
         try socket.write(from: MinecraftPacket(id: 0x00))
         
         var packet = try socket.readMinecraftPacket()
+        socket.close()
+
         guard let response: MinecraftString = packet.read() else { throw MinecraftPacketError.malformedPacket(packet) }
         guard let json = response.value.data(using: .utf8) else { throw MinecraftPacketError.couldNotEncode(response.value) }
-        return try JSONDecoder().decode(MinecraftServerInfo.self, from: json)
+        let serverInfo = try JSONDecoder().decode(MinecraftServerInfo.self, from: json)
+        
+        return serverInfo
     }
 }
