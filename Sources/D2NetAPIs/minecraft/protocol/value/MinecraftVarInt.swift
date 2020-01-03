@@ -32,7 +32,6 @@ public struct MinecraftVarInt: MinecraftProtocolValue {
         var tmp: UInt8 = 0
         
         repeat {
-            print(byteCount)
             guard byteCount < data.count else { return nil }
             guard let b = d.popFirst() else { return nil }
             tmp = b
@@ -43,7 +42,6 @@ public struct MinecraftVarInt: MinecraftProtocolValue {
             guard byteCount <= 5 else { return nil }
         } while (tmp & 0b10000000) != 0
         
-        print("Done decoding varint")
         return (MinecraftVarInt(value), byteCount)
     }
 }
