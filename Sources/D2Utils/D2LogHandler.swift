@@ -22,7 +22,8 @@ public struct D2LogHandler: LogHandler {
     }
 
     public func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata?, file: String, function: String, line: UInt) {
-        let output = "\(timestamp(using: metadata)) [\(level)] \(label): \(message)"
+        let mergedMetadata = self.metadata.merging(metadata ?? [:], uniquingKeysWith: { _, newKey in newKey })
+        let output = "\(timestamp(using: mergedMetadata)) [\(level)] \(label): \(message)"
 
         lastOutputs.push(output)
         print(output)
