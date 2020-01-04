@@ -1,9 +1,12 @@
 import Foundation
+import Logging
 import SwiftDiscord
 import D2Commands
 import D2Utils
 
 func main() throws {
+	LoggingSystem.bootstrap { D2LogHandler(label: $0) }
+
 	let args = CommandLine.arguments
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2ClientHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: args[safely: 1])
