@@ -22,9 +22,13 @@ public struct MinecraftServerPing {
         socket.close()
         
         guard let response: MinecraftString = packet.read() else { throw MinecraftPacketError.malformedPacket(packet) }
-        guard let json = response.value.data(using: .utf8) else { throw MinecraftPacketError.couldNotEncode(response.value) }
-        let serverInfo = try JSONDecoder().decode(MinecraftServerInfo.self, from: json)
-        
-        return serverInfo
+        let json = response.value
+        guard let jsonData = json.data(using: .utf8) else { throw MinecraftPacketError.couldNotEncode(response.value) }
+        do {
+            let serverInfo = try JSONDecoder().decode(MinecraftServerInfo.self, from: jsonData)
+            return serverInfo
+        } catch {
+            throw MinecraftServerPingError.couldNotDecodeJson(json, error)
+        }
     }
 }
