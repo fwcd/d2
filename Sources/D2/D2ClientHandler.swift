@@ -44,6 +44,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
 		registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
+		registry["logs"] = LogsCommand()
 		registry["for"] = ForCommand()
 		registry["void"] = VoidCommand()
 		registry["quit"] = QuitCommand()
