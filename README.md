@@ -15,7 +15,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ### Manually (for local development)
 
 #### System Dependencies
-* Swift 5
+* Swift 5.1
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
         * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
