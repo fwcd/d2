@@ -3,10 +3,13 @@ import Foundation
 import FoundationNetworking
 #endif
 import Dispatch
+import Logging
 import SwiftDiscord
 import D2Utils
 import D2Permissions
 import D2Script
+
+fileprivate let log = Logger(label: "D2ScriptCommand")
 
 public class D2ScriptCommand: StringCommand {
 	public let info: CommandInfo
@@ -54,7 +57,7 @@ public class D2ScriptCommand: StringCommand {
 		
 		// Print something to the console
 		storage[function: "print"] = {
-			print($0.first.flatMap { $0 } ?? .string(""))
+			log.info("\($0.first.flatMap { $0 } ?? .string(""))")
 			return nil
 		}
 		

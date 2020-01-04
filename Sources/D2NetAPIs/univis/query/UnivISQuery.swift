@@ -5,7 +5,10 @@ import FoundationNetworking
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
+import Logging
 import D2Utils
+
+fileprivate let log = Logger(label: "UnivISQuery")
 
 public struct UnivISQuery {
 	private let url: URL
@@ -31,7 +34,7 @@ public struct UnivISQuery {
 	}
 	
 	public func start(then: @escaping (Result<UnivISOutputNode, Error>) -> Void) {
-		print("Querying \(url)")
+		log.info("Querying \(url)")
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
@@ -45,7 +48,7 @@ public struct UnivISQuery {
 				return
 			}
 			
-			// print("Got \(String(data: data!, encoding: .utf8))")
+			log.debug("Got \(String(data: data, encoding: .utf8))")
 			
 			let delegate = UnivISXMLParserDelegate(then: then)
 			let parser = XMLParser(data: data)

@@ -1,6 +1,9 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
 import D2NetAPIs
+
+fileprivate let log = Logger(label: "MDBCommand")
 
 public class MDBCommand: StringCommand {
 	public let info = CommandInfo(
@@ -49,7 +52,7 @@ public class MDBCommand: StringCommand {
 				}
 			}
 		} catch {
-			print(error)
+			log.warning("\(error)")
 			output.append("An error occurred. Check the log for more information.")
 		}
 	}

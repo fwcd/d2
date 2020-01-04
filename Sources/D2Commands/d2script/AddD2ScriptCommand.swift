@@ -1,8 +1,10 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Utils
 import D2Script
 
+fileprivate let log = Logger(label: "AddD2ScriptCommand")
 fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
 
 // TODO: Use code command instead of StringCommand
@@ -36,7 +38,7 @@ public class AddD2ScriptCommand: StringCommand {
 			} catch D2ScriptCommandError.multipleCommandsDefined(let msg) {
 				output.append("Multiple commands defined: \(msg)")
 			} catch {
-				print(error)
+				log.warning("\(error)")
 				output.append("Could not parse code.")
 			}
 		} else {

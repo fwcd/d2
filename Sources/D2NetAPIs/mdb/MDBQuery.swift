@@ -5,7 +5,10 @@ import FoundationNetworking
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
+import Logging
 import D2Utils
+
+fileprivate let log = Logger(label: "MDBQuery")
 
 public struct MDBQuery {
 	public let url: URL
@@ -27,7 +30,7 @@ public struct MDBQuery {
 	}
 	
 	public func start(then: @escaping (Result<[MDBModule], Error>) -> Void) {
-		print("Querying \(url)")
+		log.info("Querying \(url)")
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"

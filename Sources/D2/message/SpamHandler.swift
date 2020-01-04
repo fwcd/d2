@@ -1,7 +1,10 @@
 import Foundation
+import Logging
 import SwiftDiscord
 import D2Commands
 import D2Utils
+
+fileprivate let log = Logger(label: "SpamHandler")
 
 fileprivate struct SpammerProfile {
     let lastSpamMessages = ExpiringList<DiscordMessage>()
@@ -66,7 +69,7 @@ struct SpamHandler: MessageHandler {
             if success {
                 then?()
             } else {
-                print("Could not add role \(role) to spammer \(user)")
+                log.warning("Could not add role \(role) to spammer \(user)")
             }
         }
     }
@@ -80,7 +83,7 @@ struct SpamHandler: MessageHandler {
 
         client.removeGuildMemberRole(role, from: user, on: guild.id) { success, _ in
             if !success {
-                print("Could not remove role \(role) from spammer \(user)")
+                log.warning("Could not remove role \(role) from spammer \(user)")
             }
             self.remove(roles: remainingRoles, from: user, on: guild, client: client, then: then)
         }

@@ -12,8 +12,8 @@ public class ToGifCommand: Command {
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
     private let quantizers: [String: (Image) -> ColorQuantization] = [
-        "uniform": { UniformQuantization(fromImage: $0, colorCount: GIF_COLOR_COUNT) },
-        "octree": { OctreeQuantization(fromImage: $0, colorCount: GIF_COLOR_COUNT) }
+        "uniform": { UniformQuantization(fromImage: $0, colorCount: gifColorCount) },
+        "octree": { OctreeQuantization(fromImage: $0, colorCount: gifColorCount) }
     ]
     
     public init() {}
@@ -23,7 +23,7 @@ public class ToGifCommand: Command {
             output.append("Input does not have an image")
             return
         }
-        let quantizer = input.asText.flatMap { quantizers[$0]?(image) } ?? OctreeQuantization(fromImage: image, colorCount: GIF_COLOR_COUNT)
+        let quantizer = input.asText.flatMap { quantizers[$0]?(image) } ?? OctreeQuantization(fromImage: image, colorCount: gifColorCount)
         let width = image.width
         let height = image.height
         var gif = AnimatedGif(width: UInt16(width), height: UInt16(height), globalQuantization: quantizer)

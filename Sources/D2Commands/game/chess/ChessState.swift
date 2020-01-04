@@ -1,6 +1,9 @@
+import Logging
 import SwiftDiscord
 import D2Utils
 import D2Permissions
+
+fileprivate let log = Logger(label: "ChessState")
 
 public struct ChessState: GameState {
 	public typealias Role = ChessRole
@@ -46,7 +49,7 @@ public struct ChessState: GameState {
 	
 	private func isInCheck(_ role: Role) -> Bool {
 		guard let king = locateKing(of: role) else {
-			print("Could not test if \(role) is in check without a king")
+			log.error("Could not test if \(role) is in check without a king")
 			return false
 		}
 		let opponent: Role = role.opponent
@@ -72,7 +75,7 @@ public struct ChessState: GameState {
 		do {
 			try stateAfterMove.performDirectly(move: move)
 		} catch {
-			print("Could not spawn child state while testing whether a move causes a check: \(error)")
+			log.error("Could not spawn child state while testing whether a move causes a check: \(error)")
 			return false
 		}
 		return stateAfterMove.isInCheck(role)
@@ -84,7 +87,7 @@ public struct ChessState: GameState {
 		do {
 			try stateAfterMove.performDirectly(move: move)
 		} catch {
-			print("Could not spawn child state while testing whether a move causes a checkmate: \(error)")
+			log.error("Could not spawn child state while testing whether a move causes a checkmate: \(error)")
 			return false
 		}
 		return stateAfterMove.isCheckmate(role)

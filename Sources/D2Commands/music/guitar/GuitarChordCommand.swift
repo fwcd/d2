@@ -1,5 +1,8 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
+
+fileprivate let log = Logger(label: "GuitarChordCommand")
 
 // TODO: Use Arg API
 
@@ -40,7 +43,7 @@ public class GuitarChordCommand: StringCommand {
 		} catch NoteError.invalidNoteLetter(let noteLetter) {
 			output.append("Invalid note letter: `\(noteLetter)`")
 		} catch {
-			print(error)
+			log.warning("\(error)")
 			output.append("An error occurred while creating chord")
 		}
 	}

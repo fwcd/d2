@@ -1,8 +1,9 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
 import Dispatch
 
-fileprivate let maxExecutionSeconds = 3
+fileprivate let log = Logger(label: "BFCommand")
 
 public class BFCommand: StringCommand {
 	public let info = CommandInfo(
@@ -11,9 +12,12 @@ public class BFCommand: StringCommand {
 		longDescription: "Asynchronously invokes a Brainf&*k interpreter",
 		requiredPermissionLevel: .basic
 	)
+	private let maxExecutionSeconds: Int
 	private var running = false
 	
-	public init() {}
+	public init(maxExecutionSeconds: Int = 3) {
+		self.maxExecutionSeconds = maxExecutionSeconds
+	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
@@ -55,10 +59,10 @@ public class BFCommand: StringCommand {
 			}
 			
 			if interpreter.cancelled {
-				print("Cancelled BF task finished running")
-				output.append("Your program took longer than \(maxExecutionSeconds) seconds. The output was:\n\(response)")
+				log.debug("Cancelled BF task finished running")
+				output.append("Your program took longer than \(self.maxExecutionSeconds) seconds. The output was:\n\(response)")
 			} else {
-				print("BF task finished running")
+				log.debug("BF task finished running")
 				output.append(response)
 			}
 		}

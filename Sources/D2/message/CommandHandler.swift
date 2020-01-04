@@ -1,7 +1,10 @@
+import Logging
 import SwiftDiscord
 import D2Commands
 import D2Permissions
 import D2Utils
+
+fileprivate let log = Logger(label: "CommandHandler")
 
 /** A segment of an invocation pipe that transfers outputs from one command to another. */
 fileprivate class PipeComponent {
@@ -74,17 +77,17 @@ class CommandHandler: MessageHandler {
 				let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 				
 				if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-					print("Got command #\(currentIndex): \(groups)")
+					log.info("Got command #\(currentIndex): \(groups)")
 					let name = groups[1]
 					let args = groups[2]
 					
 					if let command = registry[name] {
 						let hasPermission = permissionManager.user(message.author, hasPermission: command.info.requiredPermissionLevel)
 						if hasPermission {
-							print("Appending '\(name)' to pipe")
+							log.debug("Appending '\(name)' to pipe")
 							pipe.append(PipeComponent(command: command, context: context, args: args))
 						} else {
-							print("Rejected '\(name)' due to insufficient permissions")
+							log.notice("Rejected '\(name)' due to insufficient permissions")
 							message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
 							pipeConstructionSuccessful = false
 							break
@@ -92,7 +95,7 @@ class CommandHandler: MessageHandler {
 						
 						userOnly = userOnly || command.info.userOnly
 					} else {
-						print("Did not recognize command '\(name)'")
+						log.notice("Did not recognize command '\(name)'")
 						if !isBot {
 							message.channel?.send("Sorry, I do not know the command `\(name)`.")
 						}
@@ -105,6 +108,7 @@ class CommandHandler: MessageHandler {
 			if pipeConstructionSuccessful && !(userOnly && isBot) {
 				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
 					message.channel?.send("Your pipe is too long.")
+					log.notice("Too long pipe")
 					return true
 				}
 				

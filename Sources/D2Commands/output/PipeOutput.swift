@@ -1,4 +1,7 @@
+import Logging
 import SwiftDiscord
+
+fileprivate let log = Logger(label: "PipeOutput")
 
 public class PipeOutput: CommandOutput {
 	private let sink: Command
@@ -14,7 +17,7 @@ public class PipeOutput: CommandOutput {
 	}
 	
 	public func append(_ value: RichValue, to channel: OutputChannel) {
-		print("Piping to \(sink)")
+		log.debug("Piping to \(sink)")
 		let nextInput = args.isEmpty ? value : (.text(args) + value)
 		sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
 	}

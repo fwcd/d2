@@ -1,5 +1,8 @@
 import SwiftDiscord
+import Logging
 import D2Utils
+
+fileprivate let log = Logger(label: "HoogleCommand")
 
 public class HoogleCommand: StringCommand {
     public let info = CommandInfo(
@@ -17,7 +20,7 @@ public class HoogleCommand: StringCommand {
             let results = try Shell().outputSync(for: "hoogle", args: [input])
             output.append(.code(results ?? "No results", language: "haskell"))
         } catch {
-            print(error)
+            log.warning("\(error)")
             output.append("An error occurred while hoogling")
         }
     }

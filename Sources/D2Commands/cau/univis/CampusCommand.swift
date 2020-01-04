@@ -4,9 +4,11 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import Logging
 import D2Utils
 import D2NetAPIs
 
+fileprivate let log = Logger(label: "CampusCommand")
 fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
 
 /** Locates locations on the University of Kiel's campus. */
@@ -60,13 +62,13 @@ public class CampusCommand: StringCommand {
 						)))
 					} catch {
 						output.append("Could not create static map, see console for more details")
-						print(error)
+						log.warning("\(error)")
 					}
 				}
 			}
 		} catch {
-			print(error)
 			output.append("An error occurred. Check the log for more information.")
+			log.warning("\(error)")
 		}
 	}
 	

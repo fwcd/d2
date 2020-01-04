@@ -2,6 +2,9 @@ import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
+import Logging
+
+fileprivate let log = Logger(label: "WolframAlphaParserDelegate")
 
 class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	let then: (Result<WolframAlphaOutput, Error>) -> Void
@@ -24,7 +27,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
-		// print("Entering \(elementName): \(attributeDict)")
+		log.trace("Entering \(elementName): \(attributeDict)")
 		switch elementName {
 			case "queryresult":
 				result = WolframAlphaOutput()
@@ -72,9 +75,9 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-		// print("Exiting \(elementName)")
+		log.trace("Exiting \(elementName)")
 		if elementName == "queryresult" {
-			print("Ending parsing")
+			log.trace("Ending parsing")
 			then(.success(result))
 		} else {
 			switch elementName {
@@ -103,7 +106,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-		print(parseError)
+		log.warning("\(parseError)")
 		if !hasErrored {
 			then(.failure(parseError))
 			hasErrored = true
@@ -111,7 +114,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
-		print(validationError)
+		log.warning("\(validationError)")
 		if !hasErrored {
 			then(.failure(validationError))
 			hasErrored = true

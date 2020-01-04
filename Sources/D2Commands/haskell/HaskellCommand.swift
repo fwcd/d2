@@ -1,5 +1,8 @@
+import Logging
 import SwiftDiscord
 import D2Utils
+
+fileprivate let log = Logger(label: "HaskellCommand")
 
 public class HaskellCommand: StringCommand {
     public let info = CommandInfo(
@@ -18,7 +21,7 @@ public class HaskellCommand: StringCommand {
             let value = try Shell().outputSync(for: "mueval", args: ["-e", input, "-t", String(timeout)])
             output.append(.code(value ?? "No output", language: "haskell"))
         } catch {
-            print(error)
+            log.warning("\(error)")
             output.append("Could not evaluate expression.")
         }
     }

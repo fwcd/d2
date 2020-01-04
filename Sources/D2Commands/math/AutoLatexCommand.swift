@@ -2,6 +2,9 @@ import D2Utils
 import D2Permissions
 import SwiftDiscord
 import Foundation
+import Logging
+
+fileprivate let log = Logger(label: "AutoLatexCommand")
 
 /** A simple heuristic for detecting "formulas" in messages. Matches a single character. */
 fileprivate let formulaPattern = try! Regex(from: "[0-9{}\\+\\-*\\/\\[\\]\\\\|]")
@@ -33,15 +36,15 @@ public class AutoLatexCommand: StringCommand {
         if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
             do {
                 let formula = escapeText(in: content)
-                try renderer.renderImage(from: formula, scale: 1.5, onError: { print($0) }) {
+                try renderer.renderImage(from: formula, scale: 1.5, onError: { log.warning("\($0)") }) {
                     do {
                         try output.append($0)
                     } catch {
-                        print(error)
+                        log.error("\(error)")
                     }
                 }
             } catch {
-                print(error)
+                log.warning("\(error)")
             }
         }
         

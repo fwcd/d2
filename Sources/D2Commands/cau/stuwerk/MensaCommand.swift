@@ -1,6 +1,9 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
 import D2NetAPIs
+
+fileprivate let log = Logger(label: "MensaCommand")
 
 /** Fetches the CAU canteen's daily menu. */
 public class MensaCommand: StringCommand {
@@ -23,7 +26,7 @@ public class MensaCommand: StringCommand {
             try DailyFoodMenu(canteen: canteen).fetchMealsAsync {
                 guard case let .success(meals) = $0 else {
                     guard case let .failure(error) = $0 else { fatalError("Result should either be successful or not") }
-                    print(error)
+                    log.warning("\(error)")
                     output.append("An error occurred while performing the request")
                     return
                 }
@@ -34,7 +37,7 @@ public class MensaCommand: StringCommand {
                 )))
             }
         } catch {
-            print(error)
+            log.warning("\(error)")
             output.append("An error occurred while constructing the request")
         }
     }

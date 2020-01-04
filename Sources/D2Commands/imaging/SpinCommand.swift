@@ -1,7 +1,10 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Graphics
 import D2Utils
+
+fileprivate let log = Logger(label: "SpinCommand")
 
 public class SpinCommand: Command {
 	public let info = CommandInfo(
@@ -37,7 +40,7 @@ public class SpinCommand: Command {
 				gif.appendTrailer()
 				output.append(.gif(gif))
 			} catch {
-				print(error)
+				log.error("\(error)")
 				output.append("Error while generating animation:\n`\(error)`")
 			}
 		} else {

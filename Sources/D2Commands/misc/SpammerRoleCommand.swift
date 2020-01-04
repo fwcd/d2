@@ -1,6 +1,8 @@
+import Logging
 import SwiftDiscord
 import D2Utils
 
+fileprivate let log = Logger(label: "SpammerRoleCommand")
 fileprivate let resetSubcommand = "reset"
 
 public class SpammerRoleCommand: StringCommand {
@@ -36,7 +38,7 @@ public class SpammerRoleCommand: StringCommand {
                 output.append("The current spammer role is `\(spamConfiguration.value.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
             }
         } catch {
-            print(error)
+            log.warning("\(error)")
             output.append("Could not update spammer role")
         }
     }

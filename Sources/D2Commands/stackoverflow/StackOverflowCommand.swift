@@ -1,8 +1,11 @@
 import SwiftDiscord
 import Foundation
+import Logging
 import D2Utils
 import D2Permissions
 import D2NetAPIs
+
+fileprivate let log = Logger(label: "StackOverflowCommand")
 
 public class StackOverflowCommand: StringCommand {
 	public let info = CommandInfo(
@@ -30,21 +33,21 @@ public class StackOverflowCommand: StringCommand {
 					))
 				} catch NetApiError.noResults(let msg) {
 					output.append(msg)
-					print("NetApiError while querying StackOverflow: \(msg)")
+					log.warning("NetApiError while querying StackOverflow: \(msg)")
 				} catch NetworkError.ioError(let err) {
 					output.append("An IO error while querying StackOverflow")
-					print(err)
+					log.warning("\(err)")
 				} catch NetworkError.jsonDecodingError(let data) {
 					output.append("Could not decode data as JSON")
-					print("Could not decode data from StackOverflow request as JSON: \(data)")
+					log.warning("Could not decode data from StackOverflow request as JSON: \(data)")
 				} catch {
 					output.append("An asynchronous error occurred while querying StackOverflow")
-					print(error)
+					log.warning("\(error)")
 				}
 			}
 		} catch {
 			output.append("A synchronous error occurred while querying StackOverflow")
-			print(error)
+			log.warning("\(error)")
 		}
 	}
 }

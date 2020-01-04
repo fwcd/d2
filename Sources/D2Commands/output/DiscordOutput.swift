@@ -3,6 +3,9 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import Logging
+
+fileprivate let log = Logger(label: "DiscordOutput")
 
 public class DiscordOutput: CommandOutput {
 	private let messageWriter = DiscordMessageWriter()
@@ -22,8 +25,7 @@ public class DiscordOutput: CommandOutput {
 		do {
 			message = try messageWriter.write(value: value)
 		} catch {
-			print("Error while encoding message:")
-			print(error)
+			log.error("Error while encoding message: \(error)")
 			message = DiscordMessage(content: """
 				An error occurred while encoding the message:
 				```
@@ -38,14 +40,14 @@ public class DiscordOutput: CommandOutput {
 					if let channelId = ch.map({ $0.id }) {
 						self.client.sendMessage(message, to: channelId, callback: self.onSent)
 					} else {
-						print("Could not find user channel \(id)")
+						log.warning("Could not find user channel \(id)")
 					}
 				}
 			case .defaultChannel:
 				if let textChannel = defaultTextChannel {
 					client.sendMessage(message, to: textChannel.id, callback: onSent)
 				} else {
-					print("No default text channel available")
+					log.warning("No default text channel available")
 				}
 		}
 	}

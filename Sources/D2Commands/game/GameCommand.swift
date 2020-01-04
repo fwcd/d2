@@ -1,7 +1,9 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Utils
 
+fileprivate let log = Logger(label: "GameCommand")
 fileprivate let flagRegex = try! Regex(from: "--(\\S+)")
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
@@ -112,7 +114,7 @@ public class GameCommand<G: Game>: StringCommand {
 			encodedBoard = state.board.asRichValue
 			
 			if case .embed(_) = encodedBoard {
-				print("Warning: Embed-encoded boards are currently not supported by GameCommand")
+				log.warning("Embed-encoded boards are currently not supported by GameCommand")
 			}
 		}
 		
@@ -177,7 +179,7 @@ public class GameCommand<G: Game>: StringCommand {
 				// Output next board and user's hands
 				var embed: DiscordEmbed? = nil
 				
-				// print("Next possible moves: \(next.possibleMoves)")
+				log.debug("Next possible moves: \(next.possibleMoves)")
 				sendHandsAsDMs(fromState: next, to: output)
 				
 				if let winner = next.winner {
@@ -235,7 +237,7 @@ public class GameCommand<G: Game>: StringCommand {
 			output.append("Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
 		} catch {
 			output.append("Error while attempting move")
-			print(error)
+			log.warning("\(error)")
 		}
 		
 		return subscriptionAction

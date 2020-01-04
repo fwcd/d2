@@ -1,7 +1,9 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
 import D2Utils
 
+fileprivate let log = Logger(label: "LatexCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)=(\\S+)")
 
 // TODO: Use the Arg API
@@ -23,7 +25,7 @@ public class LatexCommand: StringCommand {
 			latexRenderer = try LatexRenderer()
 		} catch {
 			latexRenderer = nil
-			print("Could not initialize latex renderer: \(error)")
+			log.error("Could not initialize latex renderer: \(error)")
 		}
 	}
 	

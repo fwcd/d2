@@ -1,11 +1,14 @@
+import Dispatch
 import Foundation
 import Logging
 
 /**
  * A handler that logs to the console and stores
- * the last n lines in memory.
+ * the last n lines in a global cyclic queue.
  */
 public struct D2LogHandler: LogHandler {
+    private static let lastOutputsQueue = DispatchQueue(label: "D2LogHandler.lastOutputs")
+    public private(set) static var lastOutputs = CircularArray<String>(capacity: 100)
     public static let timestampFormatKey = "timestamp"
     
     public var logLevel: Logger.Level = .info
@@ -14,19 +17,19 @@ public struct D2LogHandler: LogHandler {
     ]
     
     private let label: String
-    @Box private var lastOutputs: CircularArray<String>!
     
-    public init(label: String, capacity: Int = 100) {
+    public init(label: String) {
         self.label = label
-        lastOutputs = CircularArray(capacity: capacity)
     }
 
     public func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata?, file: String, function: String, line: UInt) {
         let mergedMetadata = self.metadata.merging(metadata ?? [:], uniquingKeysWith: { _, newKey in newKey })
         let output = "\(timestamp(using: mergedMetadata)) [\(level)] \(label): \(message)"
-
-        lastOutputs.push(output)
+        
         print(output)
+        D2LogHandler.lastOutputsQueue.async {
+            D2LogHandler.lastOutputs.push(output)
+        }
     }
     
     private func timestamp(using metadata: Logger.Metadata?) -> String {

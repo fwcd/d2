@@ -1,4 +1,5 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
 import D2Utils
 import Foundation
@@ -7,6 +8,7 @@ import FoundationNetworking
 #endif
 import SwiftSoup
 
+fileprivate let log = Logger(label: "WebCommand")
 fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")
 
 public class WebCommand: StringCommand {
@@ -57,7 +59,7 @@ public class WebCommand: StringCommand {
 				))
 			} catch {
 				output.append("An error occurred while parsing the HTML")
-				print(error)
+				log.warning("\(error)")
 			}
 		}.resume()
 	}

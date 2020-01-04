@@ -1,10 +1,13 @@
 import Foundation
+import Logging
 import D2Utils
 
-public let GIF_COLOR_COUNT = 256
-fileprivate let COLOR_CHANNELS = 3
-fileprivate let TRANSPARENT_COLOR_INDEX: UInt8 = 0xFF
-fileprivate let COLOR_RESOLUTION: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (bits per pixel - 1)
+fileprivate let log = Logger(label: "AnimatedGif")
+
+public let gifColorCount = 256
+fileprivate let colorChannels = 3
+fileprivate let transparentColorIndex: UInt8 = 0xFF
+fileprivate let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (bits per pixel - 1)
 
 /**
  * A GIF-encoder that supports
@@ -40,7 +43,7 @@ public struct AnimatedGif {
 	}
 	
 	public init(quantizingImage image: Image) {
-		self.init(width: UInt16(image.width), height: UInt16(image.height), globalQuantization: OctreeQuantization(fromImage: image, colorCount: GIF_COLOR_COUNT))
+		self.init(width: UInt16(image.width), height: UInt16(image.height), globalQuantization: OctreeQuantization(fromImage: image, colorCount: gifColorCount))
 	}
 	
 	// Determines how an AnimatedGIF should
@@ -100,11 +103,11 @@ public struct AnimatedGif {
 		append(short: height)
 		
 		let sortFlag = false
-		let sizeOfGlobalColorTable: UInt8 = COLOR_RESOLUTION
+		let sizeOfGlobalColorTable: UInt8 = colorResolution
 		
 		var packedField = PackedFieldByte()
 		packedField.append(useGlobalColorTable)
-		packedField.append(COLOR_RESOLUTION, bits: 3)
+		packedField.append(colorResolution, bits: 3)
 		packedField.append(sortFlag)
 		packedField.append(sizeOfGlobalColorTable, bits: 3)
 		append(byte: packedField.rawValue)
@@ -143,7 +146,7 @@ public struct AnimatedGif {
 		append(byte: packedField.rawValue)
 		
 		append(short: delayTime)
-		append(byte: TRANSPARENT_COLOR_INDEX) // Transparent color index
+		append(byte: transparentColorIndex) // Transparent color index
 		append(byte: 0x00) // Block terminator
 	}
 	
@@ -156,7 +159,7 @@ public struct AnimatedGif {
 		
 		let interlaceFlag = false
 		let sortFlag = false
-		let sizeOfLocalColorTable: UInt8 = COLOR_RESOLUTION
+		let sizeOfLocalColorTable: UInt8 = colorResolution
 		
 		var packedField = PackedFieldByte()
 		packedField.append(useLocalColorTable)
@@ -168,15 +171,15 @@ public struct AnimatedGif {
 	}
 	
 	private mutating func append(colorTable: [Color]) {
-		print("Appending color table...")
-		let maxColorBytes = GIF_COLOR_COUNT * COLOR_CHANNELS
+		log.debug("Appending color table...")
+		let maxColorBytes = gifColorCount * colorChannels
 		var i = 0
 
 		for color in colorTable {
 			append(byte: color.red)
 			append(byte: color.green)
 			append(byte: color.blue)
-			i += COLOR_CHANNELS
+			i += colorChannels
 		}
 		
 		while i < maxColorBytes {
@@ -187,7 +190,7 @@ public struct AnimatedGif {
 	
 	private func quantize(color: Color, with quantization: ColorQuantization) -> Int {
 		if color.alpha < 128 {
-			return Int(TRANSPARENT_COLOR_INDEX)
+			return Int(transparentColorIndex)
 		} else {
 			return quantization.quantize(color: color)
 		}
@@ -196,9 +199,9 @@ public struct AnimatedGif {
 	private mutating func appendImageDataAsLZW(frame: Image, quantization: ColorQuantization, width: Int, height: Int) {
 		// Convert the ARGB-encoded image first to color
 		// indices and then to LZW-compressed codes
-		var encoder = LzwEncoder(colorCount: GIF_COLOR_COUNT)
+		var encoder = LzwEncoder(colorCount: gifColorCount)
 		
-		print("LZW-encoding the frame...")
+		log.debug("LZW-encoding the frame...")
 		// Iterate all pixels as ARGB values and encode them
 		for y in 0..<height {
 			for x in 0..<width {
@@ -207,7 +210,7 @@ public struct AnimatedGif {
 		}
 		encoder.finishEncoding()
         
-		print("Appending the encoded frame, minCodeSize: \(encoder.minCodeSize)...")
+		log.debug("Appending the encoded frame, minCodeSize: \(encoder.minCodeSize)...")
 		append(byte: UInt8(encoder.minCodeSize))
 		
 		let lzwEncoded = encoder.bytes
@@ -232,7 +235,7 @@ public struct AnimatedGif {
 		var localQuantization: ColorQuantization? = nil
 		
 		if globalQuantization == nil {
-			localQuantization = OctreeQuantization(fromImage: frame, colorCount: GIF_COLOR_COUNT)
+			localQuantization = OctreeQuantization(fromImage: frame, colorCount: gifColorCount)
 		}
 
 		try append(frame: frame, localQuantization: localQuantization, delayTime: delayTime, disposalMethod: disposalMethod)

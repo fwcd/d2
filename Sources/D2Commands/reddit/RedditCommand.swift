@@ -1,9 +1,12 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+
+fileprivate let log = Logger(label: "RedditCommand")
 
 public class RedditCommand: StringCommand {
 	public let info = CommandInfo(
@@ -26,7 +29,7 @@ public class RedditCommand: StringCommand {
 			return
 		}
 		
-		print("Querying \(url)")
+		log.info("Querying \(url)")
 		
 		// TODO: Use HTTPRequest
 		
@@ -35,7 +38,7 @@ public class RedditCommand: StringCommand {
 		request.addValue("Discord application D2", forHTTPHeaderField: "User-Agent")
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				print(String(describing: error))
+				log.warning("\(error)")
 				output.append("Error while querying URL.")
 				return
 			}
@@ -68,10 +71,10 @@ public class RedditCommand: StringCommand {
 					output.append(embed)
 				} else {
 					output.append("No post found.")
-					print(json)
+					log.notice("No post found: \(json))")
 				}
 			} catch {
-				print(String(describing: error))
+				log.warning("\(error)")
 				output.append("Error while decoding JSON.")
 			}
 		}.resume()

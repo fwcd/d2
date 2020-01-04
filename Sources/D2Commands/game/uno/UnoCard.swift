@@ -1,5 +1,8 @@
+import Logging
 import D2Graphics
 import D2Utils
+
+fileprivate let log = Logger(label: "UnoCard")
 
 public enum UnoCard: Hashable {
 	case number(Int, UnoColor)
@@ -79,7 +82,7 @@ public enum UnoCard: Hashable {
 			
 			return img
 		} catch {
-			print("Error while creating uno card image: \(error)")
+			log.warning("Error while creating uno card image: \(error)")
 			return nil
 		}
 	}

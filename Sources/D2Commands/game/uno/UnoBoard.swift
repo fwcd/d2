@@ -1,5 +1,8 @@
+import Logging
 import D2Utils
 import D2Graphics
+
+fileprivate let log = Logger(label: "UnoBoard")
 
 fileprivate struct PileCard {
 	let card: UnoCard
@@ -38,7 +41,7 @@ public struct UnoBoard: RichValueConvertible {
 			
 			return img
 		} catch {
-			print("Error while creating uno card image: \(error)")
+			log.warning("Error while creating uno card image: \(error)")
 			return nil
 		}
 	}

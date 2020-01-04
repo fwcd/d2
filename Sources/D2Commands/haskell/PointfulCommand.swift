@@ -1,5 +1,8 @@
+import Logging
 import SwiftDiscord
 import D2Utils
+
+fileprivate let log = Logger(label: "PointfulCommand")
 
 public class PointfulCommand: StringCommand {
     public let info = CommandInfo(
@@ -17,7 +20,7 @@ public class PointfulCommand: StringCommand {
             let pointful = try Shell().outputSync(for: "pointful", args: [input])
             output.append(.code(pointful ?? "No results", language: "haskell"))
         } catch {
-            print(error)
+            log.warning("\(error)")
             output.append("An error occurred while converting to pointful notation")
         }
     }

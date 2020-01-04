@@ -1,7 +1,10 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Utils
 import D2Graphics
+
+fileprivate let log = Logger(label: "DemoImageCommand")
 
 public class DemoImageCommand: StringCommand {
 	public let info = CommandInfo(
@@ -32,7 +35,7 @@ public class DemoImageCommand: StringCommand {
 			
 			try output.append(image)
 		} catch {
-			print(error)
+			log.error("\(error)")
 			output.append("An error occurred while encoding/sending the image")
 		}
 	}

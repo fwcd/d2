@@ -1,5 +1,8 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
+
+fileprivate let log = Logger(label: "PollCommand")
 
 // TODO: Use Arg API
 
@@ -39,7 +42,7 @@ public class PollCommand: StringCommand {
 		let reactions: [String]
 		var text: String = "Poll: \(components.first!)"
 		
-		print("Creating poll `\(text)` with options \(options)")
+		log.info("Creating poll `\(text)` with options \(options)")
 		
 		if options.isEmpty {
 			reactions = ["👍", "👎", "🤷"]

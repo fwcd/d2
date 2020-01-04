@@ -1,10 +1,12 @@
 import SwiftDiscord
 import Foundation
+import Logging
 import D2Permissions
 import D2NetAPIs
 import D2Graphics
 import D2Utils
 
+fileprivate let log = Logger(label: "WolframAlphaCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
@@ -46,7 +48,7 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
 		query.start {
 			guard case let .success(data) = $0 else {
-				if case let .failure(error) = $0 { print(error) }
+				if case let .failure(error) = $0 { log.warning("\(error)") }
 				output.append("An error occurred while querying WolframAlpha.")
 				self.isRunning = false
 				return
@@ -61,7 +63,7 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
 		query.startAndParse {
 			guard case let .success(result) = $0 else {
-				if case let .failure(error) = $0 { print(error) }
+				if case let .failure(error) = $0 { log.warning("\(error)") }
 				output.append("An error occurred while querying WolframAlpha.")
 				self.isRunning = false
 				return

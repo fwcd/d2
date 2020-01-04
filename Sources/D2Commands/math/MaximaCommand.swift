@@ -1,10 +1,11 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Utils
 import Dispatch
 
+fileprivate let log = Logger(label: "MaximaCommand")
 fileprivate let maxExecutionSeconds = 5
-
 fileprivate let clearedInputChars = try! Regex(from: "\\|&,;")
 fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*([\\s\\S]+)\\(%i2\\)")
 
@@ -24,7 +25,7 @@ public class MaximaCommand: StringCommand {
 			latexRenderer = try LatexRenderer()
 		} catch {
 			latexRenderer = nil
-			print("Could not initialize latex renderer for MaximaCommand: \(error)")
+			log.error("Could not initialize latex renderer for MaximaCommand: \(error)")
 		}
 	}
 	
@@ -68,7 +69,7 @@ public class MaximaCommand: StringCommand {
 					semaphore.signal()
 				}
 			} catch {
-				print("An error occurred in MaximaCommand: \(error)")
+				log.warning("An error occurred in MaximaCommand: \(error)")
 				self.running = false
 				semaphore.signal()
 			}
@@ -92,9 +93,9 @@ public class MaximaCommand: StringCommand {
 				if process.isRunning {
 					do {
 						try shell.outputSync(for: "kill", args: ["-9", String(process.processIdentifier)])
-						print("Killed maxima process")
+						log.debug("Killed maxima process")
 					} catch {
-						print("Killing maxima process failed, try to manually kill the process: kill -9 \(process.processIdentifier)")
+						log.error("Killing maxima process failed, try to manually kill the process: kill -9 \(process.processIdentifier)")
 					}
 				}
 			})

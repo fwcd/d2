@@ -155,7 +155,6 @@ class PipeOutput: CommandOutput {
     }
     
     func append(_ value: RichValue) {
-        print("Piping to \(sink)")
         let nextInput = args.isEmpty ? value : (.text(args) + value)
         sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
     }

@@ -1,8 +1,10 @@
+import Logging
 import Socket
 import SwiftDiscord
 import D2Utils
 import D2NetAPIs
 
+fileprivate let log = Logger(label: "MinecraftServerPingCommand")
 fileprivate let hostPortPattern = try! Regex(from: "([^:]+)(?::(\\d+))?")
 
 public class MinecraftServerPingCommand: StringCommand {
@@ -38,7 +40,7 @@ public class MinecraftServerPingCommand: StringCommand {
                 output.append("Could not parse host/port, please specify it using the following format: `localhost:25565`")
             }
         } catch {
-            print(error)
+            log.warning("\(error)")
             output.append("Could not ping server")
         }
     }

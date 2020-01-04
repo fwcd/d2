@@ -1,5 +1,7 @@
 import D2Utils
+import Logging
 
+fileprivate let log = Logger(label: "D2ScriptParser")
 fileprivate let operators: [String] = ["=", "+", "-", "*", "/", "^"]
 fileprivate let keywords: [String] = ["command", "if", "else", "for", "while"]
 
@@ -146,7 +148,7 @@ public struct D2ScriptParser {
 		tokens.next()
 		tokens.next()
 		let args = try parseFunctionArgs(from: tokens)
-		// print("Parsing function call to \(functionName) with args \(args)")
+		log.debug("Parsing function call to \(functionName) with args \(args)")
 		guard tokens.next() == .rightParenthesis else { throw D2ScriptError.syntaxError("Function call needs to end with a closing parenthesis") }
 		return D2ScriptFunctionCall(functionName: functionName, arguments: args)
 	}

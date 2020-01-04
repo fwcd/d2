@@ -1,4 +1,7 @@
 import Foundation
+import Logging
+
+fileprivate let log = Logger(label: "Shell")
 
 /** A wrapper that simplifies the creation of subprocesses. */
 public struct Shell {
@@ -59,14 +62,14 @@ public struct Shell {
 				try execute(process: process)
 				process.waitUntilExit()
 			} catch {
-				print("Warning: Shell.findPath could launch 'which' to find \(executable)")
+				log.warning("Shell.findPath could launch 'which' to find \(executable)")
 				return executable
 			}
 			
 			if let output = String(data: pipe.fileHandleForReading.availableData, encoding: .utf8) {
 				return output.trimmingCharacters(in: .whitespacesAndNewlines)
 			} else {
-				print("Warning: Shell.findPath could not read 'which' output to find \(executable)")
+				log.warning("Shell.findPath could not read 'which' output to find \(executable)")
 				return executable
 			}
 		}

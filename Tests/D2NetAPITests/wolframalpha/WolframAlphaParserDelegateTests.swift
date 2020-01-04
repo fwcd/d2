@@ -3,7 +3,10 @@ import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
+import Logging
 @testable import D2NetAPIs
+
+fileprivate let log = Logger(label: "WolframAlphaParserDelegateTests")
 
 final class WolframAlphaParserDelegateTests: XCTestCase {
 	static var allTests = [
@@ -108,9 +111,9 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
 		
 		parser.delegate = delegate
 		
-		print("Starting to parse")
+		log.debug("Starting to parse")
 		let result = parser.parse()
-		print("Done")
+		log.debug("Done")
 		
 		XCTAssert(result, "XML parser should succeed")
 	}

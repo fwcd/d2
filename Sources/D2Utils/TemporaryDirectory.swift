@@ -1,4 +1,7 @@
 import Foundation
+import Logging
+
+fileprivate let log = Logger(label: "TemporaryDirectory")
 
 /**
  * A custom temporary directory. The directory is deleted
@@ -36,7 +39,7 @@ public class TemporaryDirectory {
 				try FileManager.default.removeItem(at: url)
 			}
 		} catch {
-			print("Error while removing temporary directory: \(error)")
+			log.error("Error while removing temporary directory: \(error)")
 		}
 	}
 }

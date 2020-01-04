@@ -2,7 +2,10 @@ import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
+import Logging
 import D2Utils
+
+fileprivate let log = Logger(label: "UnivISXMLParserDelegate")
 
 class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
 	let then: (Result<UnivISOutputNode, Error>) -> Void
@@ -24,7 +27,7 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
-		// print("Started \(elementName)")
+		log.trace("Started \(elementName)")
 		do {
 			// Ignore top-level 'UnivIS' element
 			guard elementName != "UnivIS" else { return }
@@ -46,15 +49,15 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
 	}
 	
 	func parser(_ parser: XMLParser, foundCharacters string: String) {
-		// print("Got \(string)")
+		log.trace("Got \(string)")
 		currentCharacters += string
 	}
 	
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-		// print("Ended \(elementName)")
+		log.trace("Ended \(elementName)")
 		do {
 			if elementName == "UnivIS" {
-				print("Ending parsing")
+				log.trace("Ending parsing")
 				then(.success(UnivISOutputNode(childs: nodes)))
 			} else if let builder = nodeBuilder {
 				if elementName == currentName {

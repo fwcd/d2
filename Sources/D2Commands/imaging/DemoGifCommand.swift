@@ -1,7 +1,10 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Graphics
 import D2Utils
+
+fileprivate let log = Logger(label: "DemoGifCommand")
 
 public class DemoGifCommand: StringCommand {
 	public let info = CommandInfo(
@@ -24,7 +27,7 @@ public class DemoGifCommand: StringCommand {
 			let angle = (2.0 * Double.pi) / Double(angleCount)
 			
 			for angleIndex in 0..<angleCount {
-				print("Creating frame \(angleIndex) of \(angleCount)")
+				log.info("Creating frame \(angleIndex) of \(angleCount)")
 				
 				let image = try Image(width: width, height: height)
 				var graphics = CairoGraphics(fromImage: image)
@@ -38,7 +41,7 @@ public class DemoGifCommand: StringCommand {
             gif.appendTrailer()
 			output.append(.gif(gif))
 		} catch {
-			print(error)
+			log.error("\(error)")
 			output.append("An error occurred while encoding/sending the image")
 		}
 	}

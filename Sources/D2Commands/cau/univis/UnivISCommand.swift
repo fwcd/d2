@@ -1,7 +1,10 @@
 import SwiftDiscord
+import Logging
 import D2Permissions
 import D2Utils
 import D2NetAPIs
+
+fileprivate let log = Logger(label: "UnivISCommand")
 
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"
@@ -56,15 +59,15 @@ public class UnivISCommand: StringCommand {
 					
 					output.append(embed)
 				} else if case let .failure(error) = response {
-					print(error)
 					output.append("UnivIS query error. Check the log for more information.")
+					log.warning("\(error)")
 				}
 			}
 		} catch UnivISCommandError.invalidSearchParameter(let paramName) {
 			output.append("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
 		} catch {
-			print(error)
 			output.append("An error occurred. Check the log for more information.")
+			log.warning("\(error)")
 		}
 	}
 	

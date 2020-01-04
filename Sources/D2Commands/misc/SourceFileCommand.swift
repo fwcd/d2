@@ -1,3 +1,4 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import Foundation
@@ -5,8 +6,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
-fileprivate let repositoryUrl = "https://github.com/fwcd/D2/tree/master"
-fileprivate let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/D2/master"
+fileprivate let log = Logger(label: "SourceFileCommand")
+
+fileprivate let repositoryUrl = "https://github.com/fwcd/d2/tree/master"
+fileprivate let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/d2/master"
 
 public class SourceFileCommand: StringCommand {
 	public let info = CommandInfo(
@@ -41,7 +44,7 @@ public class SourceFileCommand: StringCommand {
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				print(String(describing: error))
+				log.warning("\(error)")
 				output.append("Error while querying source file URL")
 				return
 			}

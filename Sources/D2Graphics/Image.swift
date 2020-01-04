@@ -1,6 +1,9 @@
 import Cairo
 import Foundation
+import Logging
 import D2Utils
+
+fileprivate let log = Logger(label: "Image")
 
 /**
  * An image that internally wraps a Cairo surface.
@@ -63,7 +66,7 @@ public struct Image {
 			case .rgb24?:
 				ptr.storeBytes(of: color.rgb, as: UInt32.self)
 			default:
-				print("Warning: Could not store color \(color) in an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
+				log.warning("Could not store color \(color) in an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
 		}
 	}
 	
@@ -75,7 +78,7 @@ public struct Image {
 			case .rgb24?:
 				return Color(rgb: ptr.load(as: UInt32.self))
 			default:
-				print("Warning: Color not read color from an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
+				log.warning("Color not read color from an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
 				return nil
 		}
 	}

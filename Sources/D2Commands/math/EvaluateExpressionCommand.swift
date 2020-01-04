@@ -1,7 +1,9 @@
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2Utils
 
+fileprivate let log = Logger(label: "EvaluateExpressionCommand")
 fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
 // TODO: Use Arg API, integrate flags into arg API
@@ -49,7 +51,7 @@ public class EvaluateExpressionCommand: StringCommand {
 		} catch ExpressionError.emptyResult {
 			output.append("The expression yielded no result")
 		} catch {
-			print(error)
+			log.warning("\(error)")
 			output.append("Error while parsing/evaluating expression")
 		}
 	}
