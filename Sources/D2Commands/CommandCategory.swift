@@ -5,6 +5,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case essential
     case file
     case game
+    case gitlab
     case haskell
     case imaging
     case math
@@ -27,6 +28,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .essential: return ":sparkles: Fundamental commands (such as `help`)"
             case .file: return ":file_folder: File IO"
             case .game: return ":game_die: Multiplayer games"
+            case .gitlab: return ":fox: GitLab"
             case .haskell: return ":umbrella2: Haskell"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
             case .math: return ":bar_chart: Plotting and calculations"

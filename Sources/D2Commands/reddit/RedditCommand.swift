@@ -38,7 +38,7 @@ public class RedditCommand: StringCommand {
 		request.addValue("Discord application D2", forHTTPHeaderField: "User-Agent")
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				log.warning("\(error)")
+				log.warning("\(error!)")
 				output.append("Error while querying URL.")
 				return
 			}

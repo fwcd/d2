@@ -44,7 +44,7 @@ public class SourceFileCommand: StringCommand {
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				log.warning("\(error)")
+				log.warning("\(error!)")
 				output.append("Error while querying source file URL")
 				return
 			}
