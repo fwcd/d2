@@ -8,8 +8,8 @@ public struct GitLabPipeline: Codable {
         case ref
         case sha
         case yamlErrors = "yaml_errors"
-        case updatedAfter = "updated_after"
-        case updatedBefore = "updated_before"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
         case orderBy = "order_by"
         case sort
         case webUrl = "web_url"
@@ -24,11 +24,22 @@ public struct GitLabPipeline: Codable {
     public let ref: String?
     public let sha: String?
     public let yamlErrors: Bool?
-    public let updatedAfter: String?
-    public let updatedBefore: String?
+    public let createdAt: String?
+    public let updatedAt: String?
     public let orderBy: String?
     public let sort: String?
     public let webUrl: String?
+    
+    public var statusEmoji: String {
+        switch status {
+            case "success"?: return ":white_check_mark:"
+            case "failed"?: return ":x:"
+            case "running"?: return ":man_running:"
+            case "pending"?: return ":hourglass:"
+            case "cancelled"?: return ":no_entry_sign:"
+            default: return ":question:"
+        }
+    }
     
     // Detail info
     

@@ -1,5 +1,6 @@
 import SwiftDiscord
 import Logging
+import D2NetAPIs
 import D2Permissions
 import D2Utils
 
@@ -31,7 +32,28 @@ public class GitLabCommand: StringCommand {
                 output.append(":white_check_mark: Updated project to `\(arg)`")
             },
             "get-server": { [unowned self] _, output in output.append("The current server is `\(self.gitLabConfig.value.serverHost ?? "none")`") },
-            "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.value.projectId.map { "\($0)" } ?? "none")`") }
+            "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.value.projectId.map { "\($0)" } ?? "none")`") },
+            "pipelines": { [unowned self] _, output in
+                try self.fetchPipelines() {
+                    guard case let .success(pipelines) = $0 else {
+                        guard case let .failure(error) = $0 else { fatalError("Invalid result variant") }
+                        log.warning("\(error)")
+                        output.append("Could not fetch pipelines")
+                        return
+                    }
+                    output.append(DiscordEmbed(
+                        title: ":rocket: Pipelines",
+                        fields: pipelines.prefix(5).map {
+                            DiscordEmbed.Field(name: "#\($0.id ?? -1)", value: """
+                                Status: \($0.statusEmoji) \($0.status ?? "?")
+                                Branch: `\($0.ref ?? "?")`
+                                Created At: `\($0.createdAt ?? "?")`
+                                Updated At: `\($0.updatedAt ?? "?")`
+                                """)
+                        }
+                    ))
+                }
+            }
         ]
         info.helpText = """
             Subcommands:
@@ -46,6 +68,8 @@ public class GitLabCommand: StringCommand {
             if let subcommand = subcommands[subcommandName] {
                 do {
                     try subcommand(arg, output)
+                } catch GitLabConfigurationError.unspecified(let attr) {
+                    output.append("Please specify the \(attr)")
                 } catch {
                     output.append("An error occurred while executing the subcommand")
                     log.warning("\(error)")
@@ -56,5 +80,15 @@ public class GitLabCommand: StringCommand {
         } else {
             output.append("Please use the following pattern: `[subcommand] [...]`")
         }
+    }
+    
+    private func remoteGitLab() throws -> RemoteGitLab {
+        guard let serverHost = gitLabConfig.value.serverHost else { throw GitLabConfigurationError.unspecified("server host") }
+        return RemoteGitLab(host: serverHost)
+    }
+    
+    private func fetchPipelines(then: @escaping (Result<[GitLabPipeline], Error>) -> Void) throws {
+        guard let projectId = gitLabConfig.value.projectId else { throw GitLabConfigurationError.unspecified("project id") }
+        try remoteGitLab().queryPipelines(projectId: projectId, then: then)
     }
 }
