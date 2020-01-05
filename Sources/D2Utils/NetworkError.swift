@@ -6,5 +6,5 @@ public enum NetworkError: Error {
 	case ioError(Error)
 	case missingData
 	case notUTF8(Data)
-	case jsonDecodingError(Data)
+	case jsonDecodingError(String)
 }

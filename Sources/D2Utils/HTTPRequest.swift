@@ -72,7 +72,7 @@ public struct HTTPRequest {
 				return
 			}
 			guard let deserialized = try? JSONDecoder().decode(type, from: data) else {
-				then(.failure(NetworkError.jsonDecodingError(data)))
+				then(.failure(NetworkError.jsonDecodingError(String(data: data, encoding: .utf8) ?? "<non-UTF-8-encoded data: \(data)>")))
 				return
 			}
 			then(.success(deserialized))

@@ -30,38 +30,9 @@ public struct GitLabPipeline: Codable {
     public let sort: String?
     public let webUrl: String?
     
-    public var statusEmoji: String {
-        switch status {
-            case "success"?: return ":white_check_mark:"
-            case "failed"?: return ":x:"
-            case "running"?: return ":man_running:"
-            case "pending"?: return ":hourglass:"
-            case "cancelled"?: return ":no_entry_sign:"
-            default: return ":question:"
-        }
-    }
-    
     // Detail info
     
     public let beforeSha: String?
     public let tag: Bool?
-    public let user: User?
-    
-    public struct User: Codable {
-        public enum CodingKeys: String, CodingKey {
-            case name
-            case username
-            case id
-            case state
-            case avatarUrl = "avatar_url"
-            case webUrl = "web_url"
-        }
-
-        public let name: String?
-        public let username: String?
-        public let id: Int?
-        public let state: String?
-        public let avatarUrl: String?
-        public let webUrl: String?
-    }
+    public let user: GitLabUser?
 }

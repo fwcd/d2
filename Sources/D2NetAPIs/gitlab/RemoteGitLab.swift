@@ -31,4 +31,12 @@ public struct RemoteGitLab {
     public func queryPipeline(projectId: Int, pipelineId: Int, then: @escaping (Result<GitLabPipeline, Error>) -> Void) {
         query(GitLabPipeline.self, from: "/projects/\(projectId)/pipelines/\(pipelineId)", then: then)
     }
+    
+    public func queryPipelineJobs(projectId: Int, pipelineId: Int, then: @escaping (Result<[GitLabJob], Error>) -> Void) {
+        query([GitLabJob].self, from: "/projects/\(projectId)/pipelines/\(pipelineId)/jobs", then: then)
+    }
+    
+    public func queryJobs(projectId: Int, then: @escaping (Result<[GitLabJob], Error>) -> Void) {
+        query([GitLabJob].self, from: "/projects/\(projectId)/jobs", then: then)
+    }
 }

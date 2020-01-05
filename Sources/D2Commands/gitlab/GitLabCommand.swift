@@ -35,23 +35,34 @@ public class GitLabCommand: StringCommand {
             "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.value.projectId.map { "\($0)" } ?? "none")`") },
             "pipelines": { [unowned self] _, output in
                 try self.fetchPipelines() {
-                    guard case let .success(pipelines) = $0 else {
-                        guard case let .failure(error) = $0 else { fatalError("Invalid result variant") }
-                        log.warning("\(error)")
-                        output.append("Could not fetch pipelines")
-                        return
+                    switch $0 {
+                        case .success(let pipelines):
+                            output.append(DiscordEmbed(
+                                title: ":rocket: Pipelines",
+                                fields: pipelines.prefix(5).map {
+                                    DiscordEmbed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
+                                }
+                            ))
+                        case .failure(let error):
+                            log.warning("\(error)")
+                            output.append("Could not fetch pipelines")
                     }
-                    output.append(DiscordEmbed(
-                        title: ":rocket: Pipelines",
-                        fields: pipelines.prefix(5).map {
-                            DiscordEmbed.Field(name: "#\($0.id ?? -1)", value: """
-                                Status: \($0.statusEmoji) \($0.status ?? "?")
-                                Branch: `\($0.ref ?? "?")`
-                                Created At: `\($0.createdAt ?? "?")`
-                                Updated At: `\($0.updatedAt ?? "?")`
-                                """)
-                        }
-                    ))
+                    
+                }
+            },
+            "pipeline": { [unowned self] _, output in
+                try self.fetchMostRecentPipelineJobs() {
+                    switch $0 {
+                        case .success(let jobs):
+                            output.append(DiscordEmbed(
+                                title: ":fireworks: Pipeline",
+                                fields: (jobs.first?.pipeline.map(self.describe(pipeline:)).map { [DiscordEmbed.Field(name: "Information", value: $0)] } ?? [])
+                                    + jobs.map { DiscordEmbed.Field(name: "Job: \(($0.stage ?? "?").withFirstUppercased)", value: self.describe(job: $0)) }
+                            ))
+                        case .failure(let error):
+                            log.warning("\(error)")
+                            output.append("Could not fetch most recent pipeline")
+                    }
                 }
             }
         ]
@@ -82,13 +93,53 @@ public class GitLabCommand: StringCommand {
         }
     }
     
+    private func describe(pipeline: GitLabPipeline) -> String {
+        let status = pipeline.status
+        return """
+            Status: \(emojiOf(status: status)) \(status ?? "?")
+            Branch: `\(pipeline.ref ?? "?")`
+            Created At: `\(pipeline.createdAt ?? "?")`
+            Updated At: `\(pipeline.updatedAt ?? "?")`
+            """
+    }
+    
+    private func describe(job: GitLabJob) -> String {
+        return """
+            Duration: \(job.duration ?? 0)
+            Runner: \(job.runner?.description ?? "?") (\(job.runner?.status ?? "no status"))
+            Artifacts: \(job.artifacts?.compactMap { $0.filename }.joined(separator: ", ") ?? "no artifacts")
+            """
+    }
+    
+    private func emojiOf(status: String?) -> String {
+        switch status {
+            case "success"?: return ":white_check_mark:"
+            case "failed"?: return ":x:"
+            case "running"?: return ":man_running:"
+            case "pending"?: return ":hourglass:"
+            case "cancelled"?: return ":no_entry_sign:"
+            default: return ":question:"
+        }
+    }
+    
     private func remoteGitLab() throws -> RemoteGitLab {
         guard let serverHost = gitLabConfig.value.serverHost else { throw GitLabConfigurationError.unspecified("server host") }
         return RemoteGitLab(host: serverHost)
     }
     
-    private func fetchPipelines(then: @escaping (Result<[GitLabPipeline], Error>) -> Void) throws {
+    private func projectId() throws -> Int {
         guard let projectId = gitLabConfig.value.projectId else { throw GitLabConfigurationError.unspecified("project id") }
-        try remoteGitLab().queryPipelines(projectId: projectId, then: then)
+        return projectId
+    }
+    
+    private func fetchPipelines(then: @escaping (Result<[GitLabPipeline], Error>) -> Void) throws {
+        try remoteGitLab().queryPipelines(projectId: try projectId(), then: then)
+    }
+    
+    private func fetchMostRecentPipelineJobs(then: @escaping (Result<[GitLabJob], Error>) -> Void) throws {
+        try remoteGitLab().queryJobs(projectId: try projectId()) { then($0.map { jobs in
+            let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()
+            return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
+        }) }
     }
 }

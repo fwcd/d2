@@ -4,6 +4,10 @@ fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0
 fileprivate let quotes = CharacterSet(charactersIn: "\"'`")
 
 extension StringProtocol {
+	public var withFirstUppercased: String {
+		prefix(1).uppercased() + dropFirst()
+	}
+
 	public func split(by length: Int) -> [String] {
 		var start = startIndex
 		var output = [String]()
