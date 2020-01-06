@@ -111,7 +111,7 @@ public class GitLabCommand: StringCommand {
             Runner: \(job.runner?.description ?? "?") (\(job.runner?.status ?? "no status"))
             Artifacts: \(job.artifacts?.compactMap { $0.filename }.joined(separator: ", ") ?? "no artifacts")
             ```
-            \(jobLog.nilIfEmpty?.split(separator: "\n").suffix(5).joined(separator: "\n") ?? "no log")
+            \(jobLog.nilIfEmpty?.split { $0.isNewline }.suffix(5).joined(separator: "\n") ?? "no log")
             ```
             """
     }
@@ -150,8 +150,9 @@ public class GitLabCommand: StringCommand {
                 return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
             }) {
                 case .success(let pipelineJobs):
-                    collect(thenables: pipelineJobs.map { $0.id.map { jid in { gitLab.fetchJobLog(projectId: pid, jobId: jid, then: $0) } } ?? { $0(.success("")) } }) {
-                        then($0.map { jobLogs in Array(zip(pipelineJobs, jobLogs)) })
+                    let sortedJobs = pipelineJobs.sorted(by: ascendingComparator { $0.id ?? -1 })
+                    collect(thenables: sortedJobs.map { $0.id.map { jid in { gitLab.fetchJobLog(projectId: pid, jobId: jid, then: $0) } } ?? { $0(.success("")) } }) {
+                        then($0.map { jobLogs in Array(zip(sortedJobs, jobLogs)) })
                     }
                 case .failure(let error):
                     then(.failure(error))
