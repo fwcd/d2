@@ -16,10 +16,10 @@ public struct MinecraftPacket {
         self.id = id.value
         content = restData.advanced(by: idByteCount)
     }
-
-    public init(id: Int32) {
+    
+    public init(id: Int32, content: Data = Data()) {
         self.id = id
-        content = Data()
+        self.content = content
     }
     
     public mutating func write<V>(_ value: V) where V: MinecraftProtocolValue {
