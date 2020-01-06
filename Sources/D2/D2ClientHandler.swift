@@ -87,6 +87,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["poll"] = PollCommand()
 		registry["concat"] = ConcatCommand()
 		registry["presence"] = PresenceCommand()
+		registry["xkcd"] = XkcdCommand()
 		registry["dm"] = DirectMessageCommand()
 		registry["tofile"] = ToFileCommand()
 		registry["chord"] = GuitarChordCommand()

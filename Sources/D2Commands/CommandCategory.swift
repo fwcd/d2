@@ -19,6 +19,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case stackoverflow
     case web
     case wolframalpha
+    case xkcd
     
     public var description: String {
         switch self {
@@ -42,6 +43,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .stackoverflow: return ":books: Stack Overflow API"
             case .web: return ":globe_with_meridians: In-Discord web browsing"
             case .wolframalpha: return ":boom: WolframAlpha API"
+            case .xkcd: return ":pencil2: xkcd"
         }
     }
 }
