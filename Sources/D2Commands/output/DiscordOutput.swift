@@ -23,8 +23,8 @@ public class DiscordOutput: CommandOutput {
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		var message: DiscordMessage
 		do {
-			if case let .error(error, userText: _) = value {
-				log.warning("\(error)")
+			if case let .error(error, errorText: errorText) = value {
+				log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
 			}
 			message = try messageWriter.write(value: value)
 		} catch {

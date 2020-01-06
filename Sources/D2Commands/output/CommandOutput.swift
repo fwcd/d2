@@ -30,4 +30,12 @@ public extension CommandOutput {
 	func append(_ files: [DiscordFileUpload], to channel: OutputChannel = .defaultChannel) {
 		append(.files(files), to: channel)
 	}
+	
+	func append(errorText: String, to channel: OutputChannel = .defaultChannel) {
+		append(.error(nil, errorText: errorText), to: channel)
+	}
+	
+	func append(_ error: Error, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
+		append(.error(error, errorText: errorText), to: channel)
+	}
 }

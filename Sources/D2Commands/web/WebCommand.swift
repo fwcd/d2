@@ -58,8 +58,7 @@ public class WebCommand: StringCommand {
 					fields: splitOutput.dropFirst().enumerated().map { DiscordEmbed.Field(name: "Page \($0.0 + 1)", value: $0.1) }
 				))
 			} catch {
-				output.append("An error occurred while parsing the HTML")
-				log.warning("\(error)")
+				output.append(error, errorText: "An error occurred while parsing the HTML")
 			}
 		}.resume()
 	}

@@ -20,8 +20,7 @@ public class HoogleCommand: StringCommand {
             let results = try Shell().outputSync(for: "hoogle", args: [input])
             output.append(.code(results ?? "No results", language: "haskell"))
         } catch {
-            log.warning("\(error)")
-            output.append("An error occurred while hoogling")
+            output.append(error, errorText: "An error occurred while hoogling")
         }
     }
 }

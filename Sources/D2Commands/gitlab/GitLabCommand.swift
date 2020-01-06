@@ -44,8 +44,7 @@ public class GitLabCommand: StringCommand {
                                 }
                             ))
                         case .failure(let error):
-                            log.warning("\(error)")
-                            output.append("Could not fetch pipelines")
+                            output.append(error, errorText: "Could not fetch pipelines")
                     }
                     
                 }
@@ -62,8 +61,7 @@ public class GitLabCommand: StringCommand {
                                 }
                             ))
                         case .failure(let error):
-                            log.warning("\(error)")
-                            output.append("Could not fetch most recent pipeline")
+                            output.append(error, errorText: "Could not fetch most recent pipeline")
                     }
                 }
             }
@@ -84,8 +82,7 @@ public class GitLabCommand: StringCommand {
                 } catch GitLabConfigurationError.unspecified(let attr) {
                     output.append("Please specify the \(attr)")
                 } catch {
-                    output.append("An error occurred while executing the subcommand")
-                    log.warning("\(error)")
+                    output.append(error, errorText: "An error occurred while executing the subcommand")
                 }
             } else {
                 output.append("Could not find subcommand with name `\(subcommandName)`")

@@ -23,7 +23,7 @@ public class WolframAlphaCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !isRunning else {
-			output.append("Wait for the first input to finish!")
+			output.append(errorText: "Wait for the first input to finish!")
 			return
 		}
 		isRunning = true
@@ -40,7 +40,7 @@ public class WolframAlphaCommand: StringCommand {
 				try performFullQuery(input: processedInput, output: output, showSteps: flags.contains("steps"))
 			}
 		} catch {
-			output.append("An error occurred. Check the log for more information.")
+			output.append(error)
 		}
 	}
 	
@@ -48,8 +48,9 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
 		query.start {
 			guard case let .success(data) = $0 else {
-				if case let .failure(error) = $0 { log.warning("\(error)") }
-				output.append("An error occurred while querying WolframAlpha.")
+				if case let .failure(error) = $0 {
+					output.append(error, errorText: "An error occurred while querying WolframAlpha.")
+				}
 				self.isRunning = false
 				return
 			}
@@ -63,8 +64,9 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
 		query.startAndParse {
 			guard case let .success(result) = $0 else {
-				if case let .failure(error) = $0 { log.warning("\(error)") }
-				output.append("An error occurred while querying WolframAlpha.")
+				if case let .failure(error) = $0 {
+					output.append(error, errorText: "An error occurred while querying WolframAlpha.")
+				}
 				self.isRunning = false
 				return
 			}

@@ -52,8 +52,7 @@ public class MDBCommand: StringCommand {
 				}
 			}
 		} catch {
-			log.warning("\(error)")
-			output.append("An error occurred. Check the log for more information.")
+			output.append(error)
 		}
 	}
 }

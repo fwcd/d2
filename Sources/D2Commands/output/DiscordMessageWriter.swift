@@ -28,9 +28,9 @@ public struct DiscordMessageWriter {
 					""")
 			case let .embed(embed):
 				return MessageLike(fromEmbed: embed)
-			case let .error(error, userText: text):
+			case let .error(error, errorText: text):
 				return MessageLike(fromEmbed: DiscordEmbed(
-					title: ":warning: \(type(of: error))",
+					title: ":warning: \(error.map { "\(type(of: $0))" } ?? "Warning")",
 					description: text,
 					footer: DiscordEmbed.Footer(text: "Check the logs for more details!")
 				))

@@ -61,14 +61,12 @@ public class CampusCommand: StringCommand {
 							image: DiscordEmbed.Image(url: URL(string: mapURL)!)
 						)))
 					} catch {
-						output.append("Could not create static map, see console for more details")
-						log.warning("\(error)")
+						output.append(error, errorText: "Could not create static map, see console for more details")
 					}
 				}
 			}
 		} catch {
-			output.append("An error occurred. Check the log for more information.")
-			log.warning("\(error)")
+			output.append(error)
 		}
 	}
 	

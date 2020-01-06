@@ -20,8 +20,7 @@ public class PointfreeCommand: StringCommand {
             let pointfree = try Shell().outputSync(for: "pointfree", args: [input])
             output.append(.code(pointfree ?? "No results", language: "haskell"))
         } catch {
-            log.warning("\(error)")
-            output.append("An error occurred while converting to pointfree notation")
+            output.append(error, errorText: "An error occurred while converting to pointfree notation")
         }
     }
 }

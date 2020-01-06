@@ -236,8 +236,7 @@ public class GameCommand<G: Game>: StringCommand {
 		} catch GameError.moveOutOfBounds(let msg) {
 			output.append("Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
 		} catch {
-			output.append("Error while attempting move")
-			log.warning("\(error)")
+			output.append(error, errorText: "Error while attempting move")
 		}
 		
 		return subscriptionAction

@@ -38,8 +38,7 @@ public class AddD2ScriptCommand: StringCommand {
 			} catch D2ScriptCommandError.multipleCommandsDefined(let msg) {
 				output.append("Multiple commands defined: \(msg)")
 			} catch {
-				log.warning("\(error)")
-				output.append("Could not parse code.")
+				output.append(error, errorText: "Could not parse code.")
 			}
 		} else {
 			output.append("Did not recognize code. \(info.helpText!)")

@@ -26,8 +26,7 @@ public class MensaCommand: StringCommand {
             try DailyFoodMenu(canteen: canteen).fetchMealsAsync {
                 guard case let .success(meals) = $0 else {
                     guard case let .failure(error) = $0 else { fatalError("Result should either be successful or not") }
-                    log.warning("\(error)")
-                    output.append("An error occurred while performing the request")
+                    output.append(error, errorText: "An error occurred while performing the request")
                     return
                 }
                 
@@ -37,8 +36,7 @@ public class MensaCommand: StringCommand {
                 )))
             }
         } catch {
-            log.warning("\(error)")
-            output.append("An error occurred while constructing the request")
+            output.append(error, errorText: "An error occurred while constructing the request")
         }
     }
 }

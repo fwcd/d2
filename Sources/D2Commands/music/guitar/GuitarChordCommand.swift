@@ -31,20 +31,19 @@ public class GuitarChordCommand: StringCommand {
 				.files([DiscordFileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")])
 			]))
 		} catch ChordError.invalidChord(let chord) {
-			output.append("Invalid chord: `\(chord)`")
+			output.append(errorText: "Invalid chord: `\(chord)`")
 		} catch ChordError.invalidRootNote(let root) {
-			output.append("Invalid root note: `\(root)`")
+			output.append(errorText: "Invalid root note: `\(root)`")
 		} catch ChordError.notOnGuitarFretboard(let chord) {
-			output.append("Could not find chord on guitar fretboard: `\(chord)`")
+			output.append(errorText: "Could not find chord on guitar fretboard: `\(chord)`")
 		} catch NoteError.invalidNote(let note) {
-			output.append("Invalid note: `\(note)`")
+			output.append(errorText: "Invalid note: `\(note)`")
 		} catch NoteError.notInTwelveToneOctave(let note) {
-			output.append("Not in the standard twelve-tone octave: `\(note)`")
+			output.append(errorText: "Not in the standard twelve-tone octave: `\(note)`")
 		} catch NoteError.invalidNoteLetter(let noteLetter) {
-			output.append("Invalid note letter: `\(noteLetter)`")
+			output.append(errorText: "Invalid note letter: `\(noteLetter)`")
 		} catch {
-			log.warning("\(error)")
-			output.append("An error occurred while creating chord")
+			output.append(error, errorText: "An error occurred while creating chord")
 		}
 	}
 }

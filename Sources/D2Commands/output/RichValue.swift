@@ -13,7 +13,7 @@ public enum RichValue: Addable {
 	case gif(AnimatedGif)
 	case code(String, language: String?)
 	case embed(DiscordEmbed?)
-	case error(Error, userText: String)
+	case error(Error?, errorText: String)
 	case files([DiscordFileUpload])
 	case compound([RichValue])
 	

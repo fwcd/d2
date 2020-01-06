@@ -74,8 +74,7 @@ public class RedditCommand: StringCommand {
 					log.notice("No post found: \(json))")
 				}
 			} catch {
-				log.warning("\(error)")
-				output.append("Error while decoding JSON.")
+				output.append(error, errorText: "Error while decoding JSON.")
 			}
 		}.resume()
 	}

@@ -20,8 +20,7 @@ public class PointfulCommand: StringCommand {
             let pointful = try Shell().outputSync(for: "pointful", args: [input])
             output.append(.code(pointful ?? "No results", language: "haskell"))
         } catch {
-            log.warning("\(error)")
-            output.append("An error occurred while converting to pointful notation")
+            output.append(error, errorText: "An error occurred while converting to pointful notation")
         }
     }
 }

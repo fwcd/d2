@@ -59,15 +59,13 @@ public class UnivISCommand: StringCommand {
 					
 					output.append(embed)
 				} else if case let .failure(error) = response {
-					output.append("UnivIS query error. Check the log for more information.")
-					log.warning("\(error)")
+					output.append(error, errorText: "UnivIS query error.")
 				}
 			}
 		} catch UnivISCommandError.invalidSearchParameter(let paramName) {
 			output.append("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
 		} catch {
-			output.append("An error occurred. Check the log for more information.")
-			log.warning("\(error)")
+			output.append(error)
 		}
 	}
 	

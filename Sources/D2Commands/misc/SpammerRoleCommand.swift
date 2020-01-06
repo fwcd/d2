@@ -23,7 +23,7 @@ public class SpammerRoleCommand: StringCommand {
         let mentions = context.message.mentionRoles
         
         guard mentions.count <= 1 else {
-            output.append("Too many roles, please only mention one!")
+            output.append(errorText: "Too many roles, please only mention one!")
             return
         }
         
@@ -38,8 +38,7 @@ public class SpammerRoleCommand: StringCommand {
                 output.append("The current spammer role is `\(spamConfiguration.value.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
             }
         } catch {
-            log.warning("\(error)")
-            output.append("Could not update spammer role")
+            output.append(error, errorText: "Could not update spammer role")
         }
     }
 }

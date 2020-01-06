@@ -21,8 +21,7 @@ public class HaskellCommand: StringCommand {
             let value = try Shell().outputSync(for: "mueval", args: ["-e", input, "-t", String(timeout)])
             output.append(.code(value ?? "No output", language: "haskell"))
         } catch {
-            log.warning("\(error)")
-            output.append("Could not evaluate expression.")
+            output.append(error, errorText: "Could not evaluate expression.")
         }
     }
 }

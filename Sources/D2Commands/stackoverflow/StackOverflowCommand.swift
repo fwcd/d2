@@ -32,22 +32,19 @@ public class StackOverflowCommand: StringCommand {
 						color: 0xffad0a
 					))
 				} catch NetApiError.noResults(let msg) {
-					output.append(msg)
+					output.append(errorText: msg)
 					log.warning("NetApiError while querying StackOverflow: \(msg)")
 				} catch NetworkError.ioError(let err) {
-					output.append("An IO error while querying StackOverflow")
-					log.warning("\(err)")
+					output.append(err, errorText: "An IO error while querying StackOverflow")
 				} catch NetworkError.jsonDecodingError(let data) {
-					output.append("Could not decode data as JSON")
+					output.append(errorText: "Could not decode data as JSON")
 					log.warning("Could not decode data from StackOverflow request as JSON: \(data)")
 				} catch {
-					output.append("An asynchronous error occurred while querying StackOverflow")
-					log.warning("\(error)")
+					output.append(error, errorText: "An asynchronous error occurred while querying StackOverflow")
 				}
 			}
 		} catch {
-			output.append("A synchronous error occurred while querying StackOverflow")
-			log.warning("\(error)")
+			output.append(error, errorText: "A synchronous error occurred while querying StackOverflow")
 		}
 	}
 }
