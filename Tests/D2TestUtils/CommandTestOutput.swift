@@ -17,6 +17,7 @@ public class CommandTestOutput: CommandOutput {
 	public var contents: [String] { return messages.map { $0.content } }
 	public var last: DiscordMessage? { return messages.last }
 	public var lastContent: String? { return last?.content }
+	public var lastEmbedDescription: String? { return last?.embeds.first?.description }
 	
 	private let messageWriter = DiscordMessageWriter()
 	

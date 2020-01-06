@@ -24,13 +24,13 @@ final class TicTacToeCommandTests: XCTestCase {
 		command.startMatch(between: [playerX, playerO], on: channel, output: output)
 		
 		command.perform("move", withArgs: "top left", on: channel, output: output, author: playerO)
-		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameO)`")
+		XCTAssertEqual(output.lastEmbedDescription, ":warning: It is not your turn, `\(nameO)`")
 		
 		command.perform("move", withArgs: "top left", on: channel, output: output, author: playerX)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(e)\(e)\n\(e)\(e)\(e)")
 		
 		command.perform("move", withArgs: "top right", on: channel, output: output, author: playerX)
-		XCTAssertEqual(output.lastContent, "It is not your turn, `\(nameX)`")
+		XCTAssertEqual(output.lastEmbedDescription, ":warning: It is not your turn, `\(nameX)`")
 		
 		command.perform("move", withArgs: "center center", on: channel, output: output, author: playerO)
 		XCTAssertEqual(output.lastContent, "\(x)\(e)\(e)\n\(e)\(o)\(e)\n\(e)\(e)\(e)")
