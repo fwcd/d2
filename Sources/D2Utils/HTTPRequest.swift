@@ -11,7 +11,8 @@ public struct HTTPRequest {
 		host: String,
 		path: String,
 		method: String = "GET",
-		query: [String: String] = [:]
+		query: [String: String] = [:],
+		headers: [String: String] = [:]
 	) throws {
 		let queryString = query.urlQueryEncoded
 		var components = URLComponents()
@@ -31,6 +32,10 @@ public struct HTTPRequest {
 		if method == "POST" {
 			request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 			request.httpBody = queryString.data(using: .utf8)
+		}
+		
+		for (key, value) in headers {
+			request.setValue(value, forHTTPHeaderField: key)
 		}
 	}
 	

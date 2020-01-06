@@ -80,7 +80,8 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ```json
 {
     "mapQuest": "YOUR_MAP_QUEST_KEY",
-    "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY"
+    "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY",
+    "gitlab": "YOUR_GITLAB_PERSONAL_ACCESS_TOKEN"
 }
 ```
 

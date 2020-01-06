@@ -17,7 +17,8 @@ public struct RemoteGitLab {
     private func query<T>(_ type: T.Type, from endpointPath: String, then: @escaping (Result<T, Error>) -> Void) where T: Decodable {
         do {
             log.info("Querying \(endpointPath) from GitLab \(host)")
-            let request = try HTTPRequest(scheme: scheme, host: host, path: apiPath + endpointPath)
+            let headers = storedNetApiKeys?.gitlab.map { ["Private-Token": $0] } ?? [:]
+            let request = try HTTPRequest(scheme: scheme, host: host, path: apiPath + endpointPath, headers: headers)
             return request.fetchJSONAsync(as: type, then: then)
         } catch {
             then(.failure(error))
