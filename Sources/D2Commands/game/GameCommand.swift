@@ -49,7 +49,7 @@ public class GameCommand<G: Game>: StringCommand {
 			do {
 				try subcommand(output)
 			} catch {
-				output.append("Error while running subcommand: \(error)")
+				output.append(errorText: "Error while running subcommand: \(error)")
 			}
 			return
 		}
@@ -228,13 +228,13 @@ public class GameCommand<G: Game>: StringCommand {
 				output.append(text)
 			}
 		} catch GameError.invalidMove(let msg) {
-			output.append("Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
+			output.append(errorText: "Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.ambiguousMove(let msg) {
-			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+			output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.incompleteMove(let msg) {
-			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+			output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.moveOutOfBounds(let msg) {
-			output.append("Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
+			output.append(errorText: "Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
 		} catch {
 			output.append(error, errorText: "Error while attempting move")
 		}

@@ -4,11 +4,9 @@ fileprivate let log = Logger(label: "LatexUtils")
 
 func handleLatex(error: Error, output: CommandOutput) {
 	if case let LatexError.pdfError(pdfLog) = error {
-		output.append("A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
-		log.warning("LaTeX PDF error:\n\(pdfLog)")
+		output.append(error, errorText: "A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
 	} else {
-		output.append("An asynchronous LaTeX error occurred")
-		log.warning("Asynchronous LaTeX error: \(error)")
+		output.append(error, errorText: "An asynchronous LaTeX error occurred")
 	}
 }
 
@@ -23,8 +21,7 @@ func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from 
 			do {
 				try output.append($0)
 			} catch {
-				output.append("Error while appending image to output")
-				log.error("Error while appending image to output: \(error)")
+				output.append(error, errorText: "Error while appending image to output")
 			}
 			then()
 		}

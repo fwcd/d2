@@ -42,7 +42,7 @@ public class ForCommand: StringCommand {
 					output.append(String(range.lowerBound + i))
 				}
 			} else {
-				output.append("Your range is too long!")
+				output.append(errorText: "Your range is too long!")
 			}
 		}
 	}

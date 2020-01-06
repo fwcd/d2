@@ -35,8 +35,7 @@ public class DemoImageCommand: StringCommand {
 			
 			try output.append(image)
 		} catch {
-			log.error("\(error)")
-			output.append("An error occurred while encoding/sending the image")
+			output.append(error, errorText: "An error occurred while encoding/sending the image")
 		}
 	}
 }

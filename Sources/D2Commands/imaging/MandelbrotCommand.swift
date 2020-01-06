@@ -36,8 +36,7 @@ public class MandelbrotCommand: StringCommand {
             
             try output.append(image)
         } catch {
-            log.error("\(error)")
-            output.append("Could not create image")
+            output.append(error, errorText: "Could not create image")
         }
     }
     

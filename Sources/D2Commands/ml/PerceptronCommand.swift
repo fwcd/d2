@@ -57,19 +57,19 @@ public class PerceptronCommand: StringCommand {
 				do {
 					try subcommand(cmdArgs, output)
 				} catch MLError.sizeMismatch(let msg) {
-					output.append("Size mismatch: \(msg)")
+					output.append(errorText: "Size mismatch: \(msg)")
 				} catch MLError.illegalState(let msg) {
-					output.append("Illegal state: \(msg)")
+					output.append(errorText: "Illegal state: \(msg)")
 				} catch MLError.invalidFormat(let msg) {
-					output.append("Invalid format: \(msg)")
+					output.append(errorText: "Invalid format: \(msg)")
 				} catch {
-					output.append("An error occurred: \(error)")
+					output.append(error)
 				}
 			} else {
-				output.append("Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands.keys)`")
+				output.append(errorText: "Unknown subcommand: `\(cmdName)`. Try one of these: `\(subcommands.keys)`")
 			}
 		} else {
-			output.append(info.helpText!)
+			output.append(errorText: info.helpText!)
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class PerceptronCommand: StringCommand {
 			try model.learn(rate: learningRate)
 			try outputModel(to: output)
 		} else {
-			output.append("Unrecognized syntax, try specifying a learning rate")
+			output.append(errorText: "Unrecognized syntax, try specifying a learning rate")
 		}
 	}
 	

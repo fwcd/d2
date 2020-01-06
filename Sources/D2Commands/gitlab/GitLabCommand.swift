@@ -80,15 +80,15 @@ public class GitLabCommand: StringCommand {
                 do {
                     try subcommand(arg, output)
                 } catch GitLabConfigurationError.unspecified(let attr) {
-                    output.append("Please specify the \(attr)")
+                    output.append(errorText: "Please specify the \(attr)")
                 } catch {
                     output.append(error, errorText: "An error occurred while executing the subcommand")
                 }
             } else {
-                output.append("Could not find subcommand with name `\(subcommandName)`")
+                output.append(errorText: "Could not find subcommand with name `\(subcommandName)`")
             }
         } else {
-            output.append("Please use the following pattern: `[subcommand] [...]`")
+            output.append(errorText: "Please use the following pattern: `[subcommand] [...]`")
         }
     }
     

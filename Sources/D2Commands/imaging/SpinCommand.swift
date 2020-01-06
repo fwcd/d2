@@ -40,11 +40,10 @@ public class SpinCommand: Command {
 				gif.appendTrailer()
 				output.append(.gif(gif))
 			} catch {
-				log.error("\(error)")
-				output.append("Error while generating animation:\n`\(error)`")
+				output.append(error, errorText: "Error while generating animation")
 			}
 		} else {
-			output.append("Error: Input is not an image")
+			output.append(errorText: "Input is not an image")
 		}
 	}
 }

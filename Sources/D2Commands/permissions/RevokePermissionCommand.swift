@@ -35,7 +35,7 @@ public class RevokePermissionCommand: StringCommand {
 				output.append("Did not change any permissions.")
 			}
 		} else {
-			output.append("Syntax error: The arguments need to match `[@user or role]*`")
+			output.append(errorText: "Syntax error: The arguments need to match `[@user or role]*`")
 		}
 	}
 }

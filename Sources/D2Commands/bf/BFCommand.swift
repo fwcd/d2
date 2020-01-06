@@ -60,7 +60,7 @@ public class BFCommand: StringCommand {
 			
 			if interpreter.cancelled {
 				log.debug("Cancelled BF task finished running")
-				output.append("Your program took longer than \(self.maxExecutionSeconds) seconds. The output was:\n\(response)")
+				output.append(errorText: "Your program took longer than \(self.maxExecutionSeconds) seconds. The output was:\n\(response)")
 			} else {
 				log.debug("BF task finished running")
 				output.append(response)

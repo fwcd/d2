@@ -33,7 +33,7 @@ public class PresenceCommand: StringCommand {
 			
 			client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: customText, type: activityType), status: status))
 		} else {
-			output.append("Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
+			output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
 		}
 	}
 }

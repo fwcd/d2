@@ -41,8 +41,7 @@ public class DemoGifCommand: StringCommand {
             gif.appendTrailer()
 			output.append(.gif(gif))
 		} catch {
-			log.error("\(error)")
-			output.append("An error occurred while encoding/sending the image")
+			output.append(error, errorText: "An error occurred while encoding/sending the image")
 		}
 	}
 }

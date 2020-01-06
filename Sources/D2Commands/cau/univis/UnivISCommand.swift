@@ -63,7 +63,7 @@ public class UnivISCommand: StringCommand {
 				}
 			}
 		} catch UnivISCommandError.invalidSearchParameter(let paramName) {
-			output.append("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
+			output.append(errorText: "Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
 		} catch {
 			output.append(error)
 		}

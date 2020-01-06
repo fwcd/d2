@@ -33,7 +33,7 @@ public class ToGifCommand: Command {
             gif.appendTrailer()
             output.append(.gif(gif))
         } catch {
-            output.append("Could not append frame to GIF")
+            output.append(error, errorText: "Could not append frame to GIF")
         }
     }
 }

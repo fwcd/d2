@@ -64,7 +64,7 @@ public class MaximaCommand: StringCommand {
 					}
 				} else {
 					// Render text output directly instead
-					output.append("```\n\(result)\n```")
+					output.append(.code(result, language: nil))
 					self.running = false
 					semaphore.signal()
 				}
@@ -82,7 +82,7 @@ public class MaximaCommand: StringCommand {
 			let result = semaphore.wait(timeout: timeout)
 			
 			if result == .timedOut && process.isRunning {
-				output.append("Maxima took longer than \(maxExecutionSeconds) seconds")
+				output.append(errorText: "Maxima took longer than \(maxExecutionSeconds) seconds")
 				process.terminate()
 			}
 			

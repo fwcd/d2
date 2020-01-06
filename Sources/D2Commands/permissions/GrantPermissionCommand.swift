@@ -37,10 +37,10 @@ public class GrantPermissionCommand: StringCommand {
 					output.append("Did not change any permissions.")
 				}
 			} else {
-				output.append("Unknown permission level `\(rawLevel)`")
+				output.append(errorText: "Unknown permission level `\(rawLevel)`")
 			}
 		} else {
-			output.append("Syntax error: The arguments need to match `[@user or role]* [permission level]`")
+			output.append(errorText: "Syntax error: The arguments need to match `[@user or role]* [permission level]`")
 		}
 	}
 }

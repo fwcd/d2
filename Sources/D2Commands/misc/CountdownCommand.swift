@@ -60,7 +60,7 @@ public class CountdownCommand: StringCommand {
                 if let goal = self.goals.removeValue(forKey: input) {
                     output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
                 } else {
-                    output.append(":question: No goal named `\(input)` is currently running")
+                    output.append(errorText: ":question: No goal named `\(input)` is currently running")
                 }
             }
         ]

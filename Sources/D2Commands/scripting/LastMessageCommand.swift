@@ -20,7 +20,7 @@ public class LastMessageCommand: Command {
 					output.append($0)
 				}
 			} else {
-				output.append("Could not find last message.")
+				output.append(errorText: "Could not find last message.")
 			}
 		}
 	}

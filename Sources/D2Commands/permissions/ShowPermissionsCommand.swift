@@ -9,7 +9,7 @@ public class ShowPermissionsCommand: Command {
 		requiredPermissionLevel: .admin
 	)
 	public let inputValueType: RichValueType = .none
-	public let outputValueType: RichValueType = .text
+	public let outputValueType: RichValueType = .code
 	private let permissionManager: PermissionManager
 	
 	public init(permissionManager: PermissionManager) {
@@ -17,6 +17,6 @@ public class ShowPermissionsCommand: Command {
 	}
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-		output.append("```\n\(permissionManager)\n```")
+		output.append(.code("\(permissionManager)", language: nil))
 	}
 }

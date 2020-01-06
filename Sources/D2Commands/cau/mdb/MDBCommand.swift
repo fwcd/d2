@@ -48,7 +48,7 @@ public class MDBCommand: StringCommand {
 					
 					output.append(embed)
 				} else {
-					output.append("No such module found.")
+					output.append(errorText: "No such module found.")
 				}
 			}
 		} catch {

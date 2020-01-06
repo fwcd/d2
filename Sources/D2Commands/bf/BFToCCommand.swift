@@ -8,6 +8,7 @@ public class BFToCCommand: StringCommand {
 		longDescription: "Outputs a C program whose functionality is equivalent to the given BF program",
 		requiredPermissionLevel: .basic
 	)
+	public let outputValueType: RichValueType = .code
 
 	public init() {}
 	
@@ -49,10 +50,10 @@ public class BFToCCommand: StringCommand {
 			
 			if let lengthLimit = output.messageLengthLimit {
 				for chunk in outputC.split(by: lengthLimit) {
-					output.append("```c\n\(chunk)\n```")
+					output.append(.code(chunk, language: "c"))
 				}
 			} else {
-				output.append("```c\n\(outputC)\n```")
+				output.append(.code(outputC, language: "c"))
 			}
 		}
 	}

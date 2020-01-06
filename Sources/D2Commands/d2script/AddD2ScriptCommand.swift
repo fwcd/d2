@@ -34,14 +34,14 @@ public class AddD2ScriptCommand: StringCommand {
 				registry[name] = command
 				output.append(":ballot_box_with_check: Added/updated command `\(name)`")
 			} catch D2ScriptCommandError.noCommandDefined(let msg) {
-				output.append("No command defined: \(msg)")
+				output.append(errorText: "No command defined: \(msg)")
 			} catch D2ScriptCommandError.multipleCommandsDefined(let msg) {
-				output.append("Multiple commands defined: \(msg)")
+				output.append(errorText: "Multiple commands defined: \(msg)")
 			} catch {
 				output.append(error, errorText: "Could not parse code.")
 			}
 		} else {
-			output.append("Did not recognize code. \(info.helpText!)")
+			output.append(errorText: "Did not recognize code. \(info.helpText!)")
 		}
 	}
 }

@@ -47,7 +47,7 @@ public class EchoCommand: Command {
 		let lengthLimit = output.messageLengthLimit ?? Int.max
 		
 		if (value.asText?.count ?? 0) > lengthLimit {
-			output.append("Can not echo value that is longer than \(lengthLimit) characters")
+			output.append(errorText: "Cannot echo value that is longer than \(lengthLimit) characters")
 		} else {
 			output.append(value)
 		}

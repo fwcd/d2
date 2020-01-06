@@ -70,7 +70,7 @@ public class RedditCommand: StringCommand {
 						.map { DiscordEmbed.Image(url: $0) }
 					output.append(embed)
 				} else {
-					output.append("No post found.")
+					output.append(errorText: "No post found.")
 					log.notice("No post found: \(json))")
 				}
 			} catch {

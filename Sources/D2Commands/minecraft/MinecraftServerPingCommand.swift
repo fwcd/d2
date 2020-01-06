@@ -37,7 +37,7 @@ public class MinecraftServerPingCommand: StringCommand {
                     ]
                 ))
             } else {
-                output.append("Could not parse host/port, please specify it using the following format: `localhost:25565`")
+                output.append(errorText: "Could not parse host/port, please specify it using the following format: `localhost:25565`")
             }
         } catch {
             output.append(error, errorText: "Could not ping server")

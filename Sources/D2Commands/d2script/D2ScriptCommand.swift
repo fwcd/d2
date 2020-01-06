@@ -76,12 +76,12 @@ public class D2ScriptCommand: StringCommand {
 			
 			URLSession.shared.dataTask(with: url) { (data, response, error) in
 				guard error == nil else {
-					output.append("An error occurred while performing the HTTP request")
+					output.append(error!, errorText: "An error occurred while performing the HTTP request")
 					self.semaphore.signal()
 					return
 				}
 				guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncate(1000) else {
-					output.append("Could not fetch data as UTF-8 string")
+					output.append(errorText: "Could not fetch data as UTF-8 string")
 					self.semaphore.signal()
 					return
 				}

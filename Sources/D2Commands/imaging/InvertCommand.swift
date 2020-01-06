@@ -29,10 +29,10 @@ public class InvertCommand: Command {
 				
 				output.append(.image(inverted))
 			} catch {
-				output.append("An error occurred while creating a new image:\n`\(error)`")
+				output.append(error, errorText: "An error occurred while creating a new image")
 			}
 		} else {
-			output.append("Error: Not an image!")
+			output.append(errorText: "Not an image!")
 		}
 	}
 }
