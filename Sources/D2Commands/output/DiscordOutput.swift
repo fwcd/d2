@@ -23,6 +23,9 @@ public class DiscordOutput: CommandOutput {
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		var message: DiscordMessage
 		do {
+			if case let .error(error, userText: _) = value {
+				log.warning("\(error)")
+			}
 			message = try messageWriter.write(value: value)
 		} catch {
 			log.error("Error while encoding message: \(error)")

@@ -28,6 +28,8 @@ public struct DiscordMessageWriter {
 					""")
 			case let .embed(embed):
 				return MessageLike(fromEmbed: embed)
+			case let .error(_, userText: text):
+				return MessageLike(fromContent: ":warning: An error occurred: \(text)")
 			case let .files(files):
 				return MessageLike(fromFiles: files)
 			case let .compound(components):

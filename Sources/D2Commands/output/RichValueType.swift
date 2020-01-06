@@ -5,6 +5,7 @@ public enum RichValueType {
     case gif
     case code
     case embed
+    case error
     case files
     case compound([RichValueType])
     case unknown
