@@ -5,7 +5,7 @@ public struct XkcdQuery {
 
     public func fetch(comicId: Int? = nil, then: @escaping (Result<XkcdComic, Error>) -> Void) {
         do {
-            let request = try HTTPRequest(host: "xkcd.com", path: "\(comicId.map { "/\($0)" })/info.0.json")
+            let request = try HTTPRequest(host: "xkcd.com", path: "\(comicId.map { "/\($0)" } ?? "")/info.0.json")
             request.fetchJSONAsync(as: XkcdComic.self, then: then)
         } catch {
             then(.failure(error))
