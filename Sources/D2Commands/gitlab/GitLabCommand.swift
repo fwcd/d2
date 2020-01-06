@@ -106,10 +106,11 @@ public class GitLabCommand: StringCommand {
     }
     
     private func describe(job: GitLabJob, withLog jobLog: String) -> String {
+        let status = job.status
         return """
+            Status: \(emojiOf(status: status)) \(status ?? "?")
             Duration: \(job.duration ?? 0)
             Runner: \(job.runner?.description ?? "?") (\(job.runner?.status ?? "no status"))
-            Artifacts: \(job.artifacts?.compactMap { $0.filename }.joined(separator: ", ") ?? "no artifacts")
             ```
             \(jobLog.nilIfEmpty?.split { $0.isNewline }.suffix(5).joined(separator: "\n") ?? "no log")
             ```
