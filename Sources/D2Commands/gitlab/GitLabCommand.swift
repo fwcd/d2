@@ -51,13 +51,15 @@ public class GitLabCommand: StringCommand {
                 }
             },
             "pipeline": { [unowned self] _, output in
-                try self.fetchMostRecentPipelineJobs() {
+                try self.fetchMostRecentPipelineJobsAndLogs() {
                     switch $0 {
                         case .success(let jobs):
+                            let pipeline = jobs.first?.0.pipeline
                             output.append(DiscordEmbed(
-                                title: ":fireworks: Pipeline",
-                                fields: (jobs.first?.pipeline.map(self.describe(pipeline:)).map { [DiscordEmbed.Field(name: "Information", value: $0)] } ?? [])
-                                    + jobs.map { DiscordEmbed.Field(name: "Job: \(($0.stage ?? "?").withFirstUppercased)", value: self.describe(job: $0)) }
+                                title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
+                                fields: (pipeline.map(self.describe(pipeline:)).map { [DiscordEmbed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
+                                    DiscordEmbed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
+                                }
                             ))
                         case .failure(let error):
                             log.warning("\(error)")
@@ -103,11 +105,14 @@ public class GitLabCommand: StringCommand {
             """
     }
     
-    private func describe(job: GitLabJob) -> String {
+    private func describe(job: GitLabJob, withLog jobLog: String) -> String {
         return """
             Duration: \(job.duration ?? 0)
             Runner: \(job.runner?.description ?? "?") (\(job.runner?.status ?? "no status"))
             Artifacts: \(job.artifacts?.compactMap { $0.filename }.joined(separator: ", ") ?? "no artifacts")
+            ```
+            \(jobLog.nilIfEmpty?.split(separator: "\n").suffix(5).joined(separator: "\n") ?? "no log")
+            ```
             """
     }
     
@@ -133,13 +138,24 @@ public class GitLabCommand: StringCommand {
     }
     
     private func fetchPipelines(then: @escaping (Result<[GitLabPipeline], Error>) -> Void) throws {
-        try remoteGitLab().queryPipelines(projectId: try projectId(), then: then)
+        try remoteGitLab().fetchPipelines(projectId: try projectId(), then: then)
     }
     
-    private func fetchMostRecentPipelineJobs(then: @escaping (Result<[GitLabJob], Error>) -> Void) throws {
-        try remoteGitLab().queryJobs(projectId: try projectId()) { then($0.map { jobs in
-            let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()
-            return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
-        }) }
+    private func fetchMostRecentPipelineJobsAndLogs(then: @escaping (Result<[(GitLabJob, String)], Error>) -> Void) throws {
+        let gitLab = try remoteGitLab()
+        let pid = try projectId()
+        gitLab.fetchJobs(projectId: pid) {
+            switch $0.map({ (jobs: [GitLabJob]) -> [GitLabJob] in
+                let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()
+                return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
+            }) {
+                case .success(let pipelineJobs):
+                    collect(thenables: pipelineJobs.map { $0.id.map { jid in { gitLab.fetchJobLog(projectId: pid, jobId: jid, then: $0) } } ?? { $0(.success("")) } }) {
+                        then($0.map { jobLogs in Array(zip(pipelineJobs, jobLogs)) })
+                    }
+                case .failure(let error):
+                    then(.failure(error))
+            }
+        }
     }
 }

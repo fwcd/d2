@@ -14,30 +14,46 @@ public struct RemoteGitLab {
         self.host = host
     }
     
-    private func query<T>(_ type: T.Type, from endpointPath: String, then: @escaping (Result<T, Error>) -> Void) where T: Decodable {
+    private func request(for endpointPath: String) throws -> HTTPRequest {
+        let headers = storedNetApiKeys?.gitlab.map { ["Private-Token": $0] } ?? [:]
+        return try HTTPRequest(scheme: scheme, host: host, path: apiPath + endpointPath, headers: headers)
+    }
+    
+    private func fetchString(from endpointPath: String, then: @escaping (Result<String, Error>) -> Void) {
         do {
             log.info("Querying \(endpointPath) from GitLab \(host)")
-            let headers = storedNetApiKeys?.gitlab.map { ["Private-Token": $0] } ?? [:]
-            let request = try HTTPRequest(scheme: scheme, host: host, path: apiPath + endpointPath, headers: headers)
-            return request.fetchJSONAsync(as: type, then: then)
+            return try request(for: endpointPath).fetchUTF8Async(then: then)
         } catch {
             then(.failure(error))
         }
     }
     
-    public func queryPipelines(projectId: Int, then: @escaping (Result<[GitLabPipeline], Error>) -> Void) {
-        query([GitLabPipeline].self, from: "/projects/\(projectId)/pipelines", then: then)
+    private func fetchJSON<T>(as type: T.Type, from endpointPath: String, then: @escaping (Result<T, Error>) -> Void) where T: Decodable {
+        do {
+            log.info("Querying \(endpointPath) as JSON from GitLab \(host)")
+            return try request(for: endpointPath).fetchJSONAsync(as: type, then: then)
+        } catch {
+            then(.failure(error))
+        }
     }
     
-    public func queryPipeline(projectId: Int, pipelineId: Int, then: @escaping (Result<GitLabPipeline, Error>) -> Void) {
-        query(GitLabPipeline.self, from: "/projects/\(projectId)/pipelines/\(pipelineId)", then: then)
+    public func fetchPipelines(projectId: Int, then: @escaping (Result<[GitLabPipeline], Error>) -> Void) {
+        fetchJSON(as: [GitLabPipeline].self, from: "/projects/\(projectId)/pipelines", then: then)
     }
     
-    public func queryPipelineJobs(projectId: Int, pipelineId: Int, then: @escaping (Result<[GitLabJob], Error>) -> Void) {
-        query([GitLabJob].self, from: "/projects/\(projectId)/pipelines/\(pipelineId)/jobs", then: then)
+    public func fetchPipeline(projectId: Int, pipelineId: Int, then: @escaping (Result<GitLabPipeline, Error>) -> Void) {
+        fetchJSON(as: GitLabPipeline.self, from: "/projects/\(projectId)/pipelines/\(pipelineId)", then: then)
     }
     
-    public func queryJobs(projectId: Int, then: @escaping (Result<[GitLabJob], Error>) -> Void) {
-        query([GitLabJob].self, from: "/projects/\(projectId)/jobs", then: then)
+    public func fetchPipelineJobs(projectId: Int, pipelineId: Int, then: @escaping (Result<[GitLabJob], Error>) -> Void) {
+        fetchJSON(as: [GitLabJob].self, from: "/projects/\(projectId)/pipelines/\(pipelineId)/jobs", then: then)
+    }
+    
+    public func fetchJobs(projectId: Int, then: @escaping (Result<[GitLabJob], Error>) -> Void) {
+        fetchJSON(as: [GitLabJob].self, from: "/projects/\(projectId)/jobs", then: then)
+    }
+    
+    public func fetchJobLog(projectId: Int, jobId: Int, then: @escaping (Result<String, Error>) -> Void) {
+        fetchString(from: "/projects/\(projectId)/jobs/\(jobId)/trace", then: then)
     }
 }
