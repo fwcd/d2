@@ -18,7 +18,7 @@ public class MensaCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let canteen = Canteen.parse(from: input) else {
-            output.append("Could not parse mensa from \(input), try `i` or `ii`")
+            output.append(errorText: "Could not parse mensa from \(input), try `i` or `ii`")
             return
         }
         

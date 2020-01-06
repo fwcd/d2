@@ -18,7 +18,7 @@ public class AvatarCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let user = context.message.mentions.first else {
-			output.append("Mention someone to begin!")
+			output.append(errorText: "Mention someone to begin!")
 			return
 		}
 		

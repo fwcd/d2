@@ -20,7 +20,7 @@ public class ToGifCommand: Command {
     
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let image = input.asImage else {
-            output.append("Input does not have an image")
+            output.append(errorText: "Input does not have an image")
             return
         }
         let quantizer = input.asText.flatMap { quantizers[$0]?(image) } ?? OctreeQuantization(fromImage: image, colorCount: gifColorCount)

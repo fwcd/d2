@@ -26,7 +26,7 @@ public class AddD2ScriptCommand: StringCommand {
 				let command = try D2ScriptCommand(script: try parser.parse(code))
 				let name = command.name
 				guard !name.contains(" ") else {
-					output.append("Command name '\(name)' may not contain spaces")
+					output.append(errorText: "Command name '\(name)' may not contain spaces")
 					return
 				}
 				

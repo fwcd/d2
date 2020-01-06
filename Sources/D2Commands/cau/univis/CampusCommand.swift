@@ -29,16 +29,16 @@ public class CampusCommand: StringCommand {
 				.name: input
 			]).start { response in
 				guard case let .success(queryOutput) = response else {
-					output.append("An error occurred while querying.")
+					output.append(errorText: "An error occurred while querying.")
 					return
 				}
 				// Successfully received and parsed UnivIS query output
 				guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
-					output.append("No room was found!")
+					output.append(errorText: "No room was found!")
 					return
 				}
 				guard let rawAddress = room.address else {
-					output.append("Room has no address!")
+					output.append(errorText: "Room has no address!")
 					return
 				}
 				

@@ -37,11 +37,11 @@ public class UnivISCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			guard let parsedArgs = inputPattern.firstGroups(in: input) else {
-				output.append("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
+				output.append(errorText: "Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
 				return
 			}
 			guard let searchKey = UnivISSearchKey(rawValue: parsedArgs[1]) else {
-				output.append("Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
+				output.append(errorText: "Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
 				return
 			}
 			

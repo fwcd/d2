@@ -25,7 +25,7 @@ public class RedditCommand: StringCommand {
 		components.path = "/r/\(input)/top.json"
 		
 		guard let url = components.url else {
-			output.append("Error while creating URL.")
+			output.append(errorText: "Error while creating URL.")
 			return
 		}
 		
@@ -39,11 +39,11 @@ public class RedditCommand: StringCommand {
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
 				log.warning("\(error!)")
-				output.append("Error while querying URL.")
+				output.append(errorText: "Error while querying URL.")
 				return
 			}
 			guard let data = data else {
-				output.append("Missing data after querying URL.")
+				output.append(errorText: "Missing data after querying URL.")
 				return
 			}
 			

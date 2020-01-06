@@ -20,17 +20,17 @@ public class ToFileCommand: Command {
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		if case let .compound(values) = input {
 			guard let name = values.first else {
-				output.append("Missing file name")
+				output.append(errorText: "Missing file name")
 				return
 			}
 			
 			guard let content = values[safely: 1] else {
-				output.append("Missing content (try piping some value into this invocation)")
+				output.append(errorText: "Missing content (try piping some value into this invocation)")
 				return
 			}
 
 			guard let data = (content.asText ?? content.asCode ?? "").data(using: .utf8) else {
-				output.append("Could not encode file data as UTF-8")
+				output.append(errorText: "Could not encode file data as UTF-8")
 				return
 			}
 			

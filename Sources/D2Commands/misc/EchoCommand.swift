@@ -32,7 +32,7 @@ public class EchoCommand: Command {
 				append(value, to: output)
 			} else {
 				guard !timer.isRunning else {
-					output.append("Cannot run multiple asynchronous `echo`s concurrently")
+					output.append(errorText: "Cannot run multiple asynchronous `echo`s concurrently")
 					return
 				}
 				

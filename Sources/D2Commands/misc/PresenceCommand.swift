@@ -27,7 +27,7 @@ public class PresenceCommand: StringCommand {
 			let customText = parsedArgs[3]
 			
 			guard let client = context.client else {
-				output.append("No client found")
+				output.append(errorText: "No client found")
 				return
 			}
 			

@@ -35,7 +35,7 @@ public class CountdownCommand: StringCommand {
         subcommands = [
             "add": { [unowned self] input, output in
                 guard let parsedInput = namedDatePattern.firstGroups(in: input) else {
-                    output.append("Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
+                    output.append(errorText: "Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
                     return
                 }
 
@@ -43,7 +43,7 @@ public class CountdownCommand: StringCommand {
                 let rawDate = parsedInput[2]
 
                 guard let date = self.parseDate(from: rawDate) else {
-                    output.append("Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
+                    output.append(errorText: "Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
                     return
                 }
 
@@ -53,7 +53,7 @@ public class CountdownCommand: StringCommand {
             },
             "remove": { [unowned self] input, output in
                 guard !(self.goals[input]?.protectedFromRemoval ?? false) else {
-                    output.append(":no_entry: `\(input)` is protected from removal")
+                    output.append(errorText: ":no_entry: `\(input)` is protected from removal")
                     return
                 }
 
@@ -75,7 +75,7 @@ public class CountdownCommand: StringCommand {
             let subcommandArgs = parsedArgs[2]
 
             guard let subcommand = subcommands[subcommandName] else {
-                output.append("Could not find subcommand with name \(subcommandName)")
+                output.append(errorText: "Could not find subcommand with name \(subcommandName)")
                 return
             }
 

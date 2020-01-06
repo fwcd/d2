@@ -25,7 +25,7 @@ public class GitLabCommand: StringCommand {
             },
             "set-project": { [unowned self] arg, output in
                 guard let projectId = Int(arg) else {
-                    output.append("Project ID should be an integer: `\(arg)`")
+                    output.append(errorText: "Project ID should be an integer: `\(arg)`")
                     return
                 }
                 try self.gitLabConfig.update { $0.projectId = projectId }

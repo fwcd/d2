@@ -22,7 +22,7 @@ public class StackOverflowCommand: StringCommand {
 			try StackOverflowQuery(input: input).start {
 				do {
 					guard let answer = try $0.get().items?.first else {
-						output.append("No answers found")
+						output.append(errorText: "No answers found")
 						return
 					}
 					output.append(DiscordEmbed(

@@ -41,7 +41,7 @@ public class D2ScriptCommand: StringCommand {
 		// Output to Discord
 		storage[function: "output"] = {
 			guard let value = $0.first else {
-				output.append("output(...) received no arguments")
+				output.append(errorText: "output(...) received no arguments")
 				return nil
 			}
 			switch value {
@@ -64,11 +64,11 @@ public class D2ScriptCommand: StringCommand {
 		// Perform a synchronous GET request
 		storage[function: "httpGet"] = {
 			guard case let .string(rawUrl)?? = $0.first else {
-				output.append("httpGet(...) received no arguments")
+				output.append(errorText: "httpGet(...) received no arguments")
 				return nil
 			}
 			guard let url = URL(string: rawUrl) else {
-				output.append("Invalid URL: \(rawUrl)")
+				output.append(errorText: "Invalid URL: \(rawUrl)")
 				return nil
 			}
 			
@@ -96,7 +96,7 @@ public class D2ScriptCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
-			output.append("This command is already running, wait for it to finish")
+			output.append(errorText: "This command is already running, wait for it to finish")
 			return
 		}
 		

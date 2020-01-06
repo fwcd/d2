@@ -55,12 +55,12 @@ public class GameCommand<G: Game>: StringCommand {
 		}
 		
 		guard let channel = context.channel else {
-			output.append("No channel to play on.")
+			output.append(errorText: "No channel to play on.")
 			return
 		}
 
 		guard !context.message.mentions.isEmpty else {
-			output.append("Mention one or more users to play against.")
+			output.append(errorText: "Mention one or more users to play against.")
 			return
 		}
 		
@@ -164,14 +164,14 @@ public class GameCommand<G: Game>: StringCommand {
 			
 			if actionResult.onlyCurrentPlayer {
 				guard state.rolesOf(player: author).contains(state.currentRole) else {
-					output.append("It is not your turn, `\(author.username)`")
+					output.append(errorText: "It is not your turn, `\(author.username)`")
 					return .continueSubscription
 				}
 			}
 			
 			if actionResult.cancelsMatch {
 				matches[channelID] = nil
-				output.append("Cancelled match: \(state.playersDescription)")
+				output.append(errorText: "Cancelled match: \(state.playersDescription)")
 				return .cancelSubscription
 			}
 			

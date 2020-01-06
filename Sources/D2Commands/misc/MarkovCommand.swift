@@ -22,11 +22,11 @@ public class MarkovCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let channelId = context.channel?.id else {
-			output.append("Could not figure out the channel we are on")
+			output.append(errorText: "Could not figure out the channel we are on")
 			return
 		}
 		guard let client = context.client else {
-			output.append("MarkovCommand can not be invoked without a client")
+			output.append(errorText: "MarkovCommand can not be invoked without a client")
 			return
 		}
 		
@@ -36,7 +36,7 @@ public class MarkovCommand: StringCommand {
 		if flags.contains("all"), let guild = context.guild, let user = client.user {
 			guild.getGuildMember(user.id) { optionalMe, _ in
 				guard let me = optionalMe else {
-					output.append("Could not fetch guild member for myself")
+					output.append(errorText: "Could not fetch guild member for myself")
 					return
 				}
 				
@@ -72,7 +72,7 @@ public class MarkovCommand: StringCommand {
 					}
 					
 					guard let startWord = words.randomElement() else {
-						output.append("Did not find any words in this channel")
+						output.append(errorText: "Did not find any words in this channel")
 						return
 					}
 					

@@ -31,13 +31,13 @@ public class LatexCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
-			output.append("Wait for the first LaTeX command to finish")
+			output.append(errorText: "Wait for the first LaTeX command to finish")
 			return
 		}
 		running = true
 		
 		guard let renderer = latexRenderer else {
-			output.append("No LaTeX renderer present")
+			output.append(errorText: "No LaTeX renderer present")
 			return
 		}
 		

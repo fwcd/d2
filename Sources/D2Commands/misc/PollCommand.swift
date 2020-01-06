@@ -20,22 +20,22 @@ public class PollCommand: StringCommand {
 		let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
 		
 		guard components.count >= 1 else {
-			output.append("Syntax: [poll text] [zero or more vote options...]")
+			output.append(errorText: "Syntax: [poll text] [zero or more vote options...]")
 			return
 		}
 		
 		let options = Array(components.dropFirst())
 		
 		guard options.count < 10 else {
-			output.append("Too many options!")
+			output.append(errorText: "Too many options!")
 			return
 		}
 		guard let client = context.client else {
-			output.append("Missing client")
+			output.append(errorText: "Missing client")
 			return
 		}
 		guard let channelId = context.channel?.id else {
-			output.append("Missing channel id")
+			output.append(errorText: "Missing channel id")
 			return
 		}
 		

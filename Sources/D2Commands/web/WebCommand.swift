@@ -24,22 +24,22 @@ public class WebCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let url = urlPattern.firstGroups(in: input).flatMap({ URL(string: $0[1]) }) else {
-			output.append("Not a valid URL: `\(input)`")
+			output.append(errorText: "Not a valid URL: `\(input)`")
 			return
 		}
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				output.append("An HTTP error occurred: \(error!)")
+				output.append(errorText: "An HTTP error occurred: \(error!)")
 				return
 			}
 			guard let data = data else {
-				output.append("No data returned")
+				output.append(errorText: "No data returned")
 				return
 			}
 			guard let html = String(data: data, encoding: .utf8) else {
-				output.append("Could not decode response as UTF-8")
+				output.append(errorText: "Could not decode response as UTF-8")
 				return
 			}
 			

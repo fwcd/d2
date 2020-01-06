@@ -21,7 +21,7 @@ public class BFCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
-			output.append("Whoa, not so fast. Wait for the program to finish!")
+			output.append(errorText: "Whoa, not so fast. Wait for the program to finish!")
 			return
 		}
 		
