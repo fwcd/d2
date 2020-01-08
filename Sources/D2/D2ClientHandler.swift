@@ -66,6 +66,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["tictactoe"] = GameCommand<TicTacToeGame>()
 		registry["uno"] = GameCommand<UnoGame>()
 		registry["sourcefile"] = SourceFileCommand()
+		registry["urbandict"] = UrbanDictionaryCommand()
 		registry["chess"] = GameCommand<ChessGame>()
 		registry["cyclethrough"] = CycleThroughCommand()
 		registry["demoimage"] = DemoImageCommand()

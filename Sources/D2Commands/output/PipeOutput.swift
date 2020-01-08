@@ -19,7 +19,7 @@ public class PipeOutput: CommandOutput {
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		let nextOutput = next ?? PrintOutput()
 
-		if case let .error(_) = value {
+		if case .error(_) = value {
 			log.debug("Propagating error through pipe")
 			nextOutput.append(value, to: channel)
 		} else {
