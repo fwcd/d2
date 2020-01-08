@@ -21,24 +21,39 @@ public struct Regex: CustomStringConvertible {
 			.compactMap { Range($0.range, in: str).map { String(str[$0]) } }
 	}
 	
+	private func groups(from match: NSTextCheckingResult, in str: String) -> [String] {
+		return (0..<match.numberOfRanges)
+			.map { Range(match.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
+	}
+	
 	public func firstGroups(in str: String) -> [String]? {
-		let optionalGroups = pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))[safely: 0]
-		
-		return optionalGroups
-			.map { groups in (0..<groups.numberOfRanges)
-				.map { Range(groups.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
-		}
+		return pattern.matches(in: str, range: NSRange(str.startIndex..., in: str)).first
+			.map { groups(from: $0, in: str) }
 	}
 	
 	public func allGroups(in str: String) -> [[String]] {
 		return pattern.matches(in: str, range: NSRange(str.startIndex..., in: str))
-			.map { groups in (0..<groups.numberOfRanges)
-				.map { Range(groups.range(at: $0), in: str).map { String(str[$0]) } ?? "" }
-		}
+			.map { groups(from: $0, in: str) }
 	}
 	
 	public func replace(in str: String, with replacement: String) -> String {
 		return pattern.stringByReplacingMatches(in: str, range: NSRange(str.startIndex..., in: str), withTemplate: replacement)
+	}
+	
+	public func replace(in str: String, using replacer: ([String]) -> String) -> String {
+		var result = ""
+		var i = str.startIndex
+		
+		for match in pattern.matches(in: str, range: NSRange(str.startIndex..., in: str)) {
+			guard let range = Range(match.range, in: str) else { continue }
+			result += str[i..<range.lowerBound]
+			result += replacer(groups(from: match, in: str))
+			i = range.upperBound
+		}
+		
+		result += str[i...]
+
+		return result
 	}
 	
 	public static func escape(_ str: String) -> String {

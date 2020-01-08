@@ -3,7 +3,7 @@ import SwiftDiscord
 import D2NetAPIs
 import D2Utils
 
-fileprivate let linkPattern = try! Regex(from: "\\[(\\w+)\\]")
+fileprivate let linkPattern = try! Regex(from: "\\[([\\w\\s]+)\\]")
 
 public class UrbanDictionaryCommand: StringCommand {
     public let info = CommandInfo(
@@ -37,7 +37,7 @@ public class UrbanDictionaryCommand: StringCommand {
     }
     
     private func embedOf(entry: UrbanDictionaryEntry) -> DiscordEmbed {
-        return DiscordEmbed(
+        DiscordEmbed(
             title: ":blue_book: \(entry.word)",
             description: markdownOf(formattedText: entry.definition),
             url: entry.permalink.flatMap { URL(string: $0) },
@@ -51,6 +51,6 @@ public class UrbanDictionaryCommand: StringCommand {
     }
     
     private func markdownOf(formattedText: String) -> String {
-        linkPattern.replace(in: formattedText, with: "[$1](https://www.urbandictionary.com/define.php?term=$1)")
+        linkPattern.replace(in: formattedText) { "[\($0[1])](https://www.urbandictionary.com/define.php?term=\($0[1].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0[1]))" }
     }
 }
