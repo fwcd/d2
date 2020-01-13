@@ -74,6 +74,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["mandelbrot"] = MandelbrotCommand()
 		registry["invert"] = InvertCommand()
 		registry["spin"] = AnimateCommand<SpinAnimation>(description: "Rotates an image")
+		registry["twirl"] = AnimateCommand<TransformAnimation<TwirlTransform>>(description: "Applies a twirl distortion effect")
 		registry["togif"] = ToGifCommand()
 		registry["avatar"] = AvatarCommand()
 		registry["latex"] = LatexCommand()
