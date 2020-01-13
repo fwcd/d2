@@ -1,3 +1,5 @@
+import Foundation
+
 /**
  * A linear transformation in 2D euclidean space.
  */
@@ -21,30 +23,52 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
         self.jy = jy
     }
     
+    public static func zero() -> Mat2<T> {
+        Mat2(
+            ix: 0, jx: 0,
+            iy: 0, jy: 0
+        )
+    }
+    
+    public static func identity() -> Mat2<T> {
+        Mat2(
+            ix: 1, jx: 0,
+            iy: 0, jy: 1
+        )
+    }
+    
+    public static func rotation(by angle: Double) -> Mat2<Double> {
+        Mat2<Double>(
+            ix: cos(angle), jx: -sin(angle),
+            iy: sin(angle), jy: cos(angle)
+        )
+    }
+    
+    public static func diagonal(x: T, y: T) -> Mat2<T> {
+        Mat2(
+            ix: x, jx: 0,
+            iy: 0, jy: y
+        )
+    }
+    
     public static func +(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T> {
         Mat2(
-            ix: lhs.ix + rhs.ix,
-            jx: lhs.jx + rhs.jx,
-            iy: lhs.iy + rhs.iy,
-            jy: lhs.jy + rhs.jy
+            ix: lhs.ix + rhs.ix, jx: lhs.jx + rhs.jx,
+            iy: lhs.iy + rhs.iy, jy: lhs.jy + rhs.jy
         )
     }
     
     public static func -(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T> {
         Mat2(
-            ix: lhs.ix - rhs.ix,
-            jx: lhs.jx - rhs.jx,
-            iy: lhs.iy - rhs.iy,
-            jy: lhs.jy - rhs.jy
+            ix: lhs.ix - rhs.ix, jx: lhs.jx - rhs.jx,
+            iy: lhs.iy - rhs.iy, jy: lhs.jy - rhs.jy
         )
     }
     
     public static func *(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T> {
         Mat2(
-            ix: lhs.ix * rhs.ix + lhs.jx * rhs.iy,
-            jx: lhs.ix * rhs.jx + lhs.jx * rhs.jy,
-            iy: lhs.iy * rhs.ix + lhs.jy * rhs.iy,
-            jy: lhs.iy * rhs.jx + rhs.jy * rhs.jy
+            ix: lhs.ix * rhs.ix + lhs.jx * rhs.iy, jx: lhs.ix * rhs.jx + lhs.jx * rhs.jy,
+            iy: lhs.iy * rhs.ix + lhs.jy * rhs.iy, jy: lhs.iy * rhs.jx + rhs.jy * rhs.jy
         )
     }
     
