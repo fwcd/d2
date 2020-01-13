@@ -28,11 +28,7 @@ public class ToGifCommand: Command {
         let height = image.height
         var gif = AnimatedGif(width: width, height: height, globalQuantization: quantizer)
 
-        do {
-            gif.append(frame: .init(image: image, delayTime: 0))
-            output.append(.gif(gif))
-        } catch {
-            output.append(error, errorText: "Could not append frame to GIF")
-        }
+        gif.append(frame: .init(image: image, delayTime: 0))
+        output.append(.gif(gif))
     }
 }

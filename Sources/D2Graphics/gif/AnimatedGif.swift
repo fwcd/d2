@@ -4,7 +4,7 @@ public struct AnimatedGif {
     public let width: Int
     public let height: Int
     private let globalQuantization: ColorQuantization?
-    public private(set) var frames: [Frame] = []
+    public var frames: [Frame] = []
     
     public init(width: Int, height: Int, globalQuantization: ColorQuantization? = nil) {
         self.width = width
