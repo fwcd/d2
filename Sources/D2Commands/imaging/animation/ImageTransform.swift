@@ -5,7 +5,7 @@ import D2Utils
  * that distorts the image.
  */
 public protocol ImageTransform {
-    init(at center: Vec2<Int>?)
+    init(at pos: Vec2<Int>?)
     
     /**
      * Inversely applies this function,
@@ -13,5 +13,5 @@ public protocol ImageTransform {
      * in the source image given a destination
      * position.
      */
-    func sourcePos(from destPos: Vec2<Int>, percent: Double) -> Vec2<Int>
+    func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int>
 }

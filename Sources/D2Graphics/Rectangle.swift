@@ -1,6 +1,6 @@
 import D2Utils
 
-public struct Rectangle<T: VecComponent> {
+public struct Rectangle<T: IntExpressibleAlgebraicField> {
 	public let topLeft: Vec2<T>
 	public let size: Vec2<T>
 	public let color: Color
