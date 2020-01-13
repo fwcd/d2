@@ -68,7 +68,7 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
     public static func *(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T> {
         Mat2(
             ix: lhs.ix * rhs.ix + lhs.jx * rhs.iy, jx: lhs.ix * rhs.jx + lhs.jx * rhs.jy,
-            iy: lhs.iy * rhs.ix + lhs.jy * rhs.iy, jy: lhs.iy * rhs.jx + rhs.jy * rhs.jy
+            iy: lhs.iy * rhs.ix + lhs.jy * rhs.iy, jy: lhs.iy * rhs.jx + lhs.jy * rhs.jy
         )
     }
     
