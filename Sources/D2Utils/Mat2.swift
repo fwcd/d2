@@ -1,7 +1,7 @@
 /**
  * A linear transformation in 2D euclidean space.
  */
-public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable {
+public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hashable, CustomStringConvertible {
     public let ix: T
     public let jx: T
     public let iy: T
@@ -12,6 +12,7 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable {
         guard det != 0 else { return nil }
         return Mat2(ix: jy / det, jx: -jx / det, iy: -iy / det, jy: ix / det)
     }
+    public var description: String { ("(\(ix), \(jx))\n(\(iy), \(jy))") }
     
     public init(ix: T, jx: T, iy: T, jy: T) {
         self.ix = ix
