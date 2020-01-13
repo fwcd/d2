@@ -9,9 +9,8 @@ public struct TwirlTransform: ImageTransform {
     
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
         let center = pos ?? (imageSize / 2)
-        let delta = center - destPos
-        let dist = delta.magnitude
-
-        fatalError("Not implemented") // TODO
+        let delta = (destPos - center).asDouble
+        let normalizedDist = delta.magnitude / Double(imageSize.y)
+        return center + (Mat2<Double>.rotation(by: 2 * Double.pi * normalizedDist) * delta).floored
     }
 }
