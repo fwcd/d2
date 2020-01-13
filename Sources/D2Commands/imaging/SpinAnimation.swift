@@ -1,4 +1,5 @@
 import D2Graphics
+import D2Utils
 
 public struct SpinAnimation: Animation {
     public func renderFrame(from image: Image, to graphics: inout Graphics, percent: Double, args: String) {
