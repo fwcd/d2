@@ -26,11 +26,10 @@ public class ToGifCommand: Command {
         let quantizer = input.asText.flatMap { quantizers[$0]?(image) } ?? OctreeQuantization(fromImage: image, colorCount: gifColorCount)
         let width = image.width
         let height = image.height
-        var gif = AnimatedGif(width: UInt16(width), height: UInt16(height), globalQuantization: quantizer)
+        var gif = AnimatedGif(width: width, height: height, globalQuantization: quantizer)
 
         do {
-            try gif.append(frame: image, delayTime: 0)
-            gif.appendTrailer()
+            gif.append(frame: .init(image: image, delayTime: 0))
             output.append(.gif(gif))
         } catch {
             output.append(error, errorText: "Could not append frame to GIF")

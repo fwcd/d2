@@ -7,7 +7,7 @@ extension DiscordTextChannel {
 	}
 	
 	public func send(gif: AnimatedGif) throws {
-		send(DiscordMessage(fromGif: gif))
+		send(try DiscordMessage(fromGif: gif))
 	}
 }
 
@@ -18,9 +18,9 @@ extension DiscordMessageLikeInitializable {
 		], tts: false)
 	}
 	
-	public init(fromGif gif: AnimatedGif, name: String? = nil) {
+	public init(fromGif gif: AnimatedGif, name: String? = nil) throws {
 		self.init(content: "", embed: nil, files: [
-			DiscordFileUpload(data: gif.data, filename: name ?? "image.gif", mimeType: "image/gif")
+			DiscordFileUpload(data: try gif.encoded(), filename: name ?? "image.gif", mimeType: "image/gif")
 		], tts: false)
 	}
 }

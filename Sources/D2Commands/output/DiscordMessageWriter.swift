@@ -19,7 +19,7 @@ public struct DiscordMessageWriter {
 			case let .image(img):
 				return try MessageLike(fromImage: img)
 			case let .gif(gif):
-				return MessageLike(fromGif: gif)
+				return try MessageLike(fromGif: gif)
 			case let .code(code, language: lang):
 				return MessageLike(fromContent: """
 					```\(lang ?? "")

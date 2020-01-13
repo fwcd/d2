@@ -6,9 +6,9 @@ public class AnimateCommand<A: Animation>: Command {
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
     private let frames: Int
-    private let delayTime: UInt16
+    private let delayTime: Int
     
-    public init(description: String, frames: Int = 30, delayTime: UInt16 = 2) {
+    public init(description: String, frames: Int = 30, delayTime: Int = 2) {
         info = CommandInfo(
             category: .imaging,
             shortDescription: description,
@@ -34,10 +34,9 @@ public class AnimateCommand<A: Animation>: Command {
                     let percent = Double(frameIndex) / Double(frames)
                     
                     try animation.renderFrame(from: image, to: &frame, percent: percent)
-                    try gif.append(frame: frame, delayTime: delayTime)
+                    gif.append(frame: .init(image: frame, delayTime: delayTime))
                 }
                 
-                gif.appendTrailer()
                 output.append(.gif(gif))
             } catch {
                 output.append(error, errorText: "Error while generating animation")

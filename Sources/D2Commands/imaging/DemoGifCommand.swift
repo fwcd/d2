@@ -21,7 +21,7 @@ public class DemoGifCommand: StringCommand {
 		do {
 			let width = 200
 			let height = 200
-			var gif = AnimatedGif(width: UInt16(width), height: UInt16(height))
+			var gif = AnimatedGif(width: width, height: height)
 			
 			let angleCount = 4
 			let angle = (2.0 * Double.pi) / Double(angleCount)
@@ -35,10 +35,9 @@ public class DemoGifCommand: StringCommand {
 				graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 100, y: 100))
 				graphics.draw(Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: Colors.blue))
 				
-				try gif.append(frame: image, delayTime: 100)
+				gif.append(frame: .init(image: image, delayTime: 100))
 			}
 			
-            gif.appendTrailer()
 			output.append(.gif(gif))
 		} catch {
 			output.append(error, errorText: "An error occurred while encoding/sending the image")
