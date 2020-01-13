@@ -31,13 +31,11 @@ public class AnimateCommand: Command {
             
             do {
                 for frameIndex in 0..<frames {
-                    let frameImage = try Image(width: width, height: height)
-                    var graphics: Graphics = CairoGraphics(fromImage: frameImage)
+                    var frame = try Image(width: width, height: height)
                     let percent = Double(frameIndex) / Double(frames)
                     
-                    try animation.renderFrame(from: image, to: &graphics, percent: percent, args: args)
-                    
-                    try gif.append(frame: frameImage, delayTime: delayTime)
+                    try animation.renderFrame(from: image, to: &frame, percent: percent, args: args)
+                    try gif.append(frame: frame, delayTime: delayTime)
                 }
                 
                 gif.appendTrailer()
