@@ -1,0 +1,8 @@
+import D2Graphics
+
+public struct SpinAnimation: Animation {
+    public func renderFrame(from image: Image, to graphics: inout Graphics, percent: Double, args: String) {
+        let angle = percent * 2 * Double.pi
+        graphics.draw(image, at: Vec2(x: 0, y: 0), rotation: angle)
+    }
+}
