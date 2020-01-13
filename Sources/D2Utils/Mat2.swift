@@ -47,6 +47,13 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable {
         )
     }
     
+    public static func *(lhs: Mat2<T>, rhs: Vec2<T>) -> Vec2<T> {
+        Vec2(
+            x: lhs.ix * rhs.x + lhs.jx * rhs.y,
+            y: lhs.iy * rhs.x + lhs.jy * rhs.y
+        )
+    }
+    
     public static func /(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T>? {
         rhs.inverse.map { lhs * $0 }
     }
