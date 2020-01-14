@@ -1,5 +1,6 @@
 import SwiftDiscord
 import D2Graphics
+import D2Utils
 
 public class AnimateCommand<A: Animation>: Command {
     public let info: CommandInfo
@@ -22,6 +23,9 @@ public class AnimateCommand<A: Animation>: Command {
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         if let image = input.asImage {
             let args = input.asText ?? ""
+            let typingIndicator = context.channel.map { DiscordTypingIndicator(on: $0) }
+            typingIndicator?.startAsync()
+        
             do {
                 let animation = try A.init(args: args)
                 
@@ -41,6 +45,8 @@ public class AnimateCommand<A: Animation>: Command {
             } catch {
                 output.append(error, errorText: "Error while generating animation")
             }
+
+            typingIndicator?.stop()
         } else {
             output.append(errorText: "No image passed to AnimateCommand")
         }
