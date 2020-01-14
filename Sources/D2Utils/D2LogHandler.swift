@@ -11,15 +11,16 @@ public struct D2LogHandler: LogHandler {
     public private(set) static var lastOutputs = CircularArray<String>(capacity: 100)
     public static let timestampFormatKey = "timestamp"
     
-    public var logLevel: Logger.Level = .info
+    public var logLevel: Logger.Level
     public var metadata: Logger.Metadata = [
         timestampFormatKey: .string("dd.MM.yyyy HH:mm:ss")
     ]
     
     private let label: String
     
-    public init(label: String) {
+    public init(label: String, logLevel: Logger.Level = .info) {
         self.label = label
+        self.logLevel = logLevel
     }
 
     public func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata?, file: String, function: String, line: UInt) {

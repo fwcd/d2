@@ -25,6 +25,8 @@ public class PipeOutput: CommandOutput {
 		} else {
 			log.debug("Piping to \(sink)")
 			let nextInput = args.isEmpty ? value : (.text(args) + value)
+			
+			log.trace("Invoking sink")
 			sink.invoke(input: nextInput, output: nextOutput, context: context)
 		}
 	}

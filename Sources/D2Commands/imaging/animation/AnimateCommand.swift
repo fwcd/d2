@@ -1,6 +1,9 @@
 import SwiftDiscord
 import D2Graphics
 import D2Utils
+import Logging
+
+fileprivate let log = Logger(label: "AnimateCommand")
 
 public class AnimateCommand<A: Animation>: Command {
     public let info: CommandInfo
@@ -26,17 +29,23 @@ public class AnimateCommand<A: Animation>: Command {
         typingIndicator?.startAsync()
 
         do {
+            log.trace("Creating animation")
             let animation = try A.init(args: args)
 
             if let image = input.asImage {
+                log.trace("Fetching image size")
                 let width = image.width
                 let height = image.height
+
+                log.debug("Creating gif")
                 var gif = AnimatedGif(quantizingImage: image)
                 
                 for i in 0..<defaultFrameCount {
+                    log.debug("Creating frame \(i)")
                     var frame = try Image(width: width, height: height)
                     let percent = Double(i) / Double(defaultFrameCount)
                     
+                    log.debug("Rendering frame \(i)")
                     try animation.renderFrame(from: image, to: &frame, percent: percent)
                     gif.append(frame: .init(image: frame, delayTime: delayTime))
                 }

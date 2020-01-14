@@ -38,7 +38,13 @@ public enum RichValue: Addable {
 	}
 	
 	private func extract<T>(using extractor: (RichValue) -> T?) -> T? {
-		extractor(self) ?? values.compactMap { $0.extract(using: extractor) }.first
+		if let extracted = extractor(self) {
+			return extracted
+		} else if case let .compound(values) = self {
+			return values.compactMap { $0.extract(using: extractor) }.first
+		} else {
+			return nil
+		}
 	}
 	
 	public static func of(values: [RichValue]) -> RichValue {
