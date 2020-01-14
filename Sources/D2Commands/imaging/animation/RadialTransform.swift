@@ -14,7 +14,7 @@ public struct RadialTransform<R: RadialDistortion>: ImageTransform {
         let delta = (destPos - center).asDouble
         let scaleFactor = scale / Double(imageSize.y)
         let normalizedDestDist = delta.magnitude * scaleFactor
-        let normalizedSourceDist = R.init().sourceDist(from: normalizedDestDist, percent: percent)
+        let normalizedSourceDist = max(-10000, min(10000, R.init().sourceDist(from: normalizedDestDist, percent: percent)))
         return center + (delta * normalizedSourceDist).floored
     }
 }

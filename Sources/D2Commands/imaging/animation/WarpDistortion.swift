@@ -1,9 +1,9 @@
 import Foundation
 
-public struct BumpDistortion: RadialDistortion {
+public struct WarpDistortion: RadialDistortion {
     public init() {}
     
     public func sourceDist(from normalizedDestDist: Double, percent: Double) -> Double {
-        pow(normalizedDestDist, percent)
+        -log(normalizedDestDist * percent + 0.1)
     }
 }
