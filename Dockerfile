@@ -37,6 +37,6 @@ RUN ./install-all
 
 # Build
 WORKDIR /d2
-RUN swift build
+RUN swift build -c release
 
 CMD ["./.build/debug/D2"]
