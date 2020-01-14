@@ -2,12 +2,18 @@ import D2Graphics
 import D2Utils
 
 /**
- * Matches a single integer vector in the arguments.
+ * Matches a single integer vector.
+ * 
  * The first capture describes the x-coordinate
  * and the second capture the y-coordinate of the
  * position where the transform is applied.
  */
-fileprivate let argsPattern = try! Regex(from: "(-?\\d+)\\s+(-?\\d+)")
+fileprivate let posPattern = try! Regex(from: "(-?\\d+)\\s+(-?\\d+)")
+
+/**
+ * Matches a single key-value argument.
+ */
+fileprivate let kvPattern = try! Regex(from: "(\\w+)\\s*=\\s*(\\S+)")
 
 /**
  * An animation that applies a progress-dependent
@@ -17,7 +23,10 @@ public struct TransformAnimation<T: ImageTransform>: Animation {
     private let transform: T
     
     public init(args: String) {
-        transform = T.init(at: argsPattern.firstGroups(in: args).map { Vec2<Int>(x: Int($0[1])!, y: Int($0[2])!) })
+        let pos: Vec2<Int>? = posPattern.firstGroups(in: args).map { Vec2<Int>(x: Int($0[1])!, y: Int($0[2])!) }
+        let kvArgs: [String: String] = Dictionary(uniqueKeysWithValues: kvPattern.allGroups(in: args).map { ($0[1], $0[2]) })
+
+        transform = T.init(at: pos, kvArgs: kvArgs)
     }
 
     public func renderFrame(from image: Image, to frame: inout Image, percent: Double) {

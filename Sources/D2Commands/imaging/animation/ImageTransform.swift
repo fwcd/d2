@@ -5,7 +5,7 @@ import D2Utils
  * that distorts the image.
  */
 public protocol ImageTransform {
-    init(at pos: Vec2<Int>?)
+    init(at pos: Vec2<Int>?, kvArgs: [String: String])
     
     /**
      * Inversely applies this function,
