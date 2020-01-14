@@ -27,18 +27,14 @@ public class SpammerRoleCommand: StringCommand {
             return
         }
         
-        do {
-            if let role = mentions.first {
-                spamConfiguration.wrappedValue.spammerRoles[guild.id] = role
-                output.append(":white_check_mark: Successfully updated the spammer role")
-            } else if input == resetSubcommand {
-                spamConfiguration.wrappedValue.spammerRoles[guild.id] = nil
-                output.append(":white_check_mark: Successfully reset the spammer role")
-            } else {
-                output.append("The current spammer role is `\(spamConfiguration.wrappedValue.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
-            }
-        } catch {
-            output.append(error, errorText: "Could not update spammer role")
+        if let role = mentions.first {
+            spamConfiguration.wrappedValue.spammerRoles[guild.id] = role
+            output.append(":white_check_mark: Successfully updated the spammer role")
+        } else if input == resetSubcommand {
+            spamConfiguration.wrappedValue.spammerRoles[guild.id] = nil
+            output.append(":white_check_mark: Successfully reset the spammer role")
+        } else {
+            output.append("The current spammer role is `\(spamConfiguration.wrappedValue.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
         }
     }
 }
