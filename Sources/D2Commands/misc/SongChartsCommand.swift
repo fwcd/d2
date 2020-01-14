@@ -16,6 +16,7 @@ public class SongChartsCommand: StringCommand {
 
     @AutoSerializing(filePath: "local/songCharts.json") private var songCharts: [GuildID: GuildSongCharts] = .init()
     private let maxSongs: Int = 300
+    private var trackedGuilds: Set<GuildID> = []
 
     private let queryIntervalSeconds: Int = 60
     
@@ -26,9 +27,16 @@ public class SongChartsCommand: StringCommand {
                     output.append(errorText: "No guild available.")
                     return
                 }
+                guard !self.trackedGuilds.contains(guild.id) else {
+                    output.append(errorText: "Already tracked.")
+                    return
+                }
+                self.trackedGuilds.insert(guild.id)
+
                 if self.songCharts[guild.id] == nil {
                     self.songCharts[guild.id] = GuildSongCharts()
                 }
+                
                 self.queryChartsAndRepeatInBackground(for: guild)
                 output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
             }
