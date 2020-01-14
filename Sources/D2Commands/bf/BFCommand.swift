@@ -1,6 +1,7 @@
 import SwiftDiscord
 import Logging
 import D2Permissions
+import D2Utils
 import Dispatch
 
 fileprivate let log = Logger(label: "BFCommand")
@@ -13,7 +14,7 @@ public class BFCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	private let maxExecutionSeconds: Int
-	private var running = false
+	@Synchronized private var running = false
 	
 	public init(maxExecutionSeconds: Int = 3) {
 		self.maxExecutionSeconds = maxExecutionSeconds
@@ -66,12 +67,10 @@ public class BFCommand: StringCommand {
 				output.append(response)
 			}
 		}
-		
-		let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
 		queue.async(execute: task)
 		
-		DispatchQueue.global(qos: .userInitiated).async {
-			_ = task.wait(timeout: timeout)
+		let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
+		DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: timeout) {
 			interpreter.cancel()
 			self.running = false
 		}
