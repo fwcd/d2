@@ -8,10 +8,10 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
-        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("c591e23c19f92a1e80e2ff9311a60ecee02d31dc")),
+        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("67ee8a5b4e5779f9c6822f76b8e3c5cf99ed5d54")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
-        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0"),
-        .package(url: "https://github.com/IBM-Swift/BlueSocket", .upToNextMinor(from: "1.0.0")),
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
+        .package(url: "https://github.com/IBM-Swift/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0")
     ],
     targets: [

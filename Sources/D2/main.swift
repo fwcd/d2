@@ -12,7 +12,7 @@ func main() throws {
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2ClientHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: args[safely: 1])
 	let token = try DiskJsonSerializer().readJson(as: Token.self, fromFile: "local/discordToken.json").token
-	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [.log(.info)])
+	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [])
 	
 	log.info("Connecting client")
 	client.connect()

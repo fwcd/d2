@@ -18,40 +18,16 @@ public enum RichValue: Addable {
 	case compound([RichValue])
 	
 	public var asText: String? {
-		if case let .text(txt) = self {
-			return txt
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asText }.first
-		} else {
-			return nil
-		}
+		extract { if case let .text(text) = $0 { return text } else { return nil } }
 	}
 	public var asCode: String? {
-		if case .code(let code, language: _) = self {
-			return code
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asCode }.first
-		} else {
-			return nil
-		}
+		extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }
 	}
 	public var asImage: Image? {
-		if case .image(let image) = self {
-			return image
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asImage }.first
-		} else {
-			return nil
-		}
+		extract { if case let .image(image) = $0 { return image } else { return nil } }
 	}
 	public var asGif: AnimatedGif? {
-		if case .gif(let gif) = self {
-			return gif
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asGif }.first
-		} else {
-			return nil
-		}
+		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }
 	}
 	public var values: [RichValue] {
 		switch self {
@@ -59,6 +35,10 @@ public enum RichValue: Addable {
 			case let .compound(values): return values
 			default: return [self]
 		}
+	}
+	
+	private func extract<T>(using extractor: (RichValue) -> T?) -> T? {
+		extractor(self) ?? values.compactMap { $0.extract(using: extractor) }.first
 	}
 	
 	public static func of(values: [RichValue]) -> RichValue {
