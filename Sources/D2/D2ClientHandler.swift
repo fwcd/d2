@@ -78,6 +78,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["bump"] = AnimateCommand<TransformAnimation<RadialTransform<BumpDistortion>>>(description: "Applies a bump distortion effect")
 		registry["pinch"] = AnimateCommand<TransformAnimation<RadialTransform<PinchDistortion>>>(description: "Applies an inverse bump distortion effect")
 		registry["warp"] = AnimateCommand<TransformAnimation<RadialTransform<WarpDistortion>>>(description: "Applies a warp distortion effect")
+		registry["squiggle"] = AnimateCommand<TransformAnimation<SquiggleTransform>>(description: "Applies a 'squiggling' distortion effect")
 		registry["pingpong"] = PingPongCommand()
 		registry["reverse"] = ReverseCommand()
 		registry["togif"] = ToGifCommand()
