@@ -17,6 +17,7 @@ public struct TwirlTransform: ImageTransform {
         let center = pos ?? (imageSize / 2)
         let delta = (destPos - center).asDouble
         let normalizedDist = (delta.magnitude * scale) / Double(imageSize.y)
-        return center + (Mat2<Double>.rotation(by: 2 * Double.pi * (normalizedDist * rotationStrength + rotationBias) * percent) * delta).floored
+        let angle = 2 * Double.pi * (normalizedDist * rotationStrength + rotationBias) * percent
+        return center + (Mat2<Double>.rotation(by: angle) * delta).floored
     }
 }
