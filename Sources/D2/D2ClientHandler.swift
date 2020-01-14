@@ -97,6 +97,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["chord"] = GuitarChordCommand()
 		registry["web"] = WebCommand()
 		registry["stats"] = StatsCommand()
+		registry["songcharts"] = SongChartsCommand()
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()
 		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
