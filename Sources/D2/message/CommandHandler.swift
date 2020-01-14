@@ -41,7 +41,6 @@ class CommandHandler: MessageHandler {
     private let msgParser = DiscordMessageParser()
 	
 	private let operationQueue: OperationQueue
-	private let secondsUntilTypingIndicator: Int = 2
     
     init(
         commandPrefix: String,
@@ -89,17 +88,14 @@ class CommandHandler: MessageHandler {
 					return true
 				}
 				
-				var finalOutput: IndicatingOutput? = nil
-				
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
 					let sinkCommand = pipeSink.command
-					finalOutput = IndicatingOutput(DiscordOutput(client: client, defaultTextChannel: message.channel) { sentMessage, _ in
+					pipeSink.output = DiscordOutput(client: client, defaultTextChannel: message.channel) { sentMessage, _ in
 						if let sent = sentMessage {
 							sinkCommand.onSuccessfullySent(message: sent)
 						}
-					})
-					pipeSink.output = finalOutput!
+					}
 				}
 				
 				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
@@ -111,18 +107,16 @@ class CommandHandler: MessageHandler {
 				
 				operationQueue.addOperation {
 					self.msgParser.parse(pipeSource.args, message: message) { input in
-						self.withTypingIndicator(on: message.channel, while: { !(finalOutput?.used ?? true) }) {
-							// Execute the pipe
-							pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
-							
-							// Add subscriptions
-							let added = pipe
-								.map { (it: PipeComponent) -> Command in it.command }
-								.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscriptionManager.hasSubscription(on: message.channelId, by: cmd) }
-								.map { Subscription(channel: message.channelId, command: $0) }
-							
-							self.subscriptionManager.add(subscriptions: added)
-						}
+						// Execute the pipe
+						pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
+						
+						// Add subscriptions
+						let added = pipe
+							.map { (it: PipeComponent) -> Command in it.command }
+							.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscriptionManager.hasSubscription(on: message.channelId, by: cmd) }
+							.map { Subscription(channel: message.channelId, command: $0) }
+						
+						self.subscriptionManager.add(subscriptions: added)
 					}
 				}
 			}
@@ -169,32 +163,5 @@ class CommandHandler: MessageHandler {
 		
 		guard !(userOnly && isBot) else { return nil }
 		return pipe
-	}
-	
-	private func withTypingIndicator(on textChannel: DiscordTextChannel?, while condition: @escaping () -> Bool, task: @escaping () -> Void) {
-		guard let channel = textChannel else {
-			task()
-			return
-		}
-
-		let queue = DispatchQueue(label: "Command invocation")
-		queue.async(execute: task)
-
-		let timeout = DispatchTime.now() + .seconds(secondsUntilTypingIndicator)
-		DispatchQueue.global(qos: .default).asyncAfter(deadline: timeout) {
-			if condition() {
-				let typingQueue = DispatchQueue(label: "Typing indicator")
-				self.triggerTypingRepeatedly(on: channel, while: condition, queue: typingQueue)
-			}
-		}
-	}
-	
-	private func triggerTypingRepeatedly(on textChannel: DiscordTextChannel, while condition: @escaping () -> Bool, queue: DispatchQueue) {
-		if condition() {
-			textChannel.triggerTyping()
-			queue.asyncAfter(deadline: DispatchTime.now() + .seconds(9)) {
-				self.triggerTypingRepeatedly(on: textChannel, while: condition, queue: queue)
-			}
-		}
 	}
 }

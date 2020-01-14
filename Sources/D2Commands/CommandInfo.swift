@@ -20,6 +20,7 @@ public struct CommandInfo {
     public var userOnly: Bool
     /** The source file in which the command is located. */
     public var sourceFile: String
+    /** Whether the typing indicator should be displayed. */
     
     public init(
         category: CommandCategory,
