@@ -5,6 +5,7 @@ import D2Utils
 fileprivate let log = Logger(label: "AnimatedGifEncoder")
 
 public let gifColorCount = 256
+public let gifNonTransparentColorCount = gifColorCount - 1
 fileprivate let colorChannels = 3
 fileprivate let transparentColorIndex: UInt8 = 0xFF
 fileprivate let colorResolution: UInt8 = 0b111 // Between 0 and 8 (exclusive) -> Will be interpreted as (bits per pixel - 1)
@@ -43,7 +44,7 @@ public struct AnimatedGifEncoder {
 	}
 	
 	public init(quantizingImage image: Image) {
-		self.init(width: UInt16(image.width), height: UInt16(image.height), globalQuantization: OctreeQuantization(fromImage: image, colorCount: gifColorCount))
+		self.init(width: UInt16(image.width), height: UInt16(image.height), globalQuantization: OctreeQuantization(fromImage: image, colorCount: gifNonTransparentColorCount))
 	}
 	
 	// Determines how an AnimatedGIF should

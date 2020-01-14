@@ -15,7 +15,7 @@ public struct AnimatedGif {
     public init(quantizingImage image: Image) {
         width = image.width
         height = image.height
-        globalQuantization = OctreeQuantization(fromImage: image, colorCount: gifColorCount)
+        globalQuantization = OctreeQuantization(fromImage: image, colorCount: gifNonTransparentColorCount)
     }
     
     public struct Frame {
