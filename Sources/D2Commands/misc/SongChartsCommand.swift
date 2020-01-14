@@ -65,11 +65,23 @@ public class SongChartsCommand: StringCommand {
     }
 
     private func queryChartsAndRepeatInBackground(for guild: DiscordGuild) {
-        songCharts[guild.id]?.update { _ in
-            log.info("Querying \(guild.name) for playing songs...")
-            for presence in guild.presences {
-                log.info("Found: \(presence)")
+        songCharts[guild.id]?.update {
+            log.info("Querying \(guild.name) for currently playing songs...")
+            var songsFound = 0
+
+            for (_, presence) in guild.presences {
+                guard let activity = presence.game else { continue }
+                if activity.name == "Spotify" {
+                    $0.incrementPlayCount(for: .init(
+                        title: activity.details,
+                        album: activity.assets?.largeText,
+                        artist: activity.state
+                    ))
+                    songsFound += 1
+                }
             }
+
+            log.info("Found \(songsFound) songs")
         }
 
         let deadline = DispatchTime.now() + .seconds(queryIntervalSeconds)

@@ -2,9 +2,10 @@ struct GuildSongCharts: Codable {
     var playCounts: [Song: Int] = [:]
     
     struct Song: Codable, Hashable, CustomStringConvertible {
-        let title: String
-        let artist: String
-        var description: String { "\(title) - \(artist)" }
+        let title: String?
+        let album: String?
+        let artist: String?
+        var description: String { "\(title ?? "?") by \(artist ?? "?")" }
     }
     
     mutating func keepTop(n: Int, ifSongCountGreaterThan maxSongs: Int) {
