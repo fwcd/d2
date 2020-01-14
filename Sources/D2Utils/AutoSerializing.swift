@@ -1,25 +1,37 @@
+import Logging
+
+fileprivate let log = Logger(label: "AutoSerializing")
+
 /** Wraps a value that is automatically read from/written to a file. */
-public class AutoSerializing<T: Codable & DefaultInitializable> {
+@propertyWrapper
+public class AutoSerializing<T: Codable> {
     private let serializer = DiskJsonSerializer()
     private let filePath: String
-    public private(set) var value: T
-    
-    public init(filePath: String) throws {
-        self.filePath = filePath
-        if let storedValue = try? serializer.readJson(as: T.self, fromFile: filePath) {
-            value = storedValue
-        } else {
-            value = T.init()
-            try writeToDisk()
+    public private(set) var storedValue: T
+    public var wrappedValue: T {
+        get { storedValue }
+        set {
+            storedValue = newValue
+            writeToDisk()
         }
     }
     
-    private func writeToDisk() throws {
-        try serializer.write(value, asJsonToFile: filePath)
+    public init(wrappedValue: T, filePath: String) {
+        self.filePath = filePath
+        if let onDiskValue = try? serializer.readJson(as: T.self, fromFile: filePath) {
+            storedValue = onDiskValue
+        } else {
+            storedValue = wrappedValue
+            writeToDisk()
+        }
     }
     
-    public func update(action: (inout T) throws -> Void) throws {
-        try action(&value)
-        try writeToDisk()
+    private func writeToDisk() {
+        do {
+            log.info("Auto-serializing to \(filePath)")
+            try serializer.write(storedValue, asJsonToFile: filePath)
+        } catch {
+            log.error("Error during auto-serialization: \(error)")
+        }
     }
 }

@@ -26,7 +26,7 @@ struct SpamHandler: MessageHandler {
 
     mutating func handle(message: DiscordMessage, from client: DiscordClient) -> Bool {
         guard isPossiblySpam(message: message) else { return false }
-        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.value.interval))
+        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.wrappedValue.interval))
         
         guard let guild = client.guildForChannel(message.channelId) else { return false }
         let author = message.author.id
@@ -49,15 +49,15 @@ struct SpamHandler: MessageHandler {
     }
     
     private func isSpamming(user: UserID) -> Bool {
-        return lastSpamMessages.count(forWhich: { $0.author.id == user }) > config.value.maxSpamMessagesPerInterval
+        return lastSpamMessages.count(forWhich: { $0.author.id == user }) > config.wrappedValue.maxSpamMessagesPerInterval
     }
     
     private func penalize(spammer user: UserID, on guild: DiscordGuild, client: DiscordClient) {
         guard let member = guild.members[user] else { return }
 
-        if let role = config.value.spammerRoles[guild.id] {
+        if let role = config.wrappedValue.spammerRoles[guild.id] {
             add(role: role, to: user, on: guild, client: client) {
-                if self.config.value.removeOtherRolesFromSpammer {
+                if self.config.wrappedValue.removeOtherRolesFromSpammer {
                     self.remove(roles: member.roleIds, from: user, on: guild, client: client)
                 }
             }

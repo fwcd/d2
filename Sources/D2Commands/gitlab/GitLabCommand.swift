@@ -14,13 +14,13 @@ public class GitLabCommand: StringCommand {
         longDescription: "Fetches CI/CD pipeline information and more from a GitLab server",
         requiredPermissionLevel: .vip
     )
-    private let gitLabConfig = try! AutoSerializing<GitLabConfiguration>(filePath: "local/gitLabConfig.json")
+    @AutoSerializing(filePath: "local/gitLabConfig.json") private var gitLabConfig: GitLabConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) throws -> Void] = [:]
     
     public init() {
         subcommands = [
             "set-server": { [unowned self] arg, output in
-                try self.gitLabConfig.update { $0.serverHost = arg }
+                self.gitLabConfig.serverHost = arg
                 output.append(":white_check_mark: Updated server to `\(arg)`")
             },
             "set-project": { [unowned self] arg, output in
@@ -28,11 +28,11 @@ public class GitLabCommand: StringCommand {
                     output.append(errorText: "Project ID should be an integer: `\(arg)`")
                     return
                 }
-                try self.gitLabConfig.update { $0.projectId = projectId }
+                self.gitLabConfig.projectId = projectId
                 output.append(":white_check_mark: Updated project to `\(arg)`")
             },
-            "get-server": { [unowned self] _, output in output.append("The current server is `\(self.gitLabConfig.value.serverHost ?? "none")`") },
-            "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.value.projectId.map { "\($0)" } ?? "none")`") },
+            "get-server": { [unowned self] _, output in output.append("The current server is `\(self.gitLabConfig.serverHost ?? "none")`") },
+            "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.projectId.map { "\($0)" } ?? "none")`") },
             "pipelines": { [unowned self] _, output in
                 try self.fetchPipelines() {
                     switch $0 {
@@ -126,12 +126,12 @@ public class GitLabCommand: StringCommand {
     }
     
     private func remoteGitLab() throws -> RemoteGitLab {
-        guard let serverHost = gitLabConfig.value.serverHost else { throw GitLabConfigurationError.unspecified("server host") }
+        guard let serverHost = gitLabConfig.serverHost else { throw GitLabConfigurationError.unspecified("server host") }
         return RemoteGitLab(host: serverHost)
     }
     
     private func projectId() throws -> Int {
-        guard let projectId = gitLabConfig.value.projectId else { throw GitLabConfigurationError.unspecified("project id") }
+        guard let projectId = gitLabConfig.projectId else { throw GitLabConfigurationError.unspecified("project id") }
         return projectId
     }
     

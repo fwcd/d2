@@ -15,7 +15,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		self.initialPresence = initialPresence
 		
 		let registry = CommandRegistry()
-		let spamConfiguration = try AutoSerializing<SpamConfiguration>(filePath: "local/spamConfig.json")
+		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
 		let subscriptionManager = SubscriptionManager()
 
