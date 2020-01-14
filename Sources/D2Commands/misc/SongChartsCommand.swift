@@ -26,7 +26,9 @@ public class SongChartsCommand: StringCommand {
                     output.append(errorText: "No guild available.")
                     return
                 }
-                self.songCharts[guild.id] = GuildSongCharts()
+                if self.songCharts[guild.id] == nil {
+                    self.songCharts[guild.id] = GuildSongCharts()
+                }
                 self.queryChartsAndRepeatInBackground(for: guild)
                 output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
             }
