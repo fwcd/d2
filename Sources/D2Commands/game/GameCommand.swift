@@ -171,7 +171,7 @@ public class GameCommand<G: Game>: StringCommand {
 			
 			if actionResult.cancelsMatch {
 				matches[channelID] = nil
-				output.append(errorText: "Cancelled match: \(state.playersDescription)")
+				output.append("Cancelled match: \(state.playersDescription)")
 				return .cancelSubscription
 			}
 			
