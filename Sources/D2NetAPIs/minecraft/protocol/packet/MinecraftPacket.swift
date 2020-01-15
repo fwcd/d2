@@ -10,7 +10,7 @@ public struct MinecraftPacket {
     }
     
     public init?(data: Data) {
-        guard let (length, lenByteCount) = MinecraftVarInt.from(data) else { return nil }
+        guard let (_, lenByteCount) = MinecraftVarInt.from(data) else { return nil }
         let restData = data.advanced(by: lenByteCount)
         guard let (id, idByteCount) = MinecraftVarInt.from(restData) else { return nil }
         self.id = id.value

@@ -48,7 +48,7 @@ public struct UnivISQuery {
 				return
 			}
 			
-			log.debug("Got \(String(data: data, encoding: .utf8))")
+			log.debug("Got \(String(data: data, encoding: .utf8) ?? "nil")")
 			
 			let delegate = UnivISXMLParserDelegate(then: then)
 			let parser = XMLParser(data: data)
