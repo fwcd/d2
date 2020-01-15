@@ -39,4 +39,4 @@ RUN ./install-all
 WORKDIR /d2
 RUN swift build -c release
 
-CMD ["./.build/debug/D2"]
+CMD ["./.build/release/D2"]
