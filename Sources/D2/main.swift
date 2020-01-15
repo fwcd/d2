@@ -5,14 +5,13 @@ import SwiftDiscord
 import D2Commands
 import D2Utils
 
-func main(rawLogLevel: String) throws {
+func main(rawLogLevel: String, initialPresence: String?) throws {
 	let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
 	LoggingSystem.bootstrap { D2LogHandler(label: $0, logLevel: logLevel) }
 
 	let log = Logger(label: "main")
-	let args = CommandLine.arguments
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
-	let handler = try D2ClientHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: args[safely: 1])
+	let handler = try D2ClientHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
 	let token = try DiskJsonSerializer().readJson(as: Token.self, fromFile: "local/discordToken.json").token
 	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [])
 	
@@ -23,5 +22,6 @@ func main(rawLogLevel: String) throws {
 
 command(
 	Option("level", default: "info", flag: "l", description: "The global logging level"),
+	Option("initialPresence", default: nil, description: "The initial activity message"),
 	main
 ).run()
