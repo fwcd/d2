@@ -1,11 +1,12 @@
+import Commander
 import Foundation
 import Logging
 import SwiftDiscord
 import D2Commands
 import D2Utils
 
-func main() throws {
-	let logLevel = CommandLine.arguments[safely: 1].flatMap(Logger.Level.init(rawValue:)) ?? .info
+func main(rawLogLevel: String) throws {
+	let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
 	LoggingSystem.bootstrap { D2LogHandler(label: $0, logLevel: logLevel) }
 
 	let log = Logger(label: "main")
@@ -20,4 +21,7 @@ func main() throws {
 	RunLoop.current.run()
 }
 
-try main()
+command(
+	Option("level", default: "info", flag: "l", description: "The global logging level"),
+	main
+).run()
