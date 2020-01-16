@@ -1,12 +1,18 @@
 import Foundation
+import Logging
 import SwiftDiscord
 import D2Permissions
 import D2NetAPIs
 
+fileprivate let log = Logger(label: "IntegralCalculatorCommand")
+
 public class IntegralCalculatorCommand: StringCommand {
-	public let description = "Solves an integral online and presents a step-by-step solution"
-	public let sourceFile: String = #file
-	public let requiredPermissionLevel = PermissionLevel.basic
+	public let info = CommandInfo(
+		category: .math,
+		shortDescription: "Solves an integral",
+		longDescription: "Solves an integral online and presents a step-by-step solution",
+		requiredPermissionLevel: .basic
+	)
 	private let parser = InfixExpressionParser()
 	private let latexRenderer: LatexRenderer?
 	
@@ -15,7 +21,7 @@ public class IntegralCalculatorCommand: StringCommand {
 			latexRenderer = try LatexRenderer()
 		} catch {
 			latexRenderer = nil
-			print("Could not initialize latex renderer for WebIntegralCalculatorCommand: \(error)")
+			log.error("Could not initialize latex renderer for IntegralCalculatorCommand: \(error)")
 		}
 	}
 	
@@ -23,19 +29,18 @@ public class IntegralCalculatorCommand: StringCommand {
 		do {
 			let parsedInput = try parser.parse(input)
 			guard let integrationVariable = parsedInput.occurringVariables.first else {
-				output.append("Ambiguous integral due to multiple integration variables")
+				output.append(errorText: "Ambiguous integral due to multiple integration variables")
 				return
 			}
 			
-			try IntegralCalculatorQuery(params: IntegralQueryParams(
+			IntegralCalculatorQuery(params: IntegralQueryParams(
 				expression: parsedInput.infixICNotation,
 				expressionCanonical: parsedInput.prefixFunctionNotation,
 				intVar: integrationVariable
-			)).start {
+			)).perform {
 				guard case let .success(result) = $0 else {
-					if case let .failure(err) = $0 {
-						print(err)
-						output.append("An asynchronous error occurred while querying the integral calculator: \(err)")
+					if case let .failure(error) = $0 {
+						output.append(error, errorText: "An asynchronous error occurred while querying the integral calculator: \(error)")
 					}
 					return
 				}
@@ -44,16 +49,12 @@ public class IntegralCalculatorCommand: StringCommand {
 					let stepsLatex = result.steps.joined(separator: "\\\\")
 					renderLatexPNG(with: renderer, from: stepsLatex, to: output)
 				} else {
-					print("Warning: No LaTeX renderer present in WebIntegralCalculatorCommand")
+					log.warning("Warning: No LaTeX renderer present in WebIntegralCalculatorCommand")
 					output.append(result.steps.joined(separator: "\n"))
 				}
 			}
-		} catch WebApiError.apiError(let msg) {
-			print(msg)
-			output.append("A web API error occurred: \(msg)")
 		} catch {
-			print(error)
-			output.append("An error occurred while parsing or performing the query")
+			output.append(error, errorText: "An error occurred while parsing or performing the query")
 		}
 	}
 }
