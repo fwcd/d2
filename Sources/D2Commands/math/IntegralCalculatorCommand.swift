@@ -1,9 +1,9 @@
 import Foundation
 import SwiftDiscord
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
 
-public class WebIntegralCalculatorCommand: StringCommand {
+public class IntegralCalculatorCommand: StringCommand {
 	public let description = "Solves an integral online and presents a step-by-step solution"
 	public let sourceFile: String = #file
 	public let requiredPermissionLevel = PermissionLevel.basic
