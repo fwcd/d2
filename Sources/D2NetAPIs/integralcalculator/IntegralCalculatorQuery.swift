@@ -6,13 +6,11 @@ import SwiftSoup
 fileprivate let log = Logger(label: "IntegralCalculatorQuery")
 fileprivate let pageVersionPattern = try! Regex(from: "\\bpageVersion\\s*=\\s*(\\d+)\\b")
 
-public struct IntegralCalculatorQuery {
-	private let params: IntegralQueryParams
-	private let manual: Bool
+public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
+	private let params: P
 	
-	public init(params: IntegralQueryParams, manual: Bool = false) {
+	public init(params: P) {
 		self.params = params
-		self.manual = manual
 	}
 	
 	public func perform(then: @escaping (Result<IntegralQueryOutput, Error>) -> Void) {
@@ -26,7 +24,7 @@ public struct IntegralCalculatorQuery {
 						try HTTPRequest(
 							scheme: "https",
 							host: "www.integral-calculator.com",
-							path: self.manual ? "/manualint.php" : "/int.php",
+							path: P.endpoint,
 							method: "POST",
 							query: [
 								"q": params,

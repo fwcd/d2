@@ -33,7 +33,7 @@ public class IntegralCalculatorCommand: StringCommand {
 				return
 			}
 			
-			IntegralCalculatorQuery(params: IntegralQueryParams(
+			IntegralCalculatorQuery(params: DefaultIntegralQueryParams(
 				expression: parsedInput.infixICNotation,
 				expressionCanonical: parsedInput.prefixFunctionNotation,
 				intVar: integrationVariable
