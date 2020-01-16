@@ -14,14 +14,21 @@ public struct HTTPRequest {
 		query: [String: String] = [:],
 		headers: [String: String] = [:]
 	) throws {
-		let queryString = query.urlQueryEncoded
+		let isPost = method == "POST"
+
 		var components = URLComponents()
 		components.scheme = scheme
 		components.host = host
 		components.path = path
+		components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value) }
 		
-		if method == "GET" {
-			components.percentEncodedQuery = queryString
+		let body: Data
+		
+		if isPost {
+			body = components.percentEncodedQuery?.data(using: .utf8) ?? .init()
+			components.queryItems = []
+		} else {
+			body = .init()
 		}
 		
 		guard let url = components.url else { throw NetworkError.couldNotCreateURL(components) }
@@ -29,9 +36,10 @@ public struct HTTPRequest {
 		request = URLRequest(url: url)
 		request.httpMethod = method
 		
-		if method == "POST" {
-			request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-			request.httpBody = queryString.data(using: .utf8)
+		if isPost {
+			request.setValue("application/x-www-form-urlencoded;charset=UTF-8", forHTTPHeaderField: "Content-Type")
+			request.setValue("\(body.count)", forHTTPHeaderField: "Content-Length")
+			request.httpBody = body
 		}
 		
 		for (key, value) in headers {

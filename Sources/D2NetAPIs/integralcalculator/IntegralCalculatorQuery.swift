@@ -10,24 +10,26 @@ public struct IntegralCalculatorQuery {
 	private let params: IntegralQueryParams
 	private let manual: Bool
 	
-	public init(params: IntegralQueryParams, manual: Bool = true) {
+	public init(params: IntegralQueryParams, manual: Bool = false) {
 		self.params = params
 		self.manual = manual
 	}
 	
 	public func perform(then: @escaping (Result<IntegralQueryOutput, Error>) -> Void) {
-		log.info("Querying integral calculator...")
 		fetchPageVersion {
 			switch $0 {
 				case let .success(pageVersion):
 					do {
+						let params = String(data: try JSONEncoder().encode(self.params), encoding: .utf8) ?? ""
+						log.info("Querying integral calculator v\(pageVersion) with params \(params)...")
+
 						try HTTPRequest(
 							scheme: "https",
 							host: "www.integral-calculator.com",
 							path: self.manual ? "/manualint.php" : "/int.php",
 							method: "POST",
 							query: [
-								"q": String(data: try JSONEncoder().encode(self.params), encoding: .utf8) ?? "",
+								"q": params,
 								"v": pageVersion
 							]
 						).fetchUTF8Async {
