@@ -34,7 +34,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .gitlab: return ":fox: GitLab"
             case .haskell: return ":umbrella2: Haskell"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
-            case .math: return ":bar_chart: Plotting and calculations"
+            case .math: return ":bar_chart: Mathematics"
             case .minecraft: return ":evergreen_tree: Minecraft"
             case .misc: return ":art: Miscellaneous commands"
             case .ml: return ":bulb: Machine learning"
