@@ -11,7 +11,7 @@ struct LzwDecoder {
         table = LzwDecoderTable(colorCount: colorCount)
     }
     
-    public mutating func beginDecoding(in data: inout BitData) throws {
+    public mutating func beginDecoding(from data: inout BitData) throws {
         // Read clear code
         var discarded = [Int]()
         try decodeAndAppend(from: &data, into: &discarded)

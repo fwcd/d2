@@ -18,6 +18,7 @@ public struct BitData {
         }
     }
     private var remainingBitsInByte: UInt { 8 - bitIndexFromRight }
+    public var atHead: BitData { BitData(from: data) }
 
     public init(from data: Data = Data([0])) {
         self.data = data

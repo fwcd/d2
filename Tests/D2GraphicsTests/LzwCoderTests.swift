@@ -2,9 +2,10 @@ import XCTest
 import D2Utils
 @testable import D2Graphics
 
-final class LzwEncoderTests: XCTestCase {
+final class LzwCoderTests: XCTestCase {
 	static var allTests = [
-		("testLzwEncoder", testLzwEncoder)
+		("testLzwEncoder", testLzwEncoder),
+		("testLzwDecoder", testLzwDecoder)
 	]
 	// Using the sample image from
 	// http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
@@ -71,5 +72,27 @@ final class LzwEncoderTests: XCTestCase {
 	private func encodeNext(with encoder: inout LzwEncoder, into data: inout BitData, _ i: inout Int) {
 		encoder.encodeAndAppend(index: indices[i], into: &data)
 		i += 1
+	}
+	
+	func testLzwDecoder() throws {
+		var encoder = LzwEncoder(colorCount: 4)
+		var encoded = BitData()
+		
+		encoder.beginEncoding(in: &encoded)
+		for index in indices {
+			encoder.encodeAndAppend(index: index, into: &encoded)
+		}
+		encoder.finishEncoding(in: &encoded)
+		
+		encoded = encoded.atHead
+		var decoder = LzwDecoder(colorCount: 4)
+		var decoded = [Int]()
+		
+		try decoder.beginDecoding(from: &encoded)
+		for _ in 0..<indices.count {
+			try decoder.decodeAndAppend(from: &encoded, into: &decoded)
+		}
+		
+		XCTAssertEqual(decoded, indices)
 	}
 }
