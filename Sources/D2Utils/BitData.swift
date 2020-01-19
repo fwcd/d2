@@ -41,9 +41,7 @@ public struct BitData {
         while bitCount > 0 {
             let c = min(bitCount, remainingBitsInByte)
             let i = initialBitCount - bitCount
-            print("@\(i)")
             value |= readFromCurrentByte(bitCount: c) << i
-            print("done@\(i)")
             bitCount -= c
         }
         return value

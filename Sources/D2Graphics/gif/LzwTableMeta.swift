@@ -3,6 +3,8 @@ struct LzwTableMeta {
 	public let minCodeSize: Int
 	public let clearCode: Int
 	public let endOfInfoCode: Int
+	
+	public private(set) var codeSize: Int
     
     public init(colorCount: Int) {
         self.colorCount = colorCount
@@ -17,5 +19,18 @@ struct LzwTableMeta {
         
         clearCode = 1 << minCodeSize
         endOfInfoCode = clearCode + 1
+		codeSize = -1 // set in reset()
+
+		resetCodeSize()
     }
+	
+	mutating func updateCodeSize(count: Int) {
+		if (count - 1) == (1 << codeSize) {
+			codeSize += 1
+		}
+	}
+	
+	mutating func resetCodeSize() {
+		codeSize = minCodeSize + 1
+	}
 }

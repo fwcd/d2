@@ -201,26 +201,28 @@ public struct AnimatedGifEncoder {
 		// Convert the ARGB-encoded image first to color
 		// indices and then to LZW-compressed codes
 		var encoder = LzwEncoder(colorCount: gifColorCount)
+		var lzwEncoded = BitData()
 		
 		log.debug("LZW-encoding the frame...")
+		encoder.beginEncoding(in: &lzwEncoded)
 		// Iterate all pixels as ARGB values and encode them
 		for y in 0..<height {
 			for x in 0..<width {
-				encoder.encodeAndAppend(index: quantize(color: frame[y, x], with: quantization))
+				encoder.encodeAndAppend(index: quantize(color: frame[y, x], with: quantization), into: &lzwEncoded)
 			}
 		}
-		encoder.finishEncoding()
+		encoder.finishEncoding(in: &lzwEncoded)
         
 		log.debug("Appending the encoded frame, minCodeSize: \(encoder.minCodeSize)...")
 		append(byte: UInt8(encoder.minCodeSize))
 		
-		let lzwEncoded = encoder.encoded
 		var byteIndex = 0
-		while byteIndex < lzwEncoded.count {
-			let subBlockByteCount = min(0xFF, lzwEncoded.count - byteIndex)
+		let lzwData = lzwEncoded.data
+		while byteIndex < lzwData.count {
+			let subBlockByteCount = min(0xFF, lzwData.count - byteIndex)
 			append(byte: UInt8(subBlockByteCount))
 			for _ in 0..<subBlockByteCount {
-				append(byte: lzwEncoded[byteIndex])
+				append(byte: lzwData[byteIndex])
 				byteIndex += 1
 			}
 		}

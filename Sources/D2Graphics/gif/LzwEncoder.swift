@@ -7,25 +7,25 @@ struct LzwEncoder {
 	private(set) var table: LzwEncoderTable
 	private var indexBuffer: [Int] = []
 	
-	public private(set) var encoded: [UInt8] = [0] // The encoded bytes
-	private var bitIndexFromRight: Int = 0 // ...inside the current byte
-	
 	public var minCodeSize: Int { return table.meta.minCodeSize }
 	
 	public init(colorCount: Int) {
 		table = LzwEncoderTable(colorCount: colorCount)
-        write(code: table.meta.clearCode)
 	}
 	
-	public mutating func encodeAndAppend(index: Int) {
+	public mutating func beginEncoding(in data: inout BitData) {
+        write(code: table.meta.clearCode, into: &data)
+	}
+	
+	public mutating func encodeAndAppend(index: Int, into data: inout BitData) {
 		// The main LZW encoding algorithm
 		let extendedBuffer = indexBuffer + [index]
 		if table.contains(indices: extendedBuffer) {
 			indexBuffer = extendedBuffer
 		} else {
-			write(code: table[indexBuffer]!)
+			write(code: table[indexBuffer]!, into: &data)
 			if table.count >= maxCodeTableCount {
-				write(code: table.meta.clearCode)
+				write(code: table.meta.clearCode, into: &data)
 				table.reset()
 			} else {
 				table.append(indices: extendedBuffer)
@@ -34,27 +34,12 @@ struct LzwEncoder {
 		}
 	}
     
-    public mutating func finishEncoding() {
-        write(code: table[indexBuffer]!)
-        write(code: table.meta.endOfInfoCode)
+    public mutating func finishEncoding(in data: inout BitData) {
+        write(code: table[indexBuffer]!, into: &data)
+        write(code: table.meta.endOfInfoCode, into: &data)
     }
 	
-	private mutating func write(code: Int) {
-		let unsignedCode = UInt(code)
-		for i in 0..<table.codeSize {
-			append(bit: UInt8((unsignedCode >> i) & 1))
-		}
-	}
-	
-	private mutating func append(bit: UInt8) {
-		let byteIndex = encoded.count - 1
-		let oldByte = encoded[byteIndex]
-		encoded[byteIndex] = oldByte | (bit << bitIndexFromRight)
-		bitIndexFromRight += 1
-		
-		if bitIndexFromRight >= 8 {
-			encoded.append(0)
-			bitIndexFromRight = 0
-		}
+	private func write(code: Int, into data: inout BitData) {
+		data.write(UInt(code), bitCount: UInt(table.meta.codeSize))
 	}
 }

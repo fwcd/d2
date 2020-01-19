@@ -4,7 +4,7 @@ import D2Utils
 struct LzwDecoderTable {
     // Stores the mappings from single codes to multiple indices
     private(set) var entries: [[Int]] = []
-	public let meta: LzwTableMeta
+	public var meta: LzwTableMeta
     
     public init(colorCount: Int) {
         meta = LzwTableMeta(colorCount: colorCount)
@@ -20,5 +20,6 @@ struct LzwDecoderTable {
     
     public mutating func reset() {
         entries = []
+        meta.resetCodeSize()
     }
 }
