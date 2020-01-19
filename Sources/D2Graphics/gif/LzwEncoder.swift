@@ -7,14 +7,14 @@ struct LzwEncoder {
 	private(set) var table: LzwEncoderTable
 	private var indexBuffer: [Int] = []
 	
-	public private(set) var bytes: [UInt8] = [0] // The output bytes
+	public private(set) var encoded: [UInt8] = [0] // The encoded bytes
 	private var bitIndexFromRight: Int = 0 // ...inside the current byte
 	
-	public var minCodeSize: Int { return table.minCodeSize }
+	public var minCodeSize: Int { return table.meta.minCodeSize }
 	
 	public init(colorCount: Int) {
 		table = LzwEncoderTable(colorCount: colorCount)
-        write(code: table.clearCode)
+        write(code: table.meta.clearCode)
 	}
 	
 	public mutating func encodeAndAppend(index: Int) {
@@ -25,7 +25,7 @@ struct LzwEncoder {
 		} else {
 			write(code: table[indexBuffer]!)
 			if table.count >= maxCodeTableCount {
-				write(code: table.clearCode)
+				write(code: table.meta.clearCode)
 				table.reset()
 			} else {
 				table.append(indices: extendedBuffer)
@@ -36,7 +36,7 @@ struct LzwEncoder {
     
     public mutating func finishEncoding() {
         write(code: table[indexBuffer]!)
-        write(code: table.endOfInfoCode)
+        write(code: table.meta.endOfInfoCode)
     }
 	
 	private mutating func write(code: Int) {
@@ -47,13 +47,13 @@ struct LzwEncoder {
 	}
 	
 	private mutating func append(bit: UInt8) {
-		let byteIndex = bytes.count - 1
-		let oldByte = bytes[byteIndex]
-		bytes[byteIndex] = oldByte | (bit << bitIndexFromRight)
+		let byteIndex = encoded.count - 1
+		let oldByte = encoded[byteIndex]
+		encoded[byteIndex] = oldByte | (bit << bitIndexFromRight)
 		bitIndexFromRight += 1
 		
 		if bitIndexFromRight >= 8 {
-			bytes.append(0)
+			encoded.append(0)
 			bitIndexFromRight = 0
 		}
 	}

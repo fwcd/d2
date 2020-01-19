@@ -1,29 +1,14 @@
 // Based on http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
 
 struct LzwEncoderTable {
-	private let colorCount: Int
-	// Stores the mapping from multiple indices to a single code
+	// Stores the mappings from multiple indices to a single code
 	private var entries: [[Int]: Int] = [:]
 	private(set) var codeSize: Int
 	var count: Int
-	
-	public let minCodeSize: Int
-	public let clearCode: Int
-	public let endOfInfoCode: Int
+	public let meta: LzwTableMeta
 	
 	public init(colorCount: Int) {
-		self.colorCount = colorCount
-		
-		// Find the smallest power of two that is
-		// greater than or equal to the color count
-		var size = 2
-		while (1 << size) < colorCount {
-			size += 1
-		}
-		minCodeSize = size
-        
-        clearCode = 1 << minCodeSize
-        endOfInfoCode = clearCode + 1
+		meta = LzwTableMeta(colorCount: colorCount)
 		count = -1 // Will be set in reset()
 		codeSize = -1 // Will be set in reset()
 		
@@ -59,7 +44,7 @@ struct LzwEncoderTable {
 	
 	public mutating func reset() {
 		entries = [:]
-		codeSize = minCodeSize + 1
-		count = (1 << minCodeSize) + 2
+		codeSize = meta.minCodeSize + 1
+		count = (1 << meta.minCodeSize) + 2
 	}
 }
