@@ -14,7 +14,7 @@ final class BitDataTests: XCTestCase {
         sink1.write(0b0, bitCount: 1)
         XCTAssertEqual([UInt8](sink1.data), [0b011])
         sink1.write(0b0101, bitCount: 4)
-        XCTAssertEqual([UInt8](sink1.data), [0b01010011])
+        XCTAssertEqual([UInt8](sink1.data), [0b0101011])
         sink1.write(0b101, bitCount: 3)
         XCTAssertEqual([UInt8](sink1.data), [0b10101011, 0b10])
         

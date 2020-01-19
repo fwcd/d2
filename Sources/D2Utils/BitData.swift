@@ -28,7 +28,8 @@ public struct BitData {
         var bitCount = initialBitCount
         while bitCount > 0 {
             let c = min(bitCount, remainingBitsInByte)
-            writeIntoCurrentByte(value, bitCount: c)
+            let i = initialBitCount - bitCount
+            writeIntoCurrentByte(value >> i, bitCount: c)
             bitCount -= c
         }
     }
@@ -40,26 +41,35 @@ public struct BitData {
         while bitCount > 0 {
             let c = min(bitCount, remainingBitsInByte)
             let i = initialBitCount - bitCount
+            print("@\(i)")
             value |= readFromCurrentByte(bitCount: c) << i
+            print("done@\(i)")
             bitCount -= c
         }
         return value
     }
     
     private mutating func writeIntoCurrentByte(_ value: UInt, bitCount: UInt) {
-        assert(bitCount <= remainingBitsInByte)
         let oldByte = data[byteIndex]
-        let mask: UInt = (1 << bitCount) - 1
-        data[byteIndex] = oldByte | UInt8((value & mask) << (bitInByteFromRight + bitCount - 1))
+        let mask: UInt = maskOfOnes(bitCount: UInt(bitCount))
+        data[byteIndex] = oldByte | UInt8((value & mask) << bitIndexFromRight)
         bitIndexFromRight += bitCount
     }
     
     private mutating func readFromCurrentByte(bitCount: UInt) -> UInt {
-        assert(bitCount <= remainingBitsInByte)
         let byte = data[byteIndex]
-        let mask: UInt8 = (1 << bitCount) - 1
-        let value = (byte >> bitCount) & mask
+        let mask: UInt = maskOfOnes(bitCount: bitCount)
+        let value = UInt(byte >> bitIndexFromRight) & mask
         bitIndexFromRight += bitCount
-        return UInt(value)
+        return value
+    }
+    
+    private func maskOfOnes<U>(bitCount: U) -> U where U: FixedWidthInteger {
+        assert(bitCount <= U.bitWidth)
+        if bitCount == U.bitWidth {
+            return U.max
+        } else {
+            return (1 << bitCount) - 1
+        }
     }
 }
