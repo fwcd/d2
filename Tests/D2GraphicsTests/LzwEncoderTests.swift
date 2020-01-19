@@ -32,36 +32,36 @@ final class LzwEncoderTests: XCTestCase {
 		// for details on this example
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 6)
-		XCTAssertEqual(encoder.bytes, [0b00000100]) // #4
+		XCTAssertEqual(encoder.encoded, [0b00000100]) // #4
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 7)
-		XCTAssertEqual(encoder.bytes, [0b00001100]) // #4 #1
+		XCTAssertEqual(encoder.encoded, [0b00001100]) // #4 #1
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 7)
-		XCTAssertEqual(encoder.bytes, [0b00001100]) // #4 #1
+		XCTAssertEqual(encoder.encoded, [0b00001100]) // #4 #1
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 8)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00000001]) // #4 #1 #6
+		XCTAssertEqual(encoder.encoded, [0b10001100, 0b00000001]) // #4 #1 #6
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 8)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00000001]) // #4 #1 #6
+		XCTAssertEqual(encoder.encoded, [0b10001100, 0b00000001]) // #4 #1 #6
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 9)
 		XCTAssertEqual(encoder.table.codeSize, 4)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00001101]) // #4 #1 #6 #6
+		XCTAssertEqual(encoder.encoded, [0b10001100, 0b00001101]) // #4 #1 #6 #6
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 10)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
+		XCTAssertEqual(encoder.encoded, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 		
 		encodeNext(&encoder, &i)
 		XCTAssertEqual(encoder.table.count, 10)
-		XCTAssertEqual(encoder.bytes, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
+		XCTAssertEqual(encoder.encoded, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 	}
 	
 	private func encodeNext(_ encoder: inout LzwEncoder, _ i: inout Int) {
