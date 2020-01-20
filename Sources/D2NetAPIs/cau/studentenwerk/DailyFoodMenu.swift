@@ -2,6 +2,8 @@ import D2Utils
 import Foundation
 import SwiftSoup
 
+fileprivate let mealPropertyIconPattern = try! Regex(from: "iconProp_(\\w+)\\.")
+
 public class DailyFoodMenu {
     private let request: HTTPRequest
 
@@ -37,7 +39,7 @@ public class DailyFoodMenu {
                     guard let price = try $0.getElementsByTag("td").last() else { return nil }
                     return Meal(
                         title: try title.text(),
-                        properties: try properties.text(),
+                        properties: try properties.getElementsByTag("img").array().compactMap { self.parseMealProperty(iconSrc: try $0.attr("src")) },
                         price: try price.text()
                     )
                 }
@@ -45,6 +47,19 @@ public class DailyFoodMenu {
                 then(.success(meals))
             } catch {
                 then(.failure(error))
+            }
+        }
+    }
+    
+    private func parseMealProperty(iconSrc: String) -> MealProperty? {
+        mealPropertyIconPattern.firstGroups(in: iconSrc).flatMap {
+            switch $0[1] {
+                case "g": return .chicken
+                case "r": return .beef
+                case "s": return .pork
+                case "vegetarisch": return .vegetarian
+                case "vegan": return .vegan
+                default: return nil
             }
         }
     }

@@ -32,11 +32,22 @@ public class MensaCommand: StringCommand {
                 
                 output.append(.embed(DiscordEmbed(
                     title: ":fork_knife_plate: Today's menu for \(canteen)",
-                    fields: meals.map { DiscordEmbed.Field(name: "\($0.title) \($0.properties)", value: $0.price) }
+                    fields: meals.map { DiscordEmbed.Field(name: $0.title, value: "\($0.price) \($0.properties.compactMap(self.emojiOf).joined(separator: " "))") }
                 )))
             }
         } catch {
             output.append(error, errorText: "An error occurred while constructing the request")
+        }
+    }
+    
+    private func emojiOf(mealProperty: MealProperty) -> String? {
+        switch mealProperty {
+            case .beef: return ":cow2:"
+            case .pork: return ":pig:"
+            case .chicken: return ":chicken:"
+            case .vegetarian: return ":corn:"
+            case .vegan: return ":sunflower:"
+            default: return nil
         }
     }
 }
