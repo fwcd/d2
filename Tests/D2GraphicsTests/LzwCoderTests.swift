@@ -31,41 +31,41 @@ final class LzwCoderTests: XCTestCase {
 		
 		// Each code uses 3 bits in the output
 		XCTAssertEqual(encoder.table.meta.codeSize, 3)
-		XCTAssertEqual(encoder.table.count, 6)
+		XCTAssertEqual(encoder.table.meta.count, 6)
 		
 		// See http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html#lzw_bytes
 		// for details on this example
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 6)
+		XCTAssertEqual(encoder.table.meta.count, 6)
 		XCTAssertEqual([UInt8](encoded.data), [0b00000100]) // #4
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 7)
+		XCTAssertEqual(encoder.table.meta.count, 7)
 		XCTAssertEqual([UInt8](encoded.data), [0b00001100]) // #4 #1
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 7)
+		XCTAssertEqual(encoder.table.meta.count, 7)
 		XCTAssertEqual([UInt8](encoded.data), [0b00001100]) // #4 #1
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 8)
+		XCTAssertEqual(encoder.table.meta.count, 8)
 		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00000001]) // #4 #1 #6
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 8)
+		XCTAssertEqual(encoder.table.meta.count, 8)
 		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00000001]) // #4 #1 #6
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 9)
+		XCTAssertEqual(encoder.table.meta.count, 9)
 		XCTAssertEqual(encoder.table.meta.codeSize, 4)
 		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00001101]) // #4 #1 #6 #6
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 10)
+		XCTAssertEqual(encoder.table.meta.count, 10)
 		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
-		XCTAssertEqual(encoder.table.count, 10)
+		XCTAssertEqual(encoder.table.meta.count, 10)
 		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 	}
 	
@@ -85,6 +85,7 @@ final class LzwCoderTests: XCTestCase {
 		encoder.finishEncoding(in: &encoded)
 		
 		encoded = encoded.atHead
+		
 		var decoder = LzwDecoder(colorCount: 4)
 		var decoded = [Int]()
 		

@@ -1,5 +1,8 @@
 // Based on http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
 import D2Utils
+import Logging
+
+fileprivate let log = Logger(label: "LzwDecoder")
 
 struct LzwDecoder {
     private(set) var table: LzwDecoderTable
@@ -17,30 +20,38 @@ struct LzwDecoder {
         try decodeAndAppend(from: &data, into: &discarded)
     }
     
-    public mutating func decodeAndAppend(from data: inout BitData, into decoded: inout [Int]) throws {
+    @discardableResult
+    public mutating func decodeAndAppend(from data: inout BitData, into decoded: inout [Int]) throws -> Bool {
         let code = data.read(bitCount: UInt(table.meta.codeSize))
-        try decodeAndAppend(code: Int(code), into: &decoded)
+        return try decodeAndAppend(code: Int(code), into: &decoded)
     }
     
-    private mutating func decodeAndAppend(code: Int, into decoded: inout [Int]) throws {
-        if let lastCode = lastCode {
-            // The main LZW decoding algorithm
-            if code == table.meta.clearCode {
-                table.reset()
-            } else if let indices = table[code] {
-                guard var nextIndices = table[lastCode] else { throw LzwCodingError.tableTooSmall }
-                guard let k = indices.first else { throw LzwCodingError.decodedIndicesEmpty }
+    private mutating func decodeAndAppend(code: Int, into decoded: inout [Int]) throws -> Bool {
+        // The main LZW decoding algorithm
+        guard code != table.meta.endOfInfoCode else { return false }
+        if code == table.meta.clearCode {
+            table.reset()
+            lastCode = nil
+        } else {
+            if let indices = table[code] {
                 decoded.append(contentsOf: indices)
-                nextIndices.append(k)
+                guard let k = indices.first else { throw LzwCodingError.decodedIndicesEmpty }
+                log.trace("Found code: k = \(k) from \(indices) @ codeSize \(table.meta.codeSize)")
+                if let lastCode = lastCode {
+                    guard let lastIndices = table[lastCode] else { throw LzwCodingError.tableTooSmall }
+                    table.append(indices: lastIndices + [k])
+                }
+            } else if let lastCode = lastCode {
+                guard let lastIndices = table[lastCode] else { throw LzwCodingError.tableTooSmall }
+                guard let k = lastIndices.first else { throw LzwCodingError.decodedIndicesEmpty }
+                log.trace("Did not found code: k = \(k)")
+                let nextIndices = lastIndices + [k]
+                decoded.append(contentsOf: nextIndices)
                 table.append(indices: nextIndices)
-            } else {
-                guard var indices = table[lastCode] else { throw LzwCodingError.tableTooSmall }
-                guard let k = indices.first else { throw LzwCodingError.decodedIndicesEmpty }
-                decoded.append(contentsOf: indices)
-                indices.append(k)
-                table.append(indices: indices)
             }
+            lastCode = code
         }
-        lastCode = code
+        log.trace("Decoded \(code), table: \(table) -> \(decoded)")
+        return true
     }
 }

@@ -1,6 +1,8 @@
 // Based on http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
 import D2Utils
+import Logging
 
+fileprivate let log = Logger(label: "LzwEncoder")
 fileprivate let maxCodeTableCount: Int = 1 << 12
 
 struct LzwEncoder {
@@ -24,7 +26,7 @@ struct LzwEncoder {
 			indexBuffer = extendedBuffer
 		} else {
 			write(code: table[indexBuffer]!, into: &data)
-			if table.count >= maxCodeTableCount {
+			if table.meta.count >= maxCodeTableCount {
 				write(code: table.meta.clearCode, into: &data)
 				table.reset()
 			} else {
@@ -32,6 +34,7 @@ struct LzwEncoder {
 			}
             indexBuffer = [index]
 		}
+		log.trace("Encoded \(index), table: \(table) at code size \(table.meta.codeSize)")
 	}
     
     public mutating func finishEncoding(in data: inout BitData) {

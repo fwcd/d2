@@ -1,16 +1,13 @@
 // Based on http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
 
-struct LzwEncoderTable {
+struct LzwEncoderTable: CustomStringConvertible {
 	// Stores the mappings from multiple indices to a single code
 	private var entries: [[Int]: Int] = [:]
-	private(set) var count: Int
 	public private(set) var meta: LzwTableMeta
+	var description: String { "\(entries)" }
 	
 	public init(colorCount: Int) {
 		meta = LzwTableMeta(colorCount: colorCount)
-		count = -1 // Will be set in reset()
-		
-		reset()
 	}
 	
 	public subscript(indices: [Int]) -> Int? {
@@ -24,9 +21,8 @@ struct LzwEncoderTable {
 	
 	public mutating func append(indices: [Int]) {
 		assert(indices.count > 1)
-		entries[indices] = count
-		count += 1
-		meta.updateCodeSize(count: count)
+		entries[indices] = meta.count
+		meta.incrementCount()
 	}
 	
 	public func contains(indices: [Int]) -> Bool {
@@ -35,7 +31,6 @@ struct LzwEncoderTable {
 	
 	public mutating func reset() {
 		entries = [:]
-		count = (1 << meta.minCodeSize) + 2
-		meta.resetCodeSize()
+		meta.reset()
 	}
 }
