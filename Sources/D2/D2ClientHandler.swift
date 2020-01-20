@@ -62,6 +62,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
+		registry["wikipedia"] = WikipediaCommand()
 		registry["gitlab"] = GitLabCommand()
 		registry["perceptron"] = PerceptronCommand()
 		registry["tictactoe"] = GameCommand<TicTacToeGame>()
