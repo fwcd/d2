@@ -6,22 +6,22 @@ import Foundation
  * from **right (LSB) to left (MSB)** inside a byte.
  */
 public struct BitData {
-    public private(set) var data: Data
+    public private(set) var bytes: [UInt8]
     private var byteIndex: Int = 0
     private var bitIndexFromRight: UInt = 0 { // ...inside the current byte
         didSet {
             if bitIndexFromRight >= 8 {
-                data.append(0)
+                bytes.append(0)
                 byteIndex += 1
                 bitIndexFromRight = 0
             }
         }
     }
     private var remainingBitsInByte: UInt { 8 - bitIndexFromRight }
-    public var atHead: BitData { BitData(from: data) }
+    public var atHead: BitData { BitData(from: bytes) }
 
-    public init(from data: Data = Data([0])) {
-        self.data = data
+    public init(from bytes: [UInt8] = [0]) {
+        self.bytes = bytes
     }
 
     /** Writes the rightmost `bitCount` bits from the value. **/
@@ -49,14 +49,14 @@ public struct BitData {
     }
     
     private mutating func writeIntoCurrentByte(_ value: UInt, bitCount: UInt) {
-        let oldByte = data[byteIndex]
+        let oldByte = bytes[byteIndex]
         let mask: UInt = maskOfOnes(bitCount: UInt(bitCount))
-        data[byteIndex] = oldByte | UInt8((value & mask) << bitIndexFromRight)
+        bytes[byteIndex] = oldByte | UInt8((value & mask) << bitIndexFromRight)
         bitIndexFromRight += bitCount
     }
     
     private mutating func readFromCurrentByte(bitCount: UInt) -> UInt {
-        let byte = data[byteIndex]
+        let byte = bytes[byteIndex]
         let mask: UInt = maskOfOnes(bitCount: bitCount)
         let value = UInt(byte >> bitIndexFromRight) & mask
         bitIndexFromRight += bitCount

@@ -37,36 +37,36 @@ final class LzwCoderTests: XCTestCase {
 		// for details on this example
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 6)
-		XCTAssertEqual([UInt8](encoded.data), [0b00000100]) // #4
+		XCTAssertEqual(encoded.bytes, [0b00000100]) // #4
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 7)
-		XCTAssertEqual([UInt8](encoded.data), [0b00001100]) // #4 #1
+		XCTAssertEqual(encoded.bytes, [0b00001100]) // #4 #1
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 7)
-		XCTAssertEqual([UInt8](encoded.data), [0b00001100]) // #4 #1
+		XCTAssertEqual(encoded.bytes, [0b00001100]) // #4 #1
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 8)
-		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00000001]) // #4 #1 #6
+		XCTAssertEqual(encoded.bytes, [0b10001100, 0b00000001]) // #4 #1 #6
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 8)
-		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00000001]) // #4 #1 #6
+		XCTAssertEqual(encoded.bytes, [0b10001100, 0b00000001]) // #4 #1 #6
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 9)
 		XCTAssertEqual(encoder.table.meta.codeSize, 4)
-		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00001101]) // #4 #1 #6 #6
+		XCTAssertEqual(encoded.bytes, [0b10001100, 0b00001101]) // #4 #1 #6 #6
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 10)
-		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
+		XCTAssertEqual(encoded.bytes, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 		
 		encodeNext(with: &encoder, into: &encoded, &i)
 		XCTAssertEqual(encoder.table.meta.count, 10)
-		XCTAssertEqual([UInt8](encoded.data), [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
+		XCTAssertEqual(encoded.bytes, [0b10001100, 0b00101101, 0b00000000]) // #4 #1 #6 #6 #2
 	}
 	
 	private func encodeNext(with encoder: inout LzwEncoder, into data: inout BitData, _ i: inout Int) {
