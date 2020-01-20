@@ -21,7 +21,7 @@ public class WikipediaCommand: StringCommand {
                     output.append(DiscordEmbed(
                         title: page.displayTitle ?? page.title ?? "No title",
                         description: (page.extract?.prefix(1000)).map { String($0) },
-                        image: (page.thumbnail?.source).flatMap { URL(string: $0) }.map { DiscordEmbed.Image(url: $0) },
+                        thumbnail: (page.thumbnail?.source).flatMap { URL(string: $0) }.map { DiscordEmbed.Thumbnail(url: $0) },
                         footer: page.description.map { DiscordEmbed.Footer(text: $0) }
                     ))
                 case .failure(let error):
