@@ -3,7 +3,7 @@ fileprivate let fractionPattern = try! Regex(from: "(-?\\d+)\\s*/\\s*(-?\\d+)")
 
 public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, ExpressibleByIntegerLiteral, Hashable, Comparable, CustomStringConvertible {
     public var numerator: Int
-    public var denominator: Int // Always positive
+    public var denominator: Int
 
     public var description: String { denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)" }
     public var asDouble: Double { Double(numerator) / Double(denominator) }
@@ -90,6 +90,10 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
         }
     }
     
+    public func signum() -> Int {
+        numerator.signum() * denominator.signum()
+    }
+    
     public mutating func negate() {
         numerator.negate()
         denominator.negate()
@@ -123,7 +127,7 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     private mutating func normalizeSign() {
-        let sign = numerator.signum() * denominator.signum()
+        let sign = signum()
         numerator = sign * abs(numerator)
         denominator = abs(denominator)
     }

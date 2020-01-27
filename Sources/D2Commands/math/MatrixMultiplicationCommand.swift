@@ -69,8 +69,10 @@ public class MatrixMultiplicationCommand: StringCommand {
     }
     
     private func latexFraction(of rational: Rational) -> String {
-        let reduced = rational.reduced()
-        return reduced.denominator == 1 ? String(reduced.numerator) : "\\frac{\(reduced.numerator)}{\(reduced.denominator)}"
+        let sign = rational.signum()
+        let absReduced = abs(rational.reduced())
+        let frac = absReduced.denominator == 1 ? String(absReduced.numerator) : "\\frac{\(absReduced.numerator)}{\(absReduced.denominator)}"
+        return "\(sign < 0 ? "-" : "\\phantom{-}")\(frac)"
     }
     
     private func parseMatrix(from tokens: TokenIterator<String>) throws -> Matrix<Rational> {
