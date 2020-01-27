@@ -123,7 +123,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             }
         
             public mutating func next() -> T? {
-                guard i < row.matrix.height else { return nil }
+                guard i < row.matrix.width else { return nil }
                 let x = i
                 i += 1
                 return row.matrix[row.y, x]
@@ -151,7 +151,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             }
 
             public mutating func next() -> T? {
-                guard i < column.matrix.width else { return nil }
+                guard i < column.matrix.height else { return nil }
                 let y = i
                 i += 1
                 return column.matrix[y, column.x]
