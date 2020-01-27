@@ -15,8 +15,8 @@ public class SongChartsCommand: StringCommand {
     private var subcommands: [String: (CommandOutput, CommandContext) -> Void] = [:]
 
     @AutoSerializing(filePath: "local/songCharts.json") private var songCharts: [GuildID: GuildSongCharts] = .init()
+    @AutoSerializing(filePath: "local/songTrackedGuilds.json") private var trackedGuilds: Set<GuildID> = []
     private let maxSongs: Int = 300
-    private var trackedGuilds: Set<GuildID> = []
 
     private let queryIntervalSeconds: Int = 60
     
@@ -39,6 +39,13 @@ public class SongChartsCommand: StringCommand {
                 
                 self.queryChartsAndRepeatInBackground(for: guild)
                 output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
+            },
+            "tracked": { [unowned self] output, context in
+                output.append(DiscordEmbed(
+                    title: "Tracked Guilds",
+                    description: self.trackedGuilds.compactMap { context.client?.guilds[$0] }.map { $0.name }.joined(separator: "\n"),
+                    footer: DiscordEmbed.Footer(text: "Guilds for which anonymized song statistics are collected")
+                ))
             }
         ]
         info.helpText = """
@@ -72,6 +79,12 @@ public class SongChartsCommand: StringCommand {
 
     private func plural(of str: String, ifOne value: Int) -> String {
         return (value == 1) ? str : "\(str)s"
+    }
+    
+    public func onCreated(guild: DiscordGuild) {
+        if trackedGuilds.contains(guild.id) {
+            queryChartsAndRepeatInBackground(for: guild)
+        }
     }
 
     private func queryChartsAndRepeatInBackground(for guild: DiscordGuild) {

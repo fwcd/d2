@@ -8,6 +8,8 @@ public protocol Command: class {
 	var info: CommandInfo { get }
 	
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
+
+	func onCreated(guild: DiscordGuild)
 	
 	func onSuccessfullySent(message: DiscordMessage)
 	
@@ -19,6 +21,8 @@ public protocol Command: class {
 extension Command {
 	public var inputValueType: RichValueType { return .unknown }
 	public var outputValueType: RichValueType { return .unknown }
+	
+	public func onCreated(guild: DiscordGuild) {}
 	
 	public func onSuccessfullySent(message: DiscordMessage) {}
 	

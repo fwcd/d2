@@ -1,20 +1,24 @@
 import SwiftDiscord
 import Foundation
+import Logging
 import D2Utils
 import D2Commands
 import D2Permissions
+
+fileprivate let log = Logger(label: "D2ClientHandler")
 
 /** A client delegate that dispatches commands. */
 class D2ClientHandler: DiscordClientDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
+	private var registry: CommandRegistry
 	private var messageHandlers: [MessageHandler]
 	
 	init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
 		self.commandPrefix = commandPrefix
 		self.initialPresence = initialPresence
 		
-		let registry = CommandRegistry()
+		registry = CommandRegistry()
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
 		let subscriptionManager = SubscriptionManager()
@@ -112,6 +116,12 @@ class D2ClientHandler: DiscordClientDelegate {
 
 	func client(_ client: DiscordClient, didConnect connected: Bool) {
 		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
+	}
+	
+	func client(_ client: DiscordClient, createdGuild guild: DiscordGuild) {
+		for (_, command) in registry {
+			command.onCreated(guild: guild)
+		}
 	}
 	
 	func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
