@@ -40,6 +40,14 @@ public class SongChartsCommand: StringCommand {
                 self.queryChartsAndRepeatInBackground(for: guild)
                 output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
             },
+            "untrack": { [unowned self] output, context in
+                guard let guild = context.guild else {
+                    output.append(errorText: "No guild available.")
+                    return
+                }
+                self.trackedGuilds.remove(guild.id)
+                output.append(":x: Successfully untracked guild `\(guild.name)`")
+            },
             "tracked": { [unowned self] output, context in
                 output.append(DiscordEmbed(
                     title: "Tracked Guilds",
@@ -109,7 +117,9 @@ public class SongChartsCommand: StringCommand {
 
         let deadline = DispatchTime.now() + .seconds(queryIntervalSeconds)
         DispatchQueue.global(qos: .background).asyncAfter(deadline: deadline) {
-            self.queryChartsAndRepeatInBackground(for: guild)
+            if self.trackedGuilds.contains(guild.id) {
+                self.queryChartsAndRepeatInBackground(for: guild)
+            }
         }
     }
     
