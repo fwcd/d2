@@ -14,6 +14,7 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
         guard det != 0 else { return nil }
         return Mat2(ix: jy / det, jx: -jx / det, iy: -iy / det, jy: ix / det)
     }
+    public var asMatrix: Matrix<T> { Matrix(width: 2, height: 2, values: [ix, jx, iy, jy]) }
     public var description: String { ("(\(ix), \(jx))\n(\(iy), \(jy))") }
     
     public init(ix: T, jx: T, iy: T, jy: T) {

@@ -4,7 +4,6 @@ import D2Permissions
 public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 	public let info: CommandInfo
 	public let name: String
-	public let inputValueType: RichValueType = .text
 	public let outputValueType: RichValueType = .text
 	public let argPattern = ArgPair(
 		patternWithLeft: ArgValue(name: "lhs", examples: []),

@@ -35,5 +35,17 @@ final class Mat2Tests: XCTestCase {
             iy: 1, jy: -1
         ))
         XCTAssertEqual(a * Vec2(x: 4, y: 2), Vec2(x: 24, y: -6))
+        
+        XCTAssertEqual(a.asMatrix, Matrix([
+            [3, 6],
+            [-6, 9]
+        ]))
+        XCTAssertEqual(a.asMatrix + b.asMatrix, (a + b).asMatrix)
+        XCTAssertEqual(a.asMatrix - b.asMatrix, (a - b).asMatrix)
+        XCTAssertEqual(a.asMatrix * b.asMatrix, (a * b).asMatrix)
+        XCTAssertEqual("\(a.asMatrix)", """
+            (3, 6)
+            (-6, 9)
+            """)
     }
 }
