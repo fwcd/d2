@@ -29,7 +29,7 @@ public class MatrixMultiplicationCommand: StringCommand {
         let tokens = TokenIterator(rawTokens)
         var current: Matrix<Double>? = nil
 
-        log.info("Tokens: \(rawTokens)")
+        log.debug("Tokens: \(rawTokens)")
         
         do {
             while tokens.peek() != nil {
