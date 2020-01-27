@@ -3,7 +3,11 @@ import Logging
 import D2Utils
 
 fileprivate let log = Logger(label: "MatrixMultiplicationCommand")
-fileprivate let tokenPattern = try! Regex(from: "[(),]|(?:-?\\d+(?:\\.\\d+)?)")
+fileprivate let rawDecimalPattern = "-?\\d+(?:\\.\\d+)?"
+fileprivate let rawFractionPattern = "-?\\d+/\\d+"
+// Order of rawFractionPattern and rawDecimalPattern below matters since
+// otherwise numerator and denominator would get parsed as separate tokens
+fileprivate let tokenPattern = try! Regex(from: "[(),]|((?:\(rawFractionPattern))|(?:\(rawDecimalPattern)))")
 
 public class MatrixMultiplicationCommand: StringCommand {
     public let info = CommandInfo(
@@ -35,6 +39,7 @@ public class MatrixMultiplicationCommand: StringCommand {
             while tokens.peek() != nil {
                 let rhs = try parseMatrix(from: tokens)
                 if let lhs = current {
+                    log.debug("Right-multiplying \(lhs) by \(rhs)")
                     guard lhs.width == rhs.height else {
                         throw ExpressionError.shapeMismatch("Left width (\(lhs.width)) should match right height (\(rhs.height))")
                     }
@@ -48,13 +53,15 @@ public class MatrixMultiplicationCommand: StringCommand {
                 output.append("Empty product")
                 return
             }
+            
+            log.debug("Computed matrix product \(product)")
 
             if let renderer = latexRenderer {
                 let latexFormula = "\\begin{pmatrix}\(product.asArray.map { $0.map { latexFraction(of: $0) }.joined(separator: " & ") }.joined(separator: " \\\\\\\\ "))\\end{pmatrix}"
                 log.info("Rendering \(latexFormula)")
                 renderLatexImage(with: renderer, from: latexFormula, to: output, scale: 1.5)
             } else {
-                output.append("\(product)")
+                output.append(product.formattedDescription)
             }
         } catch {
             output.append(error, errorText: "\(error)")

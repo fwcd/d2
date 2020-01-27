@@ -10,7 +10,9 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     public var magnitude: Rational { Rational(abs(numerator), denominator) }
     
     public init?(_ string: String) {
-        if let parsedDecimal = decimalPattern.firstGroups(in: string) {
+        if let parsedFraction = fractionPattern.firstGroups(in: string) {
+            self.init(Int(parsedFraction[1])!, Int(parsedFraction[2])!)
+        } else if let parsedDecimal = decimalPattern.firstGroups(in: string) {
             let rawSign = parsedDecimal[1]
             let rawCharacteristic = parsedDecimal[2]
             let rawMantissa = parsedDecimal[3]
@@ -20,8 +22,6 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
             let mantissa = Int(rawMantissa) ?? 0
             self.init(sign * (characteristic * factor + mantissa), factor)
             reduce()
-        } else if let parsedFraction = fractionPattern.firstGroups(in: string) {
-            self.init(Int(parsedFraction[1])!, Int(parsedFraction[2])!)
         } else {
             return nil
         }
