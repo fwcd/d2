@@ -50,11 +50,8 @@ public class MatrixMultiplicationCommand: StringCommand {
             }
 
             if let renderer = latexRenderer {
-                let latexFormula = """
-                    \\begin{pmatrix}
-                    \(product.asArray.map { $0.map { "\($0)" }.joined(separator: " & ") }.joined(separator: "\\\\\n"))
-                    \\end{pmatrix}
-                    """
+                let latexFormula = "\\begin{pmatrix}\(product.asArray.map { $0.map { "\($0)" }.joined(separator: " & ") }.joined(separator: "\\\\"))\\end{pmatrix}"
+                log.info("Rendering \(latexFormula)")
                 renderLatexPNG(with: renderer, from: latexFormula, to: output)
             } else {
                 output.append("\(product)")
