@@ -43,9 +43,6 @@ final class Mat2Tests: XCTestCase {
         XCTAssertEqual(a.asMatrix + b.asMatrix, (a + b).asMatrix)
         XCTAssertEqual(a.asMatrix - b.asMatrix, (a - b).asMatrix)
         XCTAssertEqual(a.asMatrix * b.asMatrix, (a * b).asMatrix)
-        XCTAssertEqual("\(a.asMatrix)", """
-            (3, 6)
-            (-6, 9)
-            """)
+        XCTAssertEqual("\(a.asMatrix)", "((3, 6), (-6, 9))")
     }
 }
