@@ -45,7 +45,7 @@ public class LatexCommand: StringCommand {
 		let color = flags["color"] ?? "white"
 		let processedInput = flagPattern.replace(in: input, with: "")
 		
-		renderLatexPNG(with: renderer, color: color, from: processedInput, to: output) {
+		renderLatexImage(with: renderer, from: processedInput, to: output, color: color) {
 			self.running = false
 		}
 	}

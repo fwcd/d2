@@ -49,7 +49,7 @@ public class IntegralCalculatorCommand: StringCommand {
 					let stepsLatex = result.steps
 						.map { $0.replacingOccurrences(of: "$", with: "") }
 						.joined(separator: "\\\\")
-					renderLatexPNG(with: renderer, from: stepsLatex, to: output)
+					renderLatexImage(with: renderer, from: stepsLatex, to: output)
 				} else {
 					log.warning("Warning: No LaTeX renderer present in WebIntegralCalculatorCommand")
 					output.append(result.steps.joined(separator: "\n"))

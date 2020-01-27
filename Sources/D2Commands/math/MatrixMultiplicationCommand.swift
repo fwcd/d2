@@ -52,7 +52,7 @@ public class MatrixMultiplicationCommand: StringCommand {
             if let renderer = latexRenderer {
                 let latexFormula = "\\begin{pmatrix}\(product.asArray.map { $0.map { "\($0)" }.joined(separator: " & ") }.joined(separator: " \\\\\\\\ "))\\end{pmatrix}"
                 log.info("Rendering \(latexFormula)")
-                renderLatexPNG(with: renderer, from: latexFormula, to: output)
+                renderLatexImage(with: renderer, from: latexFormula, to: output, scale: 1.5)
             } else {
                 output.append("\(product)")
             }

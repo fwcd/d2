@@ -10,9 +10,9 @@ func handleLatex(error: Error, output: CommandOutput) {
 	}
 }
 
-func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from input: String, to output: CommandOutput, then: (() -> Void)? = nil) {
+func renderLatexImage(with renderer: LatexRenderer, from input: String, to output: CommandOutput, color: String = "white", scale: Double = 6, then: (() -> Void)? = nil) {
 	do {
-		try renderer.renderImage(from: input, color: color, onError: {
+		try renderer.renderImage(from: input, color: color, scale: scale, onError: {
 			// Catch asynchronous errors
 			handleLatex(error: $0, output: output)
 			then?()
