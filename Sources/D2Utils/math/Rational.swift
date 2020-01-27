@@ -1,11 +1,31 @@
+fileprivate let decimalPattern = try! Regex(from: "(-?)(\\d+)(?:\\.(\\d+))?")
+fileprivate let fractionPattern = try! Regex(from: "(-?\\d+)\\s*/\\s*(-?\\d+)")
+
 public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, ExpressibleByIntegerLiteral, Hashable, Comparable, CustomStringConvertible {
     public var numerator: Int
     public var denominator: Int // Always positive
 
     public var description: String { denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)" }
     public var asDouble: Double { Double(numerator) / Double(denominator) }
-    public var reduced: Rational { reduced(by: greatestCommonDivisor(numerator, denominator)) }
     public var magnitude: Rational { Rational(abs(numerator), denominator) }
+    
+    public init?(_ string: String) {
+        if let parsedDecimal = decimalPattern.firstGroups(in: string) {
+            let rawSign = parsedDecimal[1]
+            let rawCharacteristic = parsedDecimal[2]
+            let rawMantissa = parsedDecimal[3]
+            let sign = rawSign == "-" ? -1 : 1
+            let factor = 10 ** rawMantissa.count
+            let characteristic = Int(rawCharacteristic)!
+            let mantissa = Int(rawMantissa) ?? 0
+            self.init(sign * (characteristic * factor + mantissa), factor)
+            reduce()
+        } else if let parsedFraction = fractionPattern.firstGroups(in: string) {
+            self.init(Int(parsedFraction[1])!, Int(parsedFraction[2])!)
+        } else {
+            return nil
+        }
+    }
     
     public init<T>(exactly value: T) where T: BinaryInteger {
         self.init(integerLiteral: Int(value))
@@ -17,9 +37,9 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public init(_ numerator: Int, _ denominator: Int) {
-        let sign = numerator.signum() * denominator.signum()
-        self.numerator = sign * abs(numerator)
-        self.denominator = abs(denominator)
+        self.numerator = numerator
+        self.denominator = denominator
+        normalizeSign()
     }
     
     public static func +(lhs: Rational, rhs: Rational) -> Rational {
@@ -75,11 +95,42 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
         denominator.negate()
     }
     
-    public func expandd(by factor: Int) -> Rational {
+    public func expanded(by factor: Int) -> Rational {
         Rational(numerator * factor, denominator * factor)
     }
     
+    public mutating func expand(by factor: Int) {
+        numerator *= factor
+        denominator *= factor
+    }
+    
     public func reduced(by factor: Int) -> Rational {
-        Rational(numerator / factor, denominator / factor)
+        Rational(numerator / factor, denominator / factor).normalizedSign()
+    }
+    
+    public func reduced() -> Rational {
+        reduced(by: greatestCommonDivisor(numerator, denominator))
+    }
+    
+    public mutating func reduce(by factor: Int) {
+        numerator /= factor
+        denominator /= factor
+        normalizeSign()
+    }
+    
+    public mutating func reduce() {
+        reduce(by: greatestCommonDivisor(numerator, denominator))
+    }
+    
+    private mutating func normalizeSign() {
+        let sign = numerator.signum() * denominator.signum()
+        numerator = sign * abs(numerator)
+        denominator = abs(denominator)
+    }
+    
+    private func normalizedSign() -> Rational {
+        var res = self
+        res.normalizeSign()
+        return res
     }
 }

@@ -27,7 +27,7 @@ public class MatrixMultiplicationCommand: StringCommand {
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         let rawTokens = tokenPattern.matches(in: input).map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
         let tokens = TokenIterator(rawTokens)
-        var current: Matrix<Double>? = nil
+        var current: Matrix<Rational>? = nil
 
         log.debug("Tokens: \(rawTokens)")
         
@@ -50,7 +50,7 @@ public class MatrixMultiplicationCommand: StringCommand {
             }
 
             if let renderer = latexRenderer {
-                let latexFormula = "\\begin{pmatrix}\(product.asArray.map { $0.map { "\($0)" }.joined(separator: " & ") }.joined(separator: " \\\\\\\\ "))\\end{pmatrix}"
+                let latexFormula = "\\begin{pmatrix}\(product.asArray.map { $0.map { latexFraction(of: $0) }.joined(separator: " & ") }.joined(separator: " \\\\\\\\ "))\\end{pmatrix}"
                 log.info("Rendering \(latexFormula)")
                 renderLatexImage(with: renderer, from: latexFormula, to: output, scale: 1.5)
             } else {
@@ -61,17 +61,22 @@ public class MatrixMultiplicationCommand: StringCommand {
         }
     }
     
-    private func parseMatrix(from tokens: TokenIterator<String>) throws -> Matrix<Double> {
+    private func latexFraction(of rational: Rational) -> String {
+        let reduced = rational.reduced()
+        return reduced.denominator == 1 ? String(reduced.numerator) : "\\frac{\(reduced.numerator)}{\(reduced.denominator)}"
+    }
+    
+    private func parseMatrix(from tokens: TokenIterator<String>) throws -> Matrix<Rational> {
         Matrix(try parseCommaSeparatedList("matrix", from: tokens, valueParser: parseRow))
     }
     
-    private func parseRow(from tokens: TokenIterator<String>) throws -> [Double] {
+    private func parseRow(from tokens: TokenIterator<String>) throws -> [Rational] {
         try parseCommaSeparatedList("row", from: tokens, valueParser: parseValue)
     }
     
-    private func parseValue(from tokens: TokenIterator<String>) throws -> Double {
+    private func parseValue(from tokens: TokenIterator<String>) throws -> Rational {
         let token = tokens.next()
-        guard let value = token.flatMap({ Double($0) }) else { throw ExpressionError.unrecognizedToken("Expected value, but got '\(token ?? "nil")'") }
+        guard let value = token.flatMap({ Rational($0)?.reduced() }) else { throw ExpressionError.unrecognizedToken("Expected value, but got '\(token ?? "nil")'") }
         return value
     }
     
