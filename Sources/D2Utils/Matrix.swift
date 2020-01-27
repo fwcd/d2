@@ -4,6 +4,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public let width: Int
     public let height: Int
     private var values: [T]
+    public var asArray: [[T]] { (0..<height).map { Array(self[row: $0]) } }
     public var description: String {
         (0..<height)
             .map { "(\(self[row: $0].map { "\($0)" }.joined(separator: ", ")))" }

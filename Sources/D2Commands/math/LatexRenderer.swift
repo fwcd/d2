@@ -18,13 +18,13 @@ class LatexRenderer {
 		cleanUp()
 	}
 	
-	func renderImage(from formula: String, color: String = "white", scale: Double = 6, onError: @escaping (Error) -> Void, then: @escaping (Image) -> Void) throws {
+	func renderImage(from formula: String, color: String = "white", scale: Double = 6, onError: @escaping (Error) -> Void, then: @escaping (Image) throws -> Void) throws {
 		let timestamp = Int64(Date().timeIntervalSince1970 * 1000000)
 		let outputFile = tempDir.childFile(named: "\(latexPrefix)-\(timestamp).png")
 
 		try renderPNG(from: formula, to: outputFile, color: color, scale: scale, onError: onError) {
 			do {
-				then(try Image(fromPngFile: outputFile.url))
+				try then(try Image(fromPngFile: outputFile.url))
 			} catch {
 				onError(error)
 			}

@@ -57,6 +57,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["%"] = BinaryOperationCommand<Int>(name: "remainder", operation: %)
 		registry["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
 		registry["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
+		registry["matmul"] = MatrixMultiplicationCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
 		registry["mcping"] = MinecraftServerPingCommand()
