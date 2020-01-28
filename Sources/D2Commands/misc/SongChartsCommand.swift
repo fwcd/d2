@@ -63,7 +63,7 @@ public class SongChartsCommand: StringCommand {
                 self.songCharts[guild.id] = nil
                 output.append(":wastebasket: Successfully cleared song charts for `\(guild.name)`")
             },
-            "debugPresence": { [unowned self] output, context in
+            "debugPresence": { [] output, context in
                 guard let guild = context.guild else {
                     output.append("Not on a guild.")
                     return
@@ -97,7 +97,7 @@ public class SongChartsCommand: StringCommand {
                     .sorted { $0.value > $1.value }
                     .prefix(25)
                     .enumerated()
-                    .map { (i, entry) in "\(i). \(entry.0) (played \(entry.1) \(plural(of: "time", ifOne: entry.1)))" }
+                    .map { (i, entry) in "\(i). \(entry.0) (played \(entry.1) \("time".plural(ifOne: entry.1)))" }
                     .joined(separator: "\n")
             ))
         } else if let subcommand = subcommands[String(input.split(separator: " ")[0])] {
@@ -107,10 +107,6 @@ public class SongChartsCommand: StringCommand {
         }
     }
 
-    private func plural(of str: String, ifOne value: Int) -> String {
-        return (value == 1) ? str : "\(str)s"
-    }
-    
     public func onReceivedUpdated(presence: DiscordPresence) {
         let guildId = presence.guildId
         if trackedGuilds.contains(guildId), let activity = presence.game {

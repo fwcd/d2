@@ -86,10 +86,6 @@ public class CountdownCommand: StringCommand {
         }
     }
     
-    private func plural(of str: String, ifOne value: Int) -> String {
-        return (value == 1) ? str : "\(str)s"
-    }
-    
     private func parseDate(from input: String) -> Date? {
         return inputDateFormatters.compactMap { $0.date(from: input) }.first
     }
@@ -115,7 +111,7 @@ public class CountdownCommand: StringCommand {
         let hours = date.hour!
         let minutes = date.minute!
 
-        return "\(days) \(plural(of: "day", ifOne: days)), \(hours) \(plural(of: "hour", ifOne: hours)) and \(minutes) \(plural(of: "minute", ifOne: minutes))"
+        return "\(days) \("day".plural(ifOne: days)), \(hours) \("hour".plural(ifOne: hours)) and \(minutes) \("minute".plural(ifOne: minutes))"
     }
     
     private func removeCompletedGoals() {

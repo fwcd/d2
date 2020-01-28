@@ -47,7 +47,6 @@ public class MensaCommand: StringCommand {
             case .chicken: return ":chicken:"
             case .vegetarian: return ":corn:"
             case .vegan: return ":sunflower:"
-            default: return nil
         }
     }
 }

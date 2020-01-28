@@ -80,4 +80,8 @@ extension StringProtocol {
 			return String(self)
 		}
 	}
+	
+	public func plural(ifOne value: Int) -> String {
+		value == 1 ? String(self) : "\(self)s"
+	}
 }
