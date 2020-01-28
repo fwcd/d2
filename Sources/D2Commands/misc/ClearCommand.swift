@@ -1,5 +1,7 @@
 import SwiftDiscord
+import Logging
 
+fileprivate let log = Logger(label: "ClearCommand")
 fileprivate let confirmationString = "delete"
 
 public class ClearCommand: StringCommand {
@@ -24,17 +26,14 @@ public class ClearCommand: StringCommand {
             output.append("No DiscordClient available")
             return
         }
-        guard let channel = context.channel else {
-            output.append("No channel available")
-            return
-        }
         guard let n = Int(input), n >= minDeletableCount, n <= maxDeletableCount else {
             output.append("Please enter a number (of messages to be deleted) between \(minDeletableCount) and \(maxDeletableCount)!")
             return
         }
         
-        client.getMessages(for: channel.id, limit: n) { messages, _ in
-            self.messagesToBeDeleted[channel.id] = messages
+        let channelId = context.message.channelId
+        client.getMessages(for: channelId, limit: n) { messages, _ in
+            self.messagesToBeDeleted[channelId] = messages
             let grouped = Dictionary(grouping: messages, by: { $0.author.username })
 
             output.append(DiscordEmbed(
@@ -52,6 +51,7 @@ public class ClearCommand: StringCommand {
         if let client = context.client, let channel = context.channel, let messages = messagesToBeDeleted[channel.id] {
             messagesToBeDeleted[channel.id] = nil
             if content == confirmationString {
+                log.notice("Deleting \(messages.count) \("message".plural(ifOne: messages.count))")
                 if messages.count == 1 {
                     client.deleteMessage(messages[0].id, on: channel.id) { success, _ in
                         if success {
@@ -77,11 +77,10 @@ public class ClearCommand: StringCommand {
     }
     
     public func onSuccessfullySent(message: DiscordMessage) {
-        if let channel = message.channel, messagesToBeDeleted[channel.id] != nil {
-            let isConfirmationMessage = !message.embeds.isEmpty
-            if isConfirmationMessage {
-                messagesToBeDeleted[channel.id]!.append(message)
-            }
+        log.debug("Successfully sent \(message)")
+        let channelId = message.channelId
+        if messagesToBeDeleted[channelId] != nil {
+            messagesToBeDeleted[channelId]!.append(message)
         }
     }
 }
