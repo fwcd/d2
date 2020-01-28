@@ -1,4 +1,5 @@
 import SwiftDiscord
+import D2Utils
 import Foundation
 
 public class UserCommand: StringCommand {
@@ -35,7 +36,7 @@ public class UserCommand: StringCommand {
             footer: DiscordEmbed.Footer(text: "ID: \(user.id)"),
             fields: [
                 DiscordEmbed.Field(name: "Nick", value: member.nick ?? "_none_"),
-                DiscordEmbed.Field(name: "Roles", value: member.roles?.map { $0.name }.joined(separator: "\n").nilIfEmpty ?? "_none_"),
+                DiscordEmbed.Field(name: "Roles", value: member.roles?.sorted(by: descendingComparator { $0.position }).map { $0.name }.joined(separator: "\n").nilIfEmpty ?? "_none_"),
                 DiscordEmbed.Field(name: "Voice Status", value: ((member.deaf ? ["deaf"] : []) + (member.mute ? ["mute"] : [])).joined(separator: ", ").nilIfEmpty ?? "_none_"),
                 DiscordEmbed.Field(name: "Joined at", value: dateFormatter.string(from: member.joinedAt))
             ] + (presence.map { [
