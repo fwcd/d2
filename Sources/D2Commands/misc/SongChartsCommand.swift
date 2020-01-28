@@ -3,6 +3,13 @@ import D2Utils
 import Logging
 
 fileprivate let log = Logger(label: "SongChartsCommand")
+fileprivate let songExtractors: [String: (DiscordActivity) -> GuildSongCharts.Song] = [
+    "Spotify": { .init(
+        title: $0.details,
+        album: $0.assets?.largeText,
+        artist: $0.state
+    ) }
+]
 
 public class SongChartsCommand: StringCommand {
     public var info: CommandInfo = CommandInfo(
@@ -55,6 +62,20 @@ public class SongChartsCommand: StringCommand {
                 }
                 self.songCharts[guild.id] = nil
                 output.append(":wastebasket: Successfully cleared song charts for `\(guild.name)`")
+            },
+            "debugPresence": { [unowned self] output, context in
+                guard let guild = context.guild else {
+                    output.append("Not on a guild.")
+                    return
+                }
+                guard let mentioned = context.message.mentions.first else {
+                    output.append("Please mention someone!")
+                    return
+                }
+                output.append(.compound([
+                    .text("User `\(mentioned.username)` has the presence:"),
+                    .code(guild.presences[mentioned.id].map { "\($0)" } ?? "nil", language: "swift")
+                ]))
             }
         ]
         info.helpText = """
@@ -79,7 +100,7 @@ public class SongChartsCommand: StringCommand {
                     .map { (i, entry) in "\(i). \(entry.0) (played \(entry.1) \(plural(of: "time", ifOne: entry.1)))" }
                     .joined(separator: "\n")
             ))
-        } else if let subcommand = subcommands[input] {
+        } else if let subcommand = subcommands[String(input.split(separator: " ")[0])] {
             subcommand(output, context)
         } else {
             output.append(errorText: "Unrecognized subcommand `\(input)`")
@@ -92,17 +113,19 @@ public class SongChartsCommand: StringCommand {
     
     public func onReceivedUpdated(presence: DiscordPresence) {
         let guildId = presence.guildId
-        if trackedGuilds.contains(guildId), let activity = presence.game, activity.name == "Spotify" {
-            var charts = songCharts[guildId] ?? GuildSongCharts()
+        if trackedGuilds.contains(guildId), let activity = presence.game {
+            log.debug("Received presence of type \(activity.name)")
 
-            charts.incrementPlayCount(for: .init(
-                title: activity.details,
-                album: activity.assets?.largeText,
-                artist: activity.state
-            ))
-            charts.keepTop(n: maxSongs / 2, ifSongCountGreaterThan: maxSongs)
+            if let songExtractor = songExtractors[activity.name] {
+                var charts = songCharts[guildId] ?? GuildSongCharts()
+                let song = songExtractor(activity)
 
-            songCharts[guildId] = charts
+                charts.incrementPlayCount(for: song)
+                charts.keepTop(n: maxSongs / 2, ifSongCountGreaterThan: maxSongs)
+                log.info("Incremented play count for \(song)")
+
+                songCharts[guildId] = charts
+            }
         }
     }
 }
