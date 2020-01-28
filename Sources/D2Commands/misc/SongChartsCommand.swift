@@ -1,6 +1,5 @@
 import SwiftDiscord
 import D2Utils
-import Dispatch
 import Logging
 
 fileprivate let log = Logger(label: "SongChartsCommand")
@@ -32,12 +31,6 @@ public class SongChartsCommand: StringCommand {
                     return
                 }
                 self.trackedGuilds.insert(guild.id)
-
-                if self.songCharts[guild.id] == nil {
-                    self.songCharts[guild.id] = GuildSongCharts()
-                }
-                
-                self.queryChartsAndRepeatInBackground(for: guild)
                 output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
             },
             "untrack": { [unowned self] output, context in
@@ -54,6 +47,14 @@ public class SongChartsCommand: StringCommand {
                     description: self.trackedGuilds.compactMap { context.client?.guilds[$0] }.map { $0.name }.joined(separator: "\n"),
                     footer: DiscordEmbed.Footer(text: "Guilds for which anonymized song statistics are collected")
                 ))
+            },
+            "clear": { [unowned self] output, context in
+                guard let guild = context.guild else {
+                    output.append(errorText: "No guild available.")
+                    return
+                }
+                self.songCharts[guild.id] = nil
+                output.append(":wastebasket: Successfully cleared song charts for `\(guild.name)`")
             }
         ]
         info.helpText = """
@@ -89,44 +90,19 @@ public class SongChartsCommand: StringCommand {
         return (value == 1) ? str : "\(str)s"
     }
     
-    public func onCreated(guild: DiscordGuild) {
-        if trackedGuilds.contains(guild.id) {
-            queryChartsAndRepeatInBackground(for: guild)
-        }
-    }
+    public func onReceivedUpdated(presence: DiscordPresence) {
+        let guildId = presence.guildId
+        if trackedGuilds.contains(guildId), let activity = presence.game, activity.name == "Spotify" {
+            var charts = songCharts[guildId] ?? GuildSongCharts()
 
-    private func queryChartsAndRepeatInBackground(for guild: DiscordGuild) {
-        songCharts[guild.id]?.update {
-            log.info("Querying \(guild.name) for currently playing songs...")
-            var songsFound = 0
+            charts.incrementPlayCount(for: .init(
+                title: activity.details,
+                album: activity.assets?.largeText,
+                artist: activity.state
+            ))
+            charts.keepTop(n: maxSongs / 2, ifSongCountGreaterThan: maxSongs)
 
-            for (_, presence) in guild.presences {
-                guard let activity = presence.game else { continue }
-                if activity.name == "Spotify" {
-                    $0.incrementPlayCount(for: .init(
-                        title: activity.details,
-                        album: activity.assets?.largeText,
-                        artist: activity.state
-                    ))
-                    songsFound += 1
-                }
-            }
-
-            log.info("Found \(songsFound) songs")
-        }
-
-        let deadline = DispatchTime.now() + .seconds(queryIntervalSeconds)
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: deadline) {
-            if self.trackedGuilds.contains(guild.id) {
-                self.queryChartsAndRepeatInBackground(for: guild)
-            }
-        }
-    }
-    
-    private func updateCharts(playedSong: GuildSongCharts.Song, guildId: GuildID) {
-        songCharts[guildId]?.update {
-            $0.incrementPlayCount(for: playedSong)
-            $0.keepTop(n: maxSongs / 2, ifSongCountGreaterThan: maxSongs)
+            songCharts[guildId] = charts
         }
     }
 }

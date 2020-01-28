@@ -118,9 +118,9 @@ class D2ClientHandler: DiscordClientDelegate {
 		client.setPresence(DiscordPresenceUpdate(game: DiscordActivity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	
-	func client(_ client: DiscordClient, didCreateGuild guild: DiscordGuild) {
+	func client(_ client: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
 		for (_, command) in registry {
-			command.onCreated(guild: guild)
+			command.onReceivedUpdated(presence: presence)
 		}
 	}
 	

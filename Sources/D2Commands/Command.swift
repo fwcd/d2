@@ -9,28 +9,24 @@ public protocol Command: class {
 	
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 
-	func onCreated(guild: DiscordGuild)
-	
 	func onSuccessfullySent(message: DiscordMessage)
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction
+
+	func onReceivedUpdated(presence: DiscordPresence)
 	
 	func equalTo(_ rhs: Command) -> Bool
 }
 
 extension Command {
-	public var inputValueType: RichValueType { return .unknown }
-	public var outputValueType: RichValueType { return .unknown }
-	
-	public func onCreated(guild: DiscordGuild) {}
+	public var inputValueType: RichValueType { .unknown }
+	public var outputValueType: RichValueType { .unknown }
 	
 	public func onSuccessfullySent(message: DiscordMessage) {}
 	
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
-		return .continueSubscription
-	}
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction { .continueSubscription }
+	
+	public func onReceivedUpdated(presence: DiscordPresence) {}
 
-	public func equalTo(_ rhs: Command) -> Bool {
-		return self === rhs
-	}
+	public func equalTo(_ rhs: Command) -> Bool { self === rhs }
 }
