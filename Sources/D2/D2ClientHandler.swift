@@ -35,6 +35,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["bfencode"] = BFEncodeCommand()
 		registry["bftoc"] = BFToCCommand()
 		registry["echo"] = EchoCommand()
+		registry["say"] = SayCommand()
 		registry["campus"] = CampusCommand()
 		registry["type"] = TriggerTypingCommand()
 		registry["mdb"] = MDBCommand()
