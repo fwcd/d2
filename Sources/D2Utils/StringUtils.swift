@@ -81,7 +81,7 @@ extension StringProtocol {
 		}
 	}
 	
-	public func plural(ifOne value: Int) -> String {
+	public func pluralize(with value: Int) -> String {
 		value == 1 ? String(self) : "\(self)s"
 	}
 }

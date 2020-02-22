@@ -97,7 +97,7 @@ public class SongChartsCommand: StringCommand {
                     .sorted { $0.value > $1.value }
                     .prefix(25)
                     .enumerated()
-                    .map { (i, entry) in "\(i). \(entry.0) (played \(entry.1) \("time".plural(ifOne: entry.1)))" }
+                    .map { (i, entry) in "\(i). \(entry.0) (played \(entry.1) \("time".pluralize(with: entry.1)))" }
                     .joined(separator: "\n")
             ))
         } else if let subcommand = subcommands[String(input.split(separator: " ")[0])] {

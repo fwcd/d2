@@ -37,9 +37,9 @@ public class ClearCommand: StringCommand {
             let grouped = Dictionary(grouping: messages, by: { $0.author.username })
 
             output.append(DiscordEmbed(
-                title: ":warning: You are about to DELETE \(messages.count) \("message".plural(ifOne: messages.count))",
+                title: ":warning: You are about to DELETE \(messages.count) \("message".pluralize(with: messages.count))",
                 description: """
-                    \(grouped.map { "\($0.1.count) \("message".plural(ifOne: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
+                    \(grouped.map { "\($0.1.count) \("message".pluralize(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
                     
                     Are you sure? Enter `\(confirmationString)` to confirm (any other message will cancel).
                     """
@@ -51,7 +51,7 @@ public class ClearCommand: StringCommand {
         if let client = context.client, let channel = context.channel, let messages = messagesToBeDeleted[channel.id] {
             messagesToBeDeleted[channel.id] = nil
             if content == confirmationString {
-                log.notice("Deleting \(messages.count) \("message".plural(ifOne: messages.count))")
+                log.notice("Deleting \(messages.count) \("message".pluralize(with: messages.count))")
                 if messages.count == 1 {
                     client.deleteMessage(messages[0].id, on: channel.id) { success, _ in
                         if success {
