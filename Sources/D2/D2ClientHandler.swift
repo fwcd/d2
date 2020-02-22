@@ -69,6 +69,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["integral"] = IntegralCalculatorCommand()
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["mcmods"] = MinecraftServerModsCommand()
+		registry["mcmod"] = MinecraftModSearchCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
 		registry["wikipedia"] = WikipediaCommand()
