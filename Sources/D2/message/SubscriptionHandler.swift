@@ -3,10 +3,12 @@ import D2Commands
 
 /** Handles messages from command subscriptions. */
 struct SubscriptionHandler: MessageHandler {
+    private let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
     
-    init(registry: CommandRegistry, manager: SubscriptionManager) {
+    init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager) {
+        self.commandPrefix = commandPrefix
         self.registry = registry
         self.manager = manager
     }
@@ -18,7 +20,8 @@ struct SubscriptionHandler: MessageHandler {
 		let context = CommandContext(
 			guild: client.guildForChannel(message.channelId),
 			registry: registry,
-			message: message
+			message: message,
+            commandPrefix: commandPrefix
 		)
 		let isBot = message.author.bot
 	

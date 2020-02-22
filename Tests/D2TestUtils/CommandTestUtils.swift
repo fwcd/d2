@@ -5,7 +5,7 @@ extension Command {
 	public func testInvoke(
 		input: RichValue = .none,
 		output: CommandOutput,
-		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""))
+		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""), commandPrefix: "")
 	) {
 		invoke(input: input, output: output, context: context)
 	}
@@ -13,7 +13,7 @@ extension Command {
 	public func testSubscriptionMessage(
 		withContent content: String,
 		output: CommandOutput,
-		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""))
+		context: CommandContext = CommandContext(guild: nil, registry: CommandRegistry(), message: DiscordMessage(content: ""), commandPrefix: "")
 	) -> SubscriptionAction {
 		return onSubscriptionMessage(withContent: content, output: output, context: context)
 	}

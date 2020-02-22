@@ -5,35 +5,34 @@ import D2Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "MinecraftServerPingCommand")
-fileprivate let hostPortPattern = try! Regex(from: "([^:]+)(?::(\\d+))?")
 
 public class MinecraftServerPingCommand: StringCommand {
     public let info = CommandInfo(
         category: .minecraft,
-        shortDescription: "Pings a Minecraft Server",
-        longDescription: "Fetches the Message of the Day (MOTD) and the current player list of a Minecraft Server",
-        requiredPermissionLevel: .vip
+        shortDescription: "Pings a Minecraft server",
+        longDescription: "Fetches the Message of the Day (MOTD) and the current player list of a Minecraft server",
+        requiredPermissionLevel: .basic
     )
     
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            if let parsedHostPort = hostPortPattern.firstGroups(in: input) {
-                let host = parsedHostPort[1]
-                let port = Int32(parsedHostPort[2]) ?? 25565
+            if let (host, port) = parseMcHostPort(from: input) {
                 let serverInfo = try MinecraftServerPing(host: host, port: port, timeoutMs: 1000).perform()
+                let modCount = serverInfo.forgeData?.mods?.count ?? serverInfo.modinfo?.modList?.count
                 
                 // TODO: Display server favicon in embed
                 
                 output.append(DiscordEmbed(
                     title: "Minecraft Server at `\(host):\(port)`",
                     description: "\(serverInfo.description)",
+                    footer: modCount.map { _ in DiscordEmbed.Footer(text: "Use \(context.commandPrefix)mcmods to get a detailed mod list") },
                     fields: [
                         DiscordEmbed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
                         DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
                         DiscordEmbed.Field(name: "Version", value: serverInfo.version.name),
-                        DiscordEmbed.Field(name: "Mods", value: (serverInfo.forgeData?.mods?.map { "\($0)" } ?? serverInfo.modinfo?.modList?.map { "\($0)" } ?? [String]()).joined(separator: "\n").truncate(300, appending: "\n...and more").nilIfEmpty ?? "_vanilla_")
+                        DiscordEmbed.Field(name: "Mods", value: modCount.map { "\($0) \("mod".plural(ifOne: $0))" } ?? "_vanilla_")
                     ]
                 ))
             } else {

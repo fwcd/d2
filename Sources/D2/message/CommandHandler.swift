@@ -75,7 +75,8 @@ class CommandHandler: MessageHandler {
         let context = CommandContext(
 			guild: client.guildForChannel(message.channelId),
 			registry: registry,
-			message: message
+			message: message,
+			commandPrefix: commandPrefix
 		)
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		

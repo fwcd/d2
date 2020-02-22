@@ -26,7 +26,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
-			SubscriptionHandler(registry: registry, manager: subscriptionManager)
+			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
 		]
 
 		registry["ping"] = PingCommand()
@@ -68,6 +68,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
 		registry["mcping"] = MinecraftServerPingCommand()
+		registry["mcmods"] = MinecraftServerModsCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
 		registry["wikipedia"] = WikipediaCommand()
