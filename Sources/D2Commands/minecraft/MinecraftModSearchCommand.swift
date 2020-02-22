@@ -29,7 +29,7 @@ public class MinecraftModSearchCommand: StringCommand {
                                 thumbnail: mod.defaultAttachment.flatMap { $0.thumbnailUrl }.flatMap(URL.init(string:)).map(DiscordEmbed.Thumbnail.init(url:)),
                                 footer: DiscordEmbed.Footer(text: "ID: \(mod.id), Downloads: \(mod.downloadCount ?? -1), Available: \(mod.isAvailable.map { String($0) } ?? "?")"),
                                 fields: [
-                                    DiscordEmbed.Field(name: "Categories", value: (mod.categories ?? []).compactMap { $0.name }.joined(separator: ",").nilIfEmpty ?? "_none_"),
+                                    DiscordEmbed.Field(name: "Categories", value: (mod.categories ?? []).compactMap { $0.name }.joined(separator: ", ").nilIfEmpty ?? "_none_"),
                                     DiscordEmbed.Field(name: "Latest Files", value: (mod.latestFiles ?? []).compactMap { file in
                                         file.displayName.flatMap { name in file.downloadUrl.map { url in "[\(name)](\(url))" } }
                                     }.joined(separator: "\n").nilIfEmpty ?? "_none_")
