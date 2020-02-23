@@ -38,4 +38,13 @@ public extension CommandOutput {
 	func append(_ error: Error, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
 		append(.error(error, errorText: errorText), to: channel)
 	}
+	
+	func append(_ result: Result<RichValue, Error>, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
+		switch result {
+			case .success(let value):
+				append(value, to: channel)
+			case .failure(let error):
+				append(error, errorText: errorText, to: channel)
+		}
+	}
 }
