@@ -21,6 +21,7 @@ public class RedditCommand: StringCommand {
 				RichValue.embed(DiscordEmbed(
 					title: $0.title,
 					description: $0.selftext,
+					url: $0.permalink.flatMap { URL(string: "https://www.reddit.com\($0)") },
 					image: ($0.preview?.firstGif?.source?.url ?? $0.url)
 						.flatMap(URL.init(string:))
 						.filter(self.refersToImage(url:))
