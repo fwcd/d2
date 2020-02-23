@@ -35,8 +35,8 @@ public class MinecraftModSearchCommand: StringCommand {
                                     let details = (file.id == mod.defaultFileId ? ["default"] : [])
                                                 + (fileVersions[file.id]?.compactMap { $0.gameVersion } ?? [])
                                     return file.displayName.flatMap { name in
-                                        file.downloadUrl.map { url in
-                                            "[\(name)](\(url))\(details.joined(separator: ", ").nilIfEmpty.map { " (\($0))" } ?? "")"
+                                        (file.downloadUrl?.replacingOccurrences(of: " ", with: "%20")).map {
+                                            "[\(name)](\($0))\(details.joined(separator: ", ").nilIfEmpty.map { " (\($0))" } ?? "")"
                                         }
                                     }
                                 }.joined(separator: "\n").nilIfEmpty ?? "_none_")
