@@ -21,13 +21,18 @@ public class RedditCommand: StringCommand {
 				RichValue.embed(DiscordEmbed(
 					title: $0.title,
 					description: $0.selftext,
-					image: $0.url
-						.filter { $0.hasSuffix(".jpg") || $0.hasSuffix(".png") || $0.hasSuffix(".gif") }
+					image: ($0.preview?.firstGif?.source?.url ?? $0.url)
 						.flatMap(URL.init(string:))
+						.filter(self.refersToImage(url:))
 						.map(DiscordEmbed.Image.init(url:)),
 					footer: DiscordEmbed.Footer(text: "\($0.ups ?? -1) upvotes, \($0.downs ?? -1) downvotes")
 				))
 			}, errorText: "Reddit search failed")
 		}
+	}
+	
+	private func refersToImage(url: URL) -> Bool {
+		let path = url.path
+		return path.hasSuffix(".gif") || path.hasSuffix(".png") || path.hasSuffix(".jpg")
 	}
 }

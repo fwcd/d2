@@ -142,12 +142,20 @@ public struct RedditLink: Codable {
     }
     
     public struct Preview: Codable {
-        public let images: [Image]?
+        public let images: [Resource]?
         public let enabled: Bool?
         
-        public struct Image: Codable {
+        public var firstGif: Resource? { images?.compactMap { $0.variants?.gif }.first }
+        
+        public class Resource: Codable {
             public let source: UrlWithSize?
             public let resolutions: [UrlWithSize]?
+            public let variants: Variants?
+            
+            public struct Variants: Codable {
+                public let gif: Resource?
+                public let mp4: Resource?
+            }
         }
     }
     
