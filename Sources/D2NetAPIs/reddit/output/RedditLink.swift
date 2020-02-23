@@ -1,4 +1,4 @@
-public struct RedditPost: Codable {
+public struct RedditLink: Codable {
     public enum CodingKeys: String, CodingKey {
         case subreddit
         case id
