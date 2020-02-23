@@ -5,13 +5,11 @@ public struct MinecraftModSearchQuery {
 
     public init(
         term: String,
-        gameVersion: String = "1.12.2",
         maxResults: Int = 3
     ) {
         params = [
             "categoryId": "0",
             "gameId": "432",
-            "gameVersion": gameVersion,
             "index": "0",
             "pageSize": String(maxResults),
             "searchFilter": term,
