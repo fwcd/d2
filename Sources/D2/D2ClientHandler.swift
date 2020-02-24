@@ -95,6 +95,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["reverse"] = ReverseCommand()
 		registry["togif"] = ToGifCommand()
 		registry["avatar"] = AvatarCommand()
+		registry["qr"] = QRCommand()
 		registry["latex"] = LatexCommand()
 		registry["autolatex"] = AutoLatexCommand()
 		registry["hoogle"] = HoogleCommand()

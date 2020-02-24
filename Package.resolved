@@ -83,12 +83,30 @@
         }
       },
       {
+        "package": "QRCodeGenerator",
+        "repositoryURL": "https://github.com/fjfdeztoro/Swift-QR-Code-generator.git",
+        "state": {
+          "branch": null,
+          "revision": "a2bab2628e74f08ef137fa39a1540344c887ddd9",
+          "version": "0.0.9"
+        }
+      },
+      {
         "package": "SwiftDiscord",
         "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
         "state": {
           "branch": null,
           "revision": "67ee8a5b4e5779f9c6822f76b8e3c5cf99ed5d54",
           "version": null
+        }
+      },
+      {
+        "package": "SwiftNUStep",
+        "repositoryURL": "https://github.com/fjfdeztoro/SwiftNUStep",
+        "state": {
+          "branch": null,
+          "revision": "784cf9183bb900d1887cbf0206530cd6c5aeaf71",
+          "version": "0.0.2"
         }
       },
       {
