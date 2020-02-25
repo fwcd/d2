@@ -17,16 +17,23 @@ public class QRCommand: StringCommand {
         do {
             let qr = try QRCode.encode(text: input, ecl: .medium)
             let scale = 4
-            let width = qr.size * scale
-            let height = qr.size * scale
-            let image = try Image(width: width, height: height)
+            let margin = 4 // in modules
+            let imageSize = (qr.size + 2 * margin) * scale
+            let image = try Image(width: imageSize, height: imageSize)
             var graphics = CairoGraphics(fromImage: image)
             
             for y in 0..<qr.size {
                 for x in 0..<qr.size {
                     let module = qr.getModule(x: x, y: y)
                     let color = module ? Colors.white : Colors.transparent
-                    graphics.draw(Rectangle(fromX: Double(x * scale), y: Double(y * scale), width: Double(scale), height: Double(scale), color: color, isFilled: true))
+                    graphics.draw(Rectangle(
+                        fromX: Double((x + margin) * scale),
+                        y: Double((y + margin) * scale),
+                        width: Double(scale),
+                        height: Double(scale),
+                        color: color,
+                        isFilled: true
+                    ))
                 }
             }
 
