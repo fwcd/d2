@@ -10,22 +10,27 @@ public class QRCommand: StringCommand {
         longDescription: "Generates a QR code from given text",
         requiredPermissionLevel: .basic
     )
-    let tempDir = TemporaryDirectory()
     
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        let tempFile = tempDir.createFile(named: "qr.xml")
-        let svgXml = QRCodeGenerator.getQRCodeAsSVG(input, withTolerance: .Medium)
-        tempFile.write(utf8: svgXml)
-        
         do {
-            let width = 200 // TODO
-            let height = 200
+            let qr = try QRCode.encode(text: input, ecl: .medium)
+            let scale = 4
+            let width = qr.size * scale
+            let height = qr.size * scale
             let image = try Image(width: width, height: height)
-            let graphics = CairoGraphics(fromImage: image)
-            graphics.draw(try SVG(fromSvgFile: tempFile.path, width: width, height: height))
-            output.append(image)
+            var graphics = CairoGraphics(fromImage: image)
+            
+            for y in 0..<qr.size {
+                for x in 0..<qr.size {
+                    let module = qr.getModule(x: x, y: y)
+                    let color = module ? Colors.white : Colors.transparent
+                    graphics.draw(Rectangle(fromX: Double(x * scale), y: Double(y * scale), width: Double(scale), height: Double(scale), color: color, isFilled: true))
+                }
+            }
+
+            try output.append(image)
         } catch {
             output.append(error, errorText: "An error occurred while converting the QR code SVG to an image")
         }

@@ -14,7 +14,7 @@ let package = Package(
         .package(url: "https://github.com/IBM-Swift/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
-        .package(url: "https://github.com/fjfdeztoro/Swift-QR-Code-generator.git", from: "0.0.9")
+        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

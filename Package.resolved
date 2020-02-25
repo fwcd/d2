@@ -84,11 +84,11 @@
       },
       {
         "package": "QRCodeGenerator",
-        "repositoryURL": "https://github.com/fjfdeztoro/Swift-QR-Code-generator.git",
+        "repositoryURL": "https://github.com/fwcd/swift-qrcode-generator.git",
         "state": {
           "branch": null,
-          "revision": "a2bab2628e74f08ef137fa39a1540344c887ddd9",
-          "version": "0.0.9"
+          "revision": "8e785d4b915bed178503648b6b68fa79482c5f79",
+          "version": "0.0.2"
         }
       },
       {
@@ -98,15 +98,6 @@
           "branch": null,
           "revision": "67ee8a5b4e5779f9c6822f76b8e3c5cf99ed5d54",
           "version": null
-        }
-      },
-      {
-        "package": "SwiftNUStep",
-        "repositoryURL": "https://github.com/fjfdeztoro/SwiftNUStep",
-        "state": {
-          "branch": null,
-          "revision": "784cf9183bb900d1887cbf0206530cd6c5aeaf71",
-          "version": "0.0.2"
         }
       },
       {
