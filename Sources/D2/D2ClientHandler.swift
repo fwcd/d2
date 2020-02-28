@@ -70,6 +70,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["mcmods"] = MinecraftServerModsCommand()
 		registry["mcmod"] = MinecraftModSearchCommand()
+		registry["ftbpacks"] = FTBModpacksCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
 		registry["wikipedia"] = WikipediaCommand()

@@ -95,12 +95,12 @@ public struct HTTPRequest {
 		}
 	}
 	
-	public func fetchXMLAsync<D, T>(using delegateType: D.Type, then: @escaping (Result<T, Error>) -> Void) where D: XMLParserDelegate & ThenInitializable, D.Value == Result<T, Error> {
+	public func fetchXMLAsync<T>(using delegate: XMLParserDelegate, then: @escaping (Result<T, Error>) -> Void) {
 		runAsync {
 			switch $0 {
 				case .success(let data):
 					let parser = XMLParser(data: data)
-					parser.delegate = D.init(then: then)
+					parser.delegate = delegate
 					_ = parser.parse()
 				case .failure(let error):
 					then(.failure(error))
