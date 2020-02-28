@@ -11,6 +11,7 @@ public class MinecraftModSearchCommand: StringCommand {
         helpText: "Syntax: [mod name]",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
     
     public init() {}
     

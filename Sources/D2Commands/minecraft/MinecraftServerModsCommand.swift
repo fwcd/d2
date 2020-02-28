@@ -8,6 +8,7 @@ public class MinecraftServerModsCommand: StringCommand {
         longDescription: "Fetches a list of mods used by a given server",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
     
     public init() {}
     

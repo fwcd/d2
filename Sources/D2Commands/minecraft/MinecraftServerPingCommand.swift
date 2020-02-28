@@ -13,6 +13,7 @@ public class MinecraftServerPingCommand: StringCommand {
         longDescription: "Fetches the Message of the Day (MOTD) and the current player list of a Minecraft server",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
     
     public init() {}
     
