@@ -18,14 +18,17 @@ public class FTBModpacksCommand: StringCommand {
                 let packs = try $0.get().prefix(5)
                 output.append(DiscordEmbed(
                     title: "Recent FTB Modpacks",
-                    thumbnail: (packs.first?.imageUrl).flatMap(URL.init(string:)).map(DiscordEmbed.Thumbnail.init(url:)),
+                    image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(DiscordEmbed.Image.init(url:)),
                     fields: packs.map {
                         DiscordEmbed.Field(
                             name: "\($0.name ?? "?")\($0.mcVersion.map { " (\($0))" } ?? "")",
-                            value: $0.description?
-                                .replacingOccurrences(of: "<br>", with: "\n")
-                                .replacingOccurrences(of: "\n\n", with: "\n")
-                                .truncate(300, appending: "...") ?? "_no description_"
+                            value: """
+                                [[Download Pack]](\($0.downloadUrl ?? "")) [[Download Server]](\($0.serverDownloadUrl ?? ""))
+                                \($0.description?
+                                    .replacingOccurrences(of: "<br>", with: "\n")
+                                    .replacingOccurrences(of: "\n\n", with: "\n")
+                                    .truncate(300, appending: "...") ?? "_no description_")
+                                """
                         )
                     }
                 ))
