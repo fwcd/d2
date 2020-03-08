@@ -31,12 +31,12 @@ public class MinecraftDynmapCommand: StringCommand {
                     MinecraftDynmapWorldQuery(host: host, world: worldName).perform {
                         switch $0 {
                             case .success(let world):
-                                if let name = playerName {
+                                if let name = playerName, let map = config.worlds?.first(where: { $0.name == worldName })?.maps?.first {
                                     if let player = world.players?.first(where: { $0.name == name }) {
                                         output.append(DiscordEmbed(
                                             title: "Minecraft Player `\(name)`",
                                             description: self.describe(player: player),
-                                            image: URL(string: "http://\(host):8123/\(self.tilePath(for: player))").map { DiscordEmbed.Image(url: $0) }
+                                            image: URL(string: "http://\(host):8123/\(self.tilePath(for: player, on: map))").map { DiscordEmbed.Image(url: $0) }
                                         ))
                                     } else {
                                         output.append(errorText: "Could not find player `\(name)` on server")
@@ -70,13 +70,15 @@ public class MinecraftDynmapCommand: StringCommand {
         """
     }
     
-    private func tilePath(for player: MinecraftDynmapWorld.Player, zoomLevel: Int = 2) -> String {
-        let zoom = String(repeating: "z", count: zoomLevel)
-        let gridSize = 1 << zoomLevel
-        let gridX = Int(player.x ?? 0) / gridSize
-        let gridZ = Int(player.z ?? 0) / gridSize
-        let x = gridX * gridSize
-        let z = gridZ * gridSize
-        return "tiles/\(player.world ?? "world")/flat/0_0/\(zoom)_\(x)_\(z).png"
+    private func tilePath(for player: MinecraftDynmapWorld.Player, on map: MinecraftDynmapConfiguration.World.Map, zoomLevel: Int = 2) -> String {
+        let zoomPrefix = String(repeating: "z", count: zoomLevel) + (zoomLevel > 0 ? "_" : "")
+        let (rawTileX, rawTileY) = map.toTilePos(x: player.x ?? 0, y: player.y ?? 0, z: player.z ?? 0)
+        let rounding = 1 << zoomLevel
+        let tileX = (Int(rawTileX) / rounding) * rounding
+        let tileY = (Int(rawTileY) / rounding) * rounding
+        let gridSize = 32
+        let gridX = tileX / gridSize
+        let gridY = tileY / gridSize
+        return "tiles/\(player.world ?? "world")/\(map.name ?? "flat")/\(gridX)_\(gridY)/\(zoomPrefix)\(tileX)_\(tileY).png"
     }
 }
