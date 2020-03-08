@@ -29,7 +29,7 @@ public class MinecraftDynmapChatCommand: StringCommand {
                 return
             }
             let host = parsedArgs[1]
-            let message = parsedArgs[2]
+            let message = "[\(context.author.username)] \(parsedArgs[2])"
             
             log.info("Sending chat message '\(message)' to host '\(host)'")
 
