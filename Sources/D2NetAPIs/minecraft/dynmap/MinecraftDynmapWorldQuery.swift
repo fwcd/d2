@@ -1,3 +1,4 @@
+import Foundation
 import D2Utils
 
 public struct MinecraftDynmapWorldQuery {
@@ -11,7 +12,8 @@ public struct MinecraftDynmapWorldQuery {
     
     public func perform(then: @escaping (Result<MinecraftDynmapWorld, Error>) -> Void) {
         do {
-            let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/world/\(world)/0")
+            let timestamp = Int(Date().timeIntervalSince1970)
+            let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/world/\(world)/\(timestamp)")
             request.fetchJSONAsync(as: MinecraftDynmapWorld.self, then: then)
         } catch {
             then(.failure(error))
