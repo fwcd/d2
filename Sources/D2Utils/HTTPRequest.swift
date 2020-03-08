@@ -37,7 +37,7 @@ public struct HTTPRequest {
 			body = components.percentEncodedQuery?.data(using: .utf8) ?? .init()
 			components.queryItems = []
 		} else {
-			body = customBody.data(using: .utf8) ?? .init()
+			body = customBody?.data(using: .utf8) ?? .init()
 		}
 		
 		guard let url = components.url else { throw NetworkError.couldNotCreateURL(components) }
