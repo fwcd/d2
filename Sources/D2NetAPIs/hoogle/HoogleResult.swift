@@ -9,5 +9,7 @@ public struct HoogleResult: Codable {
     public struct NamedURL: Codable {
         public let url: String
         public let name: String
+        
+        public var markdown: String { "[\(name)](\(url))" }
     }
 }

@@ -1,6 +1,7 @@
 import SwiftDiscord
 import Logging
 import D2Utils
+import D2NetAPIs
 
 fileprivate let log = Logger(label: "HoogleCommand")
 
@@ -11,16 +12,24 @@ public class HoogleCommand: StringCommand {
         longDescription: "Searches for a function matching a type signature using the Hoogle search engine",
         requiredPermissionLevel: .basic
     )
-    public let outputValueType: RichValueType = .code
+    public let outputValueType: RichValueType = .embed
     
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        do {
-            let results = try Shell().outputSync(for: "hoogle", args: [input])
-            output.append(.code(results ?? "No results", language: "haskell"))
-        } catch {
-            output.append(error, errorText: "An error occurred while hoogling")
+        HoogleQuery(term: input).perform {
+            switch $0 {
+                case let .success(results):
+                    output.append(DiscordEmbed(
+                        title: ":closed_umbrella: Hoogle Results",
+                        fields: results.map { DiscordEmbed.Field(name: $0.item, value: """
+                            _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
+                            \($0.docs)
+                            """) }
+                    ))
+                case let .failure(error):
+                    output.append(error, errorText: "An error occurred while hoogling")
+            }
         }
     }
 }

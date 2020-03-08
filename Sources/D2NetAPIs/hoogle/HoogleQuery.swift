@@ -9,7 +9,7 @@ public struct HoogleQuery {
     
     public func perform(then: @escaping (Result<[HoogleResult], Error>) -> Void) {
         do {
-            let request = try HTTPRequest(host: "hoogle.haskell.org", query: [
+            let request = try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
                 "mode": "json",
                 "format": "text",
                 "hoogle": term,
