@@ -22,10 +22,16 @@ public class HoogleCommand: StringCommand {
                 case let .success(results):
                     output.append(DiscordEmbed(
                         title: ":closed_umbrella: Hoogle Results",
-                        fields: results.map { DiscordEmbed.Field(name: $0.item, value: """
-                            _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
-                            \($0.docs)
-                            """) }
+                        description: results
+                            .map { """
+                                ```haskell
+                                \($0.item)
+                                ```
+                                _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
+                                \($0.docs?.replacingOccurrences(of: "\n\n", with: "\n") ?? "_no docs_")
+                                """ }
+                            .joined(separator: "\n"),
+                        color: 0x8900b3
                     ))
                 case let .failure(error):
                     output.append(error, errorText: "An error occurred while hoogling")
