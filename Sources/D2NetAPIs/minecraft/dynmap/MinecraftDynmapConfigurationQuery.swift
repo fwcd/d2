@@ -9,7 +9,7 @@ public struct MinecraftDynmapConfigurationQuery {
     
     public func perform(then: @escaping (Result<MinecraftDynmapConfiguration, Error>) -> Void) {
         do {
-            let request = try HTTPRequest(host: host, port: 8123, path: "/up/configuration")
+            let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/configuration")
             request.fetchJSONAsync(as: MinecraftDynmapConfiguration.self, then: then)
         } catch {
             then(.failure(error))

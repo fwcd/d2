@@ -71,6 +71,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["mcmods"] = MinecraftServerModsCommand()
 		registry["mcmod"] = MinecraftModSearchCommand()
         registry["mcchat"] = MinecraftDynmapChatCommand()
+		registry["mcdynmap"] = MinecraftDynmapCommand()
 		registry["ftbpacks"] = FTBModpacksCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
