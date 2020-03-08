@@ -4,7 +4,7 @@ General-purpose virtual assistant for Discord.
 [![Linux](https://github.com/fwcd/d2/workflows/Linux/badge.svg)](https://github.com/fwcd/d2/actions)
 [![macOS](https://github.com/fwcd/d2/workflows/macOS/badge.svg)](https://github.com/fwcd/d2/actions)
 
-In addition to suporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
+In addition to supporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
 
 ## Installation
 
