@@ -4,23 +4,26 @@ fileprivate let sectionTitlePattern = try! Regex(from: "=+\\s*([^=\\s]+)\\s*=+")
 
 public struct MinecraftWikitextDocument {
     public let sections: [Section]
+    public let introductionLines: [String]
 
     public init?(from raw: String) {
         // Parses the sections from raw wikitext
 
         var sections = [Section]()
+        var introductionLines = [String]()
         var currentSection: Section? = nil
 
         for line in raw.split(separator: "\n").map({ String($0) }) {
-            if line.starts(with: "=") {
+            if let parsedTitle = sectionTitlePattern.firstGroups(in: line) {
                 if let section = currentSection {
                     sections.append(section)
                 }
 
-                guard let parsedTitle = sectionTitlePattern.firstGroups(in: line) else { return nil }
                 currentSection = Section(title: parsedTitle[1], contentLines: [])
+            } else if currentSection != nil {
+                currentSection!.contentLines.append(line)
             } else {
-                currentSection?.contentLines.append(line)
+                introductionLines.append(line)
             }
         }
         
@@ -28,6 +31,7 @@ public struct MinecraftWikitextDocument {
             sections.append(section)
         }
         
+        self.introductionLines = introductionLines
         self.sections = sections
     }
     
