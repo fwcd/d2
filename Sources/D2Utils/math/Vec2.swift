@@ -48,8 +48,12 @@ public struct Vec2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mult
 		Vec2(x: -operand.x, y: -operand.y)
 	}
 	
-	public func dot(other: Vec2<T>) -> T {
+	public func dot(_ other: Vec2<T>) -> T {
 		(x * other.x) + (y * other.y)
+	}
+	
+	public func cross(_ other: Vec2<T>) -> T {
+		(x * other.y) - (y * other.x)
 	}
 	
 	public func map<R: IntExpressibleAlgebraicField>(mapper: (T) -> R) -> Vec2<R> {
