@@ -26,6 +26,7 @@ public class MinecraftWikiCommand: StringCommand {
                     title: wikitextParse.title,
                     url: wikitextParse.title.flatMap(self.wikiLink(page:)),
                     thumbnail: self.image(from: doc).map(DiscordEmbed.Thumbnail.init(url:)),
+                    color: 0x542900,
                     fields: Array(doc.sections.prefix(5).map {
                         DiscordEmbed.Field(
                             name: $0.title ?? "Section",
