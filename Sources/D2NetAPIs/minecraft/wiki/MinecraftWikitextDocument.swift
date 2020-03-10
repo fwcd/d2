@@ -11,7 +11,7 @@ public struct MinecraftWikitextDocument {
         
         public enum Node {
             case text(String)
-            case link(String)
+            case link(String, String?)
             case template(String, [TemplateParameter])
             
             public enum TemplateParameter {

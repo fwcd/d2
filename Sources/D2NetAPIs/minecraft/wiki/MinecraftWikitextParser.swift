@@ -77,8 +77,14 @@ public struct MinecraftWikitextParser {
         log.trace("Parsing link")
         guard case .symbol("[[")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected opening [[") } 
         guard case let .text(link)? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected link") }
+        var target: String? = nil
+        if case .symbol("|")? = tokens.peek() {
+            tokens.next()
+            guard case let .text(t)? = tokens.next() else { throw MinecraftWikitextParseError.unexpectedToken("Expected link target") }
+            target = t
+        }
         guard case .symbol("]]")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing ]] (after link: \(link))") }
-        return .link(link)
+        return .link(link, target)
     }
     
     private func parseTemplate(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node {

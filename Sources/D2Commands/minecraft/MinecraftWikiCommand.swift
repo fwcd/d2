@@ -42,7 +42,7 @@ public class MinecraftWikiCommand: StringCommand {
         nodes.map {
             switch $0 {
                 case .text(let text): return text
-                case .link(let page): return "[\(page)](\(wikiLink(page: page)?.absoluteString ?? page))"
+                case .link(let page, let target): return "[\(page)](\(wikiLink(page: target ?? page)?.absoluteString ?? page))"
                 case .template(let name, let params): return name // TODO
             }
         }.joined(separator: " ")
