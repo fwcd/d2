@@ -28,7 +28,7 @@ public class MinecraftWikiCommand: StringCommand {
                     fields: Array(doc.sections.prefix(5).map {
                         DiscordEmbed.Field(
                             name: $0.title ?? "Section",
-                            value: self.markdownFrom(nodes: $0.content).truncate(200, appending: "...").nilIfEmpty ?? "_no text_"
+                            value: self.markdownFrom(nodes: $0.content).truncate(1000, appending: "...").nilIfEmpty ?? "_no text_"
                         )
                     })
                 ))
@@ -44,6 +44,8 @@ public class MinecraftWikiCommand: StringCommand {
                 case .text(let text): return text
                 case .link(let page, let target): return "[\(page)](\(wikiLink(page: target ?? page)?.absoluteString ?? page))"
                 case .template(let name, let params): return name // TODO
+                case .other(let s): return s
+                case .unknown: return "?"
             }
         }.joined(separator: " ")
     }

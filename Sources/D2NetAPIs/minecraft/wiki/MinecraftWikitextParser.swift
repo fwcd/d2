@@ -2,18 +2,20 @@ import Logging
 import D2Utils
 
 fileprivate let log = Logger(label: "MinecraftWikitextParser")
-fileprivate let tokenPattern = try! Regex(from: "\\s*(?:([\\w\\s\\.\\,\\<\\>*!\"'%&\\(\\)\\/]+)|(=+|\\[+|\\]+|\\{+|\\}+|\\|+))\\s*")
+fileprivate let tokenPattern = try! Regex(from: "\\s*(?:([^=\\[\\]\\{\\}\\|]+)|(=+|\\[+|\\]+|\\{+|\\}+|\\|))\\s*")
 
 /// A basic recursive-descent parser for a subset of wikitext.
 public struct MinecraftWikitextParser {
     fileprivate enum Token: CustomStringConvertible {
         case text(String)
         case symbol(String)
+        case unknown
         
         var description: String {
             switch self {
-                case .text(let s): return s
-                case .symbol(let s): return "s\(s)"
+                case .text(let s): return "<\(s)>"
+                case .symbol(let s): return "s<\(s)>"
+                case .unknown: return "?"
             }
         }
     }
@@ -66,10 +68,17 @@ public struct MinecraftWikitextParser {
         log.trace("Parsing node")
         guard let token = tokens.peek() else { return nil }
         switch token {
-            case .text(_): return try parseText(from: tokens)
-            case .symbol("[["): return try parseLink(from: tokens)
-            case .symbol("{{"): return try parseTemplate(from: tokens)
-            default: return nil
+            case .text(_):
+                return try parseText(from: tokens)
+            case .symbol("[["):
+                return try parseLink(from: tokens)
+            case .symbol("{{"):
+                return try parseTemplate(from: tokens)
+            case .unknown:
+                tokens.next()
+                return .unknown
+            default:
+                return nil
         }
     }
     
@@ -80,7 +89,7 @@ public struct MinecraftWikitextParser {
         var target: String? = nil
         if case .symbol("|")? = tokens.peek() {
             tokens.next()
-            guard case let .text(t)? = tokens.next() else { throw MinecraftWikitextParseError.unexpectedToken("Expected link target") }
+            guard case let .text(t)? = tokens.next() else { throw MinecraftWikitextParseError.unexpectedToken("Expected link target, but got \(tokens.current ?? .unknown)") }
             target = t
         }
         guard case .symbol("]]")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing ]] (after link: \(link))") }
