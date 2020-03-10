@@ -2,21 +2,41 @@ import Logging
 import D2Utils
 
 fileprivate let log = Logger(label: "MinecraftWikitextParser")
-fileprivate let tokenPattern = try! Regex(from: "\\s*([\\w\\s\\.]+|=+|\\[+|\\]+|\\{+|\\}+|\\|+)\\s*")
+fileprivate let tokenPattern = try! Regex(from: "\\s*(?:([\\w\\s\\.\\,\\<\\>*!\"'%&\\(\\)\\/]+)|(=+|\\[+|\\]+|\\{+|\\}+|\\|+))\\s*")
 
 /// A basic recursive-descent parser for a subset of wikitext.
 public struct MinecraftWikitextParser {
+    fileprivate enum Token: CustomStringConvertible {
+        case text(String)
+        case symbol(String)
+        
+        var description: String {
+            switch self {
+                case .text(let s): return s
+                case .symbol(let s): return "s\(s)"
+            }
+        }
+    }
+
     public init() {}
     
     public func parse(raw: String) throws -> MinecraftWikitextDocument {
-        try parseWikitext(from: TokenIterator(tokenize(raw: raw)))
+        let tokens = tokenize(raw: raw)
+        log.trace("Tokens: \(tokens)")
+        return try parseWikitext(from: TokenIterator(tokens))
     }
     
-    private func tokenize(raw: String) -> [String] {
-        tokenPattern.allGroups(in: raw).map { $0[1] }
+    private func tokenize(raw: String) -> [Token] {
+        tokenPattern.allGroups(in: raw).map {
+            if let text = $0[1].nilIfEmpty {
+                return .text(text)
+            } else {
+                return .symbol($0[2])
+            }
+        }
     }
 
-    private func parseWikitext(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument {
+    private func parseWikitext(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument {
         log.trace("Parsing wikitext")
         var sections = [MinecraftWikitextDocument.Section]()
         while let section = try parseSection(from: tokens) {
@@ -25,7 +45,7 @@ public struct MinecraftWikitextParser {
         return MinecraftWikitextDocument(sections: sections)
     }
     
-    private func parseSection(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument.Section? {
+    private func parseSection(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section? {
         log.trace("Parsing section")
         let title = try parseTitle(from: tokens)
         let nodes = try parseNodes(from: tokens)
@@ -33,7 +53,7 @@ public struct MinecraftWikitextParser {
         return .init(title: title, content: nodes)
     }
     
-    private func parseNodes(from tokens: TokenIterator<String>) throws -> [MinecraftWikitextDocument.Section.Node] {
+    private func parseNodes(from tokens: TokenIterator<Token>) throws -> [MinecraftWikitextDocument.Section.Node] {
         log.trace("Parsing nodes")
         var nodes = [MinecraftWikitextDocument.Section.Node]()
         while let node = try parseNode(from: tokens) {
@@ -42,46 +62,39 @@ public struct MinecraftWikitextParser {
         return nodes
     }
     
-    private func parseNode(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument.Section.Node? {
+    private func parseNode(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node? {
         log.trace("Parsing node")
         guard let token = tokens.peek() else { return nil }
-        if token == "[[" {
-            return try parseLink(from: tokens)
-        } else if token == "{{" {
-            return try parseTemplate(from: tokens)
-        } else if token.first.map({ $0.isLetter || $0.isNumber }) ?? false {
-            return try parseText(from: tokens)
-        } else {
-            return nil
+        switch token {
+            case .text(_): return try parseText(from: tokens)
+            case .symbol("[["): return try parseLink(from: tokens)
+            case .symbol("{{"): return try parseTemplate(from: tokens)
+            default: return nil
         }
     }
     
-    private func parseLink(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument.Section.Node {
+    private func parseLink(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node {
         log.trace("Parsing link")
-        guard let opening = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected opening [[") } 
-        guard opening == "[[" else { throw MinecraftWikitextParseError.unexpectedToken("Expected opening [[, but got \(opening)") }
-        guard let link = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected link") }
-        guard let closing = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing ]]") }
-        guard closing == "]]" else { throw MinecraftWikitextParseError.unexpectedToken("Expected closing ]], but got \(closing)") }
+        guard case .symbol("[[")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected opening [[") } 
+        guard case let .text(link)? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected link") }
+        guard case .symbol("]]")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing ]] (after link: \(link))") }
         return .link(link)
     }
     
-    private func parseTemplate(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument.Section.Node {
+    private func parseTemplate(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node {
         log.trace("Parsing template")
-        guard let opening = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected opening {{") } 
-        guard opening == "{{" else { throw MinecraftWikitextParseError.unexpectedToken("Expected opening {{, but got \(opening)") }
-        guard let name = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected template title") }
+        guard case .symbol("{{")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected opening {{") } 
+        guard case let .text(name)? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected template title") }
         var params = [MinecraftWikitextDocument.Section.Node.TemplateParameter]()
-        while tokens.peek() == "|" {
+        while case .symbol("|")? = tokens.peek() {
             tokens.next()
             params.append(try parseTemplateParameter(from: tokens))
         }
-        guard let closing = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing }}") }
-        guard closing == "}}" else { throw MinecraftWikitextParseError.unexpectedToken("Expected closing }}, but got \(closing)") }
+        guard case .symbol("}}") = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing }} (after params: \(params))") }
         return .template(name, params)
     }
     
-    private func parseTemplateParameter(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument.Section.Node.TemplateParameter {
+    private func parseTemplateParameter(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node.TemplateParameter {
         log.trace("Parsing template parameter")
         if let key = parseTemplateParameterKey(from: tokens) {
             return .keyValue(key, try parseNodes(from: tokens))
@@ -90,27 +103,27 @@ public struct MinecraftWikitextParser {
         }
     }
     
-    private func parseTemplateParameterKey(from tokens: TokenIterator<String>) -> String? {
+    private func parseTemplateParameterKey(from tokens: TokenIterator<Token>) -> String? {
         log.trace("Parsing template parameter key")
-        guard let key = tokens.peek(), key.first.map({ $0.isLetter || $0.isNumber }) ?? false else { return nil }
-        guard tokens.peek(2) == "=" else { return nil }
+        guard case let .text(key)? = tokens.peek() else { return nil }
+        guard case .symbol("=")? = tokens.peek(2) else { return nil }
         tokens.next()
         tokens.next()
         return key
     }
     
-    private func parseText(from tokens: TokenIterator<String>) throws -> MinecraftWikitextDocument.Section.Node {
+    private func parseText(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node {
         log.trace("Parsing text")
-        guard let text = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected text") }
+        guard case let .text(text)? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected text") }
         return .text(text)
     }
     
-    private func parseTitle(from tokens: TokenIterator<String>) throws -> String? {
+    private func parseTitle(from tokens: TokenIterator<Token>) throws -> String? {
         log.trace("Parsing title")
-        guard let opening = tokens.peek(), opening.starts(with: "=") else { return nil }
+        guard case let .symbol(opening)? = tokens.peek(), opening.starts(with: "=") else { return nil }
         tokens.next()
-        guard let title = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected title") }
-        guard tokens.next() == opening else { throw MinecraftWikitextParseError.unexpectedToken("Closing =s do not match opening =s (\(opening))") }
+        guard case let .text(title)? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected title") }
+        guard case let .symbol(closing) = tokens.next(), opening == closing else { throw MinecraftWikitextParseError.unexpectedToken("Closing =s do not match opening =s (\(opening))") }
         return title
     }
 }
