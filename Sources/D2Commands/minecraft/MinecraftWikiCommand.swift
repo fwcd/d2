@@ -25,10 +25,11 @@ public class MinecraftWikiCommand: StringCommand {
                 output.append(DiscordEmbed(
                     title: wikitextParse.title,
                     url: wikitextParse.title.flatMap(self.wikiLink(page:)),
+                    thumbnail: self.image(from: doc).map(DiscordEmbed.Thumbnail.init(url:)),
                     fields: Array(doc.sections.prefix(5).map {
                         DiscordEmbed.Field(
                             name: $0.title ?? "Section",
-                            value: self.markdownFrom(nodes: $0.content).truncate(1000, appending: "...").nilIfEmpty ?? "_no text_"
+                            value: self.markdown(from: $0.content).truncate(1000, appending: "...").nilIfEmpty ?? "_no text_"
                         )
                     })
                 ))
@@ -38,7 +39,7 @@ public class MinecraftWikiCommand: StringCommand {
         }
     }
     
-    private func markdownFrom(nodes: [MinecraftWikitextDocument.Section.Node]) -> String {
+    private func markdown(from nodes: [MinecraftWikitextDocument.Section.Node]) -> String {
         nodes.map {
             switch $0 {
                 case .text(let text): return text
@@ -56,5 +57,24 @@ public class MinecraftWikiCommand: StringCommand {
         components.host = "minecraft.gamepedia.com"
         components.path = "/\(page)"
         return components.url
+    }
+    
+    private func image(from doc: MinecraftWikitextDocument) -> URL? {
+        doc.sections.flatMap { (s: MinecraftWikitextDocument.Section) -> [MinecraftWikitextDocument.Section.Node] in
+            s.content
+        }.flatMap { (n: MinecraftWikitextDocument.Section.Node) -> [MinecraftWikitextDocument.Section.Node.TemplateParameter] in
+            guard case let .template(_, params) = n else { return [] }
+            return params
+        }.compactMap {
+            guard case let .keyValue(key, params) = $0,
+                key.starts(with: "image"),
+                case let .text(fileNames) = params.first,
+                let fileName = fileNames.split(separator: ";").first else { return nil }
+            var components = URLComponents()
+            components.scheme = "https"
+            components.host = "minecraft.gamepedia.com"
+            components.path = "/Special:Filepath/\(fileName)"
+            return components.url
+        }.first
     }
 }
