@@ -24,10 +24,11 @@ public class MinecraftWikiCommand: StringCommand {
                 let doc = try MinecraftWikitextParser().parse(raw: raw)
                 output.append(DiscordEmbed(
                     title: wikitextParse.title,
+                    description: doc.sections.first.map { self.markdown(from: $0.content) }?.truncate(1000, appending: "...").nilIfEmpty ?? "_no description_",
                     url: wikitextParse.title.flatMap(self.wikiLink(page:)),
                     thumbnail: self.image(from: doc).map(DiscordEmbed.Thumbnail.init(url:)),
                     color: 0x542900,
-                    fields: Array(doc.sections.prefix(5).map {
+                    fields: Array(doc.sections[1...].prefix(5).map {
                         DiscordEmbed.Field(
                             name: $0.title ?? "Section",
                             value: self.markdown(from: $0.content).truncate(1000, appending: "...").nilIfEmpty ?? "_no text_"
