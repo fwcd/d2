@@ -45,8 +45,19 @@ public class MinecraftWikiCommand: StringCommand {
         nodes.map {
             switch $0 {
                 case .text(let text): return text
-                case .link(let page, let target): return "[\(page)](\(wikiLink(page: target ?? page)?.absoluteString ?? page))"
-                case .template(let name, let params): return name // TODO
+                case .link(let nodes):
+                    switch nodes.count {
+                        case 1:
+                            let page = markdown(from: nodes[0])
+                            return "[\(page)](\(wikiLink(page: page)?.absoluteString ?? page))"
+                        case 2:
+                            let target = markdown(from: nodes[0])
+                            let page = markdown(from: nodes[1])
+                            return "[\(page)](\(wikiLink(page: target)?.absoluteString ?? target))"
+                        default:
+                            return nodes.first.map(markdown(from:)) ?? ""
+                    }
+                case .template(_, _): return "" // TODO
                 case .other(let s): return s
                 case .unknown: return "?"
             }

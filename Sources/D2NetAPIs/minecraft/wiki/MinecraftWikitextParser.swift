@@ -85,15 +85,13 @@ public struct MinecraftWikitextParser {
     private func parseLink(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node {
         log.trace("Parsing link")
         guard case .symbol("[[")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected opening [[") } 
-        guard case let .text(link)? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected link") }
-        var target: String? = nil
-        if case .symbol("|")? = tokens.peek() {
+        var nodes = [try parseNodes(from: tokens)]
+        while case .symbol("|")? = tokens.peek() {
             tokens.next()
-            guard case let .text(t)? = tokens.next() else { throw MinecraftWikitextParseError.unexpectedToken("Expected link target, but got \(tokens.current ?? .unknown)") }
-            target = t
+            nodes.append(try parseNodes(from: tokens))
         }
-        guard case .symbol("]]")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing ]] (after link: \(link))") }
-        return .link(link, target)
+        guard case .symbol("]]")? = tokens.next() else { throw MinecraftWikitextParseError.noMoreTokens("Expected closing ]] (after link: \(nodes))") }
+        return .link(nodes)
     }
     
     private func parseTemplate(from tokens: TokenIterator<Token>) throws -> MinecraftWikitextDocument.Section.Node {
