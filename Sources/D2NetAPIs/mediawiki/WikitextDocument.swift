@@ -2,7 +2,7 @@ import D2Utils
 
 fileprivate let sectionTitlePattern = try! Regex(from: "=+\\s*([^=\\s]+)\\s*=+")
 
-public struct MinecraftWikitextDocument: Equatable {
+public struct WikitextDocument: Equatable {
     public let sections: [Section]
 
     public struct Section: Equatable {

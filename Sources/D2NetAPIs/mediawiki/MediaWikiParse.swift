@@ -1,4 +1,4 @@
-public struct MinecraftWikiParse: Codable {
+public struct MediaWikiParse: Codable {
     public let parse: Parse
     
     public struct Parse: Codable {

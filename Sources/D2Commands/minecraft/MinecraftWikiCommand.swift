@@ -14,14 +14,14 @@ public class MinecraftWikiCommand: StringCommand {
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        MinecraftWikiParseQuery(page: input, prop: "wikitext").perform {
+        MediaWikiParseQuery(host: "minecraft.gamepedia.com", path: "/api.php", page: input, prop: "wikitext").perform {
             do {
                 let wikitextParse = try $0.get().parse
                 guard let raw = wikitextParse.wikitext else {
                     output.append(errorText: "No wikitext got")
                     return
                 }
-                let doc = try MinecraftWikitextParser().parse(raw: raw)
+                let doc = try WikitextParser().parse(raw: raw)
                 output.append(DiscordEmbed(
                     title: wikitextParse.title,
                     description: doc.sections.first.map { self.markdown(from: $0.content) }?.truncate(1000, appending: "...").nilIfEmpty ?? "_no description_",
@@ -41,7 +41,7 @@ public class MinecraftWikiCommand: StringCommand {
         }
     }
     
-    private func markdown(from nodes: [MinecraftWikitextDocument.Section.Node]) -> String {
+    private func markdown(from nodes: [WikitextDocument.Section.Node]) -> String {
         nodes.map {
             switch $0 {
                 case .text(let text): return text
@@ -72,10 +72,10 @@ public class MinecraftWikiCommand: StringCommand {
         return components.url
     }
     
-    private func image(from doc: MinecraftWikitextDocument) -> URL? {
-        doc.sections.flatMap { (s: MinecraftWikitextDocument.Section) -> [MinecraftWikitextDocument.Section.Node] in
+    private func image(from doc: WikitextDocument) -> URL? {
+        doc.sections.flatMap { (s: WikitextDocument.Section) -> [WikitextDocument.Section.Node] in
             s.content
-        }.flatMap { (n: MinecraftWikitextDocument.Section.Node) -> [MinecraftWikitextDocument.Section.Node.TemplateParameter] in
+        }.flatMap { (n: WikitextDocument.Section.Node) -> [WikitextDocument.Section.Node.TemplateParameter] in
             guard case let .template(_, params) = n else { return [] }
             return params
         }.compactMap {

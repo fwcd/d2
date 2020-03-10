@@ -1,17 +1,21 @@
 import D2Utils
 
-public struct MinecraftWikiParseQuery {
+public struct MediaWikiParseQuery {
+    private let host: String
+    private let path: String
     private let page: String
     private let prop: String
     private let section: String?
     
-    public init(page: String, prop: String = "wikitext", section: String? = nil) {
+    public init(host: String, path: String, page: String, prop: String = "wikitext", section: String? = nil) {
+        self.host = host
+        self.path = path
         self.page = page
         self.prop = prop
         self.section = section
     }
     
-    public func perform(then: @escaping (Result<MinecraftWikiParse, Error>) -> Void) {
+    public func perform(then: @escaping (Result<MediaWikiParse, Error>) -> Void) {
         do {
             var query = [
                 "action": "parse",
@@ -25,8 +29,8 @@ public struct MinecraftWikiParseQuery {
                 query["section"] = s
             }
 
-            let request = try HTTPRequest(host: "minecraft.gamepedia.com", path: "/api.php", query: query)
-            request.fetchJSONAsync(as: MinecraftWikiParse.self, then: then)
+            let request = try HTTPRequest(host: host, path: path, query: query)
+            request.fetchJSONAsync(as: MediaWikiParse.self, then: then)
         } catch {
             then(.failure(error))
         }
