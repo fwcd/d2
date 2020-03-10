@@ -7,8 +7,6 @@ public struct MinecraftWikiParse: Codable {
         public let wikitext: String?
         public let sections: [Section]?
         
-        public var wikitextDocument: MinecraftWikitextDocument? { wikitext.flatMap(MinecraftWikitextDocument.init(from:)) }
-        
         public struct Section: Codable {
             public let toclevel: Int?
             public let level: String?
