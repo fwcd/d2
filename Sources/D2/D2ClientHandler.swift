@@ -70,7 +70,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["mcmods"] = MinecraftServerModsCommand()
 		registry["mcmod"] = MinecraftModSearchCommand()
-        registry["mcchat"] = MinecraftDynmapChatCommand()
+        registry["mcdynchat"] = MinecraftDynmapChatCommand()
 		registry["mcdynmap"] = MinecraftDynmapCommand()
 		registry["mcwiki"] = MinecraftWikiCommand()
 		registry["mcstronghold"] = MinecraftStrongholdFinderCommand()
