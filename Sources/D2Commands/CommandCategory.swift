@@ -15,6 +15,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case ml
     case music
     case permissions
+    case prolog
     case reddit
     case scripting
     case stackoverflow
@@ -40,6 +41,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .ml: return ":bulb: Machine learning"
             case .music: return ":guitar: Chord finder and music theory"
             case .permissions: return ":white_check_mark: Permission management"
+            case .prolog: return ":owl: Prolog"
             case .reddit: return ":ledger: Reddit API"
             case .scripting: return ":tools: Command scripting"
             case .stackoverflow: return ":books: Stack Overflow API"

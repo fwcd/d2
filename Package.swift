@@ -14,7 +14,8 @@ let package = Package(
         .package(url: "https://github.com/IBM-Swift/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
-        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2")
+        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2"),
+        .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -25,7 +26,7 @@ let package = Package(
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["SwiftDiscord", "SwiftSoup", "QRCodeGenerator", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
+            dependencies: ["SwiftDiscord", "SwiftSoup", "QRCodeGenerator", "PrologInterpreter", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
         ),
         .target(
             name: "D2Permissions",

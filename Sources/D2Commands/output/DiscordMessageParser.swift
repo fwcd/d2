@@ -25,12 +25,16 @@ public struct DiscordMessageParser {
 		
 		// Parse message content
 		let content = str ?? message.content
+		
+		let textualContent = codePattern.replace(in: content, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+		if !textualContent.isEmpty {
+			values.append(.text(textualContent))
+		}
+		
 		if let codeGroups = codePattern.firstGroups(in: content) {
 			let language = codeGroups[1].nilIfEmpty
 			let code = codeGroups[2]
 			values.append(.code(code, language: language))
-		} else if !content.isEmpty {
-			values.append(.text(content))
 		}
 		
 		// Append embeds

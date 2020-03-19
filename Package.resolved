@@ -38,6 +38,24 @@
         }
       },
       {
+        "package": "LineNoise",
+        "repositoryURL": "https://github.com/andybest/linenoise-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "afc897c02b030af7333105c4fedcd843a8339238",
+          "version": "0.0.3"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "e9d769113660769a4d9dd3afb855562c0b7ae7b0",
+          "version": "7.3.4"
+        }
+      },
+      {
         "package": "Sodium",
         "repositoryURL": "https://github.com/nuclearace/Sodium",
         "state": {
@@ -80,6 +98,15 @@
           "branch": null,
           "revision": "b75ffaba05b2cffdb1420d558f1a90b4e6c46dcc",
           "version": "2.5.0"
+        }
+      },
+      {
+        "package": "Prolog",
+        "repositoryURL": "https://github.com/fwcd/swift-prolog.git",
+        "state": {
+          "branch": null,
+          "revision": "9cb83791eda7ec9861a26a3b5ae28aded78e1932",
+          "version": null
         }
       },
       {
