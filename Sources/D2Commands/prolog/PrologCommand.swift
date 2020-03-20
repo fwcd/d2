@@ -7,7 +7,9 @@ public class PrologCommand: Command {
         category: .prolog,
         shortDescription: "Interprets Prolog",
         longDescription: "Parses Prolog rules and performs queries on them",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .admin // TODO: Place a timeout on the interpreter that breaks a
+                                        //       potentially non-terminating resolution (i.e. an infinite recursion)
+                                        //       without possibly crashing the application (e.g. due to a stack overflow)
     )
     private var subcommands: [String: (RichValue, CommandOutput) -> Void] = [:]
     private var loadedProgram: Program? = nil
