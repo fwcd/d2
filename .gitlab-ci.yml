@@ -5,6 +5,8 @@ stages:
   - deploy
 
 before_script:
+  # Workaround, see explanation in Dockerfile
+  - mv /usr/lib/python2.7/site-packages /usr/lib/python2.7/dist-packages; ln -s dist-packages /usr/lib/python2.7/site-packages
   - apt-get update && apt-get install -y libopus-dev libsodium-dev libcairo2-dev
 
 test:
