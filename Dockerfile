@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     libopus-dev \
     libsodium-dev \
-    libssl1.0-dev \
+    libssl-dev \
     libcairo2-dev \
     poppler-utils \
     maxima \
