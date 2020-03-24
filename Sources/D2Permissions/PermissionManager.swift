@@ -1,8 +1,10 @@
 import D2MessageIO
 import Foundation
+import Logging
 import D2Utils
 
-fileprivate let userPermissionsFilePath = "local/UserPermissions.json"
+fileprivate let log = Logger(label: "PermissionManager")
+fileprivate let userPermissionsFilePath = "local/userPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
 public class PermissionManager: CustomStringConvertible {
@@ -31,9 +33,7 @@ public class PermissionManager: CustomStringConvertible {
 		do {
 			try storage.write(userPermissions, asJsonToFile: userPermissionsFilePath)
 		} catch {
-			// TODO: Use logger instead
-			print("Error while writing permissions to disk:")
-			print(error)
+			log.error("Error while writing permissions to disk: \(error)")
 		}
 	}
 	

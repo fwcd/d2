@@ -1,8 +1,11 @@
 import D2MessageIO
 import Foundation
+import Logging
 import D2Utils
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
+
+fileprivate let log = Logger(label: "StackOverflowCommand")
 
 public class StackOverflowCommand: StringCommand {
 	public let info = CommandInfo(
@@ -19,7 +22,7 @@ public class StackOverflowCommand: StringCommand {
 			try StackOverflowQuery(input: input).start {
 				do {
 					guard let answer = try $0.get().items?.first else {
-						output.append("No answers found")
+						output.append(errorText: "No answers found")
 						return
 					}
 					output.append(Embed(
@@ -28,23 +31,20 @@ public class StackOverflowCommand: StringCommand {
 						author: answer.owner.map { Embed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
 						color: 0xffad0a
 					))
-				} catch WebApiError.noResults(let msg) {
-					output.append(msg)
-					print("WebApiError while querying StackOverflow: \(msg)")
-				} catch URLRequestError.ioError(let err) {
-					output.append("An IO error while querying StackOverflow")
-					print(err)
-				} catch URLRequestError.jsonDecodingError(let data) {
-					output.append("Could not decode data as JSON")
-					print("Could not decode data from StackOverflow request as JSON: \(data)")
+				} catch NetApiError.noResults(let msg) {
+					output.append(errorText: msg)
+					log.warning("NetApiError while querying StackOverflow: \(msg)")
+				} catch NetworkError.ioError(let err) {
+					output.append(err, errorText: "An IO error while querying StackOverflow")
+				} catch NetworkError.jsonDecodingError(let data) {
+					output.append(errorText: "Could not decode data as JSON")
+					log.warning("Could not decode data from StackOverflow request as JSON: \(data)")
 				} catch {
-					output.append("An asynchronous error occurred while querying StackOverflow")
-					print(error)
+					output.append(error, errorText: "An asynchronous error occurred while querying StackOverflow")
 				}
 			}
 		} catch {
-			output.append("A synchronous error occurred while querying StackOverflow")
-			print(error)
+			output.append(error, errorText: "A synchronous error occurred while querying StackOverflow")
 		}
 	}
 }

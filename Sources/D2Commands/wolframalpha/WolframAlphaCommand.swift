@@ -1,10 +1,12 @@
 import D2MessageIO
 import Foundation
+import Logging
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
 import D2Graphics
 import D2Utils
 
+fileprivate let log = Logger(label: "WolframAlphaCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
@@ -21,7 +23,7 @@ public class WolframAlphaCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !isRunning else {
-			output.append("Wait for the first input to finish!")
+			output.append(errorText: "Wait for the first input to finish!")
 			return
 		}
 		isRunning = true
@@ -38,7 +40,7 @@ public class WolframAlphaCommand: StringCommand {
 				try performFullQuery(input: processedInput, output: output, showSteps: flags.contains("steps"))
 			}
 		} catch {
-			output.append("An error occurred. Check the log for more information.")
+			output.append(error)
 		}
 	}
 	
@@ -46,8 +48,9 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
 		query.start {
 			guard case let .success(data) = $0 else {
-				if case let .failure(error) = $0 { print(error) }
-				output.append("An error occurred while querying WolframAlpha.")
+				if case let .failure(error) = $0 {
+					output.append(error, errorText: "An error occurred while querying WolframAlpha.")
+				}
 				self.isRunning = false
 				return
 			}
@@ -61,8 +64,9 @@ public class WolframAlphaCommand: StringCommand {
 		let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
 		query.startAndParse {
 			guard case let .success(result) = $0 else {
-				if case let .failure(error) = $0 { print(error) }
-				output.append("An error occurred while querying WolframAlpha.")
+				if case let .failure(error) = $0 {
+					output.append(error, errorText: "An error occurred while querying WolframAlpha.")
+				}
 				self.isRunning = false
 				return
 			}
@@ -72,7 +76,7 @@ public class WolframAlphaCommand: StringCommand {
 			
 			output.append(Embed(
 				title: "Query Output",
-				author: Embed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
+				author: Embed.Author(name: "WolframAlpha"),
 				image: (plot ?? images.last).map { Embed.Image(url: $0) },
 				thumbnail: images.first.map { Embed.Thumbnail(url: $0) },
 				color: 0xfdc81a,

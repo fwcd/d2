@@ -3,6 +3,9 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import Logging
+
+fileprivate let log = Logger(label: "DiscordOutput")
 
 public class MessageIOOutput: CommandOutput {
 	private let messageWriter = MessageWriter()
@@ -20,10 +23,12 @@ public class MessageIOOutput: CommandOutput {
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		var message: Message
 		do {
+			if case let .error(error, errorText: errorText) = value {
+				log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
+			}
 			message = try messageWriter.write(value: value)
 		} catch {
-			print("Error while encoding message:")
-			print(error)
+			log.error("Error while encoding message: \(error)")
 			message = Message(content: """
 				An error occurred while encoding the message:
 				```
@@ -41,7 +46,7 @@ public class MessageIOOutput: CommandOutput {
 				if let textChannelId = defaultTextChannelId {
 					client.sendMessage(message, to: textChannelId, then: onSent)
 				} else {
-					print("No default text channel available")
+					log.warning("No default text channel available")
 				}
 		}
 	}

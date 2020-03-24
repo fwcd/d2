@@ -14,12 +14,13 @@ public struct CommandInfo {
     public var requiredPermissionLevel: PermissionLevel
     /** Whether the commands should be hidden in lists. */
     public var hidden: Bool
-    /** Whether the commands should continue to receive messages from the same channel. */
+    /** Whether the command will set up/handle subscriptions. Only for documentary purposes.. */
     public var subscribesToNextMessages: Bool
     /** Whether the command can only be invoked by users (not bots). */
     public var userOnly: Bool
     /** The source file in which the command is located. */
     public var sourceFile: String
+    /** Whether the typing indicator should be displayed. */
     
     public init(
         category: CommandCategory,

@@ -3,10 +3,13 @@ import Foundation
 import FoundationNetworking
 #endif
 import Dispatch
+import Logging
 import D2MessageIO
 import D2Utils
 import D2Permissions
 import D2Script
+
+fileprivate let log = Logger(label: "D2ScriptCommand")
 
 public class D2ScriptCommand: StringCommand {
 	public let info: CommandInfo
@@ -38,7 +41,7 @@ public class D2ScriptCommand: StringCommand {
 		// Output to Discord
 		storage[function: "output"] = {
 			guard let value = $0.first else {
-				output.append("output(...) received no arguments")
+				output.append(errorText: "output(...) received no arguments")
 				return nil
 			}
 			switch value {
@@ -54,18 +57,18 @@ public class D2ScriptCommand: StringCommand {
 		
 		// Print something to the console
 		storage[function: "print"] = {
-			print($0.first.flatMap { $0 } ?? .string(""))
+			log.info("\($0.first.flatMap { $0 } ?? .string(""))")
 			return nil
 		}
 		
 		// Perform a synchronous GET request
 		storage[function: "httpGet"] = {
 			guard case let .string(rawUrl)?? = $0.first else {
-				output.append("httpGet(...) received no arguments")
+				output.append(errorText: "httpGet(...) received no arguments")
 				return nil
 			}
 			guard let url = URL(string: rawUrl) else {
-				output.append("Invalid URL: \(rawUrl)")
+				output.append(errorText: "Invalid URL: \(rawUrl)")
 				return nil
 			}
 			
@@ -73,12 +76,12 @@ public class D2ScriptCommand: StringCommand {
 			
 			URLSession.shared.dataTask(with: url) { (data, response, error) in
 				guard error == nil else {
-					output.append("An error occurred while performing the HTTP request")
+					output.append(error!, errorText: "An error occurred while performing the HTTP request")
 					self.semaphore.signal()
 					return
 				}
 				guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncate(1000) else {
-					output.append("Could not fetch data as UTF-8 string")
+					output.append(errorText: "Could not fetch data as UTF-8 string")
 					self.semaphore.signal()
 					return
 				}
@@ -93,7 +96,7 @@ public class D2ScriptCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
-			output.append("This command is already running, wait for it to finish")
+			output.append(errorText: "This command is already running, wait for it to finish")
 			return
 		}
 		

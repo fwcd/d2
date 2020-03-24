@@ -4,6 +4,8 @@ struct PlaceholderNode: ExpressionASTNode {
 	let name: String
 	let occurringVariables: Set<String>
 	var label: String { return name }
+	var prefixFunctionNotation: String { return label }
+	var infixICNotation: String { return label }
 	
 	init(name: String) {
 		self.name = name

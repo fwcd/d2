@@ -1,7 +1,10 @@
 import Foundation
+import Logging
 import D2MessageIO
 import D2Commands
 import D2Utils
+
+fileprivate let log = Logger(label: "SpamHandler")
 
 fileprivate struct SpammerProfile {
     let lastSpamMessages = ExpiringList<Message>()
@@ -23,7 +26,7 @@ struct SpamHandler: MessageHandler {
 
     mutating func handle(message: Message, from client: MessageClient) -> Bool {
         guard isPossiblySpam(message: message) else { return false }
-        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.value.interval))
+        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.wrappedValue.interval))
         
         guard let channelId = message.channelId,
             let guild = client.guildForChannel(channelId),
@@ -53,9 +56,9 @@ struct SpamHandler: MessageHandler {
     private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {
         guard let member = guild.members[user] else { return }
 
-        if let role = config.value.spammerRoles[guild.id] {
+        if let role = config.wrappedValue.spammerRoles[guild.id] {
             add(role: role, to: user, on: guild, client: client) {
-                if self.config.value.removeOtherRolesFromSpammer {
+                if self.config.wrappedValue.removeOtherRolesFromSpammer {
                     self.remove(roles: member.roleIds, from: user, on: guild, client: client)
                 }
             }
@@ -67,7 +70,7 @@ struct SpamHandler: MessageHandler {
             if success {
                 then?()
             } else {
-                print("Could not add role \(role) to spammer \(user)")
+                log.warning("Could not add role \(role) to spammer \(user)")
             }
         }
     }
@@ -81,7 +84,7 @@ struct SpamHandler: MessageHandler {
 
         client.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming") { success, _ in
             if !success {
-                print("Could not remove role \(role) from spammer \(user)")
+                log.warning("Could not remove role \(role) from spammer \(user)")
             }
             self.remove(roles: remainingRoles, from: user, on: guild, client: client, then: then)
         }

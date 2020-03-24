@@ -4,7 +4,7 @@ General-purpose virtual assistant for Discord.
 [![Linux](https://github.com/fwcd/d2/workflows/Linux/badge.svg)](https://github.com/fwcd/d2/actions)
 [![macOS](https://github.com/fwcd/d2/workflows/macOS/badge.svg)](https://github.com/fwcd/d2/actions)
 
-In addition to suporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
+In addition to supporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
 
 ## Installation
 
@@ -15,7 +15,7 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 ### Manually (for local development)
 
 #### System Dependencies
-* Swift 5
+* Swift 5.1
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
         * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
@@ -75,12 +75,13 @@ In addition to suporting various web APIs, it features basic scripting capabilit
 }
 ```
 
-* Create a file named `webApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
+* Create a file named `netApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
 
 ```json
 {
     "mapQuest": "YOUR_MAP_QUEST_KEY",
-    "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY"
+    "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY",
+    "gitlab": "YOUR_GITLAB_PERSONAL_ACCESS_TOKEN"
 }
 ```
 
@@ -117,7 +118,7 @@ These depend on several library targets:
 * `D2Permissions`, the permission manager
 * `D2Script`, an experimental DSL that can be used to script commands
 * `D2Graphics`, 2D graphics and drawing
-* `D2WebAPIs`, client implementations of various web APIs
+* `D2NetAPIs`, client implementations of various web APIs
 * `D2Utils`, a collection of useful utilities
 
 ### D2
@@ -161,7 +162,6 @@ class PipeOutput: CommandOutput {
     }
     
     func append(_ value: RichValue) {
-        print("Piping to \(sink)")
         let nextInput = args.isEmpty ? value : (.text(args) + value)
         sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
     }

@@ -1,7 +1,9 @@
+import Logging
 import D2MessageIO
 import D2Permissions
 import D2Utils
 
+fileprivate let log = Logger(label: "GameCommand")
 fileprivate let flagRegex = try! Regex(from: "--(\\S+)")
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
@@ -47,18 +49,18 @@ public class GameCommand<G: Game>: StringCommand {
 			do {
 				try subcommand(output)
 			} catch {
-				output.append("Error while running subcommand: \(error)")
+				output.append(errorText: "Error while running subcommand: \(error)")
 			}
 			return
 		}
 		
 		guard let channel = context.channel else {
-			output.append("No channel to play on.")
+			output.append(errorText: "No channel to play on.")
 			return
 		}
 
 		guard !context.message.mentions.isEmpty else {
-			output.append("Mention one or more users to play against.")
+			output.append(errorText: "Mention one or more users to play against.")
 			return
 		}
 		
@@ -66,6 +68,7 @@ public class GameCommand<G: Game>: StringCommand {
 		let players = ([context.author] + context.message.mentions).map { GamePlayer(from: $0) }
 		
 		startMatch(between: players, on: channel.id, output: output, flags: flags)
+		context.subscribeToChannel()
 	}
 	
 	private func matches(output: CommandOutput) {
@@ -112,7 +115,7 @@ public class GameCommand<G: Game>: StringCommand {
 			encodedBoard = state.board.asRichValue
 			
 			if case .embed(_) = encodedBoard {
-				print("Warning: Embed-encoded boards are currently not supported by GameCommand")
+				log.warning("Embed-encoded boards are currently not supported by GameCommand")
 			}
 		}
 		
@@ -136,21 +139,22 @@ public class GameCommand<G: Game>: StringCommand {
 		return sequence.joined(separator: "\n")
 	}
 	
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
 		let author = GamePlayer(from: context.author)
 		
 		if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel {
-			return perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, output: output, author: author)
-		} else {
-			return .continueSubscription
+			let continueSubscription = perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, output: output, author: author)
+			if !continueSubscription {
+				context.unsubscribeFromChannel()
+			}
 		}
 	}
 	
-	/** Performs a game action if present, otherwise does nothing. */
+	/** Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription. */
 	@discardableResult
-	func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> SubscriptionAction {
-		guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return .continueSubscription }
-		var subscriptionAction: SubscriptionAction = .continueSubscription
+	func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> Bool {
+		guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
+		var continueSubscription: Bool = true
 		
 		do {
 			let params = ActionParameters(
@@ -158,26 +162,26 @@ public class GameCommand<G: Game>: StringCommand {
 				state: state,
 				apiEnabled: apiEnabled
 			)
-			guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return .continueSubscription }
+			guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return true }
 			
 			if actionResult.onlyCurrentPlayer {
 				guard state.rolesOf(player: author).contains(state.currentRole) else {
-					output.append("It is not your turn, `\(author.username)`")
-					return .continueSubscription
+					output.append(errorText: "It is not your turn, `\(author.username)`")
+					return true
 				}
 			}
 			
 			if actionResult.cancelsMatch {
 				matches[channelID] = nil
 				output.append("Cancelled match: \(state.playersDescription)")
-				return .cancelSubscription
+				return false
 			}
 			
 			if let next = actionResult.nextState {
 				// Output next board and user's hands
 				var embed: Embed? = nil
 				
-				// print("Next possible moves: \(next.possibleMoves)")
+				log.debug("Next possible moves: \(next.possibleMoves)")
 				sendHandsAsDMs(fromState: next, to: output)
 				
 				if let winner = next.winner {
@@ -189,7 +193,7 @@ public class GameCommand<G: Game>: StringCommand {
 					)
 					
 					matches[channelID] = nil
-					subscriptionAction = .cancelSubscription
+					continueSubscription = false
 				} else if next.isDraw {
 					// Game over due to a draw
 					
@@ -199,7 +203,7 @@ public class GameCommand<G: Game>: StringCommand {
 					)
 					
 					matches[channelID] = nil
-					subscriptionAction = .cancelSubscription
+					continueSubscription = false
 				} else {
 					// Advance the game
 					
@@ -214,7 +218,7 @@ public class GameCommand<G: Game>: StringCommand {
 					matches[channelID] = next
 				}
 				
-				if !silent || subscriptionAction == .cancelSubscription {
+				if !silent || !continueSubscription {
 					let encodedBoard: RichValue = next.board.asRichValue
 					output.append(.compound([
 						encodedBoard,
@@ -226,19 +230,18 @@ public class GameCommand<G: Game>: StringCommand {
 				output.append(text)
 			}
 		} catch GameError.invalidMove(let msg) {
-			output.append("Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
+			output.append(errorText: "Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.ambiguousMove(let msg) {
-			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+			output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.incompleteMove(let msg) {
-			output.append("Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+			output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
 		} catch GameError.moveOutOfBounds(let msg) {
-			output.append("Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
+			output.append(errorText: "Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
 		} catch {
-			output.append("Error while attempting move")
-			print(error)
+			output.append(error, errorText: "Error while attempting move")
 		}
 		
-		return subscriptionAction
+		return continueSubscription
 	}
 	
 	private func describe(role: G.State.Role, in state: G.State) -> String {

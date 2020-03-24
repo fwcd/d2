@@ -1,5 +1,8 @@
+import Logging
 import D2Utils
 import D2Graphics
+
+fileprivate let log = Logger(label: "ChessBoardView")
 
 struct ChessBoardView {
 	let image: Image?
@@ -55,7 +58,7 @@ struct ChessBoardView {
 			
 			image = img
 		} catch {
-			print("Error while creating chess board image: \(error)")
+			log.warning("Error while creating chess board image: \(error)")
 			image = nil
 		}
 	}

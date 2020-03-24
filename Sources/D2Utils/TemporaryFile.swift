@@ -1,4 +1,7 @@
 import Foundation
+import Logging
+
+fileprivate let log = Logger(label: "TemporaryFile")
 
 /**
  * A custom temporary file. The file is deleted
@@ -46,7 +49,7 @@ public class TemporaryFile {
 				try delete()
 			}
 		} catch {
-			print("Error while removing temporary file: \(error)")
+			log.error("Error while removing temporary file: \(error)")
 		}
 	}
 }

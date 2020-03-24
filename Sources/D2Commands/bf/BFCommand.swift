@@ -1,8 +1,10 @@
 import D2MessageIO
+import Logging
 import D2Permissions
+import D2Utils
 import Dispatch
 
-fileprivate let maxExecutionSeconds = 3
+fileprivate let log = Logger(label: "BFCommand")
 
 public class BFCommand: StringCommand {
 	public let info = CommandInfo(
@@ -11,13 +13,16 @@ public class BFCommand: StringCommand {
 		longDescription: "Asynchronously invokes a Brainf&*k interpreter",
 		requiredPermissionLevel: .basic
 	)
-	private var running = false
+	private let maxExecutionSeconds: Int
+	@Synchronized private var running = false
 	
-	public init() {}
+	public init(maxExecutionSeconds: Int = 3) {
+		self.maxExecutionSeconds = maxExecutionSeconds
+	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
-			output.append("Whoa, not so fast. Wait for the program to finish!")
+			output.append(errorText: "Whoa, not so fast. Wait for the program to finish!")
 			return
 		}
 		
@@ -55,19 +60,17 @@ public class BFCommand: StringCommand {
 			}
 			
 			if interpreter.cancelled {
-				print("Cancelled BF task finished running")
-				output.append("Your program took longer than \(maxExecutionSeconds) seconds. The output was:\n\(response)")
+				log.debug("Cancelled BF task finished running")
+				output.append(errorText: "Your program took longer than \(self.maxExecutionSeconds) seconds. The output was:\n\(response)")
 			} else {
-				print("BF task finished running")
+				log.debug("BF task finished running")
 				output.append(response)
 			}
 		}
-		
-		let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
 		queue.async(execute: task)
 		
-		DispatchQueue.global(qos: .userInitiated).async {
-			_ = task.wait(timeout: timeout)
+		let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
+		DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: timeout) {
 			interpreter.cancel()
 			self.running = false
 		}

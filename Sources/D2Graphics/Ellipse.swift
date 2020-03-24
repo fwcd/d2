@@ -1,6 +1,6 @@
 import D2Utils
 
-public struct Ellipse<T: VecComponent> {
+public struct Ellipse<T: IntExpressibleAlgebraicField> {
 	public let center: Vec2<T>
 	public let radius: Vec2<T>
 	public let color: Color

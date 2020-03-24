@@ -1,3 +1,7 @@
+import Logging
+
+fileprivate let log = Logger(label: "AvlTree")
+
 /**
  * A balanced binary search tree.
  */
@@ -121,7 +125,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
 			if left!.balance > 0 {
 				rotateRight()
 			} else {
-				print("Left-balance: \(left!.balance) of \(self)")
+				log.debug("Left-balance: \(left!.balance) of \(self)")
 				doubleRotateLeftRight()
 			}
 			return true

@@ -13,41 +13,37 @@ public enum RichValue: Addable {
 	case gif(AnimatedGif)
 	case code(String, language: String?)
 	case embed(Embed?)
+	case error(Error?, errorText: String)
 	case files([Message.FileUpload])
 	case compound([RichValue])
 	
 	public var asText: String? {
-		if case let .text(txt) = self {
-			return txt
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asText }.first
-		} else {
-			return nil
-		}
+		extract { if case let .text(text) = $0 { return text } else { return nil } }
 	}
 	public var asCode: String? {
-		if case .code(let code, language: _) = self {
-			return code
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asCode }.first
-		} else {
-			return nil
-		}
+		extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }
 	}
 	public var asImage: Image? {
-		if case .image(let image) = self {
-			return image
-		} else if case let .compound(values) = self {
-			return values.compactMap { $0.asImage }.first
-		} else {
-			return nil
-		}
+		extract { if case let .image(image) = $0 { return image } else { return nil } }
+	}
+	public var asGif: AnimatedGif? {
+		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }
 	}
 	public var values: [RichValue] {
 		switch self {
 			case .none: return []
 			case let .compound(values): return values
 			default: return [self]
+		}
+	}
+	
+	private func extract<T>(using extractor: (RichValue) -> T?) -> T? {
+		if let extracted = extractor(self) {
+			return extracted
+		} else if case let .compound(values) = self {
+			return values.compactMap { $0.extract(using: extractor) }.first
+		} else {
+			return nil
 		}
 	}
 	

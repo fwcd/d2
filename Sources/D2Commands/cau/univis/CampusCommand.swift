@@ -4,9 +4,11 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import Logging
 import D2Utils
-import D2WebAPIs
+import D2NetAPIs
 
+fileprivate let log = Logger(label: "CampusCommand")
 fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
 
 /** Locates locations on the University of Kiel's campus. */
@@ -27,16 +29,16 @@ public class CampusCommand: StringCommand {
 				.name: input
 			]).start { response in
 				guard case let .success(queryOutput) = response else {
-					output.append("An error occurred while querying.")
+					output.append(errorText: "An error occurred while querying.")
 					return
 				}
 				// Successfully received and parsed UnivIS query output
 				guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
-					output.append("No room was found!")
+					output.append(errorText: "No room was found!")
 					return
 				}
 				guard let rawAddress = room.address else {
-					output.append("Room has no address!")
+					output.append(errorText: "Room has no address!")
 					return
 				}
 				
@@ -59,14 +61,12 @@ public class CampusCommand: StringCommand {
 							image: Embed.Image(url: URL(string: mapURL)!)
 						)))
 					} catch {
-						output.append("Could not create static map, see console for more details")
-						print(error)
+						output.append(error, errorText: "Could not create static map, see console for more details")
 					}
 				}
 			}
 		} catch {
-			print(error)
-			output.append("An error occurred. Check the log for more information.")
+			output.append(error)
 		}
 	}
 	

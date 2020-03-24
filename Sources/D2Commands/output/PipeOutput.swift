@@ -1,3 +1,7 @@
+import Logging
+
+fileprivate let log = Logger(label: "PipeOutput")
+
 public class PipeOutput: CommandOutput {
 	private let sink: Command
 	private let context: CommandContext
@@ -12,8 +16,17 @@ public class PipeOutput: CommandOutput {
 	}
 	
 	public func append(_ value: RichValue, to channel: OutputChannel) {
-		print("Piping to \(sink)")
-		let nextInput = args.isEmpty ? value : (.text(args) + value)
-		sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
+		let nextOutput = next ?? PrintOutput()
+
+		if case .error(_) = value {
+			log.debug("Propagating error through pipe")
+			nextOutput.append(value, to: channel)
+		} else {
+			log.debug("Piping to \(sink)")
+			let nextInput = args.isEmpty ? value : (.text(args) + value)
+			
+			log.trace("Invoking sink")
+			sink.invoke(input: nextInput, output: nextOutput, context: context)
+		}
 	}
 }

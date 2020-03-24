@@ -18,11 +18,11 @@ public class DirectMessageCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let parsedArgs = inputPattern.firstGroups(in: input) else {
-			output.append("Syntax error: `\(input)` should have format `[mentioned user] [message]`")
+			output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")
 			return
 		}
 		guard let mentioned = context.message.mentions.first else {
-			output.append("Did not mention anyone")
+			output.append(errorText: "Did not mention anyone")
 			return
 		}
 		

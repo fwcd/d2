@@ -1,9 +1,13 @@
 import Foundation
 
 fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
-fileprivate let quotes = CharacterSet(charactersIn: "\"'`")
+fileprivate let quotes = CharacterSet(charactersIn: "\"'")
 
 extension StringProtocol {
+	public var withFirstUppercased: String {
+		prefix(1).uppercased() + dropFirst()
+	}
+
 	public func split(by length: Int) -> [String] {
 		var start = startIndex
 		var output = [String]()
@@ -75,5 +79,9 @@ extension StringProtocol {
 		} else {
 			return String(self)
 		}
+	}
+	
+	public func pluralize(with value: Int) -> String {
+		value == 1 ? String(self) : "\(self)s"
 	}
 }

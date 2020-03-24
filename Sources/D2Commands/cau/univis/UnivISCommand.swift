@@ -1,7 +1,10 @@
+import Logging
 import D2MessageIO
 import D2Permissions
 import D2Utils
-import D2WebAPIs
+import D2NetAPIs
+
+fileprivate let log = Logger(label: "UnivISCommand")
 
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"
@@ -34,11 +37,11 @@ public class UnivISCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			guard let parsedArgs = inputPattern.firstGroups(in: input) else {
-				output.append("Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
+				output.append(errorText: "Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
 				return
 			}
 			guard let searchKey = UnivISSearchKey(rawValue: parsedArgs[1]) else {
-				output.append("Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
+				output.append(errorText: "Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
 				return
 			}
 			
@@ -56,15 +59,13 @@ public class UnivISCommand: StringCommand {
 					
 					output.append(embed)
 				} else if case let .failure(error) = response {
-					print(error)
-					output.append("UnivIS query error. Check the log for more information.")
+					output.append(error, errorText: "UnivIS query error.")
 				}
 			}
 		} catch UnivISCommandError.invalidSearchParameter(let paramName) {
-			output.append("Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
+			output.append(errorText: "Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
 		} catch {
-			print(error)
-			output.append("An error occurred. Check the log for more information.")
+			output.append(error)
 		}
 	}
 	

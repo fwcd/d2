@@ -1,7 +1,9 @@
+import Logging
 import D2MessageIO
 import D2Permissions
 import D2Utils
 
+fileprivate let log = Logger(label: "EvaluateExpressionCommand")
 fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
 // TODO: Use Arg API, integrate flags into arg API
@@ -39,18 +41,17 @@ public class EvaluateExpressionCommand: StringCommand {
 				} else if variables.count == 1 {
 					try output.append(try FunctionGraphRenderer(input: variables.first!).render(ast: ast), name: "functionGraph.png")
 				} else {
-					output.append("Too many unknown variables: `\(variables)`")
+					output.append(errorText: "Too many unknown variables: `\(variables)`")
 				}
 			}
 		} catch ExpressionError.invalidOperator(let op) {
-			output.append("Found invalid operator: `\(op)`")
+			output.append(errorText: "Found invalid operator: `\(op)`")
 		} catch ExpressionError.tooFewOperands(let op) {
-			output.append("Operator `\(op)` has too few operands")
+			output.append(errorText: "Operator `\(op)` has too few operands")
 		} catch ExpressionError.emptyResult {
-			output.append("The expression yielded no result")
+			output.append(errorText: "The expression yielded no result")
 		} catch {
-			print(error)
-			output.append("Error while parsing/evaluating expression")
+			output.append(error, errorText: "Error while parsing/evaluating expression")
 		}
 	}
 }

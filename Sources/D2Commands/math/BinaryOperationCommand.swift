@@ -4,7 +4,6 @@ import D2Permissions
 public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 	public let info: CommandInfo
 	public let name: String
-	public let inputValueType: RichValueType = .text
 	public let outputValueType: RichValueType = .text
 	public let argPattern = ArgPair(
 		patternWithLeft: ArgValue(name: "lhs", examples: []),
@@ -29,11 +28,11 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 		let rawRHS = input.right.value
 		
 		guard let lhs = T.init(rawLHS) else {
-			output.append("Left-hand side `\(rawLHS)` could not be parsed")
+			output.append(errorText: "Left-hand side `\(rawLHS)` could not be parsed")
 			return
 		}
 		guard let rhs = T.init(rawRHS) else {
-			output.append("Right-hand side `\(rawRHS)` could not be parsed")
+			output.append(errorText: "Right-hand side `\(rawRHS)` could not be parsed")
 			return
 		}
 		

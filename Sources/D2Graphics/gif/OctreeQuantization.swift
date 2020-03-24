@@ -1,8 +1,10 @@
 // Based on https://www.cubic.org/docs/octree.htm
 
 import D2Utils
+import Logging
 
-fileprivate let MAX_DEPTH = 8 // bits in a byte (of each color channel)
+fileprivate let log = Logger(label: "OctreeQuantization")
+fileprivate let maxDepth = 8 // bits in a byte (of each color channel)
 
 /**
  * A quantization that uses an octree
@@ -59,7 +61,7 @@ public struct OctreeQuantization: ColorQuantization {
         }
         
         func insert(color insertedColor: Color) {
-            if depth == MAX_DEPTH {
+            if depth == maxDepth {
                 red = UInt(insertedColor.red)
                 green = UInt(insertedColor.green)
                 blue = UInt(insertedColor.blue)
@@ -83,7 +85,7 @@ public struct OctreeQuantization: ColorQuantization {
                     if let index = nearColorTableIndex {
                         return index
                     } else {
-                        print("Warning: Did not find color table index for \(lookupColor) @ depth \(depth), returning 0...")
+                        log.warning("Did not find color table index for \(lookupColor) @ depth \(depth), returning 0...")
                         return 0
                     }
                 }
@@ -159,7 +161,7 @@ public struct OctreeQuantization: ColorQuantization {
         colorTable = []
         octree = OctreeNode(depth: 0)
         
-        print("Inserting colors")
+        log.debug("Inserting colors")
         for y in 0..<image.height {
             for x in 0..<image.width {
                 octree.insert(color: image[y, x])
@@ -185,7 +187,7 @@ public struct OctreeQuantization: ColorQuantization {
             reduceQueues[i].sort(by: <)
         }
         
-        print("Reducing octree, leafCount = \(leafCount)")
+        log.debug("Reducing octree, leafCount = \(leafCount)")
         while leafCount > colorCount {
             // Find deepest reducible node
             var reducible: QueuedReducibleNode? = nil
@@ -204,12 +206,12 @@ public struct OctreeQuantization: ColorQuantization {
         // DEBUG:
         // for i in (0..<reduceQueues.count).reversed() {
         //     if !reduceQueues[i].isEmpty {
-        //         print("Reduced until depth \(i), leafCount: \(leafCount)")
+        //         log.debug("Reduced until depth \(i), leafCount: \(leafCount)")
         //         break
         //     }
         // }
 
-        print("Filling color table")
+        log.debug("Filling color table")
         octree.fill(colorTable: &colorTable)
     }
     

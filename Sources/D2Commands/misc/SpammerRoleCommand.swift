@@ -1,6 +1,8 @@
+import Logging
 import D2MessageIO
 import D2Utils
 
+fileprivate let log = Logger(label: "SpammerRoleCommand")
 fileprivate let resetSubcommand = "reset"
 
 public class SpammerRoleCommand: StringCommand {
@@ -21,23 +23,18 @@ public class SpammerRoleCommand: StringCommand {
         let mentions = context.message.mentionRoles
         
         guard mentions.count <= 1 else {
-            output.append("Too many roles, please only mention one!")
+            output.append(errorText: "Too many roles, please only mention one!")
             return
         }
         
-        do {
-            if let role = mentions.first {
-                try spamConfiguration.update { $0.spammerRoles[guild.id] = role }
-                output.append(":white_check_mark: Successfully updated the spammer role")
-            } else if input == resetSubcommand {
-                try spamConfiguration.update { $0.spammerRoles[guild.id] = nil }
-                output.append(":white_check_mark: Successfully reset the spammer role")
-            } else {
-                output.append("The current spammer role is `\(spamConfiguration.value.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
-            }
-        } catch {
-            print(error)
-            output.append("Could not update spammer role")
+        if let role = mentions.first {
+            spamConfiguration.wrappedValue.spammerRoles[guild.id] = role
+            output.append(":white_check_mark: Successfully updated the spammer role")
+        } else if input == resetSubcommand {
+            spamConfiguration.wrappedValue.spammerRoles[guild.id] = nil
+            output.append(":white_check_mark: Successfully reset the spammer role")
+        } else {
+            output.append("The current spammer role is `\(spamConfiguration.wrappedValue.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
         }
     }
 }

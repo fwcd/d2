@@ -18,9 +18,9 @@ extension Message {
 		], tts: false)
 	}
 	
-	public init(fromGif gif: AnimatedGif, name: String? = nil) {
+	public init(fromGif gif: AnimatedGif, name: String? = nil) throws {
 		self.init(content: "", embed: nil, files: [
-			Message.FileUpload(data: gif.data, filename: name ?? "image.gif", mimeType: "image/gif")
+			Message.FileUpload(data: try gif.encoded(), filename: name ?? "image.gif", mimeType: "image/gif")
 		], tts: false)
 	}
 }

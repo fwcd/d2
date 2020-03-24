@@ -25,12 +25,12 @@ public class ForCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !timer.isRunning else {
-			output.append("Cannot run multiple `for`-loops concurrently")
+			output.append(errorText: "Cannot run multiple `for`-loops concurrently")
 			return
 		}
 		
 		guard let parsedArgs = inputPattern.firstGroups(in: input) else {
-			output.append("Syntax error: For arguments need to match `[number](...|..<)[number]`")
+			output.append(errorText: "Syntax error: For arguments need to match `[number](...|..<)[number]`")
 			return
 		}
 		
@@ -42,7 +42,7 @@ public class ForCommand: StringCommand {
 					output.append(String(range.lowerBound + i))
 				}
 			} else {
-				output.append("Your range is too long!")
+				output.append(errorText: "Your range is too long!")
 			}
 		}
 	}

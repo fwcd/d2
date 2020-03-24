@@ -8,6 +8,7 @@ enum ExpressionError: Error {
 	case unhandledToken(InfixExpressionToken)
 	case parenthesesMismatch(String)
 	case unsupported(String)
+	case shapeMismatch(String)
 	case unexpectedEnd
 	case emptyResult
 }

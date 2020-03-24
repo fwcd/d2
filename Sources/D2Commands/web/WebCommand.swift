@@ -1,12 +1,14 @@
 import D2MessageIO
 import D2Permissions
 import D2Utils
+import Logging
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 import SwiftSoup
 
+fileprivate let log = Logger(label: "WebCommand")
 fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")
 
 public class WebCommand: StringCommand {
@@ -22,22 +24,22 @@ public class WebCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let url = urlPattern.firstGroups(in: input).flatMap({ URL(string: $0[1]) }) else {
-			output.append("Not a valid URL: `\(input)`")
+			output.append(errorText: "Not a valid URL: `\(input)`")
 			return
 		}
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			guard error == nil else {
-				output.append("An HTTP error occurred: \(error!)")
+				output.append(errorText: "An HTTP error occurred: \(error!)")
 				return
 			}
 			guard let data = data else {
-				output.append("No data returned")
+				output.append(errorText: "No data returned")
 				return
 			}
 			guard let html = String(data: data, encoding: .utf8) else {
-				output.append("Could not decode response as UTF-8")
+				output.append(errorText: "Could not decode response as UTF-8")
 				return
 			}
 			
@@ -56,8 +58,7 @@ public class WebCommand: StringCommand {
 					fields: splitOutput.dropFirst().enumerated().map { Embed.Field(name: "Page \($0.0 + 1)", value: $0.1) }
 				))
 			} catch {
-				output.append("An error occurred while parsing the HTML")
-				print(error)
+				output.append(error, errorText: "An error occurred while parsing the HTML")
 			}
 		}.resume()
 	}

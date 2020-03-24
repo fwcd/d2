@@ -11,12 +11,14 @@ public protocol ArgCommand: StringCommand {
 }
 
 extension ArgCommand {
+    public var inputValueType: RichValueType { .text }
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         let words = input.split(separator: " ").map { String($0) }
         if let args = Args.parse(from: TokenIterator(words)) {
             invoke(withArgInput: args, output: output, context: context)
         } else {
-            output.append("Syntax: `\(argPattern)`")
+            output.append(errorText: "Syntax: `\(argPattern)`")
         }
     }
 }

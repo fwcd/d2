@@ -35,7 +35,7 @@ public class CountdownCommand: StringCommand {
         subcommands = [
             "add": { [unowned self] input, output in
                 guard let parsedInput = namedDatePattern.firstGroups(in: input) else {
-                    output.append("Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
+                    output.append(errorText: "Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
                     return
                 }
 
@@ -43,7 +43,7 @@ public class CountdownCommand: StringCommand {
                 let rawDate = parsedInput[2]
 
                 guard let date = self.parseDate(from: rawDate) else {
-                    output.append("Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
+                    output.append(errorText: "Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
                     return
                 }
 
@@ -53,14 +53,14 @@ public class CountdownCommand: StringCommand {
             },
             "remove": { [unowned self] input, output in
                 guard !(self.goals[input]?.protectedFromRemoval ?? false) else {
-                    output.append(":no_entry: `\(input)` is protected from removal")
+                    output.append(errorText: ":no_entry: `\(input)` is protected from removal")
                     return
                 }
 
                 if let goal = self.goals.removeValue(forKey: input) {
                     output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
                 } else {
-                    output.append(":question: No goal named `\(input)` is currently running")
+                    output.append(errorText: ":question: No goal named `\(input)` is currently running")
                 }
             }
         ]
@@ -75,7 +75,7 @@ public class CountdownCommand: StringCommand {
             let subcommandArgs = parsedArgs[2]
 
             guard let subcommand = subcommands[subcommandName] else {
-                output.append("Could not find subcommand with name \(subcommandName)")
+                output.append(errorText: "Could not find subcommand with name \(subcommandName)")
                 return
             }
 
@@ -84,10 +84,6 @@ public class CountdownCommand: StringCommand {
             removeCompletedGoals() // Clean up
             showRunningGoals(to: output)
         }
-    }
-    
-    private func plural(of str: String, ifOne value: Int) -> String {
-        return (value == 1) ? str : "\(str)s"
     }
     
     private func parseDate(from input: String) -> Date? {
@@ -115,7 +111,7 @@ public class CountdownCommand: StringCommand {
         let hours = date.hour!
         let minutes = date.minute!
 
-        return "\(days) \(plural(of: "day", ifOne: days)), \(hours) \(plural(of: "hour", ifOne: hours)) and \(minutes) \(plural(of: "minute", ifOne: minutes))"
+        return "\(days) \("day".pluralize(with: days)), \(hours) \("hour".pluralize(with: hours)) and \(minutes) \("minute".pluralize(with: minutes))"
     }
     
     private func removeCompletedGoals() {

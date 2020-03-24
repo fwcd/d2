@@ -1,6 +1,9 @@
+import Logging
 import D2MessageIO
 import D2Permissions
-import D2WebAPIs
+import D2NetAPIs
+
+fileprivate let log = Logger(label: "MDBCommand")
 
 public class MDBCommand: StringCommand {
 	public let info = CommandInfo(
@@ -24,7 +27,7 @@ public class MDBCommand: StringCommand {
 			
 			query.start { response in
 				guard case let .success(result) = response else {
-					output.append("An error occurred while querying.")
+					output.append(errorText: "An error occurred while querying.")
 					return
 				}
 				
@@ -45,12 +48,11 @@ public class MDBCommand: StringCommand {
 					
 					output.append(embed)
 				} else {
-					output.append("No such module found.")
+					output.append(errorText: "No such module found.")
 				}
 			}
 		} catch {
-			print(error)
-			output.append("An error occurred. Check the log for more information.")
+			output.append(error)
 		}
 	}
 }

@@ -1,7 +1,9 @@
+import Logging
 import D2MessageIO
 import D2Permissions
 import D2Utils
 
+fileprivate let log = Logger(label: "LatexCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)=(\\S+)")
 
 // TODO: Use the Arg API
@@ -23,19 +25,19 @@ public class LatexCommand: StringCommand {
 			latexRenderer = try LatexRenderer()
 		} catch {
 			latexRenderer = nil
-			print("Could not initialize latex renderer: \(error)")
+			log.error("Could not initialize latex renderer: \(error)")
 		}
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
-			output.append("Wait for the first LaTeX command to finish")
+			output.append(errorText: "Wait for the first LaTeX command to finish")
 			return
 		}
 		running = true
 		
 		guard let renderer = latexRenderer else {
-			output.append("No LaTeX renderer present")
+			output.append(errorText: "No LaTeX renderer present")
 			return
 		}
 		
@@ -43,7 +45,7 @@ public class LatexCommand: StringCommand {
 		let color = flags["color"] ?? "white"
 		let processedInput = flagPattern.replace(in: input, with: "")
 		
-		renderLatexPNG(with: renderer, color: color, from: processedInput, to: output) {
+		renderLatexImage(with: renderer, from: processedInput, to: output, color: color) {
 			self.running = false
 		}
 	}

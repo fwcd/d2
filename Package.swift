@@ -1,4 +1,4 @@
-// swift-tools-version:4.2
+// swift-tools-version:4.2.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -8,16 +8,21 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
-        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("6f8503520e028cae17e06efd53f60b04585414a2")),
+        .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("67ee8a5b4e5779f9c6822f76b8e3c5cf99ed5d54")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
-        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0")
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
+        .package(url: "https://github.com/IBM-Swift/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
+        .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
+        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2"),
+        .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "D2",
-            dependencies: ["SwiftDiscord", "D2MessageIO", "D2Utils", "D2Permissions", "D2Commands"]
+            dependencies: ["SwiftDiscord", "D2MessageIO", "Commander", "D2Utils", "D2Permissions", "D2Commands"]
         ),
         .target(
             name: "D2Shell",
@@ -25,7 +30,7 @@ let package = Package(
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["D2MessageIO", "SwiftSoup", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2WebAPIs"]
+            dependencies: ["D2MessageIO", "SwiftSoup", "QRCodeGenerator", "PrologInterpreter", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
         ),
         .target(
             name: "D2Permissions",
@@ -36,8 +41,8 @@ let package = Package(
             dependencies: ["D2Utils"]
         ),
         .target(
-            name: "D2WebAPIs",
-            dependencies: ["D2Utils", "SwiftSoup"]
+            name: "D2NetAPIs",
+            dependencies: ["D2Utils", "SwiftSoup", "Socket"]
         ),
         .target(
             name: "D2Graphics",
@@ -45,7 +50,7 @@ let package = Package(
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["D2MessageIO"]
+            dependencies: ["D2MessageIO", "Socket", "Logging"]
         ),
         .target(
             name: "D2MessageIO"
@@ -67,8 +72,8 @@ let package = Package(
             dependencies: ["D2MessageIO", "D2TestUtils", "D2Graphics"]
         ),
         .testTarget(
-            name: "D2WebAPITests",
-            dependencies: ["D2MessageIO", "D2TestUtils", "D2WebAPIs"]
+            name: "D2NetAPITests",
+            dependencies: ["D2MessageIO", "D2TestUtils", "D2NetAPIs"]
         ),
         .testTarget(
             name: "D2TestUtils",

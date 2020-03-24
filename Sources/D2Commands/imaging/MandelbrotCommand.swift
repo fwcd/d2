@@ -1,7 +1,10 @@
+import Logging
 import D2MessageIO
 import D2Utils
 import D2Graphics
 import Foundation
+
+fileprivate let log = Logger(label: "MandelbrotCommand")
 
 public class MandelbrotCommand: StringCommand {
     public let info = CommandInfo(
@@ -33,8 +36,7 @@ public class MandelbrotCommand: StringCommand {
             
             try output.append(image)
         } catch {
-            print(error)
-            output.append("Could not create image")
+            output.append(error, errorText: "Could not create image")
         }
     }
     

@@ -16,19 +16,19 @@ public class CycleThroughCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !timer.isRunning else {
-			output.append("Animation is already running.")
+			output.append(errorText: "Animation is already running.")
 			return
 		}
 		
 		let frames = input.split(separator: " ")
 		
 		guard frames.count < 4 else {
-			output.append("Too many frames.")
+			output.append(errorText: "Too many frames.")
 			return
 		}
 		
 		guard let firstFrame = frames.first else {
-			output.append("Cannot create empty animation.")
+			output.append(errorText: "Cannot create empty animation.")
 			return
 		}
 		

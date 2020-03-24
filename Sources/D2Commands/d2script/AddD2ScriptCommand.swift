@@ -1,8 +1,10 @@
+import Logging
 import D2MessageIO
 import D2Permissions
 import D2Utils
 import D2Script
 
+fileprivate let log = Logger(label: "AddD2ScriptCommand")
 fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
 
 // TODO: Use code command instead of StringCommand
@@ -24,7 +26,7 @@ public class AddD2ScriptCommand: StringCommand {
 				let command = try D2ScriptCommand(script: try parser.parse(code))
 				let name = command.name
 				guard !name.contains(" ") else {
-					output.append("Command name '\(name)' may not contain spaces")
+					output.append(errorText: "Command name '\(name)' may not contain spaces")
 					return
 				}
 				
@@ -32,15 +34,14 @@ public class AddD2ScriptCommand: StringCommand {
 				registry[name] = command
 				output.append(":ballot_box_with_check: Added/updated command `\(name)`")
 			} catch D2ScriptCommandError.noCommandDefined(let msg) {
-				output.append("No command defined: \(msg)")
+				output.append(errorText: "No command defined: \(msg)")
 			} catch D2ScriptCommandError.multipleCommandsDefined(let msg) {
-				output.append("Multiple commands defined: \(msg)")
+				output.append(errorText: "Multiple commands defined: \(msg)")
 			} catch {
-				print(error)
-				output.append("Could not parse code.")
+				output.append(error, errorText: "Could not parse code.")
 			}
 		} else {
-			output.append("Did not recognize code. \(info.helpText!)")
+			output.append(errorText: "Did not recognize code. \(info.helpText!)")
 		}
 	}
 }

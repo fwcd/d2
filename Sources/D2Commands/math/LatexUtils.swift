@@ -1,33 +1,33 @@
+import Logging
+
+fileprivate let log = Logger(label: "LatexUtils")
+
 func handleLatex(error: Error, output: CommandOutput) {
-	if case let LatexError.pdfError(log) = error {
-		output.append("A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: log))\n```")
-		print("LaTeX PDF error:")
-		print(log)
+	if case let LatexError.pdfError(pdfLog) = error {
+		output.append(error, errorText: "A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
 	} else {
-		output.append("An asynchronous LaTeX error occurred")
-		print("Asynchronous LaTeX error: \(error)")
+		output.append(error, errorText: "An asynchronous LaTeX error occurred")
 	}
 }
 
-func renderLatexPNG(with renderer: LatexRenderer, color: String = "white", from input: String, to output: CommandOutput, then: @escaping () -> Void) {
+func renderLatexImage(with renderer: LatexRenderer, from input: String, to output: CommandOutput, color: String = "white", scale: Double = 6, then: (() -> Void)? = nil) {
 	do {
-		try renderer.renderImage(from: input, color: color, onError: {
+		try renderer.renderImage(from: input, color: color, scale: scale, onError: {
 			// Catch asynchronous errors
 			handleLatex(error: $0, output: output)
-			then()
+			then?()
 		}) {
 			// Render output
 			do {
 				try output.append($0)
 			} catch {
-				output.append("Error while appending image to output")
-				print("Error while appending image to output: \(error)")
+				output.append(error, errorText: "Error while appending image to output")
 			}
-			then()
+			then?()
 		}
 	} catch {
 		handleLatex(error: error, output: output)
-		then()
+		then?()
 	}
 }
 

@@ -10,6 +10,7 @@ public class BFEncodeCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	private let maxStringLength: Int
+	public let outputValueType: RichValueType = .code
 	
 	public init(maxStringLength: Int = 30) {
 		self.maxStringLength = maxStringLength
@@ -17,13 +18,13 @@ public class BFEncodeCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard input.count <= maxStringLength || output.messageLengthLimit == nil else {
-			output.append("Your string needs to be shorter than \(maxStringLength) characters!")
+			output.append(errorText: "Your string needs to be shorter than \(maxStringLength) characters!")
 			return
 		}
 		
 		let encodedChars = input.map { encode($0) ?? "" }
 		let encoded = encodedChars.reduce("") { "\($0)>\($1)" } + String(repeating: "<", count: max(0, encodedChars.count - 1))
-		output.append("```\(encoded)```")
+		output.append(.code(encoded, language: nil))
 	}
 	
 	private func encode(_ character: Character) -> String? {

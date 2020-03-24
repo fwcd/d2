@@ -1,0 +1,41 @@
+import Foundation
+import SwiftDiscord
+import D2NetAPIs
+
+public class FTBModpacksCommand: StringCommand {
+    public let info = CommandInfo(
+        category: .minecraft,
+        shortDescription: "Fetches a list of FTB modpacks",
+        longDescription: "Fetches a list of recent Feed The Beast modpacks with descriptions and download links",
+        requiredPermissionLevel: .basic
+    )
+    public let outputValueType: RichValueType = .embed
+    
+    public init() {}
+    
+    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+        FTBModpacksQuery().perform {
+            do {
+                let packs = try $0.get().prefix(5)
+                output.append(DiscordEmbed(
+                    title: "Recent FTB Modpacks",
+                    image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(DiscordEmbed.Image.init(url:)),
+                    fields: packs.map {
+                        DiscordEmbed.Field(
+                            name: "\($0.name ?? "?")\($0.mcVersion.map { " (\($0))" } ?? "")",
+                            value: """
+                                [[Download Pack]](\($0.downloadUrl ?? "")) [[Download Server]](\($0.serverDownloadUrl ?? ""))
+                                \($0.description?
+                                    .replacingOccurrences(of: "<br>", with: "\n")
+                                    .replacingOccurrences(of: "\n\n", with: "\n")
+                                    .truncate(300, appending: "...") ?? "_no description_")
+                                """
+                        )
+                    }
+                ))
+            } catch {
+                output.append(error, errorText: "Could not fetch recent FTB modpacks")
+            }
+        }
+    }
+}

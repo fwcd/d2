@@ -1,7 +1,10 @@
+import Logging
 import D2MessageIO
 import D2Utils
 import D2Graphics
 import Dispatch
+
+fileprivate let log = Logger(label: "DiscordMessageParser")
 
 // The first group matches the language, the second group matches the code
 fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
@@ -22,12 +25,16 @@ public struct MessageParser {
 		
 		// Parse message content
 		let content = str ?? message.content
+		
+		let textualContent = codePattern.replace(in: content, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+		if !textualContent.isEmpty {
+			values.append(.text(textualContent))
+		}
+		
 		if let codeGroups = codePattern.firstGroups(in: content) {
 			let language = codeGroups[1].nilIfEmpty
 			let code = codeGroups[2]
 			values.append(.code(code, language: language))
-		} else if !content.isEmpty {
-			values.append(.text(content))
 		}
 		
 		// Append embeds
@@ -48,7 +55,7 @@ public struct MessageParser {
 						let data = try $0.get()
 						values.append(.image(try Image(fromPng: data)))
 					} catch {
-						print(error)
+						log.error("\(error)")
 					}
 					semaphore.signal()
 				}
@@ -63,7 +70,7 @@ public struct MessageParser {
 				// 		let data = try $0.get()
 				// 		values.append(.gif(try AnimatedGif(from: data)))
 				// 	} catch {
-				// 		print(error)
+				// 		log.error("\(error)")
 				// 	}
 				// 	semaphore.signal()
 				// }
@@ -77,7 +84,7 @@ public struct MessageParser {
 				semaphore.wait()
 			}
 			
-			// print("Parsed input: \(values)")
+			log.debug("Parsed input: \(values)")
 			then(RichValue.of(values: values))
 		}
 	}

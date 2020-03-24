@@ -23,11 +23,11 @@ public class SortByCommand: StringCommand {
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let criterion = sortCriteria[input] else {
-			output.append("Unrecognized sort criterion: \(input). Try using one of these: \(sortCriteria.keys)")
+			output.append(errorText: "Unrecognized sort criterion: \(input). Try using one of these: \(sortCriteria.keys)")
 			return
 		}
 		guard let channel = context.channel?.id else {
-			output.append("No channel found for message")
+			output.append(errorText: "No channel found for message")
 			return
 		}
 

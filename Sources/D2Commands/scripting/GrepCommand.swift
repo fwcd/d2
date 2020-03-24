@@ -29,12 +29,12 @@ public class GrepCommand: ArgCommand {
 			}
 			
 			if result.isEmpty {
-				output.append("Grep result is empty!")
+				output.append(errorText: "Grep result is empty!")
 			} else {
 				output.append(result)
 			}
 		} catch {
-			output.append("Regex syntax error: \(error)")
+			output.append(error, errorText: "Regex syntax error: \(error)")
 		}
 	}
 }
