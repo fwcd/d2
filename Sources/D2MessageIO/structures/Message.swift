@@ -10,6 +10,7 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 	public let activity: MessageActivity?
 	public let application: MessageApplication?
 	public let author: User?
+	public let dm: Bool
 	public let channelId: ChannelID?
 	public let editedTimestamp: Date?
 	public let id: MessageID?
@@ -47,6 +48,7 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 		application: MessageApplication? = nil,
 		author: User? = nil,
 		channelId: ChannelID? = nil,
+		dm: Bool = false,
 		editedTimestamp: Date? = nil,
 		id: MessageID? = nil,
 		mentionEveryone: Bool = false,
@@ -68,6 +70,7 @@ public struct Message: Codable, ExpressibleByStringLiteral {
 		self.activity = activity
 		self.application = application
 		self.author = author
+		self.dm = dm
 		self.channelId = channelId
 		self.editedTimestamp = editedTimestamp
 		self.id = id

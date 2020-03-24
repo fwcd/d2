@@ -1,6 +1,7 @@
 import Commander
 import Foundation
 import Logging
+import SwiftDiscord
 import D2Commands
 import D2Utils
 
@@ -12,10 +13,10 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2ClientHandler(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
 	let token = try DiskJsonSerializer().readJson(as: Token.self, fromFile: "local/discordToken.json").token
-	let client = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: handler, configuration: [])
+	let discordClient = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: MessageIOClientDelegate(inner: handler), configuration: [])
 	
 	log.info("Connecting client")
-	client.connect()
+	discordClient.connect()
 	RunLoop.current.run()
 }
 

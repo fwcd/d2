@@ -50,7 +50,7 @@ struct SpamHandler: MessageHandler {
     }
     
     private func isSpamming(user: UserID) -> Bool {
-        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.value.maxSpamMessagesPerInterval
+        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.wrappedValue.maxSpamMessagesPerInterval
     }
     
     private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {

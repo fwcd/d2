@@ -9,7 +9,7 @@ struct DiscordMessageClient: MessageClient {
 		self.client = client
 	}
 	
-	func guild(for guildId: GuildID) -> Guild? {
+	func guild(for guildId: D2MessageIO.GuildID) -> Guild? {
 		return client.guilds[guildId.usingDiscordAPI]?.usingMessageIO
 	}
 	
@@ -34,7 +34,7 @@ struct DiscordMessageClient: MessageClient {
 	}
 	
 	func createDM(with user: D2MessageIO.UserID, then: ClientCallback<D2MessageIO.ChannelID>?) {
-		client.createDM(with: user) {
+		client.createDM(with: user.usingDiscordAPI) {
 			then?($0?.id.usingMessageIO, $1)
 		}
 	}
@@ -51,9 +51,33 @@ struct DiscordMessageClient: MessageClient {
 		}
 	}
 	
+	func deleteMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
+		client.deleteMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI) {
+			then?($0, $1)
+		}
+	}
+
+	func bulkDeleteMessages(_ ids: [D2MessageIO.MessageID], on channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
+		client.bulkDeleteMessages(ids.map { $0.usingDiscordAPI }, on: channelId.usingDiscordAPI) {
+			then?($0, $1)
+		}
+	}
+
 	func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, then: ClientCallback<[Message]>?) {
 		client.getMessages(for: channelId.usingDiscordAPI, limit: limit) {
 			then?($0.map { $0.usingMessageIO }, $1)
+		}
+	}
+
+	func isGuildTextChannel(_ channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
+		client.getChannel(channelId.usingDiscordAPI) {
+			then?($0.map { $0 is DiscordGuildTextChannel } ?? false, $1)
+		}
+	}
+	
+	func isDMTextChannel(_ channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
+		client.getChannel(channelId.usingDiscordAPI) {
+			then?($0.map { $0 is DiscordDMChannel || $0 is DiscordGroupDMChannel } ?? false, $1)
 		}
 	}
 

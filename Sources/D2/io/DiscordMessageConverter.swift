@@ -32,6 +32,7 @@ extension DiscordMessage: MessageIOConvertible {
 			application: application?.usingMessageIO,
 			author: author.usingMessageIO,
 			channelId: channelId.usingMessageIO,
+			dm: channel is DiscordDMChannel || channel is DiscordGroupDMChannel,
 			editedTimestamp: editedTimestamp,
 			id: id.usingMessageIO,
 			mentionEveryone: mentionEveryone,

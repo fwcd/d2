@@ -34,10 +34,10 @@ public class MarkovCommand: StringCommand {
 		let mentioned = context.message.mentions.first
 		
 		if flags.contains("all"), let guild = context.guild {
-			guard let me = client.me.flatMap({ guild.members[$0.id] }) else {
-				output.append("Could not fetch guild member for myself")
-				return
-			}
+			// guard let me = client.me.flatMap({ guild.members[$0.id] }) else {
+			// 	output.append("Could not fetch guild member for myself")
+			// 	return
+			// }
 
 			let channels = Set(guild.channels
 				// TODO: Add an API to query for member permissions to MessageIO

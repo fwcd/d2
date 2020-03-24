@@ -57,7 +57,7 @@ extension Embed.Field: DiscordAPIConvertible {
 
 // FROM Discord conversions
 
-extension Embed: MessageIOConvertible {
+extension DiscordEmbed: MessageIOConvertible {
 	public var usingMessageIO: Embed {
 		return Embed(
 			title: title,
@@ -74,7 +74,7 @@ extension Embed: MessageIOConvertible {
 	}
 }
 
-extension Embed.Author: MessageIOConvertible {
+extension DiscordEmbed.Author: MessageIOConvertible {
 	public var usingMessageIO: Embed.Author {
 		return Embed.Author(
 			name: name,
@@ -84,25 +84,25 @@ extension Embed.Author: MessageIOConvertible {
 	}
 }
 
-extension Embed.Thumbnail: MessageIOConvertible {
+extension DiscordEmbed.Thumbnail: MessageIOConvertible {
 	public var usingMessageIO: Embed.Thumbnail {
 		return Embed.Thumbnail(url: url)
 	}
 }
 
-extension Embed.Image: MessageIOConvertible {
+extension DiscordEmbed.Image: MessageIOConvertible {
 	public var usingMessageIO: Embed.Image {
 		return Embed.Image(url: url)
 	}
 }
 
-extension Embed.Footer: MessageIOConvertible {
+extension DiscordEmbed.Footer: MessageIOConvertible {
 	public var usingMessageIO: Embed.Footer {
 		return Embed.Footer(text: text)
 	}
 }
 
-extension Embed.Field: MessageIOConvertible {
+extension DiscordEmbed.Field: MessageIOConvertible {
 	public var usingMessageIO: Embed.Field {
 		return Embed.Field(name: name, value: value, inline: inline)
 	}

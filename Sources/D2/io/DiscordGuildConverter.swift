@@ -37,7 +37,7 @@ extension DiscordGuildChannel /* TODO: No protocol inheritance clauses: MessageI
 			name: name,
 			parentId: parentId?.usingMessageIO,
 			position: position,
-			isVoiceChannel: self is GuildVoiceChannel,
+			isVoiceChannel: self is DiscordGuildVoiceChannel,
 			permissionOverwrites: permissionOverwrites.usingMessageIO
 		)
 	}

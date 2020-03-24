@@ -63,9 +63,13 @@ class CommandHandler: MessageHandler {
     }
 
     func handle(message: Message, from client: MessageClient) -> Bool {
-        guard message.content.starts(with: commandPrefix) && !(message.channel is DiscordDMChannel) else { return false }
+        guard message.content.starts(with: commandPrefix) && !message.dm, let channelId = message.channelId else { return false }
+		guard let author = message.author else {
+			log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
+			return false
+		}
 		guard operationQueue.operationCount < operationQueue.maxConcurrentOperationCount else {
-			message.channel?.send("Too many concurrent command invocations, please wait for one to finish!")
+			client.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
 			log.notice("Command invocation not processed, since max concurrent operation count was reached")
 			return false
 		}
@@ -78,8 +82,8 @@ class CommandHandler: MessageHandler {
 		// Precedence: Chain < Pipe
 		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
 			if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, client: client) {
-				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
-					message.channel?.send("Your pipe is too long.")
+				guard (permissionManager[author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
+					client.sendMessage("Your pipe is too long.", to: channelId)
 					log.notice("Too long pipe")
 					return true
 				}
@@ -113,8 +117,9 @@ class CommandHandler: MessageHandler {
         return true
     }
 	
-	private func constructPipe(rawPipeCommand: String, message: DiscordMessage, client: DiscordClient) -> [PipeComponent]? {
-		let isBot = message.author.bot
+	private func constructPipe(rawPipeCommand: String, message: Message, client: MessageClient) -> [PipeComponent]? {
+		guard let channelId = message.channelId, let author = message.author else { return nil }
+		let isBot = author.bot
 		var pipe = [PipeComponent]()
 		var userOnly = false
 		
@@ -128,12 +133,12 @@ class CommandHandler: MessageHandler {
 				let args = groups[2]
 
 				if let command = registry[name] {
-					let hasPermission = permissionManager.user(message.author, hasPermission: command.info.requiredPermissionLevel)
+					let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel)
 					if hasPermission {
 						log.debug("Appending '\(name)' to pipe")
 
 						let context = CommandContext(
-							guild: client.guildForChannel(message.channelId),
+							client: client,
 							registry: registry,
 							message: message,
 							commandPrefix: commandPrefix,
@@ -143,7 +148,7 @@ class CommandHandler: MessageHandler {
 						pipe.append(PipeComponent(command: command, context: context, args: args))
 					} else {
 						log.notice("Rejected '\(name)' due to insufficient permissions")
-						message.channel?.send("Sorry, you are not permitted to execute `\(name)`.")
+						client.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
 						return nil
 					}
 					
@@ -151,7 +156,7 @@ class CommandHandler: MessageHandler {
 				} else {
 					log.notice("Did not recognize command '\(name)'")
 					if !isBot {
-						message.channel?.send("Sorry, I do not know the command `\(name)`.")
+						client.sendMessage("Sorry, I do not know the command `\(name)`.", to: channelId)
 					}
 					return nil
 				}

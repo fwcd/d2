@@ -35,6 +35,10 @@ public protocol MessageClient {
 	func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?)
 	
 	func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?)
+
+	func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?)
+	
+	func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?)
 	
 	func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?)
 	
@@ -54,6 +58,10 @@ public extension MessageClient {
 		createDM(with: user, then: defaultCallback)
 	}
 	
+	func sendMessage(_ content: String, to channelId: ChannelID) {
+		sendMessage(Message(content: content), to: channelId)
+	}
+	
 	func sendMessage(_ message: Message, to channelId: ChannelID) {
 		sendMessage(message, to: channelId, then: defaultCallback)
 	}
@@ -61,11 +69,15 @@ public extension MessageClient {
 	func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) {
 		editMessage(id, on: channelId, content: content, then: defaultCallback)
 	}
-	
-	func getMessages(for channelId: ChannelID, limit: Int) {
-		getMessages(for: channelId, limit: limit, then: defaultCallback)
+
+	func deleteMessage(_ id: MessageID, on channelId: ChannelID) {
+		deleteMessage(id, on: channelId, then: defaultCallback)
 	}
 	
+	func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) {
+		bulkDeleteMessages(ids, on: channelId, then: defaultCallback)
+	}
+
 	func triggerTyping(on channelId: ChannelID) {
 		triggerTyping(on: channelId, then: defaultCallback)
 	}
