@@ -62,8 +62,7 @@ public class PortalCommand: StringCommand {
                 }
             },
             "close": { output, context in
-                context.unsubscribeFromChannel()
-                output.append(":comet: Closed portal.")
+                self.closePortal(output: output, context: context)
             }
         ]
         info.helpText = """
@@ -113,13 +112,17 @@ public class PortalCommand: StringCommand {
         context.subscribeToChannel()
     }
     
-    private func closePortal(context: CommandContext) {
+    private func closePortal(output: CommandOutput, context: CommandContext) {
         let channelId = context.channel?.id
+        let closeMessage = ":coment: Closed portal."
 
         for (i, portal) in portals.enumerated().reversed() where portal.origin == channelId || portal.target == channelId {
             context.subscriptions.unsubscribe(from: portal.origin)
+            output.append(closeMessage, to: .serverChannel(portal.origin))
+
             if let target = portal.target {
                 context.subscriptions.unsubscribe(from: target)
+                output.append(closeMessage, to: .serverChannel(target))
             }
             portals.remove(at: i)
         }
