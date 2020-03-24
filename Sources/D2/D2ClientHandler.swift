@@ -67,6 +67,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["matmul"] = MatrixMultiplicationCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
+		registry["portal"] = PortalCommand()
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["mcmods"] = MinecraftServerModsCommand()
 		registry["mcmod"] = MinecraftModSearchCommand()
