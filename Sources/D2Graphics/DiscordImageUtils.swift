@@ -7,7 +7,7 @@ extension InteractiveTextChannel {
 	}
 	
 	public func send(gif: AnimatedGif) throws {
-		send(Message(fromGif: gif))
+		send(try Message(fromGif: gif))
 	}
 }
 

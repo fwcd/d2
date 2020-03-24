@@ -49,11 +49,12 @@ let package = Package(
             dependencies: ["D2MessageIO", "D2Utils", "Cairo"]
         ),
         .target(
-            name: "D2Utils",
-            dependencies: ["D2MessageIO", "Socket", "Logging"]
+            name: "D2MessageIO",
+            dependencies: ["D2Utils", "Logging"]
         ),
         .target(
-            name: "D2MessageIO"
+            name: "D2Utils",
+            dependencies: ["Socket", "Logging"]
         ),
         .testTarget(
             name: "D2CommandTests",

@@ -1,6 +1,6 @@
-import D2MessageIO
 import Dispatch
 import Logging
+import D2Utils
 
 fileprivate let log = Logger(label: "TypingIndicator")
 
