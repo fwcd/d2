@@ -20,7 +20,7 @@ public class HoogleCommand: StringCommand {
         HoogleQuery(term: input).perform {
             switch $0 {
                 case let .success(results):
-                    output.append(Embed
+                    output.append(Embed(
                         title: ":closed_umbrella: Hoogle Results",
                         description: results
                             .map { """

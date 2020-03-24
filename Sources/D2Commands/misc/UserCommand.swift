@@ -35,14 +35,14 @@ public class UserCommand: StringCommand {
             thumbnail: URL(string: "https://cdn.discordapp.com/avatars/\(user.id)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) },
             footer: Embed.Footer(text: "ID: \(user.id)"),
             fields: [
-                Embedname: "Nick", value: member.nick ?? "_none_"),
+                Embed.Field(name: "Nick", value: member.nick ?? "_none_"),
                 Embed.Field(name: "Roles", value: member.roles?.sorted(by: descendingComparator { $0.position }).map { $0.name }.joined(separator: "\n").nilIfEmpty ?? "_none_"),
-                Embedname: "Voice Status", value: ((member.deaf ? ["deaf"] : []) + (member.mute ? ["mute"] : [])).joined(separator: ", ").nilIfEmpty ?? "_none_"),
-                Embedname: "Joined at", value: dateFormatter.string(from: member.joinedAt))
+                Embed.Field(name: "Voice Status", value: ((member.deaf ? ["deaf"] : []) + (member.mute ? ["mute"] : [])).joined(separator: ", ").nilIfEmpty ?? "_none_"),
+                Embed.Field(name: "Joined at", value: dateFormatter.string(from: member.joinedAt))
             ] + (presence.map { [
-                Embedname: "Status", value: stringOf(status: $0.status))
+                Embed.Field(name: "Status", value: stringOf(status: $0.status))
             ] + ($0.game.map { [
-                Embedname: "Activity", value: """
+                Embed.Field(name: "Activity", value: """
                     Name: \($0.name)
                     Assets: \($0.assets.flatMap { [$0.largeText, $0.smallText].compactMap { $0 }.joined(separator: ", ").nilIfEmpty } ?? "_none_")
                     Details: \($0.details ?? "_none_")

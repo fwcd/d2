@@ -26,7 +26,7 @@ public class RedditCommand: StringCommand {
 						.flatMap(URL.init(string:))
 						.filter(self.refersToImage(url:))
 						.map(Embed.Image.init(url:)),
-					footer: Embed(text: "\($0.ups ?? -1) upvotes, \($0.downs ?? -1) downvotes")
+					footer: Embed.Footer(text: "\($0.ups ?? -1) upvotes, \($0.downs ?? -1) downvotes")
 				))
 			}, errorText: "Reddit search failed")
 		}

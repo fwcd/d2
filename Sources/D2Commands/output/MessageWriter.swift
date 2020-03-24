@@ -19,7 +19,7 @@ public struct MessageWriter {
 			case let .image(img):
 				return try Message(fromImage: img)
 			case let .gif(gif):
-				return Message(fromGif: gif)
+				return try Message(fromGif: gif)
 			case let .code(code, language: lang):
 				return Message(content: """
 					```\(lang ?? "")

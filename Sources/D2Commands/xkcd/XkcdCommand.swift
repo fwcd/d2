@@ -22,7 +22,7 @@ public class XkcdCommand: StringCommand {
                         title: "xkcd #\(comic.num): \(comic.title ?? "no title")",
                         url: URL(string: "https://xkcd.com/\(comic.num)")!,
                         image: comic.img.flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
-                        footer: comic.alt.map { Embed(text: $0) }
+                        footer: comic.alt.map { Embed.Footer(text: $0) }
                     ))
                 case .failure(let error):
                     output.append(error, errorText: "An error occurred while fetching the comic")

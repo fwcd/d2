@@ -42,9 +42,9 @@ public class MinecraftDynmapCommand: StringCommand {
                                         output.append(errorText: "Could not find player `\(name)` on server")
                                     }
                                 } else {
-                                    output.append(Embed
+                                    output.append(Embed(
                                         title: "Minecraft Server Dynmap",
-                                        fields: world.players?.map { Embedname: $0.name ?? "Unnamed player", value: self.describe(player: $0)) } ?? []
+                                        fields: world.players?.map { Embed.Field(name: $0.name ?? "Unnamed player", value: self.describe(player: $0)) } ?? []
                                     ))
                                 }
                             case .failure(let error):

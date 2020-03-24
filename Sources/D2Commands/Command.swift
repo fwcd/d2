@@ -13,7 +13,7 @@ public protocol Command: class {
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
 
-	func onReceivedUpdated(presence: DiscordPresence)
+	func onReceivedUpdated(presence: Presence)
 	
 	func equalTo(_ rhs: Command) -> Bool
 }
@@ -26,7 +26,7 @@ extension Command {
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
 	
-	public func onReceivedUpdated(presence: DiscordPresence) {}
+	public func onReceivedUpdated(presence: Presence) {}
 
 	public func equalTo(_ rhs: Command) -> Bool { self === rhs }
 }

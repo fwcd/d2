@@ -56,8 +56,8 @@ public class GitLabCommand: StringCommand {
                             let pipeline = jobs.first?.0.pipeline
                             output.append(Embed(
                                 title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
-                                fields: (pipeline.map(self.describe(pipeline:)).map { [Embedname: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
-                                    Embedname: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
+                                fields: (pipeline.map(self.describe(pipeline:)).map { [Embed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
+                                    Embed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
                                 }
                             ))
                         case .failure(let error):

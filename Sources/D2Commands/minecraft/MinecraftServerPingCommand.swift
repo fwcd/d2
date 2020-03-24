@@ -30,10 +30,10 @@ public class MinecraftServerPingCommand: StringCommand {
                     description: "\(serverInfo.description)",
                     footer: modCount.map { _ in Embed.Footer(text: "Use \(context.commandPrefix)mcmods to get a detailed mod list") },
                     fields: [
-                        Embedname: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
-                        Embedname: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
-                        Embedname: "Version", value: serverInfo.version.name),
-                        Embedname: "Mods", value: modCount.map { "\($0) \("mod".pluralize(with: $0))" } ?? "_vanilla_")
+                        Embed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
+                        Embed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
+                        Embed.Field(name: "Version", value: serverInfo.version.name),
+                        Embed.Field(name: "Mods", value: modCount.map { "\($0) \("mod".pluralize(with: $0))" } ?? "_vanilla_")
                     ]
                 ))
             } else {

@@ -36,7 +36,7 @@ public class ClearCommand: StringCommand {
             self.messagesToBeDeleted[channelId] = messages
             let grouped = Dictionary(grouping: messages, by: { $0.author.username })
 
-            output.append(Embed
+            output.append(Embed(
                 title: ":warning: You are about to DELETE \(messages.count) \("message".pluralize(with: messages.count))",
                 description: """
                     \(grouped.map { "\($0.1.count) \("message".pluralize(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
