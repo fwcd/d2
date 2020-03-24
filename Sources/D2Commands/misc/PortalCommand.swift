@@ -1,4 +1,28 @@
 import SwiftDiscord
+import Logging
+
+fileprivate let log = Logger(label: "PortalCommand")
+
+fileprivate struct Portal {
+    let origin: ChannelID
+    let originName: String
+    
+    var target: ChannelID? = nil
+    var targetName: String? = nil
+    
+    init(origin: ChannelID, originName: String) {
+        self.origin = origin
+        self.originName = originName
+    }
+    
+    func other(_ channelId: ChannelID) -> ChannelID? {
+        switch channelId {
+            case origin: return target
+            case target: return origin
+            default: return nil
+        }
+    }
+}
 
 public class PortalCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -8,16 +32,38 @@ public class PortalCommand: StringCommand {
         requiredPermissionLevel: .vip
     )
     private var subcommands: [String: (CommandOutput, CommandContext) -> Void] = [:]
+    private var portals: [Portal] = []
+    private var halfOpenPortal: Portal? = nil
 
     public init() {
         subcommands = [
             "open": { [unowned self] output, context in
-                context.subscribeToChannel()
-                output.append(":sparkles: Opened portal")
+                guard self.currentPortal(context: context) == nil else {
+                    output.append(errorText: "You are already connected to a portal!")
+                    return
+                }
+                if var portal = self.halfOpenPortal {
+                    self.halfOpenPortal = nil
+
+                    guard let channelId = context.channel?.id else {
+                        output.append(errorText: "Cannot open a portal without a channel.")
+                        return
+                    }
+                    
+                    portal.target = channelId
+                    portal.targetName = self.endpointName(context: context)
+                    self.portals.append(portal)
+
+                    output.append(":dizzy: You are now connected to `\(portal.originName)`")
+                    output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .serverChannel(portal.origin))
+                } else {
+                    self.openNewPortal(context: context)
+                    output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
+                }
             },
-            "close": { [unowned self] output, context in
+            "close": { output, context in
                 context.unsubscribeFromChannel()
-                output.append(":comet: Closed portal")
+                output.append(":comet: Closed portal.")
             }
         ]
         info.helpText = """
@@ -37,8 +83,50 @@ public class PortalCommand: StringCommand {
     }
     
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
-        for channelId in context.subscriptions where channelId != context.channel?.id {
-            output.append(.text("**\(context.author.username):** \(content)"), to: .serverChannel(channelId))
+        guard let channelId = context.channel?.id else {
+            log.warning("No channel id available, despite being subscribed!")
+            return
+        }
+        guard let portal = currentPortal(context: context) else {
+            log.warning("Not connected to a portal, despite being subscribed!")
+            return
+        }
+        guard let otherChannelId = portal.other(channelId) else { return } // Do nothing if portal is only partially connected
+        output.append(.text("**\(context.author.username):** \(content)"), to: .serverChannel(otherChannelId))
+    }
+    
+    private func endpointName(context: CommandContext) -> String {
+        return context.channel.flatMap { channel in context.guild.map { "\($0.channels[channel.id]?.name ?? "<unnamed channel>") on server \($0.name)" } } ?? "<unnamed endpoint>"
+    }
+    
+    private func currentPortal(context: CommandContext) -> Portal? {
+        let channelId = context.channel?.id
+        return portals.first(where: { $0.origin == channelId || $0.target == channelId })
+    }
+    
+    private func openNewPortal(context: CommandContext) {
+        guard let channelId = context.channel?.id else {
+            log.warning("Tried to open new portal without a channel being present.")
+            return
+        }
+        halfOpenPortal = Portal(origin: channelId, originName: endpointName(context: context))
+        context.subscribeToChannel()
+    }
+    
+    private func closePortal(context: CommandContext) {
+        let channelId = context.channel?.id
+
+        for (i, portal) in portals.enumerated().reversed() where portal.origin == channelId || portal.target == channelId {
+            context.subscriptions.unsubscribe(from: portal.origin)
+            if let target = portal.target {
+                context.subscriptions.unsubscribe(from: target)
+            }
+            portals.remove(at: i)
+        }
+        
+        if let portal = halfOpenPortal, channelId == portal.origin {
+            context.subscriptions.unsubscribe(from: portal.origin)
+            halfOpenPortal = nil
         }
     }
 }
