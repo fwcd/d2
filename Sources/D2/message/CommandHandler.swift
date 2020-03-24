@@ -72,17 +72,12 @@ class CommandHandler: MessageHandler {
 
         currentIndex += 1
 
-        let context = CommandContext(
-			guild: client.guildForChannel(message.channelId),
-			registry: registry,
-			message: message,
-			commandPrefix: commandPrefix
-		)
+  
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 		
 		// Precedence: Chain < Pipe
 		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
-			if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, context: context, client: client) {
+			if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, client: client) {
 				guard (permissionManager[message.author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
 					message.channel?.send("Your pipe is too long.")
 					log.notice("Too long pipe")
@@ -110,14 +105,6 @@ class CommandHandler: MessageHandler {
 					self.msgParser.parse(pipeSource.args, message: message) { input in
 						// Execute the pipe
 						pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
-						
-						// Add subscriptions
-						let added = pipe
-							.map { (it: PipeComponent) -> Command in it.command }
-							.filter { cmd in cmd.info.subscribesToNextMessages && !self.subscriptionManager.hasSubscription(on: message.channelId, by: cmd) }
-							.map { Subscription(channel: message.channelId, command: $0) }
-						
-						self.subscriptionManager.add(subscriptions: added)
 					}
 				}
 			}
@@ -126,7 +113,7 @@ class CommandHandler: MessageHandler {
         return true
     }
 	
-	private func constructPipe(rawPipeCommand: String, message: DiscordMessage, context: CommandContext, client: DiscordClient) -> [PipeComponent]? {
+	private func constructPipe(rawPipeCommand: String, message: DiscordMessage, client: DiscordClient) -> [PipeComponent]? {
 		let isBot = message.author.bot
 		var pipe = [PipeComponent]()
 		var userOnly = false
@@ -139,11 +126,20 @@ class CommandHandler: MessageHandler {
 				log.info("Got command #\(currentIndex): \(groups)")
 				let name = groups[1]
 				let args = groups[2]
-				
+
 				if let command = registry[name] {
 					let hasPermission = permissionManager.user(message.author, hasPermission: command.info.requiredPermissionLevel)
 					if hasPermission {
 						log.debug("Appending '\(name)' to pipe")
+
+						let context = CommandContext(
+							guild: client.guildForChannel(message.channelId),
+							registry: registry,
+							message: message,
+							commandPrefix: commandPrefix,
+							subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name)
+						)				
+
 						pipe.append(PipeComponent(command: command, context: context, args: args))
 					} else {
 						log.notice("Rejected '\(name)' due to insufficient permissions")
