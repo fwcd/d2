@@ -42,23 +42,10 @@ public class PortalCommand: StringCommand {
                     output.append(errorText: "You are already connected to a portal!")
                     return
                 }
-                if var portal = self.halfOpenPortal {
-                    self.halfOpenPortal = nil
-
-                    guard let channelId = context.channel?.id else {
-                        output.append(errorText: "Cannot open a portal without a channel.")
-                        return
-                    }
-                    
-                    portal.target = channelId
-                    portal.targetName = self.endpointName(context: context)
-                    self.portals.append(portal)
-
-                    output.append(":dizzy: You are now connected to `\(portal.originName)`")
-                    output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .serverChannel(portal.origin))
+                if self.halfOpenPortal == nil {
+                    self.openNewPortal(output: output, context: context)
                 } else {
-                    self.openNewPortal(context: context)
-                    output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
+                    self.connectPortal(output: output, context: context)
                 }
             },
             "close": { output, context in
@@ -103,18 +90,42 @@ public class PortalCommand: StringCommand {
         return portals.first(where: { $0.origin == channelId || $0.target == channelId })
     }
     
-    private func openNewPortal(context: CommandContext) {
+    private func openNewPortal(output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             log.warning("Tried to open new portal without a channel being present.")
             return
         }
+
         halfOpenPortal = Portal(origin: channelId, originName: endpointName(context: context))
         context.subscribeToChannel()
+
+        output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
     }
+    
+    private func connectPortal(output: CommandOutput, context: CommandContext) {
+        guard var portal = halfOpenPortal else {
+            log.warning("Tried to connect portal without having a half-open portal. This is likely a bug.")
+            return
+        }
+        halfOpenPortal = nil
+
+        guard let channelId = context.channel?.id else {
+            output.append(errorText: "Cannot open a portal without a channel.")
+            return
+        }
+        
+        portal.target = channelId
+        portal.targetName = self.endpointName(context: context)
+        self.portals.append(portal)
+        context.subscribeToChannel()
+
+        output.append(":dizzy: You are now connected to `\(portal.originName)`")
+        output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .serverChannel(portal.origin))
+}
     
     private func closePortal(output: CommandOutput, context: CommandContext) {
         let channelId = context.channel?.id
-        let closeMessage = ":coment: Closed portal."
+        let closeMessage = ":comet: Closed portal."
 
         for (i, portal) in portals.enumerated().reversed() where portal.origin == channelId || portal.target == channelId {
             context.subscriptions.unsubscribe(from: portal.origin)
