@@ -12,7 +12,9 @@ fileprivate func defaultCallback<T>(_ dummy: T, error: HTTPURLResponse?) {
 }
 
 public protocol MessageClient {
-	var me: User? { get } // Me
+	var me: User? { get }
+	
+	func guild(for guildId: GuildID) -> Guild?
 	
 	func setPresence(_ presence: PresenceUpdate)
 	

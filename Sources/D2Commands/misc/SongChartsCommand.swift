@@ -51,7 +51,7 @@ public class SongChartsCommand: StringCommand {
             "tracked": { [unowned self] output, context in
                 output.append(Embed(
                     title: "Tracked Guilds",
-                    description: self.trackedGuilds.compactMap { context.client?.guilds[$0] }.map { $0.name }.joined(separator: "\n"),
+                    description: self.trackedGuilds.compactMap { context.client?.guild(for: $0) }.map { $0.name }.joined(separator: "\n"),
                     footer: Embed.Footer(text: "Guilds for which anonymized song statistics are collected")
                 ))
             },

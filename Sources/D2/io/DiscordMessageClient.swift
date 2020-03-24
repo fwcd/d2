@@ -9,6 +9,10 @@ struct DiscordMessageClient: MessageClient {
 		self.client = client
 	}
 	
+	func guild(for guildId: GuildID) -> Guild? {
+		return client.guilds[guildId.usingDiscordAPI]?.usingMessageIO
+	}
+	
 	func setPresence(_ presence: PresenceUpdate) {
 		client.setPresence(presence.usingDiscordAPI)
 	}

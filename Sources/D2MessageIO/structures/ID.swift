@@ -1,3 +1,6 @@
+// TODO: Add a string attribute to ids to disambiguate to whose message
+//       backend's id they refer.
+
 public typealias ChannelID = ID
 public typealias MessageID = ID
 public typealias AttachmentID = ID

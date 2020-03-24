@@ -23,18 +23,21 @@ public class ClearCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client else {
-            output.append("No MessageIO client available")
+            output.append(errorText: "No MessageIO client available")
             return
         }
         guard let n = Int(input), n >= minDeletableCount, n <= maxDeletableCount else {
-            output.append("Please enter a number (of messages to be deleted) between \(minDeletableCount) and \(maxDeletableCount)!")
+            output.append(errorText: "Please enter a number (of messages to be deleted) between \(minDeletableCount) and \(maxDeletableCount)!")
             return
         }
-        
-        let channelId = context.message.channelId
+        guard let channelId = context.message.channelId else {
+            output.append(errorText: "Message has no channel ID")
+            return
+        }
+
         client.getMessages(for: channelId, limit: n) { messages, _ in
             self.messagesToBeDeleted[channelId] = messages
-            let grouped = Dictionary(grouping: messages, by: { $0.author.username })
+            let grouped = Dictionary(grouping: messages, by: { $0.author?.username ?? "<unnamed>" })
 
             output.append(Embed(
                 title: ":warning: You are about to DELETE \(messages.count) \("message".pluralize(with: messages.count))",
@@ -53,8 +56,8 @@ public class ClearCommand: StringCommand {
             messagesToBeDeleted[channel.id] = nil
             if content == confirmationString {
                 log.notice("Deleting \(messages.count) \("message".pluralize(with: messages.count))")
-                if messages.count == 1 {
-                    client.deleteMessage(messages[0].id, on: channel.id) { success, _ in
+                if messages.count == 1, let messageId = messages.first?.id {
+                    client.deleteMessage(messageId, on: channel.id) { success, _ in
                         if success {
                             output.append(":wastebasket: Deleted message")
                         } else {
@@ -62,7 +65,12 @@ public class ClearCommand: StringCommand {
                         }
                     }
                 } else {
-                    client.bulkDeleteMessages(messages.map { $0.id }, on: channel.id) { success, _ in
+                    let messageIds = messages.compactMap { $0.id }
+                    guard !messageIds.isEmpty else {
+                        output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
+                        return
+                    }
+                    client.bulkDeleteMessages(messageIds, on: channel.id) { success, _ in
                         if success {
                             output.append(":wastebasket: Deleted \(messages.count) messages")
                         } else {
