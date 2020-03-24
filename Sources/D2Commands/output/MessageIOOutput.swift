@@ -5,7 +5,7 @@ import FoundationNetworking
 #endif
 import Logging
 
-fileprivate let log = Logger(label: "DiscordOutput")
+fileprivate let log = Logger(label: "MessageIOOutput")
 
 public class MessageIOOutput: CommandOutput {
 	private let messageWriter = MessageWriter()

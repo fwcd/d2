@@ -43,7 +43,7 @@ extension Message.Attachment {
 	 */
 	public func download(then: @escaping (Result<Data, Error>) -> Void) {
 		guard let url = url else {
-			then(.failure(URLRequestError.missingURL))
+			then(.failure(NetworkError.missingURL))
 			return
 		}
 		URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in

@@ -1,15 +1,15 @@
-import SwiftDiscord
+import D2MessageIO
 import Dispatch
 import Logging
 
-fileprivate let log = Logger(label: "DiscordTypingIndicator")
+fileprivate let log = Logger(label: "TypingIndicator")
 
-public class DiscordTypingIndicator {
-    private let channel: DiscordTextChannel
-    private let queue = DispatchQueue(label: "DiscordTypingIndicator", qos: .background)
+public class TypingIndicator {
+    private let channel: InteractiveTextChannel
+    private let queue = DispatchQueue(label: "TypingIndicator", qos: .background)
     @Synchronized private var running: Bool = false
 
-    public init(on channel: DiscordTextChannel) {
+    public init(on channel: InteractiveTextChannel) {
         self.channel = channel
     }
     
