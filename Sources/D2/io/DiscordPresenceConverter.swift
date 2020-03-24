@@ -20,6 +20,7 @@ extension DiscordActivity: MessageIOConvertible {
 	public var usingMessageIO: Presence.Activity {
 		return Presence.Activity(
 			name: name,
+			state: state,
 			timestamps: timestamps?.usingMessageIO,
 			type: type?.usingMessageIO
 		)

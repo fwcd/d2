@@ -19,11 +19,13 @@ public struct Presence: Codable {
 	
 	public struct Activity: Codable {
 		public let name: String
+		public let state: String
 		public let timestamps: Timestamps?
 		public let type: ActivityType
 		
-		public init(name: String, timestamps: Timestamps? = nil, type: ActivityType) {
+		public init(name: String, state: String, timestamps: Timestamps? = nil, type: ActivityType) {
 			self.name = name
+			self.state = state
 			self.timestamps = timestamps
 			self.type = type
 		}

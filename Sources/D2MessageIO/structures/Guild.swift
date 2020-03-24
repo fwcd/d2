@@ -67,6 +67,10 @@ public struct Guild: Codable {
 		self.channels = channels
 	}
 	
+	public func roles(for member: Member) -> [Role] {
+		return member.roleIds.compactMap { roles[$0] }
+	}
+	
 	public struct Channel: Codable {
 		public let guildId: GuildID
 		public let name: String
@@ -105,14 +109,16 @@ public struct Guild: Codable {
 		public let joinedAt: Date
 		public let user: User
 		public let deaf: Bool
+		public let mute: Bool
 		public let nick: String?
 		public let roleIds: [RoleID]
 		
-		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, nick: String? = nil, roleIds: [RoleID] = []) {
+		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, mute: Bool, nick: String? = nil, roleIds: [RoleID] = []) {
 			self.guildId = guildId
 			self.joinedAt = joinedAt
 			self.user = user
 			self.deaf = deaf
+			self.mute = mute
 			self.nick = nick
 			self.roleIds = roleIds
 		}

@@ -68,6 +68,7 @@ extension DiscordGuildMember: MessageIOConvertible {
 			joinedAt: joinedAt,
 			user: user.usingMessageIO,
 			deaf: deaf,
+			mute: mute,
 			roleIds: roleIds.usingMessageIO
 		)
 	}

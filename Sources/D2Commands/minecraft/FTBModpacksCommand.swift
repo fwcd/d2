@@ -19,7 +19,7 @@ public class FTBModpacksCommand: StringCommand {
                 let packs = try $0.get().prefix(5)
                 output.append(Embed(
                     title: "Recent FTB Modpacks",
-                    image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(Embedinit(url:)),
+                    image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
                     fields: packs.map {
                         Embed
                             name: "\($0.name ?? "?")\($0.mcVersion.map { " (\($0))" } ?? "")",
