@@ -21,7 +21,7 @@ public class FTBModpacksCommand: StringCommand {
                     title: "Recent FTB Modpacks",
                     image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
                     fields: packs.map {
-                        Embed
+                        Embed.Field(
                             name: "\($0.name ?? "?")\($0.mcVersion.map { " (\($0))" } ?? "")",
                             value: """
                                 [[Download Pack]](\($0.downloadUrl ?? "")) [[Download Server]](\($0.serverDownloadUrl ?? ""))
