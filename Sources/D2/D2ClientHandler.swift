@@ -119,7 +119,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["xkcd"] = XkcdCommand()
 		registry["dm"] = DirectMessageCommand()
 		registry["tofile"] = ToFileCommand()
-		registry["chord"] = GuitarChordCommand()
+		registry["chord"] = FretboardChordCommand()
 		registry["web"] = WebCommand()
 		registry["stats"] = StatsCommand()
 		registry["songcharts"] = SongChartsCommand()

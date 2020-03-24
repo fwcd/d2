@@ -1,11 +1,11 @@
 let standardGuitarTuning = ["E2", "A2", "D3", "G3", "B3", "E4"].map { try! Note(of: $0) }
 
-struct GuitarFretboard {
-	private let guitarStrings: [[Note]]
-	var stringCount: Int { return guitarStrings.count }
+struct Fretboard {
+	private let strings: [[Note]]
+	var stringCount: Int { return strings.count }
 	
 	init(fretCount: Int = 12, tuning: [Note] = standardGuitarTuning) {
-		guitarStrings = tuning.map {
+		strings = tuning.map {
 			var fret = [Note]()
 			var note = $0
 			
@@ -29,13 +29,13 @@ struct GuitarFretboard {
 	}
 	
 	func find(note: Note, on guitarString: Int) -> NoteResult? {
-		return guitarStrings[safely: guitarString]?
+		return strings[safely: guitarString]?
 			.enumerated()
 			.map { NoteResult(note: $0.1, location: Location(guitarString: guitarString, fret: $0.0)) }
 			.first { note.matches($0.note) }
 	}
 	
 	func find(note: Note) -> NoteResult? {
-		return (0..<guitarStrings.count).compactMap { find(note: note, on: $0) }.first
+		return (0..<strings.count).compactMap { find(note: note, on: $0) }.first
 	}
 }

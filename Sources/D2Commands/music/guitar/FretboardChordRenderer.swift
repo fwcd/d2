@@ -1,13 +1,13 @@
 import D2Graphics
 import D2Utils
 
-struct GuitarChordRenderer: ChordRenderer {
+struct FretboardChordRenderer: ChordRenderer {
 	private let width: Int
 	private let height: Int
 	private let gutterHeight: Double
 	private let padding: Double
 	private let fgColor: Color
-	private let fretboard: GuitarFretboard
+	private let fretboard: Fretboard
 	private let minFrets: Int
 	
 	init(
@@ -16,7 +16,7 @@ struct GuitarChordRenderer: ChordRenderer {
 		gutterHeight: Double = 10,
 		padding: Double = 20,
 		fgColor: Color = Colors.white,
-		fretboard: GuitarFretboard = GuitarFretboard(),
+		fretboard: Fretboard = Fretboard(),
 		minFrets: Int = 7
 	) {
 		self.width = width
@@ -31,7 +31,7 @@ struct GuitarChordRenderer: ChordRenderer {
 	func render(chord: Chord) throws -> Image {
 		let image = try Image(width: width, height: height)
 		var graphics = CairoGraphics(fromImage: image)
-		let guitarChord = try GuitarChord(from: chord, on: fretboard)
+		let guitarChord = try FretboardChord(from: chord, on: fretboard)
 		let fretCount = max(minFrets, guitarChord.maxFret + 1)
 		let stringCount = fretboard.stringCount
 		
