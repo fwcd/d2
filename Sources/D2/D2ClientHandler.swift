@@ -88,6 +88,7 @@ class D2ClientHandler: DiscordClientDelegate {
 		registry["cyclethrough"] = CycleThroughCommand()
 		registry["demoimage"] = DemoImageCommand()
 		registry["demogif"] = DemoGifCommand()
+		registry["color"] = ColorCommand()
 		registry["mandelbrot"] = MandelbrotCommand()
 		registry["invert"] = InvertCommand()
 		registry["spin"] = AnimateCommand<SpinAnimation>(description: "Rotates an image")
