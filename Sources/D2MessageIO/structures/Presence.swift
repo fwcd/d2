@@ -19,22 +19,52 @@ public struct Presence: Codable {
 	
 	public struct Activity: Codable {
 		public let name: String
-		public let state: String
+		public let assets: Assets?
+		public let details: String?
+		public let party: Party?
+		public let state: String?
 		public let timestamps: Timestamps?
 		public let type: ActivityType
 		
-		public init(name: String, state: String, timestamps: Timestamps? = nil, type: ActivityType) {
+		public init(name: String, assets: Assets? = nil, details: String? = nil, party: Party? = nil, state: String? = nil, timestamps: Timestamps? = nil, type: ActivityType) {
 			self.name = name
+			self.assets = assets
+			self.details = details
+			self.party = party
 			self.state = state
 			self.timestamps = timestamps
 			self.type = type
+		}
+		
+		public struct Assets: Codable {
+			public let largeImage: String?
+			public let largeText: String?
+			public let smallImage: String?
+			public let smallText: String?
+			
+			public init(largeImage: String? = nil, largeText: String? = nil, smallImage: String? = nil, smallText: String? = nil) {
+				self.largeImage = largeImage
+				self.largeText = largeText
+				self.smallImage = smallImage
+				self.smallText = smallText
+			}
+		}
+		
+		public struct Party: Codable {
+			public let id: String
+			public let sizes: [Int]?
+			
+			public init(id: String, sizes: [Int]? = nil) {
+				self.id = id
+				self.sizes = sizes
+			}
 		}
 		
 		public struct Timestamps: Codable {
 			public let start: Int?
 			public let end: Int?
 			
-			public init(start: Int?, end: Int?) {
+			public init(start: Int? = nil, end: Int? = nil) {
 				self.start = start
 				self.end = end
 			}

@@ -79,7 +79,10 @@ public class ClearCommand: StringCommand {
     
     public func onSuccessfullySent(message: Message) {
         log.debug("Successfully sent \(message)")
-        let channelId = message.channelId
+        guard let channelId = message.channelId else {
+            log.warning("No channel ID for message after being sent. This is most likely a bug.")
+            return
+        }
         if messagesToBeDeleted[channelId] != nil {
             messagesToBeDeleted[channelId]!.append(message)
         }

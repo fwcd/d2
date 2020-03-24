@@ -20,9 +20,32 @@ extension DiscordActivity: MessageIOConvertible {
 	public var usingMessageIO: Presence.Activity {
 		return Presence.Activity(
 			name: name,
+			assets: assets?.usingMessageIO,
+			details: details,
+			party: party?.usingMessageIO,
 			state: state,
 			timestamps: timestamps?.usingMessageIO,
 			type: type?.usingMessageIO
+		)
+	}
+}
+
+extension DiscordActivityAssets: MessageIOConvertible {
+	public var usingMessageIO: Presence.Activity.Assets {
+		return Presence.Activity.Assets(
+			largeImage: largeImage,
+			largeText: largeText,
+			smallImage: smallImage,
+			smallText: smallText
+		)
+	}
+}
+
+extension DiscordParty: MessageIOConvertible {
+	public var usingMessageIO: Presence.Activity.Party {
+		return Presence.Activity.Party(
+			id: id,
+			sizes: sizes
 		)
 	}
 }

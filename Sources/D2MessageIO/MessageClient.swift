@@ -28,6 +28,10 @@ public protocol MessageClient {
 	
 	func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<Message?>?)
 	
+	func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?)
+	
+	func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?)
+	
 	func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?)
 	
 	func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?)
