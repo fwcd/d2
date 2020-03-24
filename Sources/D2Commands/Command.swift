@@ -11,7 +11,7 @@ public protocol Command: class {
 
 	func onSuccessfullySent(message: DiscordMessage)
 	
-	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction
+	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
 
 	func onReceivedUpdated(presence: DiscordPresence)
 	
@@ -24,7 +24,7 @@ extension Command {
 	
 	public func onSuccessfullySent(message: DiscordMessage) {}
 	
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction { .continueSubscription }
+	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
 	
 	public func onReceivedUpdated(presence: DiscordPresence) {}
 

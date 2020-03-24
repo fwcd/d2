@@ -24,13 +24,19 @@ public class AutoLatexCommand: StringCommand {
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        output.append(":pencil: Enabled automatic LaTeX-reformatting for this channel!")
+        if input == "cancel" {
+            output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
+            context.unsubscribeFromChannel()
+        } else {
+            output.append(":pencil: Enabled automatic LaTeX-reformatting for this channel!")
+            context.subscribeToChannel()
+        }
     }
     
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
+    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         if content == "cancel autolatex" {
-            output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
-            return .cancelSubscription
+            output.append("This syntax has been deprecated, please use `\(context.commandPrefix)autolatex cancel` to cancel.")
+            return
         }
         
         if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
@@ -47,8 +53,6 @@ public class AutoLatexCommand: StringCommand {
                 log.warning("\(error)")
             }
         }
-        
-        return .continueSubscription
     }
     
     private func escapeText(in content: String) -> String {

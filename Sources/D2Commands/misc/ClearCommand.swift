@@ -45,9 +45,10 @@ public class ClearCommand: StringCommand {
                     """
             ))
         }
+        context.subscribeToChannel()
     }
     
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) -> SubscriptionAction {
+    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         if let client = context.client, let channel = context.channel, let messages = messagesToBeDeleted[channel.id] {
             messagesToBeDeleted[channel.id] = nil
             if content == confirmationString {
@@ -73,7 +74,7 @@ public class ClearCommand: StringCommand {
                 output.append(":x: Cancelling deletion")
             }
         }
-        return .cancelSubscription
+        context.unsubscribeFromChannel()
     }
     
     public func onSuccessfullySent(message: DiscordMessage) {
