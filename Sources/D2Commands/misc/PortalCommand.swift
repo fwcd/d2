@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Logging
 
 fileprivate let log = Logger(label: "PortalCommand")

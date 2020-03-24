@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Logging
 
 fileprivate let log = Logger(label: "ClearCommand")
@@ -14,7 +14,7 @@ public class ClearCommand: StringCommand {
     )
     private let minDeletableCount: Int
     private let maxDeletableCount: Int
-    private var messagesToBeDeleted: [ChannelID: [DiscordMessage]] = [:]
+    private var messagesToBeDeleted: [ChannelID: [Message]] = [:]
     
     public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80) {
         self.minDeletableCount = minDeletableCount
@@ -23,7 +23,7 @@ public class ClearCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client else {
-            output.append("No DiscordClient available")
+            output.append("No MessageIO client available")
             return
         }
         guard let n = Int(input), n >= minDeletableCount, n <= maxDeletableCount else {
@@ -36,7 +36,7 @@ public class ClearCommand: StringCommand {
             self.messagesToBeDeleted[channelId] = messages
             let grouped = Dictionary(grouping: messages, by: { $0.author.username })
 
-            output.append(DiscordEmbed(
+            output.append(Embed
                 title: ":warning: You are about to DELETE \(messages.count) \("message".pluralize(with: messages.count))",
                 description: """
                     \(grouped.map { "\($0.1.count) \("message".pluralize(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
@@ -77,7 +77,7 @@ public class ClearCommand: StringCommand {
         context.unsubscribeFromChannel()
     }
     
-    public func onSuccessfullySent(message: DiscordMessage) {
+    public func onSuccessfullySent(message: Message) {
         log.debug("Successfully sent \(message)")
         let channelId = message.channelId
         if messagesToBeDeleted[channelId] != nil {

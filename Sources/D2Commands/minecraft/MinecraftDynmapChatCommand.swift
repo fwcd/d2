@@ -1,6 +1,6 @@
 import Foundation
 import Logging
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 
 fileprivate let log = Logger(label: "MinecraftDynmapChatCommand")

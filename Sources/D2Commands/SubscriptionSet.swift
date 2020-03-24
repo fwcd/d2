@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 
 public class SubscriptionSet: Sequence {
     private var subscriptions: Set<ChannelID> = []

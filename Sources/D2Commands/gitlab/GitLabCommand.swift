@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import Logging
 import D2NetAPIs
 import D2Permissions
@@ -37,10 +37,10 @@ public class GitLabCommand: StringCommand {
                 try self.fetchPipelines() {
                     switch $0 {
                         case .success(let pipelines):
-                            output.append(DiscordEmbed(
+                            output.append(Embed(
                                 title: ":rocket: Pipelines",
                                 fields: pipelines.prefix(5).map {
-                                    DiscordEmbed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
+                                    Embed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
                                 }
                             ))
                         case .failure(let error):
@@ -54,10 +54,10 @@ public class GitLabCommand: StringCommand {
                     switch $0 {
                         case .success(let jobs):
                             let pipeline = jobs.first?.0.pipeline
-                            output.append(DiscordEmbed(
+                            output.append(Embed(
                                 title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
-                                fields: (pipeline.map(self.describe(pipeline:)).map { [DiscordEmbed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
-                                    DiscordEmbed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
+                                fields: (pipeline.map(self.describe(pipeline:)).map { [Embedname: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
+                                    Embedname: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
                                 }
                             ))
                         case .failure(let error):

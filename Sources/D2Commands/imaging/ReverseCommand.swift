@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 
 public class ReverseCommand: Command {
     public let info = CommandInfo(

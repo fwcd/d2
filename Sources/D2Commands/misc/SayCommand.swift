@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 
 public class SayCommand: StringCommand {
     public let info = CommandInfo(
@@ -11,6 +11,6 @@ public class SayCommand: StringCommand {
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        context.channel?.send(DiscordMessage(content: input, tts: true))
+        context.channel?.send(Message(content: input, tts: true))
     }
 }

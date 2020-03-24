@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2NetAPIs
 import D2Utils
 
@@ -24,15 +24,15 @@ public class MinecraftModSearchCommand: StringCommand {
                         let fileVersions = Dictionary(grouping: mod.gameVersionLatestFiles ?? [], by: { $0.projectFileId })
                         let latestFiles = (mod.latestFiles ?? []).sorted(by: { ($1.fileDate ?? "").lexicographicallyPrecedes($0.fileDate ?? "") })
 
-                        output.append(DiscordEmbed(
+                        output.append(Embed
                             title: "\(mod.name ?? "Minecraft Mod") by \((mod.authors ?? []).compactMap { $0.name }.joined(separator: ", "))",
                             description: mod.summary,
                             url: mod.websiteUrl.flatMap(URL.init(string:)),
-                            thumbnail: mod.defaultAttachment.flatMap { $0.thumbnailUrl }.flatMap(URL.init(string:)).map(DiscordEmbed.Thumbnail.init(url:)),
-                            footer: DiscordEmbed.Footer(text: "ID: \(mod.id), Downloads: \(mod.downloadCount ?? -1), Available: \(mod.isAvailable.map { String($0) } ?? "?")"),
+                            thumbnail: mod.defaultAttachment.flatMap { $0.thumbnailUrl }.flatMap(URL.init(string:)).map(Embedail.init(url:)),
+                            footer: Embed(text: "ID: \(mod.id), Downloads: \(mod.downloadCount ?? -1), Available: \(mod.isAvailable.map { String($0) } ?? "?")"),
                             fields: [
-                                DiscordEmbed.Field(name: "Categories", value: categories.compactMap { $0.name }.joined(separator: ", ").nilIfEmpty ?? "_none_"),
-                                DiscordEmbed.Field(name: "Latest Files", value: latestFiles.compactMap { file in
+                                Embedname: "Categories", value: categories.compactMap { $0.name }.joined(separator: ", ").nilIfEmpty ?? "_none_"),
+                                Embedname: "Latest Files", value: latestFiles.compactMap { file in
                                     let details = (file.id == mod.defaultFileId ? ["default"] : [])
                                                 + (fileVersions[file.id]?.compactMap { $0.gameVersion } ?? [])
                                     return file.displayName.flatMap { name in

@@ -1,9 +1,9 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 import Logging
 
 fileprivate let log = Logger(label: "SongChartsCommand")
-fileprivate let songExtractors: [String: (DiscordActivity) -> GuildSongCharts.Song] = [
+fileprivate let songExtractors: [String: (Activity) -> GuildSongCharts.Song] = [
     "Spotify": { .init(
         title: $0.details,
         album: $0.assets?.largeText,
@@ -49,10 +49,10 @@ public class SongChartsCommand: StringCommand {
                 output.append(":x: Successfully untracked guild `\(guild.name)`")
             },
             "tracked": { [unowned self] output, context in
-                output.append(DiscordEmbed(
+                output.append(Embed(
                     title: "Tracked Guilds",
                     description: self.trackedGuilds.compactMap { context.client?.guilds[$0] }.map { $0.name }.joined(separator: "\n"),
-                    footer: DiscordEmbed.Footer(text: "Guilds for which anonymized song statistics are collected")
+                    footer: Embed(text: "Guilds for which anonymized song statistics are collected")
                 ))
             },
             "clear": { [unowned self] output, context in
@@ -91,7 +91,7 @@ public class SongChartsCommand: StringCommand {
                 output.append(errorText: "No song charts available for this guild.")
                 return
             }
-            output.append(DiscordEmbed(
+            output.append(Embed
                 title: ":star: Song Charts :musical_note:",
                 description: charts.playCounts
                     .sorted { $0.value > $1.value }
@@ -107,7 +107,7 @@ public class SongChartsCommand: StringCommand {
         }
     }
 
-    public func onReceivedUpdated(presence: DiscordPresence) {
+    public func onReceivedUpdated(presence: Presence) {
         let guildId = presence.guildId
         if trackedGuilds.contains(guildId), let activity = presence.game {
             log.debug("Received presence of type \(activity.name)")

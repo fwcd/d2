@@ -6,7 +6,7 @@ public class CycleThroughCommand: StringCommand {
 	public let info = CommandInfo(
 		category: .misc,
 		shortDescription: "Animates a sequence of characters",
-		longDescription: "Creates a pseudo-animation by repeatedly editing the sent Discord message",
+		longDescription: "Creates a pseudo-animation by repeatedly editing the sent message",
 		requiredPermissionLevel: .vip
 	)
 	private let loops = 4

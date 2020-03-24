@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2NetAPIs
 import D2Utils
 
@@ -36,16 +36,16 @@ public class UrbanDictionaryCommand: StringCommand {
         }
     }
     
-    private func embedOf(entry: UrbanDictionaryEntry) -> DiscordEmbed {
-        DiscordEmbed(
+    private func embedOf(entry: UrbanDictionaryEntry) -> Embed {
+        Embed(
             title: ":blue_book: \(entry.word)",
             description: markdownOf(formattedText: entry.definition),
             url: entry.permalink.flatMap { URL(string: $0) },
             color: 0x0018b5,
-            footer: DiscordEmbed.Footer(text: "Author: \(entry.author ?? "?")"),
+            footer: Embed.Footer(text: "Author: \(entry.author ?? "?")"),
             fields: [
-                DiscordEmbed.Field(name: "Example", value: entry.example.map(markdownOf) ?? "_no example_"),
-                DiscordEmbed.Field(name: "Rating", value: ":thumbsup: \(entry.thumbsUp ?? 0) :thumbsdown: \(entry.thumbsDown ?? 0)")
+                Embed.Field(name: "Example", value: entry.example.map(markdownOf) ?? "_no example_"),
+                Embed.Field(name: "Rating", value: ":thumbsup: \(entry.thumbsUp ?? 0) :thumbsdown: \(entry.thumbsDown ?? 0)")
             ]
         )
     }

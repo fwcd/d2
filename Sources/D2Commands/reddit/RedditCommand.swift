@@ -18,15 +18,15 @@ public class RedditCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		RedditQuery(subreddit: input, maxResults: 10).perform {
 			output.append($0.flatMap { Result.from($0.data.children?.randomElement()?.data, errorIfNil: RedditError.noResultsFound) }.map {
-				RichValue.embed(DiscordEmbed(
+				RichValue.embed(Embed(
 					title: $0.title,
 					description: $0.selftext,
 					url: $0.permalink.flatMap { URL(string: "https://www.reddit.com\($0)") },
 					image: ($0.preview?.firstGif?.source?.url ?? $0.url)
 						.flatMap(URL.init(string:))
 						.filter(self.refersToImage(url:))
-						.map(DiscordEmbed.Image.init(url:)),
-					footer: DiscordEmbed.Footer(text: "\($0.ups ?? -1) upvotes, \($0.downs ?? -1) downvotes")
+						.map(Embed.Image.init(url:)),
+					footer: Embed(text: "\($0.ups ?? -1) upvotes, \($0.downs ?? -1) downvotes")
 				))
 			}, errorText: "Reddit search failed")
 		}

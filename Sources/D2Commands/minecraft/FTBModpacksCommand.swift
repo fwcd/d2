@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2NetAPIs
 
 public class FTBModpacksCommand: StringCommand {
@@ -17,11 +17,11 @@ public class FTBModpacksCommand: StringCommand {
         FTBModpacksQuery().perform {
             do {
                 let packs = try $0.get().prefix(5)
-                output.append(DiscordEmbed(
+                output.append(Embed(
                     title: "Recent FTB Modpacks",
-                    image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(DiscordEmbed.Image.init(url:)),
+                    image: (packs.last?.imageUrl).flatMap(URL.init(string:)).map(Embedinit(url:)),
                     fields: packs.map {
-                        DiscordEmbed.Field(
+                        Embed
                             name: "\($0.name ?? "?")\($0.mcVersion.map { " (\($0))" } ?? "")",
                             value: """
                                 [[Download Pack]](\($0.downloadUrl ?? "")) [[Download Server]](\($0.serverDownloadUrl ?? ""))

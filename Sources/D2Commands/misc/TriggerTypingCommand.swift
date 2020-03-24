@@ -4,7 +4,7 @@ public class TriggerTypingCommand: Command {
 	public let info = CommandInfo(
 		category: .misc,
 		shortDescription: "Begins to type",
-		longDescription: "Triggers Discord's typing indicator",
+		longDescription: "Triggers the channel's typing indicator",
 		requiredPermissionLevel: .basic
 	)
 	public let inputValueType: RichValueType = .none

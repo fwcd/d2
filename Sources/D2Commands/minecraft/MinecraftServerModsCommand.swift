@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2NetAPIs
 
 public class MinecraftServerModsCommand: StringCommand {
@@ -18,7 +18,7 @@ public class MinecraftServerModsCommand: StringCommand {
                 let serverInfo = try MinecraftServerPing(host: host, port: port, timeoutMs: 1000).perform()
                 let modList = serverInfo.forgeData?.mods?.map { "\($0)" } ?? serverInfo.modinfo?.modList?.map { "\($0)" } ?? [String]()
                 
-                output.append(DiscordEmbed(
+                output.append(Embed
                     title: "Minecraft Server Mods at `\(host):\(port)`",
                     description: modList
                         .joined(separator: "\n")

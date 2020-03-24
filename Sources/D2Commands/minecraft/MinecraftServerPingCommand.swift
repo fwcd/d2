@@ -1,6 +1,6 @@
 import Logging
 import Socket
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 import D2NetAPIs
 
@@ -25,15 +25,15 @@ public class MinecraftServerPingCommand: StringCommand {
                 
                 // TODO: Display server favicon in embed
                 
-                output.append(DiscordEmbed(
+                output.append(Embed(
                     title: "Minecraft Server at `\(host):\(port)`",
                     description: "\(serverInfo.description)",
-                    footer: modCount.map { _ in DiscordEmbed.Footer(text: "Use \(context.commandPrefix)mcmods to get a detailed mod list") },
+                    footer: modCount.map { _ in Embed.Footer(text: "Use \(context.commandPrefix)mcmods to get a detailed mod list") },
                     fields: [
-                        DiscordEmbed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
-                        DiscordEmbed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
-                        DiscordEmbed.Field(name: "Version", value: serverInfo.version.name),
-                        DiscordEmbed.Field(name: "Mods", value: modCount.map { "\($0) \("mod".pluralize(with: $0))" } ?? "_vanilla_")
+                        Embedname: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
+                        Embedname: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
+                        Embedname: "Version", value: serverInfo.version.name),
+                        Embedname: "Mods", value: modCount.map { "\($0) \("mod".pluralize(with: $0))" } ?? "_vanilla_")
                     ]
                 ))
             } else {

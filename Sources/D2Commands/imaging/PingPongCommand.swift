@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 
 public class PingPongCommand: Command {
     public let info = CommandInfo(

@@ -1,4 +1,4 @@
-import SwiftDiscord
+import D2MessageIO
 import D2Graphics
 import D2Utils
 import Logging
@@ -25,7 +25,7 @@ public class AnimateCommand<A: Animation>: Command {
     
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         let args = input.asText ?? ""
-        let typingIndicator = context.channel.map { DiscordTypingIndicator(on: $0) }
+        let typingIndicator = context.channel.map { TypingIndicator(on: $0) }
         typingIndicator?.startAsync()
 
         do {

@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2Utils
 import D2NetAPIs
 
@@ -33,18 +33,18 @@ public class MinecraftDynmapCommand: StringCommand {
                             case .success(let world):
                                 if let name = playerName, let map = config.worlds?.first(where: { $0.name == worldName })?.maps?.first {
                                     if let player = world.players?.first(where: { $0.name == name }) {
-                                        output.append(DiscordEmbed(
+                                        output.append(Embed(
                                             title: "Minecraft Player `\(name)`",
                                             description: self.describe(player: player),
-                                            image: URL(string: "http://\(host):8123/\(self.tilePath(for: player, on: map))").map { DiscordEmbed.Image(url: $0) }
+                                            image: URL(string: "http://\(host):8123/\(self.tilePath(for: player, on: map))").map { Embed.Image(url: $0) }
                                         ))
                                     } else {
                                         output.append(errorText: "Could not find player `\(name)` on server")
                                     }
                                 } else {
-                                    output.append(DiscordEmbed(
+                                    output.append(Embed
                                         title: "Minecraft Server Dynmap",
-                                        fields: world.players?.map { DiscordEmbed.Field(name: $0.name ?? "Unnamed player", value: self.describe(player: $0)) } ?? []
+                                        fields: world.players?.map { Embedname: $0.name ?? "Unnamed player", value: self.describe(player: $0)) } ?? []
                                     ))
                                 }
                             case .failure(let error):

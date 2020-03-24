@@ -1,5 +1,5 @@
 import Foundation
-import SwiftDiscord
+import D2MessageIO
 import D2Permissions
 import D2NetAPIs
 
@@ -18,11 +18,11 @@ public class WikipediaCommand: StringCommand {
         WikipediaPageQuery(pageName: input).perform {
             switch $0 {
                 case .success(let page):
-                    output.append(DiscordEmbed(
+                    output.append(Embed(
                         title: page.displayTitle ?? page.title ?? "No title",
                         description: (page.extract?.prefix(1000)).map { String($0) },
-                        thumbnail: (page.thumbnail?.source).flatMap { URL(string: $0) }.map { DiscordEmbed.Thumbnail(url: $0) },
-                        footer: page.description.map { DiscordEmbed.Footer(text: $0) }
+                        thumbnail: (page.thumbnail?.source).flatMap { URL(string: $0) }.map { Embed.Thumbnail(url: $0) },
+                        footer: page.description.map { Embed(text: $0) }
                     ))
                 case .failure(let error):
                     output.append(error, errorText: "An error occurred while querying the Wikipedia")
