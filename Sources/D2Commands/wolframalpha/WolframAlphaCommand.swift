@@ -76,7 +76,7 @@ public class WolframAlphaCommand: StringCommand {
 			
 			output.append(DiscordEmbed(
 				title: "Query Output",
-				author: DiscordEmbed.Author(name: "WolframAlpha", iconUrl: URL(string: "https://pbs.twimg.com/profile_images/804868917990739969/OFknlig__400x400.jpg")),
+				author: DiscordEmbed.Author(name: "WolframAlpha"),
 				image: (plot ?? images.last).map { DiscordEmbed.Image(url: $0) },
 				thumbnail: images.first.map { DiscordEmbed.Thumbnail(url: $0) },
 				color: 0xfdc81a,
