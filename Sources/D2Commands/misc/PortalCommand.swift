@@ -82,7 +82,7 @@ public class PortalCommand: StringCommand {
     }
     
     private func endpointName(context: CommandContext) -> String {
-        return context.channel.flatMap { channel in context.guild.map { "\($0.channels[channel.id]?.name ?? "<unnamed channel>") on server \($0.name)" } } ?? "<unnamed endpoint>"
+        return context.channel.flatMap { channel in context.guild.map { "\($0.channels[channel.id]?.name ?? "<unnamed channel>") on server \($0.name) (\(context.client?.name ?? "<unknown platform>"))" } } ?? "<unnamed endpoint>"
     }
     
     private func currentPortal(context: CommandContext) -> Portal? {
