@@ -8,6 +8,7 @@ fileprivate let log = Logger(label: "D2DiscordIO.DiscordRun")
 
 /** Runs the Discord-based backend. */
 public func runDiscordIO(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String, disposables: inout [Any]) {
+    log.info("Running Discord backend...")
     let delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient)
     let queue = DispatchQueue(label: "Discord handle queue")
     let discordClient = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: delegate, configuration: [.handleQueue(queue)])

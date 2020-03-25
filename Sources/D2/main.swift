@@ -19,7 +19,7 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 		return D2LogHandler(label: $0, logLevel: level)
 	}
 
-	let log = Logger(label: "main")
+	let log = Logger(label: "D2.main")
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
 	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/ioBackendTokens.json")
