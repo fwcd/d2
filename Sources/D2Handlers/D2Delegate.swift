@@ -5,10 +5,10 @@ import D2Utils
 import D2Commands
 import D2Permissions
 
-fileprivate let log = Logger(label: "D2ClientHandler")
+fileprivate let log = Logger(label: "D2Delegate")
 
 /** A client delegate that dispatches commands. */
-public class D2ClientHandler: MessageDelegate {
+public class D2Delegate: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
 	private var registry: CommandRegistry
