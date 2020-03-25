@@ -9,7 +9,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
         .package(url: "https://github.com/nuclearace/SwiftDiscord.git", .revision("f8db5d698a3960f3cc1cedd29342357d0bfeccd6")),
-        .package(url: "https://github.com/rapierorg/telegram-bot-swift.git", from: "2.0.0"),
+        .package(url: "https://github.com/givip/Telegrammer.git", .revision("32657287befddf3d303287bf319901f5c7a6f24e")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
         .package(url: "https://github.com/IBM-Swift/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
@@ -31,7 +31,7 @@ let package = Package(
         ),
         .target(
             name: "D2TelegramIO",
-            dependencies: ["Logging", "TelegramBotSDK", "D2MessageIO", "D2Utils"]
+            dependencies: ["Logging", "Telegrammer", "D2MessageIO", "D2Utils"]
         ),
         .target(
             name: "D2Handlers",

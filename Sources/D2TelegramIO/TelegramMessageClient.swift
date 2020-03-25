@@ -1,13 +1,13 @@
 import D2MessageIO
-import TelegramBotSDK
+import Telegrammer
 
 struct TelegramMessageClient: MessageClient {
-    private let bot: TelegramBot
+    private let bot: Bot
     
     var me: D2MessageIO.User? { nil } // TODO
     var name: String { telegramClientName }
     
-    init(bot: TelegramBot) {
+    init(bot: Bot) {
         self.bot = bot
     }
 

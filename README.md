@@ -24,8 +24,8 @@ In addition to supporting various web APIs, it features basic scripting capabili
 * `timeout` and `kill` (for `MaximaCommand`)
 
 #### Linux
-* `sudo apt-get install libopus-dev libsodium-dev libssl1.1 libcurl4-openssl-dev libcairo2-dev poppler-utils maxima`
-    * Note that you might need to use `libssl-dev` instead of `libssl1.1` on Ubuntu
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima`
+    * Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
     * If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
         * `mkdir /usr/include/freetype2/freetype`
         * `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`

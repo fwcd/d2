@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "async-http-client",
+        "repositoryURL": "https://github.com/swift-server/async-http-client.git",
+        "state": {
+          "branch": null,
+          "revision": "48e284d1ea6d0e8baac1af1c4ad8bd298670caf6",
+          "version": "1.0.1"
+        }
+      },
+      {
         "package": "Socket",
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
         "state": {
@@ -44,6 +53,15 @@
           "branch": null,
           "revision": "afc897c02b030af7333105c4fedcd843a8339238",
           "version": "0.0.3"
+        }
+      },
+      {
+        "package": "multipart-kit",
+        "repositoryURL": "https://github.com/vapor/multipart-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "b41a49b5756ac3fbf8f2b07228a7e75f9b60731a",
+          "version": "4.0.0-beta.2"
         }
       },
       {
@@ -92,6 +110,15 @@
         }
       },
       {
+        "package": "swift-nio-extras",
+        "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
+        "state": {
+          "branch": null,
+          "revision": "b4dbfacff47fb8d0f9e0a422d8d37935a9f10570",
+          "version": "1.4.0"
+        }
+      },
+      {
         "package": "swift-nio-ssl",
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
@@ -137,12 +164,12 @@
         }
       },
       {
-        "package": "TelegramBotSDK",
-        "repositoryURL": "https://github.com/rapierorg/telegram-bot-swift.git",
+        "package": "Telegrammer",
+        "repositoryURL": "https://github.com/givip/Telegrammer.git",
         "state": {
           "branch": null,
-          "revision": "7b1a0ee80578fce31936a28ecf5e5a6f6975e7fb",
-          "version": "2.0.0"
+          "revision": "32657287befddf3d303287bf319901f5c7a6f24e",
+          "version": null
         }
       },
       {

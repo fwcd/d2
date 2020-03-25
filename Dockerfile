@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y \
     libopus-dev \
     libsodium-dev \
     libssl-dev \
-    libcurl4-openssl-dev \
     libcairo2-dev \
     poppler-utils \
     maxima \

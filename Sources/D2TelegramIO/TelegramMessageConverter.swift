@@ -1,9 +1,9 @@
 import D2MessageIO
-import TelegramBotSDK
+import Telegrammer
 
 // FROM Telegram conversions
 
-extension TelegramBotSDK.Message: MessageIOConvertible {
+extension Telegrammer.Message: MessageIOConvertible {
     public var usingMessageIO: D2MessageIO.Message {
         .init(
             content: text ?? "",

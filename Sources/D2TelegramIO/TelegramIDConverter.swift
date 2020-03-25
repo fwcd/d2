@@ -1,5 +1,5 @@
 import D2MessageIO
-import TelegramBotSDK
+import Telegrammer
 
 // FROM Telegram conversions
 
