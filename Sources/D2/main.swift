@@ -3,6 +3,7 @@ import Foundation
 import Logging
 import SwiftDiscord
 import D2Handlers
+import D2DiscordIO
 import D2Utils
 
 func main(rawLogLevel: String, initialPresence: String?) throws {

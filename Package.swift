@@ -22,7 +22,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "D2",
-            dependencies: ["Logging", "Commander", "SwiftDiscord", "D2Utils", "D2Handlers"]
+            dependencies: ["Logging", "Commander", "D2Utils", "D2Handlers", "D2DiscordIO"]
+        ),
+        .target(
+            name: "D2DiscordIO",
+            dependencies: ["Logging", "SwiftDiscord", "D2MessageIO", "D2Utils"]
         ),
         .target(
             name: "D2Handlers",
