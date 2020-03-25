@@ -40,7 +40,11 @@ public class MessageIOOutput: CommandOutput {
 			case .serverChannel(let id): client.sendMessage(message, to: id)
 			case .userChannel(let id):
 				client.createDM(with: id) { channelId, _ in
-					self.client.sendMessage(message, to: channelId, then: self.onSent)
+					guard let id = channelId else {
+						log.error("Could not send direct message, since no channel ID could be fetched")
+						return
+					}
+					self.client.sendMessage(message, to: id, then: self.onSent)
 				}
 			case .defaultChannel:
 				if let textChannelId = defaultTextChannelId {

@@ -5,10 +5,11 @@ import SwiftDiscord
 
 extension Message: DiscordAPIConvertible {
 	public var usingDiscordAPI: DiscordMessage {
+		let embed: Embed? = embeds.first
 		return DiscordMessage(
 			content: content,
-			embed: embeds.first?.usingDiscordAPI,
-			files: files.map { $0.usingDiscordAPI },
+			embed: embed?.usingDiscordAPI,
+			files: files.usingDiscordAPI,
 			tts: tts
 		)
 	}

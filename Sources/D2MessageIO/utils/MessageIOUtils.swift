@@ -15,12 +15,12 @@ extension InteractiveTextChannel {
 }
 
 extension Guild {
-	public var allUsers: [User] { return members.map { $0.value.user } }
+	public var allUsers: [User] { return members.map { $0.1.user } }
 	
 	public func users(with roles: [RoleID]) -> [User] {
 		return roles.flatMap { role in
 			members
-				.map { $0.value }
+				.map { $0.1 }
 				.filter { $0.roleIds.contains(role) }
 				.map { $0.user }
 		}

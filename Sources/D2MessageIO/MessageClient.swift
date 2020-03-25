@@ -24,7 +24,7 @@ public protocol MessageClient {
 
 	func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
 	
-	func createDM(with user: UserID, then: ClientCallback<ChannelID>?)
+	func createDM(with user: UserID, then: ClientCallback<ChannelID?>?)
 	
 	func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?)
 	

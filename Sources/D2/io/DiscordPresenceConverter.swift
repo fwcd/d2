@@ -11,7 +11,7 @@ extension DiscordPresence: MessageIOConvertible {
 			game: game?.usingMessageIO,
 			nick: nick,
 			roles: roles,
-			status: status?.usingMessageIO
+			status: status.usingMessageIO
 		)
 	}
 }
@@ -25,7 +25,7 @@ extension DiscordActivity: MessageIOConvertible {
 			party: party?.usingMessageIO,
 			state: state,
 			timestamps: timestamps?.usingMessageIO,
-			type: type?.usingMessageIO
+			type: type.usingMessageIO
 		)
 	}
 }
@@ -38,6 +38,17 @@ extension DiscordActivityAssets: MessageIOConvertible {
 			smallImage: smallImage,
 			smallText: smallText
 		)
+	}
+}
+
+extension DiscordPresenceStatus: MessageIOConvertible {
+	public var usingMessageIO: Presence.Status {
+		switch self {
+			case .idle: return .idle
+			case .offline: return .offline
+			case .online: return .online
+			case .doNotDisturb: return .doNotDisturb
+		}
 	}
 }
 

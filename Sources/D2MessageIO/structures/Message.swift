@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Message: Codable, ExpressibleByStringLiteral {
+public struct Message: ExpressibleByStringLiteral {
 	public let content: String
 	public let embeds: [Embed]
 	public let files: [Message.FileUpload]

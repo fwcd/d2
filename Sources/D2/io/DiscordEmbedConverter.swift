@@ -5,8 +5,8 @@ import Foundation
 // TO Discord conversions
 
 extension Embed: DiscordAPIConvertible {
-	public var usingDiscordAPI: Embed {
-		return Embed(
+	public var usingDiscordAPI: DiscordEmbed {
+		return DiscordEmbed(
 			title: title,
 			description: description,
 			author: author?.usingDiscordAPI,
@@ -22,8 +22,8 @@ extension Embed: DiscordAPIConvertible {
 }
 
 extension Embed.Author: DiscordAPIConvertible {
-	public var usingDiscordAPI: Embed.Author {
-		return Embed.Author(
+	public var usingDiscordAPI: DiscordEmbed.Author {
+		return DiscordEmbed.Author(
 			name: name,
 			iconUrl: iconUrl,
 			url: url
@@ -32,26 +32,26 @@ extension Embed.Author: DiscordAPIConvertible {
 }
 
 extension Embed.Thumbnail: DiscordAPIConvertible {
-	public var usingDiscordAPI: Embed.Thumbnail {
-		return Embed.Thumbnail(url: url)
+	public var usingDiscordAPI: DiscordEmbed.Thumbnail {
+		return DiscordEmbed.Thumbnail(url: url)
 	}
 }
 
 extension Embed.Image: DiscordAPIConvertible {
-	public var usingDiscordAPI: Embed.Image {
-		return Embed.Image(url: url)
+	public var usingDiscordAPI: DiscordEmbed.Image {
+		return DiscordEmbed.Image(url: url)
 	}
 }
 
 extension Embed.Footer: DiscordAPIConvertible {
-	public var usingDiscordAPI: Embed.Footer {
-		return Embed.Footer(text: text)
+	public var usingDiscordAPI: DiscordEmbed.Footer {
+		return DiscordEmbed.Footer(text: text)
 	}
 }
 
 extension Embed.Field: DiscordAPIConvertible {
-	public var usingDiscordAPI: Embed.Field {
-		return Embed.Field(name: name, value: value, inline: inline)
+	public var usingDiscordAPI: DiscordEmbed.Field {
+		return DiscordEmbed.Field(name: name, value: value, inline: inline)
 	}
 }
 

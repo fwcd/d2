@@ -33,7 +33,7 @@ struct DiscordMessageClient: MessageClient {
 		}
 	}
 	
-	func createDM(with user: D2MessageIO.UserID, then: ClientCallback<D2MessageIO.ChannelID>?) {
+	func createDM(with user: D2MessageIO.UserID, then: ClientCallback<D2MessageIO.ChannelID?>?) {
 		client.createDM(with: user.usingDiscordAPI) {
 			then?($0?.id.usingMessageIO, $1)
 		}
@@ -88,6 +88,8 @@ struct DiscordMessageClient: MessageClient {
 	}
 	
 	func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String, then: ClientCallback<Message?>?) {
-		then?($0?.usingMessageIO, $1)
+		client.createReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) {
+			then?($0?.usingMessageIO, $1)
+		}
 	}
 }

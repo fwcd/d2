@@ -1,7 +1,8 @@
 import Foundation
+import D2Utils
 
 // TODO: Make this a protocol and add roles/members properties
-public struct Guild: Codable {
+public struct Guild {
 	public let id: GuildID
 	public let ownerId: UserID
 	public let region: String
@@ -16,9 +17,9 @@ public struct Guild: Codable {
 	public let embedEnabled: Bool
 	public let embedChannelId: ChannelID
 	public let icon: String
-	public let members: [UserID: Member]
+	public let members: LazyDictionary<UserID, Member>
 	public let roles: [RoleID: Role]
-	public let presences: [UserID: Presence]
+	public let presences: LazyDictionary<UserID, Presence>
 	public let voiceStates: [UserID: VoiceState]
 	public let emojis: [EmojiID: Emoji]
 	public let channels: [ChannelID: Channel]
@@ -38,9 +39,9 @@ public struct Guild: Codable {
 		embedEnabled: Bool,
 		embedChannelId: ChannelID,
 		icon: String,
-		members: [UserID: Member] = [:],
+		members: LazyDictionary<UserID, Member> = [:],
 		roles: [RoleID: Role] = [:],
-		presences: [UserID: Presence] = [:],
+		presences: LazyDictionary<UserID, Presence> = [:],
 		voiceStates: [UserID: VoiceState] = [:],
 		emojis: [EmojiID: Emoji] = [:],
 		channels: [ChannelID: Channel] = [:]
