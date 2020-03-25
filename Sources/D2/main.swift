@@ -1,4 +1,5 @@
 import Commander
+import Dispatch
 import Logging
 import D2Handlers
 import D2DiscordIO
@@ -13,9 +14,17 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
 	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/ioBackendTokens.json")
 	
+	let runner = DispatchQueue(label: "IO backend", attributes: .concurrent)
+	var launchedAnyBackend = false
+	
 	if let discordToken = tokens.discord {
 		log.info("Launching Discord backend")
-		runDiscordIOBackend(with: handler, token: discordToken)
+		launchedAnyBackend = true
+		runner.async { runDiscordIOBackend(with: handler, token: discordToken) }
+	}
+	
+	if !launchedAnyBackend {
+		log.notice("No backend was launched since no tokens were provided. The application will thus now quit.")
 	}
 }
 
