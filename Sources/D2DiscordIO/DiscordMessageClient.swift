@@ -3,6 +3,8 @@ import SwiftDiscord
 
 struct DiscordMessageClient: MessageClient {
 	private let client: DiscordClient
+	
+	var name: String { return "Discord" }
 	var me: User? { return client.user?.usingMessageIO }
 	
 	init(client: DiscordClient) {

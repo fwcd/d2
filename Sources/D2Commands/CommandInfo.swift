@@ -24,8 +24,8 @@ public struct CommandInfo {
     
     public init(
         category: CommandCategory,
-        shortDescription: String = "No short description",
-        longDescription: String = "No long description",
+        shortDescription: String = "No description",
+        longDescription: String? = nil,
         helpText: String? = nil,
         requiredPermissionLevel: PermissionLevel = .admin,
         hidden: Bool = false,
@@ -35,7 +35,7 @@ public struct CommandInfo {
     ) {
         self.category = category
         self.shortDescription = shortDescription
-        self.longDescription = longDescription
+        self.longDescription = longDescription ?? shortDescription
         self.helpText = helpText
         self.requiredPermissionLevel = requiredPermissionLevel
         self.hidden = hidden

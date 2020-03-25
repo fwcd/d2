@@ -125,6 +125,7 @@ public class D2ClientHandler: MessageDelegate {
 		registry["songcharts"] = SongChartsCommand()
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()
+		registry["iobackend"] = IOBackendCommand()
 		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
