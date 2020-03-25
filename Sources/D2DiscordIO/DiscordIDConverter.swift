@@ -8,7 +8,7 @@ extension ID: DiscordAPIConvertible {
 		guard clientName == discordClientName else {
 			fatalError("Tried to convert non-Discord ID to Discord API representation: \(self)")
 		}
-		return value.base(as: Snowflake.self)
+		return base(as: Snowflake.self)
 	}
 }
 

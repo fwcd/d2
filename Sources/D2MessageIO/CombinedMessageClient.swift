@@ -14,8 +14,10 @@ public class CombinedMessageClient: MessageClient {
     
     public init() {}
 
-    public func register(client: MessageClient) {
+    @discardableResult
+    public func register(client: MessageClient) -> MessageClient {
         clients[client.name] = client
+        return OverlayMessageClient(inner: client, name: client.name, me: client.me)
     }
     
     private func withClient<T>(of id: ID, _ action: (MessageClient) throws -> T?) rethrows -> T? {
