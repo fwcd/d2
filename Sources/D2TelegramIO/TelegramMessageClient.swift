@@ -1,5 +1,8 @@
 import D2MessageIO
 import Telegrammer
+import Logging
+
+fileprivate let log = Logger(label: "D2TelegramIO.TelegramMessageClient")
 
 struct TelegramMessageClient: MessageClient {
     private let bot: Bot
@@ -41,8 +44,20 @@ struct TelegramMessageClient: MessageClient {
     }
 	
 	func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
-        // TODO
-        then?(nil, nil)
+        log.info("Sending message '\(message.content)'")
+        do {
+            try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: message.content)).whenComplete {
+                do {
+                    then?(try $0.get().usingMessageIO, nil)
+                } catch {
+                    log.warning("Could not send message to Telegram: \(error)")
+                    then?(nil, nil)
+                }
+            }
+        } catch {
+            log.warning("Could not send message to Telegram: \(error)")
+            then?(nil, nil)
+        }
     }
 	
 	func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<D2MessageIO.Message?>?) {
