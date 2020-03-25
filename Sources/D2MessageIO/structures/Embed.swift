@@ -77,7 +77,7 @@ public struct Embed: Codable {
 		public let value: String
 		public let inline: Bool
 		
-		public init(name: String, value: String, inline: Bool = true) {
+		public init(name: String, value: String, inline: Bool = false) {
 			self.name = name
 			self.value = value
 			self.inline = inline
