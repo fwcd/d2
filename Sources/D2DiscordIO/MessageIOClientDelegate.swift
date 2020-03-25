@@ -13,17 +13,17 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
     }
 
     public func client(_ client: DiscordClient, didConnect connected: Bool) {
-        log.info("Connected")
+        log.debug("Connected")
         inner.on(connect: connected, client: DiscordMessageClient(client: client))
     }
     
     public func client(_ client: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
-        log.info("Got presence update")
+        log.debug("Got presence update")
         inner.on(receivePresenceUpdate: presence.usingMessageIO, client: DiscordMessageClient(client: client))
     }
     
     public func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
-        log.info("Got message")
+        log.debug("Got message")
         inner.on(createMessage: message.usingMessageIO, client: DiscordMessageClient(client: client))
     }
 }
