@@ -137,6 +137,15 @@
         }
       },
       {
+        "package": "TelegramBotSDK",
+        "repositoryURL": "https://github.com/rapierorg/telegram-bot-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "7b1a0ee80578fce31936a28ecf5e5a6f6975e7fb",
+          "version": "2.0.0"
+        }
+      },
+      {
         "package": "websocket-kit",
         "repositoryURL": "https://github.com/vapor/websocket-kit",
         "state": {

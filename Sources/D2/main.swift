@@ -4,14 +4,11 @@ import Foundation
 import Logging
 import D2Handlers
 import D2DiscordIO
+import D2TelegramIO
 import D2Utils
 
-private func async(in group: DispatchGroup, _ task: @escaping () -> Void) {
-	group.enter()
-	DispatchQueue.global().async {
-		task()
-		group.leave()
-	}
+private func async(_ task: @escaping () -> Void) {
+	DispatchQueue.global().async(execute: task)
 }
 
 func main(rawLogLevel: String, initialPresence: String?) throws {
@@ -25,12 +22,11 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	
 	var disposables = [Any]()
 	var launchedAnyBackend = false
-	let group = DispatchGroup()
 	
 	if let discordToken = tokens.discord {
 		log.info("Launching Discord backend")
 		launchedAnyBackend = true
-		async(in: group) {
+		async {
 			runDiscordIOBackend(with: handler, token: discordToken, disposables: &disposables)
 		}
 	}
@@ -38,8 +34,8 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	if let telegramToken = tokens.telegram {
 		log.info("Launching Telegram backend")
 		launchedAnyBackend = true
-		async(in: group) {
-			// TODO
+		async {
+			runTelegramIOBackend(with: handler, token: telegramToken)
 		}
 	}
 	
