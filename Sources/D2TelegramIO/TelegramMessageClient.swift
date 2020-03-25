@@ -42,11 +42,27 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         then?(nil, nil)
     }
+    
+    private func flatten(embed: Embed) -> String {
+        let lines: [String?] = [
+            embed.title.flatMap { title in embed.url.map { "[\(title)](\($0.absoluteString))" } ?? title },
+            embed.description
+        ] + embed.fields.flatMap { ["**\($0.name)**", $0.value] } + [
+            embed.footer?.text
+        ]
+        return lines
+            .compactMap { $0 }
+            .joined(separator: "\n")
+    }
 	
 	func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
-        log.info("Sending message '\(message.content)'")
+        let text = [message.content, message.embed.map(flatten(embed:))]
+            .compactMap { $0?.nilIfEmpty }
+            .joined(separator: "\n")
+        log.info("Sending message '\(text)'")
+
         do {
-            try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: message.content)).whenComplete {
+            try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: text)).whenComplete {
                 do {
                     then?(try $0.get().usingMessageIO, nil)
                 } catch {
