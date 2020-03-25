@@ -8,13 +8,13 @@ import D2Permissions
 fileprivate let log = Logger(label: "D2ClientHandler")
 
 /** A client delegate that dispatches commands. */
-class D2ClientHandler: MessageDelegate {
+public class D2ClientHandler: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
 	private var registry: CommandRegistry
 	private var messageHandlers: [MessageHandler]
 	
-	init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
+	public init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
 		self.commandPrefix = commandPrefix
 		self.initialPresence = initialPresence
 		
@@ -128,17 +128,17 @@ class D2ClientHandler: MessageDelegate {
 		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
-	func on(connect connected: Bool, client: MessageClient) {
+	public func on(connect connected: Bool, client: MessageClient) {
 		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	
-	func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
+	public func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
 		for (_, command) in registry {
 			command.onReceivedUpdated(presence: presence)
 		}
 	}
 	
-	func on(createMessage message: Message, client: MessageClient) {
+	public func on(createMessage message: Message, client: MessageClient) {
 		for (i, _) in messageHandlers.enumerated() {
 			if messageHandlers[i].handle(message: message, from: client) {
 				break

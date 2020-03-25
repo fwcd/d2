@@ -22,43 +22,43 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "D2",
-            dependencies: ["SwiftDiscord", "D2MessageIO", "Commander", "D2Utils", "D2Permissions", "D2Commands"]
+            dependencies: ["Logging", "SwiftDiscord", "D2Utils", "D2Handlers"]
         ),
         .target(
-            name: "D2Shell",
-            dependencies: ["D2Utils", "D2Permissions", "D2Commands"]
+            name: "D2Handlers",
+            dependencies: ["Logging", "D2Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["D2MessageIO", "SwiftSoup", "QRCodeGenerator", "PrologInterpreter", "D2Utils", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
+            dependencies: ["Logging", "SwiftSoup", "QRCodeGenerator", "PrologInterpreter", "D2Utils", "D2MessageIO", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
         ),
         .target(
             name: "D2Permissions",
-            dependencies: ["D2MessageIO", "D2Utils"]
+            dependencies: ["Logging", "D2Utils", "D2MessageIO"]
         ),
         .target(
             name: "D2Script",
-            dependencies: ["D2Utils"]
+            dependencies: ["Logging", "D2Utils"]
         ),
         .target(
             name: "D2NetAPIs",
-            dependencies: ["D2Utils", "SwiftSoup", "Socket"]
+            dependencies: ["Logging", "D2Utils", "SwiftSoup", "Socket"]
         ),
         .target(
             name: "D2Graphics",
-            dependencies: ["D2MessageIO", "D2Utils", "Cairo"]
+            dependencies: ["Logging", "D2Utils", "D2MessageIO", "Cairo"]
         ),
         .target(
             name: "D2MessageIO",
-            dependencies: ["D2Utils", "Logging"]
+            dependencies: ["Logging", "D2Utils"]
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["Socket", "Logging"]
+            dependencies: ["Logging", "Socket"]
         ),
         .testTarget(
             name: "D2CommandTests",
-            dependencies: ["D2MessageIO", "D2Utils", "D2TestUtils", "D2Commands"]
+            dependencies: ["D2Utils", "D2MessageIO", "D2TestUtils", "D2Commands"]
         ),
         .testTarget(
             name: "D2ScriptTests",
@@ -66,7 +66,7 @@ let package = Package(
         ),
         .testTarget(
             name: "D2UtilsTests",
-            dependencies: ["D2MessageIO", "D2Utils", "D2TestUtils"]
+            dependencies: ["D2Utils", "D2MessageIO", "D2TestUtils"]
         ),
         .testTarget(
             name: "D2GraphicsTests",

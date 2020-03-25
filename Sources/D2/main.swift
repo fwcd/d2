@@ -2,7 +2,7 @@ import Commander
 import Foundation
 import Logging
 import SwiftDiscord
-import D2Commands
+import D2Handlers
 import D2Utils
 
 func main(rawLogLevel: String, initialPresence: String?) throws {

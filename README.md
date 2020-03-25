@@ -104,10 +104,9 @@ For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearac
 To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
 
 ## Architecture
-The program consists of two executables:
+The program consists of a single executable:
 
 * `D2`, the main Discord frontend
-* `D2Shell`, an interactive REPL mainly intended for testing
 
 Each executable uses its own implementation of message IO, e.g. `D2` uses `SwiftDiscord` to conform to `D2MessageIO`'s API.
 
