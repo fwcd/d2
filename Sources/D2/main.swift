@@ -8,17 +8,25 @@ import D2DiscordIO
 import D2TelegramIO
 import D2Utils
 
+#if DEBUG
+import Backtrace
+#endif
+
 private func async(_ task: @escaping () -> Void) {
 	DispatchQueue.global().async(execute: task)
 }
 
 func main(rawLogLevel: String, initialPresence: String?) throws {
+	#if DEBUG
+	Backtrace.install()
+	#endif
+	
 	let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
 	LoggingSystem.bootstrap {
 		let level = $0.starts(with: "D2") ? logLevel : .notice
 		return D2LogHandler(label: $0, logLevel: level)
 	}
-
+	
 	let log = Logger(label: "D2.main")
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
