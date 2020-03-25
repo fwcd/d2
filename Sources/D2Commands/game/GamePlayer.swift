@@ -10,7 +10,7 @@ public struct GamePlayer: Hashable {
 		self.init(username: user.username, id: user.id, isUser: !user.bot)
 	}
 	
-	public init(username: String, id: UserID = UserID(0), isUser: Bool = true) {
+	public init(username: String, id: UserID, isUser: Bool = true) {
 		self.username = username
 		self.id = id
 		self.isUser = isUser

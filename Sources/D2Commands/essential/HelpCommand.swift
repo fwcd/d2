@@ -50,8 +50,11 @@ public class HelpCommand: StringCommand {
 	}
 	
 	private func categoryHelpEmbed(for category: CommandCategory, context: CommandContext) -> Embed {
+		guard let author = context.author else {
+			return Embed(title: "Message has no author!") // HACK
+		}
 		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden && $0.value.info.category == category }, by: { $0.value.info.requiredPermissionLevel })
-			.filter { permissionManager[context.author].rawValue >= $0.key.rawValue }
+			.filter { permissionManager[author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 		let helpFields = helpGroups
 			.flatMap { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> [Embed.Field] in

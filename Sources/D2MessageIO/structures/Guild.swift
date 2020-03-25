@@ -72,7 +72,7 @@ public struct Guild {
 		return member.roleIds.compactMap { roles[$0] }
 	}
 	
-	public struct Channel: Codable {
+	public struct Channel {
 		public let guildId: GuildID
 		public let name: String
 		public let parentId: ChannelID?
@@ -89,7 +89,7 @@ public struct Guild {
 			self.permissionOverwrites = permissionOverwrites
 		}
 		
-		public struct PermissionOverwrite: Codable {
+		public struct PermissionOverwrite {
 			public let id: OverwriteID
 			public let type: PermissionOverwriteType
 			
@@ -105,7 +105,7 @@ public struct Guild {
 		}
 	}
 	
-	public struct Member: Codable {
+	public struct Member {
 		public let guildId: GuildID
 		public let joinedAt: Date
 		public let user: User

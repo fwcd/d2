@@ -90,7 +90,7 @@ public struct Message: ExpressibleByStringLiteral {
 		self.init(content: value)
 	}
 	
-	public struct FileUpload: Codable {
+	public struct FileUpload {
 		public let data: Data
 		public let filename: String
 		public let mimeType: String
@@ -102,7 +102,7 @@ public struct Message: ExpressibleByStringLiteral {
 		}
 	}
 	
-	public struct Attachment: Codable {
+	public struct Attachment {
 		public let id: AttachmentID
 		public let filename: String
 		public let size: Int
@@ -120,7 +120,7 @@ public struct Message: ExpressibleByStringLiteral {
 		}
 	}
 	
-	public struct MessageActivity: Codable {
+	public struct MessageActivity {
 		public let type: ActivityType
 		public let partyId: String?
 		
@@ -137,7 +137,7 @@ public struct Message: ExpressibleByStringLiteral {
 		}
 	}
 	
-	public struct MessageApplication: Codable {
+	public struct MessageApplication {
 		public let id: ID
 		public let coverImage: String
 		public let description: String
@@ -153,7 +153,7 @@ public struct Message: ExpressibleByStringLiteral {
 		}
 	}
 	
-	public struct Reaction: Codable {
+	public struct Reaction {
 		public let count: Int
 		public let me: Bool
 		public let emoji: Emoji

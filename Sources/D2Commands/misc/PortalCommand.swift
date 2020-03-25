@@ -78,7 +78,7 @@ public class PortalCommand: StringCommand {
             return
         }
         guard let otherChannelId = portal.other(channelId) else { return } // Do nothing if portal is only partially connected
-        output.append(.text("**\(context.author.username):** \(content)"), to: .serverChannel(otherChannelId))
+        output.append(.text("**\(context.author?.username ?? "Unknown user"):** \(content)"), to: .serverChannel(otherChannelId))
     }
     
     private func endpointName(context: CommandContext) -> String {

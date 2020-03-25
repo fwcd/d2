@@ -1,4 +1,4 @@
-public struct VoiceState: Codable {
+public struct VoiceState {
 	public let channelId: ChannelID
 	public let guildId: GuildID
 	public let userId: UserID

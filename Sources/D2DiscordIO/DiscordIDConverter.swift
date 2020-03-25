@@ -5,7 +5,10 @@ import SwiftDiscord
 
 extension ID: DiscordAPIConvertible {
 	public var usingDiscordAPI: Snowflake {
-		return Snowflake(rawValue)
+		guard clientName == discordClientName else {
+			fatalError("Tried to convert non-Discord ID to Discord API representation: \(self)")
+		}
+		return value.base(as: Snowflake.self)
 	}
 }
 
@@ -13,6 +16,6 @@ extension ID: DiscordAPIConvertible {
 
 extension Snowflake: MessageIOConvertible {
 	public var usingMessageIO: ID {
-		return ID(rawValue)
+		return ID(self, clientName: discordClientName)
 	}
 }

@@ -29,7 +29,7 @@ public class AvatarCommand: StringCommand {
 			try HTTPRequest(
 				scheme: "https",
 				host: "cdn.discordapp.com",
-				path: "/avatars/\(user.id.rawValue)/\(user.avatar).png",
+				path: "/avatars/\(user.id)/\(user.avatar).png",
 				query: ["size": "256"]
 			).runAsync {
 				if case let .success(data) = $0 {

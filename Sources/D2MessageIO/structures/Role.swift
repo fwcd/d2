@@ -1,4 +1,4 @@
-public struct Role: Codable {
+public struct Role {
 	public let id: RoleID
 	public let color: Int
 	public let hoist: Bool

@@ -1,4 +1,4 @@
-public struct User: Codable {
+public struct User {
 	public let avatar: String // Base64-encoded
 	public let bot: Bool
 	public let discriminator: String
@@ -13,7 +13,7 @@ public struct User: Codable {
 		bot: Bool = false,
 		discriminator: String = "",
 		email: String = "",
-		id: UserID = UserID(0),
+		id: UserID,
 		mfaEnabled: Bool = false,
 		username: String = "",
 		verified: Bool = false

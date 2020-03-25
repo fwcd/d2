@@ -6,24 +6,30 @@ fileprivate let log = Logger(label: "MessageIOClientDelegate")
 
 public class MessageIOClientDelegate: DiscordClientDelegate {
     private let inner: MessageDelegate
+    private let sinkClient: MessageClient
     
-    public init(inner: MessageDelegate) {
-        log.info("Creating delegate")
+    public init(inner: MessageDelegate, sinkClient: MessageClient) {
+        log.debug("Creating delegate")
         self.inner = inner
+        self.sinkClient = sinkClient
     }
 
-    public func client(_ client: DiscordClient, didConnect connected: Bool) {
+    public func client(_ discordClient: DiscordClient, didConnect connected: Bool) {
         log.debug("Connected")
-        inner.on(connect: connected, client: DiscordMessageClient(client: client))
+        inner.on(connect: connected, client: overlayClient(with: discordClient))
     }
     
-    public func client(_ client: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
+    public func client(_ discordClient: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
         log.debug("Got presence update")
-        inner.on(receivePresenceUpdate: presence.usingMessageIO, client: DiscordMessageClient(client: client))
+        inner.on(receivePresenceUpdate: presence.usingMessageIO, client: overlayClient(with: discordClient))
     }
     
-    public func client(_ client: DiscordClient, didCreateMessage message: DiscordMessage) {
+    public func client(_ discordClient: DiscordClient, didCreateMessage message: DiscordMessage) {
         log.debug("Got message")
-        inner.on(createMessage: message.usingMessageIO, client: DiscordMessageClient(client: client))
+        inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+    
+    private func overlayClient(with discordClient: DiscordClient) -> MessageClient {
+        OverlayMessageClient(inner: sinkClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
     }
 }

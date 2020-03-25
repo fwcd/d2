@@ -11,7 +11,7 @@ public struct CommandContext {
 	public let commandPrefix: String
 	public let subscriptions: SubscriptionSet
 	
-	public var author: User { return message.author ?? User() }
+	public var author: User? { return message.author }
 	public var guild: Guild? { return message.channelId.flatMap { client?.guildForChannel($0) } }
 	
 	public var isSubscribed: Bool { return (channel?.id).map { subscriptions.contains($0) } ?? false }

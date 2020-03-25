@@ -28,7 +28,7 @@ public protocol MessageClient {
 
 	func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
 	
-	func createDM(with user: UserID, then: ClientCallback<ChannelID?>?)
+	func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?)
 	
 	func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?)
 	
@@ -58,8 +58,8 @@ public extension MessageClient {
 		removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason, then: defaultCallback)
 	}
 
-	func createDM(with user: UserID) {
-		createDM(with: user, then: defaultCallback)
+	func createDM(with userId: UserID) {
+		createDM(with: userId, then: defaultCallback)
 	}
 	
 	func sendMessage(_ content: String, to channelId: ChannelID) {

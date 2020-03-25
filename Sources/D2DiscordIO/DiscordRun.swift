@@ -7,14 +7,16 @@ import SwiftDiscord
 fileprivate let log = Logger(label: "DiscordRun")
 
 /** Runs the Discord-based backend. */
-public func runDiscordIOBackend(with delegate: MessageDelegate, token: String, disposables: inout [Any]) {
-    let delegate = MessageIOClientDelegate(inner: delegate) // Needs to be declared separately since DiscordClient only holds a weak reference to it
+public func runDiscordIO(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String, disposables: inout [Any]) {
+    let delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient)
     let queue = DispatchQueue(label: "Discord handle queue")
     let discordClient = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: delegate, configuration: [.handleQueue(queue)])
+
+    combinedClient.register(client: DiscordMessageClient(client: discordClient))
     
     log.info("Connecting client")
     discordClient.connect()
-
-    // Ensure that the client is kept alive for the entire application's lifetime
-    disposables.append(discordClient)
+    
+    // Keep delegate alive since DiscordClient only holds a weak reference to it
+    disposables.append(delegate)
 }

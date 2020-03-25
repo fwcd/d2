@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Presence: Codable {
+public struct Presence {
 	public let guildId: GuildID
 	public let user: User
 	public let game: Activity?

@@ -1,5 +1,4 @@
-// TODO: Add a string attribute to ids to disambiguate to whose message
-//       backend's id they refer.
+import D2Utils
 
 public typealias ChannelID = ID
 public typealias MessageID = ID
@@ -10,10 +9,19 @@ public typealias EmojiID = ID
 public typealias GuildID = ID
 public typealias OverwriteID = ID
 
-public struct ID: Hashable, Codable {
-	public let rawValue: UInt64
+/**
+ * A container for a type-erased ID.
+ */
+public struct ID: Hashable, Codable, CustomStringConvertible {
+	public let value: AnyCodable
+	public let clientName: String
 	
-	public init(_ rawValue: UInt64) {
-		self.rawValue = rawValue
+	public var description: String { "\(value)" }
+	
+	public init<Value: Codable & Hashable>(_ value: Value, clientName: String) {
+		self.value = AnyCodable(value)
+		self.clientName = clientName
 	}
+	
+	public func base<T>(as: T.Type) -> T { value.base(as: T.self) }
 }

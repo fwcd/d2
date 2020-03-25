@@ -1,4 +1,4 @@
-public struct Emoji: Codable {
+public struct Emoji {
 	public let id: EmojiID?
 	public let managed: Bool
 	public let name: String

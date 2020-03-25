@@ -1,0 +1,1 @@
+let discordClientName: String = "Discord"

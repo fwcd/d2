@@ -3,6 +3,7 @@ import Dispatch
 import Foundation
 import Logging
 import D2Handlers
+import D2MessageIO
 import D2DiscordIO
 import D2TelegramIO
 import D2Utils
@@ -20,14 +21,15 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
 	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/ioBackendTokens.json")
 	
-	var disposables = [Any]()
+	var combinedClient: CombinedMessageClient! = CombinedMessageClient()
+	var disposables: [Any] = []
 	var launchedAnyBackend = false
 	
 	if let discordToken = tokens.discord {
 		log.info("Launching Discord backend")
 		launchedAnyBackend = true
 		async {
-			runDiscordIOBackend(with: handler, token: discordToken, disposables: &disposables)
+			runDiscordIO(with: handler, combinedClient: combinedClient, token: discordToken, disposables: &disposables)
 		}
 	}
 	
@@ -35,7 +37,7 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 		log.info("Launching Telegram backend")
 		launchedAnyBackend = true
 		async {
-			runTelegramIOBackend(with: handler, token: telegramToken)
+			runTelegramIO(with: handler, combinedClient: combinedClient, token: telegramToken)
 		}
 	}
 	
@@ -49,6 +51,7 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	source.setEventHandler {
 		log.info("Shutting down...")
 		disposables.removeAll()
+		combinedClient = nil
 		exit(0)
 	}
 	source.resume()

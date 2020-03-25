@@ -22,10 +22,13 @@ public class MandelbrotCommand: StringCommand {
             let width = 400
             let height = 300
             var image = try Image(width: width, height: height)
-
+            
+            var hasher = Hasher()
             let time = Int(Date().timeIntervalSince1970 * 10) % 256
-            let userId = Int(context.author.id.rawValue) % 100
-            let paletteHash = (time * userId) / 512
+            let userId = context.author?.id
+            hasher.combine(time)
+            hasher.combine(userId)
+            let paletteHash = hasher.finalize() % 50
 
             for y in 0..<height {
                 for x in 0..<width {

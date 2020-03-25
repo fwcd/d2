@@ -63,9 +63,13 @@ public class GameCommand<G: Game>: StringCommand {
 			output.append(errorText: "Mention one or more users to play against.")
 			return
 		}
+		guard let author = context.author else {
+			output.append(errorText: "Message has no author.")
+			return
+		}
 		
 		let flags = parseFlags(from: input)
-		let players = ([context.author] + context.message.mentions).map { GamePlayer(from: $0) }
+		let players = ([author] + context.message.mentions).map { GamePlayer(from: $0) }
 		
 		startMatch(between: players, on: channel.id, output: output, flags: flags)
 		context.subscribeToChannel()
@@ -140,7 +144,7 @@ public class GameCommand<G: Game>: StringCommand {
 	}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
-		let author = GamePlayer(from: context.author)
+		guard let author = context.author.map(GamePlayer.init(from:)) else { return }
 		
 		if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel {
 			let continueSubscription = perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, output: output, author: author)

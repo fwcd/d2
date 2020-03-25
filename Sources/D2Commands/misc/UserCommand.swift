@@ -32,7 +32,7 @@ public class UserCommand: StringCommand {
 
         output.append(Embed(
             title: "\(user.username)#\(user.discriminator)",
-            thumbnail: URL(string: "https://cdn.discordapp.com/avatars/\(user.id.rawValue)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) },
+            thumbnail: URL(string: "https://cdn.discordapp.com/avatars/\(user.id)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) },
             footer: Embed.Footer(text: "ID: \(user.id)"),
             fields: [
                 Embed.Field(name: "Nick", value: member.nick ?? "_none_"),
