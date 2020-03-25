@@ -38,8 +38,7 @@ In addition to supporting various web APIs, it features basic scripting capabili
 * `brew install opus libsodium ctls cairo poppler gd`
 
 #### General
-* `stack install happy hoogle show mueval pointfree pointful` (or `cabal-install ...`)
-* `hoogle generate`
+* `stack install happy show mueval pointfree pointful` (or `cabal-install ...`)
 * `cd Node && ./install-all`
 
 ## Configuration
@@ -48,11 +47,11 @@ In addition to supporting various web APIs, it features basic scripting capabili
 * Create a folder named `local` in the repository
     * If you use Docker, the `local` folder is represented by the `d2local` volume
     * [See here](https://stackoverflow.com/a/55683656) for instructions on how to copy files into it
-* Create a file named `discordToken.json` in `local` containing the API key:
+* Create a file named `ioBackendTokens.json` in `local` containing the API key:
 
 ```json
 {
-    "token": "YOUR_DISCORD_API_TOKEN"
+    "discord": "YOUR_DISCORD_API_TOKEN"
 }
 ```
 

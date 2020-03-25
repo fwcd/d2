@@ -9,5 +9,5 @@ echo $D2_CONFIG
 echo "Now copying config data from environment variables to files..."
 echo $D2_ADMIN_WHITELIST | base64 -d > /d2/local/adminWhitelist.json
 echo $D2_CONFIG | base64 -d > /d2/local/config.json
-echo $D2_DISCORD_TOKEN | base64 -d > /d2/local/discordToken.json
+echo $D2_IO_BACKEND_TOKENS | base64 -d > /d2/local/ioBackendTokens.json
 echo $D2_NET_API_KEYS | base64 -d > /d2/local/netApiKeys.json

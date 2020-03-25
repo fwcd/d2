@@ -11,9 +11,12 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	let log = Logger(label: "main")
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
-	let token = try DiskJsonSerializer().readJson(as: Token.self, fromFile: "local/discordToken.json").token
+	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/ioBackendTokens.json")
 	
-	runDiscordIOBackend(with: handler, token: token)
+	if let discordToken = tokens.discord {
+		log.info("Launching Discord backend")
+		runDiscordIOBackend(with: handler, token: discordToken)
+	}
 }
 
 command(
