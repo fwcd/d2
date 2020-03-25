@@ -3,6 +3,9 @@ import D2Permissions
 import D2Graphics
 import D2Utils
 import Foundation
+import Logging
+
+fileprivate let log = Logger(label: "AvatarCommand")
 
 public class AvatarCommand: StringCommand {
 	public let info = CommandInfo(
@@ -26,7 +29,7 @@ public class AvatarCommand: StringCommand {
 			try HTTPRequest(
 				scheme: "https",
 				host: "cdn.discordapp.com",
-				path: "/avatars/\(user.id)/\(user.avatar).png",
+				path: "/avatars/\(user.id.rawValue)/\(user.avatar).png",
 				query: ["size": "256"]
 			).runAsync {
 				if case let .success(data) = $0 {
