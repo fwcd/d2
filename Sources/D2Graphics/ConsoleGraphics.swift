@@ -1,7 +1,7 @@
 import D2Utils
 import Logging
 
-fileprivate let log = Logger(label: "ConsoleGraphics")
+fileprivate let log = Logger(label: "D2Graphics.ConsoleGraphics")
 
 public struct ConsoleGraphics: Graphics {
 	public func save() {

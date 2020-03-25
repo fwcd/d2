@@ -6,7 +6,7 @@ import Logging
 
 public typealias ClientCallback<T> = (T, HTTPURLResponse?) -> Void
 
-fileprivate let log = Logger(label: "MessageClient")
+fileprivate let log = Logger(label: "D2MessageIO.MessageClient")
 
 fileprivate func defaultCallback<T>(_ dummy: T, response: HTTPURLResponse?) {
 	if let rsp = response {

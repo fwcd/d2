@@ -4,7 +4,7 @@ import D2Utils
 import D2Graphics
 import Foundation
 
-fileprivate let log = Logger(label: "MandelbrotCommand")
+fileprivate let log = Logger(label: "D2Commands.MandelbrotCommand")
 
 public class MandelbrotCommand: StringCommand {
     public let info = CommandInfo(

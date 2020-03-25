@@ -2,7 +2,7 @@ import Logging
 import D2MessageIO
 import D2Utils
 
-fileprivate let log = Logger(label: "HaskellCommand")
+fileprivate let log = Logger(label: "D2Commands.HaskellCommand")
 
 public class HaskellCommand: StringCommand {
     public let info = CommandInfo(

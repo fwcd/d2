@@ -3,7 +3,7 @@ import Logging
 import D2Utils
 import D2Graphics
 
-fileprivate let log = Logger(label: "LatexRenderer")
+fileprivate let log = Logger(label: "D2Commands.LatexRenderer")
 fileprivate let latexPrefix = "latex"
 
 class LatexRenderer {

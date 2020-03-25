@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 
-fileprivate let log = Logger(label: "Shell")
+fileprivate let log = Logger(label: "D2Utils.Shell")
 
 /** A wrapper that simplifies the creation of subprocesses. */
 public struct Shell {

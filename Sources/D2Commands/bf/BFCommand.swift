@@ -4,7 +4,7 @@ import D2Permissions
 import D2Utils
 import Dispatch
 
-fileprivate let log = Logger(label: "BFCommand")
+fileprivate let log = Logger(label: "D2Commands.BFCommand")
 
 public class BFCommand: StringCommand {
 	public let info = CommandInfo(

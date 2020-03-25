@@ -6,7 +6,7 @@ import D2NetAPIs
 import D2Graphics
 import D2Utils
 
-fileprivate let log = Logger(label: "WolframAlphaCommand")
+fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {

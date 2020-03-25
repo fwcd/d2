@@ -5,7 +5,7 @@ import FoundationXML
 import Logging
 import D2Utils
 
-fileprivate let log = Logger(label: "FTBModpacksXMLParserDelegate")
+fileprivate let log = Logger(label: "D2NetAPIs.FTBModpacksXMLParserDelegate")
 fileprivate let baseURL = "https://ftb.forgecdn.net/FTB2"
 
 class FTBModpacksXMLParserDelegate: NSObject, XMLParserDelegate {

@@ -4,7 +4,7 @@ import D2NetAPIs
 import D2Permissions
 import D2Utils
 
-fileprivate let log = Logger(label: "GitLabCommand")
+fileprivate let log = Logger(label: "D2Commands.GitLabCommand")
 fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
 
 public class GitLabCommand: StringCommand {

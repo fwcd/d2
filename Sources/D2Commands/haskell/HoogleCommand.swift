@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "HoogleCommand")
+fileprivate let log = Logger(label: "D2Commands.HoogleCommand")
 
 public class HoogleCommand: StringCommand {
     public let info = CommandInfo(

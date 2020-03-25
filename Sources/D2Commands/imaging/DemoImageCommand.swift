@@ -4,7 +4,7 @@ import D2Permissions
 import D2Utils
 import D2Graphics
 
-fileprivate let log = Logger(label: "DemoImageCommand")
+fileprivate let log = Logger(label: "D2Commands.DemoImageCommand")
 
 public class DemoImageCommand: StringCommand {
 	public let info = CommandInfo(

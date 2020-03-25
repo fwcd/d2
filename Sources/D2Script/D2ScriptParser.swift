@@ -1,7 +1,7 @@
 import D2Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2ScriptParser")
+fileprivate let log = Logger(label: "D2Script.D2ScriptParser")
 fileprivate let operators: [String] = ["=", "+", "-", "*", "/", "^"]
 fileprivate let keywords: [String] = ["command", "if", "else", "for", "while"]
 

@@ -1,7 +1,7 @@
 import D2MessageIO
 import Logging
 
-fileprivate let log = Logger(label: "CommandContext")
+fileprivate let log = Logger(label: "D2Commands.CommandContext")
 
 public struct CommandContext {
 	public let client: MessageClient?

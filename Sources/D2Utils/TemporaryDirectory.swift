@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 
-fileprivate let log = Logger(label: "TemporaryDirectory")
+fileprivate let log = Logger(label: "D2Utils.TemporaryDirectory")
 
 /**
  * A custom temporary directory. The directory is deleted

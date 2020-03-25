@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "CombinedMessageClient")
+fileprivate let log = Logger(label: "D2MessageIO.CombinedMessageClient")
 
 /**
  * A MessageClient that combines multiple clients and

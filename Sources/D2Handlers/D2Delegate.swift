@@ -5,7 +5,7 @@ import D2Utils
 import D2Commands
 import D2Permissions
 
-fileprivate let log = Logger(label: "D2Delegate")
+fileprivate let log = Logger(label: "D2Handlers.D2Delegate")
 
 /** A client delegate that dispatches commands. */
 public class D2Delegate: MessageDelegate {

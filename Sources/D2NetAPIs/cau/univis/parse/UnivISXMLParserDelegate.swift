@@ -5,7 +5,7 @@ import FoundationXML
 import Logging
 import D2Utils
 
-fileprivate let log = Logger(label: "UnivISXMLParserDelegate")
+fileprivate let log = Logger(label: "D2NetAPIs.UnivISXMLParserDelegate")
 
 class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
 	let then: (Result<UnivISOutputNode, Error>) -> Void

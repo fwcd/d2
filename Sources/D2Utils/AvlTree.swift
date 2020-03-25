@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "AvlTree")
+fileprivate let log = Logger(label: "D2Utils.AvlTree")
 
 /**
  * A balanced binary search tree.

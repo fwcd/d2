@@ -8,7 +8,7 @@ import FoundationXML
 import Logging
 import D2Utils
 
-fileprivate let log = Logger(label: "UnivISQuery")
+fileprivate let log = Logger(label: "D2NetAPIs.UnivISQuery")
 
 public struct UnivISQuery {
 	private let url: URL

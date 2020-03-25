@@ -4,7 +4,7 @@ import D2Permissions
 import D2Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "UnivISCommand")
+fileprivate let log = Logger(label: "D2Commands.UnivISCommand")
 
 fileprivate let rawKeyPattern = "(?:\\w+)"
 fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"

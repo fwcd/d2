@@ -2,7 +2,7 @@ import Logging
 import D2Utils
 import D2Graphics
 
-fileprivate let log = Logger(label: "ChessBoardView")
+fileprivate let log = Logger(label: "D2Commands.ChessBoardView")
 
 struct ChessBoardView {
 	let image: Image?

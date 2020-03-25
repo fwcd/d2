@@ -2,7 +2,7 @@ import D2MessageIO
 import Logging
 import D2Utils
 
-fileprivate let log = Logger(label: "MatrixMultiplicationCommand")
+fileprivate let log = Logger(label: "D2Commands.MatrixMultiplicationCommand")
 fileprivate let rawDecimalPattern = "-?\\d+(?:\\.\\d+)?"
 fileprivate let rawFractionPattern = "-?\\d+/\\d+"
 // Order of rawFractionPattern and rawDecimalPattern below matters since

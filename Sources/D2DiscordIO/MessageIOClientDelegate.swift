@@ -2,7 +2,7 @@ import SwiftDiscord
 import Logging
 import D2MessageIO
 
-fileprivate let log = Logger(label: "MessageIOClientDelegate")
+fileprivate let log = Logger(label: "D2DiscordIO.MessageIOClientDelegate")
 
 public class MessageIOClientDelegate: DiscordClientDelegate {
     private let inner: MessageDelegate

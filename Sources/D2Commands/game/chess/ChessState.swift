@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Utils
 import D2Permissions
 
-fileprivate let log = Logger(label: "ChessState")
+fileprivate let log = Logger(label: "D2Commands.ChessState")
 
 public struct ChessState: GameState {
 	public typealias Role = ChessRole

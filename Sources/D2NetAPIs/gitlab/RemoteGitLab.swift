@@ -2,7 +2,7 @@ import D2Utils
 import Foundation
 import Logging
 
-fileprivate let log = Logger(label: "RemoteGitLab")
+fileprivate let log = Logger(label: "D2NetAPIs.RemoteGitLab")
 fileprivate let apiPath = "/api/v4"
 
 public struct RemoteGitLab {

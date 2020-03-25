@@ -5,7 +5,7 @@ import D2Utils
 import D2Permissions
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "StackOverflowCommand")
+fileprivate let log = Logger(label: "D2Commands.StackOverflowCommand")
 
 public class StackOverflowCommand: StringCommand {
 	public let info = CommandInfo(

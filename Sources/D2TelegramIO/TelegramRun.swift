@@ -2,7 +2,7 @@ import D2MessageIO
 import Logging
 import Telegrammer
 
-fileprivate let log = Logger(label: "TelegramRun")
+fileprivate let log = Logger(label: "D2TelegramIO.TelegramRun")
 
 /** Runs the Telegram-based backend and blocks the thread. */
 public func runTelegramIO(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String) {
@@ -16,7 +16,7 @@ public func runTelegramIO(with delegate: MessageDelegate, combinedClient: Combin
                 log.warning("Update did not contain message")
                 return
             }
-            log.info("Got message '\(message.text)'")
+            log.info("Got message '\(message.text ?? "")'")
             delegate.on(createMessage: message.usingMessageIO, client: overlayClient)
         })
         

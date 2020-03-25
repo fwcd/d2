@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Utils
 import Logging
 
-fileprivate let log = Logger(label: "SongChartsCommand")
+fileprivate let log = Logger(label: "D2Commands.SongChartsCommand")
 fileprivate let songExtractors: [String: (Presence.Activity) -> GuildSongCharts.Song] = [
     "Spotify": { .init(
         title: $0.details,

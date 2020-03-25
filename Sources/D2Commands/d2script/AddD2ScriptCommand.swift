@@ -4,7 +4,7 @@ import D2Permissions
 import D2Utils
 import D2Script
 
-fileprivate let log = Logger(label: "AddD2ScriptCommand")
+fileprivate let log = Logger(label: "D2Commands.AddD2ScriptCommand")
 fileprivate let codePattern = try! Regex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
 
 // TODO: Use code command instead of StringCommand

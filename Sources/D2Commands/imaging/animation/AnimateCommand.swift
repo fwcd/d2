@@ -3,7 +3,7 @@ import D2Graphics
 import D2Utils
 import Logging
 
-fileprivate let log = Logger(label: "AnimateCommand")
+fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
 
 public class AnimateCommand<A: Animation>: Command {
     public let info: CommandInfo

@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "PrintOutput")
+fileprivate let log = Logger(label: "D2Commands.PrintOutput")
 
 public class PrintOutput: CommandOutput {
 	public func append(_ value: RichValue, to channel: OutputChannel) {

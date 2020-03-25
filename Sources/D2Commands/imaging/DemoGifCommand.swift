@@ -4,7 +4,7 @@ import D2Permissions
 import D2Graphics
 import D2Utils
 
-fileprivate let log = Logger(label: "DemoGifCommand")
+fileprivate let log = Logger(label: "D2Commands.DemoGifCommand")
 
 public class DemoGifCommand: StringCommand {
 	public let info = CommandInfo(

@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "PipeOutput")
+fileprivate let log = Logger(label: "D2Commands.PipeOutput")
 
 public class PipeOutput: CommandOutput {
 	private let sink: Command

@@ -2,7 +2,7 @@ import Logging
 import D2MessageIO
 import D2Utils
 
-fileprivate let log = Logger(label: "PointfulCommand")
+fileprivate let log = Logger(label: "D2Commands.PointfulCommand")
 
 public class PointfulCommand: StringCommand {
     public let info = CommandInfo(

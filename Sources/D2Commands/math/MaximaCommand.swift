@@ -4,7 +4,7 @@ import D2Permissions
 import D2Utils
 import Dispatch
 
-fileprivate let log = Logger(label: "MaximaCommand")
+fileprivate let log = Logger(label: "D2Commands.MaximaCommand")
 fileprivate let maxExecutionSeconds = 5
 fileprivate let clearedInputChars = try! Regex(from: "\\|&,;")
 fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*([\\s\\S]+)\\(%i2\\)")

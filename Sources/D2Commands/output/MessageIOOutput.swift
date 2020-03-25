@@ -5,7 +5,7 @@ import FoundationNetworking
 #endif
 import Logging
 
-fileprivate let log = Logger(label: "MessageIOOutput")
+fileprivate let log = Logger(label: "D2Commands.MessageIOOutput")
 
 public class MessageIOOutput: CommandOutput {
 	private let messageWriter = MessageWriter()

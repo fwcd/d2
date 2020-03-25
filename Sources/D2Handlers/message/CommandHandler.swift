@@ -6,7 +6,7 @@ import D2Commands
 import D2Permissions
 import D2Utils
 
-fileprivate let log = Logger(label: "CommandHandler")
+fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
 
 /** A segment of an invocation pipe that transfers outputs from one command to another. */
 fileprivate class PipeComponent {

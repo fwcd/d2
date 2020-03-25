@@ -8,7 +8,7 @@ import FoundationNetworking
 #endif
 import SwiftSoup
 
-fileprivate let log = Logger(label: "WebCommand")
+fileprivate let log = Logger(label: "D2Commands.WebCommand")
 fileprivate let urlPattern = try! Regex(from: "<?([^>]+)>?")
 
 public class WebCommand: StringCommand {

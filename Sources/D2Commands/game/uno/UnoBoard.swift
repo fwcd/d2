@@ -2,7 +2,7 @@ import Logging
 import D2Utils
 import D2Graphics
 
-fileprivate let log = Logger(label: "UnoBoard")
+fileprivate let log = Logger(label: "D2Commands.UnoBoard")
 
 fileprivate struct PileCard {
 	let card: UnoCard

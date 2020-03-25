@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import D2Utils
 
-fileprivate let log = Logger(label: "AnimatedGifEncoder")
+fileprivate let log = Logger(label: "D2Graphics.AnimatedGifEncoder")
 
 public let gifColorCount = 256
 public let gifNonTransparentColorCount = gifColorCount - 1

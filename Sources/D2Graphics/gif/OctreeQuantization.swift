@@ -3,7 +3,7 @@
 import D2Utils
 import Logging
 
-fileprivate let log = Logger(label: "OctreeQuantization")
+fileprivate let log = Logger(label: "D2Graphics.OctreeQuantization")
 fileprivate let maxDepth = 8 // bits in a byte (of each color channel)
 
 /**

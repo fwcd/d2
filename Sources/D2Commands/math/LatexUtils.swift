@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "LatexUtils")
+fileprivate let log = Logger(label: "D2Commands.LatexUtils")
 
 func handleLatex(error: Error, output: CommandOutput) {
 	if case let LatexError.pdfError(pdfLog) = error {

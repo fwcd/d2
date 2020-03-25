@@ -2,7 +2,7 @@ import Logging
 import D2MessageIO
 import D2Permissions
 
-fileprivate let log = Logger(label: "PollCommand")
+fileprivate let log = Logger(label: "D2Commands.PollCommand")
 
 // TODO: Use Arg API
 

@@ -2,7 +2,7 @@ import Logging
 import D2Graphics
 import D2Utils
 
-fileprivate let log = Logger(label: "UnoCard")
+fileprivate let log = Logger(label: "D2Commands.UnoCard")
 
 public enum UnoCard: Hashable {
 	case number(Int, UnoColor)

@@ -14,7 +14,10 @@ private func async(_ task: @escaping () -> Void) {
 
 func main(rawLogLevel: String, initialPresence: String?) throws {
 	let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
-	LoggingSystem.bootstrap { D2LogHandler(label: $0, logLevel: logLevel) }
+	LoggingSystem.bootstrap {
+		let level = $0.starts(with: "D2") ? logLevel : .notice
+		return D2LogHandler(label: $0, logLevel: level)
+	}
 
 	let log = Logger(label: "main")
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")

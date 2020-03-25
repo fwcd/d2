@@ -3,7 +3,7 @@ import Logging
 import D2MessageIO
 import D2Utils
 
-fileprivate let log = Logger(label: "MinecraftDynmapChatCommand")
+fileprivate let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(.+)")
 
 public class MinecraftDynmapChatCommand: StringCommand {

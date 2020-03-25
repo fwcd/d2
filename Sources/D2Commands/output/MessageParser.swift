@@ -4,7 +4,7 @@ import D2Utils
 import D2Graphics
 import Dispatch
 
-fileprivate let log = Logger(label: "MessageParser")
+fileprivate let log = Logger(label: "D2Commands.MessageParser")
 
 // The first group matches the language, the second group matches the code
 fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")

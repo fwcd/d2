@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Permissions
 import D2Utils
 
-fileprivate let log = Logger(label: "EvaluateExpressionCommand")
+fileprivate let log = Logger(label: "D2Commands.EvaluateExpressionCommand")
 fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 
 // TODO: Use Arg API, integrate flags into arg API

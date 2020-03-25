@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "AutoSerializing")
+fileprivate let log = Logger(label: "D2Utils.AutoSerializing")
 
 /** Wraps a value that is automatically read from/written to a file. */
 @propertyWrapper

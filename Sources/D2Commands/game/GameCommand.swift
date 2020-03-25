@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Permissions
 import D2Utils
 
-fileprivate let log = Logger(label: "GameCommand")
+fileprivate let log = Logger(label: "D2Commands.GameCommand")
 fileprivate let flagRegex = try! Regex(from: "--(\\S+)")
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 

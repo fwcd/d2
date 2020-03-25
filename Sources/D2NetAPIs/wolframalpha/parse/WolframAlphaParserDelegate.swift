@@ -4,7 +4,7 @@ import FoundationXML
 #endif
 import Logging
 
-fileprivate let log = Logger(label: "WolframAlphaParserDelegate")
+fileprivate let log = Logger(label: "D2NetAPIs.WolframAlphaParserDelegate")
 
 class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 	let then: (Result<WolframAlphaOutput, Error>) -> Void

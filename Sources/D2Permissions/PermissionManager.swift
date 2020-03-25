@@ -3,7 +3,7 @@ import Foundation
 import Logging
 import D2Utils
 
-fileprivate let log = Logger(label: "PermissionManager")
+fileprivate let log = Logger(label: "D2Permissions.PermissionManager")
 fileprivate let userPermissionsFilePath = "local/userPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 

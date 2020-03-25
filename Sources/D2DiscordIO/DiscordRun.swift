@@ -4,7 +4,7 @@ import Logging
 import D2MessageIO
 import SwiftDiscord
 
-fileprivate let log = Logger(label: "DiscordRun")
+fileprivate let log = Logger(label: "D2DiscordIO.DiscordRun")
 
 /** Runs the Discord-based backend. */
 public func runDiscordIO(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String, disposables: inout [Any]) {
