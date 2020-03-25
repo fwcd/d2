@@ -97,8 +97,8 @@ For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearac
 
 ## Running
 * Using Docker: `docker-compose up -d`
-* On Linux: `swift run D2` (or D2Shell)
-* On macOS: `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include D2` (or D2Shell)
+* On Linux: `swift run D2`
+* On macOS: `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include D2`
 
 ## Additional Build Flags
 To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
