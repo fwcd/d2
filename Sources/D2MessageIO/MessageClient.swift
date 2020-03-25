@@ -2,12 +2,15 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import Logging
 
 public typealias ClientCallback<T> = (T, HTTPURLResponse?) -> Void
 
-fileprivate func defaultCallback<T>(_ dummy: T, error: HTTPURLResponse?) {
-	if let err = error {
-		print(err)
+fileprivate let log = Logger(label: "MessageClient")
+
+fileprivate func defaultCallback<T>(_ dummy: T, response: HTTPURLResponse?) {
+	if let rsp = response {
+		log.debug("\(rsp)")
 	}
 }
 
