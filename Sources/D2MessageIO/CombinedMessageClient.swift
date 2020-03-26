@@ -57,7 +57,7 @@ public class CombinedMessageClient: MessageClient {
     
     public func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?) {
         withClient(of: channelId) {
-            log.info("Handling message sent to \(channelId) with client \($0.name)")
+            log.info("Sending message to channel \(channelId) with \($0.name)")
             $0.sendMessage(message, to: channelId, then: then)
         }
     }

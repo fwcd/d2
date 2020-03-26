@@ -26,7 +26,7 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	let log = Logger(label: "D2.main")
 	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
-	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/ioBackendTokens.json")
+	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/platformTokens.json")
 	
 	// Create platforms
 	var combinedClient: CombinedMessageClient! = CombinedMessageClient()
@@ -72,6 +72,7 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	}
 
 	// Block the thread
+	log.info("Blocking the main thread")
 	dispatchMain()
 }
 
