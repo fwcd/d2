@@ -1,4 +1,5 @@
 import D2MessageIO
+import Emoji
 import Telegrammer
 import Logging
 
@@ -59,6 +60,7 @@ struct TelegramMessageClient: MessageClient {
         let text = [message.content, message.embed.map(flatten(embed:))]
             .compactMap { $0?.nilIfEmpty }
             .joined(separator: "\n")
+            .emojiUnescapedString
         log.info("Sending message '\(text)'")
 
         do {
