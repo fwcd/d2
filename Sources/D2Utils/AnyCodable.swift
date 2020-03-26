@@ -16,8 +16,9 @@ fileprivate struct ConcreteCodableBox<Base: Codable & Hashable>: AnyCodableBox {
     }
 }
 
-public struct AnyCodable: Codable, Hashable {
+public struct AnyCodable: Codable, Hashable, CustomStringConvertible {
     private var box: AnyCodableBox
+    public var description: String { "\(box.base)" }
 
     public init<Base: Codable & Hashable>(_ base: Base) {
         box = ConcreteCodableBox<Base>(base)

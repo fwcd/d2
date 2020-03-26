@@ -17,7 +17,7 @@ public class CombinedMessageClient: MessageClient {
     @discardableResult
     public func register(client: MessageClient) -> MessageClient {
         clients[client.name] = client
-        return OverlayMessageClient(inner: client, name: client.name, me: client.me)
+        return OverlayMessageClient(inner: self, name: client.name, me: client.me)
     }
     
     private func withClient<T>(of id: ID, _ action: (MessageClient) throws -> T?) rethrows -> T? {
@@ -56,7 +56,10 @@ public class CombinedMessageClient: MessageClient {
     }
     
     public func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?) {
-        withClient(of: channelId) { $0.sendMessage(message, to: channelId, then: then) }
+        withClient(of: channelId) {
+            log.info("Handling message sent to \(channelId) with client \($0.name)")
+            $0.sendMessage(message, to: channelId, then: then)
+        }
     }
     
     public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<Message?>?) {

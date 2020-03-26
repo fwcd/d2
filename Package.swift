@@ -1,10 +1,13 @@
-// swift-tools-version:4.2.0
+// swift-tools-version:5.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "D2",
+    products: [
+        .executable(name: "D2", targets: ["D2"])
+    ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
@@ -17,7 +20,8 @@ let package = Package(
         .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
         .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2"),
         .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932")),
-        .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1")
+        .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
+        .package(url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -32,7 +36,7 @@ let package = Package(
         ),
         .target(
             name: "D2TelegramIO",
-            dependencies: ["Logging", "Telegrammer", "D2MessageIO", "D2Utils"]
+            dependencies: ["Logging", "Telegrammer", "Emoji", "D2MessageIO", "D2Utils"]
         ),
         .target(
             name: "D2Handlers",

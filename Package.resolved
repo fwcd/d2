@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "Emoji",
+        "repositoryURL": "https://github.com/safx/Emoji-Swift.git",
+        "state": {
+          "branch": null,
+          "revision": "b3a49f4a9fbee3c7320591dbc7263c192244063e",
+          "version": null
+        }
+      },
+      {
         "package": "LineNoise",
         "repositoryURL": "https://github.com/andybest/linenoise-swift.git",
         "state": {
