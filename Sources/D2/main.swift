@@ -12,7 +12,7 @@ import D2Utils
 import Backtrace
 #endif
 
-func main(rawLogLevel: String, initialPresence: String?) throws {
+func main(rawLogLevel: String, initialPresence: String?) {
 	#if DEBUG
 	Backtrace.install()
 	#endif
@@ -24,56 +24,61 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	}
 	
 	let log = Logger(label: "D2.main")
-	let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
-	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
-	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/platformTokens.json")
 	
-	// Create platforms
-	var combinedClient: CombinedMessageClient! = CombinedMessageClient()
-	var platforms: [Startable] = []
-	var createdAnyPlatform = false
-	
-	if let discordToken = tokens.discord {
-		createdAnyPlatform = true
-		platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, token: discordToken))
-	}
-	
-	if let telegramToken = tokens.telegram {
-		do {
+	do {
+		let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
+		let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
+		let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/platformTokens.json")
+		
+		// Create platforms
+		var combinedClient: CombinedMessageClient! = CombinedMessageClient()
+		var platforms: [Startable] = []
+		var createdAnyPlatform = false
+		
+		if let discordToken = tokens.discord {
 			createdAnyPlatform = true
-			platforms.append(try TelegramPlatform(with: handler, combinedClient: combinedClient, token: telegramToken))
-		} catch {
-			log.warning("Could not create Telegram platform: \(error)")
+			platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, token: discordToken))
 		}
-	}
-	
-	if !createdAnyPlatform {
-		log.notice("No platform was created since no tokens were provided.")
-	}
-	
-	// Setup interrupt signal handler
-	signal(SIGINT, SIG_IGN)
-	let source = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
-	source.setEventHandler {
-		log.info("Shutting down...")
-		platforms.removeAll()
-		combinedClient = nil
-		exit(0)
-	}
-	source.resume()
-	
-	// Start the platforms
-	for platform in platforms {
-		do {
-			try platform.start()
-		} catch {
-			log.warning("Could not start platform: \(error)")
+		
+		if let telegramToken = tokens.telegram {
+			do {
+				createdAnyPlatform = true
+				platforms.append(try TelegramPlatform(with: handler, combinedClient: combinedClient, token: telegramToken))
+			} catch {
+				log.warning("Could not create Telegram platform: \(error)")
+			}
 		}
-	}
+		
+		if !createdAnyPlatform {
+			log.notice("No platform was created since no tokens were provided.")
+		}
+		
+		// Setup interrupt signal handler
+		signal(SIGINT, SIG_IGN)
+		let source = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
+		source.setEventHandler {
+			log.info("Shutting down...")
+			platforms.removeAll()
+			combinedClient = nil
+			exit(0)
+		}
+		source.resume()
+		
+		// Start the platforms
+		for platform in platforms {
+			do {
+				try platform.start()
+			} catch {
+				log.warning("Could not start platform: \(error)")
+			}
+		}
 
-	// Block the thread
-	log.info("Blocking the main thread")
-	dispatchMain()
+		// Block the thread
+		log.info("Blocking the main thread")
+		dispatchMain()
+	} catch {
+		log.error("An error occurred while starting D2: \(error)")
+	}
 }
 
 command(
