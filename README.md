@@ -1,5 +1,5 @@
 # D2
-General-purpose virtual assistant for Discord.
+General-purpose virtual assistant for Discord and Telegram.
 
 [![Linux](https://github.com/fwcd/d2/workflows/Linux/badge.svg)](https://github.com/fwcd/d2/actions)
 [![macOS](https://github.com/fwcd/d2/workflows/macOS/badge.svg)](https://github.com/fwcd/d2/actions)
@@ -47,11 +47,12 @@ In addition to supporting various web APIs, it features basic scripting capabili
 * Create a folder named `local` in the repository
     * If you use Docker, the `local` folder is represented by the `d2local` volume
     * [See here](https://stackoverflow.com/a/55683656) for instructions on how to copy files into it
-* Create a file named `ioBackendTokens.json` in `local` containing the API key:
+* Create a file named `platformTokens.json` in `local` containing the API tokens (at least one of them should be specified):
 
 ```json
 {
-    "discord": "YOUR_DISCORD_API_TOKEN"
+    "discord": "YOUR_DISCORD_API_TOKEN",
+    "telegram": "YOUR_TELEGRAM_API_TOKEN"
 }
 ```
 
