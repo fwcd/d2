@@ -9,6 +9,8 @@ public typealias EmojiID = ID
 public typealias GuildID = ID
 public typealias OverwriteID = ID
 
+public let dummyId: ID = ID(0, clientName: "Dummy")
+
 /**
  * A container for a type-erased ID.
  */

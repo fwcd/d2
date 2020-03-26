@@ -20,7 +20,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	func testXWin() throws {
 		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
-		let channel = ChannelID(0)
+		let channel = dummyId
 		command.startMatch(between: [playerX, playerO], on: channel, output: output)
 		
 		command.perform("move", withArgs: "top left", on: channel, output: output, author: playerO)
@@ -52,7 +52,7 @@ final class TicTacToeCommandTests: XCTestCase {
 	func testDraw() throws {
 		let command = GameCommand<TicTacToeGame>()
 		let output = CommandTestOutput()
-		let channel = ChannelID(0)
+		let channel = dummyId
 		command.startMatch(between: [playerX, playerO], on: channel, output: output)
 		
 		command.perform("move", withArgs: "0 0", on: channel, output: output, author: playerX)
