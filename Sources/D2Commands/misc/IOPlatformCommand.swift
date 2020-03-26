@@ -1,7 +1,7 @@
-public class IOBackendCommand: StringCommand {
+public class IOPlatformCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
-        shortDescription: "Outputs the IO backend",
+        shortDescription: "Outputs the IO platform",
         requiredPermissionLevel: .basic
     )
     

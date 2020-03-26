@@ -125,7 +125,7 @@ public class D2Delegate: MessageDelegate {
 		registry["songcharts"] = SongChartsCommand()
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()
-		registry["iobackend"] = IOBackendCommand()
+		registry["ioplatform"] = IOPlatformCommand()
 		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
