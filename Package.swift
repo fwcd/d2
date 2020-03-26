@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "D2",
+    platforms: [.macOS(.v10_14)],
     products: [
         .executable(name: "D2", targets: ["D2"])
     ],
