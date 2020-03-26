@@ -18,6 +18,8 @@ public struct DiscordPlatform: MessagePlatform {
         let queue = DispatchQueue(label: "Discord handle queue")
         self.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient)
         discordClient = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: self.delegate, configuration: [.handleQueue(queue)])
+        
+        combinedClient.register(client: DiscordMessageClient(client: discordClient))
     }
     
     public func start() {
