@@ -12,10 +12,6 @@ import D2Utils
 import Backtrace
 #endif
 
-private func async(_ task: @escaping () -> Void) {
-	DispatchQueue.global().async(execute: task)
-}
-
 func main(rawLogLevel: String, initialPresence: String?) throws {
 	#if DEBUG
 	Backtrace.install()
@@ -32,41 +28,50 @@ func main(rawLogLevel: String, initialPresence: String?) throws {
 	let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
 	let tokens = try DiskJsonSerializer().readJson(as: IOBackendTokens.self, fromFile: "local/ioBackendTokens.json")
 	
+	// Create platforms
 	var combinedClient: CombinedMessageClient! = CombinedMessageClient()
-	var disposables: [Any] = []
-	var launchedAnyBackend = false
+	var platforms: [Startable] = []
+	var createdAnyPlatform = false
 	
 	if let discordToken = tokens.discord {
-		log.info("Launching Discord backend")
-		launchedAnyBackend = true
-		async {
-			runDiscordIO(with: handler, combinedClient: combinedClient, token: discordToken, disposables: &disposables)
-		}
+		createdAnyPlatform = true
+		platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, token: discordToken))
 	}
 	
 	if let telegramToken = tokens.telegram {
-		log.info("Launching Telegram backend")
-		launchedAnyBackend = true
-		async {
-			runTelegramIO(with: handler, combinedClient: combinedClient, token: telegramToken)
+		do {
+			createdAnyPlatform = true
+			platforms.append(try TelegramPlatform(with: handler, combinedClient: combinedClient, token: telegramToken))
+		} catch {
+			log.warning("Could not create Telegram platform: \(error)")
 		}
 	}
 	
-	if !launchedAnyBackend {
-		log.notice("No backend was launched since no tokens were provided.")
+	if !createdAnyPlatform {
+		log.notice("No platform was created since no tokens were provided.")
 	}
 	
-	// Handle interrupt signals
+	// Setup interrupt signal handler
 	signal(SIGINT, SIG_IGN)
 	let source = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
 	source.setEventHandler {
 		log.info("Shutting down...")
-		disposables.removeAll()
+		platforms.removeAll()
 		combinedClient = nil
 		exit(0)
 	}
 	source.resume()
 	
+	// Start the platforms
+	for platform in platforms {
+		do {
+			try platform.start()
+		} catch {
+			log.warning("Could not start platform: \(error)")
+		}
+	}
+
+	// Block the thread
 	dispatchMain()
 }
 
