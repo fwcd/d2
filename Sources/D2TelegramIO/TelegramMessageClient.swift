@@ -64,7 +64,7 @@ struct TelegramMessageClient: MessageClient {
         log.info("Sending message '\(text)'")
 
         do {
-            try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: text)).whenComplete {
+            try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: text, parseMode: .markdown)).whenComplete {
                 do {
                     then?(try $0.get().usingMessageIO, nil)
                 } catch {
