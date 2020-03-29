@@ -3,7 +3,7 @@ import D2Permissions
 
 public class PigLatinCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .misc,
+		category: .fun,
 		shortDescription: "Encodes a string in pig latin",
 		longDescription: "Encodesway away ingstray inway igpay atinlay",
 		requiredPermissionLevel: .basic
