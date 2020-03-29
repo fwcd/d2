@@ -61,7 +61,7 @@ struct TelegramMessageClient: MessageClient {
             .compactMap { $0?.nilIfEmpty }
             .joined(separator: "\n")
             .emojiUnescapedString
-        log.info("Sending message '\(text)'")
+        log.debug("Sending message '\(text)'")
 
         do {
             try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: text, parseMode: .markdown)).whenComplete {
