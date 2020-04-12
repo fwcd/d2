@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2Utils
 import D2NetAPIs
 
 public class PokedexCommand: StringCommand {
@@ -20,7 +21,7 @@ public class PokedexCommand: StringCommand {
         PokedexQuery().perform {
             switch $0 {
                 case .success(let pokedex):
-                    guard let pokemon = pokedex.first(where: { $0.name?.starts(with: input) ?? false }) else {
+                    guard let pokemon = pokedex.min(by: ascendingComparator(comparing: { $0.name?.levenshteinDistance(to: input) ?? Int.max })) else {
                         output.append(errorText: "No such Pokémon could be found.")
                         return
                     }

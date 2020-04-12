@@ -84,4 +84,32 @@ extension StringProtocol {
 	public func pluralize(with value: Int) -> String {
 		value == 1 ? String(self) : "\(self)s"
 	}
+	
+	public func levenshteinDistance(to rhs: String) -> Int {
+		let width = count + 1
+		let height = rhs.count + 1
+		var matrix = [Int](repeating: 0, count: width * height)
+		let lhsChars = Array(self)
+		let rhsChars = Array(rhs)
+		
+		for i in 0..<width {
+			matrix[i] = i
+		}
+		for i in 0..<height {
+			matrix[i * width] = i
+		}
+		
+		for y in 1..<height {
+			for x in 1..<width {
+				let equal = lhsChars[x - 1] == rhsChars[y - 1]
+				matrix[y * width + x] = [
+					matrix[(y - 1) * width + (x - 1)] + (equal ? 0 : 1),
+					matrix[(y - 1) * width + x] + 1,
+					matrix[y * width + (x - 1)] + 1
+				].min()!
+			}
+		}
+		
+		return matrix.last!
+	}
 }

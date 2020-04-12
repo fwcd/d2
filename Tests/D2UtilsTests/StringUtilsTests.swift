@@ -17,5 +17,8 @@ final class StringUtilsTests: XCTestCase {
             " that ' should | ` | not ` | be ' ",
             " split"
         ])
+        XCTAssertEqual("".levenshteinDistance(to: "ab"), 2)
+        XCTAssertEqual("abc".levenshteinDistance(to: ""), 3)
+        XCTAssertEqual("kitten".levenshteinDistance(to: "sitting"), 3)
     }
 }
