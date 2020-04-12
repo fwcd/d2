@@ -85,12 +85,13 @@ extension StringProtocol {
 		value == 1 ? String(self) : "\(self)s"
 	}
 	
-	public func levenshteinDistance(to rhs: String) -> Int {
+	public func levenshteinDistance<S>(to rhs: S, caseSensitive: Bool = true) -> Int where S: StringProtocol {
 		let width = count + 1
 		let height = rhs.count + 1
 		var matrix = [Int](repeating: 0, count: width * height)
-		let lhsChars = Array(self)
-		let rhsChars = Array(rhs)
+		let (lhsChars, rhsChars) = caseSensitive
+			? (Array(self), Array(rhs))
+			: (Array(lowercased()), Array(rhs.lowercased()))
 		
 		for i in 0..<width {
 			matrix[i] = i
