@@ -1,4 +1,4 @@
-public enum PermissionLevel: Int, Codable {
+public enum PermissionLevel: Int, Codable, Comparable {
 	case admin = 500
 	case dev = 100
 	case vip = 50
@@ -12,5 +12,9 @@ public enum PermissionLevel: Int, Codable {
 			case "basic": return .basic
 			default: return nil
 		}
+	}
+	
+	public static func <(lhs: PermissionLevel, rhs: PermissionLevel) -> Bool {
+		return lhs.rawValue < rhs.rawValue
 	}
 }
