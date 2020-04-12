@@ -113,6 +113,7 @@ public class D2Delegate: MessageDelegate {
 		registry["piglatin"] = PigLatinCommand()
 		registry["pokemon"] = PokemonCommand()
 		registry["pokedex"] = PokedexCommand()
+		registry["pokequiz"] = PokeQuizCommand()
 		registry["chucknorrisjoke"] = ChuckNorrisJokeCommand()
 		registry["markov"] = MarkovCommand()
 		registry["watch"] = WatchCommand()
