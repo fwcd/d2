@@ -120,6 +120,7 @@ public class D2Delegate: MessageDelegate {
 		registry["concat"] = ConcatCommand()
 		registry["presence"] = PresenceCommand()
 		registry["xkcd"] = XkcdCommand()
+		registry["coinflip"] = CoinFlipCommand()
 		registry["dm"] = DirectMessageCommand()
 		registry["tofile"] = ToFileCommand()
 		registry["chord"] = FretboardChordCommand()
