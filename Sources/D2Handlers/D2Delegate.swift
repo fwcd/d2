@@ -22,6 +22,7 @@ public class D2Delegate: MessageDelegate {
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
 		let subscriptionManager = SubscriptionManager()
+		let inventoryManager = InventoryManager()
 
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
@@ -116,6 +117,7 @@ public class D2Delegate: MessageDelegate {
 		registry["pokequiz"] = PokeQuizCommand()
 		registry["chucknorrisjoke"] = ChuckNorrisJokeCommand()
 		registry["random"] = RandomCommand(permissionManager: permissionManager)
+		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["markov"] = MarkovCommand()
 		registry["watch"] = WatchCommand()
 		registry["poll"] = PollCommand()

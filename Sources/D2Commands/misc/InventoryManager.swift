@@ -1,0 +1,13 @@
+import D2Utils
+import D2MessageIO
+
+public class InventoryManager {
+    @AutoSerializing(filePath: "local/inventories.json") private var inventories: [UserID: Inventory] = [:]
+    
+    public init() {}
+    
+    public subscript(user: User) -> Inventory {
+        get { inventories[user.id] ?? .empty }
+        set { inventories[user.id] = newValue }
+    }
+}
