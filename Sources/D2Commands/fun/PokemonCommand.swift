@@ -8,6 +8,7 @@ public class PokemonCommand: StringCommand {
         shortDescription: "Catches a random Pokémon",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
     
     public init() {}
     
@@ -22,7 +23,7 @@ public class PokemonCommand: StringCommand {
                     let author = context.author?.username ?? "You"
                     output.append(Embed(
                         title: "**\(author)**, you've caught a **\(pokemon.name ?? "?")**",
-                        image: Embed.Image(url: URL(string: "https://randompokemon.com/sprites/normal/\(pokemon.id).gif")!)
+                        image: Embed.Image(url: pokemon.gifUrl)
                     ))
                 case .failure(let error):
                     output.append(error, errorText: "Could not fetch Pokédex.")
