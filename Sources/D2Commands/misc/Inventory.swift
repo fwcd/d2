@@ -3,7 +3,7 @@ import Foundation
 /// A general-purpose key-value store for virtual "items"
 /// that a user may acquire. The items are grouped into
 /// categories, which may have custom purposes.
-public struct Inventory: Hashable, Codable {
+public struct Inventory: Hashable, Codable, Sequence {
     public static let empty = Inventory()
 
     /// A dictionary holding items by category.
@@ -16,12 +16,14 @@ public struct Inventory: Hashable, Codable {
         self.items = items
     }
     
-    public struct Item: Hashable, Codable {
+    public struct Item: Hashable, Codable, CustomStringConvertible {
         /// A category-specific identifier
         public let id: String
         public let name: String
         public let iconUrl: URL?
         public let attributes: [String: String]
+        
+        public var description: String { "\(name) (#\(id))" }
         
         public init(id: String, name: String, iconUrl: URL? = nil, attributes: [String: String] = [:]) {
             self.id = id
@@ -42,11 +44,24 @@ public struct Inventory: Hashable, Codable {
         items[category]!.append(item)
     }
     
+    public func category(of item: Item) -> String? {
+        return items.first { $0.1.contains(item) }.map { $0.0 }
+    }
+    
+    public mutating func remove(item: Item, from category: String? = nil) {
+        guard let c = category ?? self.category(of: item) else { return }
+        items[c]?.removeFirst(value: item)
+    }
+    
     public mutating func clear(category: String? = nil) {
         if let category = category {
             items[category] = nil
         } else {
             items = [:]
         }
+    }
+    
+    public func makeIterator() -> AnySequence<(String, Item)>.Iterator {
+        return AnySequence(items.lazy.flatMap { (c, its) in its.map { (c, $0) } }).makeIterator()
     }
 }

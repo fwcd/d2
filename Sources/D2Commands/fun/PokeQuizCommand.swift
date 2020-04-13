@@ -5,7 +5,8 @@ public class PokeQuizCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Lets you guess the name of a Pokémon",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .basic,
+        subscribesToNextMessages: true
     )
     private var quizzes: [ChannelID: Quiz] = [:]
     

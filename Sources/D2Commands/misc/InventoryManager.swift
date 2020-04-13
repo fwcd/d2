@@ -6,6 +6,11 @@ public class InventoryManager {
     
     public init() {}
     
+    public subscript(userId: UserID) -> Inventory {
+        get { inventories[userId] ?? .empty }
+        set { inventories[userId] = newValue }
+    }
+    
     public subscript(user: User) -> Inventory {
         get { inventories[user.id] ?? .empty }
         set { inventories[user.id] = newValue }
