@@ -112,7 +112,7 @@ public class D2Delegate: MessageDelegate {
 		registry["pointful"] = PointfulCommand()
 		registry["prolog"] = PrologCommand()
 		registry["piglatin"] = PigLatinCommand()
-		registry["pokemon"] = PokemonCommand()
+		registry["pokemon"] = PokemonCommand(inventoryManager: inventoryManager)
 		registry["pokedex"] = PokedexCommand()
 		registry["pokequiz"] = PokeQuizCommand()
 		registry["chucknorrisjoke"] = ChuckNorrisJokeCommand()

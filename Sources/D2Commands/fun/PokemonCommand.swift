@@ -1,6 +1,9 @@
+import Logging
 import Foundation
 import D2MessageIO
 import D2NetAPIs
+
+fileprivate let log = Logger(label: "D2Commands.PokemonCommand")
 
 public class PokemonCommand: StringCommand {
     public let info = CommandInfo(
@@ -9,8 +12,11 @@ public class PokemonCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
+    private let inventoryManager: InventoryManager
     
-    public init() {}
+    public init(inventoryManager: InventoryManager) {
+        self.inventoryManager = inventoryManager
+    }
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         PokedexQuery().perform {
@@ -25,9 +31,20 @@ public class PokemonCommand: StringCommand {
                         title: "**\(author)**, you've caught a **\(pokemon.name ?? "?")**",
                         image: Embed.Image(url: pokemon.gifUrl)
                     ))
+                    self.addToInventory(pokemon: pokemon, context: context)
                 case .failure(let error):
                     output.append(error, errorText: "Could not fetch Pokédex.")
             }
         }
+    }
+    
+    private func addToInventory(pokemon: PokedexEntry, context: CommandContext) {
+        guard let author = context.author else {
+            log.warning("Could not add to inventory since no author is present")
+            return
+        }
+        var inventory = inventoryManager[author]
+        inventory.append(item: .init(fromPokemon: pokemon), to: pokemonInventoryCategory)
+        inventoryManager[author] = inventory
     }
 }
