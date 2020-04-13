@@ -5,7 +5,7 @@ import Telegrammer
 
 extension Int64: MessageIOConvertible {
     public var usingMessageIO: ID {
-        return ID(self, clientName: telegramClientName)
+        return ID(String(self), clientName: telegramClientName)
     }
 }
 
@@ -13,9 +13,9 @@ extension Int64: MessageIOConvertible {
 
 extension ID: TelegramAPIConvertible {
     public var usingTelegramAPI: Int64 {
-        guard clientName == telegramClientName else {
+        guard let value = Int64(value) else {
 			fatalError("Tried to convert non-Telegram ID to Telegram API representation: \(self)")
         }
-        return base(as: Int64.self)
+        return value
     }
 }
