@@ -56,11 +56,11 @@ public class TradeCommand: StringCommand {
         let authorsInventory = inventoryManager[author]
         let othersInventory = inventoryManager[other]
 
-        guard let (authorsCategory, authorsItem) = authorsInventory.first(where: { $0.1.name == authorsRawItem }) else {
+        guard let (authorsCategory, authorsItem) = authorsInventory.first(where: { $0.1.name.lowercased() == authorsRawItem.lowercased() }) else {
             output.append(errorText: "Could not find `\(authorsRawItem)` in your inventory!")
             return
         }
-        guard let (othersCategory, othersItem) = othersInventory.first(where: { $0.1.name == othersRawItem }) else {
+        guard let (othersCategory, othersItem) = othersInventory.first(where: { $0.1.name.lowercased() == othersRawItem.lowercased() }) else {
             output.append(errorText: "Could not find `\(othersRawItem)` in \(other.username)'s inventory!")
             return
         }
