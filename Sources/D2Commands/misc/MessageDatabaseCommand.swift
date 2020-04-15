@@ -16,7 +16,7 @@ public class MessageDatabaseCommand: StringCommand {
             let result = try messageDB.prepare(sql: input)
                 .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "_no output_" }
                 .joined(separator: "\n")
-            output.append("```\n\(result)\n```")
+            output.append(.code(result, language: nil))
         } catch {
             output.append(error, errorText: "Could not perform command")
         }

@@ -8,6 +8,9 @@ public class ShellCommand: StringCommand {
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        // TODO
+        let out = try Shell().outputSync(for: input).trimmingCharacters(in: .whitespacesAndNewlines)
+        if !out.isEmpty {
+            output.append(.code(out, language: nil))
+        }
     }
 }
