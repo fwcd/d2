@@ -124,7 +124,7 @@ public class CommandHandler: MessageHandler {
 		var userOnly = false
 		
 		// Construct the pipe
-		for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: true, omitBackslashes: true) {
+		for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: false, omitBackslashes: true) {
 			let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 			
 			if let groups = commandPattern.firstGroups(in: trimmedCommand) {

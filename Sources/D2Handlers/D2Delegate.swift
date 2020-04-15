@@ -23,6 +23,8 @@ public class D2Delegate: MessageDelegate {
 		let permissionManager = PermissionManager()
 		let subscriptionManager = SubscriptionManager()
 		let inventoryManager = InventoryManager()
+		let messageDB = try MessageDatabase()
+		try messageDB.setupTables()
 
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
@@ -119,7 +121,7 @@ public class D2Delegate: MessageDelegate {
 		registry["random"] = RandomCommand(permissionManager: permissionManager)
 		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
-		registry["messagedb"] = MessageDatabaseCommand()
+		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
 		registry["markov"] = MarkovCommand()
 		registry["watch"] = WatchCommand()
 		registry["poll"] = PollCommand()
