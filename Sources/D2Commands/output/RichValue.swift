@@ -15,6 +15,7 @@ public enum RichValue: Addable {
 	case embed(Embed?)
 	case error(Error?, errorText: String)
 	case files([Message.FileUpload])
+	case attachments([Message.Attachment])
 	case compound([RichValue])
 	
 	public var asText: String? {
@@ -28,6 +29,12 @@ public enum RichValue: Addable {
 	}
 	public var asGif: AnimatedGif? {
 		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }
+	}
+	public var asFiles: [Message.FileUpload]? {
+		extract { if case let .files(files) = $0 { return files } else { return nil } }
+	}
+	public var asAttachments: [Message.Attachment]? {
+		extract { if case let .attachments(attachments) = $0 { return attachments } else { return nil } }
 	}
 	public var values: [RichValue] {
 		switch self {

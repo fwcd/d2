@@ -7,6 +7,7 @@ public enum RichValueType {
     case embed
     case error
     case files
+    case attachments
     case compound([RichValueType])
     case unknown
     case any

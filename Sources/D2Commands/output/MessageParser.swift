@@ -44,6 +44,11 @@ public struct MessageParser {
 		let semaphore = DispatchSemaphore(value: 0)
 		
 		// Fetch attachments
+		if !message.attachments.isEmpty {
+			values.append(.attachments(message.attachments))
+		}
+		
+		// Download image attachments
 		for attachment in message.attachments {
 			let fileName = attachment.filename.lowercased()
 			

@@ -63,7 +63,9 @@ public class CommandHandler: MessageHandler {
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
-        guard message.content.starts(with: commandPrefix) && !message.dm, let channelId = message.channelId else { return false }
+        guard message.content.starts(with: commandPrefix),
+			!message.dm || (message.author.map { permissionManager[$0] >= PermissionLevel.admin } ?? false),
+			let channelId = message.channelId else { return false }
 		guard let author = message.author else {
 			log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
 			return false

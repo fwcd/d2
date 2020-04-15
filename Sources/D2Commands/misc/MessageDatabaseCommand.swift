@@ -14,7 +14,7 @@ public class MessageDatabaseCommand: StringCommand {
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
             let result = try messageDB.prepare(sql: input)
-                .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "_no output_" }
+                .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no output" }
                 .joined(separator: "\n")
             output.append(.code(result, language: nil))
         } catch {

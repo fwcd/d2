@@ -35,6 +35,9 @@ public struct MessageWriter {
 				))
 			case let .files(files):
 				return Message(files: files)
+			case .attachments(_):
+				// TODO: Download attachments and re-attach them as fileuploads
+				return try write(value: .error(nil, errorText: "Cannot write attachments yet!"))
 			case let .compound(components):
 				let encoded: [Message] = try components.map { try write(value: $0) }
 				return Message(
