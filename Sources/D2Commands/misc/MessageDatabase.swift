@@ -1,3 +1,4 @@
+import Foundation
 import SQLite
 import D2MessageIO
 import D2Utils
@@ -15,6 +16,7 @@ fileprivate let messageId = Expression<Int64>("message_id")
 fileprivate let authorId = Expression<Int64>("author_id")
 fileprivate let channelId = Expression<Int64>("channel_id")
 fileprivate let content = Expression<String>("content")
+fileprivate let timestamp = Expression<Date>("timestamp")
 fileprivate let hasAttachments = Expression<Bool>("has_attachments")
 fileprivate let hasEmbed = Expression<Bool>("has_embed")
 
@@ -45,6 +47,7 @@ public class MessageDatabase {
             $0.column(authorId) // TODO: references user table?
             $0.column(channelId, references: channels, channelId)
             $0.column(content)
+            $0.column(timestamp)
             $0.column(hasAttachments)
             $0.column(hasEmbed)
         })
@@ -69,11 +72,13 @@ public class MessageDatabase {
         guard let messageMessageId = message.id else { throw MessageDatabaseError.missingID("Missing message ID") }
         guard let messageChannelId = message.channelId else { throw MessageDatabaseError.missingID("Missing channel ID in message") }
         guard let messageAuthorId = message.author?.id else { throw MessageDatabaseError.missingID("Missing author ID in message") }
+        guard let messageTimestamp = message.timestamp else { throw MessageDatabaseError.missingTimestamp }
         try db.run(messages.insert(
             messageId <- try convert(id: messageMessageId),
             channelId <- try convert(id: messageChannelId),
             authorId <- try convert(id: messageAuthorId),
             content <- message.content,
+            timestamp <- messageTimestamp,
             hasAttachments <- (message.attachments.count > 0),
             hasEmbed <- (message.embeds.count > 0)
         ))
