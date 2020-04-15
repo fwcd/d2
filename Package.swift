@@ -22,7 +22,8 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2"),
         .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
-        .package(url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e"))
+        .package(url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
+        .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
