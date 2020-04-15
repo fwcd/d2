@@ -57,7 +57,7 @@ public class MessageDatabase {
         })
     }
     
-    public func execute(sql: String) throws -> Statement {
+    public func prepare(sql: String) throws -> Statement {
         try db.prepare(sql)
     }
 

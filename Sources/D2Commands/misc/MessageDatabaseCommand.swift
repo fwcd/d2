@@ -13,7 +13,10 @@ public class MessageDatabaseCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            output.append("```\n\(try messageDB.execute(sql: input).map { "\($0)".nilIfEmpty ?? "_no output_" }.joined(separator: "\n"))\n```")
+            let result = try messageDB.prepare(sql: input)
+                .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "_no output_" }
+                .joined(separator: "\n")
+            output.append("```\n\(result)\n```")
         } catch {
             output.append(error, errorText: "Could not perform command")
         }
