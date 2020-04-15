@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "CSQLite",
+        "repositoryURL": "https://github.com/stephencelis/CSQLite.git",
+        "state": {
+          "branch": null,
+          "revision": "9106e983d5e3d5149ee35281ec089484b0def018",
+          "version": "0.0.3"
+        }
+      },
+      {
         "package": "Emoji",
         "repositoryURL": "https://github.com/safx/Emoji-Swift.git",
         "state": {
@@ -98,6 +107,15 @@
           "branch": null,
           "revision": "f14ff47f45642aa5703900980b014c2e9394b6e5",
           "version": "0.9.0"
+        }
+      },
+      {
+        "package": "SQLite.swift",
+        "repositoryURL": "https://github.com/stephencelis/SQLite.swift",
+        "state": {
+          "branch": null,
+          "revision": "0a9893ec030501a3956bee572d6b4fdd3ae158a1",
+          "version": "0.12.2"
         }
       },
       {
