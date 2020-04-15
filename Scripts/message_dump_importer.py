@@ -6,6 +6,8 @@ import json
 import sqlite3
 import tarfile
 
+from datetime import datetime
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input_file", help="The message dump .tar.gz archive.")
@@ -25,7 +27,11 @@ def main():
                     with tar.extractfile(info) as f:
                         msgs = [json.loads(msg) for msg in f.readlines()]
                         for msg in msgs:
-                            db.execute("insert into messages (message_id, author_id, channel_id, content, has_attachments, has_embed) values (?, ?, ?, ?, ?, ?)", (msg["id"], msg["author_id"], channel_id, msg["content"], 0, 0))
+                            try:
+                                timestamp = datetime.strptime(msg["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
+                            except ValueError:
+                                timestamp = datetime.strptime(msg["timestamp"], "%Y-%m-%d %H:%M:%S")
+                            db.execute("insert into messages (message_id, author_id, channel_id, content, timestamp, has_attachments, has_embed) values (?, ?, ?, ?, ?, ?, ?)", (msg["id"], msg["author_id"], channel_id, msg["content"], timestamp, 0, 0))
                         print(f"    Inserted {len(msgs)} messages")
     
     db.commit()
