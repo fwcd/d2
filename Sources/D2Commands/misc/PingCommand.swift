@@ -15,6 +15,6 @@ public class PingCommand: Command {
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		let deltaMs = (context.message.timestamp?.timeIntervalSinceNow).map { $0 * -1000.0 }
-		output.append("Pong\(deltaMs.map { " in \($0) ms" } ?? "")!")
+		output.append("Pong\(deltaMs.map { " in \(String(format: "%.2f", $0)) ms" } ?? "")!")
 	}
 }
