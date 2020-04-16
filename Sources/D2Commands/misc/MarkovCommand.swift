@@ -43,7 +43,7 @@ public class MarkovCommand: StringCommand {
 		// }
 
 		do {
-			let initialState = try messageDB.randomMarkovState()
+			let initialState = try (messageDB.initialMarkovDistribution?.sample()).map { [$0] } ?? messageDB.randomMarkovState()
 			let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: initialState, maxLength: self.maxWords)
 			var result = [String]()
 			

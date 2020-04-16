@@ -31,6 +31,8 @@ fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
     
 public class MessageDatabase: MarkovPredictor {
     private let db: Connection
+
+    public private(set) lazy var initialMarkovDistribution: CustomDiscreteDistribution<String>? = queryInitialMarkovDistribution()
     public let markovOrder = 2
     
     public init() throws {
@@ -148,6 +150,19 @@ public class MessageDatabase: MarkovPredictor {
             throw MessageDatabaseError.missingMarkovData("No Markov data available to sample from")
         }
         return [row[wordA], row[wordB]]
+    }
+    
+    private func queryInitialMarkovDistribution() -> (CustomDiscreteDistribution<String>)? {
+        do {
+            let total = occurrences.sum
+            let results = try db.prepare(markovTransitions.select(wordA, total).group(wordA).order(total.desc).limit(300))
+                .map { ($0[wordA], $0[total] ?? 0) }
+            print(results)
+            return CustomDiscreteDistribution(normalizing: results)
+        } catch {
+            log.error("\(error)")
+            return nil
+        }
     }
     
     public func predict(_ markovState: [String]) -> String? {
