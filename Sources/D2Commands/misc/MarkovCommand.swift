@@ -45,15 +45,15 @@ public class MarkovCommand: StringCommand {
 		do {
 			// TODO: Use proper initial distribution without sacrificing performance
 			let sampleMessage = try messageDB.randomMessage()
-			let initialState = try [sampleMessage.content.split(separator: " ").map { String($0) }.first?.nilIfEmpty ?? messageDB.randomMarkovWord()] 
-			let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: initialState, maxLength: self.maxWords)
+			let initialWord = try input ?? sampleMessage.content.split(separator: " ").map { String($0) }.first?.nilIfEmpty ?? messageDB.randomMarkovWord()
+			let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: [initialWord], maxLength: self.maxWords)
 			var result = [String]()
 			
 			for word in stateMachine {
 				result.append(word)
 			}
 			
-			output.append(result.joined(separator: " "))
+			output.append(result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results")
 		} catch {
 			output.append(error, errorText: "Could not generate Markov text")
 		}
