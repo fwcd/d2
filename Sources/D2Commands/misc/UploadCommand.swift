@@ -29,7 +29,7 @@ public class UploadCommand: Command {
                 let data = try $0.get()
                 let url = URL(fileURLWithPath: filePath)
                 try data.write(to: url)
-                output.append("Successfully wrote \(attachment.size) bytes!")
+                output.append("Successfully wrote \(attachment.size) \("byte".pluralize(with: attachment.size))!")
             } catch {
                 output.append(error, errorText: "Could not download attachment")
             }

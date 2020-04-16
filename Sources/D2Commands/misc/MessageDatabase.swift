@@ -25,6 +25,7 @@ fileprivate let wordA = Expression<String>("word_a")
 fileprivate let wordB = Expression<String>("word_b")
 fileprivate let wordC = Expression<String>("word_c")
 fileprivate let followingWord = Expression<String>("following_word")
+fileprivate let occurrences = Expression<Int64>("occurrences")
     
 public class MessageDatabase {
     private let db: Connection
@@ -56,7 +57,8 @@ public class MessageDatabase {
             $0.column(wordB)
             $0.column(wordC)
             $0.column(followingWord)
-            $0.primaryKey(wordA, wordB, wordC)
+            $0.column(occurrences)
+            $0.primaryKey(wordA, wordB, wordC, followingWord)
         })
     }
     
@@ -91,7 +93,41 @@ public class MessageDatabase {
         return idValue
     }
     
-    public func generateMarkovTransitions() throws {
-        // TODO
+    @discardableResult
+    public func generateMarkovTransitions(for message: Message) throws -> Int {
+        try generateMarkovTransitions(text: message.content)
+    }
+    
+    @discardableResult
+    public func generateMarkovTransitions(text: String? = nil) throws -> Int {
+        var count = 0
+
+        if let text = text {
+            let words = text.split(separator: " ").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            let order = 3
+            
+            if words.count > order {
+                for i in 0..<(words.count - order) {
+                    try db.run(markovTransitions.insert(
+                        or: .ignore,
+                        wordA <- words[i],
+                        wordB <- words[i + 1],
+                        wordC <- words[i + 2],
+                        followingWord <- words[i + order],
+                        occurrences <- 0
+                    ))
+                    try db.run(markovTransitions
+                        .filter(wordA == words[i] && wordB == words[i + 1] && wordC == words[i + 2])
+                        .update(occurrences++))
+                    count += 1
+                }
+            }
+        } else {
+            for msg in try db.prepare(messages.select(messageId, content)) {
+                count += try generateMarkovTransitions(text: msg[content])
+            }
+        }
+        
+        return count
     }
 }

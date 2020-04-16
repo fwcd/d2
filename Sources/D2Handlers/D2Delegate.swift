@@ -28,7 +28,7 @@ public class D2Delegate: MessageDelegate {
 
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
-			MessageDBHandler(messageDB: messageDB),
+			MessageDatabaseHandler(messageDB: messageDB),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
 		]
