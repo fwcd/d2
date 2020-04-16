@@ -28,9 +28,9 @@ public class D2Delegate: MessageDelegate {
 
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
-			MessageDatabaseHandler(messageDB: messageDB),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
-			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
+			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
+			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
 		]
 
 		registry["ping"] = PingCommand()
