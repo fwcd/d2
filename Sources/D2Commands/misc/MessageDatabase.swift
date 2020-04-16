@@ -170,9 +170,13 @@ public class MessageDatabase: MarkovPredictor {
                     throw MessageDatabaseError.invalidMarkovState("State \(markovState) has invalid length \(markovState.count)!")
             }
             
-            let candidates = Array(try db.prepare(markovTransitions.select(wordA, wordB, followingWord).where(wordA == fullState[0] && wordB == fullState[1]).order(occurrences.desc).limit(10)))
-            // TODO: Weighted randomness using occurrences
-            return candidates.randomElement()?[followingWord]
+            let followerQuery = markovTransitions.select(followingWord, occurrences)
+                .where(wordA == fullState[0] && wordB == fullState[1])
+                .limit(50)
+            let candidates = try db.prepare(followerQuery).map { ($0[followingWord], $0[occurrences]) }
+            return candidates.nilIfEmpty.map {
+                CustomDiscreteDistribution(normalizing: $0).sample()
+            }
         } catch {
             log.warning("\(error)")
             return nil
