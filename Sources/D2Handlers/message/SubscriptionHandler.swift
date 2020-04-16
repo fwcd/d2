@@ -18,6 +18,7 @@ public struct SubscriptionHandler: MessageHandler {
 
 		let output = MessageIOOutput(client: client, defaultTextChannelId: channelId)
 		let isBot = message.author?.bot ?? false
+        var handled = false
 
         manager.notifySubscriptions(on: channelId, isBot: isBot) {
             let context = CommandContext(
@@ -28,8 +29,9 @@ public struct SubscriptionHandler: MessageHandler {
                 subscriptions: $1
             )
             registry[$0]?.onSubscriptionMessage(withContent: message.content, output: output, context: context)
+            handled = true
         }
         
-        return true
+        return handled
     }
 }
