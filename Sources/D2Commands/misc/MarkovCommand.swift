@@ -13,7 +13,7 @@ public class MarkovCommand: StringCommand {
 		shortDescription: "Generates a natural language response using a Markov chain",
 		longDescription: "Uses a Markov chain with data from the current channel to generate a human-like response",
 		helpText: "Syntax: markov [--all]? [--noping]? [@user]?",
-		requiredPermissionLevel: .admin // TODO: Admin-only until guild member permissions are fixed, see invoke method below
+		requiredPermissionLevel: .basic
 	)
 	private let messageDB: MessageDatabase
 	private let maxWords = 60
