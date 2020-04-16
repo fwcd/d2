@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies with APT
-      run: sudo apt-get update && sudo apt-get install libopus-dev libsodium-dev libcairo2-dev
+      run: sudo apt-get update && sudo apt-get install libopus-dev libsodium-dev libcairo2-dev sqlite3
     - name: Install Swiftenv
       run: git clone --depth 1 https://github.com/kylef/swiftenv.git ~/.swiftenv
     - name: Install Swift
