@@ -156,7 +156,11 @@ public class MessageDatabase: MarkovPredictor {
 
             switch markovState.count {
                 case 0, 1:
-                    guard let state = try db.prepare(markovTransitions.select(markovState.first ?? wordA, wordB).limit(1)).makeIterator().next() else {
+                    var query = markovTransitions.select(wordA, wordB)
+                    if let first = markovState.first {
+                        query = query.where(wordA == first)
+                    }
+                    guard let state = try db.prepare(query.limit(1)).makeIterator().next() else {
                         throw MessageDatabaseError.missingMarkovData("Could not find initial state! This could either be due to missing Markov transitions or an unknown passed state.")
                     }
                     fullState = [state[wordA], state[wordB]]
@@ -166,8 +170,9 @@ public class MessageDatabase: MarkovPredictor {
                     throw MessageDatabaseError.invalidMarkovState("State \(markovState) has invalid length \(markovState.count)!")
             }
             
-            let row: Row? = try db.prepare(markovTransitions.select(fullState[0], fullState[1], followingWord).order(Expression<Int>.random()).limit(1)).makeIterator().next()
-            return row?[followingWord]
+            let candidates = Array(try db.prepare(markovTransitions.select(wordA, wordB, followingWord).where(wordA == fullState[0] && wordB == fullState[1]).order(occurrences.desc).limit(10)))
+            // TODO: Weighted randomness using occurrences
+            return candidates.randomElement()?[followingWord]
         } catch {
             log.warning("\(error)")
             return nil

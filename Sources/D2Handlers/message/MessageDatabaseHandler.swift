@@ -12,7 +12,8 @@ public struct MessageDatabaseHandler: MessageHandler {
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
-        if let channelId = message.channelId,
+        if !(message.author?.bot ?? true),
+                let channelId = message.channelId,
                 let guildId = message.guild?.id,
                 client.permissionsForUser(guildId, in: channelId, on: guildId).contains(.readMessages) {
             do {
