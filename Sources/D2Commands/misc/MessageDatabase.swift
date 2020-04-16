@@ -108,32 +108,35 @@ public class MessageDatabase {
             let order = 2
             
             if words.count > order {
-                try db.transaction {
-                    for i in 0..<(words.count - order) {
-                        try db.run(markovTransitions.insert(
-                            or: .ignore,
-                            wordA <- words[i],
-                            wordB <- words[i + 1],
-                            followingWord <- words[i + order],
-                            occurrences <- 0
-                        ))
-                        try db.run(markovTransitions
-                            .filter(wordA == words[i] && wordB == words[i + 1])
-                            .update(occurrences++))
-                        count += 1
-                    }
+                for i in 0..<(words.count - order) {
+                    try db.run(markovTransitions.insert(
+                        or: .ignore,
+                        wordA <- words[i],
+                        wordB <- words[i + 1],
+                        followingWord <- words[i + order],
+                        occurrences <- 0
+                    ))
+                    try db.run(markovTransitions
+                        .filter(wordA == words[i] && wordB == words[i + 1])
+                        .update(occurrences++))
+                    count += 1
                 }
             }
         } else {
             let msgCount = try db.scalar(messages.count)
             let chunkSize = msgCount / 10
+            
+            // We assume that all messages fit into memory
+            let contents = Array(try db.prepare(messages.select(messageId, content)).enumerated())
 
-            for (i, msg) in try db.prepare(messages.select(messageId, content)).enumerated() {
-                count += try generateMarkovTransitions(text: msg[content])
-                
-                if i % chunkSize == 0 {
-                    let progress = Double(i) / Double(msgCount)
-                    log.info("Markov transitions \(String(format: "%.2f", progress * 10))% completed...")
+            try db.transaction {
+                for (i, msg) in contents {
+                    count += try generateMarkovTransitions(text: msg[content])
+                    
+                    if i % chunkSize == 0 {
+                        let progress = Double(i) / Double(msgCount)
+                        log.info("Markov transitions \(String(format: "%.2f", progress * 100))% complete...")
+                    }
                 }
             }
         }
