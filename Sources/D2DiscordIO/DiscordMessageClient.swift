@@ -27,13 +27,38 @@ struct DiscordMessageClient: MessageClient {
 	}
 	
 	func permissionsForUser(_ userId: D2MessageIO.UserID, in channelId: D2MessageIO.ChannelID, on guildId: D2MessageIO.GuildID) -> Permission {
+		// Partly based on MIT-licensed code from https://github.com/nuclearace/SwiftDiscord/blob/9e2be352a580b1c9cf92149be335f61192b85bdb/Sources/SwiftDiscord/Guild/DiscordGuildChannel.swift#L91-L136
+		// Copyright (c) 2016 Erik Little
+
 		guard let guild = client.guildForChannel(channelId.usingDiscordAPI),
 				let channel = guild.channels[channelId.usingDiscordAPI],
-				let member = guild.members[userId.usingDiscordAPI] else {
+				let everybodyRole = guild.roles[guildId.usingDiscordAPI] else {
 			log.warning("Could not check Discord permission of user \(userId) in channel \(channelId)!")
 			return []
 		}
-		return channel.permissions(for: member).usingMessageIO
+		var permissions = everybodyRole.permissions
+
+		if let everybodyOverwrite = channel.permissionOverwrites[guildId.usingDiscordAPI] {
+			permissions.subtract(everybodyOverwrite.deny)
+			permissions.formUnion(everybodyOverwrite.allow)
+		}
+		
+		if !permissions.contains(.sendMessages) {
+			// If they can't send messages, they automatically lose some permissions
+            permissions.subtract([.sendTTSMessages, .mentionEveryone, .attachFiles, .embedLinks])
+		}
+
+		if !permissions.contains(.readMessages) {
+			// If they can't read, they lose all channel based permissions
+			permissions.subtract(.allChannel)
+		}
+
+		if channel is DiscordGuildTextChannel {
+            // Text channels don't have voice permissions.
+            permissions.subtract(.voice)
+        }
+
+		return permissions.usingMessageIO
 	}
 	
 	func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?, then: ClientCallback<Bool>?) {
