@@ -23,6 +23,8 @@ public protocol MessageClient {
 	func setPresence(_ presence: PresenceUpdate)
 	
 	func guildForChannel(_ channelId: ChannelID) -> Guild?
+
+	func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission
 	
 	func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
 

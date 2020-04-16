@@ -28,6 +28,11 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         nil
     }
+
+	func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
+        // TODO
+        []
+    }
 	
 	func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
         // TODO

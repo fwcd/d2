@@ -28,6 +28,7 @@ public class D2Delegate: MessageDelegate {
 
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
+			MessageDBHandler(messageDB: messageDB),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
 		]
@@ -123,7 +124,6 @@ public class D2Delegate: MessageDelegate {
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
 		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
 		registry["shell"] = ShellCommand()
-		registry["upload"] = UploadCommand()
 		registry["upload"] = UploadCommand()
 		registry["markov"] = MarkovCommand()
 		registry["watch"] = WatchCommand()

@@ -1,5 +1,8 @@
 import D2MessageIO
+import Logging
 import SwiftDiscord
+
+fileprivate let log = Logger(label: "D2DiscordIO.DiscordMessageClient")
 
 struct DiscordMessageClient: MessageClient {
 	private let client: DiscordClient
@@ -21,6 +24,16 @@ struct DiscordMessageClient: MessageClient {
 	
 	func guildForChannel(_ channelId: D2MessageIO.ChannelID) -> Guild? {
 		return client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
+	}
+	
+	func permissionsForUser(_ userId: D2MessageIO.UserID, in channelId: D2MessageIO.ChannelID, on guildId: D2MessageIO.GuildID) -> Permission {
+		guard let guild = client.guildForChannel(channelId.usingDiscordAPI),
+				let channel = guild.channels[channelId.usingDiscordAPI],
+				let member = guild.members[userId.usingDiscordAPI] else {
+			log.warning("Could not check Discord permission of user \(userId) in channel \(channelId)!")
+			return []
+		}
+		return channel.permissions(for: member).usingMessageIO
 	}
 	
 	func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?, then: ClientCallback<Bool>?) {

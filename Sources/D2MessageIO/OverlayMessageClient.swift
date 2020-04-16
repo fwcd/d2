@@ -24,6 +24,10 @@ public struct OverlayMessageClient: MessageClient {
 	public func guildForChannel(_ channelId: ChannelID) -> Guild? {
         inner.guildForChannel(channelId)
     }
+
+	public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
+        inner.permissionsForUser(userId, in: channelId, on: guildId)
+    }
 	
 	public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
         inner.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason, then: then)
