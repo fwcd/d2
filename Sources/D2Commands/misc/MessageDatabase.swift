@@ -1,4 +1,5 @@
 import Foundation
+import Logging
 import SQLite
 import D2MessageIO
 import D2Utils
@@ -23,9 +24,10 @@ fileprivate let hasEmbed = Expression<Bool>("has_embed")
 fileprivate let markovTransitions = Table("markov_transitions")
 fileprivate let wordA = Expression<String>("word_a")
 fileprivate let wordB = Expression<String>("word_b")
-fileprivate let wordC = Expression<String>("word_c")
 fileprivate let followingWord = Expression<String>("following_word")
 fileprivate let occurrences = Expression<Int64>("occurrences")
+
+fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
     
 public class MessageDatabase {
     private let db: Connection
@@ -55,10 +57,9 @@ public class MessageDatabase {
         try db.run(markovTransitions.create(ifNotExists: true) {
             $0.column(wordA)
             $0.column(wordB)
-            $0.column(wordC)
             $0.column(followingWord)
             $0.column(occurrences)
-            $0.primaryKey(wordA, wordB, wordC, followingWord)
+            $0.primaryKey(wordA, wordB, followingWord)
         })
     }
     
@@ -104,27 +105,36 @@ public class MessageDatabase {
 
         if let text = text {
             let words = text.split(separator: " ").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            let order = 3
+            let order = 2
             
             if words.count > order {
-                for i in 0..<(words.count - order) {
-                    try db.run(markovTransitions.insert(
-                        or: .ignore,
-                        wordA <- words[i],
-                        wordB <- words[i + 1],
-                        wordC <- words[i + 2],
-                        followingWord <- words[i + order],
-                        occurrences <- 0
-                    ))
-                    try db.run(markovTransitions
-                        .filter(wordA == words[i] && wordB == words[i + 1] && wordC == words[i + 2])
-                        .update(occurrences++))
-                    count += 1
+                try db.transaction {
+                    for i in 0..<(words.count - order) {
+                        try db.run(markovTransitions.insert(
+                            or: .ignore,
+                            wordA <- words[i],
+                            wordB <- words[i + 1],
+                            followingWord <- words[i + order],
+                            occurrences <- 0
+                        ))
+                        try db.run(markovTransitions
+                            .filter(wordA == words[i] && wordB == words[i + 1])
+                            .update(occurrences++))
+                        count += 1
+                    }
                 }
             }
         } else {
-            for msg in try db.prepare(messages.select(messageId, content)) {
+            let msgCount = try db.scalar(messages.count)
+            let chunkSize = msgCount / 10
+
+            for (i, msg) in try db.prepare(messages.select(messageId, content)).enumerated() {
                 count += try generateMarkovTransitions(text: msg[content])
+                
+                if i % chunkSize == 0 {
+                    let progress = Double(i) / Double(msgCount)
+                    log.info("Markov transitions \(String(format: "%.2f", progress * 10))% completed...")
+                }
             }
         }
         
