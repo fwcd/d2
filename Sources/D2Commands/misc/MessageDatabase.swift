@@ -95,6 +95,10 @@ public class MessageDatabase: MarkovPredictor {
         return idValue
     }
     
+    private func convertBack(id: Int64) -> ID {
+        ID(String(id), clientName: "Unknown")
+    }
+
     @discardableResult
     public func generateMarkovTransitions(for message: Message) throws -> Int {
         try generateMarkovTransitions(text: message.content)
@@ -140,6 +144,18 @@ public class MessageDatabase: MarkovPredictor {
         }
         
         return count
+    }
+    
+    public func randomMessage() throws -> Message {
+        guard let row = try db.prepare(messages.order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
+            throw MessageDatabaseError.missingMessageData("No message data available to sample from")
+        }
+        // TODO: Author info, etc
+        // TODO: Timestamp deserialization doesn't work properly yet
+        return Message(
+            content: row[content],
+            id: convertBack(id: row[messageId])
+        )
     }
     
     public func randomMarkovWord() throws -> String {

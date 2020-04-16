@@ -43,7 +43,9 @@ public class MarkovCommand: StringCommand {
 		// }
 
 		do {
-			let initialState = try [messageDB.randomMarkovWord()] // TODO: Use proper initial distribution without sacrificing performance
+			// TODO: Use proper initial distribution without sacrificing performance
+			let sampleMessage = try messageDB.randomMessage()
+			let initialState = try [sampleMessage.content.split(separator: " ").map { String($0) }.first?.nilIfEmpty ?? messageDB.randomMarkovWord()] 
 			let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: initialState, maxLength: self.maxWords)
 			var result = [String]()
 			
