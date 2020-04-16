@@ -29,8 +29,9 @@ fileprivate let occurrences = Expression<Int64>("occurrences")
 
 fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
     
-public class MessageDatabase {
+public class MessageDatabase: MarkovPredictor {
     private let db: Connection
+    public let markovOrder = 2
     
     public init() throws {
         db = try Connection("local/messages.sqlite3")
@@ -105,15 +106,13 @@ public class MessageDatabase {
 
         if let text = text {
             let words = text.split(separator: " ").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            let order = 2
-            
-            if words.count > order {
-                for i in 0..<(words.count - order) {
+            if words.count > markovOrder {
+                for i in 0..<(words.count - markovOrder) {
                     try db.run(markovTransitions.insert(
                         or: .ignore,
                         wordA <- words[i],
                         wordB <- words[i + 1],
-                        followingWord <- words[i + order],
+                        followingWord <- words[i + markovOrder],
                         occurrences <- 0
                     ))
                     try db.run(markovTransitions
@@ -142,5 +141,36 @@ public class MessageDatabase {
         }
         
         return count
+    }
+    
+    public func randomMarkovState() throws -> [String] {
+        guard let row = try db.prepare(markovTransitions.select(wordA, wordB).order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
+            throw MessageDatabaseError.missingMarkovData("No Markov data available to sample from")
+        }
+        return [row[wordA], row[wordB]]
+    }
+    
+    public func predict(_ markovState: [String]) -> String? {
+        do {
+            let fullState: [String]
+
+            switch markovState.count {
+                case 0, 1:
+                    guard let state = try db.prepare(markovTransitions.select(markovState.first ?? wordA, wordB).limit(1)).makeIterator().next() else {
+                        throw MessageDatabaseError.missingMarkovData("Could not find initial state! This could either be due to missing Markov transitions or an unknown passed state.")
+                    }
+                    fullState = [state[wordA], state[wordB]]
+                case 2:
+                    fullState = markovState
+                default:
+                    throw MessageDatabaseError.invalidMarkovState("State \(markovState) has invalid length \(markovState.count)!")
+            }
+            
+            let row: Row? = try db.prepare(markovTransitions.select(fullState[0], fullState[1]).order(Expression<Int>.random()).limit(1)).makeIterator().next()
+            return row?[followingWord]
+        } catch {
+            log.warning("\(error)")
+            return nil
+        }
     }
 }

@@ -1,18 +1,18 @@
-/** A stateless transition table. */
-struct MarkovTransitionMatrix<T: Hashable> {
+/// A stateless, in-memory transition table.
+struct MarkovTransitionMatrix<T: Hashable>: MarkovPredictor {
 	private var values = [[T]: [T]]()
-	let order: Int
+	let markovOrder: Int
 	
 	init() {
-		order = 1
+		markovOrder = 1
 	}
 	
-	init<C: RandomAccessCollection>(fromElements elements: C, order: Int) where C.Element == T, C.Index == Int {
-		self.order = order
+	init<C: RandomAccessCollection>(fromElements elements: C, markovOrder: Int) where C.Element == T, C.Index == Int {
+		self.markovOrder = markovOrder
 		
-		for i in 0..<(elements.count - order) {
-			let key = Array(elements[i..<(i + order)])
-			let next = elements[i + order]
+		for i in 0..<(elements.count - markovOrder) {
+			let key = Array(elements[i..<(i + markovOrder)])
+			let next = elements[i + markovOrder]
 			
 			if values.keys.contains(key) {
 				values[key]!.append(next)

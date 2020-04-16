@@ -75,8 +75,8 @@ public class MarkovCommand: StringCommand {
 						return
 					}
 					
-					let matrix = MarkovTransitionMatrix(fromElements: words, order: self.order)
-					let stateMachine = MarkovStateMachine(matrix: matrix, startValue: startWord, maxLength: self.maxWords)
+					let matrix = MarkovTransitionMatrix(fromElements: words, markovOrder: self.order)
+					let stateMachine = MarkovStateMachine(predictor: matrix, initialState: [startWord], maxLength: self.maxWords)
 					var result = [Substring]()
 					
 					for word in stateMachine {
