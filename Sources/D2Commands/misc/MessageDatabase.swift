@@ -22,8 +22,7 @@ fileprivate let hasAttachments = Expression<Bool>("has_attachments")
 fileprivate let hasEmbed = Expression<Bool>("has_embed")
 
 fileprivate let markovTransitions = Table("markov_transitions")
-fileprivate let wordA = Expression<String>("word_a")
-fileprivate let wordB = Expression<String>("word_b")
+fileprivate let word = Expression<String>("word")
 fileprivate let followingWord = Expression<String>("following_word")
 fileprivate let occurrences = Expression<Int64>("occurrences")
 
@@ -33,7 +32,7 @@ public class MessageDatabase: MarkovPredictor {
     private let db: Connection
 
     public private(set) lazy var initialMarkovDistribution: CustomDiscreteDistribution<String>? = queryInitialMarkovDistribution()
-    public let markovOrder = 2
+    public let markovOrder = 1
     
     public init() throws {
         db = try Connection("local/messages.sqlite3")
@@ -58,11 +57,10 @@ public class MessageDatabase: MarkovPredictor {
             $0.column(hasEmbed)
         })
         try db.run(markovTransitions.create(ifNotExists: true) {
-            $0.column(wordA)
-            $0.column(wordB)
+            $0.column(word)
             $0.column(followingWord)
             $0.column(occurrences)
-            $0.primaryKey(wordA, wordB, followingWord)
+            $0.primaryKey(word, followingWord)
         })
     }
     
@@ -112,13 +110,12 @@ public class MessageDatabase: MarkovPredictor {
                 for i in 0..<(words.count - markovOrder) {
                     try db.run(markovTransitions.insert(
                         or: .ignore,
-                        wordA <- words[i],
-                        wordB <- words[i + 1],
+                        word <- words[i],
                         followingWord <- words[i + markovOrder],
                         occurrences <- 0
                     ))
                     try db.run(markovTransitions
-                        .filter(wordA == words[i] && wordB == words[i + 1])
+                        .filter(word == words[i])
                         .update(occurrences++))
                     count += 1
                 }
@@ -145,19 +142,19 @@ public class MessageDatabase: MarkovPredictor {
         return count
     }
     
-    public func randomMarkovState() throws -> [String] {
-        guard let row = try db.prepare(markovTransitions.select(wordA, wordB).order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
+    public func randomMarkovWord() throws -> String {
+        guard let row = try db.prepare(markovTransitions.select(word).order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
             throw MessageDatabaseError.missingMarkovData("No Markov data available to sample from")
         }
-        return [row[wordA], row[wordB]]
+        return row[word]
     }
     
-    private func queryInitialMarkovDistribution() -> (CustomDiscreteDistribution<String>)? {
+    public func queryInitialMarkovDistribution() -> (CustomDiscreteDistribution<String>)? {
         do {
-            let total = occurrences.sum
-            let results = try db.prepare(markovTransitions.select(wordA, total).group(wordA).order(total.desc).limit(300))
-                .map { ($0[wordA], $0[total] ?? 0) }
-            print(results)
+            let results = try db.prepare(markovTransitions.select(word, occurrences).order(occurrences.desc).limit(300))
+                .map { ($0[word], $0[occurrences]) }
+            log.info("Created initial distribution of size \(results.count)")
+            guard !results.isEmpty else { return nil }
             return CustomDiscreteDistribution(normalizing: results)
         } catch {
             log.error("\(error)")
@@ -167,26 +164,11 @@ public class MessageDatabase: MarkovPredictor {
     
     public func predict(_ markovState: [String]) -> String? {
         do {
-            let fullState: [String]
-
-            switch markovState.count {
-                case 0, 1:
-                    var query = markovTransitions.select(wordA, wordB)
-                    if let first = markovState.first {
-                        query = query.where(wordA == first)
-                    }
-                    guard let state = try db.prepare(query.limit(1)).makeIterator().next() else {
-                        throw MessageDatabaseError.missingMarkovData("Could not find initial state! This could either be due to missing Markov transitions or an unknown passed state.")
-                    }
-                    fullState = [state[wordA], state[wordB]]
-                case 2:
-                    fullState = markovState
-                default:
-                    throw MessageDatabaseError.invalidMarkovState("State \(markovState) has invalid length \(markovState.count)!")
+            guard markovState.count == 1, let stateWord = markovState.first else {
+                throw MessageDatabaseError.invalidMarkovState("State \(markovState) has invalid length \(markovState.count)!")
             }
-            
             let followerQuery = markovTransitions.select(followingWord, occurrences)
-                .where(wordA == fullState[0] && wordB == fullState[1])
+                .where(word == stateWord)
                 .limit(50)
             let candidates = try db.prepare(followerQuery).map { ($0[followingWord], $0[occurrences]) }
             return candidates.nilIfEmpty.map {
