@@ -166,7 +166,7 @@ public class MessageDatabase: MarkovPredictor {
                     throw MessageDatabaseError.invalidMarkovState("State \(markovState) has invalid length \(markovState.count)!")
             }
             
-            let row: Row? = try db.prepare(markovTransitions.select(fullState[0], fullState[1]).order(Expression<Int>.random()).limit(1)).makeIterator().next()
+            let row: Row? = try db.prepare(markovTransitions.select(fullState[0], fullState[1], followingWord).order(Expression<Int>.random()).limit(1)).makeIterator().next()
             return row?[followingWord]
         } catch {
             log.warning("\(error)")

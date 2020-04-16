@@ -125,7 +125,7 @@ public class D2Delegate: MessageDelegate {
 		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
 		registry["shell"] = ShellCommand()
 		registry["upload"] = UploadCommand()
-		registry["markov"] = MarkovCommand()
+		registry["markov"] = MarkovCommand(messageDB: messageDB)
 		registry["watch"] = WatchCommand()
 		registry["poll"] = PollCommand()
 		registry["concat"] = ConcatCommand()
