@@ -7,10 +7,10 @@ fileprivate let log = Logger(label: "D2Utils.Shell")
 public struct Shell {
 	public init() {}
 	
-	public func newProcess(_ executable: String, in directory: URL? = nil, args: [String]? = nil, withPipedOutput: Bool = false, then: ((Process) -> Void)? = nil) -> (Pipe?, Process) {
+	public func newProcess(_ executable: String, in directory: URL? = nil, args: [String]? = nil, useBash: Bool = false, withPipedOutput: Bool = false, then: ((Process) -> Void)? = nil) -> (Pipe?, Process) {
 		var pipe: Pipe? = nil
 		let process = Process()
-		let path = findPath(of: executable)
+		let path = useBash ? "/bin/bash" : findPath(of: executable)
 		
 		setExecutable(for: process, toPath: path)
 		
@@ -18,7 +18,7 @@ public struct Shell {
 			setCurrentDirectory(for: process, toURL: dirURL)
 		}
 		
-		process.arguments = args
+		process.arguments = (useBash ? ["-c", executable] : []) + (args ?? [])
 		process.terminationHandler = then
 		
 		if withPipedOutput {
@@ -31,8 +31,8 @@ public struct Shell {
 	
 	/** Synchronously runs the executable and returns the standard output. */
 	@discardableResult
-	public func outputSync(for executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws -> String? {
-		let (pipe, process) = newProcess(executable, in: directory, args: args, withPipedOutput: true, then: then)
+	public func outputSync(for executable: String, in directory: URL? = nil, args: [String]? = nil, useBash: Bool = false, then: ((Process) -> Void)? = nil) throws -> String? {
+		let (pipe, process) = newProcess(executable, in: directory, args: args, useBash: useBash, withPipedOutput: true, then: then)
 		
 		try execute(process: process)
 		process.waitUntilExit()
@@ -40,8 +40,8 @@ public struct Shell {
 		return String(data: pipe!.fileHandleForReading.availableData, encoding: .utf8)
 	}
 	
-	public func run(_ executable: String, in directory: URL? = nil, args: [String]? = nil, then: ((Process) -> Void)? = nil) throws {
-		try execute(process: newProcess(executable, in: directory, args: args, then: then).1)
+	public func run(_ executable: String, in directory: URL? = nil, args: [String]? = nil, useBash: Bool = false, then: ((Process) -> Void)? = nil) throws {
+		try execute(process: newProcess(executable, in: directory, args: args, useBash: useBash, then: then).1)
 	}
 	
 	public func findPath(of executable: String) -> String {
