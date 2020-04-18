@@ -19,6 +19,7 @@ public class ConversateCommand: StringCommand {
     }
     
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+        guard context.author?.id != context.client?.me?.id else { return }
         if content == "stop" {
             context.unsubscribeFromChannel()
             output.append("Unsubscribed from this channel.")
