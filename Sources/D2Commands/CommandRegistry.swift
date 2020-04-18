@@ -29,7 +29,7 @@ public class CommandRegistry: Sequence {
 		}
 	}
 	
-	public subscript(_ name: String, aliases aliases: [String]) -> Command? {
+	public subscript(_ name: String, aka aliases: [String]) -> Command? {
 		get { entries[resolve(name)]?.asCommand }
 		set {
 			// TODO: Support unregistration by correctly removing aliases
@@ -43,8 +43,8 @@ public class CommandRegistry: Sequence {
 	}
 	
 	public subscript(_ name: String) -> Command? {
-		get { self[name, aliases: []] }
-		set { self[name, aliases: []] = newValue }
+		get { self[name, aka: []] }
+		set { self[name, aka: []] = newValue }
 	}
 	
 	public struct CommandWithAlias {

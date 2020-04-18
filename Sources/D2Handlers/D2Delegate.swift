@@ -119,7 +119,8 @@ public class D2Delegate: MessageDelegate {
 		registry["pokemon"] = PokemonCommand(inventoryManager: inventoryManager)
 		registry["pokedex"] = PokedexCommand()
 		registry["pokequiz"] = PokeQuizCommand()
-		registry["chucknorrisjoke"] = ChuckNorrisJokeCommand()
+		registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
+		registry["wouldyourather", aka: ["wyr"]] = WouldYouRatherCommand()
 		registry["random"] = RandomCommand(permissionManager: permissionManager)
 		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
@@ -143,7 +144,7 @@ public class D2Delegate: MessageDelegate {
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()
 		registry["ioplatform"] = IOPlatformCommand()
-		registry["help"] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
+		registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
 	public func on(connect connected: Bool, client: MessageClient) {
