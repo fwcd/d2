@@ -178,6 +178,30 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
     
+    public func followUps(to suffix: String) throws -> [String] {
+        // TODO: Use a typed query once they support subqueries properly
+
+        // let m1 = messages.alias("m1")
+        // let m2 = messages.alias("m2")
+        // let one: Expression<Int> = .init(literal: "1")
+        // let query = m1
+        //     .join(m2, on: one == one) // Hack to get a pure cross product
+        //     .filter(m1[content].like("%\(suffix)") && messages.select(timestamp.min).filter(timestamp > m1[timestamp] && m2[timestamp] == timestamp).exists)
+        //     .order(Expression<Int>.random())
+        //     .limit(10)
+        
+        let stmt = try db.prepare("""
+            select m2.content
+            from messages as m1, messages as m2
+            where m1.content like "%?"
+              and m2.timestamp == (select min(timestamp) from messages where timestamp > m1.timestamp)
+            order by random()
+            limit 10
+            """, suffix)
+        
+        return stmt.compactMap { $0[0] as? String }
+    }
+    
     public func predict(_ markovState: [String]) -> String? {
         do {
             guard markovState.count == 1, let stateWord = markovState.first else {
