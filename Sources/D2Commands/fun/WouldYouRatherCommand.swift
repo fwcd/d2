@@ -9,8 +9,8 @@ public class WouldYouRatherCommand: StringCommand {
         shortDescription: "Asks an either/or question",
         requiredPermissionLevel: .basic
     )
-    private let emojiA = ":a:"
-    private let emojiB = ":regional_indicator_b:"
+    private let emojiA = "🅰"
+    private let emojiB = "🅱"
     
     public init() {}
     
@@ -25,6 +25,7 @@ public class WouldYouRatherCommand: StringCommand {
                         \(self.emojiB) \(wyr.choiceb)
                         """,
                     url: wyr.link.flatMap(URL.init(string:)),
+                    color: 0x440080,
                     footer: Embed.Footer(text: "\(wyr.votes ?? 0) \("vote".pluralize(with: wyr.votes ?? 0)) - Tags: \(wyr.tags ?? "none")")
                 ))
             } catch {
