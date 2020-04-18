@@ -26,7 +26,7 @@ public class WouldYouRatherCommand: StringCommand {
                         """,
                     url: wyr.link.flatMap(URL.init(string:)),
                     color: 0x440080,
-                    footer: Embed.Footer(text: "\(wyr.votes ?? 0) \("vote".pluralize(with: wyr.votes ?? 0)) - Tags: \(wyr.tags ?? "none")")
+                    footer: Embed.Footer(text: "\(wyr.votes ?? 0) \("vote".pluralize(with: wyr.votes ?? 0))")
                 ))
             } catch {
                 output.append(error, errorText: "Could not fetch question.")
