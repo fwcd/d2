@@ -15,15 +15,17 @@ public class ConversateCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         context.subscribeToChannel()
+        output.append("Subscribed to this channel. Type anything to talk to me.")
     }
     
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         if content == "stop" {
             context.unsubscribeFromChannel()
+            output.append("Unsubscribed from this channel.")
         } else {
             guard let last = content.split(separator: " ").last.map({ String($0) })?.nilIfEmpty else { return }
             do {
-                let initialWord = try messageDB.followUps(to: last).first.map { String($0) }?.nilIfEmpty ?? messageDB.randomMarkovWord()
+                let initialWord = try messageDB.followUps(to: last).first?.split(separator: " ").first.map { String($0) }?.nilIfEmpty ?? messageDB.randomMarkovWord()
                 let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: [initialWord], maxLength: self.maxWords)
                 var result = [String]()
                 

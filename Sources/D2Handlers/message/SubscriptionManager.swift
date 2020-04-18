@@ -2,8 +2,13 @@ import D2MessageIO
 import D2Commands
 
 public class SubscriptionManager {
+    private let registry: CommandRegistry
     private var subscriptionSets: [String: SubscriptionSet] = [:]
     public var isEmpty: Bool { subscriptionSets.isEmpty }
+    
+    init(registry: CommandRegistry) {
+        self.registry = registry
+    }
     
     public func createIfNotExistsAndGetSubscriptionSet(for commandName: String) -> SubscriptionSet {
         var subscriptionSet = subscriptionSets[commandName]
@@ -19,9 +24,9 @@ public class SubscriptionManager {
     }
     
     public func notifySubscriptions(on channel: ChannelID, isBot: Bool, action: (String, SubscriptionSet) -> Void) {
-        guard !isBot else { return } // TODO: Respect the command's userOnly setting here for more fine-grained bot filtering
         for (commandName, subscriptionSet) in subscriptionSets {
-            if subscriptionSet.contains(channel) {
+            let allowed = !isBot || !(registry[commandName]?.info.userOnly ?? true)
+            if allowed && subscriptionSet.contains(channel) {
                 action(commandName, subscriptionSet)
             }
         }

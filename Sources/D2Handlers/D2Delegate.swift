@@ -21,7 +21,7 @@ public class D2Delegate: MessageDelegate {
 		registry = CommandRegistry()
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
-		let subscriptionManager = SubscriptionManager()
+		let subscriptionManager = SubscriptionManager(registry: registry)
 		let inventoryManager = InventoryManager()
 		let messageDB = try MessageDatabase()
 		try messageDB.setupTables()
