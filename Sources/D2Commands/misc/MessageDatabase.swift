@@ -193,11 +193,11 @@ public class MessageDatabase: MarkovPredictor {
         let stmt = try db.prepare("""
             select m2.content
             from messages as m1, messages as m2
-            where m1.content like "%?"
+            where m1.content like ?
               and m2.timestamp == (select min(timestamp) from messages where timestamp > m1.timestamp)
             order by random()
             limit 10
-            """, suffix)
+            """, "%\(suffix)")
         
         return stmt.compactMap { $0[0] as? String }
     }
