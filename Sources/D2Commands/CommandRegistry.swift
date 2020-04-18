@@ -5,9 +5,14 @@ public class CommandRegistry: Sequence {
 	
 	public init() {}
 	
-	public subscript(name: String) -> Command? {
-		get { return commands[name] }
-		set(newValue) { commands[name] = newValue }
+	public subscript(_ name: String, aliases: [String] = []) -> Command? {
+		get { commands[name] ?? aliases.compactMap { commands[$0] }.first }
+		set(newValue) {
+			commands[name] = newValue
+			for alias in aliases {
+				commands[alias] = newValue
+			}
+		}
 	}
 	
 	public func makeIterator() -> Dictionary<String, Command>.Iterator {
