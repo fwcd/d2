@@ -95,7 +95,13 @@ public class CommandHandler: MessageHandler {
 					let sinkCommand = pipeSink.command
 					pipeSink.output = MessageIOOutput(client: client, defaultTextChannelId: channelId) { sentMessage, _ in
 						if let sent = sentMessage {
-							sinkCommand.onSuccessfullySent(message: sent)
+							sinkCommand.onSuccessfullySent(context: CommandContext(
+								client: client,
+								registry: self.registry,
+								message: sent,
+								commandPrefix: self.commandPrefix,
+								subscriptions: pipeSink.context.subscriptions
+							))
 						}
 					}
 				}

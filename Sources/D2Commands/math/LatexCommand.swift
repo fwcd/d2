@@ -50,7 +50,7 @@ public class LatexCommand: StringCommand {
 		}
 	}
 	
-	public func onSuccessfullySent(message: Message) {
+	public func onSuccessfullySent(context: CommandContext) {
 		latexRenderer?.cleanUp()
 	}
 }

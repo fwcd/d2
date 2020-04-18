@@ -85,7 +85,8 @@ public class ClearCommand: StringCommand {
         context.unsubscribeFromChannel()
     }
     
-    public func onSuccessfullySent(message: Message) {
+    public func onSuccessfullySent(context: CommandContext) {
+        let message = context.message
         log.debug("Successfully sent \(message)")
         guard let channelId = message.channelId else {
             log.warning("No channel ID for message after being sent. This is most likely a bug.")

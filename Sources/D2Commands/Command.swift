@@ -9,7 +9,7 @@ public protocol Command: class {
 	
 	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
-	func onSuccessfullySent(message: Message)
+	func onSuccessfullySent(context: CommandContext)
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
 
@@ -22,7 +22,7 @@ extension Command {
 	public var inputValueType: RichValueType { .unknown }
 	public var outputValueType: RichValueType { .unknown }
 	
-	public func onSuccessfullySent(message: Message) {}
+	public func onSuccessfullySent(context: CommandContext) {}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
 	

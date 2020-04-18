@@ -59,7 +59,7 @@ public class AutoLatexCommand: StringCommand {
         return textPattern.replace(in: content, with: "\\\\text{$0}")
     }
     
-    public func onSuccessfullySent(message: Message) {
+    public func onSuccessfullySent(context: CommandContext) {
         latexRenderer?.cleanUp()
     }
 }
