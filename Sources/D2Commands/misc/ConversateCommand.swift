@@ -34,8 +34,6 @@ public class ConversateCommand: StringCommand {
                     let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, content)) }
                     let distribution = CustomDiscreteDistribution(normalizing: candidates)
                     output.append(distribution.sample())
-                } else {
-                    output.append("Sorry, I don't know what you mean!")
                 }
             } catch {
                 output.append(error, errorText: "Could not query message DB")
