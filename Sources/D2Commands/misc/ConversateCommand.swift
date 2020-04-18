@@ -1,3 +1,5 @@
+import D2Utils
+
 public class ConversateCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
@@ -24,20 +26,29 @@ public class ConversateCommand: StringCommand {
             context.unsubscribeFromChannel()
             output.append("Unsubscribed from this channel.")
         } else {
-            guard let last = content.split(separator: " ").last.map({ String($0) })?.nilIfEmpty else { return }
             do {
-                let initialWord = try messageDB.followUps(to: last).first?.split(separator: " ").first.map { String($0) }?.nilIfEmpty ?? messageDB.randomMarkovWord()
-                let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: [initialWord], maxLength: self.maxWords)
-                var result = [String]()
+                guard let last = content.split(separator: " ").last.map({ String($0) })?.nilIfEmpty else { return }
+                let followUps = try messageDB.followUps(to: last)
                 
-                for word in stateMachine {
-                    result.append(word)
+                if !followUps.isEmpty {
+                    let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, content)) }
+                    let distribution = CustomDiscreteDistribution(normalizing: candidates)
+                    output.append(distribution.sample())
+                } else {
+                    output.append("Sorry, I don't know what you mean!")
                 }
-                
-                output.append(result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results")
             } catch {
                 output.append(error, errorText: "Could not query message DB")
             }
         }
+    }
+    
+    private func matchingSuffixLength(_ lhs: String, _ rhs: String) -> Int {
+        var i = 0
+        var iterator = zip(lhs.reversed(), rhs.reversed()).makeIterator()
+        while let (l, r) = iterator.next(), l == r {
+            i += 1
+        }
+        return i
     }
 }

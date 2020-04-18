@@ -178,7 +178,7 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
     
-    public func followUps(to suffix: String) throws -> [String] {
+    public func followUps(to suffix: String) throws -> [(String, String)] {
         // TODO: Use a typed query once they support subqueries properly
 
         // let m1 = messages.alias("m1")
@@ -191,7 +191,7 @@ public class MessageDatabase: MarkovPredictor {
         //     .limit(10)
         
         let stmt = try db.prepare("""
-            select m2.content
+            select m1.content, m2.content
             from messages as m1, messages as m2
             where m1.content like ?
               and m2.timestamp == (select min(timestamp) from messages where timestamp > m1.timestamp)
@@ -199,7 +199,7 @@ public class MessageDatabase: MarkovPredictor {
             limit 10
             """, "%\(suffix)")
         
-        return stmt.compactMap { $0[0] as? String }
+        return stmt.compactMap { row in (row[0] as? String).flatMap { l in (row[1] as? String).map { r in (l, r) } } }
     }
     
     public func predict(_ markovState: [String]) -> String? {
