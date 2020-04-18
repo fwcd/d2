@@ -121,6 +121,7 @@ public class D2Delegate: MessageDelegate {
 		registry["pokequiz"] = PokeQuizCommand()
 		registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
 		registry["wouldyourather", aka: ["wyr"]] = WouldYouRatherCommand()
+		registry["advice"] = AdviceCommand()
 		registry["random"] = RandomCommand(permissionManager: permissionManager)
 		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
