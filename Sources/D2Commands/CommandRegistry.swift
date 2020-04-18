@@ -55,10 +55,10 @@ public class CommandRegistry: Sequence {
 	
 	public func commandsWithAliases() -> [CommandWithAlias] {
 		let dict = Dictionary(grouping: entries, by: { resolve($0.0) })
-		return dict.map { CommandWithAlias(
-			name: $0.0,
-			aliases: $0.1.map { $0.0 },
-			command: $0.1.compactMap { $0.1.asCommand }.first! // Dict cannot contain aliases that point to no command
+		return dict.map { (name, ents) in CommandWithAlias(
+			name: name,
+			aliases: ents.map { $0.0 }.filter { name != $0 },
+			command: ents.compactMap { $0.1.asCommand }.first! // Dict cannot contain aliases that point to no command
 		) }
 	}
 	
