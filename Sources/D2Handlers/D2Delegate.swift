@@ -151,8 +151,10 @@ public class D2Delegate: MessageDelegate {
 	}
 	
 	public func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
-		for (_, command) in registry {
-			command.onReceivedUpdated(presence: presence)
+		for (_, entry) in registry {
+			if case let .command(command) = entry {
+				command.onReceivedUpdated(presence: presence)
+			}
 		}
 	}
 	

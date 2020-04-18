@@ -35,14 +35,15 @@ public class HelpCommand: StringCommand {
 	}
 	
 	private func generalHelpEmbed(context: CommandContext) -> Embed {
+		let commands = context.registry.commandsWithAliases()
 		return Embed(
 			title: ":question: Available Commands",
 			fields: CommandCategory.allCases
 				.map { category in Embed.Field(
 					name: "\(category)",
-					value: context.registry
-						.filter { $0.value.info.category == category }
-						.map { "`\(commandPrefix)\($0.key)`" }
+					value: commands
+						.filter { $0.command.info.category == category }
+						.map { "`\(commandPrefix)\($0.name)`" }
 						.joined(separator: ", ")
 						+ " (Type `\(commandPrefix)help \(category.rawValue)` for details)"
 				) }
@@ -53,16 +54,17 @@ public class HelpCommand: StringCommand {
 		guard let author = context.author else {
 			return Embed(title: "Message has no author!") // HACK
 		}
-		let helpGroups = Dictionary(grouping: context.registry.filter { !$0.value.info.hidden && $0.value.info.category == category }, by: { $0.value.info.requiredPermissionLevel })
+		let commands = context.registry.commandsWithAliases()
+		let helpGroups = Dictionary(grouping: commands.filter { !$0.command.info.hidden && $0.command.info.category == category }, by: { $0.command.info.requiredPermissionLevel })
 			.filter { permissionManager[author].rawValue >= $0.key.rawValue }
 			.sorted { $0.key.rawValue < $1.key.rawValue }
 		let helpFields = helpGroups
-			.flatMap { (group: (key: PermissionLevel, value: [(key: String, value: Command)])) -> [Embed.Field] in
+			.flatMap { (group: (key: PermissionLevel, value: [CommandRegistry.CommandWithAlias])) -> [Embed.Field] in
 				let splitGroups = group.value
-					.sorted { $0.key < $1.key }
+					.sorted { $0.name < $1.name }
 					.map { """
-						**\(commandPrefix)\($0.key)**: `\($0.value.inputValueType) -> \($0.value.outputValueType)`
-						    \($0.value.info.shortDescription)
+						**\(commandPrefix)\($0.name)**\($0.aliases.nilIfEmpty.map { " (aka. \($0.joined(separator: ", ")))" } ?? ""): `\($0.command.inputValueType) -> \($0.command.outputValueType)`
+						    \($0.command.info.shortDescription)
 						
 						""" }
 					.chunks(ofLength: 14)

@@ -17,7 +17,7 @@ public class RandomCommand: Command {
             output.append(errorText: "No author is present!")
             return
         }
-        let commands = context.registry.map { $0.1 }.filter { permissionManager[author] >= $0.info.requiredPermissionLevel }
+        let commands = context.registry.compactMap { $0.1.asCommand }.filter { permissionManager[author] >= $0.info.requiredPermissionLevel }
         guard let command = commands.randomElement() else {
             output.append(errorText: "No (permitted) commands found!")
             return
