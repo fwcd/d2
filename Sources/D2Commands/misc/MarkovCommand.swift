@@ -53,7 +53,7 @@ public class MarkovCommand: StringCommand {
 			var formattedResult = result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results"
 
 			if !flags.contains("withpings") {
-				formattedResult = formattedResult.resolvingMentions(with: context.guild)
+				formattedResult = formattedResult.cleaningMentions(with: context.guild)
 			}
 
 			output.append(formattedResult)

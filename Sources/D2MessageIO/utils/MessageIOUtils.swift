@@ -34,7 +34,7 @@ extension Guild.Member {
 fileprivate let mentionPattern = try! Regex(from: "<@(\\d+)>")
 
 extension String {
-	public func resolvingMentions(with guild: Guild? = nil) -> String {
+	public func cleaningMentions(with guild: Guild? = nil) -> String {
 		mentionPattern.replace(in: self, using: { guild?.members[ID($0[1], clientName: "dummy")]?.displayName ?? $0[1] } )
 	}
 }
@@ -47,7 +47,7 @@ extension Message {
 			return mentions + (guild?.users(with: mentionRoles) ?? [])
 		}
 	}
-	public var cleanContent: String { content.resolvingMentions(with: guild) }
+	public var cleanContent: String { content.cleaningMentions(with: guild) }
 }
 
 extension Message.Attachment {

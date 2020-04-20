@@ -36,7 +36,7 @@ public class ConversateCommand: StringCommand {
                 if !followUps.isEmpty {
                     let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, content)) }
                     let distribution = CustomDiscreteDistribution(normalizing: candidates)
-                    output.append(distribution.sample().resolvingMentions(with: context.guild))
+                    output.append(distribution.sample().cleaningMentions(with: context.guild))
                 }
             } catch {
                 output.append(error, errorText: "Could not query message DB")
