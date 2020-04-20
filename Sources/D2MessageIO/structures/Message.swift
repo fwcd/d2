@@ -1,4 +1,7 @@
 import Foundation
+import D2Utils
+
+fileprivate let mentionPattern = try! Regex(from: "<@(\\d+)>")
 
 public struct Message: ExpressibleByStringLiteral {
 	public let content: String
@@ -25,7 +28,8 @@ public struct Message: ExpressibleByStringLiteral {
 	public let guild: Guild?
 	public let guildMember: Guild.Member?
 	
-	public var embed: Embed? { return embeds.first }
+	public var embed: Embed? { embeds.first }
+	public var cleanContent: String { mentionPattern.replace(in: content, using: { guild?.members[ID($0[1], clientName: "dummy")]?.user.username ?? $0[1] } ) }
 	
 	/** Pure-string initializer without argument label for convenience. */
 	public init(_ content: String = "") {
