@@ -37,8 +37,8 @@ extension String {
 	public func cleaningMentions(with guild: Guild? = nil) -> String {
 		mentionPattern.replace(in: self, using: {
 			// TODO: This currently assumes Discord IDs
-			let member = guild?.members[ID($0[1], clientName: "Discord")] 
-			return member?.displayName ?? $0[1]
+			let id = ID($0[1], clientName: "Discord")
+			return guild?.members[id]?.displayName ?? guild?.roles[id]?.name ?? $0[1]
 		} )
 	}
 }
