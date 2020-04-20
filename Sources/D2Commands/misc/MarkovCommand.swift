@@ -12,7 +12,7 @@ public class MarkovCommand: StringCommand {
 		category: .misc,
 		shortDescription: "Generates a natural language response using a Markov chain",
 		longDescription: "Uses a Markov chain with data from the current channel to generate a human-like response",
-		helpText: "Syntax: markov [--all]? [--noping]? [@user]?",
+		helpText: "Syntax: markov [--all]? [--withping]?",
 		requiredPermissionLevel: .basic
 	)
 	private let messageDB: MessageDatabase
@@ -35,17 +35,14 @@ public class MarkovCommand: StringCommand {
 		// TODO: Filter guild ID in messages
 		
 		let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
-		
-		// TODO: Re-implement noping
+		let cleanedInput = flagPattern.replace(in: input, with: "")
 
-		// if flags.contains("noping") {
-		// 	words = words.map { pingPattern.replace(in: String($0), with: ":ping_pong:")[...] }
-		// }
+		
 
 		do {
 			// TODO: Use proper initial distribution without sacrificing performance
 			let sampleMessage = try messageDB.randomMessage()
-			let initialWord = try input ?? sampleMessage.content.split(separator: " ").map { String($0) }.first?.nilIfEmpty ?? messageDB.randomMarkovWord()
+			let initialWord = try cleanedInput ?? sampleMessage.content.split(separator: " ").map { String($0) }.first?.nilIfEmpty ?? messageDB.randomMarkovWord()
 			let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: [initialWord], maxLength: self.maxWords)
 			var result = [String]()
 			
@@ -53,7 +50,13 @@ public class MarkovCommand: StringCommand {
 				result.append(word)
 			}
 			
-			output.append(result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results")
+			var formattedResult = result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results"
+
+			if !flags.contains("withpings") {
+				formattedResult = formattedResult.resolvingMentions(with: context.guild)
+			}
+
+			output.append(formattedResult)
 		} catch {
 			output.append(error, errorText: "Could not generate Markov text")
 		}

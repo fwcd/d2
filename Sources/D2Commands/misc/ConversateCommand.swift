@@ -27,13 +27,16 @@ public class ConversateCommand: StringCommand {
             output.append("Unsubscribed from this channel.")
         } else {
             do {
-                guard let last = content.split(separator: " ").last.map({ String($0) })?.nilIfEmpty else { return }
+                guard let last = content
+                    .split(separator: " ")
+                    .last
+                    .map({ String($0) })?.nilIfEmpty else { return }
                 let followUps = try messageDB.followUps(to: last)
                 
                 if !followUps.isEmpty {
                     let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, content)) }
                     let distribution = CustomDiscreteDistribution(normalizing: candidates)
-                    output.append(distribution.sample())
+                    output.append(distribution.sample().resolvingMentions(with: context.guild))
                 }
             } catch {
                 output.append(error, errorText: "Could not query message DB")
