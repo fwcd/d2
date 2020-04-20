@@ -164,7 +164,8 @@ public class CommandHandler: MessageHandler {
 				} else {
 					log.notice("Did not recognize command '\(name)'")
 					if !isBot {
-						client.sendMessage("Sorry, I do not know the command `\(name)`.", to: channelId)
+						let alternative = registry.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
+						client.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
 					}
 					return nil
 				}
