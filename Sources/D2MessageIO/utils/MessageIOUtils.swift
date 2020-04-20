@@ -31,11 +31,15 @@ extension Guild.Member {
 	public var displayName: String { nick ?? user.username }
 }
 
-fileprivate let mentionPattern = try! Regex(from: "<@(\\d+)>")
+fileprivate let mentionPattern = try! Regex(from: "<@[&!]+(\\d+)>")
 
 extension String {
 	public func cleaningMentions(with guild: Guild? = nil) -> String {
-		mentionPattern.replace(in: self, using: { guild?.members[ID($0[1], clientName: "dummy")]?.displayName ?? $0[1] } )
+		mentionPattern.replace(in: self, using: {
+			// TODO: This currently assumes Discord IDs
+			let member = guild?.members[ID($0[1], clientName: "Discord")] 
+			return member?.displayName ?? $0[1]
+		} )
 	}
 }
 
