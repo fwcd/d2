@@ -1,3 +1,5 @@
+import D2MessageIO
+
 public class EmojiCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
@@ -12,14 +14,23 @@ public class EmojiCommand: StringCommand {
             output.append(errorText: "Not in a guild!")
             return
         }
-        guard let (_, emoji) = guild.emojis.first(where: { $0.1.name == input }) else {
-            output.append(errorText: "Could not find emoji with name `\(input)`")
+        let formatted = input.split(separator: " ").map { formatEmoji(name: String($0), in: guild) }.joined()
+        guard !formatted.isEmpty else {
+            output.append(errorText: "Please enter one or more emoji names!")
             return
         }
-        if let id = emoji.id {
-            output.append("<\(emoji.animated ? "a" : ""):\(emoji.name):\(id)>")
+        output.append(formatted)
+   }
+   
+   private func formatEmoji(name: String, in guild: Guild) -> String {
+       if let (_, emoji) = guild.emojis.first(where: { $0.1.name == name }) {
+            if let id = emoji.id {
+                return "<\(emoji.animated ? "a" : ""):\(emoji.name):\(id)>"
+            } else {
+                return emoji.name
+            }
         } else {
-            output.append(emoji.name)
+            return ":\(name):"
         }
-    }
+   }
 }
