@@ -183,10 +183,10 @@
       },
       {
         "package": "SwiftDiscord",
-        "repositoryURL": "https://github.com/nuclearace/SwiftDiscord.git",
+        "repositoryURL": "https://github.com/fwcd/SwiftDiscord.git",
         "state": {
           "branch": null,
-          "revision": "f8db5d698a3960f3cc1cedd29342357d0bfeccd6",
+          "revision": "f826f9bbd3e311079730aee7b088bc82eb252711",
           "version": null
         }
       },

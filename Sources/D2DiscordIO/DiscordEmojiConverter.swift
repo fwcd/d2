@@ -8,6 +8,7 @@ extension DiscordEmoji: MessageIOConvertible {
 		return Emoji(
 			id: id?.usingMessageIO,
 			managed: managed,
+			animated: animated,
 			name: name,
 			requireColons: requireColons,
 			roles: roles.map { $0.usingMessageIO }

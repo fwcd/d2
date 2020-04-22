@@ -17,7 +17,7 @@ public class EmojiCommand: StringCommand {
             return
         }
         if let id = emoji.id {
-            output.append("<:\(emoji.name):\(id)>")
+            output.append("<\(emoji.animated ? "a" : ""):\(emoji.name):\(id)>")
         } else {
             output.append(emoji.name)
         }
