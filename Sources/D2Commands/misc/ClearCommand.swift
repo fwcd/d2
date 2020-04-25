@@ -14,7 +14,12 @@ public class ClearCommand: StringCommand {
     )
     private let minDeletableCount: Int
     private let maxDeletableCount: Int
-    private var messagesToBeDeleted: [ChannelID: [Message]] = [:]
+    private var preparedDeletions: [ChannelID: [Deletion]] = [:]
+
+    private struct Deletion {
+        let message: Message
+        let isIntended: Bool // Whether this was NOT a confirmational message during the deletion process
+    }
     
     public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80) {
         self.minDeletableCount = minDeletableCount
@@ -36,11 +41,14 @@ public class ClearCommand: StringCommand {
         }
 
         client.getMessages(for: channelId, limit: n + 1) { messages, _ in
-            self.messagesToBeDeleted[channelId] = messages
-            let grouped = Dictionary(grouping: messages, by: { $0.author?.username ?? "<unnamed>" })
+            let deletions = messages.map { Deletion(message: $0, isIntended: $0.id != context.message.id) }
+            let intended = deletions.filter { $0.isIntended }.map { $0.message }
+
+            self.preparedDeletions[channelId] = deletions
+            let grouped = Dictionary(grouping: intended, by: { $0.author?.username ?? "<unnamed>" })
 
             output.append(Embed(
-                title: ":warning: You are about to DELETE \(messages.count) \("message".pluralize(with: messages.count))",
+                title: ":warning: You are about to DELETE \(intended.count) \("message".pluralize(with: intended.count))",
                 description: """
                     \(grouped.map { "\($0.1.count) \("message".pluralize(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
                     
@@ -52,11 +60,13 @@ public class ClearCommand: StringCommand {
     }
     
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
-        if let client = context.client, let channel = context.channel, let messages = messagesToBeDeleted[channel.id].map({ $0 + [context.message] }) {
-            messagesToBeDeleted[channel.id] = nil
+        if let client = context.client, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
+            let intendedDeletionCount = deletions.filter { $0.isIntended }.count
+            let confirmationDeletionCount = deletions.count - intendedDeletionCount
+            preparedDeletions[channel.id] = nil
             if content == confirmationString {
-                log.notice("Deleting \(messages.count) \("message".pluralize(with: messages.count))")
-                if messages.count == 1, let messageId = messages.first?.id {
+                log.notice("Deleting \(intendedDeletionCount) \("message".pluralize(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralize(with: confirmationDeletionCount))")
+                if deletions.count == 1, let messageId = deletions.first?.message.id {
                     client.deleteMessage(messageId, on: channel.id) { success, _ in
                         if success {
                             output.append(":wastebasket: Deleted message")
@@ -65,14 +75,14 @@ public class ClearCommand: StringCommand {
                         }
                     }
                 } else {
-                    let messageIds = messages.compactMap { $0.id }
+                    let messageIds = deletions.compactMap { $0.message.id }
                     guard !messageIds.isEmpty else {
                         output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
                         return
                     }
                     client.bulkDeleteMessages(messageIds, on: channel.id) { success, _ in
                         if success {
-                            output.append(":wastebasket: Deleted \(messages.count) messages")
+                            output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
                         } else {
                             output.append(errorText: "Could not delete messages")
                         }
@@ -92,8 +102,8 @@ public class ClearCommand: StringCommand {
             log.warning("No channel ID for message after being sent. This is most likely a bug.")
             return
         }
-        if messagesToBeDeleted[channelId] != nil {
-            messagesToBeDeleted[channelId]!.append(message)
+        if preparedDeletions[channelId] != nil {
+            preparedDeletions[channelId]!.append(Deletion(message: message, isIntended: false))
         }
     }
 }
