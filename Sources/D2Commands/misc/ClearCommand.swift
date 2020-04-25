@@ -9,7 +9,7 @@ public class ClearCommand: StringCommand {
         category: .misc,
         shortDescription: "Clears messages",
         longDescription: "Removes the last n messages",
-        requiredPermissionLevel: .vip,
+        requiredPermissionLevel: .admin,
         subscribesToNextMessages: true
     )
     private let minDeletableCount: Int
@@ -52,7 +52,7 @@ public class ClearCommand: StringCommand {
     }
     
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
-        if let client = context.client, let channel = context.channel, let messages = messagesToBeDeleted[channel.id] {
+        if let client = context.client, let channel = context.channel, let messages = messagesToBeDeleted[channel.id].map({ $0 + [context.message] }) {
             messagesToBeDeleted[channel.id] = nil
             if content == confirmationString {
                 log.notice("Deleting \(messages.count) \("message".pluralize(with: messages.count))")
