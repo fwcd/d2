@@ -35,7 +35,7 @@ public class ClearCommand: StringCommand {
             return
         }
 
-        client.getMessages(for: channelId, limit: n) { messages, _ in
+        client.getMessages(for: channelId, limit: n + 1) { messages, _ in
             self.messagesToBeDeleted[channelId] = messages
             let grouped = Dictionary(grouping: messages, by: { $0.author?.username ?? "<unnamed>" })
 
