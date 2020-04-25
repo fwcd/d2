@@ -9,7 +9,7 @@ public class ClearCommand: StringCommand {
         category: .misc,
         shortDescription: "Clears messages",
         longDescription: "Removes the last n messages",
-        requiredPermissionLevel: .admin,
+        requiredPermissionLevel: .vip,
         subscribesToNextMessages: true
     )
     private let minDeletableCount: Int
