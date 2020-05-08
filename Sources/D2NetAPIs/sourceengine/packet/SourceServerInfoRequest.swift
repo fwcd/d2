@@ -4,4 +4,6 @@ public struct SourceServerInfoRequest: ToSourceServerPacket {
         p.write(string: "Source Engine Query")
         return p
     }
+    
+    public init() {}
 }

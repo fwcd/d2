@@ -1,4 +1,4 @@
-public enum SourceServerPingError: Error {
+public enum SourceServerQueryError: Error {
     case noResponse
     case invalidHeader
     case couldNotDecodePacket

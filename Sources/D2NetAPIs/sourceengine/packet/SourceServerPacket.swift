@@ -10,10 +10,8 @@ public struct SourceServerPacket {
     public init(header: UInt8) {
         data = Data()
         
-        for _ in 0..<4 {
-            data.append(0xFF)
-        }
-        data.append(header)
+        write(long: 0xFFFFFFFF)
+        write(byte: header)
     }
     
     public mutating func write(string: String) {
@@ -23,6 +21,17 @@ public struct SourceServerPacket {
     
     public mutating func write(byte: UInt8) {
         data.append(byte)
+    }
+    
+    public mutating func write(long: UInt32) {
+        data.append(UInt8((long >> 24) & 0xFF))
+        data.append(UInt8((long >> 16) & 0xFF))
+        data.append(UInt8((long >> 8) & 0xFF))
+        data.append(UInt8(long & 0xFF))
+    }
+    
+    public mutating func write(float: Float32) {
+        write(long: float.bitPattern)
     }
     
     public mutating func readString() -> String? {
@@ -48,5 +57,9 @@ public struct SourceServerPacket {
             let thd = data.popFirst(),
             let fth = data.popFirst() else { return nil }
         return UInt32(littleEndian: (UInt32(fst) << 24) | (UInt32(snd) << 16) | (UInt32(thd) << 8) | UInt32(fth))
+    }
+    
+    public mutating func readFloat() -> Float32? {
+        readLong().map(Float32.init(bitPattern:))
     }
 }
