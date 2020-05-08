@@ -81,6 +81,7 @@ public class D2Delegate: MessageDelegate {
 		registry["mcwiki"] = MinecraftWikiCommand()
 		registry["mcstronghold"] = MinecraftStrongholdFinderCommand()
 		registry["ftbpacks"] = FTBModpacksCommand()
+		registry["gmodping"] = GModServerPingCommand()
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
 		registry["wikipedia"] = WikipediaCommand()

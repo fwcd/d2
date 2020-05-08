@@ -19,14 +19,14 @@ public class MinecraftServerPingCommand: StringCommand {
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            if let (host, port) = parseMcHostPort(from: input) {
-                let serverInfo = try MinecraftServerPing(host: host, port: port, timeoutMs: 1000).perform()
+            if let (host, port) = parseHostPort(from: input) {
+                let serverInfo = try MinecraftServerPing(host: host, port: port ?? 25565, timeoutMs: 1000).perform()
                 let modCount = serverInfo.forgeData?.mods?.count ?? serverInfo.modinfo?.modList?.count
                 
                 // TODO: Display server favicon in embed
                 
                 output.append(Embed(
-                    title: "Minecraft Server at `\(host):\(port)`",
+                    title: "Minecraft Server at `\(host)\(port.map { ":\($0)" } ?? "")`",
                     description: "\(serverInfo.description)",
                     footer: modCount.map { _ in Embed.Footer(text: "Use \(context.commandPrefix)mcmods to get a detailed mod list") },
                     fields: [

@@ -13,12 +13,14 @@ public struct SourceServerPing {
     }
 
     public func perform() throws -> SourceServerInfoResponse {
-        let socket = try Socket.create()
-        try socket.connect(to: host, port: port, timeout: timeoutMs)
-        try socket.write(from: SourceServerInfoRequest().packet.data)
+        guard let address = Socket.createAddress(for: host, on: port) else { throw SourceServerPingError.invalidAddress(host, port) }
+        let socket = try Socket.create(type: .datagram, proto: .udp)
+
+        try socket.setReadTimeout(value: timeoutMs)
+        try socket.write(from: SourceServerInfoRequest().packet.data, to: address)
         
         var buffer = Data(capacity: 2048)
-        let bytesRead = try socket.read(into: &buffer)
+        let (bytesRead, _) = try socket.readDatagram(into: &buffer)
         socket.close()
         
         guard let response = SourceServerInfoResponse(packet: SourceServerPacket(data: buffer[..<bytesRead])) else { throw SourceServerPingError.couldNotDecodePacket }
