@@ -9,11 +9,16 @@ public struct SourceServerPacket {
 
     public init(header: UInt8) {
         data = Data()
+        
+        for _ in 0..<4 {
+            data.append(0xFF)
+        }
         data.append(header)
     }
     
     public mutating func write(string: String) {
         data.append(string.data(using: .utf8)!)
+        data.append(0x00)
     }
     
     public mutating func write(byte: UInt8) {
@@ -35,5 +40,13 @@ public struct SourceServerPacket {
     public mutating func readShort() -> UInt16? {
         guard let le = data.popFirst(), let be = data.popFirst() else { return nil }
         return UInt16(littleEndian: (UInt16(le) << 8) | UInt16(be))
+    }
+    
+    public mutating func readLong() -> UInt32? {
+        guard let fst = data.popFirst(),
+            let snd = data.popFirst(),
+            let thd = data.popFirst(),
+            let fth = data.popFirst() else { return nil }
+        return UInt32(littleEndian: (UInt32(fst) << 24) | (UInt32(snd) << 16) | (UInt32(thd) << 8) | UInt32(fth))
     }
 }

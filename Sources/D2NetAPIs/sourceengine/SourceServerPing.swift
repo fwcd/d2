@@ -23,7 +23,10 @@ public struct SourceServerPing {
         let (bytesRead, _) = try socket.readDatagram(into: &buffer)
         socket.close()
         
-        guard let response = SourceServerInfoResponse(packet: SourceServerPacket(data: buffer[..<bytesRead])) else { throw SourceServerPingError.couldNotDecodePacket }
+        guard bytesRead > 0 else { throw SourceServerPingError.noResponse }
+        var packet = SourceServerPacket(data: buffer[..<bytesRead])
+        guard let header = packet.readLong(), header == 0xFFFFFFFF else { throw SourceServerPingError.invalidHeader }
+        guard let response = SourceServerInfoResponse(packet: packet) else { throw SourceServerPingError.couldNotDecodePacket }
         return response
     }
 }
