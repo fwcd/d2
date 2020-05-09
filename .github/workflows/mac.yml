@@ -13,7 +13,7 @@ jobs:
         brew tap vapor/tap
         brew install opus libsodium ctls pkg-config cairo
     - name: Build
-      run: swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include
+      run: swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include/cairo -Xcc -I/usr/local/include
     - name: Test
-      run: swift test -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include
+      run: swift test -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include/cairo -Xcc -I/usr/local/include
 
