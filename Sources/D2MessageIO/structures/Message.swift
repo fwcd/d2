@@ -4,10 +4,10 @@ import D2Utils
 fileprivate let mentionPattern = try! Regex(from: "<@(\\d+)>")
 
 public struct Message: ExpressibleByStringLiteral {
-	public let content: String
-	public let embeds: [Embed]
-	public let files: [Message.FileUpload]
-	public let tts: Bool
+	public var content: String
+	public var embeds: [Embed]
+	public var files: [Message.FileUpload]
+	public var tts: Bool
 	
 	public let attachments: [Attachment]
 	public let activity: MessageActivity?

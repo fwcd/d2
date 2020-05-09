@@ -12,6 +12,7 @@ public class D2Delegate: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
 	private var registry: CommandRegistry
+	private var messageRewriters: [MessageRewriter]
 	private var messageHandlers: [MessageHandler]
 	
 	public init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
@@ -26,11 +27,13 @@ public class D2Delegate: MessageDelegate {
 		let messageDB = try MessageDatabase()
 		try messageDB.setupTables()
 
+		messageRewriters = [
+			MentionSomeoneRewriter()
+		]
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
-			MentionSomeoneHandler(),
 			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
 		]
 
@@ -166,8 +169,14 @@ public class D2Delegate: MessageDelegate {
 	}
 	
 	public func on(createMessage message: Message, client: MessageClient) {
+		var m = message
+		
+		for rewriter in messageRewriters {
+			m = rewriter.rewrite(message: m, from: client)
+		}
+
 		for (i, _) in messageHandlers.enumerated() {
-			if messageHandlers[i].handle(message: message, from: client) {
+			if messageHandlers[i].handle(message: m, from: client) {
 				break
 			}
 		}
