@@ -24,7 +24,7 @@ public class RickrollCommand: Command {
 
         client.deleteMessage(messageId, on: channelId) { _, _ in
             let what = ["cool video", "meme compilation", "awesome remix", "great song", "tutorial", "nice trailer", "movie"].randomElement()!
-            output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
+            output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " and ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
         }
     }
 }
