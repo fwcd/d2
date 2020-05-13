@@ -179,6 +179,9 @@ public class D2Delegate: MessageDelegate {
 		}
 
 		for (i, _) in messageHandlers.enumerated() {
+			if messageHandlers[i].handleRaw(message: message, from: client) {
+				break
+			}
 			if messageHandlers[i].handle(message: m, from: client) {
 				break
 			}
