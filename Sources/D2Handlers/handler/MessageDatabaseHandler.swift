@@ -17,9 +17,11 @@ public struct MessageDatabaseHandler: MessageHandler {
                 let guildId = message.guild?.id,
                 client.permissionsForUser(guildId, in: channelId, on: guildId).contains(.readMessages) {
             do {
-                try messageDB.insert(message: message)
-                try messageDB.generateMarkovTransitions(for: message)
-                log.info("Wrote message '\(message.content.truncate(10, appending: "..."))' to database")
+                if try messageDB.isTracked(guildId: guildId) {
+                    try messageDB.insert(message: message)
+                    try messageDB.generateMarkovTransitions(for: message)
+                    log.info("Wrote message '\(message.content.truncate(10, appending: "..."))' to database")
+                }
             } catch {
                 log.warning("Could not insert message into DB: \(error)")
             }

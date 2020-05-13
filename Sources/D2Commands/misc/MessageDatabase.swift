@@ -7,6 +7,7 @@ import D2Utils
 fileprivate let guilds = Table("guilds")
 fileprivate let guildId = Expression<Int64>("guild_id")
 fileprivate let guildName = Expression<String>("guild_name")
+fileprivate let guildTracked = Expression<Bool>("guild_tracked")
 
 fileprivate let channels = Table("channels")
 fileprivate let channelName = Expression<String>("channel_name")
@@ -60,6 +61,7 @@ public class MessageDatabase: MarkovPredictor {
             try db.run(guilds.create(ifNotExists: true) {
                 $0.column(guildId, primaryKey: true)
                 $0.column(guildName)
+                $0.column(guildTracked)
             })
             try db.run(channels.create(ifNotExists: true) {
                 $0.column(channelId, primaryKey: true)
@@ -114,15 +116,25 @@ public class MessageDatabase: MarkovPredictor {
         try db.prepare(sql)
     }
 
-    public func queryMissingMessages(with client: MessageClient, from guildId: GuildID) throws {
+    public func queryMissingMessages(with client: MessageClient, from id: GuildID) throws {
         // TODO
+    }
+
+    public func isTracked(guildId id: GuildID) throws -> Bool {
+        let stmt = try db.prepare(guilds.select(guildTracked).filter(guildId == convert(id: id)))
+        return stmt.contains(where: { $0[guildTracked] })
+    }
+
+    public func setTracked(_ tracked: Bool, guildId id: GuildID) throws {
+        try db.run(guilds.filter(guildId == convert(id: id)).update(guildTracked <- tracked))
     }
 
     public func insert(guild: Guild) throws {
         try db.transaction {
             try db.run(guilds.insert(or: .ignore,
                 guildId <- try convert(id: guild.id),
-                guildName <- guild.name
+                guildName <- guild.name,
+                guildTracked <- false
             ))
             for (id, member) in guild.members {
                 let user = member.user
