@@ -17,9 +17,6 @@ public struct Message: ExpressibleByStringLiteral {
 	public let channelId: ChannelID?
 	public let editedTimestamp: Date?
 	public let id: MessageID?
-	public let mentionEveryone: Bool
-	public let mentionRoles: [RoleID]
-	public let mentions: [User]
 	public let nonce: ID?
 	public let pinned: Bool
 	public let reactions: [Reaction]
@@ -27,6 +24,10 @@ public struct Message: ExpressibleByStringLiteral {
 	public let type: MessageType?
 	public let guild: Guild?
 	public let guildMember: Guild.Member?
+
+	public var mentionEveryone: Bool
+	public var mentionRoles: [RoleID]
+	public var mentions: [User]
 	
 	public var embed: Embed? { embeds.first }
 	
