@@ -34,6 +34,7 @@ public class D2Delegate: MessageDelegate {
 			SpamHandler(config: spamConfiguration),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
+			MentionSomeoneHandler(),
 			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
 		]
 
@@ -172,7 +173,9 @@ public class D2Delegate: MessageDelegate {
 		var m = message
 		
 		for rewriter in messageRewriters {
-			m = rewriter.rewrite(message: m, from: client)
+			if let rewrite = rewriter.rewrite(message: m, from: client) {
+				m = rewrite
+			}
 		}
 
 		for (i, _) in messageHandlers.enumerated() {

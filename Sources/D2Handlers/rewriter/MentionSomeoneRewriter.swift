@@ -4,7 +4,7 @@ import D2Utils
 fileprivate let someonePattern = try! Regex(from: "@someone")
 
 public struct MentionSomeoneRewriter: MessageRewriter {
-    public func rewrite(message: Message, from client: MessageClient) -> Message {
+    public func rewrite(message: Message, from client: MessageClient) -> Message? {
         var m = message
         let mentionCount = someonePattern.matchCount(in: m.content)
         if mentionCount > 0,
@@ -18,7 +18,8 @@ public struct MentionSomeoneRewriter: MessageRewriter {
                 return "<@\(mention)>"
             }
             m.mentions += mentions.map { guild.members[$0]!.user }
+            return m
         }
-        return m
+        return nil
     }
 }
