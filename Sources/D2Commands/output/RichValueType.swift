@@ -5,6 +5,7 @@ public enum RichValueType {
     case gif
     case code
     case embed
+    case mentions
     case error
     case files
     case attachments

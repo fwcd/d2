@@ -1,4 +1,4 @@
-public class RickrollCommand: StringCommand {
+public class RickrollCommand: Command {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Rickrolls someone",
@@ -8,7 +8,7 @@ public class RickrollCommand: StringCommand {
     
     public init() {}
     
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else {
             output.append(errorText: "No message/channel id available")
             return
@@ -17,10 +17,14 @@ public class RickrollCommand: StringCommand {
             output.append(errorText: "No client available")
             return
         }
+        guard let mentions = input.asMentions else {
+            output.append(errorText: "Mention someone to start!")
+            return
+        }
 
         client.deleteMessage(messageId, on: channelId) { _, _ in
             let what = ["cool video", "meme compilation", "awesome remix", "great song", "tutorial", "nice trailer", "movie"].randomElement()!
-            output.append("Hey, <@\(input)>, check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
+            output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
         }
     }
 }

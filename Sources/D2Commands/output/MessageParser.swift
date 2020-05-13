@@ -39,6 +39,11 @@ public struct MessageParser {
 		
 		// Append embeds
 		values += message.embeds.map { .embed($0) }
+
+		// Append mentions
+		if let mentions = message.mentions.nilIfEmpty {
+			values.append(.mentions(mentions))
+		}
 		
 		var asyncTaskCount = 0
 		let semaphore = DispatchSemaphore(value: 0)

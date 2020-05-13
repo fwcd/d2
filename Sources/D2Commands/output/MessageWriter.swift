@@ -16,6 +16,8 @@ public struct MessageWriter {
 					throw MessageWriterError.emptyMessage
 				}
 				return Message(content: txt)
+			case let .mentions(users):
+				return Message(content: users.map { "<@\($0.id)>" }.joined(separator: " "))
 			case let .image(img):
 				return try Message(fromImage: img)
 			case let .gif(gif):

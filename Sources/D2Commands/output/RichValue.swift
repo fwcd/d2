@@ -13,6 +13,7 @@ public enum RichValue: Addable {
 	case gif(AnimatedGif)
 	case code(String, language: String?)
 	case embed(Embed?)
+	case mentions([User])
 	case error(Error?, errorText: String)
 	case files([Message.FileUpload])
 	case attachments([Message.Attachment])
@@ -23,6 +24,9 @@ public enum RichValue: Addable {
 	}
 	public var asCode: String? {
 		extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }
+	}
+	public var asMentions: [User]? {
+		extract { if case let .mentions(mentions) = $0 { return mentions } else { return nil } }
 	}
 	public var asImage: Image? {
 		extract { if case let .image(image) = $0 { return image } else { return nil } }
