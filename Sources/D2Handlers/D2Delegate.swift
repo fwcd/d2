@@ -173,6 +173,14 @@ public class D2Delegate: MessageDelegate {
 			}
 		}
 	}
+
+	public func on(createGuild guild: Guild, client: MessageClient) {
+		do {
+			try messageDB.insert(guild: guild)
+		} catch {
+			log.warning("Could not insert guild into message database: \(error)")
+		}
+	}
 	
 	public func on(createMessage message: Message, client: MessageClient) {
 		var m = message

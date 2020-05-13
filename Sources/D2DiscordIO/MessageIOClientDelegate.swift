@@ -28,6 +28,11 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         log.debug("Got message")
         inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
     }
+
+    public func client(_ discordClient: DiscordClient, didCreateGuild guild: DiscordGuild) {
+        log.debug("Created guild")
+        inner.on(createGuild: guild.usingMessageIO, client: overlayClient(with: discordClient))
+    }
     
     private func overlayClient(with discordClient: DiscordClient) -> MessageClient {
         OverlayMessageClient(inner: sinkClient, name: discordClientName, me: discordClient.user?.usingMessageIO)

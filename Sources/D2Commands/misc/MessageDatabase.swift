@@ -48,6 +48,7 @@ public class MessageDatabase: MarkovPredictor {
             try db.run(channels.create(ifNotExists: true) {
                 $0.column(channelId, primaryKey: true)
                 $0.column(guildId, references: guilds, guildId)
+                $0.column(channelName)
             })
             try db.run(messages.create(ifNotExists: true) {
                 $0.column(messageId, primaryKey: true)
@@ -64,19 +65,6 @@ public class MessageDatabase: MarkovPredictor {
                 $0.column(occurrences)
                 $0.primaryKey(word, followingWord)
             })
-            for guild in client.guilds ?? [] {
-                try db.run(guilds.insert(or: .ignore,
-                    guildId <- try convert(id: guild.id),
-                    guildName <- guild.name
-                ))
-                for (id, channel) in guild.channels {
-                    try db.run(channels.insert(or: .ignore,
-                        channelId <- try convert(id: id),
-                        guildId <- try convert(id: guild.id),
-                        channelName <- channel.name
-                    ))
-                }
-            }
         }
     }
     
@@ -87,8 +75,22 @@ public class MessageDatabase: MarkovPredictor {
     public func queryMissingMessages(with client: MessageClient, from guildId: GuildID) throws {
         // TODO
     }
+
+    public func insert(guild: Guild) throws {
+        try db.run(guilds.insert(or: .ignore,
+            guildId <- try convert(id: guild.id),
+            guildName <- guild.name
+        ))
+        for (id, channel) in guild.channels {
+            try db.run(channels.insert(or: .ignore,
+                channelId <- try convert(id: id),
+                guildId <- try convert(id: guild.id),
+                channelName <- channel.name
+            ))
+        }
+    }
     
-    public func insertMessage(message: Message) throws {
+    public func insert(message: Message) throws {
         guard let messageMessageId = message.id else { throw MessageDatabaseError.missingID("Missing message ID") }
         guard let messageChannelId = message.channelId else { throw MessageDatabaseError.missingID("Missing channel ID in message") }
         guard let messageAuthorId = message.author?.id else { throw MessageDatabaseError.missingID("Missing author ID in message") }
