@@ -1,7 +1,7 @@
 import Foundation
 
 fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
-fileprivate let quotes = CharacterSet(charactersIn: "\"'")
+fileprivate let quotes = CharacterSet(charactersIn: "\"'`")
 
 extension StringProtocol {
 	public var withFirstUppercased: String {
