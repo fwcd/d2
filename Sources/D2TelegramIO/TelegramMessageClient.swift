@@ -10,6 +10,7 @@ struct TelegramMessageClient: MessageClient {
     
     var me: D2MessageIO.User? { nil } // TODO
     var name: String { telegramClientName }
+    var guilds: [Guild]? { nil }
     
     init(bot: Bot) {
         self.bot = bot

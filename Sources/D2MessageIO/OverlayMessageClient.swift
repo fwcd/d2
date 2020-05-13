@@ -6,6 +6,7 @@ public struct OverlayMessageClient: MessageClient {
 
 	public let name: String
 	public let me: User?
+    public var guilds: [Guild]? { inner.guilds }
     
     public init(inner: MessageClient, name: String, me: User? = nil) {
         self.inner = inner

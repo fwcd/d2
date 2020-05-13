@@ -9,6 +9,7 @@ fileprivate let guildId = Expression<Int64>("guild_id")
 fileprivate let guildName = Expression<String>("guild_name")
 
 fileprivate let channels = Table("channels")
+fileprivate let channelName = Expression<String>("channel_name")
 
 // TODO: Users table?
 
@@ -38,30 +39,45 @@ public class MessageDatabase: MarkovPredictor {
         db = try Connection("local/messages.sqlite3")
     }
     
-    public func setupTables() throws {
-        try db.run(guilds.create(ifNotExists: true) {
-            $0.column(guildId, primaryKey: true)
-            $0.column(guildName)
-        })
-        try db.run(channels.create(ifNotExists: true) {
-            $0.column(channelId, primaryKey: true)
-            $0.column(guildId, references: guilds, guildId)
-        })
-        try db.run(messages.create(ifNotExists: true) {
-            $0.column(messageId, primaryKey: true)
-            $0.column(authorId) // TODO: references user table?
-            $0.column(channelId, references: channels, channelId)
-            $0.column(content)
-            $0.column(timestamp)
-            $0.column(hasAttachments)
-            $0.column(hasEmbed)
-        })
-        try db.run(markovTransitions.create(ifNotExists: true) {
-            $0.column(word)
-            $0.column(followingWord)
-            $0.column(occurrences)
-            $0.primaryKey(word, followingWord)
-        })
+    public func setupTables(client: MessageClient) throws {
+        try db.transaction {
+            try db.run(guilds.create(ifNotExists: true) {
+                $0.column(guildId, primaryKey: true)
+                $0.column(guildName)
+            })
+            try db.run(channels.create(ifNotExists: true) {
+                $0.column(channelId, primaryKey: true)
+                $0.column(guildId, references: guilds, guildId)
+            })
+            try db.run(messages.create(ifNotExists: true) {
+                $0.column(messageId, primaryKey: true)
+                $0.column(authorId) // TODO: references user table?
+                $0.column(channelId, references: channels, channelId)
+                $0.column(content)
+                $0.column(timestamp)
+                $0.column(hasAttachments)
+                $0.column(hasEmbed)
+            })
+            try db.run(markovTransitions.create(ifNotExists: true) {
+                $0.column(word)
+                $0.column(followingWord)
+                $0.column(occurrences)
+                $0.primaryKey(word, followingWord)
+            })
+            for guild in client.guilds ?? [] {
+                try db.run(guilds.insert(or: .ignore,
+                    guildId <- try convert(id: guild.id),
+                    guildName <- guild.name
+                ))
+                for (id, channel) in guild.channels {
+                    try db.run(channels.insert(or: .ignore,
+                        channelId <- try convert(id: id),
+                        guildId <- try convert(id: guild.id),
+                        channelName <- channel.name
+                    ))
+                }
+            }
+        }
     }
     
     public func prepare(sql: String) throws -> Statement {
@@ -178,7 +194,7 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
     
-    public func followUps(to suffix: String) throws -> [(String, String)] {
+    public func followUps(to suffix: String, on guildId: GuildID) throws -> [(String, String)] {
         // TODO: Use a typed query once they support subqueries properly
 
         // let m1 = messages.alias("m1")
@@ -192,12 +208,14 @@ public class MessageDatabase: MarkovPredictor {
         
         let stmt = try db.prepare("""
             select m1.content, m2.content
-            from messages as m1, messages as m2
+            from messages as m1 natural join guilds as g1, messages as m2
             where m1.content like ?
               and m2.timestamp == (select min(timestamp) from messages where timestamp > m1.timestamp)
+              and g1.guild_id == ?
+              and m1.channel_id == m2.channel_id
             order by random()
             limit 10
-            """, "%\(suffix)")
+            """, "%\(suffix)", "\(guildId)")
         
         return stmt.compactMap { row in (row[0] as? String).flatMap { l in (row[1] as? String).map { r in (l, r) } } }
     }

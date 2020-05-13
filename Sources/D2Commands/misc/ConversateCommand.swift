@@ -22,7 +22,7 @@ public class ConversateCommand: StringCommand {
     }
     
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
-        guard context.author?.id != context.client?.me?.id else { return }
+        guard context.author?.id != context.client?.me?.id, let guildId = context.guild?.id else { return }
         if content == "stop" {
             context.unsubscribeFromChannel()
             output.append("Unsubscribed from this channel.")
@@ -32,7 +32,7 @@ public class ConversateCommand: StringCommand {
                     .split(separator: " ")
                     .last
                     .map({ String($0) })?.nilIfEmpty else { return }
-                let followUps = try messageDB.followUps(to: last)
+                let followUps = try messageDB.followUps(to: last, on: guildId)
                 
                 if !followUps.isEmpty {
                     let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, content)) }

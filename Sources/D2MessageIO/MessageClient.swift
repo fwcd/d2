@@ -17,6 +17,7 @@ fileprivate func defaultCallback<T>(_ dummy: T, response: HTTPURLResponse?) {
 public protocol MessageClient {
 	var name: String { get }
 	var me: User? { get }
+	var guilds: [Guild]? { get }
 	
 	func guild(for guildId: GuildID) -> Guild?
 	

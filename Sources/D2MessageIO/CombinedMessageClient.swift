@@ -11,6 +11,7 @@ public class CombinedMessageClient: MessageClient {
 
     public var me: User? { nil }
     public var name: String { "Combined" }
+    public var guilds: [Guild]? { clients.values.flatMap { $0.guilds ?? [] } }
     
     public init() {}
 

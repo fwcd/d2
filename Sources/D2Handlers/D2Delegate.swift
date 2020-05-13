@@ -11,6 +11,7 @@ fileprivate let log = Logger(label: "D2Handlers.D2Delegate")
 public class D2Delegate: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
+	private let messageDB: MessageDatabase
 	private var registry: CommandRegistry
 	private var messageRewriters: [MessageRewriter]
 	private var messageHandlers: [MessageHandler]
@@ -20,12 +21,11 @@ public class D2Delegate: MessageDelegate {
 		self.initialPresence = initialPresence
 		
 		registry = CommandRegistry()
+		messageDB = try MessageDatabase()
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
 		let subscriptionManager = SubscriptionManager(registry: registry)
 		let inventoryManager = InventoryManager()
-		let messageDB = try MessageDatabase()
-		try messageDB.setupTables()
 
 		messageRewriters = [
 			MentionSomeoneRewriter()
@@ -158,6 +158,11 @@ public class D2Delegate: MessageDelegate {
 	}
 
 	public func on(connect connected: Bool, client: MessageClient) {
+		do {
+			try messageDB.setupTables(client: client)
+		} catch {
+			log.warning("Could not setup message database: \(error)")
+		}
 		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
 	}
 	

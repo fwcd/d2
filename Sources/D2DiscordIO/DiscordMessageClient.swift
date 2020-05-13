@@ -7,8 +7,9 @@ fileprivate let log = Logger(label: "D2DiscordIO.DiscordMessageClient")
 struct DiscordMessageClient: MessageClient {
 	private let client: DiscordClient
 	
-	var name: String { return discordClientName }
-	var me: User? { return client.user?.usingMessageIO }
+	var name: String { discordClientName }
+	var me: User? { client.user?.usingMessageIO }
+	var guilds: [Guild]? { client.guilds.values.map { $0.usingMessageIO } }
 	
 	init(client: DiscordClient) {
 		self.client = client
