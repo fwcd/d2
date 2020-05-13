@@ -11,7 +11,23 @@ fileprivate let guildName = Expression<String>("guild_name")
 fileprivate let channels = Table("channels")
 fileprivate let channelName = Expression<String>("channel_name")
 
-// TODO: Users table?
+fileprivate let users = Table("users")
+fileprivate let userId = Expression<Int64>("user_id")
+fileprivate let userName = Expression<String>("user_name")
+fileprivate let discriminator = Expression<String>("discriminator")
+fileprivate let bot = Expression<Bool>("bot")
+fileprivate let verified = Expression<Bool>("verified")
+
+fileprivate let members = Table("members")
+fileprivate let nick = Expression<String?>("nick")
+
+fileprivate let memberRoles = Table("member_roles")
+
+fileprivate let roles = Table("roles")
+fileprivate let roleId = Expression<Int64>("role_id")
+fileprivate let roleName = Expression<String>("role_name")
+fileprivate let roleColor = Expression<Int64>("role_color")
+fileprivate let rolePosition = Expression<Int64>("role_position")
 
 fileprivate let messages = Table("messages")
 fileprivate let messageId = Expression<Int64>("message_id")
@@ -50,6 +66,32 @@ public class MessageDatabase: MarkovPredictor {
                 $0.column(guildId, references: guilds, guildId)
                 $0.column(channelName)
             })
+            try db.run(users.create(ifNotExists: true) {
+                $0.column(userId, primaryKey: true)
+                $0.column(userName)
+                $0.column(discriminator)
+                $0.column(bot)
+                $0.column(verified)
+            })
+            try db.run(members.create(ifNotExists: true) {
+                $0.column(userId)
+                $0.column(guildId)
+                $0.column(nick)
+                $0.primaryKey(userId, guildId)
+            })
+            try db.run(memberRoles.create(ifNotExists: true) {
+                $0.column(userId)
+                $0.column(guildId)
+                $0.column(roleId)
+                $0.primaryKey(userId, guildId, roleId)
+            })
+            try db.run(roles.create(ifNotExists: true) {
+                $0.column(roleId, primaryKey: true)
+                $0.column(guildId)
+                $0.column(roleName)
+                $0.column(roleColor)
+                $0.column(rolePosition)
+            })
             try db.run(messages.create(ifNotExists: true) {
                 $0.column(messageId, primaryKey: true)
                 $0.column(authorId) // TODO: references user table?
@@ -77,16 +119,49 @@ public class MessageDatabase: MarkovPredictor {
     }
 
     public func insert(guild: Guild) throws {
-        try db.run(guilds.insert(or: .ignore,
-            guildId <- try convert(id: guild.id),
-            guildName <- guild.name
-        ))
-        for (id, channel) in guild.channels {
-            try db.run(channels.insert(or: .ignore,
-                channelId <- try convert(id: id),
+        try db.transaction {
+            try db.run(guilds.insert(or: .ignore,
                 guildId <- try convert(id: guild.id),
-                channelName <- channel.name
+                guildName <- guild.name
             ))
+            for (id, member) in guild.members {
+                let user = member.user
+                try db.run(members.insert(or: .ignore,
+                    userId <- try convert(id: id),
+                    guildId <- try convert(id: guild.id),
+                    nick <- member.nick
+                ))
+                try db.run(users.insert(or: .ignore,
+                    userId <- try convert(id: id),
+                    userName <- user.username,
+                    discriminator <- user.discriminator,
+                    bot <- user.bot,
+                    verified <- user.verified
+                ))
+                for rid in member.roleIds {
+                    try db.run(memberRoles.insert(or: .ignore,
+                        userId <- try convert(id: id),
+                        guildId <- try convert(id: guild.id),
+                        roleId <- try convert(id: rid)
+                    ))
+                }
+            }
+            for (id, role) in guild.roles {
+                try db.run(roles.insert(or: .ignore,
+                    roleId <- try convert(id: id),
+                    guildId <- try convert(id: guild.id),
+                    roleName <- role.name,
+                    roleColor <- Int64(role.color),
+                    rolePosition <- Int64(role.position)
+                ))
+            }
+            for (id, channel) in guild.channels {
+                try db.run(channels.insert(or: .ignore,
+                    channelId <- try convert(id: id),
+                    guildId <- try convert(id: guild.id),
+                    channelName <- channel.name
+                ))
+            }
         }
     }
     
