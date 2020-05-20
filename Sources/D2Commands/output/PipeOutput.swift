@@ -4,9 +4,10 @@ fileprivate let log = Logger(label: "D2Commands.PipeOutput")
 
 public class PipeOutput: CommandOutput {
 	private let sink: Command
-	private let context: CommandContext
 	private let args: String
 	private let next: CommandOutput?
+
+	private var context: CommandContext
 	
 	public init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
 		self.sink = sink
@@ -28,5 +29,10 @@ public class PipeOutput: CommandOutput {
 			log.trace("Invoking sink")
 			sink.invoke(input: nextInput, output: nextOutput, context: context)
 		}
+	}
+
+	public func update(context: CommandContext) {
+		self.context = context
+		next?.update(context: context)
 	}
 }

@@ -8,19 +8,23 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.MessageIOOutput")
 
 public class MessageIOOutput: CommandOutput {
+	private var context: CommandContext
 	private let messageWriter = MessageWriter()
-	private let client: MessageClient
-	private let defaultTextChannelId: ChannelID?
-	public let messageLengthLimit: Int? = 1800
 	private let onSent: ((Message?, HTTPURLResponse?) -> Void)?
+
+	public let messageLengthLimit: Int? = 1800
 	
-	public init(client: MessageClient, defaultTextChannelId: ChannelID?, onSent: ((Message?, HTTPURLResponse?) -> Void)? = nil) {
-		self.client = client
-		self.defaultTextChannelId = defaultTextChannelId
+	public init(context: CommandContext, onSent: ((Message?, HTTPURLResponse?) -> Void)? = nil) {
+		self.context = context
 		self.onSent = onSent
 	}
 	
 	public func append(_ value: RichValue, to channel: OutputChannel) {
+		guard let client = context.client else {
+			log.warning("Cannot append to MessageIO without a client!")
+			return
+		}
+
 		var message: Message
 		do {
 			if case let .error(error, errorText: errorText) = value {
@@ -37,21 +41,26 @@ public class MessageIOOutput: CommandOutput {
 				""")
 		}
 		switch channel {
-			case .serverChannel(let id): client.sendMessage(message, to: id)
+			case .serverChannel(let id):
+				client.sendMessage(message, to: id)
 			case .userChannel(let id):
 				client.createDM(with: id) { channelId, _ in
 					guard let id = channelId else {
 						log.error("Could not send direct message, since no channel ID could be fetched")
 						return
 					}
-					self.client.sendMessage(message, to: id, then: self.onSent)
+					client.sendMessage(message, to: id, then: self.onSent)
 				}
 			case .defaultChannel:
-				if let textChannelId = defaultTextChannelId {
+				if let textChannelId = context.channel?.id {
 					client.sendMessage(message, to: textChannelId, then: onSent)
 				} else {
 					log.warning("No default text channel available")
 				}
 		}
+	}
+
+	public func update(context: CommandContext) {
+		self.context = context
 	}
 }

@@ -93,7 +93,7 @@ public class CommandHandler: MessageHandler {
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
 					let sinkCommand = pipeSink.command
-					pipeSink.output = MessageIOOutput(client: client, defaultTextChannelId: channelId) { sentMessage, _ in
+					pipeSink.output = MessageIOOutput(context: pipeSink.context) { sentMessage, _ in
 						if let sent = sentMessage {
 							sinkCommand.onSuccessfullySent(context: CommandContext(
 								client: client,

@@ -2,10 +2,16 @@ import D2MessageIO
 import D2Utils
 import D2Graphics
 
+/// A sink for rich values.
 public protocol CommandOutput {
 	var messageLengthLimit: Int? { get }
 	
 	func append(_ value: RichValue, to channel: OutputChannel)
+
+	/// Updates the internal context of the output. Should only
+	/// be used if the CommandOutput if retained beyond the original
+	/// message invocation (e.g. when registering event listeners).
+	func update(context: CommandContext)
 }
 
 public extension CommandOutput {

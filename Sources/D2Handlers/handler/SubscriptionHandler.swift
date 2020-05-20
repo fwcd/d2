@@ -16,7 +16,6 @@ public struct SubscriptionHandler: MessageHandler {
     public func handle(message: Message, from client: MessageClient) -> Bool {
         guard !manager.isEmpty, let channelId = message.channelId else { return false }
 
-		let output = MessageIOOutput(client: client, defaultTextChannelId: channelId)
 		let isBot = message.author?.bot ?? false
         var handled = false
 
@@ -28,6 +27,7 @@ public struct SubscriptionHandler: MessageHandler {
                 commandPrefix: commandPrefix,
                 subscriptions: $1
             )
+            let output = MessageIOOutput(context: context)
             registry[$0]?.onSubscriptionMessage(withContent: message.content, output: output, context: context)
             handled = true
         }
