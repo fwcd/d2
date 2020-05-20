@@ -92,12 +92,12 @@ public class GameCommand<G: Game>: StringCommand {
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
 		if game.onlySendHandToCurrentRole, let player = state.playerOf(role: state.currentRole) {
 			if let hand = state.hands[state.currentRole] {
-				output.append(hand.asRichValue, to: .userChannel(player.id))
+				output.append(hand.asRichValue, to: .dmChannel(player.id))
 			}
 		} else {
 			for (role, hand) in state.hands {
 				if let player = state.playerOf(role: role) {
-					output.append(hand.asRichValue, to: .userChannel(player.id))
+					output.append(hand.asRichValue, to: .dmChannel(player.id))
 				}
 			}
 		}

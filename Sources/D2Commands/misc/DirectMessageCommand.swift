@@ -26,6 +26,6 @@ public class DirectMessageCommand: StringCommand {
 			return
 		}
 		
-		output.append(parsedArgs[1], to: .userChannel(mentioned.id))
+		output.append(parsedArgs[1], to: .dmChannel(mentioned.id))
 	}
 }

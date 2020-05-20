@@ -43,7 +43,7 @@ public class MessageIOOutput: CommandOutput {
 		switch channel {
 			case .guildChannel(let id):
 				client.sendMessage(message, to: id)
-			case .userChannel(let id):
+			case .dmChannel(let id):
 				client.createDM(with: id) { channelId, _ in
 					guard let id = channelId else {
 						log.error("Could not send direct message, since no channel ID could be fetched")
