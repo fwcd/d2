@@ -41,7 +41,7 @@ public class MessageIOOutput: CommandOutput {
 				""")
 		}
 		switch channel {
-			case .serverChannel(let id):
+			case .guildChannel(let id):
 				client.sendMessage(message, to: id)
 			case .userChannel(let id):
 				client.createDM(with: id) { channelId, _ in

@@ -78,7 +78,7 @@ public class PortalCommand: StringCommand {
             return
         }
         guard let otherChannelId = portal.other(channelId) else { return } // Do nothing if portal is only partially connected
-        output.append(.text("**\(context.author?.username ?? "Unknown user"):** \(content)"), to: .serverChannel(otherChannelId))
+        output.append(.text("**\(context.author?.username ?? "Unknown user"):** \(content)"), to: .guildChannel(otherChannelId))
     }
     
     private func endpointName(context: CommandContext) -> String {
@@ -122,7 +122,7 @@ public class PortalCommand: StringCommand {
         context.subscribeToChannel()
 
         output.append(":dizzy: You are now connected to `\(portal.originName)`")
-        output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .serverChannel(portal.origin))
+        output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .guildChannel(portal.origin))
 }
     
     private func closePortal(output: CommandOutput, context: CommandContext) {
@@ -131,11 +131,11 @@ public class PortalCommand: StringCommand {
 
         for (i, portal) in portals.enumerated().reversed() where portal.origin == channelId || portal.target == channelId {
             context.subscriptions.unsubscribe(from: portal.origin)
-            output.append(closeMessage, to: .serverChannel(portal.origin))
+            output.append(closeMessage, to: .guildChannel(portal.origin))
 
             if let target = portal.target {
                 context.subscriptions.unsubscribe(from: target)
-                output.append(closeMessage, to: .serverChannel(target))
+                output.append(closeMessage, to: .guildChannel(target))
             }
             portals.remove(at: i)
         }
