@@ -171,6 +171,7 @@ public class D2Delegate: MessageDelegate {
 			log.warning("Could not setup message database: \(error)")
 		}
 		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
+		eventListenerBus.fire(event: .connect, with: .none)
 	}
 	
 	public func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
@@ -179,6 +180,7 @@ public class D2Delegate: MessageDelegate {
 				command.onReceivedUpdated(presence: presence)
 			}
 		}
+		eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.game.map { RichValue.text($0.name) } ?? .none) // TODO: Pass full presence?
 	}
 
 	public func on(createGuild guild: Guild, client: MessageClient) {
@@ -187,6 +189,7 @@ public class D2Delegate: MessageDelegate {
 		} catch {
 			log.warning("Could not insert guild into message database: \(error)")
 		}
+		eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
 	}
 	
 	public func on(createMessage message: Message, client: MessageClient) {
