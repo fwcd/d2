@@ -22,16 +22,19 @@ public class WhatsUpCommand: StringCommand {
                     .filter { $0.1.game?.type == .stream }
                     .map { format(presence: $0.1, for: $0.0) }
                     .joined(separator: "\n")
+                    .truncate(1000, appending: "...")
                     .nilIfEmpty ?? "_no one is currently streaming :(_"),
                 Embed.Field(name: ":joystick: Gaming", value: memberPresences
                     .filter { $0.1.game?.type == .game }
                     .map { format(presence: $0.1, for: $0.0) }
                     .joined(separator: "\n")
+                    .truncate(1000, appending: "...")
                     .nilIfEmpty ?? "_no one is playing a game_"),
                 Embed.Field(name: ":headphones: Listening", value: memberPresences
                     .filter { $0.1.game?.type == .listening }
                     .map { format(presence: $0.1, for: $0.0) }
                     .joined(separator: "\n")
+                    .truncate(1000, appending: "...")
                     .nilIfEmpty ?? "_no one is listening to music_")
             ]
         ))
@@ -45,7 +48,7 @@ public class WhatsUpCommand: StringCommand {
                 $0.assets.flatMap { $0.largeText },
                 $0.state,
                 $0.timestamps?.interval?.displayString
-            ].compactMap { $0 }.joined(separator: " - ").nilIfEmpty.map { "(\($0))" } ?? "")
+            ].compactMap { $0 }.joined(separator: " - ").nilIfEmpty.map { " (\($0))" } ?? "")
             """
         } ?? "")
         """
