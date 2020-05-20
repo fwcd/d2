@@ -10,7 +10,27 @@ public class EventListenerBus {
     }
 
     public enum Event: String, CaseIterable {
-        case messageCreate = "message.create"
+        case connect
+        case disconnectWithReason
+        case createChannel
+        case deleteChannel
+        case updateChannel
+        case createGuild
+        case deleteGuild
+        case updateGuild
+        case addGuildMember
+        case removeGuildMember
+        case updateGuildMember
+        case updateMessage
+        case createMessage
+        case createRole
+        case deleteRole
+        case updateRole
+        case receivePresenceUpdate
+        case receiveReady
+        case receiveVoiceStateUpdate
+        case handleGuildMemberChunk
+        case updateEmojis
     }
 
     public func fire(event: Event, with input: RichValue) {
