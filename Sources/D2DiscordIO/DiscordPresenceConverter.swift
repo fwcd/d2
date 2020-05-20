@@ -1,3 +1,4 @@
+import Foundation
 import D2MessageIO
 import SwiftDiscord
 
@@ -64,8 +65,8 @@ extension DiscordParty: MessageIOConvertible {
 extension DiscordActivityTimestamps: MessageIOConvertible {
 	public var usingMessageIO: Presence.Activity.Timestamps {
 		return Presence.Activity.Timestamps(
-			start: start,
-			end: end
+			start: start.map { Date(timeIntervalSince1970: Double($0)) },
+			end: end.map { Date(timeIntervalSince1970: Double($0)) }
 		)
 	}
 }

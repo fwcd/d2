@@ -61,10 +61,12 @@ public struct Presence {
 		}
 		
 		public struct Timestamps: Codable {
-			public let start: Int?
-			public let end: Int?
+			public let start: Date?
+			public let end: Date?
+
+			public var interval: TimeInterval? { start.map { (end ?? Date()).timeIntervalSince($0) } }
 			
-			public init(start: Int? = nil, end: Int? = nil) {
+			public init(start: Date? = nil, end: Date? = nil) {
 				self.start = start
 				self.end = end
 			}

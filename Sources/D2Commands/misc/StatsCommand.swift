@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2Permissions
+import D2Utils
 import Foundation
 
 public class StatsCommand: StringCommand {
@@ -29,7 +30,7 @@ public class StatsCommand: StringCommand {
 		var voiceChannelCount: Int = 0
 		var textChannelCount: Int = 0
 		var presences: [Presence] = []
-		var longestPlayTime: Int = 0
+		var longestPlayTime: TimeInterval = 0
 		var longestPlayTimeGame: String = ""
 		var longestPlayTimeUsername: String = ""
 		
@@ -62,13 +63,10 @@ public class StatsCommand: StringCommand {
 			
 			for (_, presence) in guild.presences {
 				presences.append(presence)
-				if let game = presence.game {
-					let playTime = (game.timestamps?.end ?? Int(Date().timeIntervalSince1970)) - (game.timestamps?.start ?? Int.max)
-					if playTime > longestPlayTime {
-						longestPlayTime = playTime
-						longestPlayTimeGame = game.name
-						longestPlayTimeUsername = presence.user.username
-					}
+				if let game = presence.game, let playTime = game.timestamps?.interval, playTime > longestPlayTime {
+					longestPlayTime = playTime
+					longestPlayTimeGame = game.name
+					longestPlayTimeUsername = presence.user.username
 				}
 			}
 		}
@@ -84,7 +82,7 @@ public class StatsCommand: StringCommand {
 			(":pencil2: Text Channels", String(textChannelCount)),
 			(":straight_ruler: Longest Username", "`\(longestUsername)`"),
 			(":triangular_flag_on_post: Most Roles", "\(mostRoles.joined(separator: ", ")) by `\(mostRolesUsername)`"),
-			(":stopwatch: Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime)s"),
+			(":stopwatch: Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString) seconds"),
 			(":video_game: Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players")
 		]
 	}

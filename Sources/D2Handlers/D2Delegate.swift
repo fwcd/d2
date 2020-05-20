@@ -157,6 +157,7 @@ public class D2Delegate: MessageDelegate {
 		registry["chord"] = FretboardChordCommand()
 		registry["web"] = WebCommand()
 		registry["stats"] = StatsCommand()
+		registry["whatsup"] = WhatsUpCommand()
 		registry["songcharts"] = SongChartsCommand()
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()

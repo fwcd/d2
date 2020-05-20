@@ -113,7 +113,7 @@ public struct Guild {
 		public let mute: Bool
 		public let nick: String?
 		public let roleIds: [RoleID]
-		
+
 		public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, mute: Bool, nick: String? = nil, roleIds: [RoleID] = []) {
 			self.guildId = guildId
 			self.joinedAt = joinedAt

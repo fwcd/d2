@@ -49,7 +49,7 @@ public class UserCommand: StringCommand {
                     Party: \($0.party.map { "\($0.id) - sizes: \($0.sizes ?? [])" } ?? "_none_")
                     State: \($0.state ?? "_none_")
                     Type: \(stringOf(activityType: $0.type))
-                    Timestamps: \($0.timestamps.map { "start: \($0.start ?? 0) - end: \($0.end ?? 0)" } ?? "_none_")
+                    Timestamps: playing for \($0.timestamps?.interval?.displayString ?? "unknown amount of time")
                     """)
             ] } ?? []) } ?? [])
         ))
