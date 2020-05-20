@@ -27,11 +27,11 @@ public protocol MessageDelegate {
 
 	func on(createMessage message: Message, client: MessageClient)
 
-	func on(createRole role: Role, client: MessageClient)
+	func on(createRole role: Role, on guild: Guild, client: MessageClient)
 
-	func on(deleteRole role: Role, client: MessageClient)
+	func on(deleteRole role: Role, from guild: Guild, client: MessageClient)
 
-	func on(updateRole role: Role, client: MessageClient)
+	func on(updateRole role: Role, on guild: Guild, client: MessageClient)
 
 	func on(receivePresenceUpdate presence: Presence, client: MessageClient)
 
@@ -39,7 +39,7 @@ public protocol MessageDelegate {
 
 	func on(receiveVoiceStateUpdate state: VoiceState, client: MessageClient)
 
-	func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, client: MessageClient)
+	func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, for guild: Guild, client: MessageClient)
 
 	func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: MessageClient)
 }
@@ -71,11 +71,11 @@ public extension MessageDelegate {
 
 	func on(createMessage message: Message, client: MessageClient) {}
 
-	func on(createRole role: Role, client: MessageClient) {}
+	func on(createRole role: Role, on guild: Guild, client: MessageClient) {}
 
-	func on(deleteRole role: Role, client: MessageClient) {}
+	func on(deleteRole role: Role, from guild: Guild, client: MessageClient) {}
 
-	func on(updateRole role: Role, client: MessageClient) {}
+	func on(updateRole role: Role, on guild: Guild, client: MessageClient) {}
 
 	func on(receivePresenceUpdate presence: Presence, client: MessageClient) {}
 
@@ -83,7 +83,7 @@ public extension MessageDelegate {
 
 	func on(receiveVoiceStateUpdate state: VoiceState, client: MessageClient) {}
 
-	func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, client: MessageClient) {}
+	func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, for guild: Guild, client: MessageClient) {}
 
 	func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: MessageClient) {}
 }

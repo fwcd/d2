@@ -69,16 +69,56 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(updateGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
-        log.debug("Got presence update")
-        inner.on(receivePresenceUpdate: presence.usingMessageIO, client: overlayClient(with: discordClient))
+    public func client(_ discordClient: DiscordClient, didUpdateMessage message: DiscordMessage) {
+        log.debug("Got message update")
+        inner.on(updateMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
     }
-    
+
     public func client(_ discordClient: DiscordClient, didCreateMessage message: DiscordMessage) {
         log.debug("Got message")
         inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
+    public func client(_ discordClient: DiscordClient, didCreateRole role: DiscordRole, onGuild guild: DiscordGuild) {
+        log.debug("Got role create: \(role.name) on guild \(guild.name)")
+        inner.on(createRole: role.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didDeleteRole role: DiscordRole, onGuild guild: DiscordGuild) {
+        log.debug("Got role delete: \(role.name) on guild \(guild.name)")
+        inner.on(deleteRole: role.usingMessageIO, from: guild.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didUpdateRole role: DiscordRole, onGuild guild: DiscordGuild) {
+        log.debug("Got role update: \(role.name) on guild \(guild.name)")
+        inner.on(updateRole: role.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
+        log.debug("Got presence update")
+        inner.on(receivePresenceUpdate: presence.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+    
+    public func client(_ discordClient: DiscordClient, didReceiveReady ready: [String: Any]) {
+        log.debug("Received ready")
+        inner.on(receiveReady: ready, client: overlayClient(with: discordClient))
+    }
+    
+    public func client(_ discordClient: DiscordClient, didReceiveVoiceStateUpdate voiceState: DiscordVoiceState) {
+        log.debug("Got voice state update")
+        inner.on(receiveVoiceStateUpdate: voiceState.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+    
+    public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: DiscordLazyDictionary<SwiftDiscord.UserID, DiscordGuildMember>, forGuild guild: DiscordGuild) {
+        log.debug("Handling guild member chunk")
+        inner.on(handleGuildMemberChunk: chunk.usingMessageIO, for: guild.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+    
+    public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [SwiftDiscord.EmojiID: DiscordEmoji], onGuild guild: DiscordGuild) {
+        log.debug("Got updated emojis")
+        inner.on(updateEmojis: emojis.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+    
     private func overlayClient(with discordClient: DiscordClient) -> MessageClient {
         OverlayMessageClient(inner: sinkClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
     }
