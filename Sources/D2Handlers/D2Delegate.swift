@@ -199,13 +199,14 @@ public class D2Delegate: MessageDelegate {
 
 		for (i, _) in messageHandlers.enumerated() {
 			if messageHandlers[i].handleRaw(message: message, from: client) {
-				break
+				return
 			}
 			if messageHandlers[i].handle(message: m, from: client) {
-				break
+				return
 			}
 		}
 
+		// Only fire on unhandled messages
 		if m.author?.id != client.me?.id {
 			MessageParser().parse(message: m) {
 				self.eventListenerBus.fire(event: .messageCreate, with: $0)

@@ -1,4 +1,5 @@
 import D2Utils
+import D2MessageIO
 
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\w+)")
 
@@ -30,7 +31,7 @@ public class AddEventListenerCommand: StringCommand {
             }
 
             eventListenerBus.addListener(name: listenerName, for: event, output: output)
-            output.append("Added event listener!")
+            context.channel?.send(Message(content: "Added event listener!"))
         } else {
             output.append(errorText: info.helpText!)
         }
