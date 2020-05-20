@@ -1,6 +1,6 @@
 import D2Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+(\\w+)")
+fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\w+)")
 
 public class AddEventListenerCommand: StringCommand {
     public let info = CommandInfo(
@@ -13,10 +13,10 @@ public class AddEventListenerCommand: StringCommand {
             """,
         requiredPermissionLevel: .admin
     )
-    private let eventBus: EventBus
+    private let eventListenerBus: EventListenerBus
 
-    public init(eventBus: EventBus) {
-        self.eventBus = eventBus
+    public init(eventListenerBus: EventListenerBus) {
+        self.eventListenerBus = eventListenerBus
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -24,12 +24,12 @@ public class AddEventListenerCommand: StringCommand {
             let rawEventName = parsedArgs[1]
             let listenerName = parsedArgs[2]
 
-            guard let event = EventBus.Event(rawValue: rawEventName) else {
-                output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventBus.Event.allCases.map { $0.rawValue })`")
+            guard let event = EventListenerBus.Event(rawValue: rawEventName) else {
+                output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventListenerBus.Event.allCases.map { $0.rawValue })`")
                 return
             }
 
-            eventBus.addListener(name: listenerName, for: event, output: output)
+            eventListenerBus.addListener(name: listenerName, for: event, output: output)
             output.append("Added event listener!")
         } else {
             output.append(errorText: info.helpText!)

@@ -13,6 +13,7 @@ public class D2Delegate: MessageDelegate {
 	private let initialPresence: String?
 	private let messageDB: MessageDatabase
 	private var registry: CommandRegistry
+	private var eventListenerBus: EventListenerBus
 	private var messageRewriters: [MessageRewriter]
 	private var messageHandlers: [MessageHandler]
 	
@@ -22,6 +23,7 @@ public class D2Delegate: MessageDelegate {
 		
 		registry = CommandRegistry()
 		messageDB = try MessageDatabase()
+		eventListenerBus = EventListenerBus()
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
 		let subscriptionManager = SubscriptionManager(registry: registry)
@@ -65,6 +67,8 @@ public class D2Delegate: MessageDelegate {
 		registry["void"] = VoidCommand()
 		registry["quit"] = QuitCommand()
 		registry["grep"] = GrepCommand()
+		registry["addeventlistener", aka: ["on"]] = AddEventListenerCommand(eventListenerBus: eventListenerBus)
+		registry["removeeventlistener", aka: ["off"]] = RemoveEventListenerCommand(eventListenerBus: eventListenerBus)
 		registry["last"] = LastMessageCommand()
 		registry["+"] = BinaryOperationCommand<Double>(name: "addition", operation: +)
 		registry["-"] = BinaryOperationCommand<Double>(name: "subtraction", operation: -)
@@ -198,6 +202,12 @@ public class D2Delegate: MessageDelegate {
 			}
 			if messageHandlers[i].handle(message: m, from: client) {
 				break
+			}
+		}
+
+		if m.author?.id != client.me?.id {
+			MessageParser().parse(message: m) {
+				self.eventListenerBus.fire(event: .messageCreate, with: $0)
 			}
 		}
 	}

@@ -1,6 +1,8 @@
-public class EventBus {
+public class EventListenerBus {
     /// Maps events to listeners
     private var listeners: [Event: [Listener]] = [:]
+
+    public init() {}
 
     private struct Listener {
         let name: String
