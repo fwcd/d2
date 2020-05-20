@@ -23,21 +23,8 @@ public class MarkovCommand: StringCommand {
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		guard let channelId = context.channel?.id else {
-			output.append(errorText: "Could not figure out the channel we are on")
-			return
-		}
-		guard let guildId = context.guild?.id else {
-			output.append(errorText: "Could not figure out the message's guild")
-			return
-		}
-		
-		// TODO: Filter guild ID in messages
-		
 		let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
-		let cleanedInput = flagPattern.replace(in: input, with: "")
-
-		
+		let cleanedInput = flagPattern.replace(in: input, with: "").nilIfEmpty
 
 		do {
 			// TODO: Use proper initial distribution without sacrificing performance

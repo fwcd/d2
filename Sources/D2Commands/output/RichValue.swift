@@ -20,25 +20,25 @@ public enum RichValue: Addable {
 	case compound([RichValue])
 	
 	public var asText: String? {
-		extract { if case let .text(text) = $0 { return text } else { return nil } }
+		extract { if case let .text(text) = $0 { return text } else { return nil } }.nilIfEmpty?.joined(separator: " ")
 	}
 	public var asCode: String? {
-		extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }
+		extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }.first
 	}
 	public var asMentions: [User]? {
-		extract { if case let .mentions(mentions) = $0 { return mentions } else { return nil } }
+		extract { r -> [User]? in if case let .mentions(mentions) = r { return mentions } else { return nil } }.flatMap { $0 }
 	}
 	public var asImage: Image? {
-		extract { if case let .image(image) = $0 { return image } else { return nil } }
+		extract { if case let .image(image) = $0 { return image } else { return nil } }.first
 	}
 	public var asGif: AnimatedGif? {
-		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }
+		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
 	}
 	public var asFiles: [Message.FileUpload]? {
-		extract { if case let .files(files) = $0 { return files } else { return nil } }
+		extract { r -> [Message.FileUpload]? in if case let .files(files) = r { return files } else { return nil } }.flatMap { $0 }
 	}
 	public var asAttachments: [Message.Attachment]? {
-		extract { if case let .attachments(attachments) = $0 { return attachments } else { return nil } }
+		extract { r -> [Message.Attachment]? in if case let .attachments(attachments) = r { return attachments } else { return nil } }.first
 	}
 	public var values: [RichValue] {
 		switch self {
@@ -48,16 +48,16 @@ public enum RichValue: Addable {
 		}
 	}
 	
-	private func extract<T>(using extractor: (RichValue) -> T?) -> T? {
+	private func extract<T>(using extractor: (RichValue) -> T?) -> [T] {
 		if let extracted = extractor(self) {
-			return extracted
+			return [extracted]
 		} else if case let .compound(values) = self {
-			return values.compactMap { $0.extract(using: extractor) }.first
+			return values.flatMap { $0.extract(using: extractor) }
 		} else {
-			return nil
+			return []
 		}
 	}
-	
+
 	public static func of(values: [RichValue]) -> RichValue {
 		switch values.count {
 			case 0: return .none
