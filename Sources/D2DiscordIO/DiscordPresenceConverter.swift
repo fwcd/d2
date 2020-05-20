@@ -26,7 +26,8 @@ extension DiscordActivity: MessageIOConvertible {
 			party: party?.usingMessageIO,
 			state: state,
 			timestamps: timestamps?.usingMessageIO,
-			type: type.usingMessageIO
+			type: type.usingMessageIO,
+			url: url
 		)
 	}
 }

@@ -56,6 +56,6 @@ public class WhatsUpCommand: StringCommand {
             game.state,
             game.timestamps?.interval?.displayString
         ].compactMap { $0 }.joined(separator: " - ").nilIfEmpty
-        return detail.map { "**\(member.displayName)**: \($0)" }
+        return detail.map { d in "**\(member.displayName)**: \(game.url.map { "[\(d)](\($0))" } ?? d)" }
     }
 }

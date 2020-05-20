@@ -25,8 +25,9 @@ public struct Presence {
 		public let state: String?
 		public let timestamps: Timestamps?
 		public let type: ActivityType
+		public let url: String?
 		
-		public init(name: String, assets: Assets? = nil, details: String? = nil, party: Party? = nil, state: String? = nil, timestamps: Timestamps? = nil, type: ActivityType) {
+		public init(name: String, assets: Assets? = nil, details: String? = nil, party: Party? = nil, state: String? = nil, timestamps: Timestamps? = nil, type: ActivityType, url: String? = nil) {
 			self.name = name
 			self.assets = assets
 			self.details = details
@@ -34,6 +35,7 @@ public struct Presence {
 			self.state = state
 			self.timestamps = timestamps
 			self.type = type
+			self.url = url
 		}
 		
 		public struct Assets: Codable {
