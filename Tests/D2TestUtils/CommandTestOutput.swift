@@ -27,6 +27,10 @@ public class CommandTestOutput: CommandOutput {
 		internalMessages.append(try! messageWriter.write(value: value))
 		changed = true
 	}
+
+	public func update(context: CommandContext) {
+		// Ignore
+	}
 	
 	public func nthLast(_ n: Int = 1) -> Message? {
 		return messages[safely: messages.count - n]
