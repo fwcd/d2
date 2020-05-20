@@ -17,6 +17,8 @@ public protocol MessageDelegate {
 
 	func on(updateGuild guild: Guild, client: MessageClient)
 
+	func on(addGuildMember member: Guild.Member, client: MessageClient)
+
 	func on(removeGuildMember member: Guild.Member, client: MessageClient)
 
 	func on(updateGuildMember member: Guild.Member, client: MessageClient)
@@ -58,6 +60,8 @@ public extension MessageDelegate {
 	func on(deleteGuild guild: Guild, client: MessageClient) {}
 
 	func on(updateGuild guild: Guild, client: MessageClient) {}
+
+	func on(addGuildMember member: Guild.Member, client: MessageClient) {}
 
 	func on(removeGuildMember member: Guild.Member, client: MessageClient) {}
 
