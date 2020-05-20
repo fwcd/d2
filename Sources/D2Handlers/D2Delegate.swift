@@ -210,8 +210,26 @@ public class D2Delegate: MessageDelegate {
 		// Only fire on unhandled messages
 		if m.author?.id != client.me?.id {
 			MessageParser().parse(message: m) {
-				self.eventListenerBus.fire(event: .createMessage, with: $0)
+				self.eventListenerBus.fire(event: .createMessage, with: $0, context: CommandContext(
+					client: client,
+					registry: self.registry,
+					message: m,
+					commandPrefix: self.commandPrefix,
+					subscriptions: .init()
+				))
 			}
+		}
+	}
+
+	public func on(updateMessage message: Message, client: MessageClient) {
+		MessageParser().parse(message: message) {
+			self.eventListenerBus.fire(event: .updateMessage, with: $0, context: CommandContext(
+				client: client,
+				registry: self.registry,
+				message: message,
+				commandPrefix: self.commandPrefix,
+				subscriptions: .init()
+			))
 		}
 	}
 
@@ -249,12 +267,6 @@ public class D2Delegate: MessageDelegate {
 
 	public func on(updateGuildMember member: Guild.Member, client: MessageClient) {
 		eventListenerBus.fire(event: .updateGuildMember, with: .mentions([member.user]))
-	}
-
-	public func on(updateMessage message: Message, client: MessageClient) {
-		MessageParser().parse(message: message) {
-			self.eventListenerBus.fire(event: .updateMessage, with: $0)
-		}
 	}
 
 	public func on(createRole role: Role, on guild: Guild, client: MessageClient) {

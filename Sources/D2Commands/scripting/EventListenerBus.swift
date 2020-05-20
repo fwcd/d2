@@ -33,8 +33,11 @@ public class EventListenerBus {
         case updateEmojis
     }
 
-    public func fire(event: Event, with input: RichValue) {
+    public func fire(event: Event, with input: RichValue, context: CommandContext? = nil) {
         for listener in listeners[event] ?? [] {
+            if let c = context {
+                listener.output.update(context: c)
+            }
             listener.output.append(input)
         }
     }
