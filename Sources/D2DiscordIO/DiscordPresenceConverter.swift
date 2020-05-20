@@ -65,8 +65,8 @@ extension DiscordParty: MessageIOConvertible {
 extension DiscordActivityTimestamps: MessageIOConvertible {
 	public var usingMessageIO: Presence.Activity.Timestamps {
 		return Presence.Activity.Timestamps(
-			start: start.map { Date(timeIntervalSince1970: Double($0)) },
-			end: end.map { Date(timeIntervalSince1970: Double($0)) }
+			start: start.map { Date(timeIntervalSince1970: Double($0) / 1000) },
+			end: end.map { Date(timeIntervalSince1970: Double($0) / 1000) }
 		)
 	}
 }

@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2Utils
 
 public class WhatsUpCommand: StringCommand {
     public let info = CommandInfo(
@@ -16,28 +17,33 @@ public class WhatsUpCommand: StringCommand {
         }
         let memberPresences = guild.presences.compactMap { (id, p) in guild.members[id].flatMap { ($0, p) } }
         output.append(Embed(
-            title: ":satellite: Currently Active",
+            title: ":confetti_ball: Currently Active",
             fields: [
-                Embed.Field(name: ":confetti_ball: Streaming", value: memberPresences
-                    .filter { $0.1.game?.type == .stream }
-                    .map { format(presence: $0.1, for: $0.0) }
-                    .joined(separator: "\n")
-                    .truncate(1000, appending: "...")
-                    .nilIfEmpty ?? "_no one is currently streaming :(_"),
-                Embed.Field(name: ":joystick: Gaming", value: memberPresences
-                    .filter { $0.1.game?.type == .game }
-                    .map { format(presence: $0.1, for: $0.0) }
-                    .joined(separator: "\n")
-                    .truncate(1000, appending: "...")
-                    .nilIfEmpty ?? "_no one is playing a game_"),
-                Embed.Field(name: ":headphones: Listening", value: memberPresences
-                    .filter { $0.1.game?.type == .listening }
-                    .map { format(presence: $0.1, for: $0.0) }
-                    .joined(separator: "\n")
-                    .truncate(1000, appending: "...")
-                    .nilIfEmpty ?? "_no one is listening to music_")
-            ]
+                embedFieldsOf(title: ":satellite: Streaming", for: .stream, amongst: memberPresences),
+                embedFieldsOf(title: ":joystick: Gaming", for: .game, amongst: memberPresences),
+                embedFieldsOf(title: ":headphones: Listening", for: .listening, amongst: memberPresences)
+            ].flatMap { $0 }
         ))
+    }
+
+    private func embedFieldsOf(title: String, for activityType: Presence.Activity.ActivityType, amongst memberPresences: [(Guild.Member, Presence)]) -> [Embed.Field] {
+        let filtered = memberPresences.filter { $0.1.game?.type == activityType }
+        let (groups, rest) = Dictionary(grouping: filtered, by: { $0.1.game!.name })
+            .sorted(by: descendingComparator { $0.1.count })
+            .span { $0.1.count > 4 }
+        return groups.map { (name, mps) in
+            Embed.Field(name: "\(title): \(name)", value: mps
+                .map { format(presence: $0.1, for: $0.0) }
+                .joined(separator: "\n")
+                .truncate(500, appending: "...")
+                .nilIfEmpty ?? "_no one currently :(_")
+        } + (rest.flatMap { $0.1 }.nilIfEmpty.map { mps in
+            [Embed.Field(name: title, value: mps
+                .map { format(presence: $0.1, for: $0.0) }
+                .joined(separator: "\n")
+                .truncate(500, appending: "...")
+                .nilIfEmpty ?? "_no one currently :(_")]
+        } ?? [])
     }
 
     private func format(presence: Presence, for member: Guild.Member) -> String {

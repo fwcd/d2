@@ -34,6 +34,13 @@ public extension Array {
 	func chunks(ofLength chunkLength: Int) -> [[Element]] {
 		return stride(from: 0, to: count, by: chunkLength).map { Array(self[$0..<Swift.min($0 + chunkLength, count)]) }
 	}
+
+	/// The longest prefix satisfying the predicate and the rest of the list
+	func span(_ inPrefix: (Element) -> Bool) -> (ArraySlice<Element>, ArraySlice<Element>) {
+		let pre = prefix(while: inPrefix)
+		let rest = self[pre.endIndex...]
+		return (pre, rest)
+	}
 }
 
 public extension Array where Element: Equatable {

@@ -82,7 +82,7 @@ public class StatsCommand: StringCommand {
 			(":pencil2: Text Channels", String(textChannelCount)),
 			(":straight_ruler: Longest Username", "`\(longestUsername)`"),
 			(":triangular_flag_on_post: Most Roles", "\(mostRoles.joined(separator: ", ")) by `\(mostRolesUsername)`"),
-			(":stopwatch: Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString) seconds"),
+			(":stopwatch: Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
 			(":video_game: Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players")
 		]
 	}
