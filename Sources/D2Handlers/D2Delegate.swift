@@ -141,6 +141,7 @@ public class D2Delegate: MessageDelegate {
 		registry["watch"] = WatchCommand()
 		registry["poll"] = PollCommand()
 		registry["concat"] = ConcatCommand()
+		registry["revconcat"] = ReverseConcatCommand()
 		registry["presence"] = PresenceCommand()
 		registry["xkcd"] = XkcdCommand()
 		registry["coinflip"] = CoinFlipCommand()
