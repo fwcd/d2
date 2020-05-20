@@ -1,3 +1,5 @@
+import D2MessageIO
+
 public class RickrollCommand: Command {
     public let info = CommandInfo(
         category: .fun,
@@ -22,9 +24,19 @@ public class RickrollCommand: Command {
             return
         }
 
-        client.deleteMessage(messageId, on: channelId) { _, _ in
-            let what = ["cool video", "meme compilation", "awesome remix", "great song", "tutorial", "nice trailer", "movie"].randomElement()!
-            output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " and ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
+        let keepMessage = input.asText?.contains("--keep") ?? false
+
+        if keepMessage {
+            rickroll(output: output, mentions: mentions)
+        } else {
+            client.deleteMessage(messageId, on: channelId) { _, _ in
+                self.rickroll(output: output, mentions: mentions)
+            }
         }
+    }
+
+    private func rickroll(output: CommandOutput, mentions: [User]) {
+        let what = ["cool video", "meme compilation", "awesome remix", "great song", "tutorial", "nice trailer", "movie"].randomElement()!
+        output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " and ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
     }
 }
