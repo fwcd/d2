@@ -13,6 +13,8 @@ fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
  * Parses Discord messages into rich values.
  */
 public struct MessageParser {
+	private let ndArrayParser = NDArrayParser()
+
 	public init() {}
 	
 	/**
@@ -44,9 +46,11 @@ public struct MessageParser {
 		if let mentions = message.mentions.nilIfEmpty {
 			values.append(.mentions(mentions))
 		}
-		
-		var asyncTaskCount = 0
-		let semaphore = DispatchSemaphore(value: 0)
+
+		// Parse nd-arrays
+		if let ndArrays = ndArrayParser.parseMultiple(message.content).nilIfEmpty {
+			values.append(.ndArrays(ndArrays))
+		}
 		
 		// Fetch attachments
 		if !message.attachments.isEmpty {
@@ -54,6 +58,9 @@ public struct MessageParser {
 		}
 		
 		// Download image attachments
+		var asyncTaskCount = 0
+		let semaphore = DispatchSemaphore(value: 0)
+
 		for attachment in message.attachments {
 			let fileName = attachment.filename.lowercased()
 			

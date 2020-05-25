@@ -24,7 +24,7 @@ public class MatrixMultiplicationCommand: StringCommand {
             latexRenderer = try LatexRenderer()
         } catch {
             latexRenderer = nil
-            log.warning("Could not create LatexRenderer")
+            log.warning("Could not create LatexRenderer: \(error)")
         }
     }
     

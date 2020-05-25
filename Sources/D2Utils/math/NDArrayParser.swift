@@ -8,9 +8,24 @@ public struct NDArrayParser {
     public init() {}
 
     public func parse(_ input: String) throws -> NDArray<Rational> {
-        let rawTokens = tokenPattern.matches(in: input).map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-        let tokens = TokenIterator(rawTokens)
+        let tokens = tokenize(input)
         return try parseNDArray(from: tokens)
+    }
+
+    public func parseMultiple(_ input: String) -> [NDArray<Rational>] {
+        let tokens = tokenize(input)
+        var ndArrays = [NDArray<Rational>]()
+
+        while let ndArray = try? parseNDArray(from: tokens) {
+            ndArrays.append(ndArray)
+        }
+
+        return ndArrays
+    }
+
+    private func tokenize(_ input: String) -> TokenIterator<String> {
+        let rawTokens = tokenPattern.matches(in: input).map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        return TokenIterator(rawTokens)
     }
 
     private func parseNDArray(from tokens: TokenIterator<String>) throws -> NDArray<Rational> {

@@ -14,6 +14,7 @@ public enum RichValue: Addable {
 	case code(String, language: String?)
 	case embed(Embed?)
 	case mentions([User])
+	case ndArrays([NDArray<Rational>])
 	case error(Error?, errorText: String)
 	case files([Message.FileUpload])
 	case attachments([Message.Attachment])
@@ -33,6 +34,9 @@ public enum RichValue: Addable {
 	}
 	public var asGif: AnimatedGif? {
 		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
+	}
+	public var asNDArrays: [NDArray<Rational>]? {
+		extract { r -> [NDArray<Rational>]? in if case let .ndArrays(ndArrays) = r { return ndArrays } else { return nil } }.flatMap { $0 }
 	}
 	public var asFiles: [Message.FileUpload]? {
 		extract { r -> [Message.FileUpload]? in if case let .files(files) = r { return files } else { return nil } }.flatMap { $0 }

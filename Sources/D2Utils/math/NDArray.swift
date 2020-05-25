@@ -93,6 +93,15 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, H
         return i
     }
 
+    /// Splits along the first axis.
+    public func split() throws -> [NDArray<T>] {
+        if dimension == 0 {
+            throw NDArrayError.shapeMismatch("Cannot split scalar")
+        }
+        let innerShape = Array(shape.dropFirst())
+        return values.chunks(ofLength: shape[0]).map { try! NDArray($0, shape: innerShape) }
+    }
+
     public func map<U>(_ f: (T) -> U) -> NDArray<U> where U: IntExpressibleAlgebraicField {
         try! NDArray<U>(values.map(f), shape: shape)
     }

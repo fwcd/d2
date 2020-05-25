@@ -1,3 +1,4 @@
+import D2Utils
 import D2MessageIO
 import Foundation
 #if canImport(FoundationNetworking)
@@ -25,38 +26,42 @@ public class MessageIOOutput: CommandOutput {
 			return
 		}
 
-		var message: Message
-		do {
-			if case let .error(error, errorText: errorText) = value {
-				log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
-			}
-			message = try messageWriter.write(value: value)
-		} catch {
-			log.error("Error while encoding message: \(error)")
-			message = Message(content: """
-				An error occurred while encoding the message:
-				```
-				\(error)
-				```
-				""")
+		if case let .error(error, errorText: errorText) = value {
+			log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
 		}
-		switch channel {
-			case .guildChannel(let id):
-				client.sendMessage(message, to: id)
-			case .dmChannel(let id):
-				client.createDM(with: id) { channelId, _ in
-					guard let id = channelId else {
-						log.error("Could not send direct message, since no channel ID could be fetched")
-						return
+
+		messageWriter.write(value: value).listen {
+			var message: Message
+			do {
+				message = try $0.get()
+			} catch {
+				log.error("Error while encoding message: \(error)")
+				message = Message(content: """
+					An error occurred while encoding the message:
+					```
+					\(error)
+					```
+					""")
+			}
+
+			switch channel {
+				case .guildChannel(let id):
+					client.sendMessage(message, to: id)
+				case .dmChannel(let id):
+					client.createDM(with: id) { channelId, _ in
+						guard let id = channelId else {
+							log.error("Could not send direct message, since no channel ID could be fetched")
+							return
+						}
+						client.sendMessage(message, to: id, then: self.onSent)
 					}
-					client.sendMessage(message, to: id, then: self.onSent)
-				}
-			case .defaultChannel:
-				if let textChannelId = context.channel?.id {
-					client.sendMessage(message, to: textChannelId, then: onSent)
-				} else {
-					log.warning("No default text channel available")
-				}
+				case .defaultChannel:
+					if let textChannelId = self.context.channel?.id {
+						client.sendMessage(message, to: textChannelId, then: self.onSent)
+					} else {
+						log.warning("No default text channel available")
+					}
+			}
 		}
 	}
 
