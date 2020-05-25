@@ -24,7 +24,7 @@ public class CommandTestOutput: CommandOutput {
 	public init() {}
 	
 	public func append(_ value: RichValue, to channel: OutputChannel) {
-		messageWriter.write(value: value) {
+		messageWriter.write(value: value).listen {
 			self.internalMessages.append(try! $0.get())
 			self.changed = true
 		}

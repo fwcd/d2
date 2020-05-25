@@ -37,8 +37,9 @@ public struct NDArrayParser {
     }
     
     private func parseValue(from tokens: TokenIterator<String>) throws -> Rational {
-        let token = tokens.next()
+        let token = tokens.peek()
         guard let value = token.flatMap({ Rational($0)?.reduced() }) else { throw NDArrayParserError.unrecognizedToken("Expected value, but got '\(token ?? "nil")'") }
+        tokens.next()
         return value
     }
     

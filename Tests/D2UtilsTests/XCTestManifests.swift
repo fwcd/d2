@@ -11,7 +11,8 @@ public func allTests() -> [XCTestCaseEntry] {
 		testCase(BinaryHeapTests.allTests),
 		testCase(StablePriorityQueueTests.allTests),
 		testCase(Mat2Tests.allTests),
-		testCase(RationalTests.allTests)
+		testCase(RationalTests.allTests),
+		testCase(NDArrayTests.allTests)
 	]
 }
 #endif
