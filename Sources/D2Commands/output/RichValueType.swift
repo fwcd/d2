@@ -6,6 +6,7 @@ public enum RichValueType {
     case code
     case embed
     case mentions
+    case ndArrays
     case error
     case files
     case attachments

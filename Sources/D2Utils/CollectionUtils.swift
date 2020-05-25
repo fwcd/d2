@@ -1,25 +1,31 @@
 public extension Sequence {
     func count(forWhich predicate: (Element) -> Bool) -> Int {
 		// TODO: Implemented in https://github.com/apple/swift-evolution/blob/master/proposals/0220-count-where.md
-        return reduce(0) { predicate($1) ? $0 + 1 : $0 }
+        reduce(0) { predicate($1) ? $0 + 1 : $0 }
     }
 }
 
 public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
 	var urlQueryEncoded: String {
-		return map { "\($0.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($0))=\($1.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($1))" }
+		map { "\($0.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($0))=\($1.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? String($1))" }
 			.joined(separator: "&")
 	}
 }
 
 public extension Collection {
 	var nilIfEmpty: Self? {
-		return isEmpty ? nil : self
+		isEmpty ? nil : self
 	}
 	
 	subscript(safely index: Index) -> Element? {
-		return indices.contains(index) ? self[index] : nil
+		indices.contains(index) ? self[index] : nil
 	}
+}
+
+// TODO: Implement this as a generic extension over collections containing optionals
+// once Swift supports this.
+public func allNonNil<T>(_ array: [T?]) -> [T]? where T: Equatable {
+	array.contains(nil) ? nil : array.map { $0! }
 }
 
 public extension Array {
