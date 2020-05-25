@@ -4,7 +4,9 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public let width: Int
     public let height: Int
     private var values: [T]
+
     public var asArray: [[T]] { (0..<height).map { Array(self[row: $0]) } }
+    public var asNDArray: NDArray<T> { NDArray(values, shape: [height, width]) }
     public var description: String { "(\((0..<height).map { "(\(self[row: $0].map { "\($0)" }.joined(separator: ", ")))" }.joined(separator: ", ")))" }
     public var formattedDescription: String {
         (0..<height)
@@ -158,5 +160,11 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
                 return column.matrix[y, column.x]
             }
         }
+    }
+}
+
+extension NDArray {
+    public var asMatrix: Matrix<T>? {
+        dimension == 2 ? Matrix(width: shape[1], height: shape[0], values: values) : nil
     }
 }

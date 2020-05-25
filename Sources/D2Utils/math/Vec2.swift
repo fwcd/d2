@@ -1,7 +1,9 @@
 public struct Vec2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Multipliable, Divisible, Negatable, Hashable, CustomStringConvertible {
 	public var x: T
 	public var y: T
+
 	public var asTuple: (x: T, y: T) { (x: x, y: y) }
+	public var asNDArray: NDArray<T> { NDArray([x, y]) }
 	public var xInverted: Vec2<T> { Vec2(x: -x, y: y) }
 	public var yInverted: Vec2<T> { Vec2(x: x, y: -y) }
 	public var description: String { "(\(x), \(y))" }
@@ -78,4 +80,10 @@ extension Vec2 where T: BinaryFloatingPoint {
 extension Vec2 where T: BinaryInteger {
 	public var magnitude: Double { Double((x * x) + (y * y)).squareRoot() }
 	public var asDouble: Vec2<Double> { map { Double($0) } }
+}
+
+extension NDArray {
+    public var asVec2: Vec2<T>? {
+        shape == [2] ? Vec2(x: values[0], y: values[1]) : nil
+    }
 }

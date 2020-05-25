@@ -8,6 +8,7 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
     public let jx: T
     public let iy: T
     public let jy: T
+
     public var determinant: T { (ix * jy) - (jx * iy) }
     public var inverse: Mat2<T>? {
         let det = determinant
@@ -15,6 +16,7 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
         return Mat2(ix: jy / det, jx: -jx / det, iy: -iy / det, jy: ix / det)
     }
     public var asMatrix: Matrix<T> { Matrix(width: 2, height: 2, values: [ix, jx, iy, jy]) }
+    public var asNDArray: NDArray<T> { NDArray([ix, jx, iy, jy], shape: [2, 2]) }
     public var description: String { ("(\(ix), \(jx))\n(\(iy), \(jy))") }
     
     public init(ix: T, jx: T, iy: T, jy: T) {
@@ -82,5 +84,11 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
     
     public static func /(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T>? {
         rhs.inverse.map { lhs * $0 }
+    }
+}
+
+extension NDArray {
+    public var asMat2: Mat2<T>? {
+        shape == [2, 2] ? Mat2(ix: values[0], jx: values[1], iy: values[2], jy: values[3]) : nil
     }
 }

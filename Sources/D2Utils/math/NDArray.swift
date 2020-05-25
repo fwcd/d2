@@ -2,11 +2,17 @@
 /// Generalization of a matrix/vector/scalar and
 /// sometimes referred to as 'tensor'.
 public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hashable, CustomStringConvertible {
-    private var values: [T]
-    private var shape: [Int]
+    public var values: [T] {
+        didSet { assert(shape.reduce(1, *) == values.count) }
+    }
+    public var shape: [Int] {
+        didSet { assert(shape.reduce(1, *) == values.count) }
+    }
 
     public var dimension: Int { shape.count }
     public var description: String { generateDescription(coords: []) }
+
+    public var asScalar: T? { dimension == 0 ? values[0] : nil }
 
     /// Creates an nd-array from a scalar.
     public init(_ value: T) {
