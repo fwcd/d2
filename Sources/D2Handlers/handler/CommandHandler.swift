@@ -136,7 +136,7 @@ public class CommandHandler: MessageHandler {
 			let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 			
 			if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-				log.info("Got command #\(currentIndex): \(groups)")
+				log.info("Got command #\(currentIndex): \(groups.dropFirst())")
 				let name = groups[1]
 				let args = groups[2]
 
