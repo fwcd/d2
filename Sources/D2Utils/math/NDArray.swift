@@ -27,23 +27,45 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, H
     }
 
     /// Creates an nd-array from a matrix.
-    public init(_ values: [[T]]) {
+    public init(_ values: [[T]]) throws {
         // Ensure the matrix is rectangular
         var width: Int? = nil
         for row in values {
-            if let w = width {
-                assert(w == row.count, "Cannot create NDArray from non-rectangular matrix")
+            if let w = width, w != row.count {
+                throw NDArrayError.shapeMismatch("Cannot create NDArray from non-rectangular matrix")
             }
             width = row.count
         }
 
+        guard let w = width else { throw NDArrayError.shapeMismatch("Cannot create zero-width matrix") }
         self.values = values.flatMap { $0 }
-        shape = [values.count, values.isEmpty ? 0 : values[0].count]
+        shape = [values.count, w]
+    }
+
+    /// Creates an nd-array from the given nd-arrays.
+    public init(ndArrays: [NDArray<T>]) throws {
+        // Ensure the arrays have the same shape
+        var innerShape: [Int]? = nil
+        for ndArray in ndArrays {
+            if let s = innerShape, s != ndArray.shape {
+                throw NDArrayError.shapeMismatch("Cannot create NDArray from differently sized NDArrays")
+            }
+            innerShape = ndArray.shape
+        }
+
+        guard let shape = innerShape.map({ [ndArrays.count] + $0 }) else {
+            throw NDArrayError.shapeMismatch("Cannot create a non-scalar NDArray with zero elements along one axis")
+        }
+
+        values = ndArrays.flatMap { $0.values }
+        self.shape = shape
     }
 
     /// Creates an nd-array with a given shape.
-    public init(_ values: [T], shape: [Int]) {
-        assert(shape.reduce(1, *) == values.count)
+    public init(_ values: [T], shape: [Int]) throws {
+        guard shape.reduce(1, *) == values.count else {
+            throw NDArrayError.shapeMismatch("Shape \(shape) does not match value count \(values.count)")
+        }
         self.values = values
         self.shape = shape
     }
@@ -72,24 +94,26 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, H
     }
 
     public func map<U>(_ f: (T) -> U) -> NDArray<U> where U: IntExpressibleAlgebraicField {
-        NDArray<U>(values.map(f), shape: shape)
+        try! NDArray<U>(values.map(f), shape: shape)
     }
     
-    public func zip<U>(_ rhs: NDArray<T>, with f: (T, T) -> U) -> NDArray<U> where U: IntExpressibleAlgebraicField {
-        assert(shape == rhs.shape)
+    public func zip<U>(_ rhs: NDArray<T>, with f: (T, T) -> U) throws -> NDArray<U> where U: IntExpressibleAlgebraicField {
+        guard shape == rhs.shape else {
+            throw NDArrayError.shapeMismatch("Cannot zip two differently shaped NDArrays: \(shape), \(rhs.shape)")
+        }
         var zipped = [U](repeating: 0, count: values.count)
         for i in 0..<zipped.count {
             zipped[i] = f(values[i], rhs.values[i])
         }
-        return NDArray<U>(zipped, shape: shape)
+        return try! NDArray<U>(zipped, shape: shape)
     }
 
     public static func +(lhs: Self, rhs: Self) -> Self {
-        lhs.zip(rhs, with: +)
+        try! lhs.zip(rhs, with: +)
     }
 
     public static func -(lhs: Self, rhs: Self) -> Self {
-        lhs.zip(rhs, with: -)
+        try! lhs.zip(rhs, with: -)
     }
 
     public static func *(lhs: Self, rhs: T) -> Self {

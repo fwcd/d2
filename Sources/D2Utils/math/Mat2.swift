@@ -16,7 +16,7 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
         return Mat2(ix: jy / det, jx: -jx / det, iy: -iy / det, jy: ix / det)
     }
     public var asMatrix: Matrix<T> { Matrix(width: 2, height: 2, values: [ix, jx, iy, jy]) }
-    public var asNDArray: NDArray<T> { NDArray([ix, jx, iy, jy], shape: [2, 2]) }
+    public var asNDArray: NDArray<T> { try! NDArray([ix, jx, iy, jy], shape: [2, 2]) }
     public var description: String { ("(\(ix), \(jx))\n(\(iy), \(jy))") }
     
     public init(ix: T, jx: T, iy: T, jy: T) {
