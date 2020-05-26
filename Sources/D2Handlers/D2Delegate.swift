@@ -89,6 +89,7 @@ public class D2Delegate: MessageDelegate {
 		registry["orthogonalize", aka: ["orthogonal", "ortho"]] = OrthogonalizeCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
+		registry["translate"] = TranslateCommand()
 		registry["portal"] = PortalCommand()
 		registry["mcping"] = MinecraftServerPingCommand()
 		registry["mcmods"] = MinecraftServerModsCommand()
