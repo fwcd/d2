@@ -23,11 +23,23 @@ public class OrthogonalizeCommand: Command {
             output.append(errorText: "Orthogonalization is only defined for square matrices")
             return
         }
-        guard let inverse = matrix.inverse else {
-            output.append(errorText: "The given matrix has no inverse")
+
+        let columns = matrix.columnVectors
+        guard let first = columns.first else {
+            output.append(errorText: "Your matrix does not contain a single column")
             return
         }
 
-        output.append(.ndArrays([inverse.asNDArray]))
+        var orthos = [first]
+
+        // Orthogonalize the vectors using Gram-Schmidt
+        for column in columns.dropFirst() {
+            orthos.append(column + orthos.map { -column.projected(onto: $0) }.reduce(Vector.zero(size: matrix.height), +))
+        }
+
+        // Normalize the vectors
+        orthos = orthos.map { $0 / Rational(approximately: $0.magnitude) }
+
+        output.append(.ndArrays([Matrix(orthos.map { $0.values }).transpose.asNDArray]))
     }
 }

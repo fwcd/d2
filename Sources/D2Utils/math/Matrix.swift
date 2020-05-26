@@ -87,6 +87,16 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public var determinant: T? {
         rowEcholonForm.mainDiagonal?.reduce(1, *)
     }
+
+    public var transpose: Matrix<T> {
+        var t = Matrix(width: height, height: width, values: Array(repeating: 0, count: width * height))
+        for y in 0..<height {
+            for x in 0..<width {
+                t[x, y] = self[y, x]
+            }
+        }
+        return t
+    }
     
     public init(width: Int, height: Int, values: [T]) {
         assert(values.count == (width * height))
@@ -95,12 +105,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         self.values = values
     }
     
-    public init(_ values: [[T]]) {
-        height = values.count
-        width = values.first?.count ?? 0
-        self.values = values.flatMap { $0 }
+    public init(_ rows: [[T]]) {
+        height = rows.count
+        width = rows.first?.count ?? 0
+        self.values = rows.flatMap { $0 }
     }
-    
+
     public subscript(_ x: Int, _ y: Int) -> T {
         get { values[y + x * width] }
         set { values[y + x * width] = newValue }
