@@ -63,7 +63,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         for x in (1..<width).reversed() {
             for y in (0..<x).reversed() {
                 inv.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x])
-                rowEcholon.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x])
+                // rowEcholon.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x])
             }
         }
         return inv
