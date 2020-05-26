@@ -151,6 +151,7 @@ public class D2Delegate: MessageDelegate {
 		registry["poll"] = PollCommand()
 		registry["concat"] = ConcatCommand()
 		registry["revconcat"] = ReverseConcatCommand()
+		registry["rev"] = ReverseInputCommand()
 		registry["presence"] = PresenceCommand()
 		registry["xkcd"] = XkcdCommand()
 		registry["coinflip"] = CoinFlipCommand()
