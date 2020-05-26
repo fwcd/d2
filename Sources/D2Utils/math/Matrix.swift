@@ -47,7 +47,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public static func identity(width: Int) -> Matrix<T> {
         var values = [T](repeating: 0, count: width * width)
         for i in 0..<width {
-            values[(i + 1) * width] = 1
+            values[i * (width + 1)] = 1
         }
         return Matrix(width: width, height: width, values: values)
     }

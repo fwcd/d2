@@ -80,6 +80,8 @@ public class D2Delegate: MessageDelegate {
 		registry["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
 		registry["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
 		registry["matmul"] = MatrixMultiplicationCommand()
+		registry["identitymat", aka: ["onemat", "identity"]] = IdentityMatrixCommand()
+		registry["zeromat"] = ZeroMatrixCommand()
 		registry["dot"] = DotProductCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()

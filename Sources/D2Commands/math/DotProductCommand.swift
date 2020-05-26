@@ -6,6 +6,8 @@ public class DotProductCommand: Command {
         shortDescription: "Computes the dot product",
         requiredPermissionLevel: .basic
     )
+    public let inputValueType: RichValueType = .ndArrays
+    public let outputValueType: RichValueType = .ndArrays
 
     public init() {}
 
