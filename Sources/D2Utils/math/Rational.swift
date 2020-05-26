@@ -7,12 +7,14 @@ fileprivate let reduceThreshold = 1000
 public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, Absolutable, ExpressibleByIntegerLiteral, Hashable, Comparable, CustomStringConvertible {
     public var numerator: Int
     public var denominator: Int
+    public var isPrecise: Bool
 
-    public var directDescription: String { denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)" }
-    public var description: String { reduced().directDescription }
     public var asDouble: Double { Double(numerator) / Double(denominator) }
     public var magnitude: Rational { Rational(abs(numerator), denominator) }
     public var absolute: Double { magnitude.asDouble }
+
+    public var directDescription: String { isPrecise ? (denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)") : "\(asDouble)" }
+    public var description: String { reduced().directDescription }
     
     public init?(_ string: String) {
         if let parsedFraction = fractionPattern.firstGroups(in: string) {
@@ -39,27 +41,30 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     public init(integerLiteral value: Int) {
         numerator = value
         denominator = 1
+        isPrecise = true
     }
 
-    public init(approximately value: Double, accuracy: Int = 1000) {
-        self.init(Int((value * Double(accuracy)).rounded()), accuracy)
+    public init(approximately value: Double, accuracy: Int = 10_000) {
+        self.init(Int((value * Double(accuracy)).rounded()), accuracy, isPrecise: false)
         reduce()
     }
     
-    public init(_ numerator: Int, _ denominator: Int) {
+    public init(_ numerator: Int, _ denominator: Int, isPrecise: Bool = true) {
         self.numerator = numerator
         self.denominator = denominator
+        self.isPrecise = isPrecise
         normalizeSign()
     }
     
     public static func +(lhs: Rational, rhs: Rational) -> Rational {
-        Rational(lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator, lhs.denominator * rhs.denominator).autoReduced()
+        Rational(lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator, lhs.denominator * rhs.denominator, isPrecise: lhs.isPrecise && rhs.isPrecise).autoReduced()
     }
     
     public static func +=(lhs: inout Rational, rhs: Rational) {
         let newDenominator = lhs.denominator * rhs.denominator
         lhs.numerator = lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator
         lhs.denominator = newDenominator
+        lhs.isPrecise = lhs.isPrecise && rhs.isPrecise
         lhs.autoReduce()
     }
     
@@ -72,27 +77,29 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public static func *(lhs: Rational, rhs: Rational) -> Rational {
-        Rational(lhs.numerator * rhs.numerator, lhs.denominator * rhs.denominator).autoReduced()
+        Rational(lhs.numerator * rhs.numerator, lhs.denominator * rhs.denominator, isPrecise: lhs.isPrecise && rhs.isPrecise).autoReduced()
     }
     
     public static func *=(lhs: inout Rational, rhs: Rational) {
         lhs.numerator *= rhs.numerator
         lhs.denominator *= rhs.denominator
+        lhs.isPrecise = lhs.isPrecise && rhs.isPrecise
         lhs.autoReduce()
     }
     
     public static func /(lhs: Rational, rhs: Rational) -> Rational {
-        Rational(lhs.numerator * rhs.denominator, lhs.denominator * rhs.numerator).autoReduced()
+        Rational(lhs.numerator * rhs.denominator, lhs.denominator * rhs.numerator, isPrecise: lhs.isPrecise && rhs.isPrecise).autoReduced()
     }
     
     public static func /=(lhs: inout Rational, rhs: Rational) {
         lhs.numerator *= rhs.denominator
         lhs.denominator *= rhs.numerator
+        lhs.isPrecise = lhs.isPrecise && rhs.isPrecise
         lhs.autoReduce()
     }
     
     public static prefix func -(operand: Rational) -> Rational {
-        Rational(-operand.numerator, operand.denominator)
+        Rational(-operand.numerator, operand.denominator, isPrecise: operand.isPrecise)
     }
     
     public static func <(lhs: Rational, rhs: Rational) -> Bool {
@@ -125,7 +132,7 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public func expanded(by factor: Int) -> Rational {
-        Rational(numerator * factor, denominator * factor)
+        Rational(numerator * factor, denominator * factor, isPrecise: isPrecise)
     }
     
     public mutating func expand(by factor: Int) {
@@ -134,7 +141,7 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public func reduced(by factor: Int) -> Rational {
-        Rational(numerator / factor, denominator / factor).normalizedSign()
+        Rational(numerator / factor, denominator / factor, isPrecise: isPrecise).normalizedSign()
     }
     
     public func reduced() -> Rational {

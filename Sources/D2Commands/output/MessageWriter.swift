@@ -94,8 +94,13 @@ public struct MessageWriter {
 
 	private func latexOf(rational: Rational) -> String {
         let sign = rational.signum()
-        let absReduced = abs(rational.reduced())
-        let frac = absReduced.denominator == 1 ? String(absReduced.numerator) : "\\frac{\(absReduced.numerator)}{\(absReduced.denominator)}"
+		let frac: String
+		if rational.isPrecise {
+			let absReduced = abs(rational.reduced())
+			frac = absReduced.denominator == 1 ? String(absReduced.numerator) : "\\frac{\(absReduced.numerator)}{\(absReduced.denominator)}"
+		} else {
+			frac = "\(rational.asDouble.magnitude)"
+		}
         return "\(sign < 0 ? "-" : "\\phantom{-}")\(frac)"
     }
 }
