@@ -136,4 +136,8 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, H
     public static func *(lhs: T, rhs: Self) -> Self {
         rhs.map { lhs * $0 }
     }
+
+    public func dot(_ rhs: Self) throws -> T {
+        try zip(rhs, with: *).values.reduce(0, +)
+    }
 }
