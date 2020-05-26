@@ -110,7 +110,7 @@ final class MatrixTests: XCTestCase {
             [-108, 48, -27, 150],
             [79, 0, 0, -158],
             [15, -33, 63, 45],
-            [26, 6, -33, 1]
+            [26, 6, -33, -1]
         ]))
         XCTAssertNil(Matrix<Rational>([
             [1, 0],
