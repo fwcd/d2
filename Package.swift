@@ -13,8 +13,6 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
         .package(url: "https://github.com/fwcd/SwiftDiscord.git", .revision("ebff2fa08752d88e52ba5da685e2299ffbfd52bb")),
-        // Workaround: Pull in a new version of SwiftNIO to fix the renaming of NIOWebSocketClientUpgrader
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.17.0"),
         .package(url: "https://github.com/givip/Telegrammer.git", .revision("32657287befddf3d303287bf319901f5c7a6f24e")),
         .package(url: "https://github.com/PureSwift/Cairo.git", .revision("b5f867a56a20d2f0064ccb975ae4a669b374e9e0")),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
