@@ -1,9 +1,9 @@
 import D2Utils
 
-public class DeterminantCommand: Command {
+public class InverseMatrixCommand: Command {
     public let info = CommandInfo(
         category: .math,
-        shortDescription: "Computes a determinant",
+        shortDescription: "Computes the inverse of a matrix",
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .ndArrays
@@ -20,10 +20,14 @@ public class DeterminantCommand: Command {
             return
         }
         guard matrix.isSquare else {
-            output.append(errorText: "The determinant is only defined for square matrices")
+            output.append(errorText: "The inverse is only defined for square matrices")
+            return
+        }
+        guard let inverse = matrix.inverse else {
+            output.append(errorText: "The given matrix has no inverse")
             return
         }
 
-        output.append(.ndArrays([NDArray(matrix.determinant!)]))
+        output.append(.ndArrays([inverse.asNDArray]))
     }
 }

@@ -1,5 +1,7 @@
 import Foundation
 
+fileprivate let epsilon = 0.00001
+
 public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hashable, CustomStringConvertible {
     public let width: Int
     public let height: Int
@@ -17,11 +19,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     }
 
     /// Computes the determinant in O(n!).
-    public var laplaceExpansionDeterminant: T {
-        guard isSquare else { fatalError("Cannot compute determinant of non-square matrix") }
+    public var laplaceExpansionDeterminant: T? {
+        guard isSquare else { return nil }
         guard height > 1 else { return values[0] }
-        return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).laplaceExpansionDeterminant }.reduce(0, +)
+        return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).laplaceExpansionDeterminant! }.reduce(0, +)
     }
+    /// Computes a triangular matrix from this matrix through Gauss elimination.
     public var rowEcholonForm: Matrix<T> {
         var rowEcholon = self
         for x in 0..<(width - 1) {
@@ -31,8 +34,42 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         }
         return rowEcholon
     }
-    public var mainDiagonal: [T] {
-        guard isSquare else { fatalError("Cannot compute main diagonal of non-square matrix") }
+    /// The row echolon form where all leading coefficients are 1.
+    public var normalizedRowEcholonForm: Matrix<T> {
+        var rowEcholon = rowEcholonForm
+        for y in 0..<height {
+            rowEcholon.scale(row: y, by: 1 / rowEcholon.leadingCoefficient(y))
+        }
+        return rowEcholon
+    }
+    /// Finds the inverse of this matrix.
+    public var inverse: Matrix<T>? {
+        guard isSquare else { return nil }
+        var rowEcholon = self
+        var inv = Matrix<T>.identity(width: width)
+        for x in 0..<(width - 1) {
+            for y in (x + 1)..<height {
+                let factor = -rowEcholon[y, x] / rowEcholon[x, x]
+                inv.add(row: x, toRow: y, scaledBy: factor)
+                rowEcholon.add(row: x, toRow: y, scaledBy: factor)
+            }
+        }
+        for y in 0..<height {
+            let coeff = rowEcholon.leadingCoefficient(y)
+            guard coeff.absolute > epsilon else { return nil }
+            inv.scale(row: y, by: 1 / coeff)
+            rowEcholon.scale(row: y, by: 1 / coeff)
+        }
+        for x in (1..<width).reversed() {
+            for y in (0..<x).reversed() {
+                inv.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x])
+                rowEcholon.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x])
+            }
+        }
+        return inv
+    }
+    public var mainDiagonal: [T]? {
+        guard isSquare else { return nil }
         return (0..<width).map { self[$0, $0] }
     }
 
@@ -42,8 +79,8 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     /// to be of a floating point or rational type.
     /// If floating point values are not desired, use laplaceExpansionDeterminant
     /// instead (which has worse asymptotic time complexity though).
-    public var determinant: T {
-        rowEcholonForm.mainDiagonal.reduce(1, *)
+    public var determinant: T? {
+        rowEcholonForm.mainDiagonal?.reduce(1, *)
     }
     
     public init(width: Int, height: Int, values: [T]) {
@@ -97,6 +134,16 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         Matrix(width: width - 1, height: height - 1, values: values.enumerated().compactMap { (i, v) in
             (i / width == y || i % width == x) ? nil : v
         })
+    }
+
+    public func leadingCoefficient(_ y: Int) -> T {
+        for x in 0..<width {
+            let coeff = self[y, x]
+            if coeff.absolute > epsilon {
+                return coeff
+            }
+        }
+        return 0
     }
 
     public mutating func scale(row y: Int, by factor: T) {

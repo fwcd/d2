@@ -7,7 +7,8 @@ final class MatrixTests: XCTestCase {
     static var allTests = [
         ("testMinor", testMinor),
         ("testDeterminant", testDeterminant),
-        ("testRowEcholonForm", testRowEcholonForm)
+        ("testRowEcholonForm", testRowEcholonForm),
+        ("testInverse", testInverse)
     ]
 
     func testMinor() throws {
@@ -43,17 +44,17 @@ final class MatrixTests: XCTestCase {
             [4, -29, -8],
             [0, -1, 0],
             [0, 0, 2]
-        ]).determinant.asDouble, -8, accuracy: eps)
+        ]).determinant!.asDouble, -8, accuracy: eps)
         XCTAssertEqual(Matrix<Double>([
             [4, 5],
             [-3, 6]
-        ]).determinant, 39, accuracy: eps)
+        ]).determinant!, 39, accuracy: eps)
         XCTAssertEqual(Matrix<Double>([
             [4, 3, 5, 7],
             [1, 2, 3, 4],
             [3, 3, 3, 3],
             [9, 7, 8, 6]
-        ]).determinant, 27, accuracy: eps)
+        ]).determinant!, 27, accuracy: eps)
         XCTAssertEqual(Matrix<Int>([
             [4, 3, 5, 7],
             [1, 2, 3, 4],
@@ -72,6 +73,41 @@ final class MatrixTests: XCTestCase {
             [0, -2, -2],
             [0, 0, 0]
         ]))
+    }
+
+    func testInverse() throws {
+        XCTAssertEqual(Matrix<Rational>([
+            [1, 0, 0],
+            [0, 2, 0],
+            [0, 0, 3]
+        ]).inverse, Matrix<Rational>([
+            [1, 0, 0],
+            [0, Rational(1, 2), 0],
+            [0, 0, Rational(1, 3)]
+        ]))
+        XCTAssertEqual(Matrix<Rational>([
+            [2, 8],
+            [8, 4]
+        ]).inverse, Matrix<Rational>([
+            [-Rational(1, 14), Rational(1, 7)],
+            [Rational(1, 7), -Rational(1, 28)]
+        ]))
+        XCTAssertEqual(Matrix<Rational>([
+            [2, 3, 4],
+            [8, 9, 5],
+            [3, 4, 4]
+        ]).inverse, Matrix<Rational>([
+            [16, 4, -21],
+            [-17, -4, 22],
+            [5, 1, -6]
+        ]))
+        XCTAssertNil(Matrix<Rational>([
+            [1, 0],
+            [0, 0]
+        ]).inverse)
+        XCTAssertNil(Matrix<Rational>([
+            [1, 2]
+        ]).inverse)
     }
 
     private func assertApproxEqual(_ a: Matrix<Double>, _ b: Matrix<Double>) {

@@ -1,12 +1,15 @@
 fileprivate let decimalPattern = try! Regex(from: "(-?)(\\d+)(?:\\.(\\d+))?")
 fileprivate let fractionPattern = try! Regex(from: "(-?\\d+)\\s*/\\s*(-?\\d+)")
 
+fileprivate let reduceThreshold = 1000
+
 /// A numeric type supporting precise division.
 public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, Absolutable, ExpressibleByIntegerLiteral, Hashable, Comparable, CustomStringConvertible {
     public var numerator: Int
     public var denominator: Int
 
-    public var description: String { denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)" }
+    public var directDescription: String { denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)" }
+    public var description: String { reduced().directDescription }
     public var asDouble: Double { Double(numerator) / Double(denominator) }
     public var magnitude: Rational { Rational(abs(numerator), denominator) }
     public var absolute: Double { magnitude.asDouble }
@@ -69,6 +72,10 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     public static func *=(lhs: inout Rational, rhs: Rational) {
         lhs.numerator *= rhs.numerator
         lhs.denominator *= rhs.denominator
+        // Auto-reduce fraction if the denom gets too large
+        if lhs.denominator > reduceThreshold {
+            lhs.reduce()
+        }
     }
     
     public static func /(lhs: Rational, rhs: Rational) -> Rational {
@@ -78,6 +85,10 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     public static func /=(lhs: inout Rational, rhs: Rational) {
         lhs.numerator *= rhs.denominator
         lhs.denominator *= rhs.numerator
+        // Auto-reduce fraction if the denom gets too large
+        if lhs.denominator > reduceThreshold {
+            lhs.reduce()
+        }
     }
     
     public static prefix func -(operand: Rational) -> Rational {
@@ -90,6 +101,18 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
         } else {
             return lhs.numerator * rhs.denominator < rhs.numerator * lhs.denominator
         }
+    }
+
+    public static func ==(lhs: Rational, rhs: Rational) -> Bool {
+        let lr = lhs.reduced()
+        let rr = rhs.reduced()
+        return lr.numerator == rr.numerator && lr.denominator == rr.denominator
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        let r = reduced()
+        hasher.combine(r.numerator)
+        hasher.combine(r.denominator)
     }
     
     public func signum() -> Int {
