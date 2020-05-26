@@ -16,15 +16,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             .joined(separator: "\n")
     }
 
-    // TODO: Laplace expansion has O(n!) runtime, use a more efficient algorithm
-    // e.g. by reducing the matrix to row-echolon-form and multiplying along the
-    // main diagonal.
-    public var determinant: T {
+    /// Computes the determinant in O(n!).
+    public var laplaceExpansionDeterminant: T {
         guard isSquare else { fatalError("Cannot compute determinant of non-square matrix") }
         guard height > 1 else { return values[0] }
-        return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).determinant }.reduce(0, +)
+        return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).laplaceExpansionDeterminant }.reduce(0, +)
     }
-
     public var rowEcholonForm: Matrix<T> {
         var rowEcholon = self
         for x in 0..<(width - 1) {
@@ -33,6 +30,20 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             }
         }
         return rowEcholon
+    }
+    public var mainDiagonal: [T] {
+        guard isSquare else { fatalError("Cannot compute main diagonal of non-square matrix") }
+        return (0..<width).map { self[$0, $0] }
+    }
+
+    /// Computes the determinant using Gaussian elimination in O(n^3).
+    ///
+    /// Note that this requires T to support precise division, i.e.
+    /// to be of a floating point or rational type.
+    /// If floating point values are not desired, use laplaceExpansionDeterminant
+    /// instead (which has worse asymptotic time complexity though).
+    public var determinant: T {
+        rowEcholonForm.mainDiagonal.reduce(1, *)
     }
     
     public init(width: Int, height: Int, values: [T]) {

@@ -1,10 +1,13 @@
-public struct Complex: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, Hashable, ExpressibleByFloatLiteral, CustomStringConvertible {
+/// A complex number, i.e. an element of the algebraic
+/// closure of the real numbers.
+public struct Complex: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, Absolutable, Hashable, ExpressibleByFloatLiteral, CustomStringConvertible {
 	public static let i = Complex(0, i: 1)
 	public var real: Double
 	public var imag: Double
 	public var description: String { return "\(real) + \(imag)i" }
 	public var magnitudeSquared: Double { return (real * real) + (imag * imag) }
 	public var magnitude: Double { return magnitudeSquared.squareRoot() }
+	public var absolute: Double { return magnitude }
 	public var squared: Complex { return self * self }
 	
 	public init(_ real: Double = 0, i imag: Double = 0) {

@@ -1,13 +1,15 @@
 fileprivate let decimalPattern = try! Regex(from: "(-?)(\\d+)(?:\\.(\\d+))?")
 fileprivate let fractionPattern = try! Regex(from: "(-?\\d+)\\s*/\\s*(-?\\d+)")
 
-public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, ExpressibleByIntegerLiteral, Hashable, Comparable, CustomStringConvertible {
+/// A numeric type supporting precise division.
+public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divisible, Negatable, Absolutable, ExpressibleByIntegerLiteral, Hashable, Comparable, CustomStringConvertible {
     public var numerator: Int
     public var denominator: Int
 
     public var description: String { denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)" }
     public var asDouble: Double { Double(numerator) / Double(denominator) }
     public var magnitude: Rational { Rational(abs(numerator), denominator) }
+    public var absolute: Double { magnitude.asDouble }
     
     public init?(_ string: String) {
         if let parsedFraction = fractionPattern.firstGroups(in: string) {
