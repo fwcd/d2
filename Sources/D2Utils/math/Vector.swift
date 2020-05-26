@@ -69,6 +69,11 @@ extension Vector where T: BinaryInteger {
 	public var asDouble: Vector<Double> { map { Double($0) } }
 }
 
+extension Vector where T == Rational {
+    public var magnitude: Double { dot(self).asDouble.squareRoot() }
+    public var asDouble: Vector<Double> { map { $0.asDouble } }
+}
+
 extension NDArray {
     public var asVector: Vector<T>? {
         dimension == 1 ? Vector(values) : nil
