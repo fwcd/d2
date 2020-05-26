@@ -48,6 +48,14 @@ public struct Vector<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mu
 	public static func /(lhs: Self, rhs: T) -> Self {
 		lhs.map { $0 / rhs }
 	}
+		
+	public static func *(lhs: T, rhs: Self) -> Self {
+		rhs.map { lhs * $0 }
+	}
+	
+	public static func /(lhs: T, rhs: Self) -> Self {
+		rhs.map { lhs / $0 }
+	}
 	
 	public prefix static func -(operand: Self) -> Self {
 		operand.map { -$0 }
@@ -55,6 +63,11 @@ public struct Vector<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mu
 	
 	public func dot(_ other: Self) -> T {
 		(self * other).values.reduce(0, +)
+	}
+
+	public func projected(onto other: Self) -> Vector<T> {
+		let factor: T = dot(other) / other.dot(other)
+		return factor * other
 	}
 }
 
