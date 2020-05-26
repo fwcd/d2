@@ -16,17 +16,17 @@ public struct MessageParser {
 	private let ndArrayParser = NDArrayParser()
 
 	public init() {}
-	
+
 	/**
 	 * Asynchronously parses a string with its
 	 * parent message and downloads
 	 * the attachments of a message.
 	 */
-	public func parse(_ str: String? = nil, message: Message, then: @escaping (RichValue) -> Void) {
+	public func parse(_ str: String? = nil, message: Message? = nil, then: @escaping (RichValue) -> Void) {
 		var values: [RichValue] = []
 		
 		// Parse message content
-		let content = str ?? message.content
+		let content = str ?? message?.content ?? ""
 		
 		let textualContent = codePattern.replace(in: content, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
 		if !textualContent.isEmpty {
@@ -40,28 +40,28 @@ public struct MessageParser {
 		}
 		
 		// Append embeds
-		values += message.embeds.map { .embed($0) }
+		values += message?.embeds.map { .embed($0) } ?? []
 
 		// Append mentions
-		if let mentions = message.mentions.nilIfEmpty {
+		if let mentions = message?.mentions.nilIfEmpty {
 			values.append(.mentions(mentions))
 		}
 
 		// Parse nd-arrays
-		if let ndArrays = ndArrayParser.parseMultiple(message.content).nilIfEmpty {
+		if let ndArrays = ndArrayParser.parseMultiple(content).nilIfEmpty {
 			values.append(.ndArrays(ndArrays))
 		}
 		
 		// Fetch attachments
-		if !message.attachments.isEmpty {
-			values.append(.attachments(message.attachments))
+		if let attachments = message?.attachments.nilIfEmpty {
+			values.append(.attachments(attachments))
 		}
 		
 		// Download image attachments
 		var asyncTaskCount = 0
 		let semaphore = DispatchSemaphore(value: 0)
 
-		for attachment in message.attachments {
+		for attachment in message?.attachments ?? [] {
 			let fileName = attachment.filename.lowercased()
 			
 			if fileName.hasSuffix(".png") {

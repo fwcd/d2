@@ -44,6 +44,12 @@ public enum RichValue: Addable {
 	public var asAttachments: [Message.Attachment]? {
 		extract { r -> [Message.Attachment]? in if case let .attachments(attachments) = r { return attachments } else { return nil } }.first
 	}
+	public var isNone: Bool {
+		switch self {
+			case .none: return true
+			default: return false
+		}
+	}
 	public var values: [RichValue] {
 		switch self {
 			case .none: return []
@@ -71,6 +77,12 @@ public enum RichValue: Addable {
 	}
 	
 	public static func +(lhs: RichValue, rhs: RichValue) -> RichValue {
-		return .of(values: lhs.values + rhs.values)
+		if lhs.isNone {
+			return rhs
+		} else if rhs.isNone {
+			return lhs
+		} else {
+			return .of(values: lhs.values + rhs.values)
+		}
 	}
 }

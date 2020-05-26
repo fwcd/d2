@@ -6,8 +6,9 @@ public class PipeOutput: CommandOutput {
 	private let sink: Command
 	private let args: String
 	private let next: CommandOutput?
-
 	private var context: CommandContext
+
+	private let msgParser = MessageParser()
 	
 	public init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
 		self.sink = sink
@@ -24,10 +25,11 @@ public class PipeOutput: CommandOutput {
 			nextOutput.append(value, to: channel)
 		} else {
 			log.debug("Piping to \(sink)")
-			let nextInput = args.isEmpty ? value : (.text(args) + value)
-			
-			log.trace("Invoking sink")
-			sink.invoke(input: nextInput, output: nextOutput, context: context)
+			msgParser.parse(args) {
+				let nextInput = $0 + value
+				log.trace("Invoking sink")
+				self.sink.invoke(input: nextInput, output: nextOutput, context: self.context)
+			}
 		}
 	}
 
