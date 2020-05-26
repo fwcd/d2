@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        # Build using only Swift 5.1
-        swift: ['5.1']
+        # Build using only Swift 5.2
+        swift: ['5.2']
     
     steps:
     - uses: actions/checkout@v1
