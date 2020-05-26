@@ -4,7 +4,8 @@ import XCTest
 final class MatrixTests: XCTestCase {
     static var allTests = [
         ("testMinor", testMinor),
-        ("testDeterminant", testDeterminant)
+        ("testDeterminant", testDeterminant),
+        ("testRowEcholonForm", testRowEcholonForm)
     ]
 
     func testMinor() throws {
@@ -51,5 +52,26 @@ final class MatrixTests: XCTestCase {
             [3, 3, 3, 3],
             [9, 7, 8, 6]
         ]).determinant, 27)
+    }
+
+    func testRowEcholonForm() throws {
+        assertApproxEqual(Matrix<Double>([
+            [1, 3, 1],
+            [1, 1, -1],
+            [3, 11, 5]
+        ]).rowEcholonForm, Matrix<Double>([
+            [1, 3, 1],
+            [0, -2, -2],
+            [0, 0, 0]
+        ]))
+    }
+
+    private func assertApproxEqual(_ a: Matrix<Double>, _ b: Matrix<Double>) {
+        XCTAssert(a.width == b.width && a.height == b.height)
+        for y in 0..<a.height {
+            for x in 0..<a.width {
+                XCTAssertEqual(a[y, x], b[y, x], accuracy: 0.001)
+            }
+        }
     }
 }

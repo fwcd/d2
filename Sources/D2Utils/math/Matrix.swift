@@ -24,6 +24,16 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         guard height > 1 else { return values[0] }
         return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).determinant }.reduce(0, +)
     }
+
+    public var rowEcholonForm: Matrix<T> {
+        var rowEcholon = self
+        for x in 0..<(width - 1) {
+            for y in (x + 1)..<height {
+                rowEcholon.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x] / rowEcholon[x, x])
+            }
+        }
+        return rowEcholon
+    }
     
     public init(width: Int, height: Int, values: [T]) {
         assert(values.count == (width * height))
@@ -76,6 +86,19 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         Matrix(width: width - 1, height: height - 1, values: values.enumerated().compactMap { (i, v) in
             (i / width == y || i % width == x) ? nil : v
         })
+    }
+
+    public mutating func scale(row y: Int, by factor: T) {
+        assert(factor != 0)
+        for x in 0..<width {
+            self[y, x] = self[y, x] * factor
+        }
+    }
+
+    public mutating func add(row y1: Int, toRow y2: Int, scaledBy factor: T) {
+        for x in 0..<width {
+            self[y2, x] = self[y2, x] + (self[y1, x] * factor)
+        }
     }
     
     public func map<U>(_ f: (T) -> U) -> Matrix<U> where U: IntExpressibleAlgebraicField {
