@@ -48,13 +48,14 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public static func +(lhs: Rational, rhs: Rational) -> Rational {
-        Rational(lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator, lhs.denominator * rhs.denominator)
+        Rational(lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator, lhs.denominator * rhs.denominator).autoReduced()
     }
     
     public static func +=(lhs: inout Rational, rhs: Rational) {
         let newDenominator = lhs.denominator * rhs.denominator
         lhs.numerator = lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator
         lhs.denominator = newDenominator
+        lhs.autoReduce()
     }
     
     public static func -(lhs: Rational, rhs: Rational) -> Rational {
@@ -66,29 +67,23 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public static func *(lhs: Rational, rhs: Rational) -> Rational {
-        Rational(lhs.numerator * rhs.numerator, lhs.denominator * rhs.denominator)
+        Rational(lhs.numerator * rhs.numerator, lhs.denominator * rhs.denominator).autoReduced()
     }
     
     public static func *=(lhs: inout Rational, rhs: Rational) {
         lhs.numerator *= rhs.numerator
         lhs.denominator *= rhs.denominator
-        // Auto-reduce fraction if the denom gets too large
-        if lhs.denominator > reduceThreshold {
-            lhs.reduce()
-        }
+        lhs.autoReduce()
     }
     
     public static func /(lhs: Rational, rhs: Rational) -> Rational {
-        Rational(lhs.numerator * rhs.denominator, lhs.denominator * rhs.numerator)
+        Rational(lhs.numerator * rhs.denominator, lhs.denominator * rhs.numerator).autoReduced()
     }
     
     public static func /=(lhs: inout Rational, rhs: Rational) {
         lhs.numerator *= rhs.denominator
         lhs.denominator *= rhs.numerator
-        // Auto-reduce fraction if the denom gets too large
-        if lhs.denominator > reduceThreshold {
-            lhs.reduce()
-        }
+        lhs.autoReduce()
     }
     
     public static prefix func -(operand: Rational) -> Rational {
@@ -140,6 +135,12 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     public func reduced() -> Rational {
         reduced(by: greatestCommonDivisor(numerator, denominator))
     }
+
+    public func autoReduced() -> Rational {
+        var r = self
+        r.autoReduce()
+        return r
+    }
     
     public mutating func reduce(by factor: Int) {
         numerator /= factor
@@ -149,6 +150,13 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     
     public mutating func reduce() {
         reduce(by: greatestCommonDivisor(numerator, denominator))
+    }
+
+    public mutating func autoReduce() {
+        // Auto-reduce fraction if the denom gets too large
+        if denominator > reduceThreshold {
+            reduce()
+        }
     }
     
     private mutating func normalizeSign() {

@@ -101,6 +101,17 @@ final class MatrixTests: XCTestCase {
             [-17, -4, 22],
             [5, 1, -6]
         ]))
+        XCTAssertEqual(Matrix<Rational>([
+            [2, 3, 4, 6],
+            [8, 9, 5, 3],
+            [3, 4, 4, -2],
+            [1, 0, 2, 3]
+        ]).inverse, Rational(1, 237) * Matrix<Rational>([
+            [-108, 48, -27, 150],
+            [79, 0, 0, -158],
+            [15, -33, 63, 45],
+            [26, 6, -33, 1]
+        ]))
         XCTAssertNil(Matrix<Rational>([
             [1, 0],
             [0, 0]
