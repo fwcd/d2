@@ -8,7 +8,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     private var values: [T]
 
     public var isSquare: Bool { width == height }
-    public var asArray: [[T]] { (0..<height).map { Array(self[row: $0]) } }
+
+    public var rows: [[T]] { (0..<height).map { Array(self[row: $0]) } }
+    public var columns: [[T]] { (0..<width).map { Array(self[column: $0]) } }
+    public var rowVectors: [Vector<T>] { rows.map(Vector.init) }
+    public var columnVectors: [Vector<T>] { columns.map(Vector.init) }
+    public var asArray: [[T]] { rows }
     public var asNDArray: NDArray<T> { try! NDArray(values, shape: [height, width]) }
 
     public var description: String { "(\((0..<height).map { "(\(self[row: $0].map { "\($0)" }.joined(separator: ", ")))" }.joined(separator: ", ")))" }

@@ -40,6 +40,11 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
         numerator = value
         denominator = 1
     }
+
+    public init(approximately value: Double, accuracy: Int = 1000) {
+        self.init(Int((value * Double(accuracy)).rounded()), accuracy)
+        reduce()
+    }
     
     public init(_ numerator: Int, _ denominator: Int) {
         self.numerator = numerator

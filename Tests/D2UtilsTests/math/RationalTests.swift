@@ -31,5 +31,7 @@ final class RationalTests: XCTestCase {
         XCTAssertEqual(Rational("-0.33"), Rational(33, -100))
         XCTAssertEqual(Rational("-1.2"), Rational(-6, 5))
         XCTAssertEqual(Rational(1, 4), 1 / 4)
+        XCTAssertEqual(Rational(approximately: 0.25), Rational(1, 4))
+        XCTAssertEqual(Rational(approximately: 0.21, accuracy: 10), Rational(1, 5))
     }
 }

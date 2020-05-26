@@ -84,7 +84,7 @@ public class D2Delegate: MessageDelegate {
 		registry["zeromat"] = ZeroMatrixCommand()
 		registry["dot"] = DotProductCommand()
 		registry["determinant", aka: ["det"]] = DeterminantCommand()
-		registry["inverse", aka: ["inversemat", "inv", "invmat"]] = InverseMatrixCommand()
+		registry["inverse", aka: ["inversemat", "invmat", "invert"]] = InverseMatrixCommand()
 		registry["rowecholonform", aka: ["rowecholon", "gausseliminate"]] = RowEcholonFormCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
