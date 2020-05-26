@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "f6487a11d80bfb9a0a0a752b7442847c7e3a8253",
-          "version": "2.12.0"
+          "revision": "c5fa0b456524cd73dc3ddbb263d4f46c20b86ca3",
+          "version": "2.17.0"
         }
       },
       {
@@ -186,7 +186,7 @@
         "repositoryURL": "https://github.com/fwcd/SwiftDiscord.git",
         "state": {
           "branch": null,
-          "revision": "f826f9bbd3e311079730aee7b088bc82eb252711",
+          "revision": "ebff2fa08752d88e52ba5da685e2299ffbfd52bb",
           "version": null
         }
       },
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit",
         "state": {
           "branch": null,
-          "revision": "66c0ea58398f055b5a0d92b0d5f4c32ef0c02eeb",
-          "version": null
+          "revision": "021edd1ca55451ad15b3e84da6b4064e4b877b34",
+          "version": "2.1.0"
         }
       }
     ]
