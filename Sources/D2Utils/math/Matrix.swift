@@ -5,13 +5,24 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public let height: Int
     private var values: [T]
 
+    public var isSquare: Bool { width == height }
     public var asArray: [[T]] { (0..<height).map { Array(self[row: $0]) } }
     public var asNDArray: NDArray<T> { try! NDArray(values, shape: [height, width]) }
+
     public var description: String { "(\((0..<height).map { "(\(self[row: $0].map { "\($0)" }.joined(separator: ", ")))" }.joined(separator: ", ")))" }
     public var formattedDescription: String {
         (0..<height)
             .map { "(\(self[row: $0].map { "\($0)" }.joined(separator: ", ")))" }
             .joined(separator: "\n")
+    }
+
+    // TODO: Laplace expansion has O(n!) runtime, use a more efficient algorithm
+    // e.g. by reducing the matrix to row-echolon-form and multiplying along the
+    // main diagonal.
+    public var determinant: T {
+        guard isSquare else { fatalError("Cannot compute determinant of non-square matrix") }
+        guard height > 1 else { return values[0] }
+        return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).determinant }.reduce(0, +)
     }
     
     public init(width: Int, height: Int, values: [T]) {
@@ -59,6 +70,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             values[(i + 1) * width] = diagonalValue
         }
         return Matrix(width: width, height: width, values: values)
+    }
+
+    public func minor(_ y: Int, _ x: Int) -> Matrix<T> {
+        Matrix(width: width - 1, height: height - 1, values: values.enumerated().compactMap { (i, v) in
+            (i / width == y || i % width == x) ? nil : v
+        })
     }
     
     public func map<U>(_ f: (T) -> U) -> Matrix<U> where U: IntExpressibleAlgebraicField {

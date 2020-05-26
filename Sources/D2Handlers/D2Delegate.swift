@@ -83,6 +83,7 @@ public class D2Delegate: MessageDelegate {
 		registry["identitymat", aka: ["idmat", "onemat"]] = IdentityMatrixCommand()
 		registry["zeromat"] = ZeroMatrixCommand()
 		registry["dot"] = DotProductCommand()
+		registry["determinant", aka: ["det"]] = DeterminantCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
 		registry["portal"] = PortalCommand()
