@@ -10,7 +10,7 @@ public class DeterminantCommand: Command {
     public let outputValueType: RichValueType = .ndArrays
     private let sizeLimit: Int
 
-    public init(sizeLimit: Int = 5) {
+    public init(sizeLimit: Int = 16) {
         self.sizeLimit = sizeLimit
     }
     
