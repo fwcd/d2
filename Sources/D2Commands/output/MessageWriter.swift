@@ -99,7 +99,7 @@ public struct MessageWriter {
 			let absReduced = abs(rational.reduced())
 			frac = absReduced.denominator == 1 ? String(absReduced.numerator) : "\\frac{\(absReduced.numerator)}{\(absReduced.denominator)}"
 		} else {
-			frac = "\(rational.asDouble.magnitude)"
+			frac = String(format: "%.4f", rational.asDouble.magnitude)
 		}
         return "\(sign < 0 ? "-" : "\\phantom{-}")\(frac)"
     }
