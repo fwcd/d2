@@ -44,7 +44,7 @@ public struct MessageWriter {
 				return Promise(Message(embed: embed))
 			case let .ndArrays(ndArrays):
 				return Promise { then in
-					if let renderer = latexRenderer {
+					if let renderer = latexRenderer, ndArrays.contains(where: { !$0.isScalar }) {
 						do {
 							try renderer.renderImage(from: self.latexOf(ndArrays: ndArrays), onError: { then(.failure($0)) }) { img in
 								then(Result { try Message(fromImage: img) })

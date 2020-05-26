@@ -12,7 +12,8 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, H
     public var dimension: Int { shape.count }
     public var description: String { generateDescription(coords: []) }
 
-    public var asScalar: T? { dimension == 0 ? values[0] : nil }
+    public var isScalar: Bool { dimension == 0 }
+    public var asScalar: T? { isScalar ? values[0] : nil }
 
     /// Creates an nd-array from a scalar.
     public init(_ value: T) {
