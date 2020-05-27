@@ -87,6 +87,7 @@ public class D2Delegate: MessageDelegate {
 		registry["inverse", aka: ["inversemat", "invmat", "invert"]] = InverseMatrixCommand()
 		registry["rowecholonform", aka: ["rowecholon", "gausseliminate"]] = RowEcholonFormCommand()
 		registry["orthogonalize", aka: ["orthogonal", "ortho"]] = OrthogonalizeCommand()
+		registry["transpose"] = TransposeCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
 		registry["translate"] = TranslateCommand()
