@@ -280,19 +280,42 @@ public class MessageDatabase: MarkovPredictor {
     }
     
     public func insert(message: Message) throws {
-        guard let messageMessageId = message.id else { throw MessageDatabaseError.missingID("Missing message ID") }
-        guard let messageChannelId = message.channelId else { throw MessageDatabaseError.missingID("Missing channel ID in message") }
-        guard let messageAuthorId = message.author?.id else { throw MessageDatabaseError.missingID("Missing author ID in message") }
+        guard let messageMessageId = try message.id.map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing message ID") }
+        guard let messageChannelId = try message.channelId.map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing channel ID in message") }
+        guard let messageAuthorId = try (message.author?.id).map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing author ID in message") }
         guard let messageTimestamp = message.timestamp else { throw MessageDatabaseError.missingTimestamp }
-        try db.run(messages.insert(
-            messageId <- try convert(id: messageMessageId),
-            channelId <- try convert(id: messageChannelId),
-            authorId <- try convert(id: messageAuthorId),
-            content <- message.content,
-            timestamp <- messageTimestamp,
-            hasAttachments <- (message.attachments.count > 0),
-            hasEmbed <- (message.embeds.count > 0)
-        ))
+
+        try db.transaction {
+            try db.run(messages.insert(
+                messageId <- messageMessageId,
+                channelId <- messageChannelId,
+                authorId <- messageAuthorId,
+                content <- message.content,
+                timestamp <- messageTimestamp,
+                hasAttachments <- (message.attachments.count > 0),
+                hasEmbed <- (message.embeds.count > 0),
+                mentionsEveryone <- message.mentionEveryone
+            ))
+            for reaction in message.reactions {
+                try db.run(reactions.insert(
+                    messageId <- messageMessageId,
+                    emojiName <- reaction.emoji.name,
+                    reactionCount <- Int64(reaction.count)
+                ))
+            }
+            for roleMention in message.mentionRoles {
+                try db.run(roleMentions.insert(
+                    messageId <- messageMessageId,
+                    roleId <- try convert(id: roleMention)
+                ))
+            }
+            for mention in message.mentions {
+                try db.run(userMentions.insert(
+                    messageId <- messageMessageId,
+                    userId <- try convert(id: mention.id)
+                ))
+            }
+        }
     }
 
     public func insert(emoji: Emoji) throws {
