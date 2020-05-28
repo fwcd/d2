@@ -48,8 +48,8 @@ fileprivate let userMentions = Table("user_mentions")
 fileprivate let roleMentions = Table("role_mentions")
 
 fileprivate let emojis = Table("emojis")
+fileprivate let emojiId = Expression<Int64>("emoji_id")
 fileprivate let emojiName = Expression<String>("emoji_name")
-fileprivate let emojiId = Expression<Int64?>("emoji_id")
 fileprivate let isAnimated = Expression<Bool>("is_animated")
 fileprivate let isManaged = Expression<Bool>("is_managed")
 fileprivate let requiresColons = Expression<Bool>("requires_colons")
@@ -137,16 +137,16 @@ public class MessageDatabase: MarkovPredictor {
                 $0.primaryKey(messageId, roleId)
             })
             try db.run(emojis.create(ifNotExists: true) {
-                $0.column(emojiName, primaryKey: true)
-                $0.column(emojiId)
+                $0.column(emojiId, primaryKey: true)
+                $0.column(emojiName, unique: true)
                 $0.column(isAnimated)
                 $0.column(isManaged)
                 $0.column(requiresColons)
             })
             try db.run(emojiRoles.create(ifNotExists: true) {
-                $0.column(emojiName)
+                $0.column(emojiId, references: emojis, emojiId)
                 $0.column(roleId, references: roles, roleId)
-                $0.primaryKey(emojiName, roleId)
+                $0.primaryKey(emojiId, roleId)
             })
             try db.run(markovTransitions.create(ifNotExists: true) {
                 $0.column(word)
@@ -261,6 +261,21 @@ public class MessageDatabase: MarkovPredictor {
                     channelName <- channel.name
                 ))
             }
+            for (id, emoji) in guild.emojis {
+                try db.run(emojis.insert(
+                    emojiId <- try convert(id: id),
+                    emojiName <- emoji.name,
+                    isAnimated <- emoji.animated,
+                    isManaged <- emoji.managed,
+                    requiresColons <- emoji.requireColons
+                ))
+                for rid in emoji.roles {
+                    try db.run(emojiRoles.insert(
+                        emojiId <- try convert(id: id),
+                        roleId <- try convert(id: rid)
+                    ))
+                }
+            }
         }
     }
     
@@ -278,6 +293,10 @@ public class MessageDatabase: MarkovPredictor {
             hasAttachments <- (message.attachments.count > 0),
             hasEmbed <- (message.embeds.count > 0)
         ))
+    }
+
+    public func insert(emoji: Emoji) throws {
+        
     }
     
     private func convert(id: ID) throws -> Int64 {
