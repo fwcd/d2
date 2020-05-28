@@ -38,6 +38,23 @@ fileprivate let content = Expression<String>("content")
 fileprivate let timestamp = Expression<Date>("timestamp")
 fileprivate let hasAttachments = Expression<Bool>("has_attachments")
 fileprivate let hasEmbed = Expression<Bool>("has_embed")
+fileprivate let mentionsEveryone = Expression<Bool>("mentions_everyone")
+
+fileprivate let reactions = Table("reactions")
+fileprivate let reactionCount = Expression<Int64>("reaction_count")
+
+fileprivate let userMentions = Table("user_mentions")
+
+fileprivate let roleMentions = Table("role_mentions")
+
+fileprivate let emojis = Table("emojis")
+fileprivate let emojiName = Expression<String>("emoji_name")
+fileprivate let emojiId = Expression<Int64?>("emoji_id")
+fileprivate let isAnimated = Expression<Bool>("is_animated")
+fileprivate let isManaged = Expression<Bool>("is_managed")
+fileprivate let requiresColons = Expression<Bool>("requires_colons")
+
+fileprivate let emojiRoles = Table("emoji_roles")
 
 fileprivate let markovTransitions = Table("markov_transitions")
 fileprivate let word = Expression<String>("word")
@@ -76,20 +93,20 @@ public class MessageDatabase: MarkovPredictor {
                 $0.column(verified)
             })
             try db.run(members.create(ifNotExists: true) {
-                $0.column(userId)
-                $0.column(guildId)
+                $0.column(userId, references: users, userId)
+                $0.column(guildId, references: guilds, guildId)
                 $0.column(nick)
                 $0.primaryKey(userId, guildId)
             })
             try db.run(memberRoles.create(ifNotExists: true) {
-                $0.column(userId)
-                $0.column(guildId)
-                $0.column(roleId)
+                $0.column(userId, references: users, userId)
+                $0.column(guildId, references: guilds, guildId)
+                $0.column(roleId, references: roles, roleId)
                 $0.primaryKey(userId, guildId, roleId)
             })
             try db.run(roles.create(ifNotExists: true) {
                 $0.column(roleId, primaryKey: true)
-                $0.column(guildId)
+                $0.column(guildId, references: guilds, guildId)
                 $0.column(roleName)
                 $0.column(roleColor)
                 $0.column(rolePosition)
@@ -102,6 +119,34 @@ public class MessageDatabase: MarkovPredictor {
                 $0.column(timestamp)
                 $0.column(hasAttachments)
                 $0.column(hasEmbed)
+                $0.column(mentionsEveryone)
+            })
+            try db.run(reactions.create(ifNotExists: true) {
+                $0.column(messageId)
+                $0.column(emojiName)
+                $0.column(reactionCount)
+            })
+            try db.run(userMentions.create(ifNotExists: true) {
+                $0.column(messageId, references: messages, messageId)
+                $0.column(userId, references: users, userId)
+                $0.primaryKey(messageId, userId)
+            })
+            try db.run(roleMentions.create(ifNotExists: true) {
+                $0.column(messageId, references: messages, messageId)
+                $0.column(roleId, references: roles, roleId)
+                $0.primaryKey(messageId, roleId)
+            })
+            try db.run(emojis.create(ifNotExists: true) {
+                $0.column(emojiName, primaryKey: true)
+                $0.column(emojiId)
+                $0.column(isAnimated)
+                $0.column(isManaged)
+                $0.column(requiresColons)
+            })
+            try db.run(emojiRoles.create(ifNotExists: true) {
+                $0.column(emojiName)
+                $0.column(roleId, references: roles, roleId)
+                $0.primaryKey(emojiName, roleId)
             })
             try db.run(markovTransitions.create(ifNotExists: true) {
                 $0.column(word)
