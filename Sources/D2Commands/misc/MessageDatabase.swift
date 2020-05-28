@@ -163,7 +163,7 @@ public class MessageDatabase: MarkovPredictor {
 
     private func insertMessages(with client: MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, Error> {
         Promise<MessageID?, Error> { then in
-            client.getMessages(for: id, limit: client.messageFetchLimit ?? 20) { messages, _ in
+            client.getMessages(for: id, limit: client.messageFetchLimit ?? 20, selection: selection) { messages, _ in
                 do {
                     if messages.isEmpty {
                         then(.success(nil))
@@ -183,24 +183,24 @@ public class MessageDatabase: MarkovPredictor {
                 }
             }
         }.then {
-            if let id = $0 {
-                log.info("Fetching messages before \(id)")
-                return self.insertMessages(with: client, from: id, selection: .before(id))
+            if let msgId = $0 {
+                log.info("Fetching messages before \(msgId)")
+                return self.insertMessages(with: client, from: id, selection: .before(msgId))
             } else {
                 return Promise(.success(nil))
             }
         }
     }
 
-    public func rebuildMessages(with client: MessageClient, from id: GuildID, progressListener: ((String) -> Void)? = nil) -> Promise<Void, Error> {
+    public func rebuildMessages(with client: MessageClient, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, Error> {
         guard let guild = client.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
 
         do {
             log.notice("Rebuilding messages in database...")
             try db.run(messages.delete())
 
-            let guildChannels = guild.channels
-            let promise: Promise<[Void], Error> = sequence(promises: guildChannels.map { ch in
+            let guildChannels = debugMode ? guild.channels.prefix(10).compactMap { $0 } : Array(guild.channels)
+            let promises: [Promise<Void, Error>] = guildChannels.map { ch in
                 Promise { then in
                     client.isGuildTextChannel(ch.key) { i, _ in
                         then(.success(i))
@@ -214,8 +214,8 @@ public class MessageDatabase: MarkovPredictor {
                         return Promise(.success(()))
                     }
                 } 
-            })
-            return promise.void()
+            }
+            return sequence(promises: promises).void()
         } catch {
             return Promise(.failure(error))
         }
