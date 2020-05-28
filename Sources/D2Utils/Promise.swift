@@ -9,13 +9,13 @@ public class Promise<T, E> where E: Error {
     }
 
     /// Creates a finished promise.
-    public init(_ value: Result<T, E>) {
+    public required init(_ value: Result<T, E>) {
         state = .finished(value)
     }
 
     /// Creates a promise from the given thenable and
     /// synchronously begins running it.
-    public init(_ thenable: (@escaping (Result<T, E>) -> Void) -> Void) {
+    public required init(_ thenable: (@escaping (Result<T, E>) -> Void) -> Void) {
         state = .pending
         thenable {
             self.state = .finished($0)
@@ -75,7 +75,7 @@ public class Promise<T, E> where E: Error {
 
 extension Promise where E == Error {
     /// Creates a (finished) promise catching the given block.
-    public convenience init(catching block: () throws -> T) {
-        self.init(Result(catching: block))
+    public static func catching(_ block: () throws -> T) -> Self {
+        return Self(Result(catching: block))
     }
 }

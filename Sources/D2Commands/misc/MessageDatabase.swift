@@ -170,10 +170,13 @@ public class MessageDatabase: MarkovPredictor {
                     } else {
                         try self.db.transaction {
                             for message in messages {
-                                try self.insert(message: message)
+                                try self.insertDirectly(message: message)
                             }
                         }
-                        then(.success(messages.min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture }).flatMap { $0.id }))
+                        then(.success(messages
+                            .filter { $0.id != nil }
+                            .min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture })
+                            .map { $0.id! }))
                     }
                 } catch {
                     then(.failure(error))
@@ -181,6 +184,7 @@ public class MessageDatabase: MarkovPredictor {
             }
         }.then {
             if let id = $0 {
+                log.info("Fetching messages before \(id)")
                 return self.insertMessages(with: client, from: id, selection: .before(id))
             } else {
                 return Promise(.success(nil))
@@ -195,11 +199,21 @@ public class MessageDatabase: MarkovPredictor {
             log.notice("Rebuilding messages in database...")
             try db.run(messages.delete())
 
-            let guildChannels = guild.channels.filter { client.permissionsForUser(id, in: $0.key, on: id).contains(.readMessages) }
-            let promise: Promise<[Void], Error> = sequence(promises: guildChannels.map {
-                log.info("Fetching messages from channel \($0.value.name)")
-                progressListener?($0.value.name)
-                return self.insertMessages(with: client, from: $0.key).void()
+            let guildChannels = guild.channels
+            let promise: Promise<[Void], Error> = sequence(promises: guildChannels.map { ch in
+                Promise { then in
+                    client.isGuildTextChannel(ch.key) { i, _ in
+                        then(.success(i))
+                    }
+                }.then {
+                    if $0 {
+                        log.info("Fetching messages from channel \(ch.value.name)")
+                        progressListener?(ch.value.name)
+                        return self.insertMessages(with: client, from: ch.key).void()
+                    } else {
+                        return Promise(.success(()))
+                    }
+                } 
             })
             return promise.void()
         } catch {
@@ -278,8 +292,14 @@ public class MessageDatabase: MarkovPredictor {
             }
         }
     }
-    
+
     public func insert(message: Message) throws {
+        try db.transaction {
+            try insertDirectly(message: message)
+        }
+    }
+    
+    private func insertDirectly(message: Message) throws {
         guard let messageMessageId = try message.id.map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing message ID") }
         guard let messageChannelId = try message.channelId.map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing channel ID in message") }
         guard let messageAuthorId = try (message.author?.id).map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing author ID in message") }
