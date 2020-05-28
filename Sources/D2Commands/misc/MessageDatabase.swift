@@ -215,7 +215,7 @@ public class MessageDatabase: MarkovPredictor {
                     }
                 } 
             }
-            return sequence(promises: promises).void()
+            return all(promises: promises).void()
         } catch {
             return Promise(.failure(error))
         }

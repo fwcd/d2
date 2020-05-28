@@ -48,9 +48,9 @@ public func all<T, E>(promises: [Promise<T, E>]) -> Promise<[T], E> where E: Err
 }
 
 /// Sequentially executes the promises.
-public func sequence<T, C, E>(promises: C) -> Promise<[T], E> where E: Error, C: Collection, C.Element == Promise<T, E> {
+public func sequence<T, C, E>(promises: C) -> Promise<[T], E> where E: Error, C: Collection, C.Element == (() -> Promise<T, E>) {
     if let promise = promises.first {
-        return promise.then { value in sequence(promises: promises.dropFirst()).map { [value] + $0 } }
+        return promise().then { value in sequence(promises: promises.dropFirst()).map { [value] + $0 } }
     } else {
         return Promise(.success([]))
     }
