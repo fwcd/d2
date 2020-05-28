@@ -138,7 +138,7 @@ public class MessageDatabase: MarkovPredictor {
             })
             try db.run(emojis.create(ifNotExists: true) {
                 $0.column(emojiId, primaryKey: true)
-                $0.column(emojiName, unique: true)
+                $0.column(emojiName)
                 $0.column(isAnimated)
                 $0.column(isManaged)
                 $0.column(requiresColons)
@@ -228,6 +228,19 @@ public class MessageDatabase: MarkovPredictor {
 
     public func setTracked(_ tracked: Bool, guildId id: GuildID) throws {
         try db.run(guilds.filter(guildId == convert(id: id)).update(guildTracked <- tracked))
+    }
+
+    public func emojiIds(for name: String) throws -> [EmojiID] {
+        let rows = try db.prepare(emojis.select(emojiId).where(emojiName == name))
+        return rows.map { convertBack(id: $0[emojiId]) }
+    }
+
+    public func countReactions(authorId id: UserID, emojiName name: String) throws -> Int {
+        let rows = try db.prepare(messages
+            .select(content.count)
+            .join(reactions, on: messages[messageId] == reactions[messageId])
+            .where(authorId == convert(id: id) && emojiName == name))
+        return rows.makeIterator().next()![content.count]
     }
 
     public func insert(guild: Guild) throws {

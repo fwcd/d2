@@ -154,6 +154,7 @@ public class D2Delegate: MessageDelegate {
 		registry["markov"] = MarkovCommand(messageDB: messageDB)
 		registry["conversate"] = ConversateCommand(messageDB: messageDB)
 		registry["emoji"] = EmojiCommand()
+		registry["karma"] = KarmaCommand(messageDB: messageDB)
 		registry["watch"] = WatchCommand()
 		registry["poll"] = PollCommand()
 		registry["concat"] = ConcatCommand()
