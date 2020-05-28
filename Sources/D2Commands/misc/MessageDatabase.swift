@@ -262,7 +262,7 @@ public class MessageDatabase: MarkovPredictor {
                 ))
             }
             for (id, emoji) in guild.emojis {
-                try db.run(emojis.insert(
+                try db.run(emojis.insert(or: .ignore,
                     emojiId <- try convert(id: id),
                     emojiName <- emoji.name,
                     isAnimated <- emoji.animated,
@@ -270,7 +270,7 @@ public class MessageDatabase: MarkovPredictor {
                     requiresColons <- emoji.requireColons
                 ))
                 for rid in emoji.roles {
-                    try db.run(emojiRoles.insert(
+                    try db.run(emojiRoles.insert(or: .ignore,
                         emojiId <- try convert(id: id),
                         roleId <- try convert(id: rid)
                     ))
@@ -285,41 +285,35 @@ public class MessageDatabase: MarkovPredictor {
         guard let messageAuthorId = try (message.author?.id).map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing author ID in message") }
         guard let messageTimestamp = message.timestamp else { throw MessageDatabaseError.missingTimestamp }
 
-        try db.transaction {
-            try db.run(messages.insert(
+        try db.run(messages.insert(or: .ignore,
+            messageId <- messageMessageId,
+            channelId <- messageChannelId,
+            authorId <- messageAuthorId,
+            content <- message.content,
+            timestamp <- messageTimestamp,
+            hasAttachments <- (message.attachments.count > 0),
+            hasEmbed <- (message.embeds.count > 0),
+            mentionsEveryone <- message.mentionEveryone
+        ))
+        for reaction in message.reactions {
+            try db.run(reactions.insert(or: .ignore,
                 messageId <- messageMessageId,
-                channelId <- messageChannelId,
-                authorId <- messageAuthorId,
-                content <- message.content,
-                timestamp <- messageTimestamp,
-                hasAttachments <- (message.attachments.count > 0),
-                hasEmbed <- (message.embeds.count > 0),
-                mentionsEveryone <- message.mentionEveryone
+                emojiName <- reaction.emoji.name,
+                reactionCount <- Int64(reaction.count)
             ))
-            for reaction in message.reactions {
-                try db.run(reactions.insert(
-                    messageId <- messageMessageId,
-                    emojiName <- reaction.emoji.name,
-                    reactionCount <- Int64(reaction.count)
-                ))
-            }
-            for roleMention in message.mentionRoles {
-                try db.run(roleMentions.insert(
-                    messageId <- messageMessageId,
-                    roleId <- try convert(id: roleMention)
-                ))
-            }
-            for mention in message.mentions {
-                try db.run(userMentions.insert(
-                    messageId <- messageMessageId,
-                    userId <- try convert(id: mention.id)
-                ))
-            }
         }
-    }
-
-    public func insert(emoji: Emoji) throws {
-        
+        for roleMention in message.mentionRoles {
+            try db.run(roleMentions.insert(or: .ignore,
+                messageId <- messageMessageId,
+                roleId <- try convert(id: roleMention)
+            ))
+        }
+        for mention in message.mentions {
+            try db.run(userMentions.insert(or: .ignore,
+                messageId <- messageMessageId,
+                userId <- try convert(id: mention.id)
+            ))
+        }
     }
     
     private func convert(id: ID) throws -> Int64 {
