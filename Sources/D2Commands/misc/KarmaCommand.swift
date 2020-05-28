@@ -25,11 +25,14 @@ public class KarmaCommand: StringCommand {
             let emojiId = try messageDB.emojiIds(for: emojiName).first
             output.append(Embed(
                 title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? "")Upvote Karma",
-                description: try users.map {
-                    (try messageDB.countReactions(authorId: $0.id, emojiName: emojiName), $0.username)
-                }.sorted(by: descendingComparator { $0.0 }).map {
-                    "**\($0.1)**: \($0.0) \("upvote".pluralize(with: $0.0))"
-                }.prefix(10).joined(separator: "\n").nilIfEmpty
+                description: try users
+                    .map { (try messageDB.countReactions(authorId: $0.id, emojiName: emojiName), $0.username) }
+                    .filter { $0.0 > 0 }
+                    .sorted(by: descendingComparator { $0.0 })
+                    .map { "**\($0.1)**: \($0.0) \("upvote".pluralize(with: $0.0))" }
+                    .prefix(20)
+                    .joined(separator: "\n")
+                    .nilIfEmpty
             ))
         } catch {
             output.append(error, errorText: "Something went wrong while querying the message db")
