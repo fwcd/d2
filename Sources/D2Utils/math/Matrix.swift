@@ -104,6 +104,18 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         self.height = height
         self.values = values
     }
+
+    public init(columnVector values: [T]) {
+        width = 1
+        height = values.count
+        self.values = values
+    }
+
+    public init(rowVector values: [T]) {
+        width = values.count
+        height = 1
+        self.values = values
+    }
     
     public init(_ rows: [[T]]) {
         height = rows.count
