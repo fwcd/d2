@@ -12,6 +12,7 @@ public class CombinedMessageClient: MessageClient {
     public var me: User? { nil }
     public var name: String { "Combined" }
     public var guilds: [Guild]? { clients.values.flatMap { $0.guilds ?? [] } }
+    public var messageFetchLimit: Int? { clients.values.compactMap { $0.messageFetchLimit }.min() }
     
     public init() {}
 
@@ -79,8 +80,8 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: channelId) { $0.bulkDeleteMessages(ids, on: channelId, then: then) }
     }
     
-    public func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?) {
-        withClient(of: channelId) { $0.getMessages(for: channelId, limit: limit, then: then) }
+    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?) {
+        withClient(of: channelId) { $0.getMessages(for: channelId, limit: limit, selection: selection, then: then) }
     }
 
     public func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {

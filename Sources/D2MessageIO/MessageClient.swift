@@ -18,6 +18,7 @@ public protocol MessageClient {
 	var name: String { get }
 	var me: User? { get }
 	var guilds: [Guild]? { get }
+	var messageFetchLimit: Int? { get }
 	
 	func guild(for guildId: GuildID) -> Guild?
 	
@@ -41,7 +42,7 @@ public protocol MessageClient {
 	
 	func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?)
 	
-	func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?)
+	func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?)
 
 	func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?)
 	
@@ -83,6 +84,10 @@ public extension MessageClient {
 	
 	func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) {
 		bulkDeleteMessages(ids, on: channelId, then: defaultCallback)
+	}
+
+	func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?) {
+		getMessages(for: channelId, limit: limit, selection: nil, then: then)
 	}
 
 	func triggerTyping(on channelId: ChannelID) {

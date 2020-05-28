@@ -58,13 +58,24 @@ public class Promise<T, E> where E: Error {
     public func map<U>(_ transform: @escaping (T) -> U) -> Promise<U, E> {
         Promise<U, E> { then in
             self.listen {
-                switch $0 {
-                    case .success(let value):
-                        then(.success(transform(value)))
-                    case .failure(let error):
-                        then(.failure(error))
-                }
+                then($0.map(transform))
             }
         }
+    }
+
+    /// Ignores the return value of the promise.
+    public func void() -> Promise<Void, E> {
+        map { _ in }
+    }
+
+    /// Convenience method for discarding the promise in a method chain.
+    /// Making this explicit helps preventing accidental race conditions.
+    public func forget() {}
+}
+
+extension Promise where E == Error {
+    /// Creates a (finished) promise catching the given block.
+    public convenience init(catching block: () throws -> T) {
+        self.init(Result(catching: block))
     }
 }

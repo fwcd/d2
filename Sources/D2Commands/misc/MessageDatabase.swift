@@ -116,8 +116,50 @@ public class MessageDatabase: MarkovPredictor {
         try db.prepare(sql)
     }
 
-    public func queryMissingMessages(with client: MessageClient, from id: GuildID) throws {
-        // TODO
+    private func insertMessages(with client: MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, Error> {
+        Promise<MessageID?, Error> { then in
+            client.getMessages(for: id, limit: client.messageFetchLimit ?? 20) { messages, _ in
+                do {
+                    if messages.isEmpty {
+                        then(.success(nil))
+                    } else {
+                        try self.db.transaction {
+                            for message in messages {
+                                try self.insert(message: message)
+                            }
+                        }
+                        then(.success(messages.min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture }).flatMap { $0.id }))
+                    }
+                } catch {
+                    then(.failure(error))
+                }
+            }
+        }.then {
+            if let id = $0 {
+                return self.insertMessages(with: client, from: id, selection: .before(id))
+            } else {
+                return Promise(.success(nil))
+            }
+        }
+    }
+
+    public func rebuildMessages(with client: MessageClient, from id: GuildID, progressListener: ((String) -> Void)? = nil) -> Promise<Void, Error> {
+        guard let guild = client.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
+
+        do {
+            log.notice("Rebuilding messages in database...")
+            try db.run(messages.delete())
+
+            let guildChannels = guild.channels.filter { client.permissionsForUser(id, in: $0.key, on: id).contains(.readMessages) }
+            let promise: Promise<[Void], Error> = sequence(promises: guildChannels.map {
+                log.info("Fetching messages from channel \($0.value.name)")
+                progressListener?($0.value.name)
+                return self.insertMessages(with: client, from: $0.key).void()
+            })
+            return promise.void()
+        } catch {
+            return Promise(.failure(error))
+        }
     }
 
     public func isTracked(guildId id: GuildID) throws -> Bool {

@@ -10,6 +10,7 @@ struct DiscordMessageClient: MessageClient {
 	var name: String { discordClientName }
 	var me: User? { client.user?.usingMessageIO }
 	var guilds: [Guild]? { client.guilds.values.map { $0.usingMessageIO } }
+	var messageFetchLimit: Int? { 80 }
 	
 	init(client: DiscordClient) {
 		self.client = client
@@ -104,8 +105,8 @@ struct DiscordMessageClient: MessageClient {
 		}
 	}
 
-	func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, then: ClientCallback<[Message]>?) {
-		client.getMessages(for: channelId.usingDiscordAPI, limit: limit) {
+	func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?) {
+		client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) {
 			then?($0.map { $0.usingMessageIO }, $1)
 		}
 	}

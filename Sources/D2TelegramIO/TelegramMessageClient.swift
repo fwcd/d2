@@ -11,6 +11,7 @@ struct TelegramMessageClient: MessageClient {
     var me: D2MessageIO.User? { nil } // TODO
     var name: String { telegramClientName }
     var guilds: [Guild]? { nil }
+	var messageFetchLimit: Int? { nil }
     
     init(bot: Bot) {
         self.bot = bot
@@ -99,7 +100,7 @@ struct TelegramMessageClient: MessageClient {
         then?(false, nil)
     }
 	
-	func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[D2MessageIO.Message]>?) {
+	func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[D2MessageIO.Message]>?) {
         // TODO
         then?([], nil)
     }

@@ -7,6 +7,7 @@ public struct OverlayMessageClient: MessageClient {
 	public let name: String
 	public let me: User?
     public var guilds: [Guild]? { inner.guilds }
+	public var messageFetchLimit: Int? { inner.messageFetchLimit }
     
     public init(inner: MessageClient, name: String, me: User? = nil) {
         self.inner = inner
@@ -58,8 +59,8 @@ public struct OverlayMessageClient: MessageClient {
         inner.bulkDeleteMessages(ids, on: channelId, then: then)
     }
 	
-	public func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?) {
-        inner.getMessages(for: channelId, limit: limit, then: then)
+	public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?) {
+        inner.getMessages(for: channelId, limit: limit, selection: selection, then: then)
     }
 
 	public func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {

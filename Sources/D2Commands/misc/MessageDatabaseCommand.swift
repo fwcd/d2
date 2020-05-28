@@ -19,6 +19,23 @@ public class MessageDatabaseCommand: StringCommand {
                 let count = try self.messageDB.generateMarkovTransitions()
                 output.append("Successfully generated/updated \(count) \("transition".pluralize(with: count))")
             },
+            "rebuild": { [unowned self] output, context in
+                guard let client = context.client, let guildId = context.guild?.id else {
+                    output.append(errorText: "Rebuilding the message database requires a client and a guild")
+                    return
+                }
+                output.append("Rebuilding database...")
+                self.messageDB.rebuildMessages(with: client, from: guildId) {
+                    output.append("Querying channel `\($0)`...")
+                }.listen {
+                    do {
+                        try $0.get()
+                        output.append("Done rebuilding database!")
+                    } catch {
+                        output.append(error, errorText: "Error while building database: \(error)")
+                    }
+                }
+            },
             "track": { [unowned self] output, context throws in
                 guard let guild = context.guild else { return }
                 try self.messageDB.setTracked(true, guildId: guild.id)
