@@ -50,6 +50,14 @@ final class MatrixTests: XCTestCase {
             [-3, 6]
         ]).determinant!, 39, accuracy: eps)
         XCTAssertEqual(Matrix<Double>([
+            [0, 0],
+            [0, 0]
+        ]).determinant!, 0, accuracy: eps)
+        XCTAssertEqual(Matrix<Double>([
+            [1, 0],
+            [0, 0]
+        ]).determinant!, 0, accuracy: eps)
+        XCTAssertEqual(Matrix<Double>([
             [4, 3, 5, 7],
             [1, 2, 3, 4],
             [3, 3, 3, 3],
@@ -68,7 +76,7 @@ final class MatrixTests: XCTestCase {
             [1, 3, 1],
             [1, 1, -1],
             [3, 11, 5]
-        ]).rowEcholonForm, Matrix<Double>([
+        ]).rowEcholonForm!, Matrix<Double>([
             [1, 3, 1],
             [0, -2, -2],
             [0, 0, 0]
