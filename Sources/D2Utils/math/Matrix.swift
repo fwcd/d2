@@ -30,18 +30,20 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         return (0..<width).map { ($0 % 2 == 0 ? 1 : -1) * self[0, $0] * minor(0, $0).laplaceExpansionDeterminant! }.reduce(0, +)
     }
     /// Computes a triangular matrix from this matrix through Gauss elimination.
-    public var rowEcholonForm: Matrix<T> {
+    public var rowEcholonForm: Matrix<T>? {
         var rowEcholon = self
         for x in 0..<(width - 1) {
             for y in (x + 1)..<height {
-                rowEcholon.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x] / rowEcholon[x, x])
+                let denom = rowEcholon[x, x]
+                guard denom.absolute > epsilon else { return nil }
+                rowEcholon.add(row: x, toRow: y, scaledBy: -rowEcholon[y, x] / denom)
             }
         }
         return rowEcholon
     }
     /// The row echolon form where all leading coefficients are 1.
-    public var normalizedRowEcholonForm: Matrix<T> {
-        var rowEcholon = rowEcholonForm
+    public var normalizedRowEcholonForm: Matrix<T>? {
+        guard var rowEcholon = rowEcholonForm else { return nil }
         for y in 0..<height {
             rowEcholon.scale(row: y, by: 1 / rowEcholon.leadingCoefficient(y))
         }
@@ -85,7 +87,8 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     /// If floating point values are not desired, use laplaceExpansionDeterminant
     /// instead (which has worse asymptotic time complexity though).
     public var determinant: T? {
-        rowEcholonForm.mainDiagonal?.reduce(1, *)
+        guard isSquare else { return nil }
+        return rowEcholonForm?.mainDiagonal?.reduce(1, *) ?? 0
     }
 
     public var transpose: Matrix<T> {

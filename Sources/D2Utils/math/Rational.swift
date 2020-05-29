@@ -50,6 +50,7 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     }
     
     public init(_ numerator: Int, _ denominator: Int, isPrecise: Bool = true) {
+        guard denominator != 0 else { fatalError("Cannot create a rational with denominator == 0: \(numerator)/\(denominator)") }
         self.numerator = numerator
         self.denominator = denominator
         self.isPrecise = isPrecise

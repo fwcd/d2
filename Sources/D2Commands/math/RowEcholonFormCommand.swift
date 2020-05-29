@@ -14,7 +14,11 @@ public class RowEcholonFormCommand: Command {
             output.append(errorText: "Please input a matrix")
             return
         }
+        guard let rowEcholon = matrix.rowEcholonForm else {
+            output.append(errorText: "The given matrix cannot be converted into row-echolon-form")
+            return
+        }
 
-        output.append(.ndArrays([matrix.rowEcholonForm.asNDArray]))
+        output.append(.ndArrays([rowEcholon.asNDArray]))
     }
 }
