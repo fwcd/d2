@@ -28,7 +28,7 @@ public class MandelbrotCommand: StringCommand {
             let userId = context.author?.id
             hasher.combine(time)
             hasher.combine(userId)
-            let paletteHash = hasher.finalize() % 50
+            let paletteHash = Int((hasher.finalize() % 50).magnitude)
 
             for y in 0..<height {
                 for x in 0..<width {
