@@ -36,6 +36,7 @@ public class D2Delegate: MessageDelegate {
 			SpamHandler(config: spamConfiguration),
 			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
+			MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
 			MentionSomeoneHandler(),
 			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
 		]
