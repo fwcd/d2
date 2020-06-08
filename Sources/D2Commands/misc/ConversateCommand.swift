@@ -9,11 +9,11 @@ public class ConversateCommand: StringCommand {
         subscribesToNextMessages: true,
         userOnly: false
     )
-    private let messageDB: MessageDatabase
+    private let conversator: Conversator
 	private let maxWords = 60
     
-    public init(messageDB: MessageDatabase) {
-        self.messageDB = messageDB
+    public init(conversator: Conversator) {
+        self.conversator = conversator
     }
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -28,32 +28,13 @@ public class ConversateCommand: StringCommand {
             output.append("Unsubscribed from this channel.")
         } else {
             do {
-                guard let last = content
-                    .split(separator: " ")
-                    .last
-                    .map({ String($0) })?.nilIfEmpty else { return }
-                let followUps = try messageDB.followUps(to: last, on: guildId)
-                
-                if !followUps.isEmpty {
-                    let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, content)) }
-                    let distribution = CustomDiscreteDistribution(normalizing: candidates)
-                    let sample = distribution.sample().cleaningMentions(with: context.guild)
-                    if !sample.isEmpty {
-                        output.append(sample)
-                    }
+                if let answer = try conversator.answer(input: content, on: guildId) {
+                    output.append(answer.cleaningMentions(with: context.guild))
                 }
             } catch {
-                output.append(error, errorText: "Could not query message DB")
+                output.append(error, errorText: "Could not provide answer")
             }
         }
     }
-    
-    private func matchingSuffixLength(_ lhs: String, _ rhs: String) -> Int {
-        var i = 0
-        var iterator = zip(lhs.reversed(), rhs.reversed()).makeIterator()
-        while let (l, r) = iterator.next(), l == r {
-            i += 1
-        }
-        return i
-    }
+   
 }
