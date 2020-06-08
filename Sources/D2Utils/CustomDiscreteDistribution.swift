@@ -5,15 +5,15 @@ public struct CustomDiscreteDistribution<T>: Distribution {
     
     /// Creates a probability distribution that normalizes the given
     /// probabilities to the unit interval.
-    public init<N>(normalizing distribution: [(T, N)]) where N: BinaryInteger {
+    public init?<N>(normalizing distribution: [(T, N)]) where N: BinaryInteger {
         let sum = Double(distribution.map { $0.1 }.reduce(0, +))
         self.init(distribution.map { ($0.0, Double($0.1) / sum) })
     }
     
-    public init(_ distribution: [(T, Double)]) {
-        // Assert that the probabilities add up to one
-        assert(!distribution.isEmpty)
-        assert(abs(1 - distribution.map { $0.1 }.reduce(0, +)) < 0.001)
+    public init?(_ distribution: [(T, Double)]) {
+        // Make sure that the probabilities add up to one
+        guard !distribution.isEmpty,
+            abs(1 - distribution.map { $0.1 }.reduce(0, +)) < 0.001 else { return nil }
         self.distribution = distribution
     }
 

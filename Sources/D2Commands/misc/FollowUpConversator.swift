@@ -17,7 +17,7 @@ public struct FollowUpConversator: Conversator {
         
         if !followUps.isEmpty {
             let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, input)) }
-            let distribution = CustomDiscreteDistribution(normalizing: candidates)
+            guard let distribution = CustomDiscreteDistribution(normalizing: candidates) else { return nil }
             let sample = distribution.sample()
             if !sample.isEmpty {
                 return sample

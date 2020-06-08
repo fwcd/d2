@@ -474,8 +474,8 @@ public class MessageDatabase: MarkovPredictor {
                 .where(word == stateWord)
                 .limit(50)
             let candidates = try db.prepare(followerQuery).map { ($0[followingWord], $0[occurrences]) }
-            return candidates.nilIfEmpty.map {
-                CustomDiscreteDistribution(normalizing: $0).sample()
+            return candidates.nilIfEmpty.flatMap {
+                CustomDiscreteDistribution(normalizing: $0)?.sample()
             }
         } catch {
             log.warning("\(error)")
