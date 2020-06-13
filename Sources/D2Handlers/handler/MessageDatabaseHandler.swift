@@ -12,10 +12,8 @@ public struct MessageDatabaseHandler: MessageHandler {
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
-        if !(message.author?.bot ?? true),
-                let channelId = message.channelId,
-                let guildId = message.guild?.id,
-                client.permissionsForUser(guildId, in: channelId, on: guildId).contains(.readMessages) {
+        if !(message.author?.bot ?? true), let guildId = message.guild?.id {
+                // client.permissionsForUser(guildId, in: channelId, on: guildId).contains(.readMessages) {
             do {
                 if try messageDB.isTracked(guildId: guildId) {
                     try messageDB.insert(message: message)
