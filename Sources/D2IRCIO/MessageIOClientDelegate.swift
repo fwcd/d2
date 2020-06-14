@@ -15,7 +15,7 @@ public class MessageIOClientDelegate: IRCClientDelegate {
     }
 
     public func client(_ ircClient: IRCClient, received message: IRCMessage) {
-        log.debug("Received message from IRC: \(message)")
+        log.info("Received message from IRC: \(message)")
         if let m = message.usingMessageIO {
             inner.on(createMessage: m, client: overlayClient(with: ircClient))
         }

@@ -33,7 +33,7 @@ public struct IRCPlatform: MessagePlatform {
         log.info("Starting IRC client (\(config.host):\(config.port))")
         ircClient.connect()?.whenSuccess { _ in
             if let channels = self.config.autojoinedChannels {
-                log.info("Auto-joining IRC channels...")
+                log.info("Auto-joining IRC channels \(channels)...")
                 self.ircClient.sendMessage(IRCMessage(command: .JOIN(channels: channels.map { IRCChannelName($0)! }, keys: nil)))
             }
         }
