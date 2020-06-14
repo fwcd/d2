@@ -53,7 +53,15 @@ In addition to supporting various web APIs, it features basic scripting capabili
 ```json
 {
     "discord": "YOUR_DISCORD_API_TOKEN",
-    "telegram": "YOUR_TELEGRAM_API_TOKEN"
+    "telegram": "YOUR_TELEGRAM_API_TOKEN",
+    "irc": [
+        {
+            "host": "YOUR_IRC_HOST",
+            "port": 6667,
+            "nickname": "YOUR_IRC_USERNAME",
+            "password": "YOUR_IRC_PASSWORD"
+        }
+    ]
 }
 ```
 
