@@ -29,10 +29,13 @@ public class Magic8BallCommand: StringCommand {
         "Outlook not so good.",
         "Very doubtful."
     ]) {
-        self.answers = answers
+        self.answers = answers + ["I do not know how to respond to that."]
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        output.append(answers.randomElement() ?? "I do not know how to respond to that.")
+        var hasher = Hasher()
+        hasher.combine(input)
+        let i = abs(hasher.finalize()) % answers.count
+        output.append(answers[i])
     }
 }
