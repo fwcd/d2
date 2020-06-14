@@ -33,7 +33,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "D2",
-            dependencies: ["Logging", "Backtrace", "Commander", "D2Utils", "D2Handlers", "D2DiscordIO", "D2TelegramIO"]
+            dependencies: ["Logging", "Backtrace", "Commander", "D2Utils", "D2Handlers", "D2DiscordIO", "D2TelegramIO", "D2IRCIO"]
         ),
         .target(
             name: "D2DiscordIO",
@@ -42,6 +42,10 @@ let package = Package(
         .target(
             name: "D2TelegramIO",
             dependencies: ["Logging", "Telegrammer", "Emoji", "D2MessageIO", "D2Utils"]
+        ),
+        .target(
+            name: "D2IRCIO",
+            dependencies: ["Logging", "IRC", "Emoji", "D2MessageIO", "D2Utils"]
         ),
         .target(
             name: "D2Handlers",

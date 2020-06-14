@@ -6,6 +6,7 @@ import D2Handlers
 import D2MessageIO
 import D2DiscordIO
 import D2TelegramIO
+import D2IRCIO
 import D2Utils
 
 #if DEBUG
@@ -46,6 +47,15 @@ func main(rawLogLevel: String, initialPresence: String?) {
 				platforms.append(try TelegramPlatform(with: handler, combinedClient: combinedClient, token: telegramToken))
 			} catch {
 				log.warning("Could not create Telegram platform: \(error)")
+			}
+		}
+
+		for irc in tokens.irc ?? [] {
+			do {
+				createdAnyPlatform = true
+				platforms.append(try IRCPlatform(with: handler, combinedClient: combinedClient, token: irc))
+			} catch {
+				log.warning("Could not create IRC platform: \(error)")
 			}
 		}
 		
