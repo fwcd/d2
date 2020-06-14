@@ -23,7 +23,8 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
-        .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2")
+        .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
+        .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.0")
         // TODO: Integrate swiftplot, this is however blocked on https://bugs.swift.org/browse/SR-679
         //       due to a dependency target collision (CFreeType)
     ],
