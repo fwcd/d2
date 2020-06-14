@@ -28,7 +28,6 @@ public class MessageIOClientDelegate: IRCClientDelegate {
 
     public func client(_ ircClient: IRCClient, user: IRCUserID, joined channels: [ IRCChannelName ]) {
         log.info("\(user) joined \(channels)")
-        ircClient.send(.PRIVMSG(channels.map { .channel($0) }, "Hi"))
     }
 
     public func client(_ ircClient: IRCClient, user: IRCUserID, left channels: [ IRCChannelName ]) {
@@ -54,12 +53,18 @@ public class MessageIOClientDelegate: IRCClientDelegate {
     }
 
     public func client(_ ircClient: IRCClient, message: String, from sender: IRCUserID, for recipients: [ IRCMessageRecipient ]) {
-        log.info("Received text message from IRC: \(message)")
+        log.info("Received text message from IRC: \(message) (recipients: \(recipients))")
+        guard case let .channel(channelName)? = recipients.first else { return }
 
-        // TODO: Improve the message conversion here
-        if let m = IRCMessage(origin: sender.stringValue, command: .PRIVMSG(recipients, message)).usingMessageIO {
-            inner.on(createMessage: m, client: overlayClient(with: ircClient))
-        }
+        // TODO: Support chats with multiple recipients and .nickname()
+        let m = D2MessageIO.Message(
+            content: message,
+            // TODO: Proper user IDs
+            author: User(id: dummyId, username: sender.nick.stringValue),
+            channelId: channelName.usingMessageIO
+        )
+
+        inner.on(createMessage: m, client: overlayClient(with: ircClient))
     }
 
     private func overlayClient(with ircClient: IRCClient) -> MessageClient {
