@@ -2,22 +2,6 @@ import D2MessageIO
 import Emoji
 import IRC
 
-// FROM IRC conversions
-
-extension IRCMessage { // not MessageIOConvertible, since it does not support optionality
-    public var usingMessageIO: D2MessageIO.Message? {
-        guard case let .PRIVMSG(recipients, content) = command,
-            case let .channel(channelName)? = recipients.first else { return nil }
-        // TODO: Support chats with multiple recipients and .nickname()
-        return D2MessageIO.Message(
-            content: content,
-            // TODO: Proper user IDs
-            author: User(id: dummyId, username: (origin?.split(separator: "!").first).map { String($0) } ?? "?"),
-            channelId: channelName.usingMessageIO
-        )
-    }
-}
-
 // TO IRC conversions
     
 private func flatten(embed: Embed) -> String {
