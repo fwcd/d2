@@ -3,4 +3,5 @@ public struct IRCConfig: Codable {
     public let port: Int
     public let nickname: String
     public let password: String?
+    public let autojoinedChannels: [String]?
 }

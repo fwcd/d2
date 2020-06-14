@@ -65,6 +65,8 @@ In addition to supporting various web APIs, it features basic scripting capabili
 }
 ```
 
+> For more information e.g. on how to connect to the Twitch IRC API, see [this guide](https://dev.twitch.tv/docs/irc/guide/)
+
 ### Optional
 * Create a file named `config.json` in `local` (or the `d2local` volume):
 
