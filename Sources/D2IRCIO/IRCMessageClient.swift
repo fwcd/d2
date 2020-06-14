@@ -61,7 +61,7 @@ struct IRCMessageClient: MessageClient {
         ]
         return lines
             .compactMap { $0 }
-            .joined(separator: "\n")
+            .joined(separator: ", ")
     }
 	
 	func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
@@ -69,7 +69,7 @@ struct IRCMessageClient: MessageClient {
 
         let text = [message.content, message.embed.map(flatten(embed:))]
             .compactMap { $0?.nilIfEmpty }
-            .joined(separator: "\n")
+            .joined(separator: ", ")
             .emojiUnescapedString
 
         guard let channelName = IRCChannelName(channelId.value) else {
