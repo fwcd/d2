@@ -29,7 +29,8 @@ public class PortalCommand: StringCommand {
         category: .misc,
         shortDescription: "Opens a portal between two channels",
         longDescription: "Opens a bidirectional connection between two channels that allows the user to send messages back and forth",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .basic,
+        subscriptionsUserOnly: false
     )
     private var subcommands: [String: (CommandOutput, CommandContext) -> Void] = [:]
     private var portals: [Portal] = []
