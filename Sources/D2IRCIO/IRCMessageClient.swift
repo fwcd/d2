@@ -71,6 +71,7 @@ struct IRCMessageClient: MessageClient {
             .compactMap { $0?.nilIfEmpty }
             .joined(separator: ", ")
             .emojiUnescapedString
+            .truncate(480, appending: "...")
 
         guard let channelName = IRCChannelName(channelId.value) else {
             log.warning("Could not convert \(channelId.value) (maybe it is missing a leading '#'?)")
