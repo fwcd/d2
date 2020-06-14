@@ -59,6 +59,7 @@ public class D2Delegate: MessageDelegate {
 		registry["reddit"] = RedditCommand()
 		registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
 		registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
+		registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
 		registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
 		registry["user"] = UserCommand()

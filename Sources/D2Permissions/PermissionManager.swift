@@ -11,6 +11,7 @@ public class PermissionManager: CustomStringConvertible {
 	private let storage = DiskJsonSerializer()
 	private var adminWhitelist: AdminWhitelist
 	private var userPermissions: [String: PermissionLevel]
+	private var simulatedPermissions: [String: PermissionLevel] = [:]
 	public var description: String { return userPermissions.description }
 	
 	public init() {
@@ -18,14 +19,14 @@ public class PermissionManager: CustomStringConvertible {
 			adminWhitelist = try storage.readJson(as: AdminWhitelist.self, fromFile: adminWhitelistFilePath)
 		} catch {
 			adminWhitelist = AdminWhitelist(users: [])
-			// TODO: Log error at a debug level
+			log.debug("Could not read admin whitelist: \(error)")
 		}
 		
 		do {
 			userPermissions = try storage.readJson(as: [String: PermissionLevel].self, fromFile: userPermissionsFilePath)
 		} catch {
 			userPermissions = [:]
-			// TODO: Log error at a debug level
+			log.debug("Could not read user permissions: \(error)")
 		}
 	}
 	
@@ -41,20 +42,17 @@ public class PermissionManager: CustomStringConvertible {
 		return "\(user.username)#\(user.discriminator)"
 	}
 	
-	public func user(_ theUser: User, hasPermission requiredLevel: PermissionLevel) -> Bool {
-		return user(theUser, hasPermission: requiredLevel.rawValue)
+	public func user(_ theUser: User, hasPermission requiredLevel: PermissionLevel, usingSimulated: Bool = true) -> Bool {
+		return nameWithTag(encode(user: theUser), hasPermission: requiredLevel, usingSimulated: usingSimulated)
 	}
 	
-	public func user(_ theUser: User, hasPermission requiredLevel: Int) -> Bool {
-		return nameWithTag(encode(user: theUser), hasPermission: requiredLevel)
+	public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: PermissionLevel, usingSimulated: Bool = true) -> Bool {
+		return nameWithTag(theNameWithTag, hasPermission: requiredLevel.rawValue, usingSimulated: usingSimulated)
 	}
 	
-	public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: PermissionLevel) -> Bool {
-		return nameWithTag(theNameWithTag, hasPermission: requiredLevel.rawValue)
-	}
-	
-	public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: Int) -> Bool {
-		return self[theNameWithTag].rawValue >= requiredLevel
+	public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: Int, usingSimulated: Bool = true) -> Bool {
+		let userLevel = self[simulated: theNameWithTag].filter { _ in usingSimulated } ?? self[theNameWithTag]
+		return userLevel.rawValue >= requiredLevel
 	}
 	
 	public func remove(permissionsFrom user: User) {
@@ -65,12 +63,17 @@ public class PermissionManager: CustomStringConvertible {
 		userPermissions.removeValue(forKey: nameWithTag)
 	}
 	
-	public subscript(user: User) -> PermissionLevel {
+	public subscript(_ user: User) -> PermissionLevel {
 		get { return self[encode(user: user)] }
-		set(newValue) { self[encode(user: user)] = newValue }
+		set { self[encode(user: user)] = newValue }
+	}
+
+	public subscript(simulated user: User) -> PermissionLevel? {
+		get { return self[simulated: encode(user: user)] }
+		set { self[simulated: encode(user: user)] = newValue }
 	}
 	
-	public subscript(nameWithTag: String) -> PermissionLevel {
+	public subscript(_ nameWithTag: String) -> PermissionLevel {
 		get {
 			if adminWhitelist.users.contains(nameWithTag) {
 				return .admin
@@ -78,6 +81,11 @@ public class PermissionManager: CustomStringConvertible {
 				return userPermissions[nameWithTag] ?? .basic
 			}
 		}
-		set(newValue) { userPermissions[nameWithTag] = newValue }
+		set { userPermissions[nameWithTag] = newValue }
+	}
+
+	public subscript(simulated nameWithTag: String) -> PermissionLevel? {
+		get { simulatedPermissions[nameWithTag] }
+		set { simulatedPermissions[nameWithTag] = newValue }
 	}
 }

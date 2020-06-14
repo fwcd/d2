@@ -12,6 +12,8 @@ public struct CommandInfo {
     public var helpText: String?
     /** The command's permission level. */
     public var requiredPermissionLevel: PermissionLevel
+    /** Whether the command is should use a simulated permission level, if available. Should be true for almost every command. */
+    public var usesSimulatedPermissionLevel: Bool
     /** Whether the commands should be hidden in lists. */
     public var hidden: Bool
     /** Whether the command will set up/handle subscriptions. Only for documentary purposes.. */
@@ -30,6 +32,7 @@ public struct CommandInfo {
         longDescription: String? = nil,
         helpText: String? = nil,
         requiredPermissionLevel: PermissionLevel = .admin,
+        usesSimulatedPermissionLevel: Bool = true,
         hidden: Bool = false,
         subscribesToNextMessages: Bool = false,
         userOnly: Bool = true,
@@ -41,6 +44,7 @@ public struct CommandInfo {
         self.longDescription = longDescription ?? shortDescription
         self.helpText = helpText
         self.requiredPermissionLevel = requiredPermissionLevel
+        self.usesSimulatedPermissionLevel = usesSimulatedPermissionLevel
         self.hidden = hidden
         self.subscribesToNextMessages = subscribesToNextMessages
         self.userOnly = userOnly

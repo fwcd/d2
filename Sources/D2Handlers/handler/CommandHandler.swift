@@ -141,7 +141,7 @@ public class CommandHandler: MessageHandler {
 				let args = groups[2]
 
 				if let command = registry[name] {
-					let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel)
+					let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
 					if hasPermission {
 						log.debug("Appending '\(name)' to pipe")
 
