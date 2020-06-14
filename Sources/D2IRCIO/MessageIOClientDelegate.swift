@@ -7,14 +7,16 @@ fileprivate let log = Logger(label: "D2IRCIO.MessageIOClientDelegate")
 public class MessageIOClientDelegate: IRCClientDelegate {
     private let inner: MessageDelegate
     private let sinkClient: MessageClient
+    private let name: String
 
     private var joined: Bool = false
     private var channelsToJoin: [String]
     
-    public init(inner: MessageDelegate, sinkClient: MessageClient, channelsToJoin: [String]) {
-        log.debug("Creating delegate")
+    public init(inner: MessageDelegate, sinkClient: MessageClient, name: String, channelsToJoin: [String]) {
+        log.debug("Creating delegate for \(name)")
         self.inner = inner
         self.sinkClient = sinkClient
+        self.name = name
         self.channelsToJoin = channelsToJoin
     }
 
@@ -39,21 +41,17 @@ public class MessageIOClientDelegate: IRCClientDelegate {
     }
 
     public func client(_ ircClient: IRCClient, received message: IRCMessage) {
-        log.info("Received message from IRC: \(message)")
+        log.info("Received: \(message)")
 
         if !joined && !channelsToJoin.isEmpty {
             joined = true
             log.info("Auto-joining channels \(channelsToJoin)...")
             ircClient.sendMessage(IRCMessage(command: .JOIN(channels: channelsToJoin.map { IRCChannelName($0)! }, keys: nil)))
         }
-
-        if let m = message.usingMessageIO {
-            inner.on(createMessage: m, client: overlayClient(with: ircClient))
-        }
     }
 
     public func client(_ ircClient: IRCClient, message: String, from sender: IRCUserID, for recipients: [ IRCMessageRecipient ]) {
-        log.info("Received text message from IRC: \(message) (recipients: \(recipients))")
+        log.debug("Received: \(message) (recipients: \(recipients))")
         guard case let .channel(channelName)? = recipients.first else { return }
 
         // TODO: Support chats with multiple recipients and .nickname()
@@ -61,13 +59,13 @@ public class MessageIOClientDelegate: IRCClientDelegate {
             content: message,
             // TODO: Proper user IDs
             author: User(id: dummyId, username: sender.nick.stringValue),
-            channelId: channelName.usingMessageIO
+            channelId: ID(channelName.stringValue, clientName: name)
         )
 
         inner.on(createMessage: m, client: overlayClient(with: ircClient))
     }
 
     private func overlayClient(with ircClient: IRCClient) -> MessageClient {
-        OverlayMessageClient(inner: sinkClient, name: ircClientName)
+        OverlayMessageClient(inner: sinkClient, name: name)
     }
 }

@@ -22,6 +22,7 @@ extension D2MessageIO.Message: IRCAPIConvertible {
             .compactMap { $0?.nilIfEmpty }
             .joined(separator: "\n")
             .emojiUnescapedString
-        return IRCMessage(command: .PRIVMSG(channelId.map { [.channel($0.usingIRCAPI)] } ?? [], text))
+        // TODO: Find a better solution than force-unwrapping
+        return IRCMessage(command: .PRIVMSG(channelId.map { [.channel(IRCChannelName($0.value)!)] } ?? [], text))
     }
 }

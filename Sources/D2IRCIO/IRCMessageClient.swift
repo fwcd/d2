@@ -8,12 +8,13 @@ struct IRCMessageClient: MessageClient {
     private let ircClient: IRCClient
     
     var me: D2MessageIO.User? { nil } // TODO
-    var name: String { ircClientName }
+    let name: String
     var guilds: [Guild]? { nil }
 	var messageFetchLimit: Int? { nil }
     
-    init(ircClient: IRCClient) {
+    init(ircClient: IRCClient, name: String) {
         self.ircClient = ircClient
+        self.name = name
     }
 
     func guild(for guildId: GuildID) -> Guild? {

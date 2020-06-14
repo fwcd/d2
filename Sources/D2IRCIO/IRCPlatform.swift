@@ -7,17 +7,11 @@ fileprivate let log = Logger(label: "D2IRCIO.IRCPlatform")
 public struct IRCPlatform: MessagePlatform {
     private let config: IRCConfig
     private let ircClient: IRCClient
-    
-    // TODO: This currently assumes that only a single
-    // IRC client is present. It would be better to
-    // use a combination of ircClientName and host:port
-    // to identify the client uniquely.
-    //
-    // See also: IRCChannelNameConverter
-    public var name: String { ircClientName }
+    public let name: String
 
     public init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token config: IRCConfig) throws {
         self.config = config
+        name = "IRC \(config.host):\(config.port)"
 
         log.info("Initializing IRC backend (\(config.host):\(config.port))...")
         ircClient = IRCClient(options: IRCClientOptions(
@@ -27,8 +21,10 @@ public struct IRCPlatform: MessagePlatform {
             nickname: IRCNickName(config.nickname)!
         ))
 
+        combinedClient.register(client: IRCMessageClient(ircClient: ircClient, name: name))
+
         let channelsToJoin = (config.deferAutojoinToAfterFirstMessage ?? false) ? (config.autojoinedChannels ?? []) : []
-        ircClient.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient, channelsToJoin: channelsToJoin)
+        ircClient.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient, name: name, channelsToJoin: channelsToJoin)
     }
     
     public func start() throws {
