@@ -1,9 +1,11 @@
 import D2MessageIO
+import D2Utils
 import Emoji
 import IRC
 import Logging
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCMessageClient")
+fileprivate let mentionPattern = try! Regex(from: "<@.+?>")
 
 struct IRCMessageClient: MessageClient {
     private let ircClient: IRCClient
@@ -67,11 +69,13 @@ struct IRCMessageClient: MessageClient {
 	func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
         log.debug("Sending message '\(message.content)'")
 
-        let text = [message.content, message.embed.map(flatten(embed:))]
+        var text = [message.content, message.embed.map(flatten(embed:))]
             .compactMap { $0?.nilIfEmpty }
             .joined(separator: ", ")
             .emojiUnescapedString
             .truncate(480, appending: "...")
+
+        text = mentionPattern.replace(in: text, with: "@mention")
 
         guard let channelName = IRCChannelName(channelId.value) else {
             log.warning("Could not convert \(channelId.value) (maybe it is missing a leading '#'?)")
