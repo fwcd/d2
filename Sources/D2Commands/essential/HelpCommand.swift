@@ -21,10 +21,10 @@ public class HelpCommand: StringCommand {
 		if input.isEmpty {
 			output.append(generalHelpEmbed(context: context))
 		} else {
-			if let command = context.registry[input] {
-				output.append(commandHelpEmbed(for: input, command: command))
-			} else if let category = CommandCategory(rawValue: input) {
+			if let category = CommandCategory(rawValue: input) {
 				output.append(categoryHelpEmbed(for: category, context: context))
+			} else if let command = context.registry[input] {
+				output.append(commandHelpEmbed(for: input, command: command))
 			} else {
 				output.append(Embed(
 					title: ":warning: Did not recognize command `\(input)`",
