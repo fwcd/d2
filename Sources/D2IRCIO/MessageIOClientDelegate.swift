@@ -18,12 +18,25 @@ public class MessageIOClientDelegate: IRCClientDelegate {
         self.channelsToJoin = channelsToJoin
     }
 
-    public func client(_ client: IRCClient, user: IRCUserID, joined channels: [ IRCChannelName ]) {
-        log.info("IRC: \(user) joined \(channels)")
+    public func clientFailedToRegister(_ ircClient: IRCClient) {
+        log.warning("Client failed to register")
     }
 
-    public func client(_ client: IRCClient, user: IRCUserID, left channels: [ IRCChannelName ]) {
-        log.info("IRC: \(user) left \(channels)")
+    public func client(_ ircClient: IRCClient, registered nick: IRCNickName, with userInfo: IRCUserInfo) {
+        log.info("Registered \(nick) with \(userInfo)")
+    }
+
+    public func client(_ ircClient: IRCClient, user: IRCUserID, joined channels: [ IRCChannelName ]) {
+        log.info("\(user) joined \(channels)")
+        ircClient.send(.PRIVMSG(channels.map { .channel($0) }, "Hi"))
+    }
+
+    public func client(_ ircClient: IRCClient, user: IRCUserID, left channels: [ IRCChannelName ]) {
+        log.info("\(user) left \(channels)")
+    }
+
+    public func client(_ client: IRCClient, messageOfTheDay: String) {
+        log.info("Message of the day: \(messageOfTheDay)")
     }
 
     public func client(_ ircClient: IRCClient, received message: IRCMessage) {
@@ -36,6 +49,15 @@ public class MessageIOClientDelegate: IRCClientDelegate {
         }
 
         if let m = message.usingMessageIO {
+            inner.on(createMessage: m, client: overlayClient(with: ircClient))
+        }
+    }
+
+    public func client(_ ircClient: IRCClient, message: String, from sender: IRCUserID, for recipients: [ IRCMessageRecipient ]) {
+        log.info("Received text message from IRC: \(message)")
+
+        // TODO: Improve the message conversion here
+        if let m = IRCMessage(origin: sender.stringValue, command: .PRIVMSG(recipients, message)).usingMessageIO {
             inner.on(createMessage: m, client: overlayClient(with: ircClient))
         }
     }
