@@ -4,4 +4,5 @@ public struct IRCConfig: Codable {
     public let nickname: String
     public let password: String?
     public let autojoinedChannels: [String]?
+    public let deferAutojoinToAfterFirstMessage: Bool?
 }

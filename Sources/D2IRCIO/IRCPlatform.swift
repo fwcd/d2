@@ -26,13 +26,15 @@ public struct IRCPlatform: MessagePlatform {
             password: config.password,
             nickname: IRCNickName(config.nickname)!
         ))
-        ircClient.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient)
+
+        let channelsToJoin = (config.deferAutojoinToAfterFirstMessage ?? false) ? (config.autojoinedChannels ?? []) : []
+        ircClient.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient, channelsToJoin: channelsToJoin)
     }
     
     public func start() throws {
         log.info("Starting IRC client (\(config.host):\(config.port))")
         ircClient.connect()?.whenSuccess { _ in
-            if let channels = self.config.autojoinedChannels {
+            if !(self.config.deferAutojoinToAfterFirstMessage ?? false), let channels = self.config.autojoinedChannels {
                 log.info("Auto-joining IRC channels \(channels)...")
                 self.ircClient.sendMessage(IRCMessage(command: .JOIN(channels: channels.map { IRCChannelName($0)! }, keys: nil)))
             }
