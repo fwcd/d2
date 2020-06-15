@@ -1,7 +1,14 @@
 import D2Utils
 
-// TODO: Allow other expressions
-fileprivate let expr = "\\w+"
+// Source: https://www.sqlite.org/lang_select.html
+
+// TODO: Recursive expressions are not supported, since Foundation's regex engine does not support those
+fileprivate let literalExpr = "[\\w\\d]+|\"[^\"]*\""
+fileprivate let unaryExpr = "(?:\(literalExpr))(?:\\s+is(?:\\s+not)?(?:\\s+null|(?:\(literalExpr))))?"
+fileprivate let binaryExpr = "(?:\(unaryExpr))(?:\\s+(?:==|<|<=|>|>=|<>)\\s+(?:\(unaryExpr)))?"
+fileprivate let andExpr = "(?:\(binaryExpr))(?:\\s+and\\s+(?:\(binaryExpr)))*"
+fileprivate let orExpr = "(?:\(andExpr))(?:\\s+and\\s+(?:\(andExpr)))*"
+fileprivate let expr = orExpr
 fileprivate let table = "\\w+"
 fileprivate let columnAlias = "\\w+"
 fileprivate let columnName = "\\w+"
@@ -38,7 +45,7 @@ public class MessageDatabaseQueryCommand: StringCommand {
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let parsed = selectStmtPattern.firstGroups(in: input.lowercased()) else {
-            output.append(errorText: "Please enter a limiting SELECT statement!")
+            output.append(errorText: "Please enter a limiting SELECT statement! Note that currently not all SELECT statements are understood. If your query is valid SQL, please file a bug [here](https://github.com/fwcd/d2/issues).")
             return
         }
 
