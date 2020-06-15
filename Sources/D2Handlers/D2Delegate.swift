@@ -152,6 +152,7 @@ public class D2Delegate: MessageDelegate {
 		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
 		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
+		registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
 		registry["shell"] = ShellCommand()
 		registry["upload"] = UploadCommand()
 		registry["markov"] = MarkovCommand(messageDB: messageDB)
