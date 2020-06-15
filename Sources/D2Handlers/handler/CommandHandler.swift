@@ -37,7 +37,7 @@ public class CommandHandler: MessageHandler {
 	private let pipeSeparator: Character
     
     private var currentIndex = 0
-	private var maxPipeLengthForUsers: Int = 3
+	private var maxPipeLengthForUsers: Int = 5
     private let msgParser = MessageParser()
 	
 	private let operationQueue: OperationQueue
