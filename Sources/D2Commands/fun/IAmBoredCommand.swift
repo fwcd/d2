@@ -10,9 +10,9 @@ public class IAmBoredCommand: StringCommand {
     private let templates: [String]
 
     public init(
-        verbs: [String] = ["solve", "play", "build", "compose", "draw", "write", "fix", "rap", "sing", "catch", "open", "press", "sleep on", "eat"],
-        things: [String] = ["a guitar", "a new game", "a song", "a fish", "a button", "a program", "a box", "a crossword puzzle"],
-        methods: [String] = ["a pencil", "a keyboard", "your finger", "your imagination", "a friend", "a wrench", "your hand", "a computer", "your voice", "a fishing rod", "a spoon"],
+        verbs: [String] = ["solve", "play", "build", "compose", "draw", "write", "fix", "rap", "sing", "catch", "open", "press", "sleep on", "eat", "craft", "design", "read", "stream", "watch", "interpret", "analyze", "record", "create", "make", "learn making", "find", "invent", "assemble"],
+        things: [String] = ["a guitar", "a new game", "a song", "a fish", "a button", "a program", "a box", "a crossword puzzle", "a book", "a Wikipedia article", "a YouTube video", "a lamp", "a movie", "a compiler", "a hat", "a drawing", "an instrument", "a crazy idea", "a flower", "a mathematical problem", "a football", "a machine", "a poem", "a story"],
+        methods: [String] = ["a pencil", "a keyboard", "your finger", "your imagination", "a friend", "a wrench", "your hand", "a computer", "your voice", "a fishing rod", "a spoon", "a phone", "a paperclip", "a tv", "a microphone", "a stick", "a potato"],
         templates: [String] = ["Why don't you % % with %?", "Try to % % with %!", "You could % % with a %!", "You could % %!"]
     ) {
         self.verbs = verbs
