@@ -12,7 +12,9 @@ fileprivate let expr = orExpr
 fileprivate let table = "\\w+"
 fileprivate let columnAlias = "\\w+"
 fileprivate let columnName = "\\w+"
-fileprivate let resultColumn = "(?:(?:\(expr))(?:\\s+(?:as\\s+)?(?:\(columnAlias)))?)|\\*"
+fileprivate let alias = "\\s+(?:as\\s+)?(?:\(columnAlias))"
+fileprivate let aggregation = "(?:count|avg|min|max)\\s*\\((?:\\*|\\w+)\\)"
+fileprivate let resultColumn = "(?:(?:\(expr))|\\*|(?:\(aggregation)))(?:\(alias))?"
 fileprivate let joinOperator = ",|(?:(?:natural)?\\s*(?:left\\s*(?:outer|inner|cross)?)?\\s*join)"
 fileprivate let joinConstraint = "(?:on\\s+(?:\(expr))|using\\s+\\((?:\(columnName)(?:\\s*,\\s*(?:\(columnName)))*)\\))?" // TODO
 fileprivate let joinClause = "\(table)\\s*(?:(?:\(joinOperator))\\s*(?:\(table))\\s*(?:\(joinConstraint))\\s*)*"
@@ -26,7 +28,7 @@ fileprivate let orderByClause = "order\\s+by\\s+(?:\(orderingTerm))(?:\\s*,\\s*(
 fileprivate let limitClause = "limit\\s+(\\d+)" // TODO: Fix issue that numbers are not parsed
 fileprivate let selectModifier = "distinct|all"
 fileprivate let clauses = [fromClause, whereClause, groupByHavingClause, orderByClause, limitClause].map { "(?:\($0))?" }.joined(separator: "\\s*")
-fileprivate let rawSelectStmt = "^select(?:\\s*(?:\(selectModifier)))?\\s*\(resultColumn)(?:,\\s*(?:\(resultColumn))\\s*)*\\s*(?:\(clauses))$"
+fileprivate let rawSelectStmt = "^select(?:\\s*(?:\(selectModifier)))?\\s*(?:\(resultColumn))(?:,\\s*(?:\(resultColumn))\\s*)*\\s*(?:\(clauses))$"
 fileprivate let selectStmtPattern = try! Regex(from: rawSelectStmt)
 
 public class MessageDatabaseQueryCommand: StringCommand {
