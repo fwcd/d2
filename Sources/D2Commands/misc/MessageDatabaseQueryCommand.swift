@@ -51,9 +51,14 @@ public class MessageDatabaseQueryCommand: StringCommand {
             return
         }
 
+        guard parsed[0].count == input.count else {
+            output.append(errorText: "Could not parse your entire query. Only recognized: `\(input)`")
+            return
+        }
+
         let limit = parsed[safely: 1].flatMap { Int($0) } ?? Int.max
         guard limit < maxRows else {
-            output.append(errorText: "Please query less than \(maxRows) rows (parsed: \(parsed))!")
+            output.append(errorText: "Please query less than \(maxRows) rows!")
             return
         }
 
