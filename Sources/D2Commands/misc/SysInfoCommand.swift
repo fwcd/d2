@@ -25,7 +25,7 @@ public class SysInfoCommand: StringCommand {
             fields: [
                 Embed.Field(name: "CPU Usage", value: cpuUsage
                     .sorted(by: ascendingComparator { $0.key })
-                    .map { "**\($0.key)**: \($0.value)" }
+                    .map { "**\($0.key)**: \($0.value.sorted(by: ascendingComparator { $0.key }).map { "\($0.key): \($0.value)" }.joined(separator: ", "))" }
                     .joined(separator: "\n")
                     .nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Memory Usage", value: "\(usedMemory.map { "\($0)" } ?? "?") MB of \(totalMemory.map { "\($0)" } ?? "?") MB")
