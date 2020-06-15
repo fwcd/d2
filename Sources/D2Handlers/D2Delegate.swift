@@ -179,6 +179,7 @@ public class D2Delegate: MessageDelegate {
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()
 		registry["ioplatform"] = IOPlatformCommand()
+		registry["sysinfo"] = SysInfoCommand()
 		registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
