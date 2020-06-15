@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2Utils
 import PerfectSysInfo
 
 public class SysInfoCommand: StringCommand {
@@ -22,7 +23,11 @@ public class SysInfoCommand: StringCommand {
         output.append(Embed(
             title: ":clock1: System Information",
             fields: [
-                Embed.Field(name: "CPU Usage", value: cpuUsage.map { "**\($0.key)**: \($0.value)" }.joined(separator: "\n").nilIfEmpty ?? "_none_"),
+                Embed.Field(name: "CPU Usage", value: cpuUsage
+                    .sorted(by: ascendingComparator { $0.key })
+                    .map { "**\($0.key)**: \($0.value)" }
+                    .joined(separator: "\n")
+                    .nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Memory Usage", value: "\(usedMemory.map { "\($0)" } ?? "?") MB of \(totalMemory.map { "\($0)" } ?? "?") MB")
             ]
         ))
