@@ -3,9 +3,9 @@ import D2Utils
 // Source: https://www.sqlite.org/lang_select.html
 
 // TODO: Recursive expressions are not supported, since Foundation's regex engine does not support those
-fileprivate let literalExpr = "[\\w\\d]+|\"[^\"]*\""
+fileprivate let literalExpr = "[\\w\\d_-]+|\"[^\"]*\""
 fileprivate let unaryExpr = "(?:\(literalExpr))(?:\\s+is(?:\\s+not)?(?:\\s+null|(?:\(literalExpr))))?"
-fileprivate let binaryExpr = "(?:\(unaryExpr))(?:\\s+(?:==|<|<=|>|>=|<>)\\s+(?:\(unaryExpr)))?"
+fileprivate let binaryExpr = "(?:\(unaryExpr))(?:\\s+(?:==|<|<=|>|>=|<>|like)\\s+(?:\(unaryExpr)))?"
 fileprivate let andExpr = "(?:\(binaryExpr))(?:\\s+and\\s+(?:\(binaryExpr)))*"
 fileprivate let orExpr = "(?:\(andExpr))(?:\\s+and\\s+(?:\(andExpr)))*"
 fileprivate let expr = orExpr
@@ -13,7 +13,7 @@ fileprivate let table = "\\w+"
 fileprivate let columnAlias = "\\w+"
 fileprivate let columnName = "\\w+"
 fileprivate let resultColumn = "(?:(?:\(expr))(?:\\s+(?:as\\s+)?(?:\(columnAlias)))?)|\\*"
-fileprivate let joinOperator = ",|(?:(?:natural)?\\s*(?:left\\s*(?:outer)?|inner|cross)\\s*join)"
+fileprivate let joinOperator = ",|(?:(?:natural)?\\s*(?:left\\s*(?:outer|inner|cross)?)?\\s*join)"
 fileprivate let joinConstraint = "(?:on\\s+(?:\(expr))|using\\s+\\((?:\(columnName)(?:\\s*,\\s*(?:\(columnName)))*)\\))?" // TODO
 fileprivate let joinClause = "\(table)\\s*(?:(?:\(joinOperator))\\s*(?:\(table))\\s*(?:\(joinConstraint))\\s*)*"
 fileprivate let fromClause = "from\\s+(?:(?:\(joinClause))|(?:\(table))\\s*(?:,\\s*\(table)\\s*)*)"
