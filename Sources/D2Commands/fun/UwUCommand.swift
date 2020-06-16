@@ -4,7 +4,7 @@ fileprivate let log = Logger(label: "D2Commands.UwUCommand")
 
 public class UwUCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .fun,
         shortDescription: "Sends a nice smiley",
         requiredPermissionLevel: .basic,
         hidden: true
