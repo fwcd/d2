@@ -24,6 +24,7 @@ public struct DiscordStatus: Codable {
         public enum CodingKeys: String, CodingKey {
             case id
             case name
+            case status
             case createdAt = "created_at"
             case updatedAt = "updated_at"
             case position
@@ -37,6 +38,7 @@ public struct DiscordStatus: Codable {
 
         public let id: String
         public let name: String
+        public let status: String
         public let createdAt: String?
         public let updatedAt: String?
         public let position: Int?
