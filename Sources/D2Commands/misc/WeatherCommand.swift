@@ -20,7 +20,8 @@ public class WeatherCommand: StringCommand {
             do {
                 let weather = try $0.get()
                 output.append(Embed(
-                    title: ":white_sun_small_cloud: The weather for \(input)",
+                    title: ":white_sun_small_cloud: The weather for \(weather.name ?? input)",
+                    description: weather.weather?.map { $0.description }.joined(separator: ", ").nilIfEmpty,
                     footer: weather.coord.map { Embed.Footer(text: "Latitude: \($0.lat) - longitude: \($0.lon)") },
                     fields: [
                         weather.main.map { Embed.Field(name: ":thermometer: Main", value: """

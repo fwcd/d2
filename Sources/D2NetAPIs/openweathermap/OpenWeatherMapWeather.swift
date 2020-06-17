@@ -48,6 +48,7 @@ public struct OpenWeatherMapWeather: Codable {
     public struct Wind: Codable {
         public let speed: Double
         public let deg: Double
+        public let gust: Double?
     }
 
     public struct Clouds: Codable {
@@ -55,12 +56,12 @@ public struct OpenWeatherMapWeather: Codable {
     }
 
     public struct Sys: Codable {
-        public let type: Int
-        public let id: Int
-        public let message: Double
-        public let country: String
-        public let sunrise: Int
-        public let sunset: Int
+        public let type: Int?
+        public let id: Int?
+        public let message: Double?
+        public let country: String?
+        public let sunrise: Int?
+        public let sunset: Int?
     }
 
     public struct Precipitation: Codable {
