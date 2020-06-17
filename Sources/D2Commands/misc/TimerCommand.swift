@@ -5,7 +5,7 @@ import Dispatch
 
 fileprivate let argsPattern = try! Regex(from: "(?:(\\w+)\\s+)?(.+)")
 fileprivate let durationPattern = try! Regex(from: "(\\d+)\\s*([a-zA-Z]+)")
-fileprivate let flagPattern = try! Regex(from: "--[a-z]+")
+fileprivate let flagPattern = try! Regex(from: "--([a-z]+)")
 fileprivate let timeUnits: [String: (Int) -> Int] = [
     "d": { $0 * 86400 },
     "h": { $0 * 3600 },
