@@ -6,6 +6,8 @@ public struct OpenWeatherMapWeather: Codable {
     public let visibility: Int?
     public let wind: Wind?
     public let clouds: Clouds?
+    public let rain: Precipitation?
+    public let snow: Precipitation?
     public let dt: Int?
     public let sys: Sys?
     public let timezone: Int?
@@ -28,6 +30,7 @@ public struct OpenWeatherMapWeather: Codable {
     public struct Main: Codable {
         public enum CodingKeys: String, CodingKey {
             case temp
+            case feelsLike = "feels_like"
             case pressure
             case humidity
             case tempMin = "temp_min"
@@ -35,6 +38,7 @@ public struct OpenWeatherMapWeather: Codable {
         }
 
         public let temp: Double
+        public let feelsLike: Double?
         public let pressure: Double
         public let humidity: Double
         public let tempMin: Double
@@ -57,5 +61,15 @@ public struct OpenWeatherMapWeather: Codable {
         public let country: String
         public let sunrise: Int
         public let sunset: Int
+    }
+
+    public struct Precipitation: Codable {
+        public enum CodingKeys: String, CodingKey {
+            case lastHour = "1h"
+            case last3Hours = "3h"
+        }
+
+        public let lastHour: Double
+        public let last3Hours: Double
     }
 }
