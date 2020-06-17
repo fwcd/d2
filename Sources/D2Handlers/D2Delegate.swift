@@ -52,6 +52,7 @@ public class D2Delegate: MessageDelegate {
 		registry["campus"] = CampusCommand()
 		registry["type"] = TriggerTypingCommand()
 		registry["weather"] = WeatherCommand()
+		registry["webcam"] = WebcamCommand()
 		registry["mdb"] = MDBCommand()
 		registry["timetable"] = TimeTableCommand()
 		registry["univis"] = UnivISCommand()
