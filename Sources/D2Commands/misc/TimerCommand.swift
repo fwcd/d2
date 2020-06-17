@@ -40,6 +40,8 @@ public class TimerCommand: StringCommand {
     private var nextTimerId: Int = 0
 
     public init() {
+        // TODO: Serialize timer elapse timestamps in a JSON file
+
         subcommands = [
             "list": { [unowned self] input, output, context in
                 output.append(Embed(
