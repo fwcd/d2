@@ -7,4 +7,9 @@ struct NetApiKeys: Codable {
 	var wolframAlpha: String? = nil
 	var gitlab: String? = nil
 	var openweathermap: String? = nil
+	var windy: Windy? = nil
+
+	struct Windy: Codable {
+		var webcams: String? = nil
+	}
 }
