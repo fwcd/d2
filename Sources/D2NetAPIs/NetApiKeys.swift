@@ -6,4 +6,5 @@ struct NetApiKeys: Codable {
 	var mapQuest: String? = nil
 	var wolframAlpha: String? = nil
 	var gitlab: String? = nil
+	var openweathermap: String? = nil
 }
