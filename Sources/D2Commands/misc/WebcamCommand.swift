@@ -4,7 +4,7 @@ import D2NetAPIs
 import D2MessageIO
 
 fileprivate let argPattern = try! Regex(from: "(\\w+)\\s*(.*)")
-fileprivate let rawFloatPattern = "\\d+(?:\\.\\d+)?"
+fileprivate let rawFloatPattern = "-?\\d+(?:\\.\\d+)?"
 fileprivate let coordsWithRadiusPattern = try! Regex(from: "(\(rawFloatPattern))[\\s,]+(\(rawFloatPattern))(?:\\s+(\(rawFloatPattern)))")
 
 public class WebcamCommand: StringCommand {
@@ -37,7 +37,7 @@ public class WebcamCommand: StringCommand {
                             return
                         }
                         output.append(Embed(
-                            title: ":camera: Nearby Webcams",
+                            title: ":camera: Webcams in a radius of \(radius) km around \(lat), \(lon)",
                             description: webcams
                                 .map { "**\($0.title)**: \($0.status) - id: \($0.id)" }
                                 .joined(separator: "\n")
