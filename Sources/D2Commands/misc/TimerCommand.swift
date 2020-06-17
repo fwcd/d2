@@ -50,6 +50,14 @@ public class TimerCommand: StringCommand {
                         .map { "`\($0.name ?? "<unnamed>")` elapses in \($0.remainingTime.displayString)" }
                         .joined(separator: "\n")
                 ))
+            },
+            "cancel": { [unowned self] input, output, context in
+                guard let (id, timer) = self.timers.first(where: { $0.value.name == input }) else {
+                    output.append(errorText: "No timer named `\(input)`!")
+                    return
+                }
+                self.timers[id] = nil
+                output.append("Successfully cancelled timer `\(timer.name ?? "<unnamed>")`!")
             }
         ]
         info.helpText = """
