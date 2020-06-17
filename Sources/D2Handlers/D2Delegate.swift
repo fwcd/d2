@@ -47,6 +47,7 @@ public class D2Delegate: MessageDelegate {
 		registry["bfencode"] = BFEncodeCommand()
 		registry["bftoc"] = BFToCCommand()
 		registry["echo"] = EchoCommand()
+		registry["timer"] = TimerCommand()
 		registry["say"] = SayCommand()
 		registry["campus"] = CampusCommand()
 		registry["type"] = TriggerTypingCommand()

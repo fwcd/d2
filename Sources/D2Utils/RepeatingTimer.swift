@@ -17,7 +17,7 @@ public class RepeatingTimer {
 		}
 	}
 	
-	public func schedule(nTimes n: Int, action: @escaping (Int, TimerContext) -> Void) {
+	public func schedule(nTimes n: Int = 1, action: @escaping (Int, TimerContext) -> Void) {
 		// (Re)start timer
 		let queue = DispatchQueue(label: "RepeatingTimer #\(globalTimerIndex)")
 		var count = 0
