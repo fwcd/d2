@@ -26,6 +26,12 @@ public class MessageIOClientDelegate: IRCClientDelegate {
 
     public func client(_ ircClient: IRCClient, registered nick: IRCNickName, with userInfo: IRCUserInfo) {
         log.info("Registered \(nick) with \(userInfo)")
+
+        if !joined && !channelsToJoin.isEmpty {
+            joined = true
+            log.info("Auto-joining channels \(channelsToJoin)...")
+            ircClient.sendMessage(IRCMessage(command: .JOIN(channels: channelsToJoin.map { IRCChannelName($0)! }, keys: nil)))
+        }
     }
 
     public func client(_ ircClient: IRCClient, user: IRCUserID, joined channels: [ IRCChannelName ]) {
@@ -42,12 +48,6 @@ public class MessageIOClientDelegate: IRCClientDelegate {
 
     public func client(_ ircClient: IRCClient, received message: IRCMessage) {
         log.info("Received: \(message)")
-
-        if !joined && !channelsToJoin.isEmpty {
-            joined = true
-            log.info("Auto-joining channels \(channelsToJoin)...")
-            ircClient.sendMessage(IRCMessage(command: .JOIN(channels: channelsToJoin.map { IRCChannelName($0)! }, keys: nil)))
-        }
     }
 
     public func client(_ ircClient: IRCClient, message: String, from sender: IRCUserID, for recipients: [ IRCMessageRecipient ]) {

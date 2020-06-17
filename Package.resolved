@@ -177,8 +177,8 @@
         "repositoryURL": "https://github.com/NozeIO/swift-nio-irc-client.git",
         "state": {
           "branch": null,
-          "revision": "faf2b5d9c63f7eb0162f87ad2b6d7f6accc30b4a",
-          "version": null
+          "revision": "19158684b8427c2c54a442af6ea0d957b9474633",
+          "version": "0.7.2"
         }
       },
       {
