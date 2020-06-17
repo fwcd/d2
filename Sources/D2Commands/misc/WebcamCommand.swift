@@ -5,7 +5,7 @@ import D2MessageIO
 
 fileprivate let argPattern = try! Regex(from: "(\\w+)\\s*(.*)")
 fileprivate let rawFloatPattern = "\\d+(?:\\.\\d+)?"
-fileprivate let coordsPattern = try! Regex(from: "(\(rawFloatPattern))[\\s,]+(\(rawFloatPattern))")
+fileprivate let coordsWithRadiusPattern = try! Regex(from: "(\(rawFloatPattern))[\\s,]+(\(rawFloatPattern))(?:\\s+(\(rawFloatPattern)))")
 
 public class WebcamCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -15,14 +15,22 @@ public class WebcamCommand: StringCommand {
     )
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
 
-    public init() {
+    public init(maxRadius: Int = 250) {
         subcommands = [
             "near": { [unowned self] input, output in
-                guard let parsedCoords = coordsPattern.firstGroups(in: input), let lat = Double(parsedCoords[1]), let lon = Double(parsedCoords[2]) else {
+                guard let parsedCoordsWithRadius = coordsWithRadiusPattern.firstGroups(in: input), let lat = Double(parsedCoordsWithRadius[1]), let lon = Double(parsedCoordsWithRadius[2]) else {
                     output.append(errorText: "Please enter a pair of lat/lon coordinates!")
                     return
                 }
-                WindyWebcamNearbyQuery(latitude: lat, longitude: lon, radius: 10).perform {
+                guard let radius = (parsedCoordsWithRadius[3].nilIfEmpty ?? "10").flatMap({ Int($0) }) else {
+                    output.append(errorText: "Please enter a valid radius!")
+                    return
+                }
+                guard radius < maxRadius else {
+                    output.append(errorText: "Please enter a radius < \(maxRadius)!")
+                    return
+                }
+                WindyWebcamNearbyQuery(latitude: lat, longitude: lon, radius: radius).perform {
                     do {
                         guard let webcams = try $0.get().result?.webcams else {
                             output.append(errorText: "Did not find any webcams")
@@ -69,6 +77,7 @@ public class WebcamCommand: StringCommand {
 
             Examples:
             - `webcam near 0.000 0.000` (latitude, longitude)
+            - `webcam near 0.000 0.000 25` (latitude, longitude, radius in km)
             - `webcam show 123456` (webcam id)
             """
     }
