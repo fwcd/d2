@@ -46,7 +46,7 @@ public class TimerCommand: StringCommand {
                     title: ":timer: Running Timers",
                     description: self.timers.values
                         .filter { $0.guildId == context.guild?.id }
-                        .sorted(by: descendingComparator { $0.remainingTime })
+                        .sorted(by: ascendingComparator { $0.remainingTime })
                         .map { "`\($0.name ?? "<unnamed>")` elapses in \($0.remainingTime.displayString)" }
                         .joined(separator: "\n")
                 ))
