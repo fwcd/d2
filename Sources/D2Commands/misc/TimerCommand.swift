@@ -25,7 +25,8 @@ public class TimerCommand: StringCommand {
         helpText: "Syntax: [[number] [s|m|h]]+ [--here]? [--everyone]?",
         requiredPermissionLevel: .vip
     )
-    private var timers: [DispatchSourceTimer] = []
+    private var timers: [Int: DispatchSourceTimer] = [:]
+    private var nextTimerId: Int = 0
 
     public init() {}
 
@@ -42,7 +43,9 @@ public class TimerCommand: StringCommand {
         let authorId = context.author?.id
         let duration = durations.reduce(0, +)
 
-        output.append("Created a timer for \(duration) \("second".pluralize(with: duration))!")
+        let timerId = nextTimerId
+        nextTimerId += 1
+
         let timer = DispatchSource.makeTimerSource()
         timer.schedule(deadline: .now() + .seconds(duration))
         timer.setEventHandler {
@@ -55,8 +58,11 @@ public class TimerCommand: StringCommand {
                 mention = authorId.map { "<@\($0)>" } ?? ""
             }
             output.append("\(mention), the timer has elapsed!")
+            self.timers[timerId] = nil
         }
-        timers.append(timer)
+        timers[timerId] = timer
+
+        output.append("Created a timer for \(duration) \("second".pluralize(with: duration))!")
         timer.resume()
     }
 }
