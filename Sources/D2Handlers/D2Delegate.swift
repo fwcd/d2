@@ -171,6 +171,7 @@ public class D2Delegate: MessageDelegate {
 		registry["xkcd"] = XkcdCommand()
 		registry["coinflip"] = CoinFlipCommand()
 		registry["directmessage", aka: ["dm"]] = DirectMessageCommand()
+		registry["channelmessage", aka: ["m"]] = ChannelMessageCommand()
 		registry["tofile"] = ToFileCommand()
 		registry["cleanmentions"] = CleanMentionsCommand()
 		registry["chord"] = FretboardChordCommand()
