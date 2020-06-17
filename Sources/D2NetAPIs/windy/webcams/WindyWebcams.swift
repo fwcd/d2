@@ -13,7 +13,7 @@ public struct WindyWebcams: Codable {
         public struct Image: Codable {
             public let current: Previews
             public let sizes: Sizes?
-            public let daylight: Sizes?
+            public let daylight: Previews?
             public let update: Int?
 
             public struct Previews: Codable {

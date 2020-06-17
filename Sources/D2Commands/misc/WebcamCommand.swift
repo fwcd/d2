@@ -1,3 +1,4 @@
+import Foundation
 import D2Utils
 import D2NetAPIs
 import D2MessageIO
@@ -36,6 +37,26 @@ public class WebcamCommand: StringCommand {
                         ))
                     } catch {
                         output.append(error, errorText: "Could not query nearby webcams")
+                    }
+                }
+            },
+            "show": { [unowned self] input, output in
+                guard !input.isEmpty else {
+                    output.append(errorText: "Please enter a webcam id (e.g. obtained using `near`)")
+                    return
+                }
+                WindyWebcamDetailQuery(id: input).perform {
+                    do {
+                        guard let webcam = try $0.get().result?.webcams.first else {
+                            output.append(errorText: "Did not find any webcams")
+                            return
+                        }
+                        output.append(Embed(
+                            title: ":camera_with_flash: Webcam \(webcam.title)",
+                            image: webcam.image.flatMap { URL(string: $0.current.preview) }.map { Embed.Image(url: $0) }
+                        ))
+                    } catch {
+                        output.append(error, errorText: "Could not query webcam details")
                     }
                 }
             }

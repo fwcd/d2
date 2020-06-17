@@ -17,7 +17,7 @@ public struct WindyWebcamDetailQuery {
             guard let token = storedNetApiKeys?.windy?.webcams else {
                 throw NetApiError.missingApiKey("No API key for Windy webcams")
             }
-            let request = try HTTPRequest(host: "api.windy.com", path: "/api/v2/webcams/list/webcam=\(id)", query: ["show": show, "key": token])
+            let request = try HTTPRequest(host: "api.windy.com", path: "/api/webcams/v2/list/webcam=\(id)", query: ["show": show, "key": token])
             request.fetchJSONAsync(as: WindyResult<WindyWebcams>.self, then: then)
         } catch {
             then(.failure(error))
