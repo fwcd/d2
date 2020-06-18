@@ -1,5 +1,5 @@
 # TODO: Update to stable
-FROM swift:5.3-xenial
+FROM swift:nightly-5.3-xenial
 
 # Install Curl and node package repository
 RUN apt-get update && apt-get install -y curl
