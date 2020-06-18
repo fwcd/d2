@@ -19,7 +19,9 @@ public struct HaikuHandler: MessageHandler {
     }
 
     private func haikuOf(_ raw: String) -> [String]? {
-        let words = raw.split(separator: " ").map { String($0) }
+        let words = raw
+            .replacingOccurrences(of: "\n", with: " ")
+            .split(separator: " ").map { String($0) }
         var verses = [[String]()]
         var totalSyllables = 0
         var wordIt = words.makeIterator()
