@@ -1,4 +1,5 @@
-image: "swift:5.2-xenial"
+# TODO: Update to stable
+image: "swift:nightly-5.3-xenial"
 
 stages:
   - test
