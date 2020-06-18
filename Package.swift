@@ -26,7 +26,7 @@ let package = Package(
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
-        .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("8bdd5abe0e429f3554a655cb40b1f9fda8dd8a18"))
+        .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("08cd024da5f30ac32939e718a2a964445a4aab4a"))
         // TODO: Integrate swiftplot, this is however blocked on https://bugs.swift.org/browse/SR-679
         //       due to a dependency target collision (CFreeType)
     ],
@@ -51,7 +51,7 @@ let package = Package(
         ),
         .target(
             name: "D2Handlers",
-            dependencies: ["Logging", "D2Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
+            dependencies: ["Logging", "SyllableCounter", "D2Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
         ),
         .target(
             name: "D2Commands",
