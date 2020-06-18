@@ -41,6 +41,8 @@ public struct HaikuHandler: MessageHandler {
             verses.append([])
         }
 
+        guard wordIt.next() == nil else { return nil }
+
         return verses.map { $0.joined(separator: " ") }
     }
 }
