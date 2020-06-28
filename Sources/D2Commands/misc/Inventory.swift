@@ -20,14 +20,16 @@ public struct Inventory: Hashable, Codable, Sequence {
         /// A category-specific identifier
         public let id: String
         public let name: String
+        public let hidden: Bool
         public let iconUrl: URL?
         public let attributes: [String: String]
         
         public var description: String { "\(name) (#\(id))" }
         
-        public init(id: String, name: String, iconUrl: URL? = nil, attributes: [String: String] = [:]) {
+        public init(id: String, name: String, hidden: Bool = false, iconUrl: URL? = nil, attributes: [String: String] = [:]) {
             self.id = id
             self.name = name
+            self.hidden = hidden
             self.iconUrl = iconUrl
             self.attributes = attributes
         }
