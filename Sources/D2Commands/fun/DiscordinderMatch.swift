@@ -3,11 +3,17 @@ import D2MessageIO
 struct DiscordinderMatch {
     let initiator: MatchUser
     let acceptor: MatchUser
-    let halfOpen: Bool
+    let state: MatchState
 
     struct MatchUser {
         let id: UserID
         let name: String
+    }
+
+    enum MatchState: String {
+        case waitingForAcceptor
+        case accepted
+        case rejected
     }
 }
 
@@ -19,7 +25,8 @@ extension Inventory.Item {
             let initiatorName = attributes["initiator.name"],
             let acceptorClientName = attributes["acceptor.clientName"],
             let acceptorId = attributes["acceptor.id"].map({ UserID($0, clientName: acceptorClientName) }),
-            let acceptorName = attributes["acceptor.name"] else { return nil }
+            let acceptorName = attributes["acceptor.name"],
+            let state = attributes["state"].flatMap(DiscordinderMatch.MatchState.init(rawValue:)) else { return nil }
         return DiscordinderMatch(
             initiator: DiscordinderMatch.MatchUser(
                 id: initiatorId,
@@ -29,7 +36,7 @@ extension Inventory.Item {
                 id: acceptorId,
                 name: acceptorName
             ),
-            halfOpen: hidden
+            state: state
         )
     }
 
@@ -37,14 +44,15 @@ extension Inventory.Item {
         self.init(
             id: "\(match.initiator.id) + \(match.acceptor.id)",
             name: "\(match.initiator.name) + \(match.acceptor.name)",
-            hidden: match.halfOpen,
+            hidden: match.state == .accepted,
             attributes: [
                 "initiator.id": match.initiator.id.value,
                 "initiator.name": match.initiator.name,
                 "initiator.clientName": match.initiator.id.clientName,
                 "acceptor.id": match.acceptor.id.value,
                 "acceptor.name": match.acceptor.name,
-                "acceptor.clientName": match.acceptor.id.clientName
+                "acceptor.clientName": match.acceptor.id.clientName,
+                "acceptor.state": match.state.rawValue
             ]
         )
     }
