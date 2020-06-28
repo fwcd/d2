@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Utils
 
 fileprivate let allFlag = "--all"
-fileprivate let subcommandPattern = try! Regex(from: "(\\w+)(?:\\s+(.+))?")
+fileprivate let subcommandPattern = try! Regex(from: "^(\\w+)(?:\\s+(.+))?")
 
 public class InventoryCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -51,12 +51,14 @@ public class InventoryCommand: StringCommand {
                 return
             }
 
+            let showAll = input.contains(allFlag)
             let inventory = inventoryManager[user]
+
             output.append(Embed(
                 title: "Inventory for `\(user.username)`",
                 fields: inventory.items.map {
                     Embed.Field(name: $0.key, value: Dictionary(grouping: $0.value, by: { $0.id })
-                        .filter { !$0.value.contains { $0.hidden } }
+                        .filter { showAll || !$0.value.contains { $0.hidden } }
                         .map { "\($0.value.count)x \($0.value.first?.name ?? "?")" }
                         .joined(separator: "\n")
                         .nilIfEmpty ?? "_nothing_")

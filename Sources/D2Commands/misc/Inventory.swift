@@ -60,8 +60,8 @@ public struct Inventory: Hashable, Codable, Sequence {
     }
     
     public mutating func clear(category: String? = nil) {
-        if let category = category {
-            items[category] = nil
+        if let c = category {
+            items[c] = nil
         } else {
             items = [:]
         }

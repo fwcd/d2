@@ -205,6 +205,7 @@ public class DiscordinderCommand: StringCommand {
     @discardableResult
     private func accept(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
         let match = takeMatch(between: firstId, and: secondId, on: guild).accepted
+        print(match)
         setMatch(between: firstId, and: secondId, to: match)
         return match.state
     }
