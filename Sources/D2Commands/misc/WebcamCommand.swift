@@ -17,7 +17,7 @@ public class WebcamCommand: StringCommand {
 
     public init(maxRadius: Int = 250) {
         subcommands = [
-            "near": { [unowned self] input, output in
+            "near": { /*[unowned self]*/ input, output in
                 guard let parsedCoordsWithRadius = coordsWithRadiusPattern.firstGroups(in: input), let lat = Double(parsedCoordsWithRadius[1]), let lon = Double(parsedCoordsWithRadius[2]) else {
                     output.append(errorText: "Please enter a pair of lat/lon coordinates!")
                     return
@@ -48,7 +48,7 @@ public class WebcamCommand: StringCommand {
                     }
                 }
             },
-            "show": { [unowned self] input, output in
+            "show": { /*[unowned self]*/ input, output in
                 guard !input.isEmpty else {
                     output.append(errorText: "Please enter a webcam id (e.g. obtained using `near`)")
                     return
