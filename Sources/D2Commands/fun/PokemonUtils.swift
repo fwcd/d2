@@ -1,7 +1,5 @@
 import D2NetAPIs
 
-let pokemonInventoryCategory = "Pokemon"
-
 extension Inventory.Item {
     init(fromPokemon pokemon: PokedexEntry) {
         self.init(

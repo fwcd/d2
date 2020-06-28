@@ -4,6 +4,7 @@ import D2MessageIO
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.PokemonCommand")
+fileprivate let inventoryCategory = "Pokemon"
 
 public class PokemonCommand: StringCommand {
     public let info = CommandInfo(
@@ -44,7 +45,7 @@ public class PokemonCommand: StringCommand {
             return
         }
         var inventory = inventoryManager[author]
-        inventory.append(item: .init(fromPokemon: pokemon), to: pokemonInventoryCategory)
+        inventory.append(item: .init(fromPokemon: pokemon), to: inventoryCategory)
         inventoryManager[author] = inventory
     }
 }
