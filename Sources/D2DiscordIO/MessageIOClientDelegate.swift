@@ -79,6 +79,21 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
+    public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: SwiftDiscord.MessageID, onChannel channel: DiscordTextChannel, user userID: SwiftDiscord.UserID) {
+        log.debug("Did add reaction")
+        inner.on(addReaction: reaction.usingMessageIO, to: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didRemoveReaction reaction: DiscordEmoji, toMessage messageID: SwiftDiscord.MessageID, onChannel channel: DiscordTextChannel, user userID: SwiftDiscord.UserID) {
+        log.debug("Did remove reaction")
+        inner.on(removeReaction: reaction.usingMessageIO, to: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didRemoveAllReactionsFrom messageID: SwiftDiscord.MessageID, onChannel channel: DiscordTextChannel) {
+        log.debug("Did remove all reactions")
+        inner.on(removeAllReactionsFrom: messageID.usingMessageIO, on: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
     public func client(_ discordClient: DiscordClient, didCreateRole role: DiscordRole, onGuild guild: DiscordGuild) {
         log.debug("Got role create: \(role.name) on guild \(guild.name)")
         inner.on(createRole: role.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
