@@ -100,7 +100,7 @@ public class DiscordinderCommand: StringCommand {
         waitingForAcceptor.remove(authorId)
         nonCandidateIds.insert(authorId)
         
-        guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.keys.filter({ !nonCandidateIds.contains($0) }).randomElement() else {
+        guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.filter({ !nonCandidateIds.contains($0.0) && !$0.1.user.bot }).randomElement()?.0 else {
             output.append(errorText: "Sorry, no candidates are left!")
             return false
         }
