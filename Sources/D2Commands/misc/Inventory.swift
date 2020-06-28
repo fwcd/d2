@@ -54,6 +54,10 @@ public struct Inventory: Hashable, Codable, Sequence {
         guard let c = category ?? self.category(of: item) else { return }
         items[c]?.removeFirst(value: item)
     }
+
+    public mutating func removeAll(from category: String, where predicate: (Inventory.Item) -> Bool) {
+        items[category] = items[category]?.filter { !predicate($0) }
+    }
     
     public mutating func clear(category: String? = nil) {
         if let category = category {

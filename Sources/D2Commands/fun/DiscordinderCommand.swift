@@ -42,78 +42,90 @@ public class DiscordinderCommand: StringCommand {
                 output.append(errorText: "Author has no user ID")
                 return
             }
-            guard let guild = context.guild else {
-                output.append(errorText: "Not on a guild!")
-                return
-            }
-            guard let client = context.client else {
-                output.append(errorText: "No client")
-                return
-            }
             guard !context.isSubscribed else {
                 output.append(errorText: "There is already an active session on this channel!")
                 return
             }
 
-            let authorMatches = matches(for: authorId)
-            let waitingForAcceptor: Set<UserID> = Set(authorMatches
-                .filter { $0.state == .waitingForAcceptor && $0.initiator.id != authorId }
-                .map { $0.initiator.id })
-            let nonCandidateIds: Set<UserID> = Set(authorMatches
-                .flatMap { [$0.initiator.id, $0.acceptor.id] })
-                .filter { !waitingForAcceptor.contains($0) }
-            
-            guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.keys.filter({ !nonCandidateIds.contains($0) }).randomElement() else {
-                output.append(errorText: "Sorry, no candidates are left!")
-                return
-            }
-            guard let candidate = guild.members[candidateId] else {
-                output.append(errorText: "Could not find candidate")
-                return
-            }
-            let candidatePresence = guild.presences[candidateId]
+            presentNextCandidate(for: authorId, output: output, context: context)
+        }
+    }
 
-            client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId) { sentMessage, _ in
-                guard let messageId = sentMessage?.id else { return }
+    @discardableResult
+    private func presentNextCandidate(for authorId: UserID, output: CommandOutput, context: CommandContext) -> Bool {
+        guard let guild = context.guild else {
+            output.append(errorText: "Not on a guild!")
+            return false
+        }
+        guard let client = context.client else {
+            output.append(errorText: "No client")
+            return false
+        }
+        guard let channelId = context.channel?.id else {
+            output.append(errorText: "No channel ID")
+            return false
+        }
 
-                context.subscribeToChannel()
-                self.accept(matchBetween: authorId, and: candidateId, on: guild)
-                self.activeMatches[messageId] = (channelId, candidateId)
+        let authorMatches = matches(for: authorId)
+        let waitingForAcceptor: Set<UserID> = Set(authorMatches
+            .filter { $0.state == .waitingForAcceptor && $0.initiator.id != authorId }
+            .map { $0.initiator.id })
+        var nonCandidateIds: Set<UserID> = Set(authorMatches
+            .flatMap { [$0.initiator.id, $0.acceptor.id] })
+            .filter { !waitingForAcceptor.contains($0) }
+        
+        nonCandidateIds.insert(authorId)
+        
+        guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.keys.filter({ !nonCandidateIds.contains($0) }).randomElement() else {
+            output.append(errorText: "Sorry, no candidates are left!")
+            return false
+        }
+        guard let candidate = guild.members[candidateId] else {
+            output.append(errorText: "Could not find candidate")
+            return false
+        }
+        let candidatePresence = guild.presences[candidateId]
 
-                let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
-                for reaction in reactions {
-                    client.createReaction(for: messageId, on: channelId, emoji: reaction)
-                }
+        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId) { sentMessage, _ in
+            guard let messageId = sentMessage?.id else { return }
+
+            context.subscribeToChannel()
+            self.accept(matchBetween: authorId, and: candidateId, on: guild)
+            self.activeMatches[messageId] = (channelId, candidateId)
+
+            let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
+            for reaction in reactions {
+                client.createReaction(for: messageId, on: channelId, emoji: reaction)
             }
         }
+
+        return true
     }
 
 	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
         guard
             let guild = context.guild,
             let messageId = context.message.id,
-            let (_, candidateId) = activeMatches[messageId],
-            let candidateMember = guild.members[candidateId] else { return }
+            let (_, candidateId) = activeMatches[messageId] else { return }
 
         switch emoji.name {
             case rejectEmoji:
                 reject(matchBetween: user.id, and: candidateId, on: guild)
-                output.append("Rejected `\(candidateMember.displayName)`.")
             case acceptEmoji:
                 let state = accept(matchBetween: user.id, and: candidateId, on: guild)
-                switch state {
-                    case .waitingForAcceptor:
-                        output.append(":hourglass: Waiting for `\(candidateMember.displayName)` to accept.")
-                    case .accepted:
-                        output.append(":partying_face: It's a match!")
-                    default:
-                        output.append(errorText: "Invalid accept state: \(state)")
+                if state == .accepted {
+                    output.append(":partying_face: It's a match!")
+                    context.unsubscribeFromChannel()
                 }
             default:
-                output.append("Ignoring `\(candidateMember.displayName)`.")
+                break
         }
 
         activeMatches[messageId] = nil
+        let success = presentNextCandidate(for: user.id, output: output, context: context)
+        if !success {
+            context.unsubscribeFromChannel()
+        }
     }
 
     private func embedOf(member: Guild.Member, presence: Presence?) -> Embed {
@@ -145,16 +157,34 @@ public class DiscordinderCommand: StringCommand {
         return inventoryManager[userId].items[inventoryCategory]?.compactMap { $0.asDiscordinderMatch } ?? []
     }
 
-    private func getMatch(between firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch {
-        guard let firstMember = guild.members[firstId], let secondMember = guild.members[secondId] else { fatalError("User IDs for match not on the specified guild!") }
-        return (inventoryManager[firstId].items.flatMap { $0.value } + inventoryManager[secondId].items.flatMap { $0.value })
-            .compactMap { $0.asDiscordinderMatch }
-            .first
-            ?? DiscordinderMatch(
+    private func takeMatch(between firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch {
+        guard
+            let firstMember = guild.members[firstId],
+            let secondMember = guild.members[secondId] else { fatalError("User IDs for match not on the specified guild!") }
+        var firstInventory = inventoryManager[firstId]
+        var secondInventory = inventoryManager[secondId]
+        let matching: [(DiscordinderMatch, Inventory.Item)] = ((firstInventory.items[inventoryCategory] ?? []) + (secondInventory.items[inventoryCategory] ?? [])).compactMap({
+            guard
+                let match = $0.asDiscordinderMatch,
+                Set([match.initiator.id, match.acceptor.id]) == [firstId, secondId] else { return nil }
+            return (match, $0)
+        })
+
+        if let (match, item) = matching.first {
+            firstInventory.remove(item: item, from: inventoryCategory)
+            secondInventory.remove(item: item, from: inventoryCategory)
+
+            inventoryManager[firstId] = firstInventory
+            inventoryManager[secondId] = secondInventory
+
+            return match
+        } else {
+            return DiscordinderMatch(
                 initiator: .init(id: firstId, name: firstMember.displayName),
                 acceptor: .init(id: secondId, name: secondMember.displayName),
                 state: .waitingForInitiator
             )
+        }
     }
 
     private func setMatch(between firstId: UserID, and secondId: UserID, to match: DiscordinderMatch) {
@@ -162,6 +192,8 @@ public class DiscordinderCommand: StringCommand {
         var secondInventory = inventoryManager[secondId]
 
         let item = Inventory.Item(fromDiscordinderMatch: match)
+        firstInventory.remove(item: item, from: inventoryCategory)
+        secondInventory.remove(item: item, from: inventoryCategory)
         firstInventory.append(item: item, to: inventoryCategory)
         secondInventory.append(item: item, to: inventoryCategory)
 
@@ -172,7 +204,7 @@ public class DiscordinderCommand: StringCommand {
     /** Initiates or accepts a match between two users. */
     @discardableResult
     private func accept(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
-        let match = getMatch(between: firstId, and: secondId, on: guild).accepted
+        let match = takeMatch(between: firstId, and: secondId, on: guild).accepted
         setMatch(between: firstId, and: secondId, to: match)
         return match.state
     }
@@ -180,7 +212,7 @@ public class DiscordinderCommand: StringCommand {
     /** Rejects a match between two users. */
     @discardableResult
     private func reject(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
-        let match = getMatch(between: firstId, and: secondId, on: guild).rejected
+        let match = takeMatch(between: firstId, and: secondId, on: guild).rejected
         setMatch(between: firstId, and: secondId, to: match)
         return match.state
     }

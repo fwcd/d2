@@ -63,8 +63,8 @@ extension Inventory.Item {
     init(fromDiscordinderMatch match: DiscordinderMatch) {
         self.init(
             id: "\(match.initiator.id) + \(match.acceptor.id)",
-            name: "\(match.initiator.name) + \(match.acceptor.name)",
-            hidden: match.state == .accepted,
+            name: "\(match.initiator.name) + \(match.acceptor.name) (\(match.state.rawValue))",
+            hidden: match.state != .accepted && match.state != .waitingForAcceptor,
             attributes: [
                 "initiator.id": match.initiator.id.value,
                 "initiator.name": match.initiator.name,
@@ -72,7 +72,7 @@ extension Inventory.Item {
                 "acceptor.id": match.acceptor.id.value,
                 "acceptor.name": match.acceptor.name,
                 "acceptor.clientName": match.acceptor.id.clientName,
-                "acceptor.state": match.state.rawValue
+                "state": match.state.rawValue
             ]
         )
     }
