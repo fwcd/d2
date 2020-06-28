@@ -1,16 +1,16 @@
 import Foundation
 
 public struct Embed: Codable {
-	public let title: String?
-	public let description: String?
-	public let author: Author?
-	public let url: URL?
-	public let image: Image?
-	public let timestamp: Date?
-	public let thumbnail: Thumbnail?
-	public let color: Int?
-	public let footer: Footer?
-	public let fields: [Field]
+	public var title: String?
+	public var description: String?
+	public var author: Author?
+	public var url: URL?
+	public var image: Image?
+	public var timestamp: Date?
+	public var thumbnail: Thumbnail?
+	public var color: Int?
+	public var footer: Footer?
+	public var fields: [Field]
 	
 	public init(
 		title: String? = nil,

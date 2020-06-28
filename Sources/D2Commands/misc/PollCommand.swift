@@ -40,19 +40,19 @@ public class PollCommand: StringCommand {
 		}
 		
 		let reactions: [String]
-		var text: String = "Poll: \(components.first!)"
+		var embed = Embed(title: "Poll: \(components.first!)")
 		
-		log.info("Creating poll `\(text)` with options \(options)")
+		log.info("Creating poll `\(embed.title!)` with options \(options)")
 		
 		if options.isEmpty {
 			reactions = ["👍", "👎", "🤷"]
 		} else {
 			let range = 0..<options.count
-			text += "\n\(range.map { "\n:\(numberEmojiStringOf(digit: $0) ?? "?"):: \(options[$0])" }.joined())"
+			embed.description = "\(range.map { "\n**\($0):** \(options[$0])" }.joined())"
 			reactions = range.compactMap { numberEmojiOf(digit: $0) }
 		}
 		
-		client.sendMessage(Message(content: text), to: channelId) { sentMessage, _ in
+		client.sendMessage(Message(embed: embed), to: channelId) { sentMessage, _ in
 			if let nextMessageId = sentMessage?.id {
 				self.react(to: nextMessageId, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
 			}
