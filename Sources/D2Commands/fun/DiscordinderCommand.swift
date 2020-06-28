@@ -65,9 +65,9 @@ public class DiscordinderCommand: StringCommand {
             self.activeMatches[messageId] = candidateId
 
             let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
-            collect(thenables: reactions.map { emoji in
-                { then in client.createReaction(for: messageId, on: channelId, emoji: emoji) { _, _ in then(.success(())) } }
-            }) { _ in }
+            for reaction in reactions {
+                client.createReaction(for: messageId, on: channelId, emoji: reaction)
+            }
         }
     }
 
