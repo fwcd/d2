@@ -53,8 +53,9 @@ public class DiscordinderCommand: StringCommand {
             output.append(errorText: "Could not find candidate")
             return
         }
+        let candidatePresence = guild.presences[candidateId]
 
-        client.sendMessage(Message(embed: embedOf(member: candidate)), to: channelId) { sentMessage, _ in
+        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId) { sentMessage, _ in
             guard let messageId = sentMessage?.id else { return }
             context.subscribeToChannel()
 
@@ -68,11 +69,28 @@ public class DiscordinderCommand: StringCommand {
 	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
     }
 
-    private func embedOf(member: Guild.Member) -> Embed {
+    private func embedOf(member: Guild.Member, presence: Presence?) -> Embed {
         Embed(
             title: member.displayName,
+            description: (presence?.game).map { descriptionOf(activity: $0) },
             image: URL(string: "https://cdn.discordapp.com/avatars/\(member.user.id)/\(member.user.avatar).png?size=256").map(Embed.Image.init)
         )
+    }
+
+    private func descriptionOf(activity: Presence.Activity) -> String {
+        var detail: String = "Likes to \(verbOf(activityType: activity.type)) \(activity.name)"
+        if activity.name == "Custom Status", let state = activity.state {
+            detail = state
+        }
+        return detail
+    }
+
+    private func verbOf(activityType: Presence.Activity.ActivityType) -> String {
+        switch activityType {
+            case .game: return "play"
+            case .stream: return "stream"
+            case .listening: return "listen to"
+        }
     }
 
     /** Fetches all (including rejected or awaiting) matches for a user. */
