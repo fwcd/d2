@@ -61,6 +61,8 @@ public class DiscordinderCommand: StringCommand {
                     cancelSession(context: context)
                     return
                 }
+            case ignoreEmoji:
+                takeMatch(between: user.id, and: candidateId, on: guild)
             default:
                 break
         }
@@ -159,6 +161,7 @@ public class DiscordinderCommand: StringCommand {
         return inventoryManager[userId].items[inventoryCategory]?.compactMap { $0.asDiscordinderMatch } ?? []
     }
 
+    @discardableResult
     private func takeMatch(between firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch {
         guard
             let firstMember = guild.members[firstId],
