@@ -13,6 +13,8 @@ public protocol Command: class {
 	
 	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
 
+	func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
+
 	func onReceivedUpdated(presence: Presence)
 	
 	func equalTo(_ rhs: Command) -> Bool

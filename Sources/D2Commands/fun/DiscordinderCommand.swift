@@ -92,6 +92,7 @@ public class DiscordinderCommand: StringCommand {
                 output.append("Ignoring `\(user.username)`.")
         }
 
+        activeMatches[messageId] = nil
         context.unsubscribeFromChannel()
     }
 

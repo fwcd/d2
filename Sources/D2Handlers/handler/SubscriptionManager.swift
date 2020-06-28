@@ -5,6 +5,8 @@ public class SubscriptionManager {
     private let registry: CommandRegistry
     private var subscriptionSets: [String: SubscriptionSet] = [:]
     public var isEmpty: Bool { subscriptionSets.isEmpty }
+
+    public var debugSubscriptionInfos: String { subscriptionSets.keys.joined(separator: ", ") }
     
     init(registry: CommandRegistry) {
         self.registry = registry
