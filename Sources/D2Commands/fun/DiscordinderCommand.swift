@@ -36,15 +36,20 @@ public class DiscordinderCommand: StringCommand {
             return
         }
 
-        let nonCandidateIds: Set<UserID> = Set(matches(for: authorId)
-            .filter { $0.state != .waitingForAcceptor || $0.initiator.id != authorId }
+        let authorMatches = matches(for: authorId)
+        let waitingForAcceptor: Set<UserID> = Set(authorMatches
+            .filter { $0.state == .waitingForAcceptor && $0.initiator.id != authorId }
+            .map { $0.initiator.id })
+        let nonCandidateIds: Set<UserID> = Set(authorMatches
             .flatMap { [$0.initiator.id, $0.acceptor.id] })
-        let candidates: [Guild.Member] = guild.members
-            .filter { !nonCandidateIds.contains($0.0) }
-            .map { $0.1 }
+            .filter { !waitingForAcceptor.contains($0) }
         
-        guard let candidate = candidates.randomElement() else {
+        guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.keys.filter({ !nonCandidateIds.contains($0) }).randomElement() else {
             output.append(errorText: "Sorry, no candidates are left!")
+            return
+        }
+        guard let candidate = guild.members[candidateId] else {
+            output.append(errorText: "Could not find candidate")
             return
         }
 
