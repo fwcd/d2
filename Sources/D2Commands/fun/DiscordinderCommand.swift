@@ -1,3 +1,4 @@
+import Foundation
 import D2MessageIO
 import D2Utils
 
@@ -53,7 +54,7 @@ public class DiscordinderCommand: StringCommand {
             return
         }
 
-        client.sendMessage(Message(content: candidate.displayName), to: channelId) { sentMessage, _ in
+        client.sendMessage(Message(embed: embedOf(member: candidate)), to: channelId) { sentMessage, _ in
             guard let messageId = sentMessage?.id else { return }
             context.subscribeToChannel()
 
@@ -65,6 +66,13 @@ public class DiscordinderCommand: StringCommand {
     }
 
 	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
+    }
+
+    private func embedOf(member: Guild.Member) -> Embed {
+        Embed(
+            title: member.displayName,
+            image: URL(string: "https://cdn.discordapp.com/avatars/\(member.user.id)/\(member.user.avatar).png?size=256").map(Embed.Image.init)
+        )
     }
 
     /** Fetches all (including rejected or awaiting) matches for a user. */
