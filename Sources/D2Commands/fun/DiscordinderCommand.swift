@@ -72,24 +72,28 @@ public class DiscordinderCommand: StringCommand {
     }
 
 	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
-        guard let messageId = context.message.id, let candidateId = activeMatches[messageId], let guild = context.guild else { return }
+        guard
+            let guild = context.guild,
+            let messageId = context.message.id,
+            let candidateId = activeMatches[messageId],
+            let candidateMember = guild.members[candidateId] else { return }
 
         switch emoji.name {
             case rejectEmoji:
                 reject(matchBetween: user.id, and: candidateId, on: guild)
-                output.append("Rejected `\(user.username)`.")
+                output.append("Rejected `\(candidateMember.displayName)`.")
             case acceptEmoji:
                 let state = accept(matchBetween: user.id, and: candidateId, on: guild)
                 switch state {
                     case .waitingForAcceptor:
-                        output.append(":hourglass: Waiting for `\(user.username)`.")
+                        output.append(":hourglass: Waiting for `\(candidateMember.displayName)` to accept.")
                     case .accepted:
                         output.append(":partying_face: It's a match!")
                     default:
                         output.append(errorText: "Invalid accept state: \(state)")
                 }
             default:
-                output.append("Ignoring `\(user.username)`.")
+                output.append("Ignoring `\(candidateMember.displayName)`.")
         }
 
         activeMatches[messageId] = nil
