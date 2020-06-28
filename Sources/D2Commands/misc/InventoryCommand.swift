@@ -21,8 +21,9 @@ public class InventoryCommand: StringCommand {
         output.append(Embed(
             title: "Inventory for `\(user.username)`",
             fields: inventory.items.map {
-                Embed.Field(name: $0.0, value: Dictionary(grouping: $0.1, by: { $0.id })
-                    .map { "\($0.1.count)x \($0.1.first?.name ?? "?")" }
+                Embed.Field(name: $0.key, value: Dictionary(grouping: $0.value, by: { $0.id })
+                    .filter { !$0.value.contains { $0.hidden } }
+                    .map { "\($0.value.count)x \($0.value.first?.name ?? "?")" }
                     .joined(separator: "\n")
                     .nilIfEmpty ?? "_nothing_")
             }
