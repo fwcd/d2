@@ -25,6 +25,10 @@ extension Command {
 	public func onSuccessfullySent(context: CommandContext) {}
 	
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
+
+	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {}
+
+	// TODO: Support reaction removal
 	
 	public func onReceivedUpdated(presence: Presence) {}
 

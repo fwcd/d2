@@ -12,8 +12,10 @@ public class D2Delegate: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
 	private let messageDB: MessageDatabase
-	private var registry: CommandRegistry
-	private var eventListenerBus: EventListenerBus
+	private let registry: CommandRegistry
+	private let eventListenerBus: EventListenerBus
+	private let subscriptionManager: SubscriptionManager
+
 	private var messageRewriters: [MessageRewriter]
 	private var messageHandlers: [MessageHandler]
 	
@@ -24,9 +26,9 @@ public class D2Delegate: MessageDelegate {
 		registry = CommandRegistry()
 		messageDB = try MessageDatabase()
 		eventListenerBus = EventListenerBus()
+		subscriptionManager = SubscriptionManager(registry: registry)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let permissionManager = PermissionManager()
-		let subscriptionManager = SubscriptionManager(registry: registry)
 		let inventoryManager = InventoryManager()
 
 		messageRewriters = [
@@ -252,6 +254,25 @@ public class D2Delegate: MessageDelegate {
 					subscriptions: .init()
 				))
 			}
+		}
+	}
+
+	public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+		guard
+			let guild = client.guildForChannel(channelId),
+			let member = guild.members[userId] else { return }
+		// TODO: Query the actual message that the user reacted to here
+		let message = Message(content: "Dummy", channelId: channelId, id: messageId)
+		let user = member.user
+		subscriptionManager.notifySubscriptions(on: channelId, isBot: user.bot) {
+			let context = CommandContext(
+				client: client,
+				registry: registry,
+				message: message,
+				commandPrefix: commandPrefix,
+				subscriptions: $1
+			)
+			registry[$0]?.onSubscriptionReaction(emoji: reaction, by: user, output: MessageIOOutput(context: context), context: context)
 		}
 	}
 
