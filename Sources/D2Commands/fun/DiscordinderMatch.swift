@@ -3,7 +3,18 @@ import D2MessageIO
 struct DiscordinderMatch {
     let initiator: MatchUser
     let acceptor: MatchUser
-    let state: MatchState
+    private(set) var state: MatchState
+
+    var accepted: Self {
+        var m = self
+        m.state = m.state.accepted
+        return m
+    }
+    var rejected: Self {
+        var m = self
+        m.state = m.state.rejected
+        return m
+    }
 
     struct MatchUser {
         let id: UserID
@@ -11,9 +22,18 @@ struct DiscordinderMatch {
     }
 
     enum MatchState: String {
+        case waitingForInitiator
         case waitingForAcceptor
         case accepted
         case rejected
+
+        var accepted: MatchState {
+            switch self {
+                case .waitingForInitiator: return .waitingForAcceptor
+                default: return .accepted
+            }
+        }
+        var rejected: MatchState { .rejected }
     }
 }
 

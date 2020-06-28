@@ -4,6 +4,7 @@ import D2Utils
 
 fileprivate let inventoryCategory = "Discordinder Matches"
 fileprivate let acceptEmoji = "✅"
+fileprivate let ignoreEmoji = "🟨"
 fileprivate let rejectEmoji = "❌"
 
 public class DiscordinderCommand: StringCommand {
@@ -14,6 +15,7 @@ public class DiscordinderCommand: StringCommand {
         subscribesToNextMessages: true
     )
     private let inventoryManager: InventoryManager
+    private var activeMatches: [MessageID: UserID] = [:]
     
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
@@ -57,9 +59,12 @@ public class DiscordinderCommand: StringCommand {
 
         client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId) { sentMessage, _ in
             guard let messageId = sentMessage?.id else { return }
-            context.subscribeToChannel()
 
-            let reactions = [rejectEmoji, acceptEmoji]
+            context.subscribeToChannel()
+            self.accept(matchBetween: authorId, and: candidateId, on: guild)
+            self.activeMatches[messageId] = candidateId
+
+            let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
             collect(thenables: reactions.map { emoji in
                 { then in client.createReaction(for: messageId, on: channelId, emoji: emoji) { _, _ in then(.success(())) } }
             }) { _ in }
@@ -67,6 +72,27 @@ public class DiscordinderCommand: StringCommand {
     }
 
 	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
+        guard let messageId = context.message.id, let candidateId = activeMatches[messageId], let guild = context.guild else { return }
+
+        switch emoji.name {
+            case rejectEmoji:
+                reject(matchBetween: user.id, and: candidateId, on: guild)
+                output.append("Rejected `\(user.username)`.")
+            case acceptEmoji:
+                let state = accept(matchBetween: user.id, and: candidateId, on: guild)
+                switch state {
+                    case .waitingForAcceptor:
+                        output.append(":hourglass: Waiting for `\(user.username)`.")
+                    case .accepted:
+                        output.append(":partying_face: It's a match!")
+                    default:
+                        output.append(errorText: "Invalid accept state: \(state)")
+                }
+            default:
+                output.append("Ignoring `\(user.username)`.")
+        }
+
+        context.unsubscribeFromChannel()
     }
 
     private func embedOf(member: Guild.Member, presence: Presence?) -> Embed {
@@ -98,13 +124,43 @@ public class DiscordinderCommand: StringCommand {
         return inventoryManager[userId].items[inventoryCategory]?.compactMap { $0.asDiscordinderMatch } ?? []
     }
 
+    private func getMatch(between firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch {
+        guard let firstMember = guild.members[firstId], let secondMember = guild.members[secondId] else { fatalError("User IDs for match not on the specified guild!") }
+        return (inventoryManager[firstId].items.flatMap { $0.value } + inventoryManager[secondId].items.flatMap { $0.value })
+            .compactMap { $0.asDiscordinderMatch }
+            .first
+            ?? DiscordinderMatch(
+                initiator: .init(id: firstId, name: firstMember.displayName),
+                acceptor: .init(id: secondId, name: secondMember.displayName),
+                state: .waitingForInitiator
+            )
+    }
+
+    private func setMatch(between firstId: UserID, and secondId: UserID, to match: DiscordinderMatch) {
+        var firstInventory = inventoryManager[firstId]
+        var secondInventory = inventoryManager[secondId]
+
+        let item = Inventory.Item(fromDiscordinderMatch: match)
+        firstInventory.append(item: item, to: inventoryCategory)
+        secondInventory.append(item: item, to: inventoryCategory)
+
+        inventoryManager[firstId] = firstInventory
+        inventoryManager[secondId] = secondInventory
+    }
+
     /** Initiates or accepts a match between two users. */
-    private func accept(matchBetween firstId: UserID, and secondId: UserID) {
-        // TODO
+    @discardableResult
+    private func accept(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
+        let match = getMatch(between: firstId, and: secondId, on: guild).accepted
+        setMatch(between: firstId, and: secondId, to: match)
+        return match.state
     }
 
     /** Rejects a match between two users. */
-    private func reject(matchBetween firstId: UserID, and secondId: UserID) {
-        // TODO
+    @discardableResult
+    private func reject(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
+        let match = getMatch(between: firstId, and: secondId, on: guild).rejected
+        setMatch(between: firstId, and: secondId, to: match)
+        return match.state
     }
 }
