@@ -22,6 +22,7 @@ struct DiscordinderMatch {
     }
 
     enum MatchState: String {
+        case waitingForCreation
         case waitingForInitiator
         case waitingForAcceptor
         case accepted
@@ -29,6 +30,7 @@ struct DiscordinderMatch {
 
         var accepted: MatchState {
             switch self {
+                case .waitingForCreation: return .waitingForInitiator
                 case .waitingForInitiator: return .waitingForAcceptor
                 default: return .accepted
             }

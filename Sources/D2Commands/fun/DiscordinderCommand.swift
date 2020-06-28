@@ -59,6 +59,7 @@ public class DiscordinderCommand: StringCommand {
                 if state == .accepted {
                     output.append(":partying_face: It's a match!")
                     cancelSession(context: context)
+                    return
                 }
             default:
                 break
@@ -87,13 +88,14 @@ public class DiscordinderCommand: StringCommand {
         }
 
         let authorMatches = matches(for: authorId)
-        let waitingForAcceptor: Set<UserID> = Set(authorMatches
-            .filter { $0.state == .waitingForAcceptor && $0.initiator.id != authorId }
+        var waitingForAcceptor: Set<UserID> = Set(authorMatches
+            .filter { ($0.state == .waitingForAcceptor && $0.initiator.id != authorId) || ($0.state == .waitingForInitiator && $0.initiator.id == authorId) }
             .map { $0.initiator.id })
         var nonCandidateIds: Set<UserID> = Set(authorMatches
             .flatMap { [$0.initiator.id, $0.acceptor.id] })
             .filter { !waitingForAcceptor.contains($0) }
         
+        waitingForAcceptor.remove(authorId)
         nonCandidateIds.insert(authorId)
         
         guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.keys.filter({ !nonCandidateIds.contains($0) }).randomElement() else {
@@ -182,7 +184,7 @@ public class DiscordinderCommand: StringCommand {
             return DiscordinderMatch(
                 initiator: .init(id: firstId, name: firstMember.displayName),
                 acceptor: .init(id: secondId, name: secondMember.displayName),
-                state: .waitingForInitiator
+                state: .waitingForCreation
             )
         }
     }
@@ -205,7 +207,6 @@ public class DiscordinderCommand: StringCommand {
     @discardableResult
     private func accept(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
         let match = takeMatch(between: firstId, and: secondId, on: guild).accepted
-        print(match)
         setMatch(between: firstId, and: secondId, to: match)
         return match.state
     }
