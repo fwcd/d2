@@ -23,19 +23,13 @@ public class DiscordinderCommand: StringCommand {
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        guard let channelId = context.channel?.id else {
-            output.append(errorText: "No channel ID")
-            return
-        }
-
         if input == cancelSubcommand {
             guard context.isSubscribed else {
-                output.append(errorText: "No active session was running on this channel!")
+                output.append(errorText: "No session is running on this channel!")
                 return
             }
 
-            activeMatches = activeMatches.filter { (c, _) in channelId != c }
-            context.unsubscribeFromChannel()
+            cancelSession(context: context)
             output.append(":x: Cancelled Discordinder session on this channel!")
         } else {
             guard let authorId = context.author?.id else {
@@ -48,6 +42,32 @@ public class DiscordinderCommand: StringCommand {
             }
 
             presentNextCandidate(for: authorId, output: output, context: context)
+        }
+    }
+
+	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
+        guard
+            let guild = context.guild,
+            let messageId = context.message.id,
+            let (_, candidateId) = activeMatches[messageId] else { return }
+
+        switch emoji.name {
+            case rejectEmoji:
+                reject(matchBetween: user.id, and: candidateId, on: guild)
+            case acceptEmoji:
+                let state = accept(matchBetween: user.id, and: candidateId, on: guild)
+                if state == .accepted {
+                    output.append(":partying_face: It's a match!")
+                    cancelSession(context: context)
+                }
+            default:
+                break
+        }
+
+        activeMatches[messageId] = nil
+        let success = presentNextCandidate(for: user.id, output: output, context: context)
+        if !success {
+            context.unsubscribeFromChannel()
         }
     }
 
@@ -102,30 +122,10 @@ public class DiscordinderCommand: StringCommand {
         return true
     }
 
-	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
-        guard
-            let guild = context.guild,
-            let messageId = context.message.id,
-            let (_, candidateId) = activeMatches[messageId] else { return }
-
-        switch emoji.name {
-            case rejectEmoji:
-                reject(matchBetween: user.id, and: candidateId, on: guild)
-            case acceptEmoji:
-                let state = accept(matchBetween: user.id, and: candidateId, on: guild)
-                if state == .accepted {
-                    output.append(":partying_face: It's a match!")
-                    context.unsubscribeFromChannel()
-                }
-            default:
-                break
-        }
-
-        activeMatches[messageId] = nil
-        let success = presentNextCandidate(for: user.id, output: output, context: context)
-        if !success {
-            context.unsubscribeFromChannel()
-        }
+    private func cancelSession(context: CommandContext) {
+        guard let channelId = context.channel?.id else { return }
+        activeMatches = activeMatches.filter { (c, _) in channelId != c }
+        context.unsubscribeFromChannel()
     }
 
     private func embedOf(member: Guild.Member, presence: Presence?) -> Embed {
