@@ -113,4 +113,19 @@ extension StringProtocol {
 		
 		return matrix.last!
 	}
+
+	/// Applies this string as a 'template' containing % placeholders to a list of arguments
+	public func applyAsTemplate(to args: [String]) -> String {
+        var result = ""
+        var argIterator = args.makeIterator()
+        for c in self {
+            if c == "%" {
+                guard let arg = argIterator.next() else { fatalError("Provided too few args to apply(template:to:)!") }
+                result += arg
+            } else {
+                result.append(c)
+            }
+        }
+        return result
+    }
 }

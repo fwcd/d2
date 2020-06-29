@@ -160,6 +160,7 @@ public class D2Delegate: MessageDelegate {
 		registry["commandcount", aka: ["cmdcount"]] = CommandCountCommand()
 		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
+		registry["cookie"] = CookieCommand(inventoryManager: inventoryManager)
 		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
 		registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
 		registry["shell"] = ShellCommand()

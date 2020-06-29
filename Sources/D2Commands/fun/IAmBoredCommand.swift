@@ -1,3 +1,5 @@
+import D2Utils
+
 public class IAmBoredCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
@@ -29,20 +31,6 @@ public class IAmBoredCommand: StringCommand {
             output.append(errorText: "No verb/thing/method/template available!")
             return
         }
-        output.append(apply(template: template, to: [verb, thing, method]))
-    }
-
-    private func apply(template: String, to args: [String]) -> String {
-        var result = ""
-        var argIterator = args.makeIterator()
-        for c in template {
-            if c == "%" {
-                guard let arg = argIterator.next() else { fatalError("Provided too few args to apply(template:to:)!") }
-                result += arg
-            } else {
-                result.append(c)
-            }
-        }
-        return result
+        output.append(template.applyAsTemplate(to: [verb, thing, method]))
     }
 }
