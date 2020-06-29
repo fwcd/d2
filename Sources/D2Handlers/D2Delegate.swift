@@ -157,6 +157,7 @@ public class D2Delegate: MessageDelegate {
 		registry["magic8ball", aka: ["7ball", "8ball", "9ball"]] = Magic8BallCommand()
 		registry["random"] = RandomCommand(permissionManager: permissionManager)
 		registry["commandoftheday", aka: ["cotd"]] = CommandOfTheDayCommand(commandPrefix: commandPrefix)
+		registry["commandcount", aka: ["cmdcount"]] = CommandCountCommand()
 		registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
 		registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
 		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
