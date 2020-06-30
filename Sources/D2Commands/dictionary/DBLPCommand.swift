@@ -1,3 +1,4 @@
+import Foundation
 import D2NetAPIs
 import D2MessageIO
 
@@ -20,8 +21,15 @@ public class DBLPCommand: StringCommand {
         DBLPQuery(term: input).perform {
             do {
                 let result = try $0.get()
+                var urlComponents = URLComponents()
+                urlComponents.scheme = "https"
+                urlComponents.host = "dblp.org"
+                urlComponents.path = "/search"
+                urlComponents.queryItems = [URLQueryItem(name: "q", value: result.query)]
+
                 output.append(Embed(
                     title: ":books: DBLP Results",
+                    url: urlComponents.url,
                     fields: Array(result.hits.hit.map {
                         Embed.Field(name: $0.info.title, value: """
                             Year: \($0.info.year.map { "\($0)" } ?? "?")
