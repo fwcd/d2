@@ -18,7 +18,7 @@ public struct DBLPPublicationsResult: Codable {
             public let info: Info
 
             public struct Info: Codable {
-                public let authors: Authors
+                public let authors: Authors?
                 public let title: String
                 public let venue: String?
                 public let pages: String?

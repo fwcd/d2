@@ -31,10 +31,10 @@ public class DBLPCommand: StringCommand {
                     title: ":books: DBLP Publication Search Results",
                     url: urlComponents.url,
                     fields: Array(result.hits.hit.map {
-                        Embed.Field(name: $0.info.title, value: """
+                        Embed.Field(name: $0.info.title.truncate(250, appending: "..."), value: """
                             Year: \($0.info.year.map { "\($0)" } ?? "?")
                             Type: \($0.info.type ?? "?")
-                            Authors: \($0.info.authors.author.joined(separator: ", "))
+                            Authors: \($0.info.authors?.author.joined(separator: ", ").truncate(50, appending: "...") ?? "anonymous")
                             DOI: \($0.info.doi ?? "?")
                             URL: \($0.info.url ?? "?")
                             """)
