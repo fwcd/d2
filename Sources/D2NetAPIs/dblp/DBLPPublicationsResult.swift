@@ -1,4 +1,4 @@
-public struct DBLPResult: Codable {
+public struct DBLPPublicationsResult: Codable {
     public let query: String
     public let status: String
     public let time: Double

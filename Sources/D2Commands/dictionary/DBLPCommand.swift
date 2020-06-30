@@ -18,7 +18,7 @@ public class DBLPCommand: StringCommand {
             return
         }
 
-        DBLPQuery(term: input).perform {
+        DBLPPublicationsQuery(term: input).perform {
             do {
                 let result = try $0.get()
                 var urlComponents = URLComponents()
@@ -28,7 +28,7 @@ public class DBLPCommand: StringCommand {
                 urlComponents.queryItems = [URLQueryItem(name: "q", value: result.query)]
 
                 output.append(Embed(
-                    title: ":books: DBLP Results",
+                    title: ":books: DBLP Publication Search Results",
                     url: urlComponents.url,
                     fields: Array(result.hits.hit.map {
                         Embed.Field(name: $0.info.title, value: """
