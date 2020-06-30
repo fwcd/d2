@@ -112,6 +112,7 @@ public class D2Delegate: MessageDelegate {
 		registry["wolframalpha"] = WolframAlphaCommand()
 		registry["stackoverflow"] = StackOverflowCommand()
 		registry["wikipedia"] = WikipediaCommand()
+		registry["dblp"] = DBLPCommand()
 		registry["gitlab"] = GitLabCommand()
 		registry["perceptron"] = PerceptronCommand()
 		registry["tictactoe"] = GameCommand<TicTacToeGame>()

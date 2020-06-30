@@ -1,3 +1,6 @@
+import D2NetAPIs
+import D2MessageIO
+
 public class DBLPCommand: StringCommand {
     public let info = CommandInfo(
         category: .dictionary,
@@ -9,6 +12,29 @@ public class DBLPCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        // TODO
+        guard !input.isEmpty else {
+            output.append(errorText: "Please enter a query!")
+            return
+        }
+
+        DBLPQuery(term: input).perform {
+            do {
+                let result = try $0.get()
+                output.append(Embed(
+                    title: ":books: DBLP Results",
+                    fields: Array(result.hits.hit.map {
+                        Embed.Field(name: $0.info.title, value: """
+                            Year: \($0.info.year.map { "\($0)" } ?? "?")
+                            Type: \($0.info.type ?? "?")
+                            Authors: \($0.info.authors.author.joined(separator: ", "))
+                            DOI: \($0.info.doi ?? "?")
+                            URL: \($0.info.url ?? "?")
+                            """)
+                    }.prefix(4))
+                ))
+            } catch {
+                output.append(error, errorText: "Could not perform query")
+            }
+        }
     }
 }
