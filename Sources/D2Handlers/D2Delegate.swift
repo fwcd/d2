@@ -207,13 +207,20 @@ public class D2Delegate: MessageDelegate {
 	}
 
 	public func on(connect connected: Bool, client: MessageClient) {
+		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
+		eventListenerBus.fire(event: .connect, with: .none)
+
 		do {
 			try messageDB.setupTables(client: client)
 		} catch {
 			log.warning("Could not setup message database: \(error)")
 		}
-		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
-		eventListenerBus.fire(event: .connect, with: .none)
+
+		do {
+			try partyGameDB.setupTables()
+		} catch {
+			log.warning("Could not setup party game database: \(error)")
+		}
 	}
 	
 	public func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
