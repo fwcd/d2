@@ -4,8 +4,8 @@ import D2Permissions
 
 public class QuitCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
-        shortDescription: "Quits",
+        category: .essential,
+        shortDescription: "Quits D2's process",
         longDescription: "Terminates the running process",
         requiredPermissionLevel: .admin
     )
