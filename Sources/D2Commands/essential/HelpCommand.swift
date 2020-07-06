@@ -40,14 +40,19 @@ public class HelpCommand: StringCommand {
 		return Embed(
 			title: ":question: Available Commands",
 			fields: CommandCategory.allCases
-				.map { category in Embed.Field(
-					name: "\(category)",
-					value: commands
-						.filter { $0.command.info.category == category && !$0.command.info.hidden && $0.command.info.requiredPermissionLevel <= authorLevel }
-						.map { "`\(commandPrefix)\($0.name)`" }
-						.joined(separator: ", ")
-						+ " (Type `\(commandPrefix)help \(category.rawValue)` for details)"
-				) }
+				.compactMap { category in
+					guard let categoryCommands = commands
+						.filter({ $0.command.info.category == category && !$0.command.info.hidden && $0.command.info.requiredPermissionLevel <= authorLevel })
+						.nilIfEmpty else { return nil }
+
+					return Embed.Field(
+						name: "\(category)",
+						value: categoryCommands
+							.map { "`\(commandPrefix)\($0.name)`" }
+							.joined(separator: ", ")
+							+ " (Type `\(commandPrefix)help \(category.rawValue)` for details)"
+					)
+				}
 		)
 	}
 	
