@@ -71,6 +71,7 @@ public class PartyGameDatabase {
                     try self.db.transaction {
                         for q in questions {
                             try self.db.run(wyrQuestions.insert(or: .ignore,
+                                title <- q.title,
                                 firstChoice <- q.firstChoice,
                                 secondChoice <- q.secondChoice,
                                 explanation <- q.explanation

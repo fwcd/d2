@@ -14,7 +14,7 @@ public struct WouldYouRatherQuery {
             request.fetchHTMLAsync { result in
                 then(Result {
                     let document: Document = try result.get()
-                    let rawQuestions = try document.select(".questions > li").array().flatMap { try $0.getElementsByTag("li").array() }
+                    let rawQuestions = try document.select(".questions li").array().flatMap { try $0.getElementsByTag("li").array() }
                     let questions: [WouldYouRatherQuestion] = try rawQuestions.compactMap {
                         let options = try $0.getElementsByClass("option")
                         guard
