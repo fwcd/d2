@@ -4,7 +4,7 @@ import D2MessageIO
 
 public class UploadCommand: Command {
     public let info = CommandInfo(
-        category: .misc,
+        category: .file,
         shortDescription: "Uploads a file to a path relative to D2's pwd",
         helpText: "Pipe a file path into an invocation of upload, e.g. `... | upload local/test.txt`",
         requiredPermissionLevel: .admin
