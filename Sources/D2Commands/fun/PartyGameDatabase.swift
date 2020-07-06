@@ -20,9 +20,10 @@ public class PartyGameDatabase {
     public func setupTables() throws {
         try db.transaction {
             try db.run(wyrQuestions.create(ifNotExists: true) {
-                $0.column(firstChoice, primaryKey: true)
-                $0.column(secondChoice, primaryKey: true)
+                $0.column(firstChoice)
+                $0.column(secondChoice)
                 $0.column(explanation)
+                $0.primaryKey(firstChoice, secondChoice)
             })
             try db.run(nhieStatements.create(ifNotExists: true) {
                 $0.column(statement, primaryKey: true)
