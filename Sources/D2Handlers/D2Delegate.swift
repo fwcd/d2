@@ -156,6 +156,7 @@ public class D2Delegate: MessageDelegate {
 		registry["discordinder"] = DiscordinderCommand(inventoryManager: inventoryManager)
 		registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
 		registry["wouldyourather", aka: ["wyr"]] = WouldYouRatherCommand(partyGameDB: partyGameDB)
+		registry["neverhaveiever", aka: ["nhie"]] = NeverHaveIEverCommand(partyGameDB: partyGameDB)
 		registry["partygamedb"] = PartyGameDatabaseCommand(partyGameDB: partyGameDB)
 		registry["advice"] = AdviceCommand()
 		registry["magic8ball", aka: ["7ball", "8ball", "9ball"]] = Magic8BallCommand()
