@@ -21,7 +21,7 @@ public class WouldYouRatherCommand: StringCommand {
         do {
             let wyr = try partyGameDB.randomWyrQuestion()
             output.append(Embed(
-                title: "Would you rather",
+                title: wyr.title,
                 description: """
                     \(self.emojiA) \(wyr.firstChoice)
                     \(self.emojiB) \(wyr.secondChoice)

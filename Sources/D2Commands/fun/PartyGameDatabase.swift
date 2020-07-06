@@ -3,6 +3,7 @@ import D2NetAPIs
 import SQLite
 
 fileprivate let wyrQuestions = Table("wyr_questions")
+fileprivate let title = Expression<String>("title")
 fileprivate let firstChoice = Expression<String>("first_choice")
 fileprivate let secondChoice = Expression<String>("second_choice")
 fileprivate let explanation = Expression<String?>("explanation")
@@ -20,10 +21,11 @@ public class PartyGameDatabase {
     public func setupTables() throws {
         try db.transaction {
             try db.run(wyrQuestions.create(ifNotExists: true) {
+                $0.column(title)
                 $0.column(firstChoice)
                 $0.column(secondChoice)
                 $0.column(explanation)
-                $0.primaryKey(firstChoice, secondChoice)
+                $0.primaryKey(title, firstChoice, secondChoice)
             })
             try db.run(nhieStatements.create(ifNotExists: true) {
                 $0.column(statement, primaryKey: true)
@@ -41,6 +43,7 @@ public class PartyGameDatabase {
         }
 
         return WouldYouRatherQuestion(
+            title: row[title],
             firstChoice: row[firstChoice],
             secondChoice: row[secondChoice],
             explanation: row[explanation]
