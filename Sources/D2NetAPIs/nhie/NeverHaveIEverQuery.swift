@@ -21,7 +21,7 @@ public struct NeverHaveIEverQuery {
                     let nextLinks = try document.select(".pagination .page-link:contains(Next)")
 
                     if nextPage < self.maxPages && !nextLinks.isEmpty() {
-                        perform(page: nextPage, prepending: prepending + statements, then: then)
+                        self.perform(page: nextPage, prepending: prepending + statements, then: then)
                     } else {
                         then(.success(prepending + statements))
                     }
