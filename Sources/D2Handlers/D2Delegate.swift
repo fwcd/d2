@@ -12,6 +12,7 @@ public class D2Delegate: MessageDelegate {
 	private let commandPrefix: String
 	private let initialPresence: String?
 	private let messageDB: MessageDatabase
+	private let partyGameDB: PartyGameDatabase
 	private let registry: CommandRegistry
 	private let eventListenerBus: EventListenerBus
 	private let subscriptionManager: SubscriptionManager
@@ -25,6 +26,7 @@ public class D2Delegate: MessageDelegate {
 		
 		registry = CommandRegistry()
 		messageDB = try MessageDatabase()
+		partyGameDB = try PartyGameDatabase()
 		eventListenerBus = EventListenerBus()
 		subscriptionManager = SubscriptionManager(registry: registry)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
