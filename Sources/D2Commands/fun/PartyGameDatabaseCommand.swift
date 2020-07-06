@@ -1,6 +1,6 @@
 public class PartyGameDatabaseCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .fun,
         shortDescription: "Lets the user send SQL commands to the local party game database",
         helpText: "Syntax: [subcommand|sql]",
         requiredPermissionLevel: .admin
