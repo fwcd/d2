@@ -7,8 +7,8 @@ fileprivate let firstChoice = Expression<String>("first_choice")
 fileprivate let secondChoice = Expression<String>("second_choice")
 fileprivate let explanation = Expression<String?>("explanation")
 
-fileprivate let nhieQuestions = Table("nhie_questions")
-fileprivate let question = Expression<String>("question")
+fileprivate let nhieStatements = Table("nhie_statements")
+fileprivate let statement = Expression<String>("statement")
 
 public class PartyGameDatabase {
     private let db: Connection
@@ -24,8 +24,8 @@ public class PartyGameDatabase {
                 $0.column(secondChoice, primaryKey: true)
                 $0.column(explanation)
             })
-            try db.run(nhieQuestions.create(ifNotExists: true) {
-                $0.column(question, primaryKey: true)
+            try db.run(nhieStatements.create(ifNotExists: true) {
+                $0.column(statement, primaryKey: true)
             })
         }
     }
@@ -35,7 +35,7 @@ public class PartyGameDatabase {
     }
 
     public func rebuild() -> Promise<Void, Error> {
-        all(promises: [rebuildWyrQuestions(), rebuildNhieQuestions()]).void()
+        all(promises: [rebuildWyrQuestions(), rebuildNhieStatements()]).void()
     }
 
     private func rebuildWyrQuestions() -> Promise<Void, Error> {
@@ -66,7 +66,7 @@ public class PartyGameDatabase {
         } }).map { $0.flatMap { $0 } }
     }
 
-    private func rebuildNhieQuestions() -> Promise<Void, Error> {
+    private func rebuildNhieStatements() -> Promise<Void, Error> {
         // TODO
         Promise(())
     }
