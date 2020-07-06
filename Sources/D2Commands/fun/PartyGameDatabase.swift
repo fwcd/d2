@@ -35,7 +35,7 @@ public class PartyGameDatabase {
     }
 
     public func rebuild() -> Promise<Void, Error> {
-        all(promises: [rebuildWyrQuestions(), rebuildNhieStatements()]).void()
+        sequence(promises: [rebuildWyrQuestions, rebuildNhieStatements]).void()
     }
 
     private func rebuildWyrQuestions() -> Promise<Void, Error> {
@@ -44,11 +44,25 @@ public class PartyGameDatabase {
                 Promise.catching {
                     try self.db.transaction {
                         for q in questions {
-                            try self.db.run(wyrQuestions.insert(
-                                or: .ignore,
+                            try self.db.run(wyrQuestions.insert(or: .ignore,
                                 firstChoice <- q.firstChoice,
                                 secondChoice <- q.secondChoice,
                                 explanation <- q.explanation
+                            ))
+                        }
+                    }
+                }
+            }
+    }
+
+    private func rebuildNhieStatements() -> Promise<Void, Error> {
+        queryNhieStatements()
+            .then { statements in
+                Promise.catching {
+                    try self.db.transaction {
+                        for s in statements {
+                            try self.db.run(nhieStatements.insert(or: .ignore,
+                                statement <- s.statement
                             ))
                         }
                     }
@@ -66,8 +80,11 @@ public class PartyGameDatabase {
         } }).map { $0.flatMap { $0 } }
     }
 
-    private func rebuildNhieStatements() -> Promise<Void, Error> {
-        // TODO
-        Promise(())
+    private func queryNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
+        Promise { then in
+            NeverHaveIEverQuery(maxPages: 40).perform {
+                then($0)
+            }
+        }
     }
 }
