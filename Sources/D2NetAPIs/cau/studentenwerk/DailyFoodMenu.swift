@@ -22,15 +22,9 @@ public class DailyFoodMenu {
     }
     
     public func fetchMealsAsync(then: @escaping (Result<[Meal], Error>) -> Void) {
-        request.fetchUTF8Async {
-            guard case let .success(html) = $0 else {
-                guard case let .failure(error) = $0 else { fatalError("`Result` should always be either successful or not") }
-                then(.failure(error))
-                return
-            }
-            
-            do {
-                let document: Document = try SwiftSoup.parse(html)
+        request.fetchHTMLAsync { result in
+            then(Result {
+                let document: Document = try result.get()
                 guard let menu = try document.getElementsByClass("menuPrint").first() else { throw FoodMenuError.noMenuPrintAvailable }
                 let rows = try menu.getElementsByTag("tr").array()
                 let meals: [Meal] = try rows.compactMap {
@@ -43,11 +37,8 @@ public class DailyFoodMenu {
                         price: try price.text()
                     )
                 }
-                
-                then(.success(meals))
-            } catch {
-                then(.failure(error))
-            }
+                return meals
+            })
         }
     }
     

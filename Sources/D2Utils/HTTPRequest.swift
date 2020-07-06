@@ -5,6 +5,7 @@ import FoundationNetworking
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
+import SwiftSoup
 
 public struct HTTPRequest {
 	private var request: URLRequest
@@ -113,6 +114,12 @@ public struct HTTPRequest {
 				case .failure(let error):
 					then(.failure(error))
 			}
+		}
+	}
+
+	public func fetchHTMLAsync(then: @escaping (Result<Document, Error>) -> Void) {
+		fetchUTF8Async {
+			then($0.flatMap { html in Result { try SwiftSoup.parse(html) } })
 		}
 	}
 }

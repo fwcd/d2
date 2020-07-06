@@ -2,11 +2,12 @@ import D2Utils
 import SQLite
 
 fileprivate let wyrQuestions = Table("wyr_questions")
-fileprivate let question = Expression<String>("question")
 fileprivate let firstChoice = Expression<String>("first_choice")
 fileprivate let secondChoice = Expression<String>("second_choice")
+fileprivate let explanation = Expression<String?>("explanation")
 
 fileprivate let nhieQuestions = Table("nhie_questions")
+fileprivate let question = Expression<String>("question")
 
 public class PartyGameDatabase {
     private let db: Connection
@@ -18,9 +19,9 @@ public class PartyGameDatabase {
     public func setupTables() throws {
         try db.transaction {
             try db.run(wyrQuestions.create(ifNotExists: true) {
-                $0.column(question, primaryKey: true)
-                $0.column(firstChoice)
-                $0.column(secondChoice)
+                $0.column(firstChoice, primaryKey: true)
+                $0.column(secondChoice, primaryKey: true)
+                $0.column(explanation)
             })
             try db.run(nhieQuestions.create(ifNotExists: true) {
                 $0.column(question, primaryKey: true)
