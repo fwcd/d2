@@ -31,6 +31,11 @@ public class PartyGameDatabaseCommand: StringCommand {
             if let subcommand = subcommands[input] {
                 try subcommand(output, context)
             } else {
+                guard !input.isEmpty else {
+                    output.append(errorText: "Please enter an SQL statement or one of these subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+                    return
+                }
+
                 let result = try partyGameDB.prepare(sql: input)
                     .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no output" }
                     .joined(separator: "\n")
