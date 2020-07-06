@@ -18,7 +18,7 @@ public struct NeverHaveIEverQuery {
                     let statements = try rawStatements.map { NeverHaveIEverStatement(statement: try $0.text()) }
 
                     let nextPage = (page ?? 0) + 1
-                    let nextLinks = try document.select("pagination .page-link:contains(Next)")
+                    let nextLinks = try document.select(".pagination .page-link:contains(Next)")
 
                     if nextPage < self.maxPages && !nextLinks.isEmpty() {
                         perform(page: nextPage, prepending: prepending + statements, then: then)
