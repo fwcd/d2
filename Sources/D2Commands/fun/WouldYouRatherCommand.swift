@@ -9,28 +9,27 @@ public class WouldYouRatherCommand: StringCommand {
         shortDescription: "Asks an either/or question",
         requiredPermissionLevel: .basic
     )
+    private let partyGameDB: PartyGameDatabase
     private let emojiA = "🅰"
     private let emojiB = "🅱"
     
-    public init() {}
+    public init(partyGameDB: PartyGameDatabase) {
+        self.partyGameDB = partyGameDB
+    }
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        WouldYouRatherQuery().perform {
-            do {
-                let wyr = try $0.get()
-                output.append(Embed(
-                    title: wyr.title,
-                    description: """
-                        \(self.emojiA) \(wyr.choicea)
-                        \(self.emojiB) \(wyr.choiceb)
-                        """,
-                    url: wyr.link.flatMap(URL.init(string:)),
-                    color: 0x440080,
-                    footer: Embed.Footer(text: "\(wyr.votes ?? 0) \("vote".pluralize(with: wyr.votes ?? 0))")
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch question.")
-            }
+        do {
+            let wyr = try partyGameDB.randomWyrQuestion()
+            output.append(Embed(
+                title: "Would you rather",
+                description: """
+                    \(self.emojiA) \(wyr.firstChoice)
+                    \(self.emojiB) \(wyr.secondChoice)
+                    """,
+                color: 0x440080
+            ))
+        } catch {
+            output.append(error, errorText: "Could not fetch question.")
         }
     }
     

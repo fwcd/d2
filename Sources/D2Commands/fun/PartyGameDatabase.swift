@@ -34,12 +34,34 @@ public class PartyGameDatabase {
         try db.prepare(sql)
     }
 
+    public func randomWyrQuestion() throws -> WouldYouRatherQuestion {
+        guard let row = try db.prepare(wyrQuestions.order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
+            throw PartyGameDatabaseError.noSuchRow("No wyr questions in the database!")
+        }
+
+        return WouldYouRatherQuestion(
+            firstChoice: row[firstChoice],
+            secondChoice: row[secondChoice],
+            explanation: row[explanation]
+        )
+    }
+
+    public func randomNhieStatement() throws -> NeverHaveIEverStatement {
+        guard let row = try db.prepare(nhieStatements.order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
+            throw PartyGameDatabaseError.noSuchRow("No nhie statements in the database!")
+        }
+
+        return NeverHaveIEverStatement(
+            statement: row[statement]
+        )
+    }
+
     public func rebuild() -> Promise<Void, Error> {
         sequence(promises: [rebuildWyrQuestions, rebuildNhieStatements]).void()
     }
 
     private func rebuildWyrQuestions() -> Promise<Void, Error> {
-        queryWyrQuestions()
+        fetchWyrQuestions()
             .then { questions in
                 Promise.catching {
                     try self.db.transaction {
@@ -56,7 +78,7 @@ public class PartyGameDatabase {
     }
 
     private func rebuildNhieStatements() -> Promise<Void, Error> {
-        queryNhieStatements()
+        fetchNhieStatements()
             .then { statements in
                 Promise.catching {
                     try self.db.transaction {
@@ -70,7 +92,7 @@ public class PartyGameDatabase {
             }
     }
 
-    private func queryWyrQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+    private func fetchWyrQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
         sequence(promises: ["conversation-starters", "school", "dating"].map { category in {
             Promise { then in
                 WouldYouRatherQuery(category: category).perform {
@@ -80,7 +102,7 @@ public class PartyGameDatabase {
         } }).map { $0.flatMap { $0 } }
     }
 
-    private func queryNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
+    private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
         Promise { then in
             NeverHaveIEverQuery(maxPages: 40).perform {
                 then($0)
