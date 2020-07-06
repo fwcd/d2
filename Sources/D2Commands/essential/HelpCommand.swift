@@ -62,11 +62,11 @@ public class HelpCommand: StringCommand {
 			.flatMap { (group: (key: PermissionLevel, value: [CommandRegistry.CommandWithAlias])) -> [Embed.Field] in
 				let splitGroups = group.value
 					.sorted { $0.name < $1.name }
-					.map { "**\(commandPrefix)\($0.name)**\($0.aliases.nilIfEmpty.map { " (aka. \($0.joined(separator: ", ")))" } ?? ""): `\($0.command.inputValueType) -> \($0.command.outputValueType)` \($0.command.info.shortDescription)" }
+					.map { "**\(commandPrefix)\($0.name)**: \($0.aliases.nilIfEmpty.map { " (aka. `\($0.joined(separator: ", "))`)" } ?? "") \($0.command.info.shortDescription)" }
 					.chunks(ofLength: 10)
 				return splitGroups
 					.enumerated()
-					.map { Embed.Field(name: ":star: \("\(group.key)".withFirstUppercased) commands (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
+					.map { Embed.Field(name: ":star: \("\(group.key)".withFirstUppercased) Commands (\($0.0 + 1)/\(splitGroups.count))", value: $0.1.joined(separator: "\n")) }
 			}
 		return Embed(
 			title: "\(category) | Available Commands",
