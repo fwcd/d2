@@ -1,4 +1,5 @@
 import D2Utils
+import D2NetAPIs
 import SQLite
 
 fileprivate let wyrQuestions = Table("wyr_questions")
@@ -34,6 +35,38 @@ public class PartyGameDatabase {
     }
 
     public func rebuild() -> Promise<Void, Error> {
+        all(promises: [rebuildWyrQuestions(), rebuildNhieQuestions()]).void()
+    }
+
+    private func rebuildWyrQuestions() -> Promise<Void, Error> {
+        queryWyrQuestions()
+            .then { questions in
+                Promise.catching {
+                    try self.db.transaction {
+                        for q in questions {
+                            try self.db.run(wyrQuestions.insert(
+                                or: .ignore,
+                                firstChoice <- q.firstChoice,
+                                secondChoice <- q.secondChoice,
+                                explanation <- q.explanation
+                            ))
+                        }
+                    }
+                }
+            }
+    }
+
+    private func queryWyrQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+        sequence(promises: ["conversation-starters", "school", "dating"].map { category in {
+            Promise { then in
+                WouldYouRatherQuery(category: category).perform {
+                    then($0)
+                }
+            }
+        } }).map { $0.flatMap { $0 } }
+    }
+
+    private func rebuildNhieQuestions() -> Promise<Void, Error> {
         // TODO
         Promise(())
     }
