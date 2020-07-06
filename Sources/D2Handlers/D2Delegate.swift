@@ -179,7 +179,7 @@ public class D2Delegate: MessageDelegate {
 		registry["identity", aka: ["id"]] = IdentityCommand()
 		registry["presence"] = PresenceCommand()
 		registry["xkcd"] = XkcdCommand()
-		registry["coinflip"] = CoinFlipCommand()
+		registry["coinflip", aka: ["coin"]] = CoinFlipCommand()
 		registry["directmessage", aka: ["dm"]] = DirectMessageCommand()
 		registry["channelmessage", aka: ["m"]] = ChannelMessageCommand()
 		registry["tofile"] = ToFileCommand()
