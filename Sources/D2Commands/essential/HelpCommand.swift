@@ -18,11 +18,12 @@ public class HelpCommand: StringCommand {
 	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+		let authorLevel = context.author.map { permissionManager[simulated: $0] ?? permissionManager[$0] } ?? PermissionLevel.basic
 		if input.isEmpty {
-			output.append(generalHelpEmbed(context: context))
+			output.append(generalHelpEmbed(at: authorLevel, context: context))
 		} else {
 			if let category = CommandCategory(rawValue: input) {
-				output.append(categoryHelpEmbed(for: category, context: context))
+				output.append(categoryHelpEmbed(for: category, at: authorLevel, context: context))
 			} else if let command = context.registry[input] {
 				output.append(commandHelpEmbed(for: input, command: command))
 			} else {
@@ -34,7 +35,7 @@ public class HelpCommand: StringCommand {
 		}
 	}
 	
-	private func generalHelpEmbed(context: CommandContext) -> Embed {
+	private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
 		let commands = context.registry.commandsWithAliases()
 		return Embed(
 			title: ":question: Available Commands",
@@ -42,7 +43,7 @@ public class HelpCommand: StringCommand {
 				.map { category in Embed.Field(
 					name: "\(category)",
 					value: commands
-						.filter { $0.command.info.category == category }
+						.filter { $0.command.info.category == category && !$0.command.info.hidden && $0.command.info.requiredPermissionLevel <= authorLevel }
 						.map { "`\(commandPrefix)\($0.name)`" }
 						.joined(separator: ", ")
 						+ " (Type `\(commandPrefix)help \(category.rawValue)` for details)"
@@ -50,14 +51,11 @@ public class HelpCommand: StringCommand {
 		)
 	}
 	
-	private func categoryHelpEmbed(for category: CommandCategory, context: CommandContext) -> Embed {
-		guard let author = context.author else {
-			return Embed(title: "Message has no author!") // HACK
-		}
+	private func categoryHelpEmbed(for category: CommandCategory, at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
 		let commands = context.registry.commandsWithAliases()
 		let helpGroups = Dictionary(grouping: commands.filter { !$0.command.info.hidden && $0.command.info.category == category }, by: { $0.command.info.requiredPermissionLevel })
-			.filter { permissionManager[author].rawValue >= $0.key.rawValue }
-			.sorted { $0.key.rawValue < $1.key.rawValue }
+			.filter { $0.key <= authorLevel }
+			.sorted { $0.key < $1.key }
 		let helpFields = helpGroups
 			.flatMap { (group: (key: PermissionLevel, value: [CommandRegistry.CommandWithAlias])) -> [Embed.Field] in
 				let splitGroups = group.value
