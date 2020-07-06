@@ -1,3 +1,4 @@
+import D2Utils
 import SQLite
 
 fileprivate let wyrQuestions = Table("wyr_questions")
@@ -25,5 +26,14 @@ public class PartyGameDatabase {
                 $0.column(question, primaryKey: true)
             })
         }
+    }
+
+    public func prepare(sql: String) throws -> Statement {
+        try db.prepare(sql)
+    }
+
+    public func rebuild() -> Promise<Void, Error> {
+        // TODO
+        Promise(())
     }
 }
