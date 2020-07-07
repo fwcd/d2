@@ -281,7 +281,19 @@ public class D2Delegate: MessageDelegate {
 
 	public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
 		for (i, _) in reactionHandlers.enumerated() {
-			reactionHandlers[i].handle(reaction: reaction, to: messageId, on: channelId, by: userId, client: client)
+			reactionHandlers[i].handle(createdReaction: reaction, to: messageId, on: channelId, by: userId, client: client)
+		}
+	}
+
+	public func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+		for (i, _) in reactionHandlers.enumerated() {
+			reactionHandlers[i].handle(deletedReaction: reaction, from: messageId, on: channelId, by: userId, client: client)
+		}
+	}
+
+	public func on(removeAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: MessageClient) {
+		for (i, _) in reactionHandlers.enumerated() {
+			reactionHandlers[i].handle(deletedAllReactionsFrom: messageId, on: channelId, client: client)
 		}
 	}
 

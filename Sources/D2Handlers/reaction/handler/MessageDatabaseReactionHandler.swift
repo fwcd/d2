@@ -11,7 +11,7 @@ public struct MessageDatabaseReactionHandler: ReactionHandler {
         self.messageDB = messageDB
     }
 
-    public func handle(reaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
         do {
             if try messageDB.isTracked(channelId: channelId) {
                 try messageDB.add(reaction: emoji, to: messageId)

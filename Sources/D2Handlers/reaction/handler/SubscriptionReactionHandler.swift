@@ -12,7 +12,7 @@ public struct SubscriptionReactionHandler: ReactionHandler {
         self.manager = manager
     }
 
-    public func handle(reaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
         guard
 			let guild = client.guildForChannel(channelId),
 			let member = guild.members[userId] else { return }
