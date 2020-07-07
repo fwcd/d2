@@ -160,6 +160,7 @@ public class D2Delegate: MessageDelegate {
 		registry["fortunecookie", aka: ["fortune"]] = FortuneCookieCommand()
 		registry["iambored"] = IAmBoredCommand()
 		registry["discordinder"] = DiscordinderCommand(inventoryManager: inventoryManager)
+		registry["pickupline"] = PickupLineCommand()
 		registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
 		registry["wouldyourather", aka: ["wyr"]] = WouldYouRatherCommand(partyGameDB: partyGameDB)
 		registry["neverhaveiever", aka: ["nhie"]] = NeverHaveIEverCommand(partyGameDB: partyGameDB)
