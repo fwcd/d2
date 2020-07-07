@@ -24,7 +24,8 @@ public struct CommandInfo {
     public var subscriptionsUserOnly: Bool
     /** The source file in which the command is located. */
     public var sourceFile: String
-    /** Whether the typing indicator should be displayed. */
+    /** If present, the only platforms on which this command is allowed to run. */
+    public var platformAvailability: Set<String>?
     
     public init(
         category: CommandCategory,
@@ -37,7 +38,8 @@ public struct CommandInfo {
         subscribesToNextMessages: Bool = false,
         userOnly: Bool = true,
         subscriptionsUserOnly: Bool? = nil,
-        sourceFile: String = #file
+        sourceFile: String = #file,
+        platformAvailability: Set<String>? = nil
     ) {
         self.category = category
         self.shortDescription = shortDescription
@@ -50,5 +52,6 @@ public struct CommandInfo {
         self.userOnly = userOnly
         self.subscriptionsUserOnly = subscriptionsUserOnly ?? userOnly
         self.sourceFile = sourceFile
+        self.platformAvailability = platformAvailability
     }
 }

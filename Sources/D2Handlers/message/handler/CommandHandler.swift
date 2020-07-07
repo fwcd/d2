@@ -10,12 +10,14 @@ fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
 
 /** A segment of an invocation pipe that transfers outputs from one command to another. */
 fileprivate class PipeComponent {
+	let name: String
 	let command: Command
 	let context: CommandContext
 	let args: String
 	var output: CommandOutput? = nil
 	
-	init(command: Command, context: CommandContext, args: String) {
+	init(name: String, command: Command, context: CommandContext, args: String) {
+		self.name = name
 		self.command = command
 		self.context = context
 		self.args = args
@@ -89,6 +91,18 @@ public class CommandHandler: MessageHandler {
 					log.notice("Too long pipe")
 					return true
 				}
+
+				// Ensure that all commands are available on the current platform
+				let platform = client.name
+				for component in pipe {
+					if let availability = component.command.info.platformAvailability {
+						guard availability.contains(platform) else {
+							client.sendMessage("Sorry, the command `\(component.name)` is not supported on your platform (\(platform)). Retry it on one of these: \(availability)", to: channelId)
+							log.notice("\(component.name) is unavailable on \(platform)")
+							return true
+						}
+					}
+				}
 				
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
@@ -153,7 +167,7 @@ public class CommandHandler: MessageHandler {
 							subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name)
 						)				
 
-						pipe.append(PipeComponent(command: command, context: context, args: args))
+						pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
 					} else {
 						log.notice("Rejected '\(name)' due to insufficient permissions")
 						client.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
