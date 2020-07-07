@@ -44,7 +44,7 @@ extension DiscordMessage: MessageIOConvertible {
 			reactions: reactions.usingMessageIO,
 			timestamp: timestamp,
 			type: type.usingMessageIO,
-			guild: guildMember?.guild?.usingMessageIO,
+			guild: channel?.guild?.usingMessageIO,
 			guildMember: guildMember?.usingMessageIO
 		)
 	}

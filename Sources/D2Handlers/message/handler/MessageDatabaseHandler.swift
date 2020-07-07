@@ -20,16 +20,16 @@ public struct MessageDatabaseHandler: MessageHandler {
                         try messageDB.generateMarkovTransitions(for: message)
                         log.info("Wrote message '\(message.content.truncate(10, appending: "..."))' to database")
                     } else {
-                        log.info("Not inserting message from untracked guild into DB")
+                        log.debug("Not inserting message from untracked guild into DB")
                     }
                 } catch {
                     log.warning("Could not insert message into DB: \(error)")
                 }
             } else {
-                log.info("Not inserting DM into DB")
+                log.debug("Not inserting DM into DB")
             }
         } else {
-            log.info("Not inserting bot message into DB")
+            log.debug("Not inserting bot message into DB")
         }
 
         return false
