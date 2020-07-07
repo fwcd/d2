@@ -1,17 +1,25 @@
 import D2MessageIO
 import D2Utils
 
-public class KarmaCommand: StringCommand {
-    public let info = CommandInfo(
+public class ReactionLeaderboardCommand: StringCommand {
+    public private(set) var info = CommandInfo(
         category: .misc,
-        shortDescription: "Fetches the number of upvote reactions",
         helpText: "Syntax: [users...]?",
         requiredPermissionLevel: .basic
     )
     private let messageDB: MessageDatabase
+    private let title: String
+    private let name: String
+    private let emojiName: String
 
-    public init(messageDB: MessageDatabase) {
+    public init(title: String, name: String, emojiName: String, messageDB: MessageDatabase) {
+        self.title = title
+        self.name = name
+        self.emojiName = emojiName
         self.messageDB = messageDB
+
+        info.shortDescription = "Fetches \(title)"
+        info.longDescription = "Fetches the number of \(name) reactions per user"
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -21,15 +29,14 @@ public class KarmaCommand: StringCommand {
                 return
             }
             let users: [User] = context.message.mentions.nilIfEmpty ?? guild.members.map { $0.1.user }
-            let emojiName = "upvote"
             let emojiId = try messageDB.emojiIds(for: emojiName).first
             output.append(Embed(
-                title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? "")Upvote Karma",
+                title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? "")\(title)",
                 description: try users
                     .map { (try messageDB.countReactions(authorId: $0.id, emojiName: emojiName), $0.username) }
                     .filter { $0.0 > 0 }
                     .sorted(by: descendingComparator { $0.0 })
-                    .map { "**\($0.1)**: \($0.0) \("upvote".pluralize(with: $0.0))" }
+                    .map { "**\($0.1)**: \($0.0) \(name.pluralize(with: $0.0))" }
                     .prefix(20)
                     .joined(separator: "\n")
                     .nilIfEmpty
