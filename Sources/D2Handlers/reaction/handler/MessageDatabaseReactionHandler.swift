@@ -16,11 +16,31 @@ public struct MessageDatabaseReactionHandler: ReactionHandler {
             if try messageDB.isTracked(channelId: channelId) {
                 try messageDB.add(reaction: emoji, to: messageId)
                 log.info("Wrote reaction '\(emoji.name)' to database")
-            } else {
-                log.info("Not inserting reaction from untracked guild into DB")
             }
         } catch {
             log.warning("Could not insert reaction into DB: \(error)")
+        }
+    }
+
+    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+        do {
+            if try messageDB.isTracked(channelId: channelId) {
+                try messageDB.remove(reaction: emoji, from: messageId)
+                log.info("Removed reaction '\(emoji.name)' from database")
+            }
+        } catch {
+            log.warning("Could not remove reaction from DB: \(error)")
+        }
+    }
+
+    public func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: MessageClient) {
+        do {
+            if try messageDB.isTracked(channelId: channelId) {
+                try messageDB.remove(allReactionsFrom: messageId)
+                log.info("Removed all reactions from message id '\(messageId)' from database")
+            }
+        } catch {
+            log.warning("Could not remove reactions from DB: \(error)")
         }
     }
 }

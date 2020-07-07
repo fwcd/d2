@@ -324,6 +324,18 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
 
+    public func remove(reaction emoji: Emoji, from id: MessageID) throws {
+        try db.transaction {
+            try db.run(reactions.filter(messageId == convert(id: id) && emojiName == emoji.name).update(reactionCount -= 1))
+        }
+    }
+
+    public func remove(allReactionsFrom id: MessageID) throws {
+        try db.transaction {
+            try db.run(reactions.filter(messageId == convert(id: id)).delete())
+        }
+    }
+
     public func insert(message: Message) throws {
         try db.transaction {
             try insertDirectly(message: message)
