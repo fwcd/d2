@@ -18,11 +18,16 @@ public class EmojiImageCommand: StringCommand {
             return
         }
 
+        guard !input.isEmpty else {
+            output.append(errorText: "Please enter the name of an emoji!")
+            return
+        }
+
         do {
             let emojis = guild.emojis.values.filter { $0.id != nil }
             guard let emoji = emojis.first(where: { $0.name == input }) else {
                 let closest = emojis.min(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
-                output.append(errorText: "Could not find such an emoji!\(closest.map { " Did you mean `\($0)`?" } ?? "")")
+                output.append(errorText: "Could not find such an emoji!\(closest.map { " Did you mean `\($0.name)`?" } ?? "")")
                 return
             }
 
