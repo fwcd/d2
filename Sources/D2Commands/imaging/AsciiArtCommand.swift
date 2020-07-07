@@ -1,7 +1,7 @@
 import D2Graphics
 
 fileprivate let asciiShades = [
-    "#", "&", "O", "X", "+", "-", ".", " "
+    "#", "X", "+", "-", ":", ".", " "
 ]
 
 public class AsciiArtCommand: Command {
@@ -13,12 +13,12 @@ public class AsciiArtCommand: Command {
 	public let inputValueType: RichValueType = .image
 	public let outputValueType: RichValueType = .code
 
-    private let width: Int
-    private let height: Int
+    private let maxAsciiWidth: Int
+    private let maxAsciiHeight: Int
 
-    public init(width: Int = 40, height: Int = 15) {
-        self.width = width
-        self.height = height
+    public init(maxAsciiWidth: Int = 40, maxAsciiHeight: Int = 15) {
+        self.maxAsciiWidth = maxAsciiWidth
+        self.maxAsciiHeight = maxAsciiHeight
     }
 
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
@@ -27,8 +27,10 @@ public class AsciiArtCommand: Command {
             return
         }
 
-        let imageWidth = image.width
         let imageHeight = image.height
+        let imageWidth = image.width
+        let height = maxAsciiHeight
+        let width = min((imageWidth * maxAsciiWidth) / imageHeight, maxAsciiWidth)
         let asciiArt = (0..<height)
             .map { y in (0..<width)
                 .map { x in asciiShade(of: image[(y * imageHeight) / height, (x * imageWidth) / width]) }
