@@ -19,6 +19,7 @@ public class D2Delegate: MessageDelegate {
 
 	private var messageRewriters: [MessageRewriter]
 	private var messageHandlers: [MessageHandler]
+	private var reactionHandlers: [ReactionHandler]
 	
 	public init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
 		self.commandPrefix = commandPrefix
@@ -43,6 +44,9 @@ public class D2Delegate: MessageDelegate {
 			MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
 			MentionSomeoneHandler(),
 			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
+		]
+		reactionHandlers = [
+			SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
 		]
 
 		registry["ping"] = PingCommand()
@@ -275,21 +279,8 @@ public class D2Delegate: MessageDelegate {
 	}
 
 	public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
-		guard
-			let guild = client.guildForChannel(channelId),
-			let member = guild.members[userId] else { return }
-		// TODO: Query the actual message that the user reacted to here
-		let message = Message(content: "Dummy", channelId: channelId, id: messageId)
-		let user = member.user
-		subscriptionManager.notifySubscriptions(on: channelId, isBot: user.bot) {
-			let context = CommandContext(
-				client: client,
-				registry: registry,
-				message: message,
-				commandPrefix: commandPrefix,
-				subscriptions: $1
-			)
-			registry[$0]?.onSubscriptionReaction(emoji: reaction, by: user, output: MessageIOOutput(context: context), context: context)
+		for (i, _) in reactionHandlers.enumerated() {
+			reactionHandlers[i].handle(reaction: reaction, to: messageId, on: channelId, by: userId, client: client)
 		}
 	}
 
