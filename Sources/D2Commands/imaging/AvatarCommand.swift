@@ -36,7 +36,7 @@ public class AvatarCommand: StringCommand {
 				if case let .success(data) = $0 {
 					do {
 						if data.isEmpty {
-							output.append(.text("No avatar available"))
+							output.append(errorText: "No avatar available")
 						} else {
 							output.append(.image(try Image(fromPng: data)))
 						}
