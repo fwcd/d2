@@ -3,7 +3,7 @@ import D2Permissions
 import D2Utils
 import Foundation
 
-public class StatsCommand: StringCommand {
+public class ServerStatsCommand: StringCommand {
 	public let info = CommandInfo(
 		category: .misc,
 		shortDescription: "Fetches server statistics",
