@@ -161,11 +161,14 @@ public struct Message: ExpressibleByStringLiteral {
 		public let count: Int
 		public let me: Bool
 		public let emoji: Emoji
+
+		public let users: [UserID]?
 		
-		public init(count: Int, me: Bool, emoji: Emoji) {
+		public init(count: Int, me: Bool, emoji: Emoji, users: [UserID]? = nil) {
 			self.count = count
 			self.me = me
 			self.emoji = emoji
+			self.users = users
 		}
 	}
 	

@@ -41,7 +41,6 @@ fileprivate let hasEmbed = Expression<Bool>("has_embed")
 fileprivate let mentionsEveryone = Expression<Bool>("mentions_everyone")
 
 fileprivate let reactions = Table("reactions")
-fileprivate let reactionCount = Expression<Int64>("reaction_count")
 
 fileprivate let userMentions = Table("user_mentions")
 
@@ -124,8 +123,8 @@ public class MessageDatabase: MarkovPredictor {
             try db.run(reactions.create(ifNotExists: true) {
                 $0.column(messageId)
                 $0.column(emojiName)
-                $0.column(reactionCount)
-                $0.primaryKey(messageId, emojiName)
+                $0.column(userId)
+                $0.primaryKey(messageId, emojiName, userId)
             })
             try db.run(userMentions.create(ifNotExists: true) {
                 $0.column(messageId, references: messages, messageId)
@@ -248,10 +247,17 @@ public class MessageDatabase: MarkovPredictor {
 
     public func countReactions(authorId id: UserID, emojiName name: String) throws -> Int {
         let rows = try db.prepare(messages
-            .select(content.count)
+            .select(emojiName.count)
             .join(reactions, on: messages[messageId] == reactions[messageId])
             .where(authorId == convert(id: id) && emojiName == name))
-        return rows.makeIterator().next()![content.count]
+        return rows.makeIterator().next()![emojiName.count]
+    }
+
+    public func countReactions(reactorId id: UserID, emojiName name: String) throws -> Int {
+        let rows = try db.prepare(reactions
+            .select(emojiName.count)
+            .where(userId == convert(id: id) && emojiName == name))
+        return rows.makeIterator().next()![emojiName.count]
     }
 
     public func insert(guild: Guild) throws {
@@ -317,16 +323,15 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
 
-    public func add(reaction emoji: Emoji, to id: MessageID) throws {
+    public func add(reaction emoji: Emoji, to id: MessageID, by uid: UserID) throws {
         try db.transaction {
-            try db.run(reactions.insert(or: .ignore, messageId <- convert(id: id), emojiName <- emoji.name, reactionCount <- 0))
-            try db.run(reactions.filter(messageId == convert(id: id) && emojiName == emoji.name).update(reactionCount += 1))
+            try db.run(reactions.insert(or: .ignore, messageId <- convert(id: id), emojiName <- emoji.name, userId <- convert(id: uid)))
         }
     }
 
-    public func remove(reaction emoji: Emoji, from id: MessageID) throws {
+    public func remove(reaction emoji: Emoji, from id: MessageID, by uid: UserID) throws {
         try db.transaction {
-            try db.run(reactions.filter(messageId == convert(id: id) && emojiName == emoji.name).update(reactionCount -= 1))
+            try db.run(reactions.filter(messageId == convert(id: id) && emojiName == emoji.name && userId == convert(id: uid)).delete())
         }
     }
 
@@ -359,11 +364,13 @@ public class MessageDatabase: MarkovPredictor {
             mentionsEveryone <- message.mentionEveryone
         ))
         for reaction in message.reactions {
-            try db.run(reactions.insert(or: .ignore,
-                messageId <- messageMessageId,
-                emojiName <- reaction.emoji.name,
-                reactionCount <- Int64(reaction.count)
-            ))
+            for user in reaction.users ?? [] {
+                try db.run(reactions.insert(or: .ignore,
+                    messageId <- messageMessageId,
+                    emojiName <- reaction.emoji.name,
+                    userId <- convert(id: user)
+                ))
+            }
         }
         for roleMention in message.mentionRoles {
             try db.run(roleMentions.insert(or: .ignore,
