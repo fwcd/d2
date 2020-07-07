@@ -364,6 +364,10 @@ public class MessageDatabase: MarkovPredictor {
             mentionsEveryone <- message.mentionEveryone
         ))
         for reaction in message.reactions {
+            // TODO: The following loop will currently never run since
+            //       users are not provided in the Discord API's representation
+            //       of messages (they would have to be queried over a
+            //       separate getReactions endpoint for each message individually)
             for user in reaction.users ?? [] {
                 try db.run(reactions.insert(or: .ignore,
                     messageId <- messageMessageId,
