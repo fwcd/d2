@@ -15,10 +15,12 @@ public class AsciiArtCommand: Command {
 
     private let maxAsciiWidth: Int
     private let maxAsciiHeight: Int
+    private let widthScaleFactor: Double // to compensate for the rectangularly sized characters
 
-    public init(maxAsciiWidth: Int = 40, maxAsciiHeight: Int = 15) {
+    public init(maxAsciiWidth: Int = 40, maxAsciiHeight: Int = 15, widthScaleFactor: Double = 0.75) {
         self.maxAsciiWidth = maxAsciiWidth
         self.maxAsciiHeight = maxAsciiHeight
+        self.widthScaleFactor = widthScaleFactor
     }
 
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
@@ -30,7 +32,7 @@ public class AsciiArtCommand: Command {
         let imageHeight = image.height
         let imageWidth = image.width
         let height = maxAsciiHeight
-        let width = min((imageWidth * maxAsciiWidth) / imageHeight, maxAsciiWidth)
+        let width = min(Int(Double(imageWidth * maxAsciiWidth) * widthScaleFactor) / imageHeight, maxAsciiWidth)
         let asciiArt = (0..<height)
             .map { y in (0..<width)
                 .map { x in asciiShade(of: image[(y * imageHeight) / height, (x * imageWidth) / width]) }
