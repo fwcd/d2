@@ -79,7 +79,7 @@ let package = Package(
         ),
         .target(
             name: "D2Utils",
-            dependencies: ["Logging", "Socket", "SQLite"]
+            dependencies: ["Logging", "Socket", "SwiftSoup", "SQLite"]
         ),
         .testTarget(
             name: "D2CommandTests",
