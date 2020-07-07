@@ -175,6 +175,7 @@ public class D2Delegate: MessageDelegate {
 		registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
 		registry["shell"] = ShellCommand()
 		registry["upload"] = UploadCommand()
+		registry["download"] = DownloadCommand()
 		registry["markov"] = MarkovCommand(messageDB: messageDB)
 		registry["conversate"] = ConversateCommand(conversator: FollowUpConversator(messageDB: messageDB))
 		registry["emoji"] = EmojiCommand()
