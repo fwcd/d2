@@ -37,7 +37,7 @@ public class AdviceCommand: StringCommand {
     
     private func embedFrom(slip: AdviceSlip) -> Embed {
         Embed(
-            description: "**\(slip.advice)**"
+            description: ":scroll: **\(slip.advice)**"
         )
     }
 }
