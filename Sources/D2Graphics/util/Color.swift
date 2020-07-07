@@ -14,6 +14,14 @@ public struct Color: Hashable {
 		blue: 0xFF - blue,
 		alpha: alpha
 	) }
+
+	public var luminance: UInt8 {
+		return UInt8((2 * UInt(red) + 3 * UInt(green) + UInt(blue)) / 6)
+	}
+
+	public var grayscale: Color {
+		return Color(red: luminance, green: luminance, blue: luminance)
+	}
 	
 	public var asDoubleTuple: (red: Double, green: Double, blue: Double, alpha: Double) {
 		return (red: Double(red) / 255.0, green: Double(green) / 255.0, blue: Double(blue) / 255.0, alpha: Double(alpha) / 255.0)
