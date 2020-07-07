@@ -15,7 +15,7 @@ public class InvertCommand: Command {
 	public init() {}
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-		if case let .image(img) = input {
+		if let img = input.asImage {
 			do {
 				let width = img.width
 				let height = img.height

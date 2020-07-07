@@ -22,14 +22,16 @@ public class AsciiArtCommand: Command {
     }
 
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-        guard case let .image(image) = input else {
+        guard let image = input.asImage else {
             output.append(errorText: "Please attach an image!")
             return
         }
 
-        let asciiArt = (0..<image.height)
-            .map { y in (0..<image.width)
-                .map { x in asciiShade(of: image[y, x]) }
+        let imageWidth = image.width
+        let imageHeight = image.height
+        let asciiArt = (0..<height)
+            .map { y in (0..<width)
+                .map { x in asciiShade(of: image[(y * imageHeight) / height, (x * imageWidth) / width]) }
                 .joined() }
             .joined(separator: "\n")
         output.append(.code(asciiArt, language: nil))
