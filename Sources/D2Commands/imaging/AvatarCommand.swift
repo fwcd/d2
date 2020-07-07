@@ -13,7 +13,8 @@ public class AvatarCommand: StringCommand {
 		shortDescription: "Fetches the avatar of a user",
 		longDescription: "Fetches the user's profile picture and outputs it in PNG form",
 		helpText: "Syntax: [@user]",
-		requiredPermissionLevel: .basic
+		requiredPermissionLevel: .basic,
+		platformAvailability: ["Discord"] // Due to Discord-specific CDN URLs
 	)
 	public let outputValueType: RichValueType = .image
 	

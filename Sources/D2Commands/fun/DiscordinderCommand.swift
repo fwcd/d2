@@ -13,7 +13,8 @@ public class DiscordinderCommand: StringCommand {
         category: .fun,
         shortDescription: "Play a matching game with other people on the server!",
         requiredPermissionLevel: .basic,
-        subscribesToNextMessages: true
+        subscribesToNextMessages: true,
+        platformAvailability: ["Discord"] // Due to Discord-specific avatar URLs
     )
     private let inventoryManager: InventoryManager
     private var activeMatches: [MessageID: (ChannelID, UserID)] = [:]

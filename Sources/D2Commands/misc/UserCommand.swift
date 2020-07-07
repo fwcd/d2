@@ -7,7 +7,8 @@ public class UserCommand: StringCommand {
         category: .misc,
         shortDescription: "Fetches a user's presence",
         longDescription: "Fetches information about a user's status and currently played game",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .vip,
+		platformAvailability: ["Discord"] // Due to Discord-specific avatar URLs
     )
     
     public init() {}

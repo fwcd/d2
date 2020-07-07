@@ -97,7 +97,7 @@ public class CommandHandler: MessageHandler {
 				for component in pipe {
 					if let availability = component.command.info.platformAvailability {
 						guard availability.contains(platform) else {
-							client.sendMessage("Sorry, the command `\(component.name)` is not supported on your platform (\(platform)). Retry it on one of these: \(availability)", to: channelId)
+							client.sendMessage("Sorry, the command `\(component.name)` is unavailable on your platform (`\(platform)`). It is supported on: \(availability.map { "`\($0)`" }.joined(separator: ", "))", to: channelId)
 							log.notice("\(component.name) is unavailable on \(platform)")
 							return true
 						}
