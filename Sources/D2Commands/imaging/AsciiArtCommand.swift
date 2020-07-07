@@ -42,7 +42,11 @@ public class AsciiArtCommand: Command {
     }
 
     private func asciiShade(of color: Color) -> String {
-        let value = min((Int(color.luminance) * asciiShades.count) / 256, asciiShades.count)
-        return asciiShades[value]
+        if color.alpha < 20 {
+            return " "
+        } else {
+            let value = min((Int(color.luminance) * asciiShades.count) / 256, asciiShades.count)
+            return asciiShades[value]
+        }
     }
 }
