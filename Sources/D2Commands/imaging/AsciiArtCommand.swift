@@ -1,7 +1,7 @@
 import D2Graphics
 
 fileprivate let asciiShades = [
-    "#", "X", "+", "-", ":", ".", " "
+    "@", "o", ":", "-", ".", " "
 ]
 
 public class AsciiArtCommand: Command {
