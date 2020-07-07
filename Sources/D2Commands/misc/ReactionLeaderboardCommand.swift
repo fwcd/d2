@@ -31,7 +31,7 @@ public class ReactionLeaderboardCommand: StringCommand {
             let users: [User] = context.message.mentions.nilIfEmpty ?? guild.members.map { $0.1.user }
             let emojiId = try messageDB.emojiIds(for: emojiName).first
             output.append(Embed(
-                title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? "")\(title)",
+                title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? emojiName)\(title)",
                 description: try users
                     .map { (try messageDB.countReactions(authorId: $0.id, emojiName: emojiName), $0.username) }
                     .filter { $0.0 > 0 }

@@ -29,7 +29,7 @@ public protocol MessageDelegate {
 
 	func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient)
 
-	func on(removeReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient)
+	func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient)
 
 	func on(removeAllReactionsFrom message: MessageID, on channelId: ChannelID, client: MessageClient)
 
@@ -79,7 +79,7 @@ public extension MessageDelegate {
 
 	func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {}
 
-	func on(removeReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {}
+	func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {}
 
 	func on(removeAllReactionsFrom message: MessageID, on channelId: ChannelID, client: MessageClient) {}
 
