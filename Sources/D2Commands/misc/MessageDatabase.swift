@@ -125,6 +125,7 @@ public class MessageDatabase: MarkovPredictor {
                 $0.column(messageId)
                 $0.column(emojiName)
                 $0.column(reactionCount)
+                $0.primaryKey(messageId, emojiName)
             })
             try db.run(userMentions.create(ifNotExists: true) {
                 $0.column(messageId, references: messages, messageId)
@@ -221,8 +222,18 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
 
+    public func isTracked(channelId id: ChannelID) throws -> Bool {
+        let stmt = try db.prepare(guilds
+            .select(guildTracked)
+            .join(channels, on: channels[guildId] == guilds[guildId])
+            .filter(channelId == convert(id: id)))
+        return stmt.contains(where: { $0[guildTracked] })
+    }
+
     public func isTracked(guildId id: GuildID) throws -> Bool {
-        let stmt = try db.prepare(guilds.select(guildTracked).filter(guildId == convert(id: id)))
+        let stmt = try db.prepare(guilds
+            .select(guildTracked)
+            .filter(guildId == convert(id: id)))
         return stmt.contains(where: { $0[guildTracked] })
     }
 
@@ -303,6 +314,13 @@ public class MessageDatabase: MarkovPredictor {
                     ))
                 }
             }
+        }
+    }
+
+    public func add(reaction emoji: Emoji, to id: MessageID) throws {
+        try db.transaction {
+            try db.run(reactions.insert(or: .ignore, messageId <- convert(id: id), emojiName <- emoji.name, reactionCount <- 0))
+            try db.run(reactions.filter(messageId == convert(id: id) && emojiName == emoji.name).update(reactionCount += 1))
         }
     }
 

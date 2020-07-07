@@ -46,7 +46,8 @@ public class D2Delegate: MessageDelegate {
 			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
 		]
 		reactionHandlers = [
-			SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
+			SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
+			MessageDatabaseReactionHandler(messageDB: messageDB)
 		]
 
 		registry["ping"] = PingCommand()
