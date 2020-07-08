@@ -31,6 +31,11 @@ public struct TransformAnimation<T>: Animation where T: ImageTransform {
                 let src = transform.sourcePos(from: Vec2(x: x, y: y), imageSize: size, percent: percent)
                 if src.x >= 0 && src.x < width && src.y >= 0 && src.y < height {
                     frame[y, x] = image[src.y, src.x]
+                } else if useVirtualEdges {
+                    frame[y, x] = image[
+                        max(0, min(height - 1, src.y)),
+                        max(0, min(width - 1, src.x))
+                    ]
                 }
             }
         }
