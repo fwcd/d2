@@ -1,10 +1,20 @@
 # D2
-General-purpose virtual assistant for Discord and Telegram.
+General-purpose virtual assistant for Discord, IRC and Telegram.
 
 [![Linux](https://github.com/fwcd/d2/workflows/Linux/badge.svg)](https://github.com/fwcd/d2/actions)
 [![macOS](https://github.com/fwcd/d2/workflows/macOS/badge.svg)](https://github.com/fwcd/d2/actions)
 
-In addition to supporting various web APIs, it features basic scripting capabilities (such as piping and and chaining of commands) and a permission system.
+It provides:
+
+* Various useful chat utilities, e.g. polls or coin flips
+* A flexible command system that supports chaining, piping and permissions
+* Multiplayer board and card games, such as chess or Uno
+* Integration with a wide range of web APIs, including WolframAlpha, MediaWiki, Reddit and OpenWeatherMap
+* Image processing capabilities, including generation of animated GIFs
+* Tools for mathematics and linear algebra, e.g. a linear system solver
+* Music theory utilities, including a chord finder
+* Programming tools, including a Haskell API search and a Prolog interpreter
+* Humorous commands, e.g. for jokes
 
 ## Installation
 
@@ -12,7 +22,7 @@ In addition to supporting various web APIs, it features basic scripting capabili
 * Make sure to have recent versions of Docker and Docker Compose installed
 * Create a volume named `d2local` using `docker volume create d2local`
 
-### Manually (for local development)
+### manually (for local development)
 
 #### System Dependencies
 * Linux or macOS 10.15+
