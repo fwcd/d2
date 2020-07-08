@@ -26,11 +26,12 @@ public class AnimateCommand<A>: Command where A: Animation {
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
 
+    private let kvParameters: [String]
     private let defaultFrameCount: Int
     private let delayTime: Int
     
     public init(description: String, defaultFrameCount: Int = 30, delayTime: Int = 2) {
-        let kvParameters: [String] = [framesParameter] + A.kvParameters
+        let kvParameters = [framesParameter] + A.Key.allCases.map { $0.rawValue }
         info = CommandInfo(
             category: .imaging,
             shortDescription: description,
@@ -44,6 +45,7 @@ public class AnimateCommand<A>: Command where A: Animation {
             requiredPermissionLevel: .basic
         )
 
+        self.kvParameters = kvParameters
         self.defaultFrameCount = defaultFrameCount
         self.delayTime = delayTime
     }
@@ -57,12 +59,19 @@ public class AnimateCommand<A>: Command where A: Animation {
         let pos: Vec2<Int>? = posPattern.firstGroups(in: args).map { Vec2<Int>(x: Int($0[1])!, y: Int($0[2])!) }
         let kvArgs: [String: String] = Dictionary(uniqueKeysWithValues: kvPattern.allGroups(in: args).map { ($0[1], $0[2]) })
 
-        let frameCount = kvArgs[framesParameter] ?? defaultFrameCount
+        let frameCount = kvArgs[framesParameter].flatMap(Int.init) ?? defaultFrameCount
 
         // Render the animation
         do {
+            guard let animationKvArgs = kvArgs
+                .sequenceMap({ (k, v) in A.Key(rawValue: k).map { ($0, v) } })
+                .map(Dictionary.init(uniqueKeysWithValues:)) else {
+                output.append(errorText: "Invalid keys. Try using only these: \(kvParameters.map { "`\($0)`" }.joined(separator: ", "))")
+                return
+            }
+
             log.trace("Creating animation")
-            let animation = try A.init(pos: pos, kvArgs: kvArgs)
+            let animation = try A.init(pos: pos, kvArgs: animationKvArgs)
 
             if let image = input.asImage {
                 log.trace("Fetching image size")

@@ -4,7 +4,7 @@ import D2Utils
 public struct BounceTransform: ImageTransform {
     private let pos: Vec2<Int>?
 
-    public init(at pos: Vec2<Int>?, kvArgs: [String: String]) {
+    public init(at pos: Vec2<Int>?, kvArgs: [Key: String]) {
         self.pos = pos
     }
 

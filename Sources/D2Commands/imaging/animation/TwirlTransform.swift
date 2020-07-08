@@ -1,22 +1,22 @@
 import D2Utils
 
-fileprivate let scaleParameter = "scale"
-fileprivate let rotationBiasParameter = "rotationBias"
-fileprivate let rotationStrengthParameter = "rotationStrength"
-
 public struct TwirlTransform: ImageTransform {
-    public static let kvParameters: [String] = [scaleParameter, rotationBiasParameter, rotationStrengthParameter]
+    public enum Key: String, StringEnum {
+        case scale
+        case rotationBias
+        case rotationStrength
+    }
 
     private let pos: Vec2<Int>?
     private let scale: Double
     private let rotationBias: Double
     private let rotationStrength: Double
 
-    public init(at pos: Vec2<Int>?, kvArgs: [String: String]) {
+    public init(at pos: Vec2<Int>?, kvArgs: [Key: String]) {
         self.pos = pos
-        scale = kvArgs["scale"].flatMap { Double($0) } ?? 1
-        rotationBias = kvArgs["rotationBias"].flatMap { Double($0) } ?? 0
-        rotationStrength = kvArgs["rotationStrength"].flatMap { Double($0) } ?? 1
+        scale = kvArgs[.scale].flatMap { Double($0) } ?? 1
+        rotationBias = kvArgs[.rotationBias].flatMap { Double($0) } ?? 0
+        rotationStrength = kvArgs[.rotationStrength].flatMap { Double($0) } ?? 1
     }
     
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {

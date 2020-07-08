@@ -2,7 +2,7 @@ import D2Graphics
 import D2Utils
 
 public struct SpinAnimation: Animation {
-    public init(pos: Vec2<Int>?, kvArgs: [String: String]) {}
+    public init(pos: Vec2<Int>?, kvArgs: [Key: String]) {}
 
     public func renderFrame(from image: Image, to frame: inout Image, percent: Double) {
         var graphics = CairoGraphics(fromImage: frame)

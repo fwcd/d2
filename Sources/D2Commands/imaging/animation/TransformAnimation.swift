@@ -1,17 +1,16 @@
 import D2Graphics
 import D2Utils
 
-
 /**
  * An animation that applies a progress-dependent
  * pixel transformation function.
  */
 public struct TransformAnimation<T>: Animation where T: ImageTransform {
-    public static let kvParameters: [String] = T.kvParameters
+    public typealias Key = T.Key
 
     private let transform: T
     
-    public init(pos: Vec2<Int>?, kvArgs: [String: String]) {
+    public init(pos: Vec2<Int>?, kvArgs: [Key: String]) {
         transform = T.init(at: pos, kvArgs: kvArgs)
     }
 

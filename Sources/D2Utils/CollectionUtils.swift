@@ -1,8 +1,20 @@
 public extension Sequence {
-    func count(forWhich predicate: (Element) -> Bool) -> Int {
+    func count(forWhich predicate: (Element) throws -> Bool) rethrows -> Int {
 		// TODO: Implemented in https://github.com/apple/swift-evolution/blob/master/proposals/0220-count-where.md
-        reduce(0) { predicate($1) ? $0 + 1 : $0 }
+        try reduce(0) { try predicate($1) ? $0 + 1 : $0 }
     }
+
+	/// Turns a list of optionals into an optional list, like Haskell's 'sequence'.
+	func sequenceMap<T>(_ transform: (Element) throws -> T? ) rethrows -> [T]? {
+		var result = [T]()
+
+		for element in self {
+			guard let transformed = try transform(element) else { return nil }
+			result.append(transformed)
+		}
+
+		return result
+	}
 }
 
 public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
@@ -42,8 +54,8 @@ public extension Array {
 	}
 
 	/// The longest prefix satisfying the predicate and the rest of the list
-	func span(_ inPrefix: (Element) -> Bool) -> (ArraySlice<Element>, ArraySlice<Element>) {
-		let pre = prefix(while: inPrefix)
+	func span(_ inPrefix: (Element) throws -> Bool) rethrows -> (ArraySlice<Element>, ArraySlice<Element>) {
+		let pre = try prefix(while: inPrefix)
 		let rest = self[pre.endIndex...]
 		return (pre, rest)
 	}
