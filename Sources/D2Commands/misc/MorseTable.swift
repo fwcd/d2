@@ -52,15 +52,16 @@ fileprivate let morseTable: BiDictionary<String, String> = [
 ]
 
 fileprivate let wordSeparator = "   "
+fileprivate let charSeparator = " "
 
 func morseEncode(_ s: String) -> String {
     s.split(separator: " ")
-        .map { $0.map { morseTable[$0.uppercased()] ?? String($0) }.joined(separator: " ") }
+        .map { $0.map { morseTable[$0.uppercased()] ?? String($0) }.joined(separator: charSeparator) }
         .joined(separator: wordSeparator)
 }
 
 func morseDecode(_ s: String) -> String {
     s.components(separatedBy: wordSeparator)
-        .map { $0.map(String.init).map { morseTable[value: $0] ?? $0 }.joined() }
+        .map { $0.split(separator: " ").map(String.init).map { morseTable[value: $0] ?? $0 }.joined().lowercased() }
         .joined(separator: " ")
 }
