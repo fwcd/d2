@@ -135,6 +135,7 @@ public class D2Delegate: MessageDelegate {
 		registry["invertcolors"] = InvertCommand()
 		registry["threshold"] = ThresholdCommand()
 		registry["scale"] = ScaleCommand()
+		registry["ellipsemask"] = MaskCommand<EllipseMask>(description: "Applies an ellipse-shaped mask to the image")
 		registry["spin"] = AnimateCommand<SpinAnimation>(description: "Rotates an image")
 		registry["twirl"] = AnimateCommand<TransformAnimation<TwirlTransform>>(description: "Applies a twirl distortion effect")
 		registry["bump"] = AnimateCommand<TransformAnimation<RadialTransform<BumpDistortion>>>(description: "Applies a bump distortion effect")
