@@ -72,13 +72,15 @@ public struct Vec2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mult
 }
 
 extension Vec2 where T: BinaryFloatingPoint {
-	public var magnitude: T { ((x * x) + (y * y)).squareRoot() }
+	public var squaredMagnitude: T { ((x * x) + (y * y)) }
+	public var magnitude: T { squaredMagnitude.squareRoot() }
 	public var normalized: Vec2<T> { self / magnitude }
 	public var floored: Vec2<Int> { Vec2<Int>(x: Int(x.rounded(.down)), y: Int(y.rounded(.down))) }
 }
 
 extension Vec2 where T: BinaryInteger {
-	public var magnitude: Double { Double((x * x) + (y * y)).squareRoot() }
+	public var squaredMagnitude: Double { Double((x * x) + (y * y)) }
+	public var magnitude: Double { squaredMagnitude.squareRoot() }
 	public var asDouble: Vec2<Double> { map { Double($0) } }
 }
 
