@@ -152,6 +152,8 @@ public class D2Delegate: MessageDelegate {
 		registry["pointfree"] = PointfreeCommand()
 		registry["pointful"] = PointfulCommand()
 		registry["prolog"] = PrologCommand()
+		registry["morseencode", aka: ["morse", "morsify"]] = MorseEncoderCommand()
+		registry["morsedecode", aka: ["demorse", "demorsify"]] = MorseDecoderCommand()
 		registry["piglatin"] = PigLatinCommand()
 		registry["mockify", aka: ["mock"]] = MockifyCommand()
 		registry["leet", aka: ["leetspeak"]] = LeetCommand()
