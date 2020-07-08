@@ -13,7 +13,8 @@ public func allTests() -> [XCTestCaseEntry] {
 		testCase(Mat2Tests.allTests),
 		testCase(RationalTests.allTests),
 		testCase(NDArrayTests.allTests),
-		testCase(MatrixTests.allTests)
+		testCase(MatrixTests.allTests),
+		testCase(BiDictionaryTests.allTests)
 	]
 }
 #endif
