@@ -64,6 +64,7 @@ public class AnimateCommand<A>: Command where A: Animation {
         // Render the animation
         do {
             guard let animationKvArgs = kvArgs
+                .filter({ (k, _) in k != framesParameter })
                 .sequenceMap({ (k, v) in A.Key(rawValue: k).map { ($0, v) } })
                 .map(Dictionary.init(uniqueKeysWithValues:)) else {
                 output.append(errorText: "Invalid keys. Try using only these: \(kvParameters.map { "`\($0)`" }.joined(separator: ", "))")
