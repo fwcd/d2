@@ -19,6 +19,7 @@ fileprivate let posPattern = try! Regex(from: "(-?\\d+)\\s+(-?\\d+)")
  */
 fileprivate let kvPattern = try! Regex(from: "(\\w+)\\s*=\\s*(\\S+)")
 
+fileprivate let virtualEdgesParameter = "virtualedges"
 fileprivate let framesParameter = "frames"
 
 public class AnimateCommand<A>: Command where A: Animation {
@@ -40,7 +41,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                 Syntax: `[x?] [y?] [key=value...]`
                 Available Keys: \(kvParameters.map { "`\($0)`" }.joined(separator: ", "))
 
-                Example: `80 20\(kvParameters.randomElement().map { " \($0)=2" } ?? "")`
+                Example: `80 20\(kvParameters.first.map { " \($0)=2" } ?? "")`
                 """,
             requiredPermissionLevel: .basic
         )
