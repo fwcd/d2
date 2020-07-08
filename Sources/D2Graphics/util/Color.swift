@@ -1,3 +1,5 @@
+import Foundation
+
 public struct Color: Hashable {
 	public let red: UInt8
 	public let green: UInt8
@@ -69,7 +71,14 @@ public struct Color: Hashable {
 		return Color(
 			red: UInt8((Double(red) * floatAlpha) + (Double(bottomLayer.red) * invAlpha)),
 			green: UInt8((Double(green) * floatAlpha) + (Double(bottomLayer.green) * invAlpha)),
-			blue: UInt8((Double(blue) * floatAlpha) + Double(bottomLayer.blue) * invAlpha
-)		)
+			blue: UInt8((Double(blue) * floatAlpha) + Double(bottomLayer.blue) * invAlpha)
+		)
+	}
+
+	public func euclideanDistance(to color: Color, useAlpha: Bool = true) -> Double {
+		let (r1, g1, b1, a1) = asDoubleTuple
+		let (r2, g2, b2, a2) = color.asDoubleTuple
+
+		return (pow(r2 - r1, 2) + pow(g2 - g1, 2) + pow(b2 - b1, 2) + (useAlpha ? pow(a2 - a1, 2) : 0)).squareRoot()
 	}
 }

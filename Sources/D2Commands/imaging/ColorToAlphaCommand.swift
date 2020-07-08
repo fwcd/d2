@@ -1,11 +1,10 @@
 import D2MessageIO
 import D2Graphics
 
-public class InvertCommand: Command {
+public class ColorToAlphaCommand: Command {
 	public let info = CommandInfo(
 		category: .imaging,
-		shortDescription: "Inverts an image",
-		longDescription: "Inverts the color of every pixel in the image",
+		shortDescription: "Converts a color to transparency",
 		requiredPermissionLevel: .basic
 	)
 	public let inputValueType: RichValueType = .image
