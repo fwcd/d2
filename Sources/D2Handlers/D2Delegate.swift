@@ -133,6 +133,7 @@ public class D2Delegate: MessageDelegate {
 		registry["color"] = ColorCommand()
 		registry["mandelbrot"] = MandelbrotCommand()
 		registry["invertcolors"] = InvertCommand()
+		registry["colortoalpha"] = ColorToAlphaCommand()
 		registry["threshold"] = ThresholdCommand()
 		registry["scale"] = ScaleCommand()
 		registry["ellipsemask"] = MaskCommand<EllipseMask>(description: "Applies an ellipse-shaped mask to the image")

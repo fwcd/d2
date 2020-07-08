@@ -13,19 +13,40 @@ public class ColorToAlphaCommand: Command {
 	public init() {}
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-		if let img = input.asImage {
+        guard let rawColor = input.asText,
+            let colorRGB = UInt32(rawColor, radix: 16) else {
+            output.append(errorText: "Please specify an RGB color (to be converted to alpha) in hex notation!")
+            return
+        }
+
+        let color = Color(rgb: colorRGB)
+
+        // TODO: Add a key-value argument that optionally specifies this
+        // Tolerance is specified in squared [0, 1] RGB space
+        let tolerance = 0.1
+
+		if let image = input.asImage {
 			do {
-				let width = img.width
-				let height = img.height
-				var inverted = try Image(width: width, height: height)
+				let width = image.width
+				let height = image.height
+				var processed = try Image(width: width, height: height)
 				
 				for y in 0..<height {
 					for x in 0..<width {
-						inverted[y, x] = img[y, x].inverted
+                        let inColor = image[y, x]
+                        let outColor: Color
+
+                        if inColor.euclideanDistance(to: color, useAlpha: false) < tolerance {
+                            outColor = Colors.transparent
+                        } else {
+                            outColor = inColor
+                        }
+
+						processed[y, x] = outColor
 					}
 				}
 				
-				output.append(.image(inverted))
+				output.append(.image(processed))
 			} catch {
 				output.append(error, errorText: "An error occurred while creating a new image")
 			}

@@ -76,9 +76,13 @@ public struct Color: Hashable {
 	}
 
 	public func euclideanDistance(to color: Color, useAlpha: Bool = true) -> Double {
+		squaredEuclideanDistance(to: color, useAlpha: useAlpha).squareRoot()
+	}
+
+	public func squaredEuclideanDistance(to color: Color, useAlpha: Bool = true) -> Double {
 		let (r1, g1, b1, a1) = asDoubleTuple
 		let (r2, g2, b2, a2) = color.asDoubleTuple
 
-		return (pow(r2 - r1, 2) + pow(g2 - g1, 2) + pow(b2 - b1, 2) + (useAlpha ? pow(a2 - a1, 2) : 0)).squareRoot()
+		return pow(r2 - r1, 2) + pow(g2 - g1, 2) + pow(b2 - b1, 2) + (useAlpha ? pow(a2 - a1, 2) : 0)
 	}
 }
