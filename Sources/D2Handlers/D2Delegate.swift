@@ -224,6 +224,7 @@ public class D2Delegate: MessageDelegate {
 		registry["discordstatus"] = DiscordStatusCommand()
 		registry["ioplatform"] = IOPlatformCommand()
 		registry["sysinfo"] = SysInfoCommand()
+		registry["issuereport", aka: ["bugreport"]] = IssueReportCommand()
 		registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
