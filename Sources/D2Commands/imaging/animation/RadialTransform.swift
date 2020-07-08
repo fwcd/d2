@@ -1,12 +1,16 @@
 import D2Utils
 
-public struct RadialTransform<R: RadialDistortion>: ImageTransform {
+fileprivate let scaleParameter = "scale"
+
+public struct RadialTransform<R>: ImageTransform where R: RadialDistortion {
+    public static let kvParameters: [String] = [scaleParameter]
+
     private let pos: Vec2<Int>?
     private let scale: Double
     
     public init(at pos: Vec2<Int>?, kvArgs: [String: String]) {
         self.pos = pos
-        scale = kvArgs["scale"].flatMap { Double($0) } ?? 1
+        scale = kvArgs[scaleParameter].flatMap { Double($0) } ?? 1
     }
     
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {

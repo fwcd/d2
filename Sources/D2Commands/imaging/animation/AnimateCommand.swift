@@ -5,20 +5,45 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
 
-public class AnimateCommand<A: Animation>: Command {
+/**
+ * Matches a single integer vector.
+ * 
+ * The first capture describes the x-coordinate
+ * and the second capture the y-coordinate of the
+ * position where the transform is applied.
+ */
+fileprivate let posPattern = try! Regex(from: "(-?\\d+)\\s+(-?\\d+)")
+
+/**
+ * Matches a single key-value argument.
+ */
+fileprivate let kvPattern = try! Regex(from: "(\\w+)\\s*=\\s*(\\S+)")
+
+fileprivate let framesParameter = "frames"
+
+public class AnimateCommand<A>: Command where A: Animation {
     public let info: CommandInfo
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
+
     private let defaultFrameCount: Int
     private let delayTime: Int
     
     public init(description: String, defaultFrameCount: Int = 30, delayTime: Int = 2) {
+        let kvParameters: [String] = [framesParameter] + A.kvParameters
         info = CommandInfo(
             category: .imaging,
             shortDescription: description,
             longDescription: description,
+            helpText: """
+                Syntax: `[x?] [y?] [key=value...]`
+                Available Keys: \(kvParameters.map { "`\($0)`" }.joined(separator: ", "))
+
+                Example: `80 20\(kvParameters.randomElement().map { " \($0)=2" } ?? "")`
+                """,
             requiredPermissionLevel: .basic
         )
+
         self.defaultFrameCount = defaultFrameCount
         self.delayTime = delayTime
     }
@@ -28,9 +53,16 @@ public class AnimateCommand<A: Animation>: Command {
         let typingIndicator = context.channel.map { TypingIndicator(on: $0) }
         typingIndicator?.startAsync()
 
+        // Parse user-specified args
+        let pos: Vec2<Int>? = posPattern.firstGroups(in: args).map { Vec2<Int>(x: Int($0[1])!, y: Int($0[2])!) }
+        let kvArgs: [String: String] = Dictionary(uniqueKeysWithValues: kvPattern.allGroups(in: args).map { ($0[1], $0[2]) })
+
+        let frameCount = kvArgs[framesParameter] ?? defaultFrameCount
+
+        // Render the animation
         do {
             log.trace("Creating animation")
-            let animation = try A.init(args: args)
+            let animation = try A.init(pos: pos, kvArgs: kvArgs)
 
             if let image = input.asImage {
                 log.trace("Fetching image size")
@@ -40,7 +72,7 @@ public class AnimateCommand<A: Animation>: Command {
                 log.debug("Creating gif")
                 var gif = AnimatedGif(quantizingImage: image)
                 
-                for i in 0..<defaultFrameCount {
+                for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")
                     var frame = try Image(width: width, height: height)
                     let percent = Double(i) / Double(defaultFrameCount)

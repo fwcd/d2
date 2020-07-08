@@ -1,6 +1,12 @@
 import D2Utils
 
+fileprivate let scaleParameter = "scale"
+fileprivate let rotationBiasParameter = "rotationBias"
+fileprivate let rotationStrengthParameter = "rotationStrength"
+
 public struct TwirlTransform: ImageTransform {
+    public static let kvParameters: [String] = [scaleParameter, rotationBiasParameter, rotationStrengthParameter]
+
     private let pos: Vec2<Int>?
     private let scale: Double
     private let rotationBias: Double

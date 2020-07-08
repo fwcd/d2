@@ -5,6 +5,8 @@ import D2Utils
  * that distorts the image.
  */
 public protocol ImageTransform {
+    static var kvParameters: [String] { get }
+
     init(at pos: Vec2<Int>?, kvArgs: [String: String])
     
     /**
@@ -14,4 +16,8 @@ public protocol ImageTransform {
      * position.
      */
     func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int>
+}
+
+public extension ImageTransform {
+    static var kvParameters: [String] { [] }
 }

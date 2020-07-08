@@ -1,13 +1,17 @@
 import Foundation
 import D2Utils
 
+fileprivate let scaleParameter = "scale"
+
 public struct SquiggleTransform: ImageTransform {
+    public static let kvParameters: [String] = [scaleParameter]
+
     private let pos: Vec2<Int>?
     private let scale: Double
     
     public init(at pos: Vec2<Int>?, kvArgs: [String: String]) {
         self.pos = pos
-        scale = kvArgs["scale"].flatMap { Double($0) } ?? 1
+        scale = kvArgs[scaleParameter].flatMap { Double($0) } ?? 1
     }
     
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
