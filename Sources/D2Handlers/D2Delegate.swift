@@ -103,6 +103,7 @@ public class D2Delegate: MessageDelegate {
 		registry["orthogonalize", aka: ["orthogonal", "ortho"]] = OrthogonalizeCommand()
 		registry["transpose"] = TransposeCommand()
 		registry["solvelinearsystem", aka: ["solvelinear"]] = SolveLinearSystemCommand()
+		registry["solvequadratic"] = SolveQuadraticEquationCommand()
 		registry["maxima"] = MaximaCommand()
 		registry["integral"] = IntegralCalculatorCommand()
 		registry["translate"] = TranslateCommand()
