@@ -15,7 +15,8 @@ public struct HangmanGame: Game {
             } catch GameError.invalidMove(let e) {
                 var next = $0.state
                 try next.penalize(role: role)
-                return ActionResult(nextState: next, text: "`\($0.player.username)` now has \(next.remainingTries[role]!) left!")
+                let remaining = next.remainingTries[role]!
+                return ActionResult(nextState: next, text: "`\($0.player.username)` now has \(remaining) \(remaining == 1 ? "try" : "tries") left!")
             }
         }
     ]
