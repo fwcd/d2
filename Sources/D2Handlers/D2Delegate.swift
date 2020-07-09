@@ -125,6 +125,7 @@ public class D2Delegate: MessageDelegate {
 		registry["perceptron"] = PerceptronCommand()
 		registry["tictactoe"] = GameCommand<TicTacToeGame>()
 		registry["uno"] = GameCommand<UnoGame>()
+		registry["hangman"] = GameCommand<HangmanGame>()
 		registry["sourcefile"] = SourceFileCommand()
 		registry["urbandict", aka: ["urban", "ud"]] = UrbanDictionaryCommand()
 		registry["chess"] = GameCommand<ChessGame>()

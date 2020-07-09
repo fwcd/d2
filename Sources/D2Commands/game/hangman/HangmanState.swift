@@ -22,6 +22,6 @@ public struct HangmanState: GameState, Multiplayer {
     }
     
     public mutating func perform(move: Move) throws {
-        // TODO
+        try board.guess(word: move.word)
     }
 }
