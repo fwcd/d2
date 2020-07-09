@@ -9,8 +9,14 @@ public struct HangmanGame: Game {
             // TODO: Figure out how to disambiguate between multiple
             //       roles of the player if he plays against himself.
             guard let role = $0.state.rolesOf(player: $0.player).first else { throw HangmanError.playerHasNoRole }
-            let next = try $0.state.childState(after: HangmanMove(fromString: $0.args), by: role)
-            return ActionResult(nextState: next)
+            do {
+                let next = try $0.state.childState(after: HangmanMove(fromString: $0.args), by: role)
+                return ActionResult(nextState: next)
+            } catch GameError.invalidMove(let e) {
+                var next = $0.state
+                try next.penalize(role: role)
+                return ActionResult(nextState: next, text: "`\($0.player.username)` now has \(next.remainingTries[role]!) left!")
+            }
         }
     ]
     public let helpText: String = """

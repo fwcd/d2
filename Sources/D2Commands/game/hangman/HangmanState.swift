@@ -1,6 +1,8 @@
 import D2MessageIO
 import D2Permissions
 
+fileprivate let initialPlayerTries: Int = 6
+
 public struct HangmanState: GameState, Multiplayer {
     public typealias Role = Int
     public typealias Board = HangmanBoard
@@ -17,8 +19,11 @@ public struct HangmanState: GameState, Multiplayer {
     public var winner: Role? = nil
     public let isDraw: Bool = false
     
+    public private(set) var remainingTries: [Role: Int]
+
     public init(players: [GamePlayer]) {
         self.players = players
+        remainingTries = Dictionary(uniqueKeysWithValues: (0..<players.count).map { ($0, initialPlayerTries) })
     }
     
     public mutating func perform(move: Move, by role: Role) throws {
@@ -26,5 +31,10 @@ public struct HangmanState: GameState, Multiplayer {
         if board.isUncovered && winner == nil {
             winner = role
         }
+    }
+
+    public mutating func penalize(role: Role) throws {
+        guard let tries = remainingTries[role] else { throw HangmanError.invalidRole("Role \(role) cannot be penalized since it has no associated try count!") }
+        remainingTries[role] = max(0, tries - 1)
     }
 }

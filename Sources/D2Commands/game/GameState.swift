@@ -36,17 +36,17 @@ public protocol GameState {
 	mutating func perform(move: Move, by role: Role) throws
 }
 
-extension GameState {
-	public var hands: [Role: Hand] { return [:] }
-	public var handsDescription: String? { return nil }
+public extension GameState {
+	var hands: [Role: Hand] { [:] }
+	var handsDescription: String? { nil }
 	
-	public func isPossible(move: Move) -> Bool { return possibleMoves.contains(move) }
+	func isPossible(move: Move) -> Bool { possibleMoves.contains(move) }
 
-	public func childState(after move: Move) throws -> Self {
+	func childState(after move: Move) throws -> Self {
 		try childState(after: move, by: currentRole)
 	}
 	
-	public func childState(after move: Move, by role: Role) throws -> Self {
+	func childState(after move: Move, by role: Role) throws -> Self {
 		if isPossible(move: move) {
 			var next = self
 			try next.perform(move: move, by: role)
