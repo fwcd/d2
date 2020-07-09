@@ -31,7 +31,7 @@ public protocol GameState {
 	
 	func playerOf(role: Role) -> GamePlayer?
 	
-	func isPossible(move: Move) -> Bool
+	func isPossible(move: Move, by role: Role) -> Bool
 	
 	mutating func perform(move: Move, by role: Role) throws
 }
@@ -40,14 +40,14 @@ public extension GameState {
 	var hands: [Role: Hand] { [:] }
 	var handsDescription: String? { nil }
 	
-	func isPossible(move: Move) -> Bool { possibleMoves.contains(move) }
+	func isPossible(move: Move, by role: Role) -> Bool { possibleMoves.contains(move) }
 
 	func childState(after move: Move) throws -> Self {
 		try childState(after: move, by: currentRole)
 	}
 	
 	func childState(after move: Move, by role: Role) throws -> Self {
-		if isPossible(move: move) {
+		if isPossible(move: move, by: role) {
 			var next = self
 			try next.perform(move: move, by: role)
 			return next

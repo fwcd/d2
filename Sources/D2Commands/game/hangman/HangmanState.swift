@@ -33,6 +33,11 @@ public struct HangmanState: GameState, Multiplayer {
         }
     }
 
+	public func isPossible(move: Move, by role: Role) -> Bool {
+        guard let tries = remainingTries[role] else { return false }
+        return possibleMoves.contains(move) && tries > 0
+    }
+
     public mutating func penalize(role: Role) throws {
         guard let tries = remainingTries[role] else { throw HangmanError.invalidRole("Role \(role) cannot be penalized since it has no associated try count!") }
         remainingTries[role] = max(0, tries - 1)
