@@ -9,6 +9,8 @@ fileprivate let log = Logger(label: "D2Commands.MessageParser")
 // The first group matches the language, the second group matches the code
 fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
 
+fileprivate let idPattern = try! Regex(from: "\\d+")
+
 /**
  * Parses Discord messages into rich values.
  */
@@ -22,7 +24,13 @@ public struct MessageParser {
 	 * parent message and downloads
 	 * the attachments of a message.
 	 */
-	public func parse(_ str: String? = nil, message: Message? = nil, then: @escaping (RichValue) -> Void) {
+	public func parse(
+		_ str: String? = nil,
+		message: Message? = nil,
+		clientName: String? = nil,
+		guild: Guild? = nil,
+		then: @escaping (RichValue) -> Void
+	) {
 		var values: [RichValue] = []
 		
 		// Parse message content
@@ -42,8 +50,24 @@ public struct MessageParser {
 		// Append embeds
 		values += message?.embeds.map { .embed($0) } ?? []
 
-		// Append mentions
-		if let mentions = message?.mentions.nilIfEmpty {
+		// Append (explicit and implicit) mentions
+		var mentions = [User]()
+
+		if let explicitMentions = message?.mentions.nilIfEmpty {
+			mentions += explicitMentions
+		}
+
+		mentions += idPattern.allGroups(in: content)
+			.map { UserID($0[0], clientName: clientName ?? "Dummy") }
+			.compactMap { guild?.members[$0]?.user }
+
+		if content.contains("#") {
+			mentions += guild?.members
+				.map { $0.1.user }
+				.filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
+		}
+		
+		if !mentions.isEmpty {
 			values.append(.mentions(mentions))
 		}
 

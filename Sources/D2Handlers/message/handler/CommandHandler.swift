@@ -128,7 +128,7 @@ public class CommandHandler: MessageHandler {
 				guard let pipeSource = pipe.first else { continue }
 				
 				operationQueue.addOperation {
-					self.msgParser.parse(pipeSource.args, message: message) { input in
+					self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild) { input in
 						// Execute the pipe
 						pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
 					}

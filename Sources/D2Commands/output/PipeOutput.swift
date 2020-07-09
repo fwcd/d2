@@ -25,7 +25,7 @@ public class PipeOutput: CommandOutput {
 			nextOutput.append(value, to: channel)
 		} else {
 			log.debug("Piping to \(sink)")
-			msgParser.parse(args) {
+			msgParser.parse(args, clientName: context.client?.name, guild: context.guild) {
 				let nextInput = $0 + value
 				log.trace("Invoking sink")
 				self.sink.invoke(input: nextInput, output: nextOutput, context: self.context)

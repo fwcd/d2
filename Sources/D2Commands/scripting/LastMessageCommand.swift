@@ -15,7 +15,7 @@ public class LastMessageCommand: Command {
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		context.client?.getMessages(for: context.channel!.id, limit: 2) { result, _ in
 			if let lastMessage = result[safely: 1] {
-				MessageParser().parse(message: lastMessage) {
+				MessageParser().parse(message: lastMessage, clientName: context.client?.name, guild: context.guild) {
 					output.append($0)
 				}
 			} else {
