@@ -20,6 +20,8 @@ public protocol Game {
 	var helpText: String { get }
 	/** Optionally a theme color for embeds. */
 	var themeColor: Color? { get }
+	/** Whether the roles should be printed in user-facing output. */
+	var hasPrettyRoles: Bool { get }
 	
 	init()
 }
@@ -28,6 +30,7 @@ public extension Game {
 	var renderFirstBoard: Bool { true }
 	var onlySendHandToCurrentRole: Bool { true }
 	var themeColor: Color? { nil }
+	var hasPrettyRoles: Bool { false }
 	var isRealTime: Bool { false }
 	var helpText: String { "No help text found for \(name)" }
 	var apiActions: Set<String> { [] }

@@ -18,6 +18,6 @@ extension GameState where Self: Multiplayer, Self.Role == Int {
 	}
 }
 
-extension GameState where Self: Multiplayer, Self.Role == Int {
+extension GameState where Self: Multiplayer {
 	public var playersDescription: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 }

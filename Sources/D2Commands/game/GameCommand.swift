@@ -250,6 +250,11 @@ public class GameCommand<G: Game>: StringCommand {
 	}
 	
 	private func describe(role: G.State.Role, in state: G.State) -> String {
-		return "\(role.asRichValue.asText ?? "")\(state.playerOf(role: role).map { " aka. `\($0.username)`" } ?? "")"
+		let player = state.playerOf(role: role)
+		if game.hasPrettyRoles {
+			return "\(role.asRichValue.asText ?? "")\(player.map { " aka. `\($0.username)`" } ?? "")"
+		} else {
+			return player.map { "`\($0.username)`" } ?? "?"
+		}
 	}
 }

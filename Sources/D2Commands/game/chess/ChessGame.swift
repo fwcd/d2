@@ -24,6 +24,7 @@ public struct ChessGame: Game {
 	]
 	public let apiActions: Set<String> = ["move", "json"]
 	public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
+	public let hasPrettyRoles = true
 	public let helpText: String = """
 		To create new chess moves, use short Algebraic Notation (see https://en.wikipedia.org/wiki/Algebraic_notation_(chess)). In many cases, this simply means using the letter of the piece you are moving followed by its destination. Consider the following examples:
 		
