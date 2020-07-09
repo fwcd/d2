@@ -31,7 +31,7 @@
 		"prefix": "gamestate",
 		"scope": "swift",
 		"body": [
-			"import SwiftDiscord",
+			"import D2MessageIO",
 			"import D2Permissions",
 			"",
 			"public struct $1State: GameState {",
@@ -77,7 +77,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public struct $1Hand: DiscordStringEncodable {",
+			"public struct $1Hand: RichValueConvertible {",
 			"\tpublic var cards: [$1Card]",
 			"\t",
 			"\t$0",
@@ -90,7 +90,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public enum $1Role: Hashable, CaseIterable, DiscordStringEncodable {",
+			"public enum $1Role: Hashable, CaseIterable, RichValueConvertible {",
 			"\tcase $2",
 			"\tcase $3",
 			"\t",
@@ -137,7 +137,7 @@
 		"body": [
 			"import D2Utils",
 			"",
-			"public struct $1Board: Discord$2Encodable {",
+			"public struct $1Board: RichValueConvertible {",
 			"\t$0",
 			"}"
 		]

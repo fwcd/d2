@@ -90,7 +90,7 @@ public class GameCommand<G: Game>: StringCommand {
 	}
 	
 	private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
-		if game.onlySendHandToCurrentRole, let player = state.playerOf(role: state.currentRole) {
+		if game.onlySendHandToCurrentRole, !game.isRealTime, let player = state.playerOf(role: state.currentRole) {
 			if let hand = state.hands[state.currentRole] {
 				output.append(hand.asRichValue, to: .dmChannel(player.id))
 			}
@@ -168,11 +168,11 @@ public class GameCommand<G: Game>: StringCommand {
 			)
 			guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return true }
 			
-			if actionResult.onlyCurrentPlayer {
-				guard state.rolesOf(player: author).contains(state.currentRole) else {
-					output.append(errorText: "It is not your turn, `\(author.username)`")
-					return true
-				}
+			guard !actionResult.onlyCurrentPlayer
+				|| game.isRealTime
+				|| state.rolesOf(player: author).contains(state.currentRole) else {
+				output.append(errorText: "It is not your turn, `\(author.username)`")
+				return true
 			}
 			
 			if actionResult.cancelsMatch {
