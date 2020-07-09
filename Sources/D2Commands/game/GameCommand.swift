@@ -10,7 +10,7 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 /**
  * Provides a base layer of functionality for a turn-based games.
  */
-public class GameCommand<G: Game>: StringCommand {
+public class GameCommand<G: Game>: Command {
 	public private(set) var info = CommandInfo(
 		category: .game,
 		requiredPermissionLevel: .basic,
@@ -44,8 +44,9 @@ public class GameCommand<G: Game>: StringCommand {
 			"""
 	}
 	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		if let subcommand = subcommands[input] {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+		let text = input.asText ?? ""
+		if let subcommand = subcommands[text] {
 			do {
 				try subcommand(output)
 			} catch {
@@ -59,7 +60,7 @@ public class GameCommand<G: Game>: StringCommand {
 			return
 		}
 
-		guard !context.message.mentions.isEmpty else {
+		guard let mentions = input.asMentions else {
 			output.append(errorText: "Mention one or more users to play against.")
 			return
 		}
@@ -68,8 +69,8 @@ public class GameCommand<G: Game>: StringCommand {
 			return
 		}
 		
-		let flags = parseFlags(from: input)
-		let players = ([author] + context.message.mentions).map { GamePlayer(from: $0) }
+		let flags = parseFlags(from: text)
+		let players = ([author] + mentions).map { GamePlayer(from: $0) }
 		
 		startMatch(between: players, on: channel.id, output: output, flags: flags)
 		context.subscribeToChannel()
