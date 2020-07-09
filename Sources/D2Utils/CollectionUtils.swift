@@ -15,6 +15,21 @@ public extension Sequence {
 
 		return result
 	}
+
+	func withoutDuplicates<T>(by mapper: (Element) throws -> T) rethrows -> [Element] where T: Hashable {
+		var result = [Element]()
+		var keys = Set<T>()
+
+		for element in self {
+			let key = try mapper(element)
+			if !keys.contains(key) {
+				keys.insert(key)
+				result.append(element)
+			}
+		}
+
+		return result
+	}
 }
 
 public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
