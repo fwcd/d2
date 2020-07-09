@@ -164,7 +164,8 @@ public class GameCommand<G: Game>: StringCommand {
 			let params = ActionParameters(
 				args: args,
 				state: state,
-				apiEnabled: apiEnabled
+				apiEnabled: apiEnabled,
+				player: author
 			)
 			guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return true }
 			
@@ -212,11 +213,11 @@ public class GameCommand<G: Game>: StringCommand {
 					// Advance the game
 					
 					embed = Embed(
-						description: """
-							\(actionResult.text ?? "")
-							\(next.handsDescription.map { "Hands: \($0)" } ?? "")
-							It is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn
-							""".trimmingCharacters(in: .whitespacesAndNewlines)
+						description: [
+							actionResult.text,
+							next.handsDescription.map { "Hands: \($0)" },
+							game.isRealTime ? "Next turn!" : "It is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
+						].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
 					)
 					
 					matches[channelID] = next

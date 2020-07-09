@@ -5,6 +5,7 @@ public struct HangmanBoard: RichValueConvertible {
 
     public var asRichValue: RichValue { .text(String(slots.map { $0.hidden ? "-" : $0.character })) }
     public var word: String { String(slots.map(\.character)) }
+    public var isUncovered: Bool { !slots.contains { $0.hidden } }
 
     public init(word: String) {
         slots = word.map(CharacterSlot.init(character:))

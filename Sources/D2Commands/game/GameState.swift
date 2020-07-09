@@ -33,7 +33,7 @@ public protocol GameState {
 	
 	func isPossible(move: Move) -> Bool
 	
-	mutating func perform(move: Move) throws
+	mutating func perform(move: Move, by role: Role) throws
 }
 
 extension GameState {
@@ -41,11 +41,15 @@ extension GameState {
 	public var handsDescription: String? { return nil }
 	
 	public func isPossible(move: Move) -> Bool { return possibleMoves.contains(move) }
-	
+
 	public func childState(after move: Move) throws -> Self {
+		try childState(after: move, by: currentRole)
+	}
+	
+	public func childState(after move: Move, by role: Role) throws -> Self {
 		if isPossible(move: move) {
 			var next = self
-			try next.perform(move: move)
+			try next.perform(move: move, by: role)
 			return next
 		} else {
 			throw GameError.invalidMove("Move `\(move)` is not in `possibleMoves`")

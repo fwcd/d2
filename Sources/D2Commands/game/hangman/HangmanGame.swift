@@ -6,7 +6,10 @@ public struct HangmanGame: Game {
     public let isRealTime: Bool = true
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
         "try": {
-            let next = try $0.state.childState(after: HangmanMove(fromString: $0.args))
+            // TODO: Figure out how to disambiguate between multiple
+            //       roles of the player if he plays against himself.
+            guard let role = $0.state.rolesOf(player: $0.player).first else { throw HangmanError.playerHasNoRole }
+            let next = try $0.state.childState(after: HangmanMove(fromString: $0.args), by: role)
             return ActionResult(nextState: next)
         }
     ]

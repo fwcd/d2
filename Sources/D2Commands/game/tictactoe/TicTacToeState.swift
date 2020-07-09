@@ -30,7 +30,7 @@ public struct TicTacToeState: GameState {
 		self.init(playerX: players[0], playerO: players[1])
 	}
 	
-	public mutating func perform(move: Move) throws {
+	public mutating func perform(move: Move, by role: Role) throws {
 		try performMoveAt(row: move.row, col: move.column)
 	}
 	

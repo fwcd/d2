@@ -57,7 +57,7 @@
 			"\t\tself.$3 = secondPlayer",
 			"\t}",
 			"\t",
-			"\tpublic mutating func perform(move: Move) throws {",
+			"\tpublic mutating func perform(move: Move, by role: Role) throws {",
 			"\t\t$9",
 			"\t}",
 			"\t",

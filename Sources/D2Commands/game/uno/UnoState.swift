@@ -44,7 +44,7 @@ public struct UnoState: GameState, Multiplayer {
 		}
 	}
 	
-	public mutating func perform(move: Move) throws {
+	public mutating func perform(move: Move, by role: Role) throws {
 		var nextHand = hands[currentRole]!
 		var opponentDrawCardCount = 0
 		var skipDistance = 0

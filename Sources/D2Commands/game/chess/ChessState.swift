@@ -149,7 +149,7 @@ public struct ChessState: GameState {
 		return Set(moves)
 	}
 	
-	public mutating func perform(move unresolvedMove: Move) throws {
+	public mutating func perform(move unresolvedMove: Move, by role: Role) throws {
 		try performDirectly(move: try unambiguouslyResolve(move: unresolvedMove))
 	}
 	

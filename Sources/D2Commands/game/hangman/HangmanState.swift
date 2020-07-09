@@ -14,14 +14,17 @@ public struct HangmanState: GameState, Multiplayer {
         Set((board.word.map(String.init) + [board.word]).map(Move.init(fromString:)))
     }
     
-    public private(set) var winner: Role? = nil
-    public private(set) var isDraw: Bool = false
+    public var winner: Role? = nil
+    public let isDraw: Bool = false
     
     public init(players: [GamePlayer]) {
         self.players = players
     }
     
-    public mutating func perform(move: Move) throws {
+    public mutating func perform(move: Move, by role: Role) throws {
         try board.guess(word: move.word)
+        if board.isUncovered && winner == nil {
+            winner = role
+        }
     }
 }
