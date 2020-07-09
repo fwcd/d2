@@ -11,7 +11,7 @@ public struct HangmanState: GameState, Multiplayer {
     public private(set) var currentRole: Role = 0
     
     public var possibleMoves: Set<Move> {
-        Set()
+        Set((board.word.map(String.init) + [board.word]).map(Move.init(fromString:)))
     }
     
     public private(set) var winner: Role? = nil
