@@ -33,9 +33,13 @@ public struct HangmanState: GameState, Multiplayer {
         }
     }
 
-	public func isPossible(move: Move, by role: Role) -> Bool {
+    public func hasTriesLeft(role: Role) -> Bool {
         guard let tries = remainingTries[role] else { return false }
-        return possibleMoves.contains(move) && tries > 0
+        return tries > 0
+    }
+
+	public func isPossible(move: Move, by role: Role) -> Bool {
+        return possibleMoves.contains(move) && hasTriesLeft(role: role)
     }
 
     public mutating func penalize(role: Role) throws {
