@@ -38,17 +38,11 @@ public class InventoryCommand: Command {
     
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         let text = input.asText ?? ""
-        if let parsedSubcommand = subcommandPattern.firstGroups(in: text) {
-            let subcommandName = parsedSubcommand[1]
-            let subcommandArgs = parsedSubcommand[2]
-            guard let subcommand = subcommands[subcommandName] else {
-                output.append(errorText: "No subcommand named `\(subcommandName)`")
-                return
-            }
-            subcommand(subcommandArgs, output, context)
+        if let parsedSubcommand = subcommandPattern.firstGroups(in: text), let subcommand = subcommands[parsedSubcommand[1]] {
+            subcommand(parsedSubcommand[2], output, context)
         } else {
             guard let user = input.asMentions?.first ?? context.author else {
-                output.append(errorText: "No author available")
+                output.append(errorText: "Mention someone or enter a subcommand to get started!")
                 return
             }
 
