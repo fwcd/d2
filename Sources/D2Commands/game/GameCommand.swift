@@ -38,7 +38,7 @@ public class GameCommand<G: Game>: Command {
 		info.shortDescription = "Plays \(game.name) against someone"
 		info.longDescription = "Lets you create and play \(game.name) matches"
 		info.helpText = game.helpText + """
-			
+
 			
 			Generic subcommands (not directly related to \(game.name)):
 			\(subcommands.map { "- `\($0.key)`" }.joined(separator: "\n"))
@@ -61,7 +61,7 @@ public class GameCommand<G: Game>: Command {
 			return
 		}
 
-		guard let mentions = input.asMentions else {
+		guard let mentions = input.asMentions, mentions.count >= 1 else {
 			output.append(errorText: "Mention one or more users to play against.")
 			return
 		}
