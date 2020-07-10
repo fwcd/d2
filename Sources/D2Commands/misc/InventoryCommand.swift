@@ -4,7 +4,7 @@ import D2Utils
 fileprivate let allFlag = "--all"
 fileprivate let subcommandPattern = try! Regex(from: "^(\\w+)(?:\\s+(.+))?")
 
-public class InventoryCommand: StringCommand {
+public class InventoryCommand: Command {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Fetches the user's inventory",
@@ -36,8 +36,9 @@ public class InventoryCommand: StringCommand {
         info.helpText = "Available Subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))"
     }
     
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        if let parsedSubcommand = subcommandPattern.firstGroups(in: input) {
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+        let text = input.asText ?? ""
+        if let parsedSubcommand = subcommandPattern.firstGroups(in: text) {
             let subcommandName = parsedSubcommand[1]
             let subcommandArgs = parsedSubcommand[2]
             guard let subcommand = subcommands[subcommandName] else {
@@ -46,12 +47,12 @@ public class InventoryCommand: StringCommand {
             }
             subcommand(subcommandArgs, output, context)
         } else {
-            guard let user = context.message.mentions.first ?? context.author else {
+            guard let user = input.asMentions?.first ?? context.author else {
                 output.append(errorText: "No author available")
                 return
             }
 
-            let showAll = input.contains(allFlag)
+            let showAll = text.contains(allFlag)
             let inventory = inventoryManager[user]
 
             output.append(Embed(

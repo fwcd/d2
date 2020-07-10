@@ -1,12 +1,15 @@
 import D2MessageIO
 import D2Utils
 
-public class ReactionLeaderboardCommand: StringCommand {
+public class ReactionLeaderboardCommand: Command {
     public private(set) var info = CommandInfo(
         category: .misc,
         helpText: "Syntax: [users...]?",
         requiredPermissionLevel: .basic
     )
+    public let inputValueType: RichValueType = .mentions
+    public let outputValueType: RichValueType = .embed
+
     private let messageDB: MessageDatabase
     private let title: String
     private let name: String
@@ -24,13 +27,13 @@ public class ReactionLeaderboardCommand: StringCommand {
         info.longDescription = "Fetches the number of \(name) reactions per user"
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         do {
             guard let guild = context.guild else {
                 output.append(errorText: "No guild available")
                 return
             }
-            let users: [User] = context.message.mentions.nilIfEmpty ?? guild.members.map { $0.1.user }
+            let users: [User] = input.asMentions ?? guild.members.map { $0.1.user }
             let emojiId = try messageDB.emojiIds(for: emojiName).first
             output.append(Embed(
                 title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? emojiName)\(title)",

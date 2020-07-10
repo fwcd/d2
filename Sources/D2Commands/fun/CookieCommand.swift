@@ -1,11 +1,13 @@
 fileprivate let inventoryCategory = "Cookies"
 
-public class CookieCommand: StringCommand {
+public class CookieCommand: Command {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Gives someone a cookie",
         requiredPermissionLevel: .basic
     )
+	public let inputValueType: RichValueType = .mentions
+    public let outputValueType: RichValueType = .text
     private let inventoryManager: InventoryManager
     private let cookies: [Cookie]
     private let templates: [String]
@@ -48,12 +50,12 @@ public class CookieCommand: StringCommand {
         self.templates = templates
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author available!")
             return
         }
-        guard let mention = context.message.mentions.first else {
+        guard let mention = input.asMentions?.first else {
             output.append(errorText: "Mention someone to get started!")
             return
         }

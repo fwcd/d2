@@ -6,22 +6,25 @@ fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+
 
 // TODO: Use Arg API
 
-public class DirectMessageCommand: StringCommand {
+public class DirectMessageCommand: Command {
 	public let info = CommandInfo(
 		category: .misc,
 		shortDescription: "Sends a direct message to a user",
 		longDescription: "Sends a direct message to a mentioned user",
 		requiredPermissionLevel: .admin
 	)
+	public let inputValueType: RichValueType = .mentions
+    public let outputValueType: RichValueType = .text
 	
 	public init() {}
 	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		guard let parsedArgs = inputPattern.firstGroups(in: input) else {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+		let text = input.asText ?? ""
+		guard let parsedArgs = inputPattern.firstGroups(in: text) else {
 			output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")
 			return
 		}
-		guard let mentioned = context.message.mentions.first else {
+		guard let mentioned = input.asMentions?.first else {
 			output.append(errorText: "Did not mention anyone")
 			return
 		}

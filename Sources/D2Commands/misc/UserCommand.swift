@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Utils
 import Foundation
 
-public class UserCommand: StringCommand {
+public class UserCommand: Command {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Fetches a user's presence",
@@ -10,15 +10,17 @@ public class UserCommand: StringCommand {
         requiredPermissionLevel: .vip,
 		platformAvailability: ["Discord"] // Due to Discord-specific avatar URLs
     )
+    public let inputValueType: RichValueType = .mentions
+    public let outputValueType: RichValueType = .embed
     
     public init() {}
     
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append("Not on a guild.")
             return
         }
-        guard let user = context.message.mentions.first else {
+        guard let user = input.asMentions?.first else {
             output.append("Please mention someone!")
             return
         }

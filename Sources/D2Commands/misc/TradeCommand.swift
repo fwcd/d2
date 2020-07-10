@@ -3,7 +3,7 @@ import D2MessageIO
 
 fileprivate let tradePattern = try! Regex(from: "(\\w+)\\s+(\\w+)")
 
-public class TradeCommand: StringCommand {
+public class TradeCommand: Command {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Trades an item with someone",
@@ -37,7 +37,7 @@ public class TradeCommand: StringCommand {
         self.inventoryManager = inventoryManager
     }
     
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author available")
             return
@@ -46,7 +46,7 @@ public class TradeCommand: StringCommand {
             output.append(errorText: "No channel id available")
             return
         }
-        guard let parsedTrade = tradePattern.firstGroups(in: input), let other = context.message.mentions.first else {
+        guard let text = input.asText, let parsedTrade = tradePattern.firstGroups(in: text), let other = input.asMentions?.first else {
             output.append(errorText: info.helpText!)
             return
         }
