@@ -4,12 +4,14 @@ import D2Permissions
 fileprivate let initialPlayerTries: Int = 6
 
 public struct HangmanState: GameState, Multiplayer {
+    private static let wordList = (try? String(contentsOfFile: "Resources/hangman/words.txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
+
     public typealias Role = Int
     public typealias Board = HangmanBoard
     public typealias Move = HangmanMove
     
 	public let players: [GamePlayer]
-    public private(set) var board = Board(word: "test")
+    public private(set) var board = Board(word: wordList.randomElement() ?? "dummyword")
     public private(set) var currentRole: Role = 0
     
     public var possibleMoves: Set<Move> {
