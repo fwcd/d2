@@ -39,6 +39,7 @@ public class GameCommand<G: Game>: Command {
 		info.longDescription = "Lets you create and play \(game.name) matches"
 		info.helpText = game.helpText + """
 			
+			
 			Generic subcommands (not directly related to \(game.name)):
 			\(subcommands.map { "- `\($0.key)`" }.joined(separator: "\n"))
 			"""
