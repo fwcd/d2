@@ -55,16 +55,16 @@ public struct MessageParser {
 
 		if let explicitMentions = message?.mentions.nilIfEmpty {
 			mentions += explicitMentions
-		}
+		} else {
+			mentions += idPattern.allGroups(in: content)
+				.map { UserID($0[0], clientName: clientName ?? "Dummy") }
+				.compactMap { guild?.members[$0]?.user }
 
-		mentions += idPattern.allGroups(in: content)
-			.map { UserID($0[0], clientName: clientName ?? "Dummy") }
-			.compactMap { guild?.members[$0]?.user }
-
-		if content.contains("#") {
-			mentions += guild?.members
-				.map { $0.1.user }
-				.filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
+			if content.contains("#") {
+				mentions += guild?.members
+					.map { $0.1.user }
+					.filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
+			}
 		}
 		
 		if !mentions.isEmpty {
