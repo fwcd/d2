@@ -16,10 +16,11 @@ public struct HangmanState: GameState, Multiplayer {
         Set((board.word.map(String.init) + [board.word]).map(Move.init(fromString:)))
     }
     
-    public var winner: Role? = nil
-    public let isDraw: Bool = false
+    public private(set) var winner: Role? = nil
+    public private(set) var isDraw: Bool = false
     
     public private(set) var remainingTries: [Role: Int]
+    public var remainingRoleCount: Int { remainingTries.count(forWhich: { (_, v) in v > 0 }) }
 
     public init(players: [GamePlayer]) {
         self.players = players
@@ -45,5 +46,8 @@ public struct HangmanState: GameState, Multiplayer {
     public mutating func penalize(role: Role) throws {
         guard let tries = remainingTries[role] else { throw HangmanError.invalidRole("Role \(role) cannot be penalized since it has no associated try count!") }
         remainingTries[role] = max(0, tries - 1)
+        if remainingRoleCount == 0 {
+            isDraw = true
+        }
     }
 }
