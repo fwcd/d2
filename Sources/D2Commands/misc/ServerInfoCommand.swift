@@ -98,7 +98,7 @@ public class ServerInfoCommand: StringCommand {
             limit 1
             """, "\(guild.id)")
                 .makeIterator().next()
-                .map { "`\(($0[0] as? String)?.truncate(20, appending: "...") ?? "?")` by `\(($0[1] as? String) ?? "?")`" }
+                .map { "`\(($0[0] as? String)?.truncate(80, appending: "...") ?? "?")` by `\(($0[1] as? String) ?? "?")`" }
 
         let mostMessagedChannel = try? messageDB.prepare("""
             select count(message_id), channel_name
