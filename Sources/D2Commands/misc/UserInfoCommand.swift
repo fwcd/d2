@@ -7,7 +7,7 @@ public class UserInfoCommand: Command {
         category: .misc,
         shortDescription: "Fetches a user's presence",
         longDescription: "Fetches information about a user's status and currently played game",
-        requiredPermissionLevel: .vip,
+        requiredPermissionLevel: .basic,
 		platformAvailability: ["Discord"] // Due to Discord-specific avatar URLs
     )
     public let inputValueType: RichValueType = .mentions
@@ -39,7 +39,7 @@ public class UserInfoCommand: Command {
             footer: Embed.Footer(text: "ID: \(user.id)"),
             fields: [
                 Embed.Field(name: "Nick", value: member.nick ?? "_none_"),
-                Embed.Field(name: "Roles", value: guild.roles(for: member).sorted(by: descendingComparator { $0.position }).map { $0.name }.joined(separator: "\n").nilIfEmpty ?? "_none_"),
+                Embed.Field(name: "Roles", value: guild.roles(for: member).sorted(by: descendingComparator { $0.position }).map { "`\($0.name)`" }.joined(separator: ", ").nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Voice Status", value: ((member.deaf ? ["deaf"] : []) + (member.mute ? ["mute"] : [])).joined(separator: ", ").nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Joined at", value: dateFormatter.string(from: member.joinedAt))
             ] + (presence.map { [
