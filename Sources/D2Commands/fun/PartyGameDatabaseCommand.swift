@@ -36,7 +36,7 @@ public class PartyGameDatabaseCommand: StringCommand {
                     return
                 }
 
-                let result = try partyGameDB.prepare(sql: input)
+                let result = try partyGameDB.prepare(input)
                     .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no output" }
                     .joined(separator: "\n")
                 output.append(.code(result, language: nil))

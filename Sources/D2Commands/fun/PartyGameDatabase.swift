@@ -33,7 +33,7 @@ public class PartyGameDatabase {
         }
     }
 
-    public func prepare(sql: String) throws -> Statement {
+    public func prepare(_ sql: String) throws -> Statement {
         try db.prepare(sql)
     }
 

@@ -157,8 +157,8 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
     
-    public func prepare(sql: String) throws -> Statement {
-        try db.prepare(sql)
+    public func prepare(_ sql: String, _ values: String...) throws -> Statement {
+        try db.prepare(sql, values)
     }
 
     private func insertMessages(with client: MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, Error> {

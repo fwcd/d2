@@ -76,7 +76,7 @@ public class MessageDatabaseCommand: StringCommand {
                     return
                 }
 
-                let result = try messageDB.prepare(sql: input)
+                let result = try messageDB.prepare(input)
                     .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no output" }
                     .joined(separator: "\n")
                 output.append(.code(result, language: nil))

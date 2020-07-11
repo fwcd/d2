@@ -33,7 +33,7 @@ public class ServerInfoCommand: StringCommand {
 					?? "_none_", inline: false) }
 		))
 	}
-	
+
 	private func computeStats(for guild: Guild) -> [(String, [(String, String?)])] {
 		var memberCount: Int = 0
 		var userCount: Int = 0
@@ -89,7 +89,16 @@ public class ServerInfoCommand: StringCommand {
 		let mostPlayed = Dictionary(grouping: presences.filter { $0.game != nil }, by: { $0.game?.name ?? "" })
 			.max { $0.1.count < $1.1.count }
 
-		var longestMessage: String? = nil
+		let longestMessage = try! messageDB.prepare("""
+			select content, user_name
+			from messages natural join channels
+						          join users on (author_id == user_id)
+			where guild_id == ?
+			order by length(content) desc
+			limit 1
+			""", "\(guild.id)")
+				.makeIterator().next()
+				.map { "`\(($0[0] as! String).truncate(100, appending: "..."))` by `\($0[1] as! String)`" }
 
 		return [
 			(":island: General", [
