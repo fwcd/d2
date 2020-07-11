@@ -39,6 +39,7 @@ public class HelpCommand: StringCommand {
 		let commands = context.registry.commandsWithAliases()
 		return Embed(
 			title: ":question: Available Commands",
+			footer: Embed.Footer(text: "Hint: You can use \(commandPrefix)search to find the command you need!"),
 			fields: CommandCategory.allCases
 				.compactMap { category in
 					guard let categoryCommands = commands
