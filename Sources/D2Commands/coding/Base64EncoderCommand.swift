@@ -16,7 +16,12 @@ public class Base64EncoderCommand: Command {
                 return
             }
 
-            output.append(data.base64EncodedString().truncate(2000))
+            let encoded = data.base64EncodedString()
+            guard encoded.count < 4000 else {
+                output.append(errorText: "Your encoded data is too long!")
+                return
+            }
+            output.append(encoded)
         } catch {
             output.append(error, errorText: "Something went wrong while Base64-encoding")
         }
