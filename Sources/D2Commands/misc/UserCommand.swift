@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Utils
 import Foundation
 
-public class UserCommand: Command {
+public class UserInfoCommand: Command {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Fetches a user's presence",

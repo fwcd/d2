@@ -76,14 +76,20 @@ public class ServerInfoCommand: StringCommand {
 			}
 		}
 		
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
+
 		let mostPlayed = Dictionary(grouping: presences.filter { $0.game != nil }, by: { $0.game?.name ?? "" })
 			.max { $0.1.count < $1.1.count }
 
 		return [
 			(":island: General", [
-				("ID", "\(guild.id)"),
 				("Owner", guild.members[guild.id]?.displayName ?? "?"),
-				("Region", guild.region)
+				("Region", guild.region),
+				("Created at", dateFormatter.string(from: guild.joinedAt)),
+				("MFA Level", String(guild.mfaLevel)),
+				("Verification Level", String(guild.verificationLevel)),
+				("ID", "\(guild.id)")
 			]),
 			(":tophat: Counts", [
 				("Members", String(memberCount)),
