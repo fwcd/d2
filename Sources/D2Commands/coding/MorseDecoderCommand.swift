@@ -1,13 +1,13 @@
-public class MorseEncoderCommand: StringCommand {
+public class MorseDecoderCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
-        shortDescription: "Morse-encodes a string",
+        category: .coding,
+        shortDescription: "Morse-decodes a string",
         requiredPermissionLevel: .basic
     )
 
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        output.append(morseEncode(input))
+        output.append(morseDecode(input))
     }
 }

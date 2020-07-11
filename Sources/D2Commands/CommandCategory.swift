@@ -1,6 +1,7 @@
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case bf
     case cau
+    case coding
     case d2script
     case dictionary
     case essential
@@ -27,8 +28,9 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     
     public var description: String {
         switch self {
-            case .bf: return ":currency_exchange: BF interpreter"
+            case .bf: return ":brain: BF interpreter"
             case .cau: return ":school: CAU-specific utilities"
+            case .coding: return ":currency_exchange: Encoders and decoders"
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":closed_book: Dictionaries"
             case .essential: return ":sparkles: Fundamental commands (such as `help`)"
