@@ -7,8 +7,7 @@ public class UserInfoCommand: Command {
         category: .misc,
         shortDescription: "Fetches a user's presence",
         longDescription: "Fetches information about a user's status and currently played game",
-        requiredPermissionLevel: .basic,
-		platformAvailability: ["Discord"] // Due to Discord-specific avatar URLs
+        requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .embed
@@ -35,7 +34,9 @@ public class UserInfoCommand: Command {
 
         output.append(Embed(
             title: "\(user.username)#\(user.discriminator)",
-            thumbnail: URL(string: "https://cdn.discordapp.com/avatars/\(user.id)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) },
+            thumbnail: context.client?.name == "Discord"
+                ? URL(string: "https://cdn.discordapp.com/avatars/\(user.id)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) }
+                : nil,
             footer: Embed.Footer(text: "ID: \(user.id)"),
             fields: [
                 Embed.Field(name: "Nick", value: member.nick ?? "_none_"),
