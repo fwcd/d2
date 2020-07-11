@@ -222,7 +222,7 @@ public class D2Delegate: MessageDelegate {
 		registry["put"] = HTTPRequestCommand(method: "PUT")
 		registry["patch"] = HTTPRequestCommand(method: "PATCH")
 		registry["delete"] = HTTPRequestCommand(method: "DELETE")
-		registry["serverstats", aka: ["stats", "serverinfo"]] = ServerStatsCommand()
+		registry["serverinfo", aka: ["stats", "serverstats", "guildinfo", "guildstats"]] = ServerInfoCommand()
 		registry["whatsup"] = WhatsUpCommand()
 		registry["songcharts"] = SongChartsCommand()
 		registry["sortby"] = SortByCommand()
