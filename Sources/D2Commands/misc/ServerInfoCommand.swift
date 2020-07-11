@@ -136,9 +136,9 @@ public class ServerInfoCommand: StringCommand {
 
         return [
             (":island: General", [
-                ("Owner", guild.members[guild.id]?.displayName ?? "?"),
+                ("Owner", guild.members[guild.ownerId]?.displayName ?? "?"),
                 ("Region", guild.region),
-                ("Created at", dateFormatter.string(from: guild.joinedAt)),
+                ("Created at", (guild.members[guild.ownerId]?.joinedAt).map(dateFormatter.string(from:))),
                 ("MFA Level", String(guild.mfaLevel)),
                 ("Verification Level", String(guild.verificationLevel)),
                 ("ID", "\(guild.id)")
