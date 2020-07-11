@@ -10,8 +10,11 @@ public class ServerInfoCommand: StringCommand {
 		longDescription: "Outputs a range of interesting statistics about the current guild",
 		requiredPermissionLevel: .basic
 	)
+	private let messageDB: MessageDatabase
 	
-	public init() {}
+	public init(messageDB: MessageDatabase) {
+		self.messageDB = messageDB
+	}
 	
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let guild = context.guild else {
@@ -23,23 +26,27 @@ public class ServerInfoCommand: StringCommand {
 			title: ":chart_with_upwards_trend: Server Statistics for `\(guild.name)`",
 			thumbnail: URL(string: "https://cdn.discordapp.com/icons/\(guild.id)/\(guild.icon).png").map(Embed.Thumbnail.init(url:)),
 			fields: computeStats(for: guild)
-				.map { Embed.Field(name: $0.0, value: $0.1.map { "\($0.0): \($0.1)" }.joined(separator: "\n"), inline: false) }
+				.map { Embed.Field(name: $0.0, value: $0.1
+					.compactMap { (k, v) in v.map { "\(k): \($0)" } }
+					.joined(separator: "\n")
+					.nilIfEmpty
+					?? "_none_", inline: false) }
 		))
 	}
 	
-	private func computeStats(for guild: Guild) -> [(String, [(String, String)])] {
+	private func computeStats(for guild: Guild) -> [(String, [(String, String?)])] {
 		var memberCount: Int = 0
 		var userCount: Int = 0
 		var botCount: Int = 0
-		var longestUsername: String = ""
-		var mostRolesUsername: String = ""
+		var longestUsername: String? = nil
+		var mostRolesUsername: String = "?"
 		var mostRoles: [String] = []
 		var voiceChannelCount: Int = 0
 		var textChannelCount: Int = 0
 		var presences: [Presence] = []
 		var longestPlayTime: TimeInterval = 0
-		var longestPlayTimeGame: String = ""
-		var longestPlayTimeUsername: String = ""
+		var longestPlayTimeGame: String = "?"
+		var longestPlayTimeUsername: String = "?"
 		
 		for (_, member) in guild.members {
 			memberCount += 1
@@ -49,7 +56,7 @@ public class ServerInfoCommand: StringCommand {
 			} else {
 				userCount += 1
 			}
-			if user.username.count > longestUsername.count {
+			if user.username.count > (longestUsername?.count ?? 0) {
 				longestUsername = user.username
 			}
 			if member.roleIds.count > mostRoles.count {
@@ -82,6 +89,8 @@ public class ServerInfoCommand: StringCommand {
 		let mostPlayed = Dictionary(grouping: presences.filter { $0.game != nil }, by: { $0.game?.name ?? "" })
 			.max { $0.1.count < $1.1.count }
 
+		var longestMessage: String? = nil
+
 		return [
 			(":island: General", [
 				("Owner", guild.members[guild.id]?.displayName ?? "?"),
@@ -99,10 +108,13 @@ public class ServerInfoCommand: StringCommand {
 				("Text Channels", String(textChannelCount)),
 			]),
 			(":triangular_flag_on_post: Highscores", [
-				("Longest Username", "`\(longestUsername)`"),
+				("Longest Username", longestUsername),
 				("Most Roles", "\(mostRoles.map { "`\($0)`" }.joined(separator: ", ")) by `\(mostRolesUsername)`"),
 				("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
-				("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players")
+				("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralize(with: mostPlayed?.1.count ?? 0))")
+			]),
+			(":incoming_envelope: Messages", [
+				("Longest Message", longestMessage)
 			])
 		]
 	}
