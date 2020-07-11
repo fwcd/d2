@@ -5,6 +5,7 @@ public class Base64EncoderCommand: Command {
         longDescription: "Encodes text (utf8) or images (png) using Base64",
         requiredPermissionLevel: .vip
     )
+    public let outputValueType: RichValueType = .text
 
     public init() {}
 

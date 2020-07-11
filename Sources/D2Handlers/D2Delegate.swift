@@ -56,6 +56,7 @@ public class D2Delegate: MessageDelegate {
 		registry["bfencode"] = BFEncodeCommand()
 		registry["bftoc"] = BFToCCommand()
 		registry["base64encode", aka: ["base64"]] = Base64EncoderCommand()
+		registry["base64decode"] = Base64DecoderCommand()
 		registry["caesar", aka: ["rot"]] = CaesarCipherCommand()
 		registry["echo"] = EchoCommand()
 		registry["timer"] = TimerCommand()

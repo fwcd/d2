@@ -14,6 +14,7 @@ public class CaesarCipherCommand: StringCommand {
         helpText: "Syntax: [offset] [message]",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .text
 
     public init() {}
 

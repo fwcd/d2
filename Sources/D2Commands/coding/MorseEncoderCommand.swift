@@ -4,6 +4,7 @@ public class MorseEncoderCommand: StringCommand {
         shortDescription: "Morse-encodes a string",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .text
 
     public init() {}
 
