@@ -1,6 +1,6 @@
 import D2Utils
 
-fileprivate let alphabetLength: UInt32 = 26
+fileprivate let alphabetLength: Int = 26
 fileprivate let alphabetRange = 0..<alphabetLength
 fileprivate let alphabetStart = Unicode.Scalar("a").value
 
@@ -23,7 +23,7 @@ public class CaesarCipherCommand: StringCommand {
             return
         }
 
-        guard let offset = UInt32(parsedArgs[1]), alphabetRange.contains(offset) else {
+        guard let offset = UInt32(parsedArgs[1]), alphabetRange.contains(Int(offset)) else {
             output.append(errorText: "Missing or invalid offset for caesar chiffre!")
             return
         }
@@ -33,8 +33,8 @@ public class CaesarCipherCommand: StringCommand {
 
     private func shift(character: Character, by offset: UInt32) -> Character {
         guard let scalar = character.unicodeScalars.first?.value,
-            alphabetRange.contains(scalar - alphabetStart),
-            let shifted = Unicode.Scalar((scalar + offset - alphabetStart) % alphabetLength + alphabetStart) else { return character }
+            alphabetRange.contains(Int(scalar) - Int(alphabetStart)),
+            let shifted = Unicode.Scalar((scalar + offset - alphabetStart) % UInt32(alphabetLength) + alphabetStart) else { return character }
         return Character(shifted)
     }
 }
