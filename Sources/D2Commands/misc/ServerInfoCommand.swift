@@ -21,6 +21,7 @@ public class ServerInfoCommand: StringCommand {
 
 		output.append(Embed(
 			title: ":chart_with_upwards_trend: Server Statistics for `\(guild.name)`",
+			thumbnail: URL(string: "https://cdn.discordapp.com/icons/\(guild.id)/\(guild.icon).png").map(Embed.Thumbnail.init(url:)),
 			fields: computeStats(for: guild)
 				.map { Embed.Field(name: $0.0, value: $0.1.map { "\($0.0): \($0.1)" }.joined(separator: "\n"), inline: false) }
 		))
