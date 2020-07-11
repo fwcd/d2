@@ -2,7 +2,7 @@ import D2Permissions
 
 public class ShowPermissionsCommand: Command {
 	public let info = CommandInfo(
-		category: .permissions,
+		category: .administration,
 		shortDescription: "Displays the configured permissions",
 		longDescription: "Outputs all registered user permissions",
 		requiredPermissionLevel: .admin

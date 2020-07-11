@@ -1,4 +1,5 @@
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
+    case administration
     case bf
     case cau
     case coding
@@ -17,7 +18,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case misc
     case ml
     case music
-    case permissions
     case prolog
     case reddit
     case scripting
@@ -28,6 +28,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     
     public var description: String {
         switch self {
+            case .administration: return ":desktop: Administration"
             case .bf: return ":brain: BF interpreter"
             case .cau: return ":school: CAU-specific utilities"
             case .coding: return ":currency_exchange: Encoders and decoders"
@@ -46,7 +47,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .misc: return ":art: Miscellaneous commands"
             case .ml: return ":bulb: Machine learning"
             case .music: return ":guitar: Chord finder and music theory"
-            case .permissions: return ":white_check_mark: Permission management"
             case .prolog: return ":owl: Prolog"
             case .reddit: return ":ledger: Reddit API"
             case .scripting: return ":tools: Command scripting"

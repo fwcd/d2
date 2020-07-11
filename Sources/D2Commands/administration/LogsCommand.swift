@@ -4,7 +4,7 @@ import D2Utils
 
 public class LogsCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .administration,
         shortDescription: "Fetches the logs",
         longDescription: "Outputs the most recently logged lines",
         requiredPermissionLevel: .admin

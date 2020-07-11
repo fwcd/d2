@@ -2,7 +2,7 @@ import D2Utils
 
 public class ShellCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .administration,
         shortDescription: "Runs a shell command",
         helpText: "Syntax: [executable] [args]?",
         requiredPermissionLevel: .admin

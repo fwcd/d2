@@ -6,7 +6,7 @@ fileprivate let inputPattern = try! Regex(from: "(?:(?:<\\S+>)|(?:@\\S+))(?:\\s+
 
 public class RevokePermissionCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .permissions,
+		category: .administration,
 		shortDescription: "Revokes a user permissions",
 		longDescription: "Resets the permission level of one or more users",
 		requiredPermissionLevel: .admin
