@@ -1,7 +1,8 @@
 public class Base64EncoderCommand: Command {
     public let info = CommandInfo(
         category: .coding,
-        shortDescription: "Encodes text or images using Base64",
+        shortDescription: "Encodes data using Base64",
+        longDescription: "Encodes text (utf8) or images (png) using Base64",
         requiredPermissionLevel: .vip
     )
 
