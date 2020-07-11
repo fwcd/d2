@@ -16,11 +16,12 @@ public class ServerInfoCommand: StringCommand {
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		output.append(Embed(
 			title: ":chart_with_upwards_trend: Server Statistics",
-			description: computeStats(context: context).map { "\($0.0): \($0.1)" }.joined(separator: "\n")
+			fields: computeStats(context: context)
+				.map { Embed.Field(name: $0.0, value: $0.1.map { "\($0.0): \($0.1)" }.joined(separator: "\n")) }
 		))
 	}
 	
-	private func computeStats(context: CommandContext) -> [(String, String)] {
+	private func computeStats(context: CommandContext) -> [String: [(String, String)]] {
 		var memberCount: Int = 0
 		var userCount: Int = 0
 		var botCount: Int = 0
@@ -75,15 +76,19 @@ public class ServerInfoCommand: StringCommand {
 			.max { $0.1.count < $1.1.count }
 		
 		return [
-			(":tophat: Members", String(memberCount)),
-			(":speaking_head: Users", String(userCount)),
-			(":robot: Bots", String(botCount)),
-			(":speaker: Voice Channels", String(voiceChannelCount)),
-			(":pencil2: Text Channels", String(textChannelCount)),
-			(":straight_ruler: Longest Username", "`\(longestUsername)`"),
-			(":triangular_flag_on_post: Most Roles", "\(mostRoles.joined(separator: ", ")) by `\(mostRolesUsername)`"),
-			(":stopwatch: Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
-			(":video_game: Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players")
+			":tophat: Counts": [
+				("Members", String(memberCount)),
+				("Users", String(userCount)),
+				("Bots", String(botCount)),
+				("Voice Channels", String(voiceChannelCount)),
+				("Text Channels", String(textChannelCount)),
+			],
+			":triangular_flag_on_post: Highscores": [
+				("Longest Username", "`\(longestUsername)`"),
+				("Most Roles", "\(mostRoles.map { "`\($0)`" }.joined(separator: ", ")) by `\(mostRolesUsername)`"),
+				("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
+				("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) players")
+			]
 		]
 	}
 }
