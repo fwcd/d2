@@ -104,12 +104,24 @@ public class ServerInfoCommand: StringCommand {
             select count(message_id), channel_name
             from channels natural join messages
             where guild_id == ?
-            group by channel_name
+            group by channel_id
             order by count(message_id) desc
             limit 1
             """, "\(guild.id)")
                 .makeIterator().next()
                 .map { "\(($0[0] as? Int64) ?? 0) messages on channel `\(($0[1] as? String) ?? "?")`" }
+        
+        let mostMessagesSent = try? messageDB.prepare("""
+            select count(message_id), user_name
+            from messages natural join channels
+                                  join users on (user_id == author_id)
+            where channels.guild_id == ?
+            group by user_id
+            order by count(message_id) desc
+            limit 1
+            """, "\(guild.id)")
+                .makeIterator().next()
+                .map { "\(($0[0] as? Int64) ?? 0) messages by `\(($0[1] as? String) ?? "?")`" }
 
         return [
             (":island: General", [
@@ -135,7 +147,8 @@ public class ServerInfoCommand: StringCommand {
             ]),
             (":incoming_envelope: Messages", [
                 ("Longest Message", longestMessage),
-                ("Most Messaged Channel", mostMessagedChannel)
+                ("Most Messaged Channel", mostMessagedChannel),
+                ("Most Messages Sent", mostMessagesSent)
             ])
         ]
     }
