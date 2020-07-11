@@ -89,7 +89,7 @@ public class ServerInfoCommand: StringCommand {
         let mostPlayed = Dictionary(grouping: presences.filter { $0.game != nil }, by: { $0.game?.name ?? "" })
             .max { $0.1.count < $1.1.count }
 
-        let longestMessage = try! messageDB.prepare("""
+        let longestMessage = try? messageDB.prepare("""
             select content, user_name
             from messages natural join channels
                                   join users on (author_id == user_id)
@@ -98,7 +98,18 @@ public class ServerInfoCommand: StringCommand {
             limit 1
             """, "\(guild.id)")
                 .makeIterator().next()
-                .map { "`\(($0[0] as! String).truncate(100, appending: "..."))` by `\($0[1] as! String)`" }
+                .map { "`\(($0[0] as? String)?.truncate(20, appending: "...") ?? "?")` by `\(($0[1] as? String) ?? "?")`" }
+
+        let mostMessagedChannel = try? messageDB.prepare("""
+            select count(message_id), channel_name
+            from channels natural join messages
+            where guild_id == ?
+            group by channel_name
+            order by count(message_id) desc
+            limit 1
+            """, "\(guild.id)")
+                .makeIterator().next()
+                .map { "\(($0[0] as? Int64) ?? 0) messages on channel `\(($0[1] as? String) ?? "?")`" }
 
         return [
             (":island: General", [
@@ -123,7 +134,8 @@ public class ServerInfoCommand: StringCommand {
                 ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralize(with: mostPlayed?.1.count ?? 0))")
             ]),
             (":incoming_envelope: Messages", [
-                ("Longest Message", longestMessage)
+                ("Longest Message", longestMessage),
+                ("Most Messaged Channel", mostMessagedChannel)
             ])
         ]
     }
