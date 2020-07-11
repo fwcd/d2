@@ -20,7 +20,7 @@ public class UserInfoCommand: Command {
             output.append("Not on a guild.")
             return
         }
-        guard let user = input.asMentions?.first else {
+        guard let user = input.asMentions?.first ?? context.author else {
             output.append("Please mention someone!")
             return
         }
