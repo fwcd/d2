@@ -122,6 +122,17 @@ public class ServerInfoCommand: StringCommand {
             """, "\(guild.id)")
                 .makeIterator().next()
                 .map { "\(($0[0] as? Int64) ?? 0) messages by `\(($0[1] as? String) ?? "?")`" }
+        
+        let mostActiveDay = try? messageDB.prepare("""
+            select count(message_id), strftime("%Y-%m-%d", timestamp) as day
+            from messages natural join channels
+            where guild_id == ?
+            group by day
+            order by count(message_id) desc
+            limit 1
+            """, "\(guild.id)")
+                .makeIterator().next()
+                .map { "\(($0[0] as? Int64) ?? 0) messages on \(($0[1] as? String) ?? "?")" }
 
         return [
             (":island: General", [
@@ -148,7 +159,8 @@ public class ServerInfoCommand: StringCommand {
             (":incoming_envelope: Messages", [
                 ("Longest Message", longestMessage),
                 ("Most Messaged Channel", mostMessagedChannel),
-                ("Most Messages Sent", mostMessagesSent)
+                ("Most Messages Sent", mostMessagesSent),
+                ("Most Active Day", mostActiveDay)
             ])
         ]
     }
