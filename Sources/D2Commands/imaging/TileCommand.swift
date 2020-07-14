@@ -9,7 +9,7 @@ public class TileCommand: Command {
 		category: .imaging,
 		shortDescription: "Replicates the image along the x- or y-axis",
 		helpText: "Syntax: [x|y]? [number of replicas]?",
-		requiredPermissionLevel: .basic
+		requiredPermissionLevel: .vip
 	)
 	public let inputValueType: RichValueType = .compound([.text, .image])
 	public let outputValueType: RichValueType = .image
