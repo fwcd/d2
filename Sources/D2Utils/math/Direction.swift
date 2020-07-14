@@ -1,3 +1,4 @@
+/** An axis-aligned direction in the 2D-plane. */
 public enum Direction: String {
     case up
     case down
@@ -14,5 +15,8 @@ public enum Direction: String {
     }
     public var horizontal: Bool {
         self == .left || self == .right
+    }
+    public var axis: Axis {
+        horizontal ? .x : .y
     }
 }
