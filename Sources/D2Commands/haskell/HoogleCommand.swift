@@ -1,3 +1,4 @@
+import Foundation
 import Logging
 import D2MessageIO
 import D2Utils
@@ -27,8 +28,15 @@ public class HoogleCommand: StringCommand {
         HoogleQuery(term: input, count: 15).perform {
             do {
                 let searchResults = try $0.get()
+                var urlComponents = URLComponents()
+                urlComponents.scheme = "https"
+                urlComponents.host = "hoogle.haskell.org"
+                urlComponents.path = "/"
+                urlComponents.queryItems = [URLQueryItem(name: "hoogle", value: input)]
+
                 output.append(Embed(
                     title: ":closed_umbrella: Hoogle Results",
+                    url: urlComponents.url,
                     color: 0x8900b3,
                     fields: try Array(searchResults
                         .grouped(by: {
