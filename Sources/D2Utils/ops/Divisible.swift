@@ -5,4 +5,5 @@ public protocol Divisible {
 }
 
 extension Int: Divisible {}
+extension UInt: Divisible {}
 extension Double: Divisible {}

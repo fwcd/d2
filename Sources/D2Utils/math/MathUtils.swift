@@ -1,3 +1,7 @@
+import Logging
+
+fileprivate let log = Logger(label: "D2Utils.MathUtils")
+
 extension Int {
 	public func clockModulo(_ rhs: Int) -> Int {
 		return (self % rhs + rhs) % rhs
@@ -39,10 +43,25 @@ public func greatestCommonDivisor<I>(_ lhs: I, _ rhs: I) -> I where I: Expressib
 	rhs == 0 ? lhs : greatestCommonDivisor(rhs, lhs % rhs)
 }
 
+/// Computes the distance metric without risking over/underflow.
+private func distance<I>(_ x: I, _ y: I) -> I.Magnitude where I: Comparable & Subtractable & Magnitudable {
+	x < y ? (y - x).magnitude : (x - y).magnitude
+}
+
+/// Deterministically checks whether a number is prime.
+public func isPrime<I>(_ n: I) -> Bool where I: ExpressibleByIntegerLiteral & Remainderable & Divisible & Comparable & Strideable, I.Stride: SignedInteger {
+	// TODO: Use a better algorithm than trial division
+	guard n != 2, n != 3 else { return true }
+	for i in (2..<(n / 2)).reversed() {
+		guard n % i != 0 else { return false }
+	}
+	return true
+}
+
 /// Finds a nontrivial factor of the given number.
-public func integerFactor<I>(_ n: I) -> I? where I: IntExpressibleAlgebraicField & Remainderable & Magnitudable, I.Magnitude == I {
+public func integerFactor<I>(_ n: I, _ c: I = 1) -> I? where I: ExpressibleByIntegerLiteral & Addable & Multipliable & Subtractable & Divisible & Comparable & Remainderable & Magnitudable & Strideable, I.Magnitude == I, I.Stride: SignedInteger {
 	func g(_ x: I) -> I {
-		return (x * x + 1) % n
+		return (x * x + c) % n
 	}
 
 	// Pollard's rho algorithm
@@ -51,23 +70,20 @@ public func integerFactor<I>(_ n: I) -> I? where I: IntExpressibleAlgebraicField
 	var d: I = 1
 
 	while d == 1 {
-		d = g(x)
+		x = g(x)
 		y = g(g(y))
-		d = greatestCommonDivisor((x - y).magnitude, n)
+		d = greatestCommonDivisor(distance(x, y), n)
 	}
 
-	return d == n ? nil : d
+	return d == n ? (isPrime(n) ? nil : integerFactor(n, c + 1)) : d
 }
 
 /// Finds the prime factorization of the given integer.
-public func primeFactorization<I>(_ n: I) -> [I] where I: IntExpressibleAlgebraicField & Remainderable & Magnitudable, I.Magnitude == I {
-	var factors = [I]()
-	var remaining = n
-
-	while let factor = integerFactor(remaining) {
-		factors.append(factor)
-		remaining /= factor
+public func primeFactorization<I>(_ n: I) -> [I] where I: ExpressibleByIntegerLiteral & Addable & Multipliable & Subtractable & Divisible & Equatable & Comparable & Remainderable & Magnitudable & Strideable, I.Magnitude == I, I.Stride: SignedInteger {
+	log.trace("Factoring \(n)...")
+	if let factor = integerFactor(n) {
+		return primeFactorization(factor) + primeFactorization(n / factor)
+	} else {
+		return [n]
 	}
-
-	return factors
 }

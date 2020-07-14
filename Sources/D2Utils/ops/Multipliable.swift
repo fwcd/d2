@@ -5,4 +5,5 @@ public protocol Multipliable {
 }
 
 extension Int: Multipliable {}
+extension UInt: Multipliable {}
 extension Double: Multipliable {}

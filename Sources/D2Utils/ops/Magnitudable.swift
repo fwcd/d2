@@ -5,4 +5,5 @@ public protocol Magnitudable {
 }
 
 extension Int: Magnitudable {}
+extension UInt: Magnitudable {}
 extension Double: Magnitudable {}

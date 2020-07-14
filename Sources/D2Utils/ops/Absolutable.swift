@@ -5,6 +5,9 @@ public protocol Absolutable {
 extension Int: Absolutable {
     public var absolute: Double { Double(magnitude) }
 }
+extension UInt: Absolutable {
+    public var absolute: Double { Double(magnitude) }
+}
 extension Double: Absolutable {
     public var absolute: Double { magnitude }
 }

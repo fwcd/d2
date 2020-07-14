@@ -5,4 +5,5 @@ public protocol Subtractable {
 }
 
 extension Int: Subtractable {}
+extension UInt: Subtractable {}
 extension Double: Subtractable {}

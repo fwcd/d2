@@ -5,3 +5,4 @@ public protocol Remainderable {
 }
 
 extension Int: Remainderable {}
+extension UInt: Remainderable {}
