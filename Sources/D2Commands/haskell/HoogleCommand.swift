@@ -13,28 +13,28 @@ public class HoogleCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
+    private let converter = DocumentToMarkdownConverter()
     
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         HoogleQuery(term: input).perform {
-            switch $0 {
-                case let .success(results):
-                    output.append(Embed(
-                        title: ":closed_umbrella: Hoogle Results",
-                        description: results
-                            .map { """
-                                ```haskell
-                                \($0.item)
-                                ```
-                                _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
-                                \($0.docs?.replacingOccurrences(of: "\n\n", with: "\n") ?? "_no docs_")
-                                """ }
-                            .joined(separator: "\n"),
-                        color: 0x8900b3
-                    ))
-                case let .failure(error):
-                    output.append(error, errorText: "An error occurred while hoogling")
+            do {
+                let results = try $0.get()
+                output.append(Embed(
+                    title: ":closed_umbrella: Hoogle Results",
+                    description: try results
+                        .map { """
+                            ```haskell
+                            \(try self.converter.plainTextOf(htmlFragment: $0.item))
+                            ``` _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
+                            \(try $0.docs.map { try self.converter.convert(htmlFragment: $0.replacingOccurrences(of: "\n", with: "<br>")) } ?? "_no docs_")
+                            """ }
+                        .joined(separator: "\n\n"),
+                    color: 0x8900b3
+                ))
+            } catch {
+                output.append(error, errorText: "An error occurred while hoogling")
             }
         }
     }

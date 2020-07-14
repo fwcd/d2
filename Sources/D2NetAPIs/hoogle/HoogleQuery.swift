@@ -11,10 +11,9 @@ public struct HoogleQuery {
         do {
             let request = try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
                 "mode": "json",
-                "format": "text",
                 "hoogle": term,
                 "start": "1",
-                "count": "5"
+                "count": "4"
             ])
             request.fetchJSONAsync(as: [HoogleResult].self, then: then)
         } catch {

@@ -22,11 +22,16 @@ public struct DocumentToMarkdownConverter {
 	public func convert(htmlFragment: String, baseURL: URL? = nil) throws -> String {
 		try convert(SwiftSoup.parseBodyFragment(htmlFragment), baseURL: baseURL)
 	}
+
+	public func plainTextOf(htmlFragment: String) throws -> String {
+		try SwiftSoup.parseBodyFragment(htmlFragment).text()
+	}
 	
 	/** Converts an HTML element to Markdown. */
 	public func convert(_ element: Element, baseURL: URL? = nil, usedPrefixes: Set<String> = [], usedPostfixes: Set<String> = []) throws -> String {
 		var mdPrefix: String = defaultPrefix
 		var mdPostfix: String = defaultPostfix
+		var mdIfEmpty: String = ""
 		var trimContent: Bool = false
 		
 		switch element.tagName() {
@@ -49,13 +54,17 @@ public struct DocumentToMarkdownConverter {
 			case "u":
 				mdPrefix = "__"
 				mdPostfix = "__"
+			case "br":
+				mdIfEmpty = "\n"
 			case "p":
 				mdPrefix = "\n\n"
 				mdPostfix = "\n\n"
+				mdIfEmpty = "\n\n"
 				trimContent = true
 			case "pre", "tt", "code", "samp":
 				mdPrefix = "`"
 				mdPostfix = "`"
+				trimContent = true
 			case "h1", "h2", "h3", "h4", "h5", "h6":
 				mdPrefix = "\n**"
 				mdPostfix = "**\n"
@@ -91,7 +100,7 @@ public struct DocumentToMarkdownConverter {
 		}
 		
 		if content.isEmpty {
-			return ""
+			return mdIfEmpty
 		} else {
 			return "\(mdPrefix)\(content)\(mdPostfix)"
 		}
