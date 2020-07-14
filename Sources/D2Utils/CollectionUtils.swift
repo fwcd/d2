@@ -30,6 +30,14 @@ public extension Sequence {
 
 		return result
 	}
+
+	// Groups a sequence, preserving the order of the elements
+	func grouped<K>(by mapper: (Element) throws -> K) rethrows -> [(K, [Element])] where K: Hashable {
+		try Dictionary(grouping: enumerated(), by: { try mapper($0.1) })
+			.map { ($0.0, $0.1.sorted(by: ascendingComparator { $0.0 })) }
+			.sorted(by: ascendingComparator { ($0.1)[0].0 })
+			.map { ($0.0, $0.1.map(\.1)) }
+	}
 }
 
 public extension Dictionary where Key: StringProtocol, Value: StringProtocol {
