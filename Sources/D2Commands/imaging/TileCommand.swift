@@ -1,11 +1,14 @@
+import D2Utils
 import D2MessageIO
 import D2Graphics
+
+fileprivate let argsPattern = try! Regex(from: "(x|y)?\\s*(\\d+)?")
 
 public class TileCommand: Command {
 	public let info = CommandInfo(
 		category: .imaging,
-		shortDescription: "Replicates the image along the x-axis",
-		helpText: "Syntax: [number of replicas]?",
+		shortDescription: "Replicates the image along the x- or y-axis",
+		helpText: "Syntax: [x|y]? [number of replicas]?",
 		requiredPermissionLevel: .basic
 	)
 	public let inputValueType: RichValueType = .compound([.text, .image])
@@ -14,8 +17,11 @@ public class TileCommand: Command {
 	public init() {}
 	
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-		guard let text = input.asText, let replicas = text.isEmpty ? 2 : Int(text) else {
-			output.append(errorText: "The number of (tiled) replicas should be an integer!")
+		guard let text = input.asText,
+			let parsed = argsPattern.firstGroups(in: text),
+			let axis = parsed[1].isEmpty ? .x : Axis(rawValue: parsed[1]),
+			let replicas = parsed[2].isEmpty ? 2 : Int(parsed[2]) else {
+			output.append(errorText: info.helpText!)
 			return
 		}
 
@@ -23,12 +29,23 @@ public class TileCommand: Command {
 			do {
 				let width = img.width
 				let height = img.height
-				var tiled = try Image(width: width * replicas, height: height)
+				let newWidth: Int
+				let newHeight: Int
+
+				switch axis {
+					case .x: (newWidth, newHeight) = (width * replicas, height)
+					case .y: (newWidth, newHeight) = (width, height * replicas)
+				}
+
+				var tiled = try Image(width: newWidth, height: newHeight)
 				
 				for y in 0..<height {
 					for x in 0..<width {
 						for i in 0..<replicas {
-							tiled[y, x + (i * width)] = img[y, x]
+							switch axis {
+								case .x: tiled[y, x + (i * width)] = img[y, x]
+								case .y: tiled[y + (i * height), x] = img[y, x]
+							}
 						}
 					}
 				}
