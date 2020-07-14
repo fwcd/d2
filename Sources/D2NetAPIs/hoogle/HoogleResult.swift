@@ -1,4 +1,4 @@
-public struct HoogleResult: Codable {
+public struct HoogleResult: Codable, Hashable {
     public let url: String?
     public let module: NamedURL?
     public let package: NamedURL?
@@ -6,7 +6,7 @@ public struct HoogleResult: Codable {
     public let type: String?
     public let docs: String?
     
-    public struct NamedURL: Codable {
+    public struct NamedURL: Codable, Hashable {
         public let url: String
         public let name: String
         

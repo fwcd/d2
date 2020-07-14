@@ -39,10 +39,16 @@ public class HoogleCommand: StringCommand {
                                     ?? "_no docs_"
                             )
                         }).map { (key, results) in
-                            Embed.Field(name: "`\(try self.converter.plainTextOf(htmlFragment: key.item).truncate(250, appending: "..."))`", value: """
-                            _from \(results.map { "\($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")" }.truncate(3, appending: "...").joined(separator: ", "))_
-                            \(key.renderedDoc.truncate(1000, appending: "..."))
-                            """)
+                            Embed.Field(
+                                name: "`\(try self.converter.plainTextOf(htmlFragment: key.item).truncate(250, appending: "..."))`",
+                                value: """
+                                    _\(Dictionary(grouping: results, by: \.package)
+                                        .map { "\($0.key?.markdown ?? "?") \($0.value.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
+                                        .truncate(3, appending: "...")
+                                        .joined(separator: ", "))_
+                                    \(key.renderedDoc.truncate(1000, appending: "..."))
+                                    """
+                            )
                         }.prefix(4))
                 ))
             } catch {
