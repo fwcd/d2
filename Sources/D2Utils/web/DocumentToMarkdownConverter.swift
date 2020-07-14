@@ -1,16 +1,25 @@
 import Foundation
 import SwiftSoup
 
+/**
+ * Converts HTML documents into Markdown.
+ */
 public struct DocumentToMarkdownConverter {
 	private let defaultPrefix: String
 	private let defaultPostfix: String
+	private let useMultiLineCodeBlocks: Bool
+	private let codeLanguage: String?
 
 	public init(
 		defaultPrefix: String = "",
-		defaultPostfix: String = ""
+		defaultPostfix: String = "",
+		useMultiLineCodeBlocks: Bool = false,
+		codeLanguage: String? = nil
 	) {
 		self.defaultPrefix = defaultPrefix
 		self.defaultPostfix = defaultPostfix
+		self.useMultiLineCodeBlocks = useMultiLineCodeBlocks
+		self.codeLanguage = codeLanguage
 	}
 
 	/** Parses and converts a full HTML document to Markdown. */
@@ -32,7 +41,19 @@ public struct DocumentToMarkdownConverter {
 		var mdPrefix: String = defaultPrefix
 		var mdPostfix: String = defaultPostfix
 		var mdIfEmpty: String = ""
-		var trimContent: Bool = false
+		
+		var content = try element.getChildNodes().map {
+			if let childElement = $0 as? Element {
+				return try convert(childElement, baseURL: baseURL, usedPrefixes: usedPrefixes.union([mdPrefix]), usedPostfixes: usedPostfixes.union([mdPostfix]))
+			} else if let childText = ($0 as? TextNode)?.getWholeText() {
+				var trimmed = childText.trimmingCharacters(in: .whitespacesAndNewlines)
+				if childText.hasPrefix(" ") { trimmed = " \(trimmed)" }
+				if childText.hasSuffix(" ") { trimmed += " " }
+				return trimmed
+			} else {
+				return ""
+			}
+		}.joined()
 		
 		switch element.tagName() {
 			case "a":
@@ -60,11 +81,16 @@ public struct DocumentToMarkdownConverter {
 				mdPrefix = "\n\n"
 				mdPostfix = "\n\n"
 				mdIfEmpty = "\n\n"
-				trimContent = true
+				content = content.trimmingCharacters(in: .whitespacesAndNewlines)
 			case "pre", "tt", "code", "samp":
-				mdPrefix = "`"
-				mdPostfix = "`"
-				trimContent = true
+				if useMultiLineCodeBlocks && content.contains("\n") {
+					mdPrefix = "```\(codeLanguage ?? "")\n"
+					mdPostfix = "\n```"
+				} else {
+					mdPrefix = "`"
+					mdPostfix = "`"
+				}
+				content = content.trimmingCharacters(in: .whitespacesAndNewlines)
 			case "h1", "h2", "h3", "h4", "h5", "h6":
 				mdPrefix = "\n**"
 				mdPostfix = "**\n"
@@ -80,23 +106,6 @@ public struct DocumentToMarkdownConverter {
 		}
 		if usedPostfixes.contains(mdPostfix) {
 			mdPostfix = defaultPostfix
-		}
-		
-		var content = try element.getChildNodes().map {
-			if let childElement = $0 as? Element {
-				return try convert(childElement, baseURL: baseURL, usedPrefixes: usedPrefixes.union([mdPrefix]), usedPostfixes: usedPostfixes.union([mdPostfix]))
-			} else if let childText = ($0 as? TextNode)?.getWholeText() {
-				var trimmed = childText.trimmingCharacters(in: .whitespacesAndNewlines)
-				if childText.hasPrefix(" ") { trimmed = " \(trimmed)" }
-				if childText.hasSuffix(" ") { trimmed += " " }
-				return trimmed
-			} else {
-				return ""
-			}
-		}.joined()
-		
-		if trimContent {
-			content = content.trimmingCharacters(in: .whitespacesAndNewlines)
 		}
 		
 		if content.isEmpty {

@@ -13,7 +13,7 @@ public class HoogleCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    private let converter = DocumentToMarkdownConverter()
+    private let converter = DocumentToMarkdownConverter(useMultiLineCodeBlocks: true, codeLanguage: "haskell")
     
     public init() {}
     
@@ -23,15 +23,12 @@ public class HoogleCommand: StringCommand {
                 let results = try $0.get()
                 output.append(Embed(
                     title: ":closed_umbrella: Hoogle Results",
-                    description: try results
-                        .map { """
-                            ```haskell
-                            \(try self.converter.plainTextOf(htmlFragment: $0.item))
-                            ``` _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
+                    color: 0x8900b3,
+                    fields: try results
+                        .map { Embed.Field(name: "`\(try self.converter.plainTextOf(htmlFragment: $0.item))`", value: """
+                            _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
                             \(try $0.docs.map { try self.converter.convert(htmlFragment: $0.replacingOccurrences(of: "\n", with: "<br>")) } ?? "_no docs_")
-                            """ }
-                        .joined(separator: "\n\n"),
-                    color: 0x8900b3
+                            """) }
                 ))
             } catch {
                 output.append(error, errorText: "An error occurred while hoogling")
