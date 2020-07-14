@@ -48,8 +48,9 @@ public class HoogleCommand: StringCommand {
                             )
                         }).map { (key, results) in
                             let name = try self.converter.plainTextOf(htmlFragment: key.item).truncate(250, appending: "...")
-                            let modules = Dictionary(grouping: results, by: \.package)
-                                .map { "\($0.key?.markdown ?? "?") \($0.value.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
+                            let modules = results
+                                .grouped(by: \.package)
+                                .map { "\($0.0?.markdown ?? "?") \($0.1.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
                                 .truncate(3, appending: "...")
                                 .joined(separator: ", ")
                             let doc = key.renderedDoc.truncate(1000 - modules.count, appending: "...")
