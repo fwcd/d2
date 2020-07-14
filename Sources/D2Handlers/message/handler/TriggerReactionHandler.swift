@@ -6,7 +6,9 @@ public struct TriggerReactionHandler: MessageHandler {
     private let keywords: [String: String]
 
     public init(keywords: [String: String] = [
-        "hello": "👋"
+        "hello": "👋",
+        "hmmmmm": "🤔",
+        "hai": "🦈"
     ]) {
         self.keywords = keywords
     }
