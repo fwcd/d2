@@ -4,6 +4,7 @@ import D2Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.HoogleCommand")
+fileprivate let newlines = try! Regex(from: "\\n+")
 
 public class HoogleCommand: StringCommand {
     public let info = CommandInfo(
@@ -27,7 +28,7 @@ public class HoogleCommand: StringCommand {
                     fields: try results
                         .map { Embed.Field(name: "`\(try self.converter.plainTextOf(htmlFragment: $0.item))`", value: """
                             _from \($0.module?.markdown ?? "?") in \($0.package?.markdown ?? "?")_
-                            \(try $0.docs.map { try self.converter.convert(htmlFragment: $0.replacingOccurrences(of: "\n", with: "<br>")) } ?? "_no docs_")
+                            \(try $0.docs.map { try self.converter.convert(htmlFragment: newlines.replace(in: $0, with: "<br>")) } ?? "_no docs_")
                             """) }
                 ))
             } catch {
