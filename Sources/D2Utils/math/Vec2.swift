@@ -17,6 +17,10 @@ public struct Vec2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mult
 		x = value
 		y = value
 	}
+
+	public func map(_ f: (T) throws -> T) rethrows -> Vec2<T> { try Vec2(x: f(x), y: f(y)) }
+
+	public func mapBoth(_ fx: (T) throws -> T, _ fy: (T) throws -> T) rethrows -> Vec2<T> { try Vec2(x: fx(x), y: fy(y)) }
 	
 	public static func zero() -> Vec2<T> { Vec2(x: 0, y: 0) }
 
