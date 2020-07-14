@@ -14,12 +14,15 @@ public struct MentionD2Handler: MessageHandler {
     public func handleRaw(message: Message, from client: MessageClient) -> Bool {
         if let id = client.me?.id,
             message.mentions.contains(where: { $0.id == id }),
+            let messageId = message.id,
             let guildId = message.guild?.id,
             let channelId = message.channelId {
             if let answer = try? conversator.answer(input: mentionPattern.replace(in: message.content, with: ""), on: guildId) {
                 client.sendMessage(Message(content: answer), to: channelId)
-                return true
+            } else {
+                client.createReaction(for: messageId, on: channelId, emoji: "🤔")
             }
+            return true
         }
         return false
     }
