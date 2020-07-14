@@ -7,15 +7,13 @@ public struct SpinTransform: ImageTransform {
     }
 
     private let pos: Vec2<Int>?
-    private let speed: Double
 
     public init(at pos: Vec2<Int>?, kvArgs: [Key: String]) {
         self.pos = pos
-        speed = kvArgs[.speed].flatMap(Double.init) ?? 1
     }
 
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
         let centerPos = imageSize / 2
-        return (Mat2<Double>.rotation(by: speed * percent * 2.0 * .pi) * (destPos - centerPos).asDouble).floored + centerPos
+        return (Mat2<Double>.rotation(by: percent * 2.0 * .pi) * (destPos - centerPos).asDouble).floored + centerPos
     }
 }

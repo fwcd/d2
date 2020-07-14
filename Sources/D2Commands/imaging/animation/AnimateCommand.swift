@@ -86,7 +86,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                 for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")
                     var frame = try Image(width: width, height: height)
-                    let percent = Double(i) / Double(defaultFrameCount)
+                    let percent = Double(i) / Double(frameCount)
                     
                     log.debug("Rendering frame \(i)")
                     try animation.renderFrame(from: image, to: &frame, percent: percent)
