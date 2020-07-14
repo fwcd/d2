@@ -25,7 +25,7 @@ public class HoogleCommand: StringCommand {
     public init() {}
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        HoogleQuery(term: input, count: 15).perform {
+        HoogleQuery(term: input, count: 50).perform {
             do {
                 let searchResults = try $0.get()
                 var urlComponents = URLComponents()
@@ -47,15 +47,17 @@ public class HoogleCommand: StringCommand {
                                     ?? "_no docs_"
                             )
                         }).map { (key, results) in
-                            Embed.Field(
-                                name: "`\(try self.converter.plainTextOf(htmlFragment: key.item).truncate(250, appending: "..."))`",
+                            let name = try self.converter.plainTextOf(htmlFragment: key.item).truncate(250, appending: "...")
+                            let modules = Dictionary(grouping: results, by: \.package)
+                                .map { "\($0.key?.markdown ?? "?") \($0.value.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
+                                .truncate(3, appending: "...")
+                                .joined(separator: ", ")
+                            let doc = key.renderedDoc.truncate(1000 - modules.count, appending: "...")
+                            return Embed.Field(
+                                name: "`\(name)`",
                                 value: """
-                                    _\(Dictionary(grouping: results, by: \.package)
-                                        .map { "\($0.key?.markdown ?? "?") \($0.value.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
-                                        .truncate(3, appending: "...")
-                                        .joined(separator: ", ")
-                                        .truncate(max(200, 1000 - key.renderedDoc.count), appending: "..."))_
-                                    \(key.renderedDoc.truncate(800, appending: "..."))
+                                    _\(modules)_
+                                    \(doc)
                                     """
                             )
                         }.prefix(4))
