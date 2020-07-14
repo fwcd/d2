@@ -21,6 +21,6 @@ public class PrimeFactorizationCommand: StringCommand {
             output.append(errorText: "Your number should be <= \(upperLimit)!")
             return
         }
-        output.append(primeFactorization(input).map { "\($0)" }.joined(separator: " * "))
+        output.append(primeFactorization(input).sorted().map { "\($0)" }.joined(separator: " * "))
     }
 }
