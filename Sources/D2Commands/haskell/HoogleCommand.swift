@@ -53,8 +53,9 @@ public class HoogleCommand: StringCommand {
                                     _\(Dictionary(grouping: results, by: \.package)
                                         .map { "\($0.key?.markdown ?? "?") \($0.value.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
                                         .truncate(3, appending: "...")
-                                        .joined(separator: ", "))_
-                                    \(key.renderedDoc.truncate(1000, appending: "..."))
+                                        .joined(separator: ", ")
+                                        .truncate(max(200, 1000 - key.renderedDoc.count), appending: "..."))_
+                                    \(key.renderedDoc.truncate(800, appending: "..."))
                                     """
                             )
                         }.prefix(4))
