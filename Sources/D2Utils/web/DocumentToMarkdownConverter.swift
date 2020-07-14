@@ -24,9 +24,9 @@ public struct DocumentToMarkdownConverter {
 	}
 	
 	/** Converts an HTML element to Markdown. */
-	public func convert(_ element: Element, baseURL: URL? = nil) throws -> String {
-		let mdPrefix: String
-		let mdPostfix: String
+	public func convert(_ element: Element, baseURL: URL? = nil, usedPrefixes: Set<String> = [], usedPostfixes: Set<String> = []) throws -> String {
+		var mdPrefix: String = defaultPrefix
+		var mdPostfix: String = defaultPostfix
 		var trimContent: Bool = false
 		
 		switch element.tagName() {
@@ -34,13 +34,15 @@ public struct DocumentToMarkdownConverter {
 				if let href = try? element.attr("href") {
 					mdPrefix = "["
 					mdPostfix = "](\(URL(string: href, relativeTo: baseURL)?.absoluteString ?? href))"
-				} else {
-					mdPrefix = defaultPrefix
-					mdPostfix = defaultPostfix
 				}
 			case "b", "strong", "em":
-				mdPrefix = "**"
-				mdPostfix = "**"
+				if usedPrefixes.contains("**") {
+					mdPrefix = "*"
+					mdPostfix = "*"
+				} else {
+					mdPrefix = "**"
+					mdPostfix = "**"
+				}
 			case "i":
 				mdPrefix = "*"
 				mdPostfix = "*"
@@ -51,6 +53,9 @@ public struct DocumentToMarkdownConverter {
 				mdPrefix = "\n\n"
 				mdPostfix = "\n\n"
 				trimContent = true
+			case "pre", "tt", "code", "samp":
+				mdPrefix = "`"
+				mdPostfix = "`"
 			case "h1", "h2", "h3", "h4", "h5", "h6":
 				mdPrefix = "\n**"
 				mdPostfix = "**\n"
@@ -58,13 +63,19 @@ public struct DocumentToMarkdownConverter {
 				mdPrefix = (try? element.attr("alt")) ?? defaultPrefix
 				mdPostfix = defaultPostfix
 			default:
-				mdPrefix = defaultPrefix
-				mdPostfix = defaultPostfix
+				break
+		}
+
+		if usedPrefixes.contains(mdPrefix) {
+			mdPrefix = defaultPrefix
+		}
+		if usedPostfixes.contains(mdPostfix) {
+			mdPostfix = defaultPostfix
 		}
 		
 		var content = try element.getChildNodes().map {
 			if let childElement = $0 as? Element {
-				return try convert(childElement, baseURL: baseURL)
+				return try convert(childElement, baseURL: baseURL, usedPrefixes: usedPrefixes.union([mdPrefix]), usedPostfixes: usedPostfixes.union([mdPostfix]))
 			} else if let childText = ($0 as? TextNode)?.getWholeText() {
 				var trimmed = childText.trimmingCharacters(in: .whitespacesAndNewlines)
 				if childText.hasPrefix(" ") { trimmed = " \(trimmed)" }
