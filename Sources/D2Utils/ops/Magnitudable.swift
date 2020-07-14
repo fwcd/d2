@@ -6,4 +6,6 @@ public protocol Magnitudable {
 
 extension Int: Magnitudable {}
 extension UInt: Magnitudable {}
+extension UInt32: Magnitudable {}
+extension UInt64: Magnitudable {}
 extension Double: Magnitudable {}

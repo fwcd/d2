@@ -6,4 +6,6 @@ public protocol Addable {
 
 extension Int: Addable {}
 extension UInt: Addable {}
+extension UInt32: Addable {}
+extension UInt64: Addable {}
 extension Double: Addable {}

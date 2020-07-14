@@ -6,4 +6,6 @@ public protocol Multipliable {
 
 extension Int: Multipliable {}
 extension UInt: Multipliable {}
+extension UInt32: Multipliable {}
+extension UInt64: Multipliable {}
 extension Double: Multipliable {}

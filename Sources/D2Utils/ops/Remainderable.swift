@@ -6,3 +6,5 @@ public protocol Remainderable {
 
 extension Int: Remainderable {}
 extension UInt: Remainderable {}
+extension UInt32: Remainderable {}
+extension UInt64: Remainderable {}

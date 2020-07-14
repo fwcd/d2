@@ -6,4 +6,6 @@ public protocol Subtractable {
 
 extension Int: Subtractable {}
 extension UInt: Subtractable {}
+extension UInt32: Subtractable {}
+extension UInt64: Subtractable {}
 extension Double: Subtractable {}

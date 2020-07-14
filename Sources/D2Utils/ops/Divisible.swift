@@ -6,4 +6,6 @@ public protocol Divisible {
 
 extension Int: Divisible {}
 extension UInt: Divisible {}
+extension UInt32: Divisible {}
+extension UInt64: Divisible {}
 extension Double: Divisible {}
