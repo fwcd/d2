@@ -35,6 +35,13 @@ public func **(lhs: Int, rhs: Int) -> Int {
 	return result
 }
 
+infix operator %%: MultiplicationPrecedence
+
+/// Computes the floor modulus. Useful for cyclic indexing.
+public func %%(lhs: Int, rhs: Int) -> Int {
+	(lhs % rhs + rhs) % rhs
+}
+
 public func leastCommonMultiple<I>(_ lhs: I, _ rhs: I) -> I where I: ExpressibleByIntegerLiteral & Multipliable & Equatable & Divisible & Remainderable {
 	(lhs * rhs) / greatestCommonDivisor(lhs, rhs)
 }
