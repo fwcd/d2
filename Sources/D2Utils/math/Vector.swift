@@ -24,42 +24,42 @@ public struct Vector<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mu
     public func zip<U, R>(_ rhs: Vector<U>, _ zipper: (T, U) throws -> R) rethrows -> Vector<R> where U: IntExpressibleAlgebraicField, R: IntExpressibleAlgebraicField {
         Vector<R>(try Swift.zip(values, rhs.values).map(zipper))
     }
+
+	public mutating func mapInPlace(_ transform: (T) throws -> T) rethrows {
+        values = try values.map(transform)
+    }
+
+	public mutating func zipInPlace<U>(_ rhs: Vector<U>, _ zipper: (T, U) throws -> T) rethrows where U: IntExpressibleAlgebraicField {
+        values = try Swift.zip(values, rhs.values).map(zipper)
+    }
 	
-	public static func +(lhs: Self, rhs: Self) -> Self {
-		lhs.zip(rhs, +)
-	}
+	public static func +(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, +) }
 	
-	public static func -(lhs: Self, rhs: Self) -> Self {
-		lhs.zip(rhs, -)
-	}
+	public static func -(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, -) }
 	
-	public static func *(lhs: Self, rhs: Self) -> Self {
-		lhs.zip(rhs, *)
-	}
+	public static func *(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, *) }
 	
-	public static func /(lhs: Self, rhs: Self) -> Self {
-		lhs.zip(rhs, /)
-	}
+	public static func /(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, /) }
 	
-	public static func *(lhs: Self, rhs: T) -> Self {
-		lhs.map { $0 * rhs }
-	}
+	public static func *(lhs: Self, rhs: T) -> Self { lhs.map { $0 * rhs } }
 	
-	public static func /(lhs: Self, rhs: T) -> Self {
-		lhs.map { $0 / rhs }
-	}
+	public static func /(lhs: Self, rhs: T) -> Self { lhs.map { $0 / rhs } }
 		
-	public static func *(lhs: T, rhs: Self) -> Self {
-		rhs.map { lhs * $0 }
-	}
+	public static func *(lhs: T, rhs: Self) -> Self { rhs.map { lhs * $0 } }
 	
-	public static func /(lhs: T, rhs: Self) -> Self {
-		rhs.map { lhs / $0 }
-	}
+	public static func /(lhs: T, rhs: Self) -> Self { rhs.map { lhs / $0 } }
 	
-	public prefix static func -(operand: Self) -> Self {
-		operand.map { -$0 }
-	}
+	public prefix static func -(operand: Self) -> Self { operand.map { -$0 } }
+
+	public static func +=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, +) }
+
+	public static func -=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, -) }
+
+	public static func *=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, *) }
+
+	public static func /=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, /) }
+
+	public mutating func negate() { mapInPlace { -$0 } }
 	
 	public func dot(_ other: Self) -> T {
 		(self * other).values.reduce(0, +)

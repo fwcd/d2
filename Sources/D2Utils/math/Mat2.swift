@@ -3,11 +3,11 @@ import Foundation
 /**
  * A linear transformation in 2D euclidean space.
  */
-public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hashable, CustomStringConvertible {
-    public let ix: T
-    public let jx: T
-    public let iy: T
-    public let jy: T
+public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Negatable, Hashable, CustomStringConvertible {
+    public var ix: T
+    public var jx: T
+    public var iy: T
+    public var jy: T
 
     public var determinant: T { (ix * jy) - (jx * iy) }
     public var inverse: Mat2<T>? {
@@ -84,6 +84,42 @@ public struct Mat2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hash
     
     public static func /(lhs: Mat2<T>, rhs: Mat2<T>) -> Mat2<T>? {
         rhs.inverse.map { lhs * $0 }
+    }
+
+    public static prefix func -(operand: Mat2<T>) -> Mat2<T> {
+        Mat2(
+            ix: -operand.ix, jx: -operand.jx,
+            iy: -operand.iy, jy: -operand.jy
+        )
+    }
+
+    public static func +=(lhs: inout Mat2<T>, rhs: Mat2<T>) {
+        lhs.ix += rhs.ix
+        lhs.iy += rhs.iy
+        lhs.jx += rhs.jx
+        lhs.jy += rhs.jy
+    }
+
+    public static func -=(lhs: inout Mat2<T>, rhs: Mat2<T>) {
+        lhs.ix -= rhs.ix
+        lhs.iy -= rhs.iy
+        lhs.jx -= rhs.jx
+        lhs.jy -= rhs.jy
+    }
+
+    public static func *=(lhs: inout Mat2<T>, rhs: Mat2<T>) {
+        let product = lhs * rhs
+        lhs.ix = product.ix
+        lhs.iy = product.iy
+        lhs.jx = product.jx
+        lhs.jy = product.jy
+    }
+
+    public mutating func negate() {
+        ix.negate()
+        iy.negate()
+        jx.negate()
+        jy.negate()
     }
 }
 

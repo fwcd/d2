@@ -1,7 +1,7 @@
 /// A multidimensional, rectangular, numeric array.
 /// Generalization of a matrix/vector/scalar and
 /// sometimes referred to as 'tensor'.
-public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Hashable, CustomStringConvertible {
+public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Negatable, Hashable, CustomStringConvertible {
     public var values: [T] {
         didSet { assert(shape.reduce(1, *) == values.count) }
     }
@@ -103,40 +103,49 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, H
         return values.chunks(ofLength: shape[0]).map { try! NDArray($0, shape: innerShape) }
     }
 
-    public func map<U>(_ f: (T) -> U) -> NDArray<U> where U: IntExpressibleAlgebraicField {
-        try! NDArray<U>(values.map(f), shape: shape)
+    public func map<U>(_ f: (T) throws -> U) rethrows -> NDArray<U> where U: IntExpressibleAlgebraicField {
+        try! NDArray<U>(try values.map(f), shape: shape)
     }
     
-    public func zip<U>(_ rhs: NDArray<T>, with f: (T, T) -> U) throws -> NDArray<U> where U: IntExpressibleAlgebraicField {
+    public func zip<U>(_ rhs: NDArray<T>, with f: (T, T) throws -> U) throws -> NDArray<U> where U: IntExpressibleAlgebraicField {
         guard shape == rhs.shape else {
             throw NDArrayError.shapeMismatch("Cannot zip two differently shaped NDArrays: \(shape), \(rhs.shape)")
         }
-        var zipped = [U](repeating: 0, count: values.count)
-        for i in 0..<zipped.count {
-            zipped[i] = f(values[i], rhs.values[i])
+        return try! NDArray<U>(try Swift.zip(values, rhs.values).map(f), shape: shape)
+    }
+
+    public mutating func mapInPlace(_ f: (T) throws -> T) rethrows {
+        values = try values.map(f)
+    }
+
+    public mutating func zipInPlace(_ rhs: NDArray<T>, with f: (T, T) throws -> T) throws {
+        guard shape == rhs.shape else {
+            throw NDArrayError.shapeMismatch("Cannot zip two differently shaped NDArrays: \(shape), \(rhs.shape)")
         }
-        return try! NDArray<U>(zipped, shape: shape)
+        values = try Swift.zip(values, rhs.values).map(f)
     }
 
-    public static func +(lhs: Self, rhs: Self) -> Self {
-        try! lhs.zip(rhs, with: +)
-    }
+    public static func +(lhs: Self, rhs: Self) -> Self { try! lhs.zip(rhs, with: +) }
 
-    public static func -(lhs: Self, rhs: Self) -> Self {
-        try! lhs.zip(rhs, with: -)
-    }
+    public static func -(lhs: Self, rhs: Self) -> Self { try! lhs.zip(rhs, with: -) }
 
-    public static func *(lhs: Self, rhs: T) -> Self {
-        lhs.map { $0 * rhs }
-    }
+    public static func *(lhs: Self, rhs: T) -> Self { lhs.map { $0 * rhs } }
 
-    public static func /(lhs: Self, rhs: T) -> Self {
-        lhs.map { $0 / rhs }
-    }
+    public static func /(lhs: Self, rhs: T) -> Self { lhs.map { $0 / rhs } }
 
-    public static func *(lhs: T, rhs: Self) -> Self {
-        rhs.map { lhs * $0 }
-    }
+    public static func *(lhs: T, rhs: Self) -> Self { rhs.map { lhs * $0 } }
+
+    public static prefix func -(operand: Self) -> Self { operand.map { -$0 } }
+
+    public static func +=(lhs: inout Self, rhs: Self) { try! lhs.zipInPlace(rhs, with: +) }
+
+    public static func -=(lhs: inout Self, rhs: Self) { try! lhs.zipInPlace(rhs, with: -) }
+
+    public static func *=(lhs: inout Self, rhs: Self) { try! lhs.zipInPlace(rhs, with: *) }
+
+    public static func /=(lhs: inout Self, rhs: Self) { try! lhs.zipInPlace(rhs, with: /) }
+
+    public mutating func negate() { mapInPlace { -$0 } }
 
     public func dot(_ rhs: Self) throws -> T {
         try zip(rhs, with: *).values.reduce(0, +)

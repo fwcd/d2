@@ -85,4 +85,8 @@ public enum RichValue: Addable {
 			return .of(values: lhs.values + rhs.values)
 		}
 	}
+
+	public static func +=(lhs: inout RichValue, rhs: RichValue) {
+		lhs = lhs + rhs
+	}
 }

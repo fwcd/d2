@@ -189,34 +189,34 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         }
     }
     
-    public func map<U>(_ f: (T) -> U) -> Matrix<U> where U: IntExpressibleAlgebraicField {
-        Matrix<U>(width: width, height: height, values: values.map(f))
+    public func map<U>(_ f: (T) throws -> U) rethrows -> Matrix<U> where U: IntExpressibleAlgebraicField {
+        Matrix<U>(width: width, height: height, values: try values.map(f))
     }
     
-    public func zip<U>(_ rhs: Matrix<T>, with f: (T, T) -> U) -> Matrix<U> where U: IntExpressibleAlgebraicField {
+    public func zip<U>(_ rhs: Matrix<T>, with f: (T, T) throws -> U) rethrows -> Matrix<U> where U: IntExpressibleAlgebraicField {
         assert(width == rhs.width && height == rhs.height)
         var zipped = [U](repeating: 0, count: values.count)
         for i in 0..<zipped.count {
-            zipped[i] = f(values[i], rhs.values[i])
+            zipped[i] = try f(values[i], rhs.values[i])
         }
         return Matrix<U>(width: width, height: height, values: zipped)
     }
-    
-    public static func +(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
-        lhs.zip(rhs, with: +)
+
+    public mutating func mapInPlace(_ f: (T) throws -> T) rethrows {
+        values = try values.map(f)
     }
 
-    public static func -(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
-        lhs.zip(rhs, with: -)
+    public mutating func zipInPlace(_ rhs: Matrix<T>, with f: (T, T) throws -> T) rethrows {
+        values = try Swift.zip(values, rhs.values).map(f)
     }
     
-    public static func *(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
-        lhs.map { $0 * rhs }
-    }
+    public static func +(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> { lhs.zip(rhs, with: +) }
+
+    public static func -(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> { lhs.zip(rhs, with: -) }
     
-    public static func *(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
-        rhs * lhs
-    }
+    public static func *(lhs: Matrix<T>, rhs: T) -> Matrix<T> { lhs.map { $0 * rhs } }
+    
+    public static func *(lhs: T, rhs: Matrix<T>) -> Matrix<T> { rhs * lhs }
     
     public static func *(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
         assert(lhs.width == rhs.height)
@@ -231,6 +231,15 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             }
         }
         return product
+    }
+
+    public static func +=(lhs: inout Matrix<T>, rhs: Matrix<T>) { lhs.zipInPlace(rhs, with: +) }
+
+    public static func -=(lhs: inout Matrix<T>, rhs: Matrix<T>) { lhs.zipInPlace(rhs, with: -) }
+
+    public static func *=(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+        assert(lhs.width == rhs.width && lhs.height == rhs.height && lhs.width == lhs.height)
+        lhs.values = (lhs * rhs).values
     }
     
     public struct Row: Sequence {

@@ -18,36 +18,45 @@ public struct Vec2<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mult
 		y = value
 	}
 	
-	public static func zero() -> Vec2<T> {
-		Vec2(x: 0, y: 0)
-	}
+	public static func zero() -> Vec2<T> { Vec2(x: 0, y: 0) }
+
+	public static func +(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> { Vec2(x: lhs.x + rhs.x, y: lhs.y + rhs.y) }
 	
-	public static func +(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
-		Vec2(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
-	}
+	public static func -(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> { Vec2(x: lhs.x - rhs.x, y: lhs.y - rhs.y) }
 	
-	public static func -(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
-		Vec2(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
-	}
+	public static func *(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> { Vec2(x: lhs.x * rhs.x, y: lhs.y * rhs.y) }
 	
-	public static func *(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
-		Vec2(x: lhs.x * rhs.x, y: lhs.y * rhs.y)
-	}
+	public static func /(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> { Vec2(x: lhs.x / rhs.x, y: lhs.y / rhs.y) }
 	
-	public static func /(lhs: Vec2<T>, rhs: Vec2<T>) -> Vec2<T> {
-		Vec2(x: lhs.x / rhs.x, y: lhs.y / rhs.y)
-	}
+	public static func *(lhs: Vec2<T>, rhs: T) -> Vec2<T> { Vec2(x: lhs.x * rhs, y: lhs.y * rhs) }
 	
-	public static func *(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
-		Vec2(x: lhs.x * rhs, y: lhs.y * rhs)
-	}
+	public static func /(lhs: Vec2<T>, rhs: T) -> Vec2<T> { Vec2(x: lhs.x / rhs, y: lhs.y / rhs) }
 	
-	public static func /(lhs: Vec2<T>, rhs: T) -> Vec2<T> {
-		Vec2(x: lhs.x / rhs, y: lhs.y / rhs)
+	public prefix static func -(operand: Vec2<T>) -> Vec2<T> { Vec2(x: -operand.x, y: -operand.y) }
+
+	public static func +=(lhs: inout Vec2<T>, rhs: Vec2<T>) {
+		lhs.x += rhs.x
+		lhs.y += rhs.y
 	}
-	
-	public prefix static func -(operand: Vec2<T>) -> Vec2<T> {
-		Vec2(x: -operand.x, y: -operand.y)
+
+	public static func -=(lhs: inout Vec2<T>, rhs: Vec2<T>) {
+		lhs.x -= rhs.x
+		lhs.y -= rhs.y
+	}
+
+	public static func *=(lhs: inout Vec2<T>, rhs: Vec2<T>) {
+		lhs.x *= rhs.x
+		lhs.y *= rhs.y
+	}
+
+	public static func /=(lhs: inout Vec2<T>, rhs: Vec2<T>) {
+		lhs.x /= rhs.x
+		lhs.y /= rhs.y
+	}
+
+	public mutating func negate() {
+		x.negate()
+		y.negate()
 	}
 	
 	public func dot(_ other: Vec2<T>) -> T {
