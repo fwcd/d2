@@ -127,6 +127,7 @@ public class D2Delegate: MessageDelegate {
 		registry["dblp"] = DBLPCommand()
 		registry["gitlab"] = GitLabCommand()
 		registry["perceptron"] = PerceptronCommand()
+		registry["fizzbuzz"] = FizzBuzzCommand()
 		registry["tictactoe"] = GameCommand<TicTacToeGame>()
 		registry["uno"] = GameCommand<UnoGame>()
 		registry["hangman"] = GameCommand<HangmanGame>()
