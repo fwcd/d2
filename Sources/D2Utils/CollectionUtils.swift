@@ -56,9 +56,9 @@ public func allNonNil<T>(_ array: [T?]) -> [T]? where T: Equatable {
 }
 
 public extension Array {
-	func truncate(_ length: Int) -> [Element] {
+	func truncate(_ length: Int, appending appended: Element? = nil) -> [Element] {
 		if count > length {
-			return Array(prefix(length))
+			return appended.map { prefix(length - 1) + [$0] } ?? Array(prefix(length))
 		} else {
 			return self
 		}

@@ -2,9 +2,11 @@ import D2Utils
 
 public struct HoogleQuery {
     private let term: String
+    private let count: Int
     
-    public init(term: String) {
+    public init(term: String, count: Int = 4) {
         self.term = term
+        self.count = count
     }
     
     public func perform(then: @escaping (Result<[HoogleResult], Error>) -> Void) {
@@ -13,7 +15,7 @@ public struct HoogleQuery {
                 "mode": "json",
                 "hoogle": term,
                 "start": "1",
-                "count": "4"
+                "count": "\(count)"
             ])
             request.fetchJSONAsync(as: [HoogleResult].self, then: then)
         } catch {
