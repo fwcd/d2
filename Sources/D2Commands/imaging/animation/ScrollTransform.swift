@@ -18,7 +18,7 @@ public struct ScrollTransform: ImageTransform {
     }
     
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
-        (destPos + (direction.asUnitVector * speed * Int(Double(direction.horizontal ? imageSize.x : imageSize.y) * percent)))
+        (destPos - (direction.asUnitVector * speed * Int(Double(direction.horizontal ? imageSize.x : imageSize.y) * percent)))
             .mapBoth({ $0 %% imageSize.x }, { $0 %% imageSize.y })
     }
 }
