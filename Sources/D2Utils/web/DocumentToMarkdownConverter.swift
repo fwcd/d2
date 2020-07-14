@@ -1,11 +1,30 @@
 import Foundation
 import SwiftSoup
 
-struct DocumentToMarkdownConverter {
-	private let defaultPrefix = ""
-	private let defaultPostfix = ""
+public struct DocumentToMarkdownConverter {
+	private let defaultPrefix: String
+	private let defaultPostfix: String
+
+	public init(
+		defaultPrefix: String = "",
+		defaultPostfix: String = ""
+	) {
+		self.defaultPrefix = defaultPrefix
+		self.defaultPostfix = defaultPostfix
+	}
+
+	/** Parses and converts a full HTML document to Markdown. */
+	public func convert(htmlDocument: String, baseURL: URL? = nil) throws -> String {
+		try convert(SwiftSoup.parse(htmlDocument), baseURL: baseURL)
+	}
+
+	/** Parses and converts an HTML snippet to Markdown. */
+	public func convert(htmlFragment: String, baseURL: URL? = nil) throws -> String {
+		try convert(SwiftSoup.parseBodyFragment(htmlFragment), baseURL: baseURL)
+	}
 	
-	func convert(_ element: Element, baseURL: URL) throws -> String {
+	/** Converts an HTML element to Markdown. */
+	public func convert(_ element: Element, baseURL: URL? = nil) throws -> String {
 		let mdPrefix: String
 		let mdPostfix: String
 		var trimContent: Bool = false
