@@ -30,7 +30,8 @@ public class HoogleCommand: StringCommand {
                 output.append(Embed(
                     title: ":closed_umbrella: Hoogle Results",
                     color: 0x8900b3,
-                    fields: Array(try Dictionary(grouping: searchResults, by: {
+                    fields: try Array(searchResults
+                        .grouped(by: {
                             HoogleResultKey(
                                 item: $0.item,
                                 renderedDoc: try $0.docs
