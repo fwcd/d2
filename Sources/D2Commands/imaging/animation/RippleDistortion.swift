@@ -5,6 +5,6 @@ public struct RippleDistortion: RadialDistortion {
     
     public func sourceDist(from normalizedDestDist: Double, percent: Double) -> Double {
         let x = normalizedDestDist
-        return x + (percent * x * sin(40 * x))
+        return x + percent * x * sin(40 * x)
     }
 }

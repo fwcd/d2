@@ -15,10 +15,12 @@ public struct RadialTransform<R>: ImageTransform where R: RadialDistortion {
     
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
         let center = pos ?? (imageSize / 2)
-        let delta = (destPos - center).asDouble
+        let intDelta = destPos - center
+        guard intDelta != .zero() else { return center }
+        let delta = intDelta.asDouble
         let scaleFactor = scale / Double(imageSize.y)
         let normalizedDestDist = delta.magnitude * scaleFactor
         let normalizedSourceDist = max(-10000, min(10000, R.init().sourceDist(from: normalizedDestDist, percent: percent)))
-        return center + (delta * normalizedSourceDist).floored
+        return center + (delta.normalized * normalizedSourceDist * Double(imageSize.y)).floored
     }
 }

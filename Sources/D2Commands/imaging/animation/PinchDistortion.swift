@@ -4,6 +4,6 @@ public struct PinchDistortion: RadialDistortion {
     public init() {}
     
     public func sourceDist(from normalizedDestDist: Double, percent: Double) -> Double {
-        pow(normalizedDestDist, -percent)
+        pow(normalizedDestDist, 1 - percent)
     }
 }
