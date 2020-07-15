@@ -1,7 +1,7 @@
 import D2MessageIO
 import D2Graphics
 
-public class InvertCommand: Command {
+public class InvertColorsCommand: Command {
 	public let info = CommandInfo(
 		category: .imaging,
 		shortDescription: "Inverts an image",

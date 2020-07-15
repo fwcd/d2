@@ -1,7 +1,7 @@
 import D2MessageIO
 import D2Graphics
 
-public class ScaleCommand: Command {
+public class ScaleImageCommand: Command {
 	public let info = CommandInfo(
 		category: .imaging,
 		shortDescription: "Scales an image by a factor",
