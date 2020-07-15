@@ -12,7 +12,7 @@ public class PianoScaleCommand: StringCommand {
         // TODO
         do {
             let c = try Note(of: "C3")
-            let image = try PianoRenderer(range: Range(c...(c + .octave))).render(scale: DiatonicMajorScale(key: Note(of: "C2")))
+            let image = try PianoRenderer(range: Range(c...(c + .octave + .octave))).render(scale: DiatonicMajorScale(key: Note(of: "C2")))
             try output.append(image)
         } catch {
             output.append(error, errorText: "Could not render scale.")
