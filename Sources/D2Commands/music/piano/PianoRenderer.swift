@@ -47,7 +47,7 @@ struct PianoRenderer: ScaleRenderer {
                 rectangle = Rectangle(fromX: Double(x - (blackKeyWidth / 2)), y: 0, width: Double(blackKeyWidth), height: Double(blackKeyHeight), color: Colors.black, isFilled: true)
             }
 
-            if scaleSemitones.contains(note.semitone) {
+            if !scaleSemitones.contains(note.semitone) {
                 rectangle.color = rectangle.color.with(alpha: rectangle.color.alpha / 2)
             }
 
