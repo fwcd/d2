@@ -31,11 +31,13 @@ fileprivate let twelveToneOctave: [[UnoctavedNote]] = [
  */
 fileprivate let notePattern = try! Regex(from: "([a-zA-Z])([b#]?)(\\d+)?")
 
-struct Note: Hashable, CustomStringConvertible {
+struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
 	let letter: NoteLetter
 	let octave: Int? // The octave in scientific pitch notation
 	let accidental: Accidental
 	let semitone: Int // Semitones in an octave
+
+	var numValue: Int { ((octave ?? 0) * twelveToneOctave.count) + semitone }
 	var description: String { return "\("\(letter)".uppercased())\(accidental.rawValue)\(octave.map { String($0) } ?? "")" }
 	
 	private init(letter: NoteLetter, accidental: Accidental, semitone: Int, octave: Int? = nil) {
@@ -43,6 +45,17 @@ struct Note: Hashable, CustomStringConvertible {
 		self.octave = octave
 		self.accidental = accidental
 		self.semitone = semitone.clockModulo(twelveToneOctave.count)
+	}
+
+	init(numValue: Int) {
+		assert(numValue >= 0) // TODO: Investigate supporting negative numValues by using floor/clock modulo and division
+
+		let enharmonics = twelveToneOctave[numValue.clockModulo(twelveToneOctave.count)]
+		guard let enharmonic = enharmonics.first else { fatalError("No enharmonic found") }
+		letter = enharmonic.letter
+		accidental = enharmonic.accidental
+		octave = numValue / twelveToneOctave.count
+		semitone = numValue % twelveToneOctave.count
 	}
 	
 	init(of str: String) throws {
@@ -81,5 +94,13 @@ struct Note: Hashable, CustomStringConvertible {
 	func matches(_ rhs: Note) -> Bool {
 		return (semitone == rhs.semitone)
 			&& (octave == nil || rhs.octave == nil || octave == rhs.octave)
+	}
+
+	func advanced(by n: Int) -> Note {
+		Note(numValue: numValue + n)
+	}
+
+	func distance(to n: Note) -> Int {
+		n.numValue - numValue
 	}
 }
