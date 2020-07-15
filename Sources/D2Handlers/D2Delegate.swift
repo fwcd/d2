@@ -152,6 +152,7 @@ public class D2Delegate: MessageDelegate {
 		registry["pinch"] = AnimateCommand<TransformAnimation<RadialTransform<PinchDistortion>>>(description: "Applies an inverse bump distortion effect")
 		registry["wobble"] = AnimateCommand<TransformAnimation<RadialTransform<WobbleDistortion>>>(description: "Applies a wobbling distortion effect")
 		registry["warp"] = AnimateCommand<TransformAnimation<RadialTransform<WarpDistortion>>>(description: "Applies a warp distortion effect")
+		registry["ripple"] = AnimateCommand<TransformAnimation<RadialTransform<RippleDistortion>>>(description: "Applies a rippling distortion effect")
 		registry["squiggle"] = AnimateCommand<TransformAnimation<SquiggleTransform>>(description: "Applies a 'squiggling' distortion effect")
 		registry["bounce"] = AnimateCommand<TransformAnimation<BounceTransform>>(description: "Slides the image up and down smoothly")
 		registry["scroll"] = AnimateCommand<TransformAnimation<ScrollTransform>>(description: "Slides the image into a direction (by default to the right) with linear speed")
