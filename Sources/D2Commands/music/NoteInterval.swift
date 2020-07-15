@@ -9,6 +9,7 @@ struct NoteInterval {
 	static let minorThird = NoteInterval(degrees: 2, semitones: 3)
 	static let majorThird = NoteInterval(degrees: 2, semitones: 4)
 	static let perfectFourth = NoteInterval(degrees: 3, semitones: 5)
+	static let diminishedFifth = NoteInterval(degrees: 4, semitones: 6)
 	static let perfectFifth = NoteInterval(degrees: 4, semitones: 7)
 	static let minorSixth = NoteInterval(degrees: 5, semitones: 8)
 	static let majorSixth = NoteInterval(degrees: 5, semitones: 9)
