@@ -1,12 +1,12 @@
 import D2Utils
 
 public struct Rectangle<T: IntExpressibleAlgebraicField> {
-	public let topLeft: Vec2<T>
-	public let size: Vec2<T>
-	public let color: Color
-	public let isFilled: Bool
-	public let rotation: T?
-	public let cornerRadius: T?
+	public var topLeft: Vec2<T>
+	public var size: Vec2<T>
+	public var color: Color
+	public var isFilled: Bool
+	public var rotation: T?
+	public var cornerRadius: T?
 	
 	public var topRight: Vec2<T> { return topLeft + Vec2(x: size.x, y: 0) }
 	public var bottomLeft: Vec2<T> { return topLeft + Vec2(x: 0, y: size.y) }

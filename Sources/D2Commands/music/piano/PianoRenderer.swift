@@ -26,6 +26,8 @@ struct PianoRenderer: ScaleRenderer {
     }
 
 	func render(scale: Scale) throws -> Image {
+        let scaleSemitones = Set(scale.notes.map(\.semitone))
+
         let whiteKeyCount = range.count(forWhich: { $0.accidental == .none })
         let width = whiteKeyWidth * whiteKeyCount + whiteKeyPadding * (whiteKeyCount - 1)
         let image = try Image(width: width, height: whiteKeyHeight)
@@ -35,11 +37,24 @@ struct PianoRenderer: ScaleRenderer {
         var x = 0
 
         for note in range {
-            if note.accidental == .none {
-                whiteKeys.append(Rectangle(fromX: Double(x), y: 0, width: Double(whiteKeyWidth), height: Double(whiteKeyHeight), color: Colors.white, isFilled: true))
+            let isWhite = note.accidental == .none
+            var rectangle: Rectangle<Double>
+
+            if isWhite {
+                rectangle = Rectangle(fromX: Double(x), y: 0, width: Double(whiteKeyWidth), height: Double(whiteKeyHeight), color: Colors.white, isFilled: true)
                 x += whiteKeyWidth + whiteKeyPadding
             } else {
-                blackKeys.append(Rectangle(fromX: Double(x - (blackKeyWidth / 2)), y: 0, width: Double(blackKeyWidth), height: Double(blackKeyHeight), color: Colors.black, isFilled: true))
+                rectangle = Rectangle(fromX: Double(x - (blackKeyWidth / 2)), y: 0, width: Double(blackKeyWidth), height: Double(blackKeyHeight), color: Colors.black, isFilled: true)
+            }
+
+            if scaleSemitones.contains(note.semitone) {
+                rectangle.color = rectangle.color.with(alpha: rectangle.color.alpha / 2)
+            }
+
+            if isWhite {
+                whiteKeys.append(rectangle)
+            } else {
+                blackKeys.append(rectangle)
             }
         }
 

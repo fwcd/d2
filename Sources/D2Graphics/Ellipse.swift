@@ -1,11 +1,11 @@
 import D2Utils
 
 public struct Ellipse<T: IntExpressibleAlgebraicField> {
-	public let center: Vec2<T>
-	public let radius: Vec2<T>
-	public let color: Color
-	public let isFilled: Bool
-	public let rotation: T
+	public var center: Vec2<T>
+	public var radius: Vec2<T>
+	public var color: Color
+	public var isFilled: Bool
+	public var rotation: T
 	
 	public init(
 		center: Vec2<T> = Vec2(x: 0, y: 0),
