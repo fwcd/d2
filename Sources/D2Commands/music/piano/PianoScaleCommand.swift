@@ -3,7 +3,9 @@ import D2Utils
 fileprivate let argsPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\w+[b#]?)")
 fileprivate let scales: [String: (Note) -> Scale] = [
     "major": DiatonicMajorScale.init,
-    "minor": DiatonicMinorScale.init
+    "minor": DiatonicMinorScale.init,
+    "blues": BluesScale.init,
+    "pentatonic": PentatonicScale.init
 ]
 
 public class PianoScaleCommand: StringCommand {
