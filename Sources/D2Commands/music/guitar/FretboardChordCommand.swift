@@ -33,7 +33,7 @@ public class FretboardChordCommand: StringCommand {
 			let rawInstrument = parsedArgs[2].lowercased().nilIfEmpty ?? "guitar"
 
 			// Parse chord and render image
-			let chord = try Triad(of: rawChord)
+			let chord = try CommonChord(of: rawChord)
 			guard let fretboard = fretboards[rawInstrument] else {
 				output.append(errorText: "Unknown instrument `\(rawInstrument)`, try one of these: `\(fretboards.keys.joined(separator: ", "))`")
 				return

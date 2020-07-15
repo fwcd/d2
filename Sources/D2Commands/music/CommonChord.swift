@@ -15,7 +15,8 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0
  */
 fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
 
-struct Triad: Chord, Hashable, CustomStringConvertible {
+/// A triad or power chord.
+struct CommonChord: Chord, Hashable, CustomStringConvertible {
 	let notes: [Note]
 	var description: String { return notes.description }
 	
@@ -33,24 +34,24 @@ struct Triad: Chord, Hashable, CustomStringConvertible {
 			case 11:
 				additionalNotes.insert(root + .perfectEleventh, at: 0)
 				if add {
-					self.init(triad: root, isMinor: isMinor, with: additionalNotes)
+					self.init(CommonChord: root, isMinor: isMinor, with: additionalNotes)
 				} else { fallthrough }
 			case 9:
 				additionalNotes.insert(root + (isMinor ? .minorNinth : .majorNinth), at: 0)
 				if add {
-					self.init(triad: root, isMinor: isMinor, with: additionalNotes)
+					self.init(CommonChord: root, isMinor: isMinor, with: additionalNotes)
 				} else { fallthrough }
 			case 7:
 				additionalNotes.insert(root + (isMajor ? .majorSeventh : .minorSeventh), at: 0)
-				self.init(triad: root, isMinor: isMinor, with: additionalNotes)
+				self.init(CommonChord: root, isMinor: isMinor, with: additionalNotes)
 			case 5:
 				self.init(powerChord: root)
 			default:
-				self.init(triad: root, isMinor: isMinor)
+				self.init(CommonChord: root, isMinor: isMinor)
 		}
 	}
 	
-	init(triad root: Note, isMinor: Bool = false, with additionalNotes: [Note] = []) {
+	init(CommonChord root: Note, isMinor: Bool = false, with additionalNotes: [Note] = []) {
 		notes = [root, root + (isMinor ? .minorThird : .majorThird), root + .perfectFifth] + additionalNotes
 	}
 	
