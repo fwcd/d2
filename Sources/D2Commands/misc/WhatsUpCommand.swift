@@ -17,11 +17,11 @@ public class WhatsUpCommand: StringCommand {
         }
         let memberPresences = guild.presences.compactMap { (id, p) in guild.members[id].flatMap { ($0, p) } }
         output.append(Embed(
-            title: ":confetti_ball: Currently Active",
+            title: ":circus_tent: Currently Active",
             fields: [
                 embedFieldsOf(title: ":satellite: Streaming", for: .stream, amongst: memberPresences),
-                embedFieldsOf(title: ":joystick: Gaming", for: .game, amongst: memberPresences),
-                embedFieldsOf(title: ":headphones: Listening", for: .listening, amongst: memberPresences)
+                embedFieldsOf(title: ":video_game: Gaming", for: .game, amongst: memberPresences),
+                embedFieldsOf(title: ":musical_note: Listening", for: .listening, amongst: memberPresences)
             ].flatMap { $0 }
         ))
     }
