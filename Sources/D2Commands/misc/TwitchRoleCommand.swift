@@ -13,6 +13,16 @@ public class TwitchRoleCommand: Command {
     }
 
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-        // TODO
+        guard let role = input.asRoleMentions?.first else {
+            output.append(errorText: "Please mention a role to use!")
+            return
+        }
+        guard let guild = context.guild else {
+            output.append(errorText: "Not on a guild")
+            return
+        }
+
+        twitchRoleConfiguration.wrappedValue.twitchRoles[guild.id] = role
+        output.append("Successfully set the Twitch streamer role!")
     }
 }

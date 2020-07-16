@@ -32,7 +32,7 @@ public class D2Delegate: MessageDelegate {
 		eventListenerBus = EventListenerBus()
 		subscriptionManager = SubscriptionManager(registry: registry)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
-		let twitchRoleConfiguration = AutoSerializing<TwitchRoleConfiguration>(warppedValue: .init(), filePath: "local/twitchRoleConfig.json")
+		let twitchRoleConfiguration = AutoSerializing<TwitchRoleConfiguration>(wrappedValue: .init(), filePath: "local/twitchRoleConfig.json")
 		let permissionManager = PermissionManager()
 		let inventoryManager = InventoryManager()
 
