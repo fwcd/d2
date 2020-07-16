@@ -54,7 +54,7 @@ public class D2Delegate: MessageDelegate {
 			MessageDatabaseReactionHandler(messageDB: messageDB)
 		]
 		presenceHandlers = [
-			TwitchRoleHandler()
+			TwitchRoleHandler(twitchRoleConfiguration: twitchRoleConfiguration)
 		]
 
 		registry["ping"] = PingCommand()
