@@ -208,6 +208,7 @@ public class D2Delegate: MessageDelegate {
 		registry["karma", aka: ["upvotes"]] = ReactionLeaderboardCommand(title: "Upvote Karma", name: "upvote", emojiName: "upvote", useReactor: false, messageDB: messageDB)
 		registry["drinks"] = ReactionLeaderboardCommand(title: "Drinks", name: "drink", emojiName: "🍹", useReactor: true, messageDB: messageDB)
 		registry["watch"] = WatchCommand()
+		registry["regexgenerate"] = RegexGenerateCommand()
 		registry["poll"] = PollCommand()
 		registry["concat"] = ConcatCommand()
 		registry["revconcat"] = ReverseConcatCommand()
