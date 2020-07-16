@@ -265,6 +265,14 @@ public class D2Delegate: MessageDelegate {
 		} catch {
 			log.warning("Could not setup party game database: \(error)")
 		}
+
+		for guild in client.guilds ?? [] {
+			for (_, presence) in guild.presences {
+				for (i, _) in presenceHandlers.enumerated() {
+					presenceHandlers[i].handle(presenceUpdate: presence, client: client)
+				}
+			}
+		}
 	}
 	
 	public func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
