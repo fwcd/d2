@@ -27,35 +27,38 @@ public class WhatsUpCommand: StringCommand {
     }
 
     private func embedFieldsOf(title: String, for activityType: Presence.Activity.ActivityType, amongst memberPresences: [(Guild.Member, Presence)]) -> [Embed.Field] {
-        let filtered = memberPresences.filter { $0.1.game?.type == activityType }
+        let filtered = memberPresences.filter { $0.1.activities.contains { $0.type == activityType } }
         let (groups, rest) = Dictionary(grouping: filtered, by: { $0.1.game!.name })
             .sorted(by: descendingComparator { $0.1.count })
             .span { $0.1.count > 2 }
         return groups.map { (name, mps) in
             Embed.Field(name: "\(title): \(name)", value: mps
                 .sorted(by: descendingComparator(comparing: { $0.1.game!.timestamps?.interval ?? 0 }, then: { $0.1.game!.state?.count ?? 0 }))
-                .compactMap { format(presence: $0.1, for: $0.0, showGameName: false) }
+                .flatMap { (u, p) in p.activities
+                    .filter { $0.type == activityType }
+                    .compactMap { format(activity: $0, for: u, showGameName: false) } }
                 .joined(separator: "\n")
                 .truncate(500, appending: "...")
                 .nilIfEmpty ?? "_no one currently :(_")
         } + (rest.flatMap { $0.1 }.nilIfEmpty.map { mps in
             [Embed.Field(name: title, value: mps
                 .sorted(by: descendingComparator(comparing: { $0.1.game!.name }, then: { $0.1.game!.timestamps?.interval ?? 0 }))
-                .compactMap { format(presence: $0.1, for: $0.0) }
+                .flatMap { (u, p) in p.activities
+                    .filter { $0.type == activityType }
+                    .compactMap { format(activity: $0, for: u) } }
                 .joined(separator: "\n")
                 .truncate(500, appending: "...")
                 .nilIfEmpty ?? "_no one currently :(_")]
         } ?? [])
     }
 
-    private func format(presence: Presence, for member: Guild.Member, showGameName: Bool = true) -> String? {
-        let game = presence.game!
+    private func format(activity: Presence.Activity, for member: Guild.Member, showGameName: Bool = true) -> String? {
         let detail = [
-            showGameName ? game.name : nil,
-            game.assets.flatMap { $0.largeText },
-            game.state,
-            game.timestamps?.interval?.displayString
+            showGameName ? activity.name : nil,
+            activity.assets.flatMap { $0.largeText },
+            activity.state,
+            activity.timestamps?.interval?.displayString
         ].compactMap { $0 }.joined(separator: " - ").nilIfEmpty
-        return detail.map { d in "**\(member.displayName)**: \(game.url.map { "[\(d)](\($0))" } ?? d)" }
+        return detail.map { d in "**\(member.displayName)**: \(activity.url.map { "[\(d)](\($0))" } ?? d)" }
     }
 }
