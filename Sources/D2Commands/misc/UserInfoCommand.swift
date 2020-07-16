@@ -46,14 +46,16 @@ public class UserInfoCommand: Command {
             ] + (presence.map { [
                 Embed.Field(name: "Status", value: stringOf(status: $0.status))
             ] + $0.activities.map {
-                Embed.Field(name: "Activity: `\($0.name)`", value: """
-                    Assets: \($0.assets.flatMap { [$0.largeText, $0.smallText].compactMap { $0 }.joined(separator: ", ").nilIfEmpty } ?? "_none_")
-                    Details: \($0.details ?? "_none_")
-                    Party: \($0.party.map { "\($0.id) - sizes: \($0.sizes ?? [])" } ?? "_none_")
-                    State: \($0.state ?? "_none_")
-                    Type: \(stringOf(activityType: $0.type))
-                    Timestamps: playing for \($0.timestamps?.interval?.displayString ?? "unknown amount of time")
-                    """)
+                let details: [(String, String?)] = [
+                    ("Assets", $0.assets.flatMap { [$0.largeText, $0.smallText].compactMap { $0 }.joined(separator: ", ").nilIfEmpty }),
+                    ("Details", $0.details),
+                    ("Party", $0.party.map { "\($0.id) - sizes: \($0.sizes ?? [])" }),
+                    ("State", $0.state),
+                    ("Type", stringOf(activityType: $0.type)),
+                    ("Timestamps", "playing for \($0.timestamps?.interval?.displayString ?? "unknown amount of time")"),
+                    ("URL", $0.url)
+                ]
+                return Embed.Field(name: "Activity: `\($0.name)`", value: details.compactMap { (k, v) in v.map { "\(k): \($0)" } }.joined(separator: "\n"))
             } } ?? [])
         ))
     }
