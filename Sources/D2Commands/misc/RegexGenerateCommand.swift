@@ -1,3 +1,7 @@
+import Logging
+
+fileprivate let log = Logger(label: "D2Commands.RegexGenerateCommand")
+
 fileprivate enum RegexGenerateError: Error {
     case emptyChoice
 }
@@ -17,6 +21,7 @@ public class RegexGenerateCommand: StringCommand {
                 output.append(errorText: "Please enter a regex!")
                 return
             }
+            log.info("Parsed regex \(ast)")
             output.append(try generateWord(from: ast))
         } catch {
             output.append(error, errorText: "Could not parse regex!")
