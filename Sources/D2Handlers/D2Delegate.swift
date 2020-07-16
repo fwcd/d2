@@ -32,7 +32,7 @@ public class D2Delegate: MessageDelegate {
 		eventListenerBus = EventListenerBus()
 		subscriptionManager = SubscriptionManager(registry: registry)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
-		let twitchRoleConfiguration = AutoSerializing<TwitchRoleConfiguration>(wrappedValue: .init(), filePath: "local/twitchRoleConfig.json")
+		let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
 		let permissionManager = PermissionManager()
 		let inventoryManager = InventoryManager()
 
@@ -54,7 +54,7 @@ public class D2Delegate: MessageDelegate {
 			MessageDatabaseReactionHandler(messageDB: messageDB)
 		]
 		presenceHandlers = [
-			TwitchRoleHandler(twitchRoleConfiguration: twitchRoleConfiguration)
+			StreamerRoleHandler(streamerRoleConfiguration: streamerRoleConfiguration)
 		]
 
 		registry["ping"] = PingCommand()
@@ -83,7 +83,7 @@ public class D2Delegate: MessageDelegate {
 		registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
 		registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
 		registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
-		registry["twitchrole"] = TwitchRoleCommand(twitchRoleConfiguration: twitchRoleConfiguration)
+		registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: streamerRoleConfiguration)
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
 		registry["userinfo", aka: ["user"]] = UserInfoCommand()
 		registry["clear"] = ClearCommand()

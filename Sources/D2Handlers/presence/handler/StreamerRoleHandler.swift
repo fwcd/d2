@@ -3,23 +3,23 @@ import D2Utils
 import D2MessageIO
 import Logging
 
-fileprivate let log = Logger(label: "D2Handlers.TwitchRoleHandler")
+fileprivate let log = Logger(label: "D2Handlers.StreamerRoleHandler")
 
 // TODO: Note that the Discord API currently (as of July 2020) does not emit
 //       presence updates/activities for Twitch streams (possibly only for
 //       Discord's Go Live streams.)
 
-public struct TwitchRoleHandler: PresenceHandler {
-    private let twitchRoleConfiguration: AutoSerializing<TwitchRoleConfiguration>
+public struct StreamerRoleHandler: PresenceHandler {
+    private let streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>
 
-    public init(twitchRoleConfiguration: AutoSerializing<TwitchRoleConfiguration>) {
-        self.twitchRoleConfiguration = twitchRoleConfiguration
+    public init(streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>) {
+        self.streamerRoleConfiguration = streamerRoleConfiguration
     }
 
 	public func handle(presenceUpdate presence: Presence, client: MessageClient) {
         log.trace("Presence activities: \(presence.activities)")
         if
-            let roleId = twitchRoleConfiguration.wrappedValue.twitchRoles[presence.guildId],
+            let roleId = streamerRoleConfiguration.wrappedValue.streamerRoles[presence.guildId],
             let guild = client.guild(for: presence.guildId),
             let member = guild.members[presence.user.id] {
             if presence.activities.contains(where: { $0.type == .stream }) {
