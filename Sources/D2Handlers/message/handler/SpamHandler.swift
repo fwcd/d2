@@ -16,17 +16,17 @@ fileprivate struct SpammerProfile {
  * them a spammer role (which can be configured using a command).
  */
 public struct SpamHandler: MessageHandler {
-    private let config: AutoSerializing<SpamConfiguration>
+    @AutoSerializing private var config: SpamConfiguration
     private let lastSpamMessages = ExpiringList<Message>()
     private var cautionedSpammers = Set<UserID>()
     
     public init(config: AutoSerializing<SpamConfiguration>) {
-        self.config = config
+        self._config = config
     }
 
     public mutating func handle(message: Message, from client: MessageClient) -> Bool {
         guard isPossiblySpam(message: message) else { return false }
-        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.wrappedValue.interval))
+        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.interval))
         
         guard let channelId = message.channelId,
             let guild = client.guildForChannel(channelId),
@@ -50,15 +50,15 @@ public struct SpamHandler: MessageHandler {
     }
     
     private func isSpamming(user: UserID) -> Bool {
-        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.wrappedValue.maxSpamMessagesPerInterval
+        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.maxSpamMessagesPerInterval
     }
     
     private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {
         guard let member = guild.members[user] else { return }
 
-        if let role = config.wrappedValue.spammerRoles[guild.id] {
+        if let role = config.spammerRoles[guild.id] {
             add(role: role, to: user, on: guild, client: client) {
-                if self.config.wrappedValue.removeOtherRolesFromSpammer {
+                if self.config.removeOtherRolesFromSpammer {
                     self.remove(roles: member.roleIds, from: user, on: guild, client: client)
                 }
             }

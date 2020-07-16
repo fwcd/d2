@@ -12,10 +12,10 @@ public class SpammerRoleCommand: StringCommand {
         longDescription: "Sets the role which is automatically assigned to spammers",
         requiredPermissionLevel: .admin
     )
-    private let spamConfiguration: AutoSerializing<SpamConfiguration>
+    @AutoSerializing private var spamConfiguration: SpamConfiguration
     
     public init(spamConfiguration: AutoSerializing<SpamConfiguration>) {
-        self.spamConfiguration = spamConfiguration
+        self._spamConfiguration = spamConfiguration
     }
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -28,13 +28,13 @@ public class SpammerRoleCommand: StringCommand {
         }
         
         if let role = mentions.first {
-            spamConfiguration.wrappedValue.spammerRoles[guild.id] = role
+            spamConfiguration.spammerRoles[guild.id] = role
             output.append(":white_check_mark: Successfully updated the spammer role")
         } else if input == resetSubcommand {
-            spamConfiguration.wrappedValue.spammerRoles[guild.id] = nil
+            spamConfiguration.spammerRoles[guild.id] = nil
             output.append(":white_check_mark: Successfully reset the spammer role")
         } else {
-            output.append("The current spammer role is `\(spamConfiguration.wrappedValue.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
+            output.append("The current spammer role is `\(spamConfiguration.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
         }
     }
 }

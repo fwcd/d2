@@ -10,16 +10,16 @@ fileprivate let log = Logger(label: "D2Handlers.StreamerRoleHandler")
 //       Discord's Go Live streams.)
 
 public struct StreamerRoleHandler: PresenceHandler {
-    private let streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>
+    @AutoSerializing private var streamerRoleConfiguration: StreamerRoleConfiguration
 
     public init(streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>) {
-        self.streamerRoleConfiguration = streamerRoleConfiguration
+        self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 
 	public func handle(presenceUpdate presence: Presence, client: MessageClient) {
         log.trace("Presence activities: \(presence.activities)")
         if
-            let roleId = streamerRoleConfiguration.wrappedValue.streamerRoles[presence.guildId],
+            let roleId = streamerRoleConfiguration.streamerRoles[presence.guildId],
             let guild = client.guild(for: presence.guildId),
             let member = guild.members[presence.user.id] {
             if presence.activities.contains(where: { $0.type == .stream }) {

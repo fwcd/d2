@@ -6,10 +6,10 @@ public class StreamerRoleCommand: Command {
         shortDescription: "Configures a role to auto-assign to streamers",
         requiredPermissionLevel: .admin
     )
-    private let streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>
+    @AutoSerializing private var streamerRoleConfiguration: StreamerRoleConfiguration
 
     public init(streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>) {
-        self.streamerRoleConfiguration = streamerRoleConfiguration
+        self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
@@ -19,10 +19,10 @@ public class StreamerRoleCommand: Command {
         }
 
         if let role = input.asRoleMentions?.first {
-            streamerRoleConfiguration.wrappedValue.streamerRoles[guild.id] = role
+            streamerRoleConfiguration.streamerRoles[guild.id] = role
             output.append("Successfully set the Twitch streamer role!")
         } else {
-            let roleId = streamerRoleConfiguration.wrappedValue.streamerRoles[guild.id]
+            let roleId = streamerRoleConfiguration.streamerRoles[guild.id]
             let roleName = roleId.flatMap { guild.roles[$0] }?.name ?? "none"
             output.append("The Twitch streamer role on this guild is currently `\(roleName)`")
         }
