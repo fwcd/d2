@@ -250,9 +250,12 @@ public class D2Delegate: MessageDelegate {
 		registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 
-	public func on(connect connected: Bool, client: MessageClient) {
+	public func on(receiveReady: [String: Any], client: MessageClient) {
+		let guildCount = client.guilds?.count ?? 0
+		log.info("Received ready! \(guildCount) \("guild".pluralize(with: guildCount)) found.")
+
 		client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
-		eventListenerBus.fire(event: .connect, with: .none)
+		eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
 
 		do {
 			try messageDB.setupTables(client: client)
@@ -264,14 +267,6 @@ public class D2Delegate: MessageDelegate {
 			try partyGameDB.setupTables()
 		} catch {
 			log.warning("Could not setup party game database: \(error)")
-		}
-
-		for guild in client.guilds ?? [] {
-			for (_, presence) in guild.presences {
-				for (i, _) in presenceHandlers.enumerated() {
-					presenceHandlers[i].handle(presenceUpdate: presence, client: client)
-				}
-			}
 		}
 	}
 	
@@ -295,6 +290,13 @@ public class D2Delegate: MessageDelegate {
 		} catch {
 			log.warning("Could not insert guild into message database: \(error)")
 		}
+
+		for (_, presence) in guild.presences {
+			for (i, _) in presenceHandlers.enumerated() {
+				presenceHandlers[i].handle(presenceUpdate: presence, client: client)
+			}
+		}
+
 		eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
 	}
 	
@@ -408,8 +410,8 @@ public class D2Delegate: MessageDelegate {
 		eventListenerBus.fire(event: .updateRole, with: .none) // TODO: Pass role ID/role mention?
 	}
 
-	public func on(receiveReady data: [String: Any], client: MessageClient) {
-		eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
+	public func on(connect connected: Bool, client: MessageClient) {
+		eventListenerBus.fire(event: .connect, with: .none) // TODO: Pass 'connected'?
 	}
 
 	public func on(receiveVoiceStateUpdate state: VoiceState, client: MessageClient) {

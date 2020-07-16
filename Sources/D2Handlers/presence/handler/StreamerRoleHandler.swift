@@ -24,13 +24,17 @@ public struct StreamerRoleHandler: PresenceHandler {
             let member = guild.members[presence.user.id] {
             if presence.activities.contains(where: { $0.type == .stream }) {
                 if !member.roleIds.contains(roleId) {
-                    log.info("Adding streamer role to \(presence.user.username)")
-                    client.addGuildMemberRole(roleId, to: presence.user.id, on: presence.guildId, reason: "Streaming")
+                    log.info("Adding streamer role to \(member.displayName)")
+                    client.addGuildMemberRole(roleId, to: presence.user.id, on: presence.guildId, reason: "Streaming") { success, _ in
+                        if !success {
+                            log.warning("Adding streamer role to \(member.displayName) failed")
+                        }
+                    }
                 } else {
-                    log.debug("Not adding streamer role, \(member.displayName) is already streaming!")
+                    log.debug("Not adding streamer role, \(member.displayName) already has it!")
                 }
             } else if member.roleIds.contains(roleId) {
-                log.debug("Removing streamer role from \(member.displayName)")
+                log.info("Removing streamer role from \(member.displayName)")
                 client.removeGuildMemberRole(roleId, from: presence.user.id, on: presence.guildId, reason: "No longer streaming")
             } else {
                 log.debug("Not removing streamer role from \(member.displayName).")
