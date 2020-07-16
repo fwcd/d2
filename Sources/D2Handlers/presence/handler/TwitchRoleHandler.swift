@@ -5,6 +5,10 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Handlers.TwitchRoleHandler")
 
+// TODO: Note that the Discord API currently (as of July 2020) does not emit
+//       presence updates/activities for Twitch streams (possibly only for
+//       Discord's Go Live streams.)
+
 public struct TwitchRoleHandler: PresenceHandler {
     private let twitchRoleConfiguration: AutoSerializing<TwitchRoleConfiguration>
 
