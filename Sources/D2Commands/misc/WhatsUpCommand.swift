@@ -35,7 +35,7 @@ public class WhatsUpCommand: StringCommand {
             Embed.Field(name: "\(title): \(name)", value: mps
                 .sorted(by: descendingComparator(comparing: { $0.1.game!.timestamps?.interval ?? 0 }, then: { $0.1.game!.state?.count ?? 0 }))
                 .flatMap { (u, p) in p.activities
-                    .filter { $0.type == activityType }
+                    .filter { $0.type == activityType && $0.name == name }
                     .compactMap { format(activity: $0, for: u, showGameName: false) } }
                 .joined(separator: "\n")
                 .truncate(500, appending: "...")
