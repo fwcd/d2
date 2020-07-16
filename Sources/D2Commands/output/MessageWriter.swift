@@ -34,6 +34,12 @@ public struct MessageWriter {
 				return Promise(Message(content: roles.map { "<@\($0)>" }.joined(separator: " ")))
 			case let .image(img):
 				return Promise(Result { try Message(fromImage: img) })
+			case let .table(rows):
+				return Promise(Message(content: """
+					```
+					\(rows.map { "(\($0.joined(separator: ", ")))" }.joined(separator: "\n"))
+					```
+					"""))
 			case let .gif(gif):
 				return Promise(Result { try Message(fromGif: gif) })
 			case let .code(code, language: lang):

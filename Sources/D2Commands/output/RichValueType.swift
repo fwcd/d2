@@ -2,6 +2,7 @@ public enum RichValueType {
     case none
     case text
     case image
+    case table
     case gif
     case code
     case embed

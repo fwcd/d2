@@ -10,6 +10,7 @@ public enum RichValue: Addable {
 	case none
 	case text(String)
 	case image(Image)
+	case table([[String]])
 	case gif(AnimatedGif)
 	case code(String, language: String?)
 	case embed(Embed?)
@@ -26,6 +27,9 @@ public enum RichValue: Addable {
 	}
 	public var asCode: String? {
 		extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }.first
+	}
+	public var asTable: [[String]]? {
+		extract { if case let .table(table) = $0 { return table } else { return nil } }.first
 	}
 	public var asMentions: [User]? {
 		extract { r -> [User]? in if case let .mentions(mentions) = r { return mentions } else { return nil } }.flatMap { $0 }
