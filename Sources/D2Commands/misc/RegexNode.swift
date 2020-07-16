@@ -70,7 +70,7 @@ indirect enum RegexNode: CustomStringConvertible {
 
             // Operator only applies to the last character
             if case let .literal(l) = node, l.count > 1, let c = l.last {
-                pre = .literal(String(l.dropFirst()))
+                pre = .literal(String(l.dropLast()))
                 inner = .literal(String(c))
             }
 
