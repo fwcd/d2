@@ -45,9 +45,8 @@ public class UserInfoCommand: Command {
                 Embed.Field(name: "Joined at", value: dateFormatter.string(from: member.joinedAt))
             ] + (presence.map { [
                 Embed.Field(name: "Status", value: stringOf(status: $0.status))
-            ] + ($0.game.map { [
-                Embed.Field(name: "Activity", value: """
-                    Name: \($0.name)
+            ] + $0.activities.map {
+                Embed.Field(name: "Activity: `\($0.name)`", value: """
                     Assets: \($0.assets.flatMap { [$0.largeText, $0.smallText].compactMap { $0 }.joined(separator: ", ").nilIfEmpty } ?? "_none_")
                     Details: \($0.details ?? "_none_")
                     Party: \($0.party.map { "\($0.id) - sizes: \($0.sizes ?? [])" } ?? "_none_")
@@ -55,7 +54,7 @@ public class UserInfoCommand: Command {
                     Type: \(stringOf(activityType: $0.type))
                     Timestamps: playing for \($0.timestamps?.interval?.displayString ?? "unknown amount of time")
                     """)
-            ] } ?? []) } ?? [])
+            } } ?? [])
         ))
     }
     
