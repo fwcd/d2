@@ -39,7 +39,7 @@ public class RegexGenerateCommand: StringCommand {
             case .option(let o):
                 return Bool.random() ? try generateWord(from: o) : ""
             case .repetition(let r):
-                return String(repeating: try generateWord(from: r), count: Int.random(in: 0..<5))
+                return try (0..<Int.random(in: 0..<5)).map { _ in try generateWord(from: r) }.joined()
         }
     }
 }
