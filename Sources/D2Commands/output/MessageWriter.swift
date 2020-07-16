@@ -42,6 +42,8 @@ public struct MessageWriter {
 					"""))
 			case let .gif(gif):
 				return Promise(Result { try Message(fromGif: gif) })
+			case let .domNode(node):
+				return Promise(Result { .code(try node.outerHtml(), language: "html") }).then(write(value:))
 			case let .code(code, language: lang):
 				return Promise(Message(content: """
 					```\(lang ?? "")

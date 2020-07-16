@@ -1,6 +1,7 @@
 import D2MessageIO
 import D2Graphics
 import D2Utils
+import SwiftSoup
 
 /**
  * A value of a common format that
@@ -12,6 +13,7 @@ public enum RichValue: Addable {
 	case image(Image)
 	case table([[String]])
 	case gif(AnimatedGif)
+	case domNode(Element)
 	case code(String, language: String?)
 	case embed(Embed?)
 	case mentions([User])
@@ -39,6 +41,9 @@ public enum RichValue: Addable {
 	}
 	public var asImage: Image? {
 		extract { if case let .image(image) = $0 { return image } else { return nil } }.first
+	}
+	public var asDomNode: Element? {
+		extract { if case let .domNode(node) = $0 { return node } else { return nil } }.first
 	}
 	public var asGif: AnimatedGif? {
 		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
