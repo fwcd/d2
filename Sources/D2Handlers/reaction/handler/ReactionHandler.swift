@@ -1,9 +1,7 @@
 import D2MessageIO
 
-/**
- * Anything that handles incoming reactions
- * to messages from Discord.
- */
+/// Anything that handles incoming reactions
+/// to messages from Discord.
 public protocol ReactionHandler {
     mutating func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient)
 
