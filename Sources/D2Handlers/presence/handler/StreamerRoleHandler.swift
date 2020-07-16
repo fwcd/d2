@@ -31,7 +31,7 @@ public struct StreamerRoleHandler: PresenceHandler {
                         }
                     }
                 } else {
-                    log.debug("Not adding streamer role, \(member.displayName) already has it!")
+                    log.info("Not adding streamer role, \(member.displayName) already has it!")
                 }
             } else if member.roleIds.contains(roleId) {
                 log.info("Removing streamer role from \(member.displayName)")

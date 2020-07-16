@@ -39,7 +39,7 @@ public class UserInfoCommand: Command {
                 : nil,
             footer: Embed.Footer(text: "ID: \(user.id)"),
             fields: [
-                Embed.Field(name: "Nick", value: member.nick ?? "_none_"),
+                Embed.Field(name: "Nick", value: member.nick.map { "`\($0)`" } ?? "_none_"),
                 Embed.Field(name: "Roles", value: guild.roles(for: member).sorted(by: descendingComparator { $0.position }).map { "`\($0.name)`" }.joined(separator: ", ").nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Voice Status", value: ((member.deaf ? ["deaf"] : []) + (member.mute ? ["mute"] : [])).joined(separator: ", ").nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Joined at", value: dateFormatter.string(from: member.joinedAt))
