@@ -57,27 +57,44 @@ fileprivate indirect enum RegexNode: CustomStringConvertible {
 
     private static func parsePrimary(from tokens: TokenIterator<String>) throws -> RegexNode? {
         log.trace("parsePrimary")
+        var child: RegexNode?
         switch tokens.peek() {
-            case "(": return try parseParenthesized(from: tokens)
-            case "[": return try parseCharacterSet(from: tokens)
-            default:
-                guard var node = try parseLiteral(from: tokens) else { return nil }
-                postfixLoop: while true {
-                    switch tokens.peek() {
-                        case "*":
-                            node = .repeating(node)
-                            tokens.next()
-                        case "+":
-                            node = .sequence([node, .repeating(node)])
-                            tokens.next()
-                        case "?":
-                            node = .option(node)
-                            tokens.next()
-                        default: break postfixLoop
-                    }
-                }
-                return node
+            case "(": child = try parseParenthesized(from: tokens)
+            case "[": child = try parseCharacterSet(from: tokens)
+            default: child = try parseLiteral(from: tokens)
         }
+
+        guard var node = child else { return nil }
+
+        // Parse postfix operators in a loop since recursive-descent
+        // does not work well with left-recursion
+        postfixLoop:
+        while true {
+            var pre: RegexNode? = nil
+            var inner: RegexNode = node
+
+            // Operator only applies to the last character
+            if case let .literal(l) = node, l.count > 1, let c = l.last {
+                pre = .literal(String(l.dropFirst()))
+                inner = .literal(String(c))
+            }
+
+            switch tokens.peek() {
+                case "*":
+                    inner = .repeating(inner)
+                    tokens.next()
+                case "+":
+                    inner = .sequence([inner, .repeating(inner)])
+                    tokens.next()
+                case "?":
+                    inner = .option(inner)
+                    tokens.next()
+                default: break postfixLoop
+            }
+
+            node = pre.map { .sequence([$0, inner]) } ?? inner
+        }
+        return node
     }
 
     private static func parseParenthesized(from tokens: TokenIterator<String>) throws -> RegexNode? {
