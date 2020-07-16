@@ -10,6 +10,7 @@ extension DiscordPresence: MessageIOConvertible {
 			guildId: guildId.usingMessageIO,
 			user: user.usingMessageIO,
 			game: game?.usingMessageIO,
+			activities: activities.usingMessageIO,
 			nick: nick,
 			roles: roles,
 			status: status.usingMessageIO

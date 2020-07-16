@@ -4,14 +4,16 @@ public struct Presence {
 	public let guildId: GuildID
 	public let user: User
 	public let game: Activity?
+	public let activities: [Activity]
 	public let nick: String?
 	public let roles: [String]
 	public let status: Presence.Status
 	
-	public init(guildId: GuildID, user: User, game: Activity? = nil, nick: String? = nil, roles: [String] = [], status: Presence.Status) {
+	public init(guildId: GuildID, user: User, game: Activity? = nil, activities: [Activity] = [], nick: String? = nil, roles: [String] = [], status: Presence.Status) {
 		self.guildId = guildId
 		self.user = user
 		self.game = game
+		self.activities = activities
 		self.nick = nick
 		self.roles = roles
 		self.status = status
