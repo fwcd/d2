@@ -237,6 +237,7 @@ public class D2Delegate: MessageDelegate {
 		registry["put"] = HTTPRequestCommand(method: "PUT")
 		registry["patch"] = HTTPRequestCommand(method: "PATCH")
 		registry["delete"] = HTTPRequestCommand(method: "DELETE")
+		registry["parsedom", aka: ["parsehtml"]] = ParseDOMCommand()
 		registry["serverinfo", aka: ["stats", "server", "serverstats", "guild", "guildinfo", "guildstats"]] = ServerInfoCommand(messageDB: messageDB)
 		registry["whatsup"] = WhatsUpCommand()
 		registry["songcharts"] = SongChartsCommand()

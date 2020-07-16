@@ -1,3 +1,4 @@
+import Foundation
 import Logging
 import D2MessageIO
 import D2Utils
@@ -5,6 +6,8 @@ import D2Graphics
 import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
+
+fileprivate let urlPattern = try! Regex(from: "<(\\w+:\\S+?)>")
 
 // The first group matches the language, the second group matches the code
 fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
@@ -74,6 +77,11 @@ public struct MessageParser {
 		// Append role mentions
 		if let roleMentions = message?.mentionRoles {
 			values.append(.roleMentions(roleMentions))
+		}
+
+		// Append parsed URLs
+		if let urls = urlPattern.allGroups(in: content).compactMap({ URL(string: $0[1]) }).nilIfEmpty {
+			values.append(.urls(urls))
 		}
 
 		// Parse nd-arrays

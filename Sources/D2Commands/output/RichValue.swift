@@ -1,3 +1,4 @@
+import Foundation
 import D2MessageIO
 import D2Graphics
 import D2Utils
@@ -13,6 +14,7 @@ public enum RichValue: Addable {
 	case image(Image)
 	case table([[String]])
 	case gif(AnimatedGif)
+	case urls([URL])
 	case domNode(Element)
 	case code(String, language: String?)
 	case embed(Embed?)

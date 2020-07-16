@@ -5,6 +5,7 @@ public enum RichValueType {
     case table
     case gif
     case domNode
+    case urls
     case code
     case embed
     case mentions

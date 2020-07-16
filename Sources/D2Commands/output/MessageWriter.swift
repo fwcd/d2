@@ -40,6 +40,8 @@ public struct MessageWriter {
 					\(rows.map { "(\($0.joined(separator: ", ")))" }.joined(separator: "\n"))
 					```
 					"""))
+			case let .urls(urls):
+				return Promise(Message(content: urls.map(\.absoluteString).joined(separator: " ")))
 			case let .gif(gif):
 				return Promise(Result { try Message(fromGif: gif) })
 			case let .domNode(node):
