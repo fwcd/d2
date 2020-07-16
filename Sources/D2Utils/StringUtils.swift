@@ -2,10 +2,15 @@ import Foundation
 
 fileprivate let asciiCharacters = CharacterSet(charactersIn: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 fileprivate let quotes = CharacterSet(charactersIn: "\"'`")
+fileprivate let markdownEscapable = try! Regex(from: "[\\[\\]*_]")
 
 extension StringProtocol {
 	public var withFirstUppercased: String {
 		prefix(1).uppercased() + dropFirst()
+	}
+
+	public var markdownEscaped: String {
+		markdownEscapable.replace(in: String(self)) { "\\\($0[0])" }
 	}
 
 	public func split(by length: Int) -> [String] {
