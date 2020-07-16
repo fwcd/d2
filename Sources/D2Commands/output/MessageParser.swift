@@ -71,6 +71,11 @@ public struct MessageParser {
 			values.append(.mentions(mentions))
 		}
 
+		// Append role mentions
+		if let roleMentions = message?.mentionRoles {
+			values.append(.roleMentions(roleMentions))
+		}
+
 		// Parse nd-arrays
 		if let ndArrays = ndArrayParser.parseMultiple(content).nilIfEmpty {
 			values.append(.ndArrays(ndArrays))

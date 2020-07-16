@@ -14,6 +14,7 @@ public enum RichValue: Addable {
 	case code(String, language: String?)
 	case embed(Embed?)
 	case mentions([User])
+	case roleMentions([RoleID])
 	case ndArrays([NDArray<Rational>])
 	case error(Error?, errorText: String)
 	case files([Message.FileUpload])
@@ -28,6 +29,9 @@ public enum RichValue: Addable {
 	}
 	public var asMentions: [User]? {
 		extract { r -> [User]? in if case let .mentions(mentions) = r { return mentions } else { return nil } }.flatMap { $0 }
+	}
+	public var asRoleMentions: [RoleID]? {
+		extract { r -> [RoleID]? in if case let .roleMentions(mentions) = r { return mentions } else { return nil } }.flatMap { $0 }
 	}
 	public var asImage: Image? {
 		extract { if case let .image(image) = $0 { return image } else { return nil } }.first

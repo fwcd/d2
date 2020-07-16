@@ -32,6 +32,7 @@ public class D2Delegate: MessageDelegate {
 		eventListenerBus = EventListenerBus()
 		subscriptionManager = SubscriptionManager(registry: registry)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
+		let twitchRoleConfiguration = AutoSerializing<TwitchRoleConfiguration>(warppedValue: .init(), filePath: "local/twitchRoleConfig.json")
 		let permissionManager = PermissionManager()
 		let inventoryManager = InventoryManager()
 
@@ -82,6 +83,7 @@ public class D2Delegate: MessageDelegate {
 		registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
 		registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
 		registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
+		registry["twitchrole"] = TwitchRoleCommand(twitchRoleConfiguration: twitchRoleConfiguration)
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
 		registry["userinfo", aka: ["user"]] = UserInfoCommand()
 		registry["clear"] = ClearCommand()
