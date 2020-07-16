@@ -7,7 +7,7 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
 
-fileprivate let urlPattern = try! Regex(from: "<(\\w+:\\S+?)>")
+fileprivate let urlPattern = try! Regex(from: "<?(\\w+:[^>\\s]+)>?")
 
 // The first group matches the language, the second group matches the code
 fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
@@ -75,7 +75,7 @@ public struct MessageParser {
 		}
 
 		// Append role mentions
-		if let roleMentions = message?.mentionRoles {
+		if let roleMentions = message?.mentionRoles.nilIfEmpty {
 			values.append(.roleMentions(roleMentions))
 		}
 
