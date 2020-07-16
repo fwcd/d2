@@ -15,41 +15,42 @@ public class WhatsUpCommand: StringCommand {
             output.append(errorText: "No guild available")
             return
         }
-        let memberPresences = guild.presences.compactMap { (id, p) in guild.members[id].flatMap { ($0, p) } }
+        let memberActivities = guild.presences
+            .flatMap { (id, p) in guild.members[id].map { m in p.activities.map { (m, $0) } } ?? [] }
         output.append(Embed(
             title: ":circus_tent: Currently Active",
             fields: [
-                embedFieldsOf(title: ":satellite: Streaming", for: .stream, amongst: memberPresences),
-                embedFieldsOf(title: ":video_game: Gaming", for: .game, amongst: memberPresences),
-                embedFieldsOf(title: ":musical_note: Listening", for: .listening, amongst: memberPresences)
+                embedFieldsOf(title: ":satellite: Streaming", for: .stream, amongst: memberActivities),
+                embedFieldsOf(title: ":video_game: Gaming", for: .game, amongst: memberActivities),
+                embedFieldsOf(title: ":musical_note: Listening", for: .listening, amongst: memberActivities)
             ].flatMap { $0 }
         ))
     }
 
-    private func embedFieldsOf(title: String, for activityType: Presence.Activity.ActivityType, amongst memberPresences: [(Guild.Member, Presence)]) -> [Embed.Field] {
-        let filtered = memberPresences.filter { $0.1.activities.contains { $0.type == activityType } }
-        let (groups, rest) = Dictionary(grouping: filtered, by: { $0.1.game!.name })
+    private func embedFieldsOf(title: String, for activityType: Presence.Activity.ActivityType, amongst memberActivities: [(Guild.Member, Presence.Activity)]) -> [Embed.Field] {
+        let filtered = memberActivities.filter { $0.1.type == activityType }
+        let (groups, rest) = Dictionary(grouping: filtered, by: { $0.1.name })
             .sorted(by: descendingComparator { $0.1.count })
-            .span { $0.1.count > 2 }
-        return groups.map { (name, mps) in
-            Embed.Field(name: "\(title): \(name)", value: mps
-                .sorted(by: descendingComparator(comparing: { $0.1.game!.timestamps?.interval ?? 0 }, then: { $0.1.game!.state?.count ?? 0 }))
-                .flatMap { (u, p) in p.activities
-                    .filter { $0.type == activityType && $0.name == name }
-                    .compactMap { format(activity: $0, for: u, showGameName: false) } }
+            .span { $0.1.count >= 2 }
+        let groupFields = groups.map { (name, mas) in
+            Embed.Field(name: "\(title): \(name)", value: mas
+                .sorted(by: descendingComparator(comparing: { $0.1.timestamps?.interval ?? 0 }, then: { $0.1.state?.count ?? 0 }))
+                .filter { $0.1.type == activityType && $0.1.name == name }
+                .compactMap { format(activity: $0.1, for: $0.0, showGameName: false) }
                 .joined(separator: "\n")
                 .truncate(500, appending: "...")
                 .nilIfEmpty ?? "_no one currently :(_")
-        } + (rest.flatMap { $0.1 }.nilIfEmpty.map { mps in
-            [Embed.Field(name: title, value: mps
-                .sorted(by: descendingComparator(comparing: { $0.1.game!.name }, then: { $0.1.game!.timestamps?.interval ?? 0 }))
-                .flatMap { (u, p) in p.activities
-                    .filter { $0.type == activityType }
-                    .compactMap { format(activity: $0, for: u) } }
+        }
+        let restFields = (rest.flatMap { $0.1 }.nilIfEmpty.map { mas in
+            [Embed.Field(name: title, value: mas
+                .sorted(by: descendingComparator(comparing: { $0.1.name }, then: { $0.1.timestamps?.interval ?? 0 }))
+                .filter { $0.1.type == activityType }
+                .compactMap { format(activity: $0.1, for: $0.0) }
                 .joined(separator: "\n")
                 .truncate(500, appending: "...")
                 .nilIfEmpty ?? "_no one currently :(_")]
         } ?? [])
+        return groupFields + restFields
     }
 
     private func format(activity: Presence.Activity, for member: Guild.Member, showGameName: Bool = true) -> String? {
