@@ -50,6 +50,9 @@ public enum RichValue: Addable {
 	public var asGif: AnimatedGif? {
 		extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
 	}
+	public var asUrls: [URL]? {
+		extract { r -> [URL]? in if case let .urls(urls) = r { return urls } else { return nil } }.flatMap { $0 }
+	}
 	public var asNDArrays: [NDArray<Rational>]? {
 		extract { r -> [NDArray<Rational>]? in if case let .ndArrays(ndArrays) = r { return ndArrays } else { return nil } }.flatMap { $0 }
 	}

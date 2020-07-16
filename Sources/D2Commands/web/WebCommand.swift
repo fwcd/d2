@@ -9,22 +9,27 @@ import FoundationNetworking
 import SwiftSoup
 
 fileprivate let log = Logger(label: "D2Commands.WebCommand")
-fileprivate let urlPattern = try! Regex(from: "<?(http[^>]+)>?")
 
-public class WebCommand: StringCommand {
+public class WebCommand: Command {
 	public let info = CommandInfo(
 		category: .web,
 		shortDescription: "Renders a webpage",
 		longDescription: "Fetches and renders an arbitrary HTML page using an embed",
 		requiredPermissionLevel: .admin
 	)
+	public let inputValueType: RichValueType = .urls
+	public let outputValueType: RichValueType = .embed
 	private let converter = DocumentToMarkdownConverter()
 	
 	public init() {}
 	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		guard let url = urlPattern.firstGroups(in: input).flatMap({ URL(string: $0[1]) }) else {
+	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+		guard let url = input.asUrls?.first else {
 			output.append(errorText: "Not a valid URL: `\(input)`")
+			return
+		}
+		guard url.scheme == "http" || url.scheme == "https" else {
+			output.append(errorText: "The scheme has to be HTTP or HTTPS!")
 			return
 		}
 		var request = URLRequest(url: url)
@@ -52,9 +57,10 @@ public class WebCommand: StringCommand {
 					title: try document.title().nilIfEmpty ?? "Web Result",
 					description: splitOutput[safely: 0] ?? "Empty output",
 					author: Embed.Author(
-						name: url.host ?? input,
+						name: url.host ?? url.absoluteString,
 						iconUrl: self.findFavicon(in: document).flatMap { URL(string: $0, relativeTo: url) }
 					),
+					url: url,
 					fields: splitOutput.dropFirst().enumerated().map { Embed.Field(name: "Page \($0.0 + 1)", value: $0.1) }
 				))
 			} catch {
