@@ -20,6 +20,7 @@ public class D2Delegate: MessageDelegate {
 	private var messageRewriters: [MessageRewriter]
 	private var messageHandlers: [MessageHandler]
 	private var reactionHandlers: [ReactionHandler]
+	private var presenceHandlers: [PresenceHandler]
 	
 	public init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
 		self.commandPrefix = commandPrefix
@@ -50,6 +51,9 @@ public class D2Delegate: MessageDelegate {
 		reactionHandlers = [
 			SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
 			MessageDatabaseReactionHandler(messageDB: messageDB)
+		]
+		presenceHandlers = [
+			TwitchRoleHandler()
 		]
 
 		registry["ping"] = PingCommand()
@@ -267,6 +271,11 @@ public class D2Delegate: MessageDelegate {
 				command.onReceivedUpdated(presence: presence)
 			}
 		}
+
+		for (i, _) in presenceHandlers.enumerated() {
+			presenceHandlers[i].handle(presenceUpdate: presence, client: client)
+		}
+
 		eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.game.map { RichValue.text($0.name) } ?? .none) // TODO: Pass full presence?
 	}
 

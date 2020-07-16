@@ -5,5 +5,5 @@ import D2MessageIO
  * someone on Discord.
  */
 public protocol PresenceHandler {
-	func handle(presenceUpdate presence: Presence, client: MessageClient)
+	mutating func handle(presenceUpdate presence: Presence, client: MessageClient)
 }
