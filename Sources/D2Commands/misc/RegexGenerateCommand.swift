@@ -2,7 +2,9 @@ import D2Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.RegexGenerateCommand")
-fileprivate let regexTokenPattern = try! Regex(from: "\\(|\\)|\\?|\\+|\\*|\\[|\\]|\\||[^()?+*|\\[\\]]+")
+fileprivate let regexTokens = ["+", "*", "?", "(", ")", "[", "]", "|"]
+fileprivate let escapedTokens = regexTokens.map { "\\\($0)" }
+fileprivate let regexTokenPattern = try! Regex(from: "\((escapedTokens + ["[^\(escapedTokens.joined())]+"]).joined(separator: "|"))")
 
 fileprivate enum RegexParseError: Error {
     case missingParenthesis(String)
@@ -98,7 +100,7 @@ fileprivate indirect enum RegexNode: CustomStringConvertible {
 
     private static func parseLiteral(from tokens: TokenIterator<String>) throws -> RegexNode? {
         log.trace("parseLiteral")
-        guard !Set(["(", ")", "[", "]", "*", "+", "?", "|"]).contains(tokens.peek()) else { return nil }
+        guard !Set(regexTokens).contains(tokens.peek()) else { return nil }
         return tokens.next().map { .literal($0) }
     }
 }
