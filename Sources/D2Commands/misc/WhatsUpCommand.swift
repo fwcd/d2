@@ -59,6 +59,6 @@ public class WhatsUpCommand: StringCommand {
             activity.state,
             activity.timestamps?.interval?.displayString
         ].compactMap { $0 }.joined(separator: " - ").nilIfEmpty
-        return detail.map { d in "**\(member.displayName)**: \(activity.url.map { "[\(d)](\($0))" } ?? d)" }
+        return detail.map { d in "**\(member.displayName.markdownEscaped)**: \(activity.url.map { "[\(d)](\($0))" } ?? d)" }
     }
 }
