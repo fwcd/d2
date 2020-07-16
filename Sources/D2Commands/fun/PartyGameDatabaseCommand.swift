@@ -5,6 +5,7 @@ public class PartyGameDatabaseCommand: StringCommand {
         helpText: "Syntax: [subcommand|sql]",
         requiredPermissionLevel: .admin
     )
+    public let outputValueType: RichValueType = .table
     private let partyGameDB: PartyGameDatabase
     private var subcommands: [String: (CommandOutput, CommandContext) throws -> Void] = [:]
 
@@ -36,10 +37,8 @@ public class PartyGameDatabaseCommand: StringCommand {
                     return
                 }
 
-                let result = try partyGameDB.prepare(input)
-                    .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no output" }
-                    .joined(separator: "\n")
-                output.append(.code(result, language: nil))
+                let result = try partyGameDB.prepare(input).map { $0.map { $0.map { "\($0)" } ?? "?" } }
+                output.append(.table(result))
             }
         } catch {
             output.append(error, errorText: "Could not perform command")

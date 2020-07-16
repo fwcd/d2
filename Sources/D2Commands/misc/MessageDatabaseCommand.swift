@@ -8,6 +8,7 @@ public class MessageDatabaseCommand: StringCommand {
         helpText: "Syntax: [subcommand|sql]",
         requiredPermissionLevel: .admin
     )
+    public let outputValueType: RichValueType = .table
     private let messageDB: MessageDatabase
     private var subcommands: [String: (CommandOutput, CommandContext) throws -> Void] = [:]
     
@@ -76,10 +77,8 @@ public class MessageDatabaseCommand: StringCommand {
                     return
                 }
 
-                let result = try messageDB.prepare(input)
-                    .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no output" }
-                    .joined(separator: "\n")
-                output.append(.code(result, language: nil))
+                let result = try messageDB.prepare(input).map { $0.map { $0.map { "\($0)" } ?? "?" } }
+                output.append(.table(result))
             }
         } catch {
             output.append(error, errorText: "Could not perform command")
