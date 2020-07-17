@@ -33,6 +33,10 @@ extension StringProtocol {
 		return humps
 	}
 
+	public var camelHumpsWithUnderscores: [String] {
+		camelHumps.flatMap { $0.split(separator: "_") }.map(String.init)
+	}
+
 	public func split(by length: Int) -> [String] {
 		var start = startIndex
 		var output = [String]()
