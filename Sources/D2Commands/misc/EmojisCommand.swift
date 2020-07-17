@@ -25,7 +25,7 @@ public class EmojisCommand: StringCommand {
         output.append(Embed(
             title: "Emojis",
             fields: groups.map {
-                Embed.Field(name: "\($0.key.withFirstUppercased)", value: $0.value.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(20, appending: "...").joined(), inline: true)
+                Embed.Field(name: "\($0.key.truncate(10, appending: "..."))", value: $0.value.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(20, appending: "...").joined(), inline: true)
             }
         ))
     }
@@ -35,7 +35,7 @@ public class EmojisCommand: StringCommand {
             .map { Dictionary(grouping: emojis, by: $0).mapValues(Set.init) }
             .reduce([:], merge)
             .map { ($0.0, Set($0.1)) }
-            .sorted(by: descendingComparator { $0.1.count })
+            .sorted(by: descendingComparator(comparing: { $0.1.count }, then: { $0.0 }))
             .span { $0.1.count >= minPerGroup }
         return Array(groups + rest)
     }

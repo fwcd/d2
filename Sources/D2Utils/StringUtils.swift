@@ -18,7 +18,7 @@ extension StringProtocol {
 		var hump = ""
 
 		for c in self {
-			if !hump.isEmpty && c.isUppercase {
+			if c.isUppercase && hump.count > 1 {
 				humps.append(hump)
 				hump = String(c)
 			} else {
