@@ -16,35 +16,34 @@ public class EmojisCommand: StringCommand {
             return
         }
 
-        let emojis = guild.emojis.values.filter { !$0.animated }
-        let groups = group(emojis, withMinPerGroup: 2, by: [
-            { $0.name.camelHumpsWithUnderscores.first ?? "" },
-            { $0.name.camelHumpsWithUnderscores.last ?? "" }
-        ])
+        let emojis = guild.emojis.values.filter { !$0.animated && (input.isEmpty || $0.name.lowercased().contains(input.lowercased())) }
+        var groups = [String: Set<Emoji>]()
+
+        for emoji in emojis {
+            for hump in emoji.name.camelHumpsWithUnderscores {
+                groups[hump.withFirstUppercased] = (groups[hump.withFirstUppercased] ?? []).union([emoji])
+            }
+        }
+
+        let emojiLimit = 50
+        var orderedGroups = [(String, Set<Emoji>)]()
+        var insertedEmoji = Set<Emoji>()
+
+        for (name, emojis) in groups.sorted(by: descendingComparator(comparing: { $0.1.count }, then: { $0.0 })) {
+            let remaining = emojis.subtracting(insertedEmoji)
+            orderedGroups.append((name, remaining))
+            insertedEmoji.formUnion(emojis)
+
+            if insertedEmoji.count > emojiLimit {
+                break
+            }
+        }
 
         output.append(Embed(
             title: "Emojis",
-            fields: groups.map {
-                Embed.Field(name: "\($0.key.truncate(10, appending: "..."))", value: $0.value.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(20, appending: "...").joined(), inline: true)
-            }
+            fields: orderedGroups
+                .map { ("\($0.0.truncate(10, appending: "..."))", value: $0.1.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(10, appending: "...").joined().nilIfEmpty) }
+                .compactMap { (k, v) in v.map { Embed.Field(name: k, value: $0, inline: true) } }
         ))
-    }
-
-    private func group(_ emojis: [Emoji], withMinPerGroup minPerGroup: Int, by mappers: [(Emoji) -> String]) -> [(key: String, value: Set<Emoji>)] {
-        let (groups, rest) = mappers
-            .map { Dictionary(grouping: emojis, by: $0).mapValues(Set.init) }
-            .reduce([:], merge)
-            .map { ($0.0, Set($0.1)) }
-            .sorted(by: descendingComparator(comparing: { $0.1.count }, then: { $0.0 }))
-            .span { $0.1.count >= minPerGroup }
-        return Array(groups + rest)
-    }
-
-    private func merge<T, U>(_ lhs: [T: Set<U>], _ rhs: [T: Set<U>]) -> [T: Set<U>] where T: Hashable, U: Hashable {
-        var result = lhs
-        for (key, values) in rhs {
-            result[key] = (result[key] ?? []).union(values)
-        }
-        return result
     }
 }
