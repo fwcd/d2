@@ -26,22 +26,26 @@ public class EmojisCommand: StringCommand {
         }
 
         let emojiLimit = 50
+        let comparator: ((String, Set<Emoji>), (String, Set<Emoji>)) -> Bool = descendingComparator(comparing: { $0.1.count }, then: { $0.0 })
         var orderedGroups = [(String, Set<Emoji>)]()
         var insertedEmoji = Set<Emoji>()
 
-        for (name, emojis) in groups.sorted(by: descendingComparator(comparing: { $0.1.count }, then: { $0.0 })) {
+        for (name, emojis) in groups.sorted(by: comparator) {
             let remaining = emojis.subtracting(insertedEmoji)
             orderedGroups.append((name, remaining))
             insertedEmoji.formUnion(emojis)
-
-            if insertedEmoji.count > emojiLimit {
-                break
-            }
         }
+
+        orderedGroups.sort(by: comparator)
 
         output.append(Embed(
             title: "Emojis",
             fields: orderedGroups
+                .reduce([(String, Set<Emoji>)]()) {
+                    var res = $0
+                    res.append($1)
+                    return res.count <= emojiLimit ? res : $0
+                }
                 .map { ("\($0.0.truncate(10, appending: "..."))", value: $0.1.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(10, appending: "...").joined().nilIfEmpty) }
                 .compactMap { (k, v) in v.map { Embed.Field(name: k, value: $0, inline: true) } }
         ))
