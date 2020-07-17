@@ -13,6 +13,26 @@ extension StringProtocol {
 		markdownEscapable.replace(in: String(self)) { "\\\($0[0])" }
 	}
 
+	public var camelHumps: [String] {
+		var humps = [String]()
+		var hump = ""
+
+		for c in self {
+			if !hump.isEmpty && c.isUppercase {
+				humps.append(hump)
+				hump = String(c)
+			} else {
+				hump.append(c)
+			}
+		}
+
+		if !hump.isEmpty {
+			humps.append(hump)
+		}
+
+		return humps
+	}
+
 	public func split(by length: Int) -> [String] {
 		var start = startIndex
 		var output = [String]()
