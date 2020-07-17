@@ -1,4 +1,4 @@
-public struct Emoji {
+public struct Emoji: Hashable {
 	public let id: EmojiID?
 	public let managed: Bool
 	public let animated: Bool

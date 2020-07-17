@@ -25,36 +25,25 @@ public class EmojisCommand: StringCommand {
         output.append(Embed(
             title: "Emojis",
             fields: groups.map {
-                Embed.Field(name: "\($0.key.withFirstUppercased)", value: $0.value.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(20, appending: "...").joined())
+                Embed.Field(name: "\($0.key.withFirstUppercased)", value: $0.value.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(20, appending: "...").joined(), inline: true)
             }
         ))
     }
 
-    private func group(_ emojis: [Emoji], withMinPerGroup minPerGroup: Int, by mappers: [(Emoji) -> String]) -> [(key: String, value: [Emoji])] {
-        guard let mapper = mappers.first else { return [("Others", emojis)] }
-        let (groups, rest) = Dictionary(grouping: emojis, by: mapper)
+    private func group(_ emojis: [Emoji], withMinPerGroup minPerGroup: Int, by mappers: [(Emoji) -> String]) -> [(key: String, value: Set<Emoji>)] {
+        let (groups, rest) = mappers
+            .map { Dictionary(grouping: emojis, by: $0).mapValues(Set.init) }
+            .reduce([:], merge)
+            .map { ($0.0, Set($0.1)) }
             .sorted(by: descendingComparator { $0.1.count })
             .span { $0.1.count >= minPerGroup }
-        var allGroups = Array(groups)
-        if !rest.isEmpty {
-            allGroups = merge(allGroups, group(rest.flatMap { $0.1 }, withMinPerGroup: minPerGroup, by: Array(mappers.dropFirst())))
-        }
-        return allGroups
+        return Array(groups + rest)
     }
 
-    private func merge<T, U>(_ lhs: [(T, [U])], _ rhs: [(T, [U])]) -> [(T, [U])] where T: Equatable {
+    private func merge<T, U>(_ lhs: [T: Set<U>], _ rhs: [T: Set<U>]) -> [T: Set<U>] where T: Hashable, U: Hashable {
         var result = lhs
         for (key, values) in rhs {
-            var found = false
-            for i in 0..<lhs.count {
-                if result[i].0 == key {
-                    result[i].1 += values
-                    found = true
-                }
-            }
-            if !found {
-                result.append((key, values))
-            }
+            result[key] = (result[key] ?? []).union(values)
         }
         return result
     }
