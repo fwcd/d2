@@ -6,6 +6,7 @@ import D2Permissions
 public class InfoMessageCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
+        shortDescription: "Displays a static information message",
         requiredPermissionLevel: .basic
     )
     private let text: String
