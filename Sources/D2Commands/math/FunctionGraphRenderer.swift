@@ -8,8 +8,8 @@ struct FunctionGraphRenderer {
 	private let axisArrowSize: Double
 	private let axisColor: Color
 	private let axisLabelSpacing: Int
-	let pixelToFunctionX: ClosureBijection<Double>
-	let pixelToFunctionY: ClosureBijection<Double>
+	let pixelToFunctionX: AnyBijection<Double>
+	let pixelToFunctionY: AnyBijection<Double>
 	
 	init(
 		input inputVariable: String = "x",
