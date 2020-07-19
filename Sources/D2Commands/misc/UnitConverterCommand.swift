@@ -40,7 +40,7 @@ public class UnitConverterCommand: StringCommand {
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
             .mapValues { Dictionary(uniqueKeysWithValues: $0.map { ($0.1, $0.2) }) }
         
-        edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { k, _ in k })
+        edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { $0.merging($1, uniquingKeysWith: { v, _ in v }) })
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
