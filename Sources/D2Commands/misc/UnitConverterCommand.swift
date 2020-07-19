@@ -26,16 +26,22 @@ public class UnitConverterCommand: StringCommand {
     }
 
     // The unit conversion graph
-    private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Rational>]] = [
-        .m: [
-            .nm: AnyBijection(Scaling(by: 1_000_000)),
-            .mm: AnyBijection(Scaling(by: 1_000)),
-            .cm: AnyBijection(Scaling(by: 100)),
-            .km: AnyBijection(Scaling(by: Rational(1, 1_000)))
-        ]
-    ]
+    private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Rational>]]
     
-    public init() {}
+    public init() {
+        let originalEdges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Rational>]] = [
+            .m: [
+                .nm: AnyBijection(Scaling(by: 1_000_000)),
+                .mm: AnyBijection(Scaling(by: 1_000)),
+                .cm: AnyBijection(Scaling(by: 100)),
+                .km: AnyBijection(Scaling(by: Rational(1, 1_000)))
+            ]
+        ]
+        let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
+            .mapValues { Dictionary(uniqueKeysWithValues: $0.map { ($0.1, $0.2) }) }
+        
+        edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { k, _ in k })
+    }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let parsedArgs = argsPattern.firstGroups(in: input) else {
@@ -69,5 +75,10 @@ public class UnitConverterCommand: StringCommand {
         let destValue = conversion.apply(value)
         let displays: [String?] = ["\(destValue)", destValue.isDisplayedAsFraction ? "\(destValue.asDouble)" : nil]
         output.append(displays.compactMap { $0 }.map { "\($0) \(destUnit)" }.joined(separator: " = ").nilIfEmpty ?? "_?_")
+    }
+
+    private func shortestPath(from srcUnit: ConvertableUnit, to destUnit: ConvertableUnit) -> AnyBijection<Rational> {
+        // TODO
+        fatalError("TODO")
     }
 }
