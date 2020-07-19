@@ -17,7 +17,7 @@ public class TLDRCommand: StringCommand {
 
     public init(
         maxMessageCount: Int = 80,
-        highlightThreshold: Double = 0.25,
+        highlightThreshold: Double = 0,
         capitalizedFactor: Int = 3
     ) {
         self.maxMessageCount = maxMessageCount
@@ -47,7 +47,7 @@ public class TLDRCommand: StringCommand {
 
         client.getMessages(for: tldrChannelName, limit: messageCount) { messages, _ in
             let sentences = messages.flatMap { $0.content.split(separator: ".").map(String.init) }
-            let summary = self.summarize(sentences: sentences, summarySentenceCount: min(6, messageCount / 2))
+            let summary = self.summarize(sentences: sentences, summarySentenceCount: min(5, messageCount / 2))
 
             output.append(Embed(
                 title: "TL;DR of the last \(messageCount) \("message".pluralize(with: messageCount))",
