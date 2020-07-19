@@ -27,8 +27,8 @@ struct FunctionGraphRenderer {
 		self.axisLabelSpacing = axisLabelSpacing
 		self.axisColor = axisColor
 		
-		pixelToFunctionX = Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale)))
-		pixelToFunctionY = Scaling(by: -1.0 / scale).then(Translation(by: Double(height) / (2 * scale)))
+		pixelToFunctionX = AnyBijection(Scaling(by: 1.0 / scale).then(Translation(by: -Double(width) / (2 * scale))))
+		pixelToFunctionY = AnyBijection(Scaling(by: -1.0 / scale).then(Translation(by: Double(height) / (2 * scale))))
 	}
 	
 	func render(ast: ExpressionASTNode) throws -> Image {

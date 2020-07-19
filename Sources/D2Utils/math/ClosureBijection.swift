@@ -16,19 +16,3 @@ public struct AnyBijection<V>: Bijection {
 	
 	public func inverseApply(_ value: V) -> V { return inverseApplyImpl(value) }
 }
-
-public extension Bijection {
-	func then<B: Bijection>(_ next: B) -> AnyBijection<Value> where B.Value == Value {
-		return AnyBijection(
-			apply: { next.apply(self.apply($0)) },
-			inverseApply: { self.inverseApply(next.inverseApply($0)) }
-		)
-	}
-	
-	func compose<B: Bijection>(_ previous: B) -> AnyBijection<Value> where B.Value == Value {
-		return AnyBijection(
-			apply: { self.apply(previous.apply($0)) },
-			inverseApply: { previous.inverseApply(self.inverseApply($0)) }
-		)
-	}
-}
