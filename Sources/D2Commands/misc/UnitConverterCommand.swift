@@ -40,6 +40,18 @@ public class UnitConverterCommand: StringCommand {
         case kmCubed = "km^3"
         case liter = "l"
 
+        // Data size
+        case bit
+        case byte = "b"
+        case kilobyte = "kb"
+        case megabyte = "mb"
+        case gigabyte = "gb"
+        case terabyte = "tb"
+        case petabyte = "pb"
+        case exabyte = "eb"
+        case zettabyte = "zb"
+        case yottabyte = "yt"
+
         var description: String { rawValue }
     }
 
@@ -70,6 +82,16 @@ public class UnitConverterCommand: StringCommand {
                 .cmCubed: AnyBijection(Scaling(by: 1e6)),
                 .liter: AnyBijection(Scaling(by: 1e3)),
                 .kmCubed: AnyBijection(Scaling(by: 1e-18))
+            ],
+            .byte: [
+                .kilobyte: AnyBijection(Scaling(by: 1e-3)),
+                .megabyte: AnyBijection(Scaling(by: 1e-6)),
+                .gigabyte: AnyBijection(Scaling(by: 1e-9)),
+                .terabyte: AnyBijection(Scaling(by: 1e-12)),
+                .petabyte: AnyBijection(Scaling(by: 1e-15)),
+                .exabyte: AnyBijection(Scaling(by: 1e-18)),
+                .zettabyte: AnyBijection(Scaling(by: 1e-21)),
+                .yottabyte: AnyBijection(Scaling(by: 1e-24))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
@@ -92,11 +114,11 @@ public class UnitConverterCommand: StringCommand {
             output.append(errorText: "Not a number: `\(rawValue)`")
             return
         }
-        guard let srcUnit = ConvertableUnit(rawValue: rawSrcUnit) else {
+        guard let srcUnit = ConvertableUnit(rawValue: rawSrcUnit.lowercased()) else {
             output.append(errorText: "Invalid source unit `\(rawSrcUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
             return
         }
-        guard let destUnit = ConvertableUnit(rawValue: rawDestUnit) else {
+        guard let destUnit = ConvertableUnit(rawValue: rawDestUnit.lowercased()) else {
             output.append(errorText: "Invalid destination unit `\(rawDestUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
             return
         }
