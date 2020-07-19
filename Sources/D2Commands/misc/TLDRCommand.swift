@@ -47,7 +47,7 @@ public class TLDRCommand: StringCommand {
         }
     }
 
-    private func summarize(sentences: [String], summarySentenceCount: Int) -> [String] {
+    private func summarize(sentences: [String], summarySentenceCount: Int = 6, highlightThreshold: Double = 0.3) -> [String] {
         // Uses the summary algorithm from https://smmry.com/about
         // with TF-IDF as a measure of word relevance
 
@@ -66,12 +66,16 @@ public class TLDRCommand: StringCommand {
             inverseDocFreqs[term] = idf
         }
 
+        func tfIdfOf(term: String, in doc: [String]) -> Double {
+            frequencyOf(term: term, in: doc) / (inverseDocFreqs[term] ?? 1)
+        }
+
         return docs
             .enumerated()
-            .sorted(by: descendingComparator { (_, doc) in doc.map { self.frequencyOf(term: $0, in: doc) / (inverseDocFreqs[$0] ?? 1) }.reduce(0, +) })
+            .sorted(by: descendingComparator { (_, doc) in doc.map { tfIdfOf(term: $0, in: doc) }.reduce(0, +) })
             .prefix(summarySentenceCount)
             .sorted(by: ascendingComparator { $0.0 })
-            .map { $0.1.joined(separator: " ") }
+            .map { (_, doc) in doc.map { tfIdfOf(term: $0, in: doc) > highlightThreshold ? "**\($0)**" : $0 }.joined(separator: " ") }
     }
 
     private func frequencyOf(term: String, in doc: [String]) -> Double {
