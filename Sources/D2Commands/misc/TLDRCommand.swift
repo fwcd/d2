@@ -68,14 +68,14 @@ public class TLDRCommand: StringCommand {
 
         return docs
             .enumerated()
-            .sorted(by: descendingComparator { (_, doc) in doc.map { Double(self.frequencyOf(term: $0, in: doc)) / (inverseDocFreqs[$0] ?? 1) }.reduce(0, +) })
+            .sorted(by: descendingComparator { (_, doc) in doc.map { self.frequencyOf(term: $0, in: doc) / (inverseDocFreqs[$0] ?? 1) }.reduce(0, +) })
             .prefix(summarySentenceCount)
             .sorted(by: ascendingComparator { $0.0 })
             .map { $0.1.joined(separator: " ") }
     }
 
-    private func frequencyOf(term: String, in doc: [String]) -> Int {
-        absoluteFrequencyOf(term: term, in: doc) / (doc.map { absoluteFrequencyOf(term: $0, in: doc) }.max() ?? 1)
+    private func frequencyOf(term: String, in doc: [String]) -> Double {
+        Double(absoluteFrequencyOf(term: term, in: doc)) / Double(doc.map { absoluteFrequencyOf(term: $0, in: doc) }.max() ?? 1)
     }
 
     private func absoluteFrequencyOf(term: String, in doc: [String]) -> Int {
