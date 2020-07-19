@@ -20,7 +20,7 @@ public class MessagePreviewsCommand: StringCommand {
             },
             "disable": { [unowned self] output, guildId in
                 self.configuration.enabledGuildIds.remove(guildId)
-                output.append("Successfully removed message previews from this guild!")
+                output.append("Successfully disabled message previews from this guild!")
             }
         ]
     }
