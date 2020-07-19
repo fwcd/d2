@@ -17,6 +17,9 @@ public class UnitConverterCommand: StringCommand {
         case cm
         case m
         case km
+        case inch = "in"
+        case yard = "yd"
+        case foot = "ft"
 
         // Area
         case nmSquared = "nm^2"
@@ -75,7 +78,12 @@ public class UnitConverterCommand: StringCommand {
                 .nm: AnyBijection(Scaling(by: 1e6)),
                 .mm: AnyBijection(Scaling(by: 1e3)),
                 .cm: AnyBijection(Scaling(by: 1e2)),
-                .km: AnyBijection(Scaling(by: 1e-3))
+                .km: AnyBijection(Scaling(by: 1e-3)),
+                .inch: AnyBijection(Scaling(by: 39.3701)),
+                .foot: AnyBijection(Scaling(by: 3.28084))
+            ],
+            .yard: [
+                .foot: AnyBijection(Scaling(by: 3))
             ],
             .mSquared: [
                 .nmSquared: AnyBijection(Scaling(by: 1e12)),
