@@ -9,6 +9,7 @@ public class UnitConverterCommand: StringCommand {
         shortDescription: "Converts between two units",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .text
 
     private enum ConvertableUnit: String, Hashable, CaseIterable, CustomStringConvertible {
         // Length
