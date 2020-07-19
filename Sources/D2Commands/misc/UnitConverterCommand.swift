@@ -1,3 +1,4 @@
+import Foundation
 import D2Utils
 
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
@@ -51,6 +52,14 @@ public class UnitConverterCommand: StringCommand {
         case exabyte = "eb"
         case zettabyte = "zb"
         case yottabyte = "yt"
+        case kibibyte = "kib"
+        case mebibyte = "mib"
+        case gibibyte = "gib"
+        case tebibyte = "tib"
+        case pebibyte = "pib"
+        case exbibyte = "eib"
+        case zebibyte = "zib"
+        case yobibyte = "yib"
 
         var description: String { rawValue }
     }
@@ -92,7 +101,15 @@ public class UnitConverterCommand: StringCommand {
                 .petabyte: AnyBijection(Scaling(by: 1e-15)),
                 .exabyte: AnyBijection(Scaling(by: 1e-18)),
                 .zettabyte: AnyBijection(Scaling(by: 1e-21)),
-                .yottabyte: AnyBijection(Scaling(by: 1e-24))
+                .yottabyte: AnyBijection(Scaling(by: 1e-24)),
+                .kibibyte: AnyBijection(Scaling(by: pow(2, -10))),
+                .mebibyte: AnyBijection(Scaling(by: pow(2, -20))),
+                .gibibyte: AnyBijection(Scaling(by: pow(2, -30))),
+                .tebibyte: AnyBijection(Scaling(by: pow(2, -40))),
+                .pebibyte: AnyBijection(Scaling(by: pow(2, -50))),
+                .exbibyte: AnyBijection(Scaling(by: pow(2, -60))),
+                .zebibyte: AnyBijection(Scaling(by: pow(2, -70))),
+                .yobibyte: AnyBijection(Scaling(by: pow(2, -80)))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
