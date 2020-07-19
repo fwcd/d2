@@ -32,6 +32,14 @@ public class UnitConverterCommand: StringCommand {
         case hectare = "ha"
         case acre = "ac"
 
+        // Volume
+        case nmCubed = "nm^3"
+        case mmCubed = "mm^3"
+        case cmCubed = "cm^3"
+        case mCubed = "m^3"
+        case kmCubed = "km^3"
+        case liter = "l"
+
         var description: String { rawValue }
     }
 
@@ -50,11 +58,18 @@ public class UnitConverterCommand: StringCommand {
                 .nmSquared: AnyBijection(Scaling(by: 1_000_000_000_000)),
                 .mmSquared: AnyBijection(Scaling(by: 1_000_000)),
                 .cmSquared: AnyBijection(Scaling(by: 10_000)),
-                .kmSquared: AnyBijection(Scaling(by: Rational(1, 1_000_000))),
-                .hectare: AnyBijection(Scaling(by: Rational(1, 10_000)))
+                .hectare: AnyBijection(Scaling(by: Rational(1, 10_000))),
+                .kmSquared: AnyBijection(Scaling(by: Rational(1, 1_000_000)))
             ],
             .acre: [
                 .mSquared: AnyBijection(Scaling(by: Rational(approximately: 4046.9)))
+            ],
+            .mCubed: [
+                .nmCubed: AnyBijection(Scaling(by: 1_000_000_000_000_000_000)),
+                .mmCubed: AnyBijection(Scaling(by: 1_000_000_000)),
+                .cmCubed: AnyBijection(Scaling(by: 1_000_000)),
+                .liter: AnyBijection(Scaling(by: 1000)),
+                .kmCubed: AnyBijection(Scaling(by: Rational(1, 1_000_000_000_000_000_000)))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
