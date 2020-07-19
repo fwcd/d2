@@ -66,8 +66,7 @@ public class UnitConverterCommand: StringCommand {
             return
         }
 
-        // TODO: Use path search through graph
-        guard let conversion = edges[srcUnit]?[destUnit] else {
+        guard let conversion = shortestPath(from: srcUnit, to: destUnit) else {
             output.append(errorText: "No conversion between `\(srcUnit)` and `\(destUnit)` found")
             return
         }
