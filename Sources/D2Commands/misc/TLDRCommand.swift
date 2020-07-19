@@ -12,9 +12,14 @@ public class TLDRCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     private let maxMessageCount: Int
+    private let performHighlighting: Bool
 
-    public init(maxMessageCount: Int = 80) {
+    public init(
+        maxMessageCount: Int = 80,
+        performHighlighting: Bool = false
+    ) {
         self.maxMessageCount = maxMessageCount
+        self.performHighlighting = performHighlighting
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -39,7 +44,8 @@ public class TLDRCommand: StringCommand {
 
         client.getMessages(for: tldrChannelName, limit: messageCount) { messages, _ in
             let sentences = messages.flatMap { $0.content.split(separator: ".").map(String.init) }
-            let summary = self.summarize(sentences: sentences, summarySentenceCount: min(6, messageCount / 2))
+            let summary = self.summarize(sentences: sentences, summarySentenceCount: min(6, messageCount / 2), highlightThreshold: self.performHighlighting ? 0.2 : .infinity)
+
             output.append(Embed(
                 title: "TL;DR of the last \(messageCount) \("message".pluralize(with: messageCount))",
                 description: summary.joined(separator: " [...] ").nilIfEmpty
@@ -47,7 +53,7 @@ public class TLDRCommand: StringCommand {
         }
     }
 
-    private func summarize(sentences: [String], summarySentenceCount: Int = 6, highlightThreshold: Double = 0.3) -> [String] {
+    private func summarize(sentences: [String], summarySentenceCount: Int = 6, highlightThreshold: Double = .infinity) -> [String] {
         // Uses the summary algorithm from https://smmry.com/about
         // with TF-IDF as a measure of word relevance
 
@@ -66,23 +72,29 @@ public class TLDRCommand: StringCommand {
             inverseDocFreqs[term] = idf
         }
 
-        func tfIdfOf(term: String, in doc: [String]) -> Double {
-            frequencyOf(term: term, in: doc) / (inverseDocFreqs[term] ?? 1)
+        func tfIdfOf(term: String, in doc: [String], prioritizeCapitalized: Bool) -> Double {
+            frequencyOf(term: term, in: doc, prioritizeCapitalized: prioritizeCapitalized) / (inverseDocFreqs[term] ?? 1)
         }
 
-        return docs
+        let ts: [(Int, [(Double, String)])] = docs
             .enumerated()
-            .sorted(by: descendingComparator { (_, doc) in doc.map { tfIdfOf(term: $0, in: doc) }.reduce(0, +) })
+            .map { (i, doc) in (i, doc.enumerated().map { (i, t) in (tfIdfOf(term: t, in: doc, prioritizeCapitalized: i > 0), t) }) }
+            .sorted(by: descendingComparator { (_, d) in d.map(\.0).reduce(0, +) })
             .prefix(summarySentenceCount)
             .sorted(by: ascendingComparator { $0.0 })
-            .map { (_, doc) in doc.map { tfIdfOf(term: $0, in: doc) > highlightThreshold ? "**\($0)**" : $0 }.joined(separator: " ") }
+
+        return ts
+            .map { (_, d) in d.map { $0.0 > highlightThreshold ? "**\($0.1)**" : $0.1 }.joined(separator: " ") }
     }
 
-    private func frequencyOf(term: String, in doc: [String]) -> Double {
-        Double(absoluteFrequencyOf(term: term, in: doc)) / Double(doc.map { absoluteFrequencyOf(term: $0, in: doc) }.max() ?? 1)
+    private func frequencyOf(term: String, in doc: [String], prioritizeCapitalized: Bool = true) -> Double {
+        let current = Double(absoluteFrequencyOf(term: term, in: doc))
+        let total = Double(doc.map { absoluteFrequencyOf(term: $0, in: doc, prioritizeCapitalized: prioritizeCapitalized) }.max() ?? 1)
+        return current / total
     }
 
-    private func absoluteFrequencyOf(term: String, in doc: [String]) -> Int {
-        doc.count(forWhich: { $0 == term })
+    private func absoluteFrequencyOf(term: String, in doc: [String], prioritizeCapitalized: Bool = true) -> Int {
+        let factor = prioritizeCapitalized && (term.first?.isUppercase ?? false) ? 2 : 1
+        return doc.count(forWhich: { $0 == term }) * factor
     }
 }
