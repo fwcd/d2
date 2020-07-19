@@ -40,23 +40,23 @@ public class UnitConverterCommand: StringCommand {
 
         // Data size
         case bit
-        case byte = "b"
-        case kilobyte = "kb"
-        case megabyte = "mb"
-        case gigabyte = "gb"
-        case terabyte = "tb"
-        case petabyte = "pb"
-        case exabyte = "eb"
-        case zettabyte = "zb"
-        case yottabyte = "yt"
-        case kibibyte = "kib"
-        case mebibyte = "mib"
-        case gibibyte = "gib"
-        case tebibyte = "tib"
-        case pebibyte = "pib"
-        case exbibyte = "eib"
-        case zebibyte = "zib"
-        case yobibyte = "yib"
+        case byte = "B"
+        case kilobyte = "kB"
+        case megabyte = "MB"
+        case gigabyte = "GB"
+        case terabyte = "TB"
+        case petabyte = "PB"
+        case exabyte = "EB"
+        case zettabyte = "ZB"
+        case yottabyte = "YB"
+        case kibibyte = "KiB"
+        case mebibyte = "MiB"
+        case gibibyte = "GiB"
+        case tebibyte = "TiB"
+        case pebibyte = "PiB"
+        case exbibyte = "EiB"
+        case zebibyte = "ZiB"
+        case yobibyte = "YiB"
 
         // Mass
         case ng
@@ -66,7 +66,16 @@ public class UnitConverterCommand: StringCommand {
         case oz
         case lb
 
+        // Temperature
+        case kelvin = "K"
+        case celsius = "°C"
+        case fahrenheit = "°F"
+
         var description: String { rawValue }
+
+        static func of(_ s: String) -> Self? {
+            Self(rawValue: s) ?? Self(rawValue: s.lowercased()) ?? Self(rawValue: s.uppercased())
+        }
     }
 
     // The unit conversion graph
@@ -129,6 +138,12 @@ public class UnitConverterCommand: StringCommand {
             .lb: [
                 .kg: AnyBijection(Scaling(by: 0.453_592_37)),
                 .oz: AnyBijection(Scaling(by: 16))
+            ],
+            .celsius: [
+                .kelvin: AnyBijection(Translation(by: 273.15))
+            ],
+            .fahrenheit: [
+                .celsius: AnyBijection(Translation(by: -32).then(Scaling(by: 0.555555555555555)))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
@@ -160,11 +175,11 @@ public class UnitConverterCommand: StringCommand {
             output.append(errorText: "Not a number: `\(rawValue)`")
             return
         }
-        guard let srcUnit = ConvertableUnit(rawValue: rawSrcUnit.lowercased()) else {
+        guard let srcUnit = ConvertableUnit.of(rawSrcUnit) else {
             output.append(errorText: "Invalid source unit `\(rawSrcUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
             return
         }
-        guard let destUnit = ConvertableUnit(rawValue: rawDestUnit.lowercased()) else {
+        guard let destUnit = ConvertableUnit.of(rawDestUnit) else {
             output.append(errorText: "Invalid destination unit `\(rawDestUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
             return
         }
