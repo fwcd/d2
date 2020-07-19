@@ -243,6 +243,7 @@ public class D2Delegate: MessageDelegate {
 		registry["serverinfo", aka: ["stats", "server", "serverstats", "guild", "guildinfo", "guildstats"]] = ServerInfoCommand(messageDB: messageDB)
 		registry["whatsup"] = WhatsUpCommand()
 		registry["songcharts"] = SongChartsCommand()
+		registry["tldr", aka: ["summarize", "summary"]] = TLDRCommand()
 		registry["sortby"] = SortByCommand()
 		registry["addscript"] = AddD2ScriptCommand()
 		registry["discordstatus"] = DiscordStatusCommand()
