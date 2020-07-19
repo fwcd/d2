@@ -13,6 +13,7 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     public var magnitude: Rational { Rational(abs(numerator), denominator) }
     public var absolute: Double { magnitude.asDouble }
 
+    public var isDisplayedAsFraction: Bool { isPrecise && denominator != 1 }
     public var directDescription: String { isPrecise ? (denominator == 1 ? String(numerator) : "\(numerator)/\(denominator)") : "\(asDouble)" }
     public var description: String { reduced().directDescription }
     

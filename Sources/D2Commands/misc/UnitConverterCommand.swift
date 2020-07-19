@@ -66,6 +66,8 @@ public class UnitConverterCommand: StringCommand {
             return
         }
 
-        output.append("\(conversion.apply(value)) \(destUnit)")
+        let destValue = conversion.apply(value)
+        let displays: [String?] = ["\(destValue)", destValue.isDisplayedAsFraction ? "\(destValue.asDouble)" : nil]
+        output.append(displays.compactMap { $0 }.map { "\($0) \(destUnit)" }.joined(separator: " = ").nilIfEmpty ?? "_?_")
     }
 }
