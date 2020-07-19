@@ -107,7 +107,7 @@ public class UnitConverterCommand: StringCommand {
         }
 
         let destValue = conversion.apply(value)
-        output.append("\(destValue) \(destUnit)")
+        output.append("\(destValue.roundedTo(decimalPlaces: 9)) \(destUnit)")
     }
 
     private struct Prioritized<T, U>: Comparable {

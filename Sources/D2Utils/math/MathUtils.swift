@@ -1,3 +1,4 @@
+import Foundation
 import Logging
 
 fileprivate let log = Logger(label: "D2Utils.MathUtils")
@@ -5,6 +6,13 @@ fileprivate let log = Logger(label: "D2Utils.MathUtils")
 extension Int {
 	public func clockModulo(_ rhs: Int) -> Int {
 		return (self % rhs + rhs) % rhs
+	}
+}
+
+extension Double {
+	public func roundedTo(decimalPlaces: UInt) -> Double {
+		let scale = pow(10.0, Double(decimalPlaces))
+		return (self * scale).rounded() / scale
 	}
 }
 
@@ -65,7 +73,7 @@ public func isPrime<I>(_ n: I) -> Bool where I: ExpressibleByIntegerLiteral & Re
 	return true
 }
 
-/// Finds a nontrivial factor of the given number.
+/// Finds a nontrivial scale of the given number.
 public func integerFactor<I>(_ n: I, _ c: I = 1) -> I? where I: ExpressibleByIntegerLiteral & Addable & Multipliable & Subtractable & Divisible & Comparable & Remainderable & Magnitudable & Strideable, I.Magnitude == I, I.Stride: SignedInteger {
 	func g(_ x: I) -> I {
 		return (x * x + c) % n
@@ -88,8 +96,8 @@ public func integerFactor<I>(_ n: I, _ c: I = 1) -> I? where I: ExpressibleByInt
 /// Finds the prime factorization of the given integer.
 public func primeFactorization<I>(_ n: I) -> [I] where I: ExpressibleByIntegerLiteral & Addable & Multipliable & Subtractable & Divisible & Equatable & Comparable & Remainderable & Magnitudable & Strideable, I.Magnitude == I, I.Stride: SignedInteger {
 	log.trace("Factoring \(n)...")
-	if let factor = integerFactor(n) {
-		return primeFactorization(factor) + primeFactorization(n / factor)
+	if let scale = integerFactor(n) {
+		return primeFactorization(scale) + primeFactorization(n / scale)
 	} else {
 		return [n]
 	}
