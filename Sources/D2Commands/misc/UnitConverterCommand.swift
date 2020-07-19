@@ -4,15 +4,9 @@ import D2Utils
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
 
 public class UnitConverterCommand: StringCommand {
-    public let info = CommandInfo(
+    public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Converts between two units",
-        helpText: """
-            Syntax: [number] [unit] to [unit]
-
-            For example:
-            - `4 km to m`
-            """,
         requiredPermissionLevel: .basic
     )
 
@@ -116,6 +110,15 @@ public class UnitConverterCommand: StringCommand {
             .mapValues { Dictionary(uniqueKeysWithValues: $0.map { ($0.1, $0.2) }) }
         
         edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { $0.merging($1, uniquingKeysWith: { v, _ in v }) })
+        info.helpText = """
+            Syntax: `[number] [unit] to [unit]`
+
+            For example:
+            - `4 km to m`
+            - `3 gb to bit`
+
+            Supported units: \(ConvertableUnit.allCases.map { "`\($0)`" }.joined(separator: ", "))
+            """
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
