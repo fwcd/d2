@@ -15,7 +15,7 @@ public class UnitConverterCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
-    private enum ConvertableUnit: String, CaseIterable, CustomStringConvertible {
+    private enum ConvertableUnit: String, Hashable, CaseIterable, CustomStringConvertible {
         case nm
         case mm
         case cm
@@ -77,8 +77,38 @@ public class UnitConverterCommand: StringCommand {
         output.append(displays.compactMap { $0 }.map { "\($0) \(destUnit)" }.joined(separator: " = ").nilIfEmpty ?? "_?_")
     }
 
-    private func shortestPath(from srcUnit: ConvertableUnit, to destUnit: ConvertableUnit) -> AnyBijection<Rational> {
-        // TODO
-        fatalError("TODO")
+    private struct Prioritized<T, U>: Comparable {
+        let value: T
+        let priority: Int
+        let bijection: AnyBijection<U>
+
+        static func ==(lhs: Self, rhs: Self) -> Bool {
+            lhs.priority == rhs.priority
+        }
+
+        static func <(lhs: Self, rhs: Self) -> Bool {
+            lhs.priority < rhs.priority
+        }
+    }
+
+    private func shortestPath(from srcUnit: ConvertableUnit, to destUnit: ConvertableUnit) -> AnyBijection<Rational>? {
+        // Uses Dijkstra's algorithm to find the shortest path from the src unit to the dest unit
+        
+        var visited = Set<ConvertableUnit>()
+        var queue = BinaryHeap<Prioritized<ConvertableUnit, Rational>>()
+        var current = Prioritized(value: srcUnit, priority: 0, bijection: AnyBijection(IdentityBijection<Rational>()))
+
+        while current.value != destUnit {
+            visited.insert(current.value)
+
+            for (neighbor, bijection) in edges[current.value] ?? [:] where !visited.contains(neighbor) {
+                queue.insert(Prioritized(value: neighbor, priority: current.priority - 1, bijection: AnyBijection(bijection.compose(current.bijection))))
+            }
+
+            guard let next = queue.popMax() else { return nil }
+            current = next
+        }
+
+        return current.bijection
     }
 }
