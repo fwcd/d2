@@ -44,32 +44,32 @@ public class UnitConverterCommand: StringCommand {
     }
 
     // The unit conversion graph
-    private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Rational>]]
+    private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Double>]]
     
     public init() {
-        let originalEdges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Rational>]] = [
+        let originalEdges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Double>]] = [
             .m: [
-                .nm: AnyBijection(Scaling(by: 1_000_000)),
-                .mm: AnyBijection(Scaling(by: 1_000)),
-                .cm: AnyBijection(Scaling(by: 100)),
-                .km: AnyBijection(Scaling(by: Rational(1, 1_000)))
+                .nm: AnyBijection(Scaling(by: 1e6)),
+                .mm: AnyBijection(Scaling(by: 1e3)),
+                .cm: AnyBijection(Scaling(by: 1e2)),
+                .km: AnyBijection(Scaling(by: 1e-3))
             ],
             .mSquared: [
-                .nmSquared: AnyBijection(Scaling(by: 1_000_000_000_000)),
-                .mmSquared: AnyBijection(Scaling(by: 1_000_000)),
-                .cmSquared: AnyBijection(Scaling(by: 10_000)),
-                .hectare: AnyBijection(Scaling(by: Rational(1, 10_000))),
-                .kmSquared: AnyBijection(Scaling(by: Rational(1, 1_000_000)))
+                .nmSquared: AnyBijection(Scaling(by: 1e12)),
+                .mmSquared: AnyBijection(Scaling(by: 1e6)),
+                .cmSquared: AnyBijection(Scaling(by: 1e4)),
+                .hectare: AnyBijection(Scaling(by: 1e-4)),
+                .kmSquared: AnyBijection(Scaling(by: 1e-6))
             ],
             .acre: [
-                .mSquared: AnyBijection(Scaling(by: Rational(approximately: 4046.9)))
+                .mSquared: AnyBijection(Scaling(by: 4046.9))
             ],
             .mCubed: [
-                .nmCubed: AnyBijection(Scaling(by: 1_000_000_000_000_000_000)),
-                .mmCubed: AnyBijection(Scaling(by: 1_000_000_000)),
-                .cmCubed: AnyBijection(Scaling(by: 1_000_000)),
-                .liter: AnyBijection(Scaling(by: 1000)),
-                .kmCubed: AnyBijection(Scaling(by: Rational(1, 1_000_000_000_000_000_000)))
+                .nmCubed: AnyBijection(Scaling(by: 1e18)),
+                .mmCubed: AnyBijection(Scaling(by: 1e9)),
+                .cmCubed: AnyBijection(Scaling(by: 1e6)),
+                .liter: AnyBijection(Scaling(by: 1e3)),
+                .kmCubed: AnyBijection(Scaling(by: 1e-18))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
@@ -88,7 +88,7 @@ public class UnitConverterCommand: StringCommand {
         let rawSrcUnit = parsedArgs[2]
         let rawDestUnit = parsedArgs[3]
 
-        guard let value = Rational(rawValue) else {
+        guard let value = Double(rawValue) else {
             output.append(errorText: "Not a number: `\(rawValue)`")
             return
         }
@@ -107,8 +107,7 @@ public class UnitConverterCommand: StringCommand {
         }
 
         let destValue = conversion.apply(value)
-        let displays: [String?] = ["\(destValue)", destValue.isDisplayedAsFraction ? "\(destValue.asDouble)" : nil]
-        output.append(displays.compactMap { $0 }.map { "\($0) \(destUnit)" }.joined(separator: " = ").nilIfEmpty ?? "_?_")
+        output.append("\(destValue) \(destUnit)")
     }
 
     private struct Prioritized<T, U>: Comparable {
@@ -125,7 +124,7 @@ public class UnitConverterCommand: StringCommand {
         }
     }
 
-    private func shortestPath(from srcUnit: ConvertableUnit, to destUnit: ConvertableUnit) -> AnyBijection<Rational>? {
+    private func shortestPath(from srcUnit: ConvertableUnit, to destUnit: ConvertableUnit) -> AnyBijection<Double>? {
         guard srcUnit != destUnit else {
             return AnyBijection(IdentityBijection())
         }
@@ -133,8 +132,8 @@ public class UnitConverterCommand: StringCommand {
         // Uses Dijkstra's algorithm to find the shortest path from the src unit to the dest unit
         
         var visited = Set<ConvertableUnit>()
-        var queue = BinaryHeap<Prioritized<ConvertableUnit, Rational>>()
-        var current = Prioritized(value: srcUnit, priority: 0, bijection: AnyBijection(IdentityBijection<Rational>()))
+        var queue = BinaryHeap<Prioritized<ConvertableUnit, Double>>()
+        var current = Prioritized(value: srcUnit, priority: 0, bijection: AnyBijection(IdentityBijection<Double>()))
 
         while current.value != destUnit {
             visited.insert(current.value)
