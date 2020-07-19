@@ -4,7 +4,7 @@ import D2Permissions
 fileprivate let initialPlayerTries: Int = 10
 
 public struct HangmanState: GameState, Multiplayer {
-    private static let wordList = (try? String(contentsOfFile: "Resources/hangman/words.txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
+    private static let wordList = (try? String(contentsOfFile: "Resources/wordlists/english.txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
 
     public typealias Role = Int
     public typealias Board = HangmanBoard
