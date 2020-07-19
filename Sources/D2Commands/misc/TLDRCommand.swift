@@ -67,9 +67,11 @@ public class TLDRCommand: StringCommand {
         }
 
         return docs
-            .sorted(by: descendingComparator { doc in doc.map { Double(self.frequencyOf(term: $0, in: doc)) / (inverseDocFreqs[$0] ?? 1) }.reduce(0, +) })
+            .enumerated()
+            .sorted(by: descendingComparator { (_, doc) in doc.map { Double(self.frequencyOf(term: $0, in: doc)) / (inverseDocFreqs[$0] ?? 1) }.reduce(0, +) })
             .prefix(summarySentenceCount)
-            .map { $0.joined(separator: " ") }
+            .sorted(by: ascendingComparator { $0.0 })
+            .map { $0.1.joined(separator: " ") }
     }
 
     private func frequencyOf(term: String, in doc: [String]) -> Int {
