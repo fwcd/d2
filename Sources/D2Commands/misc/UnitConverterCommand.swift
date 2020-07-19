@@ -55,6 +55,14 @@ public class UnitConverterCommand: StringCommand {
         case zebibyte = "zib"
         case yobibyte = "yib"
 
+        // Mass
+        case ng
+        case mg
+        case g
+        case kg
+        case oz
+        case lb
+
         var description: String { rawValue }
     }
 
@@ -104,6 +112,15 @@ public class UnitConverterCommand: StringCommand {
                 .exbibyte: AnyBijection(Scaling(by: pow(2, -60))),
                 .zebibyte: AnyBijection(Scaling(by: pow(2, -70))),
                 .yobibyte: AnyBijection(Scaling(by: pow(2, -80)))
+            ],
+            .g: [
+                .ng: AnyBijection(Scaling(by: 1e6)),
+                .mg: AnyBijection(Scaling(by: 1e3)),
+                .kg: AnyBijection(Scaling(by: 1e-3))
+            ],
+            .lb: [
+                .kg: AnyBijection(Scaling(by: 0.453_592_37)),
+                .oz: AnyBijection(Scaling(by: 16))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
