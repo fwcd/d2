@@ -1,3 +1,4 @@
+import Foundation
 import D2Utils
 import D2MessageIO
 
@@ -48,17 +49,34 @@ public class TLDRCommand: StringCommand {
 
     private func summarize(sentences: [String], summarySentenceCount: Int) -> [String] {
         // Uses the summary algorithm from https://smmry.com/about
+        // with TF-IDF as a measure of word relevance
 
-        var wordCounts = [String: Int]()
+        let docs = sentences.map { $0.split(separator: " ").map(String.init) }
+        var termDocFreqs = [String: Int]()
+        var inverseDocFreqs = [String: Double]()
 
-        for sentence in sentences {
-            for word in sentence.split(separator: " ").map(String.init) {
-                wordCounts[word] = (wordCounts[word] ?? 0) + 1
+        for doc in docs {
+            for term in Set(doc) {
+                termDocFreqs[term] = (termDocFreqs[term] ?? 0) + 1
             }
         }
 
-        return Array(sentences
-            .sorted(by: descendingComparator { $0.split(separator: " ").compactMap { wordCounts[String($0)] }.reduce(0, +) })
-            .prefix(summarySentenceCount))
+        for (term, occurringDocCount) in termDocFreqs {
+            let idf = log(Double(docs.count) / Double(occurringDocCount))
+            inverseDocFreqs[term] = idf
+        }
+
+        return docs
+            .sorted(by: descendingComparator { doc in doc.map { Double(self.frequencyOf(term: $0, in: doc)) / (inverseDocFreqs[$0] ?? 1) }.reduce(0, +) })
+            .prefix(summarySentenceCount)
+            .map { $0.joined(separator: " ") }
+    }
+
+    private func frequencyOf(term: String, in doc: [String]) -> Int {
+        absoluteFrequencyOf(term: term, in: doc) / (doc.map { absoluteFrequencyOf(term: $0, in: doc) }.max() ?? 1)
+    }
+
+    private func absoluteFrequencyOf(term: String, in doc: [String]) -> Int {
+        doc.count(forWhich: { $0 == term })
     }
 }
