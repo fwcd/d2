@@ -1,11 +1,13 @@
 import D2Utils
 import D2MessageIO
 
+fileprivate let argsPattern = try! Regex(from: "(<#(\\d+)>)?\\s*(\\d+)?")
+
 public class TLDRCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Automatically summarizes the last n messages from the channel",
-        helpText: "Syntax: [message count]",
+        helpText: "Syntax: [channel id]? [message count]?",
         requiredPermissionLevel: .basic
     )
     private let maxMessageCount: Int
@@ -16,13 +18,17 @@ public class TLDRCommand: StringCommand {
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client, let channelId = context.channel?.id else {
-            output.append(errorText: "No MessageIO client/channel id available")
+            output.append(errorText: "No MessageIO client/channel/guild available")
             return
         }
-        guard let messageCount = input.nilIfEmpty.map({ Int($0) }) ?? 80 else {
-            output.append(errorText: "Please enter a message count!")
+        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+            output.append(errorText: info.helpText!)
             return
         }
+
+        let messageCount = parsedArgs[1].nilIfEmpty.flatMap(Int.init) ?? 80
+        let tldrChannelName = parsedArgs[2].nilIfEmpty.map { ID($0, clientName: client.name) } ?? channelId
+
         guard messageCount <= maxMessageCount else {
             output.append(errorText: "More than \(maxMessageCount) \("message".pluralize(with: maxMessageCount)) messages are currently not supported")
             return
@@ -30,7 +36,7 @@ public class TLDRCommand: StringCommand {
 
         // TODO: Support more messages using message db
 
-        client.getMessages(for: channelId, limit: messageCount) { messages, _ in
+        client.getMessages(for: tldrChannelName, limit: messageCount) { messages, _ in
             let sentences = messages.flatMap { $0.content.split(separator: ".").map(String.init) }
             let summary = self.summarize(sentences: sentences, summarySentenceCount: min(6, messageCount / 2))
             output.append(Embed(
