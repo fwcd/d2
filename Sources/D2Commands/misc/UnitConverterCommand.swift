@@ -28,10 +28,10 @@ public class UnitConverterCommand: StringCommand {
     // The unit conversion graph
     private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Rational>]] = [
         .m: [
-            .nm: AnyBijection(Scaling(by: Rational(1, 1_000_000))),
-            .mm: AnyBijection(Scaling(by: Rational(1, 1_000))),
-            .cm: AnyBijection(Scaling(by: Rational(1, 100))),
-            .km: AnyBijection(Scaling(by: 1_000))
+            .nm: AnyBijection(Scaling(by: 1_000_000)),
+            .mm: AnyBijection(Scaling(by: 1_000)),
+            .cm: AnyBijection(Scaling(by: 100)),
+            .km: AnyBijection(Scaling(by: Rational(1, 1_000)))
         ]
     ]
     
