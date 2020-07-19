@@ -100,6 +100,7 @@ public class D2Delegate: MessageDelegate {
 		registry["addeventlistener", aka: ["on"]] = AddEventListenerCommand(eventListenerBus: eventListenerBus)
 		registry["removeeventlistener", aka: ["off"]] = RemoveEventListenerCommand(eventListenerBus: eventListenerBus)
 		registry["last"] = LastMessageCommand()
+		registry["convert"] = UnitConverterCommand()
 		registry["+"] = BinaryOperationCommand<Double>(name: "addition", operation: +)
 		registry["-"] = BinaryOperationCommand<Double>(name: "subtraction", operation: -)
 		registry["*"] = BinaryOperationCommand<Double>(name: "multiplication", operation: *)
