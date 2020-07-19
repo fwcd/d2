@@ -33,6 +33,7 @@ public class D2Delegate: MessageDelegate {
 		subscriptionManager = SubscriptionManager(registry: registry)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
+		let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
 		let permissionManager = PermissionManager()
 		let inventoryManager = InventoryManager()
 
@@ -45,7 +46,7 @@ public class D2Delegate: MessageDelegate {
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
 			MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
 			MentionSomeoneHandler(),
-			MessagePreviewHandler(),
+			MessagePreviewHandler(configuration: messagePreviewsConfiguration),
 			TriggerReactionHandler(),
 			CountToNHandler(),
 			MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
@@ -85,6 +86,7 @@ public class D2Delegate: MessageDelegate {
 		registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
 		registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
 		registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: streamerRoleConfiguration)
+		registry["messagepreviews"] = MessagePreviewsCommand(configuration: messagePreviewsConfiguration)
 		registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
 		registry["userinfo", aka: ["user"]] = UserInfoCommand()
 		registry["clear"] = ClearCommand()

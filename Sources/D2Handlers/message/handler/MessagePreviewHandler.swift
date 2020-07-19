@@ -1,5 +1,6 @@
 import Foundation
 import Logging
+import D2Commands
 import D2MessageIO
 import D2Utils
 
@@ -14,8 +15,19 @@ fileprivate let messageLinkPattern = try! Regex(from: "https?://discord(?:app)?.
 
 /// Displays previews of linked messages.
 public struct MessagePreviewHandler: MessageHandler {
+    @AutoSerializing private var configuration: MessagePreviewsConfiguration
+
+    public init(configuration: AutoSerializing<MessagePreviewsConfiguration>) {
+        self._configuration = configuration
+    }
+
     public func handle(message: Message, from client: MessageClient) -> Bool {
-        if client.name == "Discord", let parsedLink = messageLinkPattern.firstGroups(in: message.content), let channelId = message.channelId {
+        if client.name == "Discord",
+            let guildId = message.guild?.id,
+            configuration.enabledGuildIds.contains(guildId),
+            let parsedLink = messageLinkPattern.firstGroups(in: message.content),
+            let channelId = message.channelId {
+
             let previewedChannelId = ID(parsedLink[2], clientName: client.name)
             let previewedMessageId = ID(parsedLink[3], clientName: client.name)
 
