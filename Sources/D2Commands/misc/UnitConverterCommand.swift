@@ -16,11 +16,21 @@ public class UnitConverterCommand: StringCommand {
     )
 
     private enum ConvertableUnit: String, Hashable, CaseIterable, CustomStringConvertible {
+        // Length
         case nm
         case mm
         case cm
         case m
         case km
+
+        // Area
+        case nmSquared = "nm^2"
+        case mmSquared = "mm^2"
+        case cmSquared = "cm^2"
+        case mSquared = "m^2"
+        case kmSquared = "km^2"
+        case hectare = "ha"
+        case acre = "ac"
 
         var description: String { rawValue }
     }
@@ -35,6 +45,16 @@ public class UnitConverterCommand: StringCommand {
                 .mm: AnyBijection(Scaling(by: 1_000)),
                 .cm: AnyBijection(Scaling(by: 100)),
                 .km: AnyBijection(Scaling(by: Rational(1, 1_000)))
+            ],
+            .mSquared: [
+                .nmSquared: AnyBijection(Scaling(by: 1_000_000_000_000)),
+                .mmSquared: AnyBijection(Scaling(by: 1_000_000)),
+                .cmSquared: AnyBijection(Scaling(by: 10_000)),
+                .kmSquared: AnyBijection(Scaling(by: Rational(1, 1_000_000))),
+                .hectare: AnyBijection(Scaling(by: Rational(1, 10_000)))
+            ],
+            .acre: [
+                .mSquared: AnyBijection(Scaling(by: Rational(approximately: 4046.9)))
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
@@ -91,6 +111,10 @@ public class UnitConverterCommand: StringCommand {
     }
 
     private func shortestPath(from srcUnit: ConvertableUnit, to destUnit: ConvertableUnit) -> AnyBijection<Rational>? {
+        guard srcUnit != destUnit else {
+            return AnyBijection(IdentityBijection())
+        }
+
         // Uses Dijkstra's algorithm to find the shortest path from the src unit to the dest unit
         
         var visited = Set<ConvertableUnit>()
