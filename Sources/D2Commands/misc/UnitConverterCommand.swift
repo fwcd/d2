@@ -84,6 +84,7 @@ public class UnitConverterCommand: StringCommand {
                 .kmCubed: AnyBijection(Scaling(by: 1e-18))
             ],
             .byte: [
+                .bit: AnyBijection(Scaling(by: 8)),
                 .kilobyte: AnyBijection(Scaling(by: 1e-3)),
                 .megabyte: AnyBijection(Scaling(by: 1e-6)),
                 .gigabyte: AnyBijection(Scaling(by: 1e-9)),
