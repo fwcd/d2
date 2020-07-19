@@ -12,14 +12,17 @@ public class TLDRCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     private let maxMessageCount: Int
-    private let performHighlighting: Bool
+    private let highlightThreshold: Double
+    private let capitalizedFactor: Int
 
     public init(
         maxMessageCount: Int = 80,
-        performHighlighting: Bool = false
+        highlightThreshold: Double = 0.25,
+        capitalizedFactor: Int = 3
     ) {
         self.maxMessageCount = maxMessageCount
-        self.performHighlighting = performHighlighting
+        self.highlightThreshold = highlightThreshold
+        self.capitalizedFactor = capitalizedFactor
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -44,7 +47,7 @@ public class TLDRCommand: StringCommand {
 
         client.getMessages(for: tldrChannelName, limit: messageCount) { messages, _ in
             let sentences = messages.flatMap { $0.content.split(separator: ".").map(String.init) }
-            let summary = self.summarize(sentences: sentences, summarySentenceCount: min(6, messageCount / 2), highlightThreshold: self.performHighlighting ? 0.2 : .infinity)
+            let summary = self.summarize(sentences: sentences, summarySentenceCount: min(6, messageCount / 2))
 
             output.append(Embed(
                 title: "TL;DR of the last \(messageCount) \("message".pluralize(with: messageCount))",
@@ -53,7 +56,7 @@ public class TLDRCommand: StringCommand {
         }
     }
 
-    private func summarize(sentences: [String], summarySentenceCount: Int = 6, highlightThreshold: Double = .infinity) -> [String] {
+    private func summarize(sentences: [String], summarySentenceCount: Int = 6) -> [String] {
         // Uses the summary algorithm from https://smmry.com/about
         // with TF-IDF as a measure of word relevance
 
@@ -94,7 +97,7 @@ public class TLDRCommand: StringCommand {
     }
 
     private func absoluteFrequencyOf(term: String, in doc: [String], prioritizeCapitalized: Bool = true) -> Int {
-        let factor = prioritizeCapitalized && (term.first?.isUppercase ?? false) ? 2 : 1
+        let factor = prioritizeCapitalized && (term.first?.isUppercase ?? false) ? capitalizedFactor : 1
         return doc.count(forWhich: { $0 == term }) * factor
     }
 }
