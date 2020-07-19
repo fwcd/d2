@@ -49,7 +49,9 @@ public class TLDRCommand: StringCommand {
         // TODO: Support more messages using message db
 
         client.getMessages(for: tldrChannelName, limit: messageCount) { messages, _ in
-            let sentences = messages.flatMap { $0.content.split(separator: ".").map(String.init) }
+            let sentences = messages
+                .sorted(by: ascendingComparator { $0.timestamp ?? .distantPast })
+                .flatMap { $0.content.split(separator: ".").map(String.init) }
             let summary = self.summarize(sentences: sentences, summarySentenceCount: min(self.maxSentenceCount, messageCount / 2))
 
             output.append(Embed(
