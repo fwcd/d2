@@ -42,7 +42,7 @@ public class UnitConverterCommand: StringCommand {
         // Data size
         case bit
         case byte = "B"
-        case kilobyte = "kB"
+        case kilobyte = "KB"
         case megabyte = "MB"
         case gigabyte = "GB"
         case terabyte = "TB"
