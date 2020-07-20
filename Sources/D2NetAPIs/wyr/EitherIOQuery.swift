@@ -1,5 +1,8 @@
+import Logging
 import D2Utils
 import SwiftSoup
+
+fileprivate let log = Logger(label: "D2NetAPIs.EitherIOQuery")
 
 public struct EitherIOQuery {
     private let term: String
@@ -25,7 +28,8 @@ public struct EitherIOQuery {
 
     public func perform(offset: Int = 0, prepending: [WouldYouRatherQuestion] = [], then: @escaping (Result<[WouldYouRatherQuestion], Error>) -> Void) {
         do {
-            let request = try HTTPRequest(host: "either.io", path: "/search", query: ["s": term, "offset": String(offset)])
+            log.info("Querying '\(term)' with offset \(offset) from either.io")
+            let request = try HTTPRequest(host: "either.io", path: "/search", query: ["s": term, "offset": String(offset)], headers: ["X-Requested-With": "XMLHttpRequest"])
             request.fetchJSONAsync(as: EitherIOResponse.self) {
                 do {
                     let response = try $0.get()
@@ -33,9 +37,9 @@ public struct EitherIOQuery {
                     let questions: [WouldYouRatherQuestion] = try node.getElementsByTag("p").array().compactMap {
                         let choices = try $0.getElementsByTag("strong").array()
                         guard
-                            let title = $0.textNodes().first?.text(),
-                            let firstChoice = try choices[safely: 0]?.text(),
-                            let secondChoice = try choices[safely: 1]?.text() else { return nil }
+                            let title = $0.textNodes().first?.text().trimmingCharacters(in: .whitespacesAndNewlines),
+                            let firstChoice = try choices[safely: 0]?.text().trimmingCharacters(in: .whitespacesAndNewlines),
+                            let secondChoice = try choices[safely: 1]?.text().trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
                         return WouldYouRatherQuestion(
                             title: title,
                             firstChoice: firstChoice,

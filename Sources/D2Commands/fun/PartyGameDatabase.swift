@@ -104,7 +104,7 @@ public class PartyGameDatabase {
     private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
         sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in {
             Promise { then in
-                EitherIOQuery(term: String(c), maxOffset: 1000).perform {
+                EitherIOQuery(term: String(c), maxOffset: 1500).perform {
                     then($0)
                 }
             }
