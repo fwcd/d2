@@ -76,12 +76,12 @@ public class ServerInfoCommand: StringCommand {
             }
         }
         
-        for (_, presence) in guild.presences {
+        for (id, presence) in guild.presences {
             presences.append(presence)
             if let game = presence.game, let playTime = game.timestamps?.interval, playTime > longestPlayTime {
                 longestPlayTime = playTime
                 longestPlayTimeGame = game.name
-                longestPlayTimeUsername = presence.user.username
+                longestPlayTimeUsername = guild.members[id]?.displayName ?? "?"
             }
         }
         
@@ -154,7 +154,7 @@ public class ServerInfoCommand: StringCommand {
             ]),
             (":triangular_flag_on_post: Highscores", [
                 ("Longest Username", longestUsername),
-                ("Most Roles", "\(mostRoles.map { "`\($0)`" }.joined(separator: ", ")) by `\(mostRolesUsername)`"),
+                ("Most Roles", "\(mostRoles.count) \("role".pluralize(with: mostRoles.count)) by `\(mostRolesUsername)`"),
                 ("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
                 ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralize(with: mostPlayed?.1.count ?? 0))")
             ]),
