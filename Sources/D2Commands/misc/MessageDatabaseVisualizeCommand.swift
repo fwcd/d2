@@ -8,7 +8,7 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Visualizes a statistic using the message database",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .vip
     )
     private let subcommands: [String: (CommandOutput, GuildID) -> Void]
 
@@ -34,11 +34,12 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                     }
                     
                     for (channelName, userName, count) in results {
-                        let edge = Edge(from: userNodes[userName]!, to: channelNodes[channelName]!)
+                        var edge = Edge(from: userNodes[userName]!, to: channelNodes[channelName]!)
+                        edge.weight = Double(count)
                         graph.append(edge)
                     }
 
-                    let data = try graph.render(using: .fdp, to: .png)
+                    let data = try graph.render(using: .sfdp, to: .png)
                     try output.append(try Image(fromPng: data))
                 } catch {
                     output.append(error, errorText: "Could not query/render people-in-channels statistic.")
