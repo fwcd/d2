@@ -165,12 +165,14 @@ public class UnitConverterCommand: StringCommand {
                     return ($0, node)
                 })
 
+                graph.aspectRatio = .compress
+                graph.textColor = .named(.white)
+                graph.backgroundColor = .named(.none)
+
                 for node in nodes.values {
                     graph.append(node)
                 }
 
-                graph.textColor = .named(.white)
-                graph.backgroundColor = .named(.none)
 
                 for (start, neighbors) in originalEdges {
                     for (end, _) in neighbors {
@@ -181,7 +183,7 @@ public class UnitConverterCommand: StringCommand {
                 }
 
                 do {
-                    let data = try graph.render(using: .dot, to: .png)
+                    let data = try graph.render(using: .neato, to: .png)
                     try output.append(try Image(fromPng: data))
                 } catch {
                     output.append(error, errorText: "Could not render unit conversion graph")
