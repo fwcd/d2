@@ -100,7 +100,7 @@ public class PartyGameDatabase {
     private func fetchWyrQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
         sequence(promises: ["conversation-starters", "school", "dating"].map { category in {
             Promise { then in
-                WouldYouRatherQuery(category: category).perform {
+                RRRatherQuery(category: category).perform {
                     then($0)
                 }
             }
@@ -109,7 +109,7 @@ public class PartyGameDatabase {
 
     private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
         Promise { then in
-            NeverHaveIEverQuery(maxPages: 40).perform {
+            NNNEverQuery(maxPages: 40).perform {
                 then($0)
             }
         }

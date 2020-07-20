@@ -1,7 +1,7 @@
 import SwiftSoup
 import D2Utils
 
-public struct NeverHaveIEverQuery {
+public struct NNNEverQuery {
     private let maxPages: Int
 
     public init(maxPages: Int) {

@@ -1,7 +1,7 @@
 import D2Utils
 import SwiftSoup
 
-public struct WouldYouRatherQuery {
+public struct RRRatherQuery {
     private let category: String
 
     public init(category: String) {
