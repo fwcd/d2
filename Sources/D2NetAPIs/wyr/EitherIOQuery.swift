@@ -48,7 +48,7 @@ public struct EitherIOQuery {
                     }
 
                     if response.showMore && offset < maxOffset {
-                        perform(offset: offset + questions.count, prepending: prepending + questions, then: then)
+                        self.perform(offset: offset + questions.count, prepending: prepending + questions, then: then)
                     } else {
                         then(.success(prepending + questions))
                     }
