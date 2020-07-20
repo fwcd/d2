@@ -530,7 +530,7 @@ public class MessageDatabase: MarkovPredictor {
             .join(channels, on: messages[channelId] == channels[channelId])
             .select(channelName, userName, content.count)
             .filter(guildId == convert(id: id))
-            .group(messageId, userId))
+            .group(messages[channelId], userId))
         return rows
             .map { (channelName: $0[channelName], userName: $0[userName], count: $0[content.count]) }
     }
