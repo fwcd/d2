@@ -21,25 +21,29 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                     var channelNodes = [String: Node]()
                     let results = try messageDB.queryMessagesPerMemberInChannels(on: guildId)
 
-                    for userName in Set(results.map(\.userName)) {
-                        let node = Node(userName)
-                        graph.append(node)
-                        userNodes[userName] = node
-                    }
+                    for (channelName, userName, count) in results where count > 100 {
+                        let userNode = userNodes[userName] ?? {
+                            var node = Node(userName)
+                            node.fillColor = .named(.gold)
+                            graph.append(node)
+                            return node
+                        }()
+                        let channelNode = channelNodes[channelName] ?? {
+                            var node = Node(channelName)
+                            node.fillColor = .named(.cyan)
+                            graph.append(node)
+                            return node
+                        }()
 
-                    for channelName in Set(results.map(\.channelName)) {
-                        let node = Node(channelName)
-                        graph.append(node)
-                        channelNodes[channelName] = node
-                    }
-                    
-                    for (channelName, userName, count) in results {
-                        var edge = Edge(from: userNodes[userName]!, to: channelNodes[channelName]!)
+                        userNodes[userName] = userNode
+                        channelNodes[channelName] = channelNode
+
+                        var edge = Edge(from: userNode, to: channelNode)
                         edge.weight = Double(count)
                         graph.append(edge)
                     }
 
-                    let data = try graph.render(using: .sfdp, to: .png)
+                    let data = try DOTRenderer(using: .sfdp, to: .png).render(graph: graph)
                     try output.append(try Image(fromPng: data))
                 } catch {
                     output.append(error, errorText: "Could not query/render people-in-channels statistic.")

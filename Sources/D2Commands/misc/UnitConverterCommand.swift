@@ -183,7 +183,7 @@ public class UnitConverterCommand: StringCommand {
                 }
 
                 do {
-                    let data = try graph.render(using: .fdp, to: .png)
+                    let data = try DOTRenderer(using: .fdp, to: .png).render(graph: graph)
                     try output.append(try Image(fromPng: data))
                 } catch {
                     output.append(error, errorText: "Could not render unit conversion graph")

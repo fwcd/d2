@@ -17,7 +17,7 @@ public class GraphVizCommand: StringCommand {
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let data = try input.renderAsDOT(using: layout, to: .png)
+            let data = try DOTRenderer(using: layout, to: .png).render(dotEncoded: input)
             try output.append(try Image(fromPng: data))
         } catch {
             output.append(errorText: "Could not render graph")
