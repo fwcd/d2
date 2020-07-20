@@ -27,7 +27,8 @@ let package = Package(
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
-        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", from: "0.1.2")
+        // TODO: Update to an actual version number once the PR is merged
+        .package(url: "https://github.com/fwcd/GraphViz.git", .revision("f6381413a0e2003e7289b76e4d28d03ba88d7df1"))
         // TODO: Integrate swiftplot, this is however blocked on https://bugs.swift.org/browse/SR-679
         //       due to a dependency target collision (CFreeType)
     ],

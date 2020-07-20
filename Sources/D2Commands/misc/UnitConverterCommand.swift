@@ -156,14 +156,30 @@ public class UnitConverterCommand: StringCommand {
         
         edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { $0.merging($1, uniquingKeysWith: { v, _ in v }) })
         subcommands = [
-            "visualize": { [unowned self] output in
+            "visualize": { output in
                 var graph = Graph(directed: false)
-                let nodes = Dictionary(uniqueKeysWithValues: ConvertableUnit.allCases.map { ($0, Node($0.rawValue)) })
-                for (start, neighbors) in self.edges {
+                let nodes = [ConvertableUnit: Node](uniqueKeysWithValues: ConvertableUnit.allCases.map {
+                    var node = Node($0.rawValue)
+                    node.strokeColor = .named(.white)
+                    node.textColor = .named(.white)
+                    return ($0, node)
+                })
+
+                for node in nodes.values {
+                    graph.append(node)
+                }
+
+                graph.textColor = .named(.white)
+                graph.backgroundColor = .named(.none)
+
+                for (start, neighbors) in originalEdges {
                     for (end, _) in neighbors {
-                        graph.append(Edge(from: nodes[start]!, to: nodes[end]!))
+                        var edge = Edge(from: nodes[start]!, to: nodes[end]!)
+                        edge.strokeColor = .named(.white)
+                        graph.append(edge)
                     }
                 }
+
                 do {
                     let data = try graph.render(using: .dot, to: .png)
                     try output.append(try Image(fromPng: data))

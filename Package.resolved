@@ -66,11 +66,11 @@
       },
       {
         "package": "GraphViz",
-        "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
+        "repositoryURL": "https://github.com/fwcd/GraphViz.git",
         "state": {
           "branch": null,
-          "revision": "6f6bd7078ad41a8b34f5eb4bf0384a93f1ba4706",
-          "version": "0.1.2"
+          "revision": "f6381413a0e2003e7289b76e4d28d03ba88d7df1",
+          "version": null
         }
       },
       {
