@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     poppler-utils \
     maxima \
     cabal-install \
-    libsqlite3-dev
+    libsqlite3-dev \
+    graphviz
 
 RUN cabal update && cabal install happy
 RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
