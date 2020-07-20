@@ -214,6 +214,7 @@ public class D2Delegate: MessageDelegate {
 		registry["cookie"] = CookieCommand(inventoryManager: inventoryManager)
 		registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
 		registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
+		registry["messagedbvisualize"] = MessageDatabaseVisualizeCommand(messageDB: messageDB)
 		registry["shell"] = ShellCommand()
 		registry["upload"] = UploadCommand()
 		registry["download"] = DownloadCommand()
