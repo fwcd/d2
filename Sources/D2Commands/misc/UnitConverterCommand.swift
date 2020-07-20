@@ -1,4 +1,7 @@
 import Foundation
+import GraphViz
+import DOT
+import D2Graphics
 import D2Utils
 
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
@@ -154,7 +157,19 @@ public class UnitConverterCommand: StringCommand {
         edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { $0.merging($1, uniquingKeysWith: { v, _ in v }) })
         subcommands = [
             "visualize": { [unowned self] output in
-                // TODO
+                var graph = Graph(directed: false)
+                let nodes = Dictionary(uniqueKeysWithValues: ConvertableUnit.allCases.map { ($0, Node($0.rawValue)) })
+                for (start, neighbors) in self.edges {
+                    for (end, _) in neighbors {
+                        graph.append(Edge(from: nodes[start]!, to: nodes[end]!))
+                    }
+                }
+                do {
+                    let data = try graph.render(using: .dot, to: .png)
+                    try output.append(try Image(fromPng: data))
+                } catch {
+                    output.append(error, errorText: "Could not render unit conversion graph")
+                }
             }
         ]
 

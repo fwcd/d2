@@ -56,7 +56,7 @@ let package = Package(
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["Logging", "SwiftSoup", "QRCodeGenerator", "SQLite", "PrologInterpreter", "PerfectSysInfo", "D2Utils", "D2MessageIO", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
+            dependencies: ["Logging", "SwiftSoup", "QRCodeGenerator", "SQLite", "GraphViz", "PrologInterpreter", "PerfectSysInfo", "D2Utils", "D2MessageIO", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
         ),
         .target(
             name: "D2Permissions",
