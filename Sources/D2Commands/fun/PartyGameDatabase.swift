@@ -98,6 +98,20 @@ public class PartyGameDatabase {
     }
 
     private func fetchWyrQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+        sequence(promises: [fetchRRRatherQuestions, fetchEitherIOQuestions]).map { $0.flatMap { $0 } }
+    }
+
+    private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+        sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in {
+            Promise { then in
+                EitherIOQuery(term: String(c), maxOffset: 1000).perform {
+                    then($0)
+                }
+            }
+        } }).map { $0.flatMap { $0 } }
+    }
+
+    private func fetchRRRatherQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
         sequence(promises: ["conversation-starters", "school", "dating"].map { category in {
             Promise { then in
                 RRRatherQuery(category: category).perform {
