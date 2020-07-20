@@ -78,6 +78,7 @@ public class UnitConverterCommand: StringCommand {
             Self(rawValue: s) ?? Self(rawValue: s.lowercased()) ?? Self(rawValue: s.uppercased())
         }
     }
+    private var subcommands: [String: (CommandOutput) -> Void] = [:]
 
     // The unit conversion graph
     private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Double>]]
@@ -151,47 +152,59 @@ public class UnitConverterCommand: StringCommand {
             .mapValues { Dictionary(uniqueKeysWithValues: $0.map { ($0.1, $0.2) }) }
         
         edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { $0.merging($1, uniquingKeysWith: { v, _ in v }) })
+        subcommands = [
+            "visualize": { [unowned self] output in
+                // TODO
+            }
+        ]
+
         info.helpText = """
-            Syntax: `[number] [unit] to [unit]`
+            Syntax: `[number] [unit] to [unit]` or `[subcommand]`
 
             For example:
             - `4 km to m`
             - `3 gb to bit`
 
             Supported units: \(ConvertableUnit.allCases.map { "`\($0)`" }.joined(separator: ", "))
+
+            Available subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))
             """
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
-            output.append(errorText: info.helpText!)
-            return
-        }
+        if let subcommand = subcommands[input] {
+            subcommand(output)
+        } else {
+            guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+                output.append(errorText: info.helpText!)
+                return
+            }
 
-        let rawValue = parsedArgs[1]
-        let rawSrcUnit = parsedArgs[2]
-        let rawDestUnit = parsedArgs[3]
+            let rawValue = parsedArgs[1]
+            let rawSrcUnit = parsedArgs[2]
+            let rawDestUnit = parsedArgs[3]
 
-        guard let value = Double(rawValue) else {
-            output.append(errorText: "Not a number: `\(rawValue)`")
-            return
-        }
-        guard let srcUnit = ConvertableUnit.of(rawSrcUnit) else {
-            output.append(errorText: "Invalid source unit `\(rawSrcUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
-            return
-        }
-        guard let destUnit = ConvertableUnit.of(rawDestUnit) else {
-            output.append(errorText: "Invalid destination unit `\(rawDestUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
-            return
-        }
+            guard let value = Double(rawValue) else {
+                output.append(errorText: "Not a number: `\(rawValue)`")
+                return
+            }
+            guard let srcUnit = ConvertableUnit.of(rawSrcUnit) else {
+                output.append(errorText: "Invalid source unit `\(rawSrcUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
+                return
+            }
+            guard let destUnit = ConvertableUnit.of(rawDestUnit) else {
+                output.append(errorText: "Invalid destination unit `\(rawDestUnit)`, try one of these: `\(ConvertableUnit.allCases.map(\.rawValue).joined(separator: ", "))`")
+                return
+            }
 
-        guard let conversion = shortestPath(from: srcUnit, to: destUnit) else {
-            output.append(errorText: "No conversion between `\(srcUnit)` and `\(destUnit)` found")
-            return
-        }
+            guard let conversion = shortestPath(from: srcUnit, to: destUnit) else {
+                output.append(errorText: "No conversion between `\(srcUnit)` and `\(destUnit)` found")
+                return
+            }
 
-        let destValue = conversion.apply(value)
-        output.append("\(destValue) \(destUnit)")
+            let destValue = conversion.apply(value)
+            output.append("\(destValue) \(destUnit)")
+        }
     }
 
     private struct Prioritized<T, U>: Comparable {
