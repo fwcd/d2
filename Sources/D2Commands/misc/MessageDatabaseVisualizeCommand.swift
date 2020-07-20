@@ -1,3 +1,4 @@
+import Foundation
 import GraphViz
 import DOT
 import D2Graphics
@@ -20,8 +21,12 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                     var userNodes = [String: Node]()
                     var channelNodes = [String: Node]()
                     let results = try messageDB.queryMessagesPerMemberInChannels(on: guildId)
+                    let maxCount = min(500, results.map(\.count).max() ?? 1)
 
-                    for (channelName, userName, count) in results where count > 100 {
+                    graph.springConstant = 4
+                    graph.maximumNumberOfLayoutIterations = 2_000
+
+                    for (channelName, userName, count) in results where count > min(200, maxCount / 2) {
                         let userNode = userNodes[userName] ?? {
                             var node = Node(userName)
                             node.fillColor = .named(.gold)
@@ -39,11 +44,17 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                         channelNodes[channelName] = channelNode
 
                         var edge = Edge(from: userNode, to: channelNode)
+                        edge.exteriorLabel = String(count)
                         edge.weight = Double(count)
+                        let shade = count == 0 ? 0 : UInt8(min((255 * count) / maxCount, 255))
+                        let color = GraphViz.Color.rgb(red: 255 - shade, green: 255 - shade, blue: 255 - shade)
+                        edge.strokeColor = color
+                        edge.textColor = color
+                        edge.strokeWidth = max(1, (2 * Double(count) / Double(maxCount)))
                         graph.append(edge)
                     }
 
-                    let data = try DOTRenderer(using: .sfdp, to: .png).render(graph: graph)
+                    let data = try DOTRenderer(using: .fdp, to: .png).render(graph: graph)
                     try output.append(try Image(fromPng: data))
                 } catch {
                     output.append(error, errorText: "Could not query/render people-in-channels statistic.")
