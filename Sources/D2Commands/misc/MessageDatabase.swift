@@ -535,12 +535,12 @@ public class MessageDatabase: MarkovPredictor {
             .map { (channelName: $0[channelName], userName: $0[userName], count: $0[content.count]) }
     }
 
-    public func queryMostUsedEmojis(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emojiName: String, emojiId: EmojiID, count: Int)] {
+    public func queryMostUsedEmojis(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emoji: Emoji, count: Int)] {
         let pattern: Expression<String> = "%<:" + emojiName + ":" + Expression<String>(emojiId) + ">%"
         var query = try emojis
             .join(messages, on: content.like(pattern))
             .join(channels, on: channels[channelId] == messages[channelId])
-            .select(emojiName, emojiId, content.count)
+            .select(emojiName, emojiId, isAnimated, isManaged, requiresColons, content.count)
             .group(emojiName)
             .filter(guildId == convert(id: id))
             .order(content.count.desc)
@@ -552,6 +552,12 @@ public class MessageDatabase: MarkovPredictor {
         }
         let rows = try db.prepare(query)
         return rows
-            .map { (emojiName: $0[emojiName], emojiId: convertBack(id: $0[emojiId]), count: $0[content.count]) }
+            .map { (emoji: Emoji(
+                id: convertBack(id: $0[emojiId]),
+                managed: $0[isManaged],
+                animated: $0[isAnimated],
+                name: $0[emojiName],
+                requireColons: $0[requiresColons]
+            ), count: $0[content.count]) }
     }
 }

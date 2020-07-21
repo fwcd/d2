@@ -39,21 +39,21 @@ public class EmojiUsageCommand: StringCommand {
         }
     }
 
-    private func process(emojis: [(emojiName: String, emojiId: EmojiID, count: Int)], on guild: Guild) -> [(emojiName: String, emojiId: EmojiID, count: Int)] {
+    private func process(emojis: [(emoji: Emoji, count: Int)], on guild: Guild) -> [(emoji: Emoji, count: Int)] {
         // Remove all emojis that are no longer present on the server
         // IDs are compared using only their values here since the client name cannot be recovered from the DB
-        var result = emojis.filter { (_, emojiId, _) in guild.emojis.contains { $0.key.value == emojiId.value } }
-        let usedIds = Set(result.map(\.emojiId.value))
+        var result = emojis.filter { (emoji, _) in guild.emojis.contains { $0.key.value == emoji.id?.value } }
+        let usedIds = Set(result.compactMap(\.emoji.id?.value))
 
         // Add unused emojis that did not appear in messages queried by the DB
-        result += guild.emojis.filter { !usedIds.contains($0.key.value) }.compactMap { (_, emoji) in emoji.id.map { (emojiName: emoji.name, emojiId: $0, count: 0) } }
+        result += guild.emojis.filter { !usedIds.contains($0.key.value) }.compactMap { (_, emoji) in (emoji: emoji, count: 0) }
 
         return result.sorted(by: descendingComparator(comparing: \.count))
     }
 
-    private func format(emojis: [(emojiName: String, emojiId: EmojiID, count: Int)]) -> String {
+    private func format(emojis: [(emoji: Emoji, count: Int)]) -> String {
         emojis
-            .map { "<:\($0.emojiName):\($0.emojiId)> was used \($0.count) \("time".pluralize(with: $0.count))" }
+            .compactMap { (emoji, count) in emoji.id.map { "<\(emoji.animated ? "a" : ""):\(emoji.name):\($0)> was used \(count) \("time".pluralize(with: count))" } }
             .joined(separator: "\n")
     }
 }
