@@ -535,7 +535,7 @@ public class MessageDatabase: MarkovPredictor {
             .map { (channelName: $0[channelName], userName: $0[userName], count: $0[content.count]) }
     }
 
-    public func queryMostUsedEmojis(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emojiName: String, emojiId: Int64, count: Int)] {
+    public func queryMostUsedEmojis(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emojiName: String, emojiId: EmojiID, count: Int)] {
         let pattern: Expression<String> = "%<:" + emojiName + ":" + Expression<String>(emojiId) + ">%"
         var query = try emojis
             .join(messages, on: content.like(pattern))
@@ -552,6 +552,6 @@ public class MessageDatabase: MarkovPredictor {
         }
         let rows = try db.prepare(query)
         return rows
-            .map { (emojiName: $0[emojiName], emojiId: $0[emojiId], count: $0[content.count]) }
+            .map { (emojiName: $0[emojiName], emojiId: convertBack(id: $0[emojiId]), count: $0[content.count]) }
     }
 }

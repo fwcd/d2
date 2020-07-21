@@ -1,5 +1,6 @@
 import Foundation
 import D2MessageIO
+import D2Utils
 
 public class EmojiUsageCommand: StringCommand {
     public let info = CommandInfo(
@@ -16,17 +17,18 @@ public class EmojiUsageCommand: StringCommand {
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         do {
-            guard let guildId = context.guild?.id else {
+            guard let guild = context.guild else {
                 output.append(errorText: "Not on a guild!")
                 return
             }
 
             let date30DaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date())
             let countPerField = 8
+
             output.append(Embed(
                 title: "Emoji Usage in Messages",
                 fields: try [("all time", nil), ("last 30 days", date30DaysAgo)]
-                    .map { ($0.0, try messageDB.queryMostUsedEmojis(on: guildId, minTimestamp: $0.1)) }
+                    .map { ($0.0, process(emojis: try messageDB.queryMostUsedEmojis(on: guild.id, minTimestamp: $0.1), on: guild)) }
                     .flatMap { [
                         Embed.Field(name: "Most used (\($0.0))", value: format(emojis: Array($0.1.prefix(countPerField))).nilIfEmpty ?? "_none_", inline: true),
                         Embed.Field(name: "Least used (\($0.0))", value: format(emojis: Array($0.1.reversed().prefix(countPerField))).nilIfEmpty ?? "_none_", inline: true),
@@ -37,7 +39,19 @@ public class EmojiUsageCommand: StringCommand {
         }
     }
 
-    private func format(emojis: [(emojiName: String, emojiId: Int64, count: Int)]) -> String {
+    private func process(emojis: [(emojiName: String, emojiId: EmojiID, count: Int)], on guild: Guild) -> [(emojiName: String, emojiId: EmojiID, count: Int)] {
+        // Remove all emojis that are no longer present on the server
+        // IDs are compared using only their values here since the client name cannot be recovered from the DB
+        var result = emojis.filter { (_, emojiId, _) in guild.emojis.contains { $0.key.value == emojiId.value } }
+        let usedIds = Set(result.map(\.emojiId.value))
+
+        // Add unused emojis that did not appear in messages queried by the DB
+        result += guild.emojis.filter { !usedIds.contains($0.key.value) }.compactMap { (_, emoji) in emoji.id.map { (emojiName: emoji.name, emojiId: $0, count: 0) } }
+
+        return result.sorted(by: descendingComparator(comparing: \.count))
+    }
+
+    private func format(emojis: [(emojiName: String, emojiId: EmojiID, count: Int)]) -> String {
         emojis
             .map { "<:\($0.emojiName):\($0.emojiId)> was used \($0.count) \("time".pluralize(with: $0.count))" }
             .joined(separator: "\n")
