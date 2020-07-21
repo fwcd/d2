@@ -32,8 +32,13 @@ public class TriviaQuizCommand: StringCommand {
                 }
 
                 output.append(Embed(
-                    description: ":earth_africa: **Trivia Question: \(question.question)**",
-                    footer: Embed.Footer(text: "Enter one of the following answers: \(question.allAnswers.sorted().map { "`\($0)`" }.joined(separator: ", "))")
+                    title: ":earth_africa: Trivia Question",
+                    description: question.question,
+                    fields: [
+                        Embed.Field(name: "Answers", value: question.allAnswers.sorted().map { "`\($0)`" }.joined(separator: ", ").nilIfEmpty ?? "_none_"),
+                        Embed.Field(name: "Category", value: question.category, inline: true),
+                        Embed.Field(name: "Difficulty", value: question.difficulty, inline: true)
+                    ]
                 ))
 
                 self.openQuestions[channelId] = question
@@ -51,6 +56,8 @@ public class TriviaQuizCommand: StringCommand {
             } else {
                 output.append(":person_shrugging: Sorry, the correct answer was `\(question.correctAnswer)`!")
             }
+
+            openQuestions[channelId] = nil
         }
 
         context.unsubscribeFromChannel()
