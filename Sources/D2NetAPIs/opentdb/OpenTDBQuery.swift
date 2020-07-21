@@ -13,7 +13,6 @@ public struct OpenTDBQuery {
             request.fetchJSONAsync(as: OpenTDBResponse.self) {
                 do {
                     var response = try $0.get()
-                    print(response)
                     response.results = response.results.map {
                         var r = $0
                         r.category = (r.category.removingPercentEncoding ?? r.category).trimmingCharacters(in: .whitespacesAndNewlines)
