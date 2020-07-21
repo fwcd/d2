@@ -1,3 +1,4 @@
+import Foundation
 import D2MessageIO
 
 public class EmojiUsageCommand: StringCommand {
@@ -20,15 +21,25 @@ public class EmojiUsageCommand: StringCommand {
                 return
             }
 
-            let emojis = try messageDB.queryMostUsedEmojis(on: guildId, limit: 20)
+            let date30DaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date())
+            let countPerField = 8
             output.append(Embed(
-                title: "Most used Emojis in Messages",
-                description: emojis
-                    .map { "<:\($0.emojiName):\($0.emojiId)> was used \($0.count) \("time".pluralize(with: $0.count))" }
-                    .joined(separator: "\n")
+                title: "Emoji Usage in Messages",
+                fields: try [("all time", nil), ("last 30 days", date30DaysAgo)]
+                    .map { ($0.0, try messageDB.queryMostUsedEmojis(on: guildId, minTimestamp: $0.1)) }
+                    .flatMap { [
+                        Embed.Field(name: "Most used (\($0.0))", value: format(emojis: Array($0.1.prefix(countPerField))).nilIfEmpty ?? "_none_", inline: true),
+                        Embed.Field(name: "Least used (\($0.0))", value: format(emojis: Array($0.1.reversed().prefix(countPerField))).nilIfEmpty ?? "_none_", inline: true),
+                    ] }
             ))
         } catch {
             output.append(error, errorText: "Could not lookup most used emojis")
         }
+    }
+
+    private func format(emojis: [(emojiName: String, emojiId: Int64, count: Int)]) -> String {
+        emojis
+            .map { "<:\($0.emojiName):\($0.emojiId)> was used \($0.count) \("time".pluralize(with: $0.count))" }
+            .joined(separator: "\n")
     }
 }
