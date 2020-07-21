@@ -50,7 +50,7 @@ public class TriviaQuizCommand: StringCommand {
     }
 
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
-        if let channelId = context.channel?.id, let question = openQuestions[channelId] {
+        if let channelId = context.channel?.id, let question = openQuestions[channelId], question.allAnswers.contains(content) {
             if content.lowercased() == question.correctAnswer.lowercased() {
                 output.append(":partying_face: Correct!")
             } else {
@@ -58,8 +58,7 @@ public class TriviaQuizCommand: StringCommand {
             }
 
             openQuestions[channelId] = nil
+            context.unsubscribeFromChannel()
         }
-
-        context.unsubscribeFromChannel()
     }
 }
