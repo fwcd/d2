@@ -10,7 +10,8 @@ public class PickupLineCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        PickupLineQuery().perform {
+        let queries: [PickupLineQuery] = [PebblePickupQuery(), PickupLineGenQuery()]
+        queries.randomElement()!.perform {
             do {
                 let line = try $0.get()
                 output.append(line.tweet)
