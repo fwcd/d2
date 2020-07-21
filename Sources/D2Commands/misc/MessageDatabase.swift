@@ -534,4 +534,22 @@ public class MessageDatabase: MarkovPredictor {
         return rows
             .map { (channelName: $0[channelName], userName: $0[userName], count: $0[content.count]) }
     }
+
+    public func queryMostUsedEmojis(on id: GuildID, limit: Int, minTimestamp: Date? = nil) throws -> [(emojiName: String, emojiId: Int64, count: Int)] {
+        let pattern: Expression<String> = "%<:" + emojiName + ":" + Expression<String>(emojiId) + ">%"
+        var query = try emojis
+            .join(messages, on: content.like(pattern))
+            .join(channels, on: channels[channelId] == messages[channelId])
+            .select(emojiName, emojiId, content.count)
+            .group(emojiName)
+            .filter(guildId == convert(id: id))
+            .order(content.count.desc)
+            .limit(limit)
+        if let m = minTimestamp {
+            query = query.filter(timestamp >= m)
+        }
+        let rows = try db.prepare(query)
+        return rows
+            .map { (emojiName: $0[emojiName], emojiId: $0[emojiId], count: $0[content.count]) }
+    }
 }

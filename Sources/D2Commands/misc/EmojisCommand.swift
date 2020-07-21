@@ -7,6 +7,7 @@ public class EmojisCommand: StringCommand {
         shortDescription: "Fetches/searches the current guild's custom emojis",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
 
     public init() {}
 
