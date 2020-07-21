@@ -46,7 +46,7 @@ public class TriviaQuizCommand: StringCommand {
 
 	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         if let channelId = context.channel?.id, let question = openQuestions[channelId] {
-            if content == question.correctAnswer {
+            if content.lowercased() == question.correctAnswer.lowercased() {
                 output.append(":partying_face: Correct!")
             } else {
                 output.append(":person_shrugging: Sorry, the correct answer was `\(question.correctAnswer)`!")
