@@ -36,7 +36,7 @@ public class TriviaQuizCommand: StringCommand {
                     footer: Embed.Footer(text: "Enter one of the following answers: \(question.allAnswers.sorted().map { "`\($0)`" }.joined(separator: ", "))")
                 ))
 
-                openQuestions[channelId] = question
+                self.openQuestions[channelId] = question
                 context.subscribeToChannel()
             } catch {
                 output.append(error, errorText: "Could not perform TDB query")

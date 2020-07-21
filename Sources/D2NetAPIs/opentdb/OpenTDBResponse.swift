@@ -5,7 +5,7 @@ public struct OpenTDBResponse: Codable {
     }
 
     public let responseCode: Int
-    public let results: [Trivia]
+    public var results: [Trivia]
 
     public struct Trivia: Codable {
         public enum CodingKeys: String, CodingKey {
@@ -17,12 +17,12 @@ public struct OpenTDBResponse: Codable {
             case incorrectAnswers = "incorrect_answers"
         }
 
-        public let category: String
-        public let type: String
-        public let difficulty: String
-        public let question: String
-        public let correctAnswer: String
-        public let incorrectAnswers: [String]
+        public var category: String
+        public var type: String
+        public var difficulty: String
+        public var question: String
+        public var correctAnswer: String
+        public var incorrectAnswers: [String]
 
         public var allAnswers: [String] { [correctAnswer] + incorrectAnswers }
     }
