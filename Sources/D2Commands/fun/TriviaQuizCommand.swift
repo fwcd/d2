@@ -15,11 +15,11 @@ public class TriviaQuizCommand: StringCommand {
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
-            output.append("No channel ID available")
+            output.append(errorText: "No channel ID available")
             return
         }
         guard !openQuestions.keys.contains(channelId) else {
-            output.append("Please answer the existing question first!")
+            output.append(errorText: "Please answer the existing question first!")
             return
         }
 
