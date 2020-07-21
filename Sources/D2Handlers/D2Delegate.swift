@@ -193,6 +193,7 @@ public class D2Delegate: MessageDelegate {
 		registry["leet", aka: ["leetspeak"]] = LeetCommand()
 		registry["rickroll"] = RickrollCommand()
 		registry["micdrop"] = MicdropCommand()
+		registry["triviaquiz", aka: ["trivia"]] = TriviaQuizCommand()
 		registry["pokemon"] = PokemonCommand(inventoryManager: inventoryManager)
 		registry["pokedex"] = PokedexCommand()
 		registry["pokequiz"] = PokeQuizCommand()
