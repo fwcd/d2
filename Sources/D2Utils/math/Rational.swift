@@ -19,14 +19,17 @@ public struct Rational: SignedNumeric, Addable, Subtractable, Multipliable, Divi
     
     public init?(_ string: String) {
         if let parsedFraction = fractionPattern.firstGroups(in: string) {
-            self.init(Int(parsedFraction[1])!, Int(parsedFraction[2])!)
+            guard let numerator = Int(parsedFraction[1]),
+                let denominator = Int(parsedFraction[2]),
+                denominator != 0 else { return nil }
+            self.init(numerator, denominator)
         } else if let parsedDecimal = decimalPattern.firstGroups(in: string) {
             let rawSign = parsedDecimal[1]
             let rawCharacteristic = parsedDecimal[2]
             let rawMantissa = parsedDecimal[3]
             let sign = rawSign == "-" ? -1 : 1
             let factor = 10 ** rawMantissa.count
-            let characteristic = Int(rawCharacteristic)!
+            guard let characteristic = Int(rawCharacteristic), factor != 0 else { return nil }
             let mantissa = Int(rawMantissa) ?? 0
             self.init(sign * (characteristic * factor + mantissa), factor)
             reduce()
