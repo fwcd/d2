@@ -401,6 +401,16 @@ public class MessageDatabase: MarkovPredictor {
         ID(String(id), clientName: "Unknown")
     }
 
+    private func convertBack(emoji row: Row) -> Emoji {
+        Emoji(
+            id: convertBack(id: row[emojiId]),
+            managed: row[isManaged],
+            animated: row[isAnimated],
+            name: row[emojiName],
+            requireColons: row[requiresColons]
+        )
+    }
+
     @discardableResult
     public func generateMarkovTransitions(for message: Message) throws -> Int {
         try generateMarkovTransitions(text: message.content)
@@ -536,6 +546,14 @@ public class MessageDatabase: MarkovPredictor {
     }
 
     public func queryMostUsedEmojis(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emoji: Emoji, count: Int)] {
+        try Dictionary(grouping: [
+            queryMostUsedEmojisInMessages(on: id, limit: limit, minTimestamp: minTimestamp),
+            queryMostUsedEmojisInReactions(on: id, limit: limit, minTimestamp: minTimestamp)
+        ].flatMap { $0 }, by: \.emoji)
+            .map { (emoji: $0.key, count: $0.value.map(\.count).reduce(0, +)) }
+    }
+
+    public func queryMostUsedEmojisInMessages(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emoji: Emoji, count: Int)] {
         let pattern: Expression<String> = "%<:" + emojiName + ":" + Expression<String>(emojiId) + ">%"
         var query = try emojis
             .join(messages, on: content.like(pattern))
@@ -552,12 +570,25 @@ public class MessageDatabase: MarkovPredictor {
         }
         let rows = try db.prepare(query)
         return rows
-            .map { (emoji: Emoji(
-                id: convertBack(id: $0[emojiId]),
-                managed: $0[isManaged],
-                animated: $0[isAnimated],
-                name: $0[emojiName],
-                requireColons: $0[requiresColons]
-            ), count: $0[content.count]) }
+            .map { (emoji: convertBack(emoji: $0), count: $0[content.count]) }
+    }
+
+    public func queryMostUsedEmojisInReactions(on id: GuildID, limit: Int? = nil, minTimestamp: Date? = nil) throws -> [(emoji: Emoji, count: Int)] {
+        var query = try reactions
+            .join(messages, on: messages[messageId] == reactions[messageId])
+            .join(emojis, on: reactions[emojiName] == emojis[emojiName])
+            .select(emojis[emojiName], emojiId, isAnimated, isManaged, requiresColons, content.count)
+            .group(emojis[emojiName])
+            .filter(guildId == convert(id: id))
+            .order(content.count.desc)
+        if let l = limit {
+            query = query.limit(l)
+        }
+        if let m = minTimestamp {
+            query = query.filter(timestamp >= m)
+        }
+        let rows = try db.prepare(query)
+        return rows
+            .map { (emoji: convertBack(emoji: $0), count: $0[content.count]) }
     }
 }

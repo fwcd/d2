@@ -26,7 +26,7 @@ public class EmojiUsageCommand: StringCommand {
             let countPerField = 8
 
             output.append(Embed(
-                title: "Emoji Usage in Messages",
+                title: "Emoji Usage in Messages and Reactions",
                 fields: try [("all time", nil), ("last 30 days", date30DaysAgo)]
                     .map { ($0.0, process(emojis: try messageDB.queryMostUsedEmojis(on: guild.id, minTimestamp: $0.1), on: guild)) }
                     .flatMap { [
