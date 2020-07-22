@@ -72,8 +72,11 @@ public struct UltimateGuitarTabParser {
         skipWhitespace(in: tokens)
         while let node = try parseNode(from: tokens) {
             nodes.append(node)
-            skipWhitespace(in: tokens)
         }
+        nodes = nodes.reversed().drop {
+            guard case let .text(t) = $0 else { return false }
+            return t.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }.reversed()
         return .init(title: title, nodes: nodes)
     }
 
