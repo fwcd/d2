@@ -32,4 +32,6 @@ public struct UltimateGuitarTab: Codable {
     public let tonalityName: String?
     public let artistUrl: String?
     public let tabUrl: String?
+
+    public var isChordTab: Bool { type?.lowercased() == "chords" }
 }

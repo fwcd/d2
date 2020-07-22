@@ -245,6 +245,8 @@ public class D2Delegate: MessageDelegate {
 		registry["tofile"] = ToFileCommand()
 		registry["cleanmentions"] = CleanMentionsCommand()
 		registry["chord"] = FretboardChordCommand()
+		registry["chords"] = LyricsCommand(showChords: true)
+		registry["lyrics"] = LyricsCommand(showChords: false)
 		registry["pianoscale", aka: ["piano"]] = PianoScaleCommand()
 		registry["web"] = WebCommand()
 		registry["get"] = HTTPRequestCommand(method: "GET")
