@@ -9,6 +9,10 @@ final class UltimateGuitarTabParserTests: XCTestCase {
     func testTabParser() throws {
         let parser = UltimateGuitarTabParser()
         XCTAssertEqual(
+            parser.tokenize(tabMarkup: "[Test] this[Thing]\nwith newlines[/closing]"),
+            [.tag("Test"), .content(" this"), .tag("Thing"), .content("with newlines"), .closingTag("closing")]
+        )
+        XCTAssertEqual(
             try parser.parse(tabMarkup: """
                 [Test]
                 this

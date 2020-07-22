@@ -5,31 +5,31 @@ import D2Utils
 /// 1. group: Whether it's a closing 'tag'
 /// 1. group: A 'tag' in square parentheses
 /// 2. group: Anything else
-fileprivate let tokenPattern = try! Regex(from: "(?:(\\/?)\\[([^\\]]+)\\])|([^\\r\\n]+)")
-
-fileprivate enum Token: Equatable {
-    case tag(String)
-    case closingTag(String)
-    case content(String)
-}
+fileprivate let tokenPattern = try! Regex(from: "(?:\\[(\\/?)([^\\]]+)\\])|([^\\r\\n\\[]+)")
 
 /// Parses UG's tab markup.
 public struct UltimateGuitarTabParser {
     public init() {}
 
-    public func parse(tabMarkup: String) throws -> GuitarTabDocument {
-        try parseTabDocument(from: tokenize(tabMarkup: tabMarkup))
+    enum Token: Equatable {
+        case tag(String)
+        case closingTag(String)
+        case content(String)
     }
 
-    private func tokenize(tabMarkup: String) -> TokenIterator<Token> {
-        TokenIterator(tokenPattern.allGroups(in: tabMarkup).compactMap {
+    public func parse(tabMarkup: String) throws -> GuitarTabDocument {
+        try parseTabDocument(from: TokenIterator(tokenize(tabMarkup: tabMarkup)))
+    }
+
+    func tokenize(tabMarkup: String) -> [Token] {
+        tokenPattern.allGroups(in: tabMarkup).compactMap {
             let isOpeningTag = $0[1].isEmpty
             if let tag = $0[2].nilIfEmpty {
                 return isOpeningTag ? Token.tag(tag) : Token.closingTag(tag)
             } else {
                 return Token.content($0[3])
             }
-        })
+        }
     }
 
     private func skipWhitespace(in tokens: TokenIterator<Token>) {
@@ -79,13 +79,13 @@ public struct UltimateGuitarTabParser {
     }
 
     private func parseTagContents(_ tag: String, from tokens: TokenIterator<Token>) throws -> [GuitarTabDocument.Section.Node] {
-        guard tokens.peek() == .tag(tag) else { throw UltimateGuitarTabParserError.tagMismatch("Expected tag '\(tag)', but got \(tokens.peek().map { "\($0)" } ?? "?")") }
+        guard tokens.peek() == .tag(tag) else { throw UltimateGuitarTabParserError.tagMismatch("Expected tag '\(tag)', but got \(tokens.peek().map { "\($0)" } ?? "nil")") }
         tokens.next()
         var nodes = [GuitarTabDocument.Section.Node]()
         while let node = try parseNode(from: tokens) {
             nodes.append(node)
         }
-        guard tokens.peek() == .closingTag(tag) else { throw UltimateGuitarTabParserError.tagMismatch("Expected closing tag '\(tag)', but got \(tokens.peek().map { "\($0)" } ?? "?")") }
+        guard tokens.peek() == .closingTag(tag) else { throw UltimateGuitarTabParserError.tagMismatch("Expected closing tag '\(tag)', but got \(tokens.peek().map { "\($0)" } ?? "nil")") }
         tokens.next()
         return nodes
     }
