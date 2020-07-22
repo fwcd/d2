@@ -82,7 +82,7 @@ public struct MessageWriter {
 				return all(promises: components.map { write(value: $0) }).map { encoded in
 					Message(
 						content: encoded.compactMap { $0.content.nilIfEmpty }.joined(separator: "\n"),
-						embed: encoded.compactMap { $0.embed }.first,
+						embeds: encoded.flatMap { $0.embeds },
 						files: encoded.flatMap { $0.files },
 						tts: false
 					)

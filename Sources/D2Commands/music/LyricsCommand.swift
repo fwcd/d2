@@ -46,15 +46,22 @@ public class LyricsCommand: StringCommand {
                         let document = try UltimateGuitarTabParser().parse(tabMarkup: content)
 
                         // Output the lyrics
-                        output.append("""
-                            **Lyrics for `\(tab.songName ?? input)` by `\(tab.artistName ?? "?")`**
-
-                            \(document.sections.map { """
-                                **\($0.title)** ```
-                                \(self.showChords ? $0.text : $0.textWithoutChords)
-                                ```
-                                """ }.joined(separator: "\n"))
-                            """)
+                        let embeds = document.sections.flatMap { section in
+                            (self.showChords ? section.text : section.textWithoutChords)
+                                .split(separator: "\n")
+                                .chunks(ofLength: 6)
+                                .map { Embed.Field(name: section.title.nilIfEmpty ?? "Unnamed Verse", value: """
+                                    ```
+                                    \($0.joined(separator: "\n"))
+                                    ```
+                                    """) }
+                        }.chunks(ofLength: 6).enumerated().map { (i, fields) in
+                            Embed(
+                                title: "Lyrics for `\(tab.songName ?? input)` by `\(tab.artistName ?? "?")` (Part \(i + 1))",
+                                fields: fields
+                            )
+                        }
+                        output.append(.compound(embeds.map { .embed($0) }))
                     } catch {
                         output.append(error, errorText: "Could not query song tab")
                     }
