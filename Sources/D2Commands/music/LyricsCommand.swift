@@ -3,7 +3,7 @@ import D2MessageIO
 import D2NetAPIs
 
 public class LyricsCommand: StringCommand {
-    public let info = CommandInfo(
+    public private(set) var info = CommandInfo(
         category: .music,
         shortDescription: "Fetches the lyrics of a song",
         requiredPermissionLevel: .basic
@@ -12,6 +12,12 @@ public class LyricsCommand: StringCommand {
 
     public init(showChords: Bool = true) {
         self.showChords = showChords
+
+        if showChords {
+            let suffix = " with chords"
+            info.shortDescription += suffix
+            info.longDescription += suffix
+        }
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
