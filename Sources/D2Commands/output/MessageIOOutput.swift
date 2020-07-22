@@ -45,25 +45,40 @@ public class MessageIOOutput: CommandOutput {
 					""")]
 			}
 
-			for message in messages {
-				switch channel {
-					case .guildChannel(let id):
-						client.sendMessage(message, to: id)
-					case .dmChannel(let id):
-						client.createDM(with: id) { channelId, _ in
-							guard let id = channelId else {
-								log.error("Could not send direct message, since no channel ID could be fetched")
-								return
-							}
-							client.sendMessage(message, to: id, then: self.onSent)
+			let _ = sequence(promises: messages.map { m in { self.send(message: m, with: client, to: channel) } })
+		}
+	}
+
+	private func send(message: Message, with client: MessageClient, to channel: OutputChannel) -> Promise<Void, Error> {
+		Promise { then in
+			switch channel {
+				case .guildChannel(let id):
+					client.sendMessage(message, to: id) {
+						self.onSent?($0, $1)
+						then(.success(()))
+					}
+				case .dmChannel(let id):
+					client.createDM(with: id) { channelId, _ in
+						guard let id = channelId else {
+							log.error("Could not send direct message, since no channel ID could be fetched")
+							then(.success(()))
+							return
 						}
-					case .defaultChannel:
-						if let textChannelId = self.context.channel?.id {
-							client.sendMessage(message, to: textChannelId, then: self.onSent)
-						} else {
-							log.warning("No default text channel available")
+						client.sendMessage(message, to: id) {
+							self.onSent?($0, $1)
+							then(.success(()))
 						}
-				}
+					}
+				case .defaultChannel:
+					if let textChannelId = self.context.channel?.id {
+						client.sendMessage(message, to: textChannelId) {
+							self.onSent?($0, $1)
+							then(.success(()))
+						}
+					} else {
+						log.warning("No default text channel available")
+						then(.success(()))
+					}
 			}
 		}
 	}
