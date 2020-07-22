@@ -1,7 +1,5 @@
-/**
- * An iterator wrapper for a sequence of tokens
- * that explicitly uses reference semantics.
- */
+/// An iterator wrapper for a sequence of tokens
+/// that explicitly uses reference semantics.
 public class TokenIterator<T>: IteratorProtocol {
 	private var iterator: Array<T>.Iterator
 	private var lookahead: [T] = []
@@ -26,7 +24,7 @@ public class TokenIterator<T>: IteratorProtocol {
 		}
 	}
 	
-	/** Peeks the kth token (if it exists). */
+	/// Peeks the kth token (if it exists).
 	public func peek(_ k: Int = 1) -> T? {
 		guard k >= 1 else { return nil }
 		
@@ -42,5 +40,24 @@ public class TokenIterator<T>: IteratorProtocol {
 			}
 			return lookahead[safely: k - 1]
 		}
+	}
+
+	/// Finds the first matching token in the rest of the
+	/// array without advancing the iteration. This allows users
+	/// to essentially do 'infinite lookahead'. Note that this will also
+	/// extend the internal lookahead buffer.
+	public func first(where predicate: (T) -> Bool) -> T? {
+		var i = 1
+		while let token = peek(i) {
+			if predicate(token) {
+				return token
+			}
+			i += 1
+		}
+		return nil
+	}
+
+	public func contains(where predicate: (T) -> Bool) -> Bool {
+		first(where: predicate) != nil
 	}
 }

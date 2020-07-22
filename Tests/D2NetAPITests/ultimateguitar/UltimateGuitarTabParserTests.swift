@@ -70,6 +70,10 @@ final class UltimateGuitarTabParserTests: XCTestCase {
                             .text("    "), .tag("ch", [.text("Am")]), .text("    "), .tag("ch", [.text("C")]), .text("    "), .tag("ch", [.text("G")]), .text("    "), .tag("ch", [.text("D")]),
                             .text("\nI just need to get it off my chest, this is a unit test!")
                         ])
+                    ]),
+                    .init(title: "Chorus", nodes: [
+                        .tag("tab", [.text("Roses are red, violets are blue,")]),
+                        .tag("tab", [.text("i hope this succeeds, and you maybe too!")])
                     ])
                 ]
             )

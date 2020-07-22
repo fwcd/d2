@@ -80,8 +80,10 @@ public struct UltimateGuitarTabParser {
     private func parseNode(from tokens: TokenIterator<Token>) throws -> GuitarTabDocument.Section.Node? {
         switch tokens.peek() {
             case let .tag(tag)?:
+                // Disambiguate between closed tags and new sections
+                guard tokens.contains(where: { $0 == .closingTag(tag) }) else { return nil }
                 return .tag(tag, try parseTagContents(tag, from: tokens))
-            case .content(_)?:
+            case .content(_)?, .newlines:
                 return .text(try parseText(from: tokens))
             default:
                 return nil
@@ -112,8 +114,8 @@ public struct UltimateGuitarTabParser {
         var nodes = [GuitarTabDocument.Section.Node]()
         while let node = try parseNode(from: tokens) {
             nodes.append(node)
-            skipNewlines(in: tokens)
         }
+        skipNewlines(in: tokens)
         guard tokens.peek() == .closingTag(tag) else { throw UltimateGuitarTabParserError.tagMismatch("Expected closing tag '\(tag)', but got \(tokens.peek().map { "\($0)" } ?? "nil")") }
         tokens.next()
         return nodes
