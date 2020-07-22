@@ -47,7 +47,7 @@ final class UltimateGuitarTabParserTests: XCTestCase {
             GuitarTabDocument(
                 sections: [
                     .init(title: "Test", nodes: [
-                        .tag("tab", [.text("This is a tab!")]),
+                        .tag("tab", [.text("This is a tab!")]), .text("\n"),
                         .tag("tab", [.text(" This is a tab with padding! ")])
                     ])
                 ]
@@ -72,7 +72,7 @@ final class UltimateGuitarTabParserTests: XCTestCase {
                         ])
                     ]),
                     .init(title: "Chorus", nodes: [
-                        .tag("tab", [.text("Roses are red, violets are blue,")]),
+                        .tag("tab", [.text("Roses are red, violets are blue,")]), .text("\n"),
                         .tag("tab", [.text("i hope this succeeds, and you maybe too!")])
                     ])
                 ]

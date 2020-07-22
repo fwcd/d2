@@ -67,8 +67,11 @@ public struct UltimateGuitarTabParser {
         var nodes = [GuitarTabDocument.Section.Node]()
         skipWhitespace(in: tokens)
         guard tokens.peek() != nil else { return nil }
-        guard case let .tag(title) = tokens.peek() else { throw UltimateGuitarTabParserError.tagMismatch("Expected section header tag") }
-        tokens.next()
+        var title = ""
+        if case let .tag(t) = tokens.peek(), !tokens.contains(where: { $0 == .closingTag(t) }) {
+            title = t
+            tokens.next()
+        }
         skipWhitespace(in: tokens)
         while let node = try parseNode(from: tokens) {
             nodes.append(node)
