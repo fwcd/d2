@@ -52,12 +52,12 @@ public class LyricsCommand: StringCommand {
                                 .chunks(ofLength: 6)
                                 .map { Embed.Field(name: section.title.nilIfEmpty ?? "Unnamed Verse", value: """
                                     ```
-                                    \($0.joined(separator: "\n"))
+                                    \($0.joined(separator: "\n").nilIfEmpty ?? "...")
                                     ```
                                     """) }
                         }.chunks(ofLength: 6).enumerated().map { (i, fields) in
                             Embed(
-                                title: "Lyrics for `\(tab.songName ?? input)` by `\(tab.artistName ?? "?")` (Part \(i + 1))",
+                                title: "\(self.showChords ? "Chords" : "Lyrics") for `\(tab.songName ?? input)` by `\(tab.artistName ?? "?")` (Part \(i + 1))",
                                 fields: fields
                             )
                         }
