@@ -108,6 +108,7 @@ public class D2Delegate: MessageDelegate {
 		registry["%"] = BinaryOperationCommand<Int>(name: "remainder", operation: %)
 		registry["rpn"] = EvaluateExpressionCommand(parser: RPNExpressionParser(), name: "Reverse Polish Notation")
 		registry["primefactorization", aka: ["factor", "factorize", "factors", "primefactorize"]] = PrimeFactorizationCommand()
+		registry["reducefraction", aka: ["reduce"]] = ReduceFractionCommand()
 		registry["math"] = EvaluateExpressionCommand(parser: InfixExpressionParser(), name: "Infix Notation")
 		registry["matmul"] = MatrixMultiplicationCommand()
 		registry["identitymat", aka: ["idmat", "onemat"]] = IdentityMatrixCommand()
