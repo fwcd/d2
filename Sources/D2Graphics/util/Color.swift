@@ -56,6 +56,10 @@ public struct Color: Hashable {
 		self.blue = blue
 		self.alpha = alpha
 	}
+
+	public func mapAllChannels(withAlpha: Bool = true, _ transform: (UInt8) throws -> UInt8) rethrows -> Color {
+		try Color(red: transform(red), green: transform(green), blue: transform(blue), alpha: withAlpha ? transform(alpha) : alpha)
+	}
 	
 	public func with(alpha newAlpha: UInt8) -> Color {
 		return Color(red: red, green: green, blue: blue, alpha: newAlpha)
