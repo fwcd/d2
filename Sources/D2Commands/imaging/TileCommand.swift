@@ -37,14 +37,15 @@ public class TileCommand: Command {
 					case .y: (newWidth, newHeight) = (width, height * replicas)
 				}
 
+				let pixels = (0..<height).map { y in (0..<width).map { x in img[y, x] } }
 				var tiled = try Image(width: newWidth, height: newHeight)
 				
 				for y in 0..<height {
 					for x in 0..<width {
 						for i in 0..<replicas {
 							switch axis {
-								case .x: tiled[y, x + (i * width)] = img[y, x]
-								case .y: tiled[y + (i * height), x] = img[y, x]
+								case .x: tiled[y, x + (i * width)] = pixels[y][x]
+								case .y: tiled[y + (i * height), x] = pixels[y][x]
 							}
 						}
 					}
