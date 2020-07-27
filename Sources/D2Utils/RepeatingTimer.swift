@@ -17,7 +17,7 @@ public class RepeatingTimer {
 		}
 	}
 	
-	public func schedule(nTimes n: Int = 1, action: @escaping (Int, TimerContext) -> Void) {
+	public func schedule(nTimes n: Int = 1, beginImmediately: Bool = true, action: @escaping (Int, TimerContext) -> Void) {
 		// (Re)start timer
 		let queue = DispatchQueue(label: "RepeatingTimer #\(globalTimerIndex)")
 		var count = 0
@@ -26,7 +26,8 @@ public class RepeatingTimer {
 		timer?.cancel()
 		
 		timer = DispatchSource.makeTimerSource(queue: queue)
-		timer!.schedule(deadline: .now(), repeating: interval, leeway: .milliseconds(100))
+		let deadline: DispatchTime = beginImmediately ? .now() : .now() + interval
+		timer!.schedule(deadline: deadline, repeating: interval, leeway: .milliseconds(100))
 		timer!.setEventHandler { [unowned self] in
 			if count >= n {
 				self.context.cancel()

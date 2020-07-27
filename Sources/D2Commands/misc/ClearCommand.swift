@@ -15,7 +15,7 @@ public class ClearCommand: StringCommand {
     )
     private let minDeletableCount: Int
     private let maxDeletableCount: Int
-    private let finalConfirmationDeletionSeconds: Int
+    private let finalConfirmationDeletionTimer: RepeatingTimer
     private var preparedDeletions: [ChannelID: [Deletion]] = [:]
     private var finallyConfirmed: Set<ChannelID> = []
 
@@ -24,10 +24,10 @@ public class ClearCommand: StringCommand {
         let isIntended: Bool // Whether this was NOT a confirmational message during the deletion process
     }
     
-    public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80, finalConfirmationDeletionSeconds: Int = 4) {
+    public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80, finalConfirmationDeletionSeconds: Int = 2) {
         self.minDeletableCount = minDeletableCount
         self.maxDeletableCount = maxDeletableCount
-        self.finalConfirmationDeletionSeconds = finalConfirmationDeletionSeconds
+        finalConfirmationDeletionTimer = RepeatingTimer(interval: .seconds(finalConfirmationDeletionSeconds))
     }
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -120,8 +120,7 @@ public class ClearCommand: StringCommand {
             }
 
             // Automatically delete the final confirmation message after some time
-            let timer = RepeatingTimer(interval: .seconds(finalConfirmationDeletionSeconds))
-            timer.schedule { _, _ in
+            finalConfirmationDeletionTimer.schedule(beginImmediately: false) { _, _ in
                 client.deleteMessage(messageId, on: channelId)
             }
         }
