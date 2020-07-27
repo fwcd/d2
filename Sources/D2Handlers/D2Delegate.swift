@@ -163,7 +163,7 @@ public class D2Delegate: MessageDelegate {
 		registry["colortoalpha"] = ColorToAlphaCommand()
 		registry["threshold"] = ThresholdCommand()
 		registry["scale", aka: ["scaleimage"]] = ScaleImageCommand()
-		registry["boxblur"] = FilterImageCommand<BoxBlurFilter>()
+		registry["boxblur"] = FilterImageCommand<BoxBlurFilter>(maxSize: 500)
 		registry["sharpen"] = FilterImageCommand<SharpenFilter>()
 		registry["horizontalsobeledges", aka: ["horizontaledges", "sobeledges", "sobel", "edges"]] = FilterImageCommand<HorizontalSobelEdgesFilter>()
 		registry["verticalsobeledges", aka: ["verticaledges"]] = FilterImageCommand<VerticalSobelEdgesFilter>()
