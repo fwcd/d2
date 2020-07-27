@@ -7,8 +7,11 @@ public class FilterImageCommand<F: ImageFilter>: Command {
         shortDescription: "Applies an image convolution filter",
         requiredPermissionLevel: .basic
     )
+    private let maxSize: Int
 
-    public init() {}
+    public init(maxSize: Int = 10) {
+        self.maxSize = maxSize
+    }
 
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let image = input.asImage else {
@@ -18,6 +21,11 @@ public class FilterImageCommand<F: ImageFilter>: Command {
 
         guard let size = input.asText.map(Int.init) ?? 8 else {
             output.append(errorText: "Please provide an integer for specifying the filter size!")
+            return
+        }
+
+        guard size <= maxSize else {
+            output.append(errorText: "Please use a filter size smaller or equal to \(maxSize)!")
             return
         }
 
