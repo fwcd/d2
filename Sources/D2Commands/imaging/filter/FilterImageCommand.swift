@@ -19,7 +19,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
             return
         }
 
-        guard let size = input.asText.map(Int.init) ?? 3 else {
+        guard let size = input.asText.map(Int.init) ?? 5 else {
             output.append(errorText: "Please provide an integer for specifying the filter size!")
             return
         }
@@ -39,28 +39,33 @@ public class FilterImageCommand<F: ImageFilter>: Command {
 
             let pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
 
-            func apply(factor: Double, to channel: UInt8, over base: UInt8) -> UInt8 {
-                UInt8(max(0, min(255, Double(base) + Double(channel) * factor)))
+            func clampToByte(_ value: Double) -> UInt8 {
+                UInt8(max(0, min(255, value)))
             }
-            
+
             // Perform the convolution
             for y in 0..<height {
                 for x in 0..<width {
-                    var value: Color = Colors.transparent
+                    var value: (red: Double, green: Double, blue: Double, alpha: Double) = (red: 0, green: 0, blue: 0, alpha: 0)
                     for dy in 0..<filterMatrix.height {
                         for dx in 0..<filterMatrix.width {
                             let pixel = pixels[max(0, min(height - 1, y + dy - halfMatrixHeight))][max(0, min(width - 1, x + dx - halfMatrixWidth))]
                             let factor = filterMatrix[dy, dx]
 
-                            value = Color(
-                                red: apply(factor: factor, to: pixel.red, over: value.red),
-                                green: apply(factor: factor, to: pixel.green, over: value.green),
-                                blue: apply(factor: factor, to: pixel.blue, over: value.blue),
-                                alpha: apply(factor: factor, to: pixel.alpha, over: value.alpha)
+                            value = (
+                                red: value.red + Double(pixel.red) * factor,
+                                green: value.green + Double(pixel.green) * factor,
+                                blue: value.blue + Double(pixel.blue) * factor,
+                                alpha: value.alpha + Double(pixel.alpha) * factor
                             )
                         }
                     }
-                    result[y, x] = value
+                    result[y, x] = Color(
+                        red: clampToByte(value.red),
+                        green: clampToByte(value.green),
+                        blue: clampToByte(value.blue),
+                        alpha: max(pixels[y][x].alpha, clampToByte(value.alpha))
+                    )
                 }
             }
 

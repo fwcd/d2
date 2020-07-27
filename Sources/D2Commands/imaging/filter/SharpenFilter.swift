@@ -4,8 +4,11 @@ public struct SharpenFilter: ImageFilter {
     public let matrix: Matrix<Double>
 
     public init(size: Int) {
-        var matrix = Matrix<Double>(repeating: -1, width: size, height: size)
-        matrix[size / 2, size / 2] = Double((size * size) - 1)
-        self.matrix = matrix
+        // Size is currently ignored
+        matrix = Matrix([
+            [0, -1, 0],
+            [-1, 5, -1],
+            [0, -1, 0]
+        ])
     }
 }
