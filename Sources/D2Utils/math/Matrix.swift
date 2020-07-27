@@ -108,6 +108,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         self.values = values
     }
 
+    public init(repeating value: T, width: Int, height: Int) {
+        self.width = width
+        self.height = height
+        values = Array(repeating: value, count: width * height)
+    }
+
     public init(columnVector values: [T]) {
         width = 1
         height = values.count
@@ -217,6 +223,8 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public static func *(lhs: Matrix<T>, rhs: T) -> Matrix<T> { lhs.map { $0 * rhs } }
     
     public static func *(lhs: T, rhs: Matrix<T>) -> Matrix<T> { rhs * lhs }
+
+    public static func /(lhs: Matrix<T>, rhs: T) -> Matrix<T> { lhs.map { $0 / rhs } }
     
     public static func *(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
         assert(lhs.width == rhs.height)
@@ -236,6 +244,10 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public static func +=(lhs: inout Matrix<T>, rhs: Matrix<T>) { lhs.zipInPlace(rhs, with: +) }
 
     public static func -=(lhs: inout Matrix<T>, rhs: Matrix<T>) { lhs.zipInPlace(rhs, with: -) }
+
+    public static func *=(lhs: inout Matrix<T>, rhs: T) { lhs.mapInPlace { $0 * rhs } }
+    
+    public static func /=(lhs: inout Matrix<T>, rhs: T) { lhs.mapInPlace { $0 / rhs } }
 
     public static func *=(lhs: inout Matrix<T>, rhs: Matrix<T>) {
         assert(lhs.width == rhs.width && lhs.height == rhs.height && lhs.width == lhs.height)

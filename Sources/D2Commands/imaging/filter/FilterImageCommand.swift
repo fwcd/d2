@@ -16,11 +16,16 @@ public class FilterImageCommand<F: ImageFilter>: Command {
             return
         }
 
+        guard let size = input.asText.map(Int.init) ?? 8 else {
+            output.append(errorText: "Please provide an integer for specifying the filter size!")
+            return
+        }
+
         do {
             let width = image.width
             let height = image.height
             var result = try Image(width: width, height: height)
-            let filterMatrix = F.init().matrix
+            let filterMatrix = F.init(size: size).matrix
             let halfMatrixWidth = filterMatrix.width / 2
             let halfMatrixHeight = filterMatrix.height / 2
             
@@ -35,10 +40,19 @@ public class FilterImageCommand<F: ImageFilter>: Command {
                                 max(0, min(width - 1, x + dx - halfMatrixWidth))
                             ]
                             let factor = filterMatrix[dy, dx]
-                            value = pixel.mapAllChannels { UInt8(max(0, min(255, Double($0) * factor))) }.alphaBlend(over: value)
+
+                            func apply(_ channel: UInt8) -> UInt8 {
+                                UInt8(max(0, min(255, Double(channel) * factor)))
+                            }
+
+                            value = Color(
+                                red: value.red + apply(pixel.red),
+                                green: value.green + apply(pixel.green),
+                                blue: value.blue + apply(pixel.blue)
+                            )
                         }
                     }
-                    result[y, x] = value
+                    result[y, x] = value.with(alpha: image[y, x].alpha)
                 }
             }
 

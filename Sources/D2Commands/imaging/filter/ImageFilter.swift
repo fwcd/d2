@@ -4,5 +4,5 @@ import D2Utils
 public protocol ImageFilter {
     var matrix: Matrix<Double> { get }
 
-    init()
+    init(size: Int)
 }
