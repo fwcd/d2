@@ -36,6 +36,10 @@ public class FilterImageCommand<F: ImageFilter>: Command {
             let filterMatrix = F.init(size: size).matrix
             let halfMatrixWidth = filterMatrix.width / 2
             let halfMatrixHeight = filterMatrix.height / 2
+
+            func apply(factor: Double, to channel: UInt8) -> UInt8 {
+                UInt8(max(0, min(255, Double(channel) * factor)))
+            }
             
             // Perform the convolution
             for y in 0..<height {
@@ -49,18 +53,15 @@ public class FilterImageCommand<F: ImageFilter>: Command {
                             ]
                             let factor = filterMatrix[dy, dx]
 
-                            func apply(_ channel: UInt8) -> UInt8 {
-                                UInt8(max(0, min(255, Double(channel) * factor)))
-                            }
-
                             value = Color(
-                                red: value.red + apply(pixel.red),
-                                green: value.green + apply(pixel.green),
-                                blue: value.blue + apply(pixel.blue)
+                                red: value.red + apply(factor: factor, to: pixel.red),
+                                green: value.green + apply(factor: factor, to: pixel.green),
+                                blue: value.blue + apply(factor: factor, to: pixel.blue),
+                                alpha: value.alpha + apply(factor: factor, to: pixel.alpha)
                             )
                         }
                     }
-                    result[y, x] = value.with(alpha: image[y, x].alpha)
+                    result[y, x] = value
                 }
             }
 
