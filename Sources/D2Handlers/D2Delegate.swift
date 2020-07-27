@@ -31,6 +31,7 @@ public class D2Delegate: MessageDelegate {
 		partyGameDB = try PartyGameDatabase()
 		eventListenerBus = EventListenerBus()
 		subscriptionManager = SubscriptionManager(registry: registry)
+		let mostRecentPipeRunner = Box<Runnable?>(wrappedValue: nil)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
 		let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
@@ -42,7 +43,7 @@ public class D2Delegate: MessageDelegate {
 		]
 		messageHandlers = [
 			SpamHandler(config: spamConfiguration),
-			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager),
+			CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, mostRecentPipeRunner: mostRecentPipeRunner),
 			SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
 			MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
 			MentionSomeoneHandler(),
@@ -276,6 +277,7 @@ public class D2Delegate: MessageDelegate {
 		registry["sysinfo"] = SysInfoCommand()
 		registry["issuereport", aka: ["bugreport"]] = IssueReportCommand()
 		registry["search", aka: ["s"]] = SearchCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
+		registry["rerun", aka: ["re"]] = ReRunCommand(permissionManager: permissionManager, mostRecentPipeRunner: mostRecentPipeRunner)
 		registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
 	}
 

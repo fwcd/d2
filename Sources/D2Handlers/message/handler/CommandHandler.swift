@@ -24,6 +24,15 @@ fileprivate class PipeComponent {
 	}
 }
 
+fileprivate struct RunnablePipe: Runnable {
+	let pipeSource: PipeComponent
+	let input: RichValue
+
+	func run() {
+		pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
+	}
+}
+
 // The first group matches the command name,
 // the second matches the arguments (the rest of the message content)
 fileprivate let commandPattern = try! Regex(from: "(\\S+)(?:\\s+([\\s\\S]*))?")
@@ -34,6 +43,7 @@ public class CommandHandler: MessageHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
 	private let subscriptionManager: SubscriptionManager
+	@Box private var mostRecentPipeRunner: Runnable?
 
 	private let chainSeparator: Character
 	private let pipeSeparator: Character
@@ -49,6 +59,7 @@ public class CommandHandler: MessageHandler {
         registry: CommandRegistry,
         permissionManager: PermissionManager,
 		subscriptionManager: SubscriptionManager,
+		mostRecentPipeRunner: Box<Runnable?>,
         chainSeparator: Character = ";",
         pipeSeparator: Character = "|"
     ) {
@@ -56,6 +67,7 @@ public class CommandHandler: MessageHandler {
         self.registry = registry
         self.permissionManager = permissionManager
 		self.subscriptionManager = subscriptionManager
+		self._mostRecentPipeRunner = mostRecentPipeRunner
 		self.chainSeparator = chainSeparator
 		self.pipeSeparator = pipeSeparator
 		
@@ -130,7 +142,11 @@ public class CommandHandler: MessageHandler {
 				operationQueue.addOperation {
 					self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild) { input in
 						// Execute the pipe
-						pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
+						let runner = RunnablePipe(pipeSource: pipeSource, input: input)
+						runner.run()
+
+						// Store the pipe for potential re-execution
+						self.mostRecentPipeRunner = runner
 					}
 				}
 			}
