@@ -1,8 +1,10 @@
 import D2Utils
 
-/// A convolution kernel used for image processing.
+/// A filter used for image processing.
 public protocol ImageFilter {
-    var matrix: Matrix<Double> { get }
+    /// The convolution kernels to be applied
+    /// sequentially.
+    var matrices: [Matrix<Double>] { get }
 
     init(size: Int)
 }

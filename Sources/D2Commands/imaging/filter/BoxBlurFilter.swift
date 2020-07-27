@@ -1,9 +1,12 @@
 import D2Utils
 
 public struct BoxBlurFilter: ImageFilter {
-    public let matrix: Matrix<Double>
+    public let matrices: [Matrix<Double>]
 
     public init(size: Int) {
-        matrix = Matrix(repeating: 1, width: size, height: size) / Double(size * size)
+        matrices = [
+            Matrix(repeating: 1, width: size, height: 1) / Double(size),
+            Matrix(repeating: 1, width: 1, height: size) / Double(size)
+        ]
     }
 }
