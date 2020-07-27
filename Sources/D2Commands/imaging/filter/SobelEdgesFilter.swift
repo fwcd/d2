@@ -1,27 +1,19 @@
 import D2Utils
 
-public struct HorizontalSobelEdgesFilter: ImageFilter {
+public struct SobelEdgesFilter<IsHorizontal: ConstBool>: ImageFilter {
     public let matrices: [Matrix<Double>]
 
     public init(size: Int) {
-        // Size is currently ignored
-        matrices = [Matrix([
-            [1, 0, -1],
-            [2, 0, -2],
-            [1, 0, -1]
-        ])]
-    }
-}
+        let halfSize = size / 2
+        let matrices = [
+            Matrix([Array(repeating: 1, count: size)]).with(2, atY: 0, x: halfSize).transpose,
+            Matrix([(0..<size).map { Double(($0 - halfSize).signum()) }])
+        ]
 
-public struct VerticalSobelEdgesFilter: ImageFilter {
-    public let matrices: [Matrix<Double>]
-
-    public init(size: Int) {
-        // Size is currently ignored
-        matrices = [Matrix([
-            [1, 2, 1],
-            [0, 0, 0],
-            [-1, -2, -1]
-        ])]
+        if IsHorizontal.value {
+            self.matrices = matrices
+        } else {
+            self.matrices = matrices.reversed().map(\.transpose)
+        }
     }
 }

@@ -186,6 +186,12 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         Matrix(width: width, height: height, values: values)
     }
 
+    public func with(_ value: T, atY y: Int, x: Int) -> Matrix<T> {
+        var result = self
+        result[y, x] = value
+        return result
+    }
+
     public mutating func scale(row y: Int, by factor: T) {
         assert(factor != 0)
         for x in 0..<width {
