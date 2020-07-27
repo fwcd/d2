@@ -182,6 +182,10 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         return 0
     }
 
+    public func reshaped(width: Int, height: Int) -> Matrix<T> {
+        Matrix(width: width, height: height, values: values)
+    }
+
     public mutating func scale(row y: Int, by factor: T) {
         assert(factor != 0)
         for x in 0..<width {

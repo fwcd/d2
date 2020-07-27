@@ -165,7 +165,7 @@ public class D2Delegate: MessageDelegate {
 		registry["scale", aka: ["scaleimage"]] = ScaleImageCommand()
 		registry["boxblur"] = FilterImageCommand<BoxBlurFilter>(maxSize: 400)
 		registry["gaussianblur", aka: ["blur"]] = FilterImageCommand<GaussianBlurFilter>(maxSize: 100)
-		registry["sharpen"] = FilterImageCommand<SharpenFilter>()
+		registry["sharpen"] = FilterImageCommand<SharpenFilter>(maxSize: 400)
 		registry["horizontalsobeledges", aka: ["horizontaledges", "sobeledges", "sobel", "edges"]] = FilterImageCommand<HorizontalSobelEdgesFilter>()
 		registry["verticalsobeledges", aka: ["verticaledges"]] = FilterImageCommand<VerticalSobelEdgesFilter>()
 		registry["emboss"] = FilterImageCommand<EmbossFilter>()
