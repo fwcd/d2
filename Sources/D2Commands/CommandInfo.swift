@@ -14,9 +14,11 @@ public struct CommandInfo {
     public var requiredPermissionLevel: PermissionLevel
     /// Whether the command is should use a simulated permission level, if available. Should be true for almost every command.
     public var usesSimulatedPermissionLevel: Bool
+    /// Whether the command should overwrite the most recently executed pipe runner. Should generally be true for almost every command.
+    public var shouldOverwriteMostRecentPipeRunner: Bool
     /// Whether the commands should be hidden in lists.
     public var hidden: Bool
-    /// Whether the command will set up/handle subscriptions. Only for documentary purposes..
+    /// Whether the command will set up/handle subscriptions. Only for documentary purposes.
     public var subscribesToNextMessages: Bool
     /// Whether the command can only be invoked by users (not bots).
     public var userOnly: Bool
@@ -34,6 +36,7 @@ public struct CommandInfo {
         helpText: String? = nil,
         requiredPermissionLevel: PermissionLevel = .admin,
         usesSimulatedPermissionLevel: Bool = true,
+        shouldOverwriteMostRecentPipeRunner: Bool = true,
         hidden: Bool = false,
         subscribesToNextMessages: Bool = false,
         userOnly: Bool = true,
@@ -47,6 +50,7 @@ public struct CommandInfo {
         self.helpText = helpText
         self.requiredPermissionLevel = requiredPermissionLevel
         self.usesSimulatedPermissionLevel = usesSimulatedPermissionLevel
+        self.shouldOverwriteMostRecentPipeRunner = shouldOverwriteMostRecentPipeRunner
         self.hidden = hidden
         self.subscribesToNextMessages = subscribesToNextMessages
         self.userOnly = userOnly

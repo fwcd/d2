@@ -15,7 +15,7 @@ fileprivate class PipeComponent {
 	let context: CommandContext
 	let args: String
 	var output: CommandOutput? = nil
-	
+
 	init(name: String, command: Command, context: CommandContext, args: String) {
 		self.name = name
 		self.command = command
@@ -146,7 +146,9 @@ public class CommandHandler: MessageHandler {
 						runner.run()
 
 						// Store the pipe for potential re-execution
-						self.mostRecentPipeRunner = runner
+						if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }) {
+							self.mostRecentPipeRunner = runner
+						}
 					}
 				}
 			}
@@ -181,7 +183,7 @@ public class CommandHandler: MessageHandler {
 							message: message,
 							commandPrefix: commandPrefix,
 							subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name)
-						)				
+						)
 
 						pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
 					} else {

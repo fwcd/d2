@@ -5,7 +5,8 @@ public class ReRunCommand: StringCommand {
     public let info = CommandInfo(
         category: .essential,
         shortDescription: "Re-runs the last command",
-        requiredPermissionLevel: .admin // TODO: Check permissions
+        requiredPermissionLevel: .admin, // TODO: Check permissions
+        shouldOverwriteMostRecentPipeRunner: false
     )
     private let permissionManager: PermissionManager
     @Box private var mostRecentPipeRunner: Runnable?
