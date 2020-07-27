@@ -9,7 +9,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
     )
     private let maxSize: Int
 
-    public init(maxSize: Int = 15) {
+    public init(maxSize: Int = 30) {
         self.maxSize = maxSize
     }
 
