@@ -5,20 +5,28 @@ public class ReRunCommand: StringCommand {
     public let info = CommandInfo(
         category: .essential,
         shortDescription: "Re-runs the last command",
-        requiredPermissionLevel: .admin, // TODO: Check permissions
+        requiredPermissionLevel: .vip,
         shouldOverwriteMostRecentPipeRunner: false
     )
     private let permissionManager: PermissionManager
-    @Box private var mostRecentPipeRunner: Runnable?
+    @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
 
-    public init(permissionManager: PermissionManager, mostRecentPipeRunner: Box<Runnable?>) {
+    public init(permissionManager: PermissionManager, mostRecentPipeRunner: Box<(Runnable, PermissionLevel)?>) {
         self.permissionManager = permissionManager
         self._mostRecentPipeRunner = mostRecentPipeRunner
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        guard let pipeRunner = mostRecentPipeRunner else {
+        guard let (pipeRunner, minPermissionLevel) = mostRecentPipeRunner else {
             output.append(errorText: "No commands have been executed yet!")
+            return
+        }
+        guard let author = context.author else {
+            output.append(errorText: "No author available")
+            return
+        }
+        guard permissionManager[author] >= minPermissionLevel else {
+            output.append(errorText: "You do not have sufficient permissions to run this command pipe!")
             return
         }
 

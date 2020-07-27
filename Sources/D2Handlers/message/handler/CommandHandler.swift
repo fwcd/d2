@@ -43,7 +43,7 @@ public class CommandHandler: MessageHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
 	private let subscriptionManager: SubscriptionManager
-	@Box private var mostRecentPipeRunner: Runnable?
+	@Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
 
 	private let chainSeparator: Character
 	private let pipeSeparator: Character
@@ -59,7 +59,7 @@ public class CommandHandler: MessageHandler {
         registry: CommandRegistry,
         permissionManager: PermissionManager,
 		subscriptionManager: SubscriptionManager,
-		mostRecentPipeRunner: Box<Runnable?>,
+		mostRecentPipeRunner: Box<(Runnable, PermissionLevel)?>,
         chainSeparator: Character = ";",
         pipeSeparator: Character = "|"
     ) {
@@ -146,8 +146,8 @@ public class CommandHandler: MessageHandler {
 						runner.run()
 
 						// Store the pipe for potential re-execution
-						if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }) {
-							self.mostRecentPipeRunner = runner
+						if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
+							self.mostRecentPipeRunner = (runner, minPermissionLevel)
 						}
 					}
 				}

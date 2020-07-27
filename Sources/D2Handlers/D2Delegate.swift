@@ -31,7 +31,7 @@ public class D2Delegate: MessageDelegate {
 		partyGameDB = try PartyGameDatabase()
 		eventListenerBus = EventListenerBus()
 		subscriptionManager = SubscriptionManager(registry: registry)
-		let mostRecentPipeRunner = Box<Runnable?>(wrappedValue: nil)
+		let mostRecentPipeRunner = Box<(Runnable, PermissionLevel)?>(wrappedValue: nil)
 		let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
 		let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
 		let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
