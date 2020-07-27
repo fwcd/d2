@@ -164,7 +164,7 @@ public class D2Delegate: MessageDelegate {
 		registry["threshold"] = ThresholdCommand()
 		registry["scale", aka: ["scaleimage"]] = ScaleImageCommand()
 		registry["boxblur"] = FilterImageCommand<BoxBlurFilter>()
-		registry["detectedges", aka: ["edges"]] = FilterImageCommand<EdgeDetectionFilter>()
+		registry["sharpen"] = FilterImageCommand<SharpenFilter>()
 		registry["ellipsemask"] = MaskCommand<EllipseMask>(description: "Applies an ellipse-shaped mask to the image")
 		registry["spin"] = AnimateCommand<TransformAnimation<SpinTransform>>(description: "Rotates an image")
 		registry["twirl"] = AnimateCommand<TransformAnimation<TwirlTransform>>(description: "Applies a twirl distortion effect")

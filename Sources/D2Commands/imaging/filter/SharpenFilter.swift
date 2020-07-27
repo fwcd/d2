@@ -1,6 +1,6 @@
 import D2Utils
 
-public struct EdgeDetectionFilter: ImageFilter {
+public struct SharpenFilter: ImageFilter {
     public let matrix: Matrix<Double>
 
     public init(size: Int) {
