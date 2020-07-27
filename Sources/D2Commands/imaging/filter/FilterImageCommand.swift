@@ -19,7 +19,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
             return
         }
 
-        guard let size = input.asText.map(Int.init) ?? 8 else {
+        guard let size = input.asText.map(Int.init) ?? 3 else {
             output.append(errorText: "Please provide an integer for specifying the filter size!")
             return
         }
@@ -61,7 +61,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
                             )
                         }
                     }
-                    result[y, x] = value.with(alpha: image[y, x].alpha)
+                    result[y, x] = value
                 }
             }
 
