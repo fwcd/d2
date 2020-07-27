@@ -19,16 +19,27 @@ public struct SubscriptionHandler: MessageHandler {
 		let isBot = message.author?.bot ?? false
         var handled = false
 
-        manager.notifySubscriptions(on: channelId, isBot: isBot) {
+        manager.notifySubscriptions(on: channelId, isBot: isBot) { name, subs in
             let context = CommandContext(
                 client: client,
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,
-                subscriptions: $1
+                subscriptions: subs
             )
-            let output = MessageIOOutput(context: context)
-            registry[$0]?.onSubscriptionMessage(withContent: message.content, output: output, context: context)
+            let command = registry[name]
+            let output = MessageIOOutput(context: context) { sentMessage, _ in
+                if let sent = sentMessage {
+                    command?.onSuccessfullySent(context: CommandContext(
+                        client: client,
+                        registry: self.registry,
+                        message: sent,
+                        commandPrefix: self.commandPrefix,
+                        subscriptions: subs
+                    ))
+                }
+            }
+            command?.onSubscriptionMessage(withContent: message.content, output: output, context: context)
             handled = true
         }
         

@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.ClearCommand")
@@ -14,16 +15,19 @@ public class ClearCommand: StringCommand {
     )
     private let minDeletableCount: Int
     private let maxDeletableCount: Int
+    private let finalConfirmationDeletionSeconds: Int
     private var preparedDeletions: [ChannelID: [Deletion]] = [:]
+    private var finallyConfirmed: Set<ChannelID> = []
 
     private struct Deletion {
         let message: Message
         let isIntended: Bool // Whether this was NOT a confirmational message during the deletion process
     }
     
-    public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80) {
+    public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80, finalConfirmationDeletionSeconds: Int = 4) {
         self.minDeletableCount = minDeletableCount
         self.maxDeletableCount = maxDeletableCount
+        self.finalConfirmationDeletionSeconds = finalConfirmationDeletionSeconds
     }
     
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
@@ -64,11 +68,13 @@ public class ClearCommand: StringCommand {
             let intendedDeletionCount = deletions.filter { $0.isIntended }.count
             let confirmationDeletionCount = deletions.count - intendedDeletionCount
             preparedDeletions[channel.id] = nil
+
             if content == confirmationString {
                 log.notice("Deleting \(intendedDeletionCount) \("message".pluralize(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralize(with: confirmationDeletionCount))")
                 if deletions.count == 1, let messageId = deletions.first?.message.id {
                     client.deleteMessage(messageId, on: channel.id) { success, _ in
                         if success {
+                            self.finallyConfirmed.insert(channel.id)
                             output.append(":wastebasket: Deleted message")
                         } else {
                             output.append(errorText: "Could not delete message")
@@ -82,6 +88,7 @@ public class ClearCommand: StringCommand {
                     }
                     client.bulkDeleteMessages(messageIds, on: channel.id) { success, _ in
                         if success {
+                            self.finallyConfirmed.insert(channel.id)
                             output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
                         } else {
                             output.append(errorText: "Could not delete messages")
@@ -92,6 +99,7 @@ public class ClearCommand: StringCommand {
                 output.append(":x: Cancelling deletion")
             }
         }
+
         context.unsubscribeFromChannel()
     }
     
@@ -103,7 +111,19 @@ public class ClearCommand: StringCommand {
             return
         }
         if preparedDeletions[channelId] != nil {
+            // While preparing a deletion, memorize all messages
             preparedDeletions[channelId]!.append(Deletion(message: message, isIntended: false))
+        } else if let messageId = message.id, finallyConfirmed.remove(channelId) != nil {
+            guard let client = context.client else {
+                log.warning("No client available for deleting the final confirmation message")
+                return
+            }
+
+            // Automatically delete the final confirmation message after some time
+            let timer = RepeatingTimer(interval: .seconds(finalConfirmationDeletionSeconds))
+            timer.schedule { _, _ in
+                client.deleteMessage(messageId, on: channelId)
+            }
         }
     }
 }
