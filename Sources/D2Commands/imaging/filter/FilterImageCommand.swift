@@ -9,7 +9,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
     )
     private let maxSize: Int
 
-    public init(maxSize: Int = 10) {
+    public init(maxSize: Int = 15) {
         self.maxSize = maxSize
     }
 
@@ -37,6 +37,8 @@ public class FilterImageCommand<F: ImageFilter>: Command {
             let halfMatrixWidth = filterMatrix.width / 2
             let halfMatrixHeight = filterMatrix.height / 2
 
+            let pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
+
             func apply(factor: Double, to channel: UInt8, over base: UInt8) -> UInt8 {
                 UInt8(max(0, min(255, Double(base) + Double(channel) * factor)))
             }
@@ -47,10 +49,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
                     var value: Color = Colors.transparent
                     for dy in 0..<filterMatrix.height {
                         for dx in 0..<filterMatrix.width {
-                            let pixel = image[
-                                max(0, min(height - 1, y + dy - halfMatrixHeight)),
-                                max(0, min(width - 1, x + dx - halfMatrixWidth))
-                            ]
+                            let pixel = pixels[max(0, min(height - 1, y + dy - halfMatrixHeight))][max(0, min(width - 1, x + dx - halfMatrixWidth))]
                             let factor = filterMatrix[dy, dx]
 
                             value = Color(
