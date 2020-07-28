@@ -163,6 +163,7 @@ public class D2Delegate: MessageDelegate {
 		registry["invertcolors"] = InvertColorsCommand()
 		registry["colortoalpha"] = ColorToAlphaCommand()
 		registry["threshold"] = ThresholdCommand()
+		registry["watermark"] = WatermarkCommand()
 		registry["scaleimage", aka: ["scale"]] = ScaleImageCommand()
 		registry["cropimage", aka: ["crop"]] = CropImageCommand()
 		registry["filterimage", aka: ["filter"]] = FilterImageDirectlyCommand()
