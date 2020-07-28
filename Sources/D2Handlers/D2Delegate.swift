@@ -165,6 +165,7 @@ public class D2Delegate: MessageDelegate {
 		registry["threshold"] = ThresholdCommand()
 		registry["scaleimage", aka: ["scale"]] = ScaleImageCommand()
 		registry["cropimage", aka: ["crop"]] = CropImageCommand()
+		registry["filterimage", aka: ["filter"]] = FilterImageDirectlyCommand()
 		registry["boxblur"] = FilterImageCommand<BoxBlurFilter>(maxSize: 400)
 		registry["gaussianblur", aka: ["blur"]] = FilterImageCommand<GaussianBlurFilter>(maxSize: 100)
 		registry["sharpen"] = FilterImageCommand<SharpenFilter>(maxSize: 400)
