@@ -8,11 +8,9 @@ public struct AdviceSlipQuery {
     }
 
     public func perform() -> Promise<AdviceSlipResult, Error> {
-        do {
+        Promise.catchingThen {
             let request = try HTTPRequest(host: "api.adviceslip.com", path: "/advice\((searchTerm?.nilIfEmpty).map { "/search/\($0)" } ?? "")")
-            request.fetchJSONAsync(as: AdviceSlipResult.self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: AdviceSlipResult.self)
         }
     }
 }

@@ -18,11 +18,9 @@ public struct MinecraftModSearchQuery {
     }
 
     public func perform() -> Promise<[MinecraftModSearchResult], Error> {
-        do {
+        Promise.catchingThen {
             let request = try HTTPRequest(host: "addons-ecs.forgesvc.net", path: "/api/v2/addon/search", query: params)
-            request.fetchJSONAsync(as: [MinecraftModSearchResult].self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: [MinecraftModSearchResult].self)
         }
     }
 }

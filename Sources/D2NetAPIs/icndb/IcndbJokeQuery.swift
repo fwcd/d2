@@ -12,11 +12,9 @@ public struct IcndbJokeQuery {
     }
 
     public func perform() -> Promise<IcndbResult, Error> {
-        do {
+        Promise.catchingThen {
             let request = try HTTPRequest(host: "api.icndb.com", path: "/jokes/random", query: params)
-            request.fetchJSONAsync(as: IcndbResult.self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: IcndbResult.self)
         }
     }
 }
