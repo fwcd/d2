@@ -18,7 +18,7 @@ public struct MessageWriter {
 			log.warning("Could not create LatexRenderer: \(error)")
 		}
 	}
-	
+
 	public func write(value: RichValue) -> Promise<Message, Error> {
 		switch value {
 			case .none:
@@ -33,7 +33,7 @@ public struct MessageWriter {
 			case let .roleMentions(roles):
 				return Promise(Message(content: roles.map { "<@\($0)>" }.joined(separator: " ")))
 			case let .image(img):
-				return Promise(Result { try Message(fromImage: img) })
+				return Promise.catching { try Message(fromImage: img) }
 			case let .table(rows):
 				return Promise(Message(content: """
 					```
@@ -43,9 +43,9 @@ public struct MessageWriter {
 			case let .urls(urls):
 				return Promise(Message(content: urls.map(\.absoluteString).joined(separator: " ")))
 			case let .gif(gif):
-				return Promise(Result { try Message(fromGif: gif) })
+				return Promise.catching { try Message(fromGif: gif) }
 			case let .domNode(node):
-				return Promise(Result { .code(try node.outerHtml(), language: "html") }).then(write(value:))
+				return Promise.catching { .code(try node.outerHtml(), language: "html") }.then(write(value:))
 			case let .code(code, language: lang):
 				return Promise(Message(content: """
 					```\(lang ?? "")

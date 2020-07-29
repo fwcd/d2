@@ -111,7 +111,7 @@ public struct HTTPRequest {
 
 	public func fetchHTMLAsync() -> Promise<Document, Error> {
 		fetchUTF8Async().then { html in
-			Promise(Result { try SwiftSoup.parse(html) })
+			.catching { try SwiftSoup.parse(html) }
 		}
 	}
 }
