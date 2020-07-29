@@ -22,18 +22,16 @@ public struct StackOverflowQuery {
 			"intitle": input,
 			"site": "stackoverflow",
 			"filter": "!bA1d_KuEt(8tau" // Only include title and question ID for each question
-		]).fetchJSONAsync(as: StackOverflowResults<StackOverflowQuestion>.self) {
-			do {
-				guard let questions = try $0.get().items else { throw NetApiError.noResults("No answers found") }
+		]).fetchJSONAsync(as: StackOverflowResults<StackOverflowQuestion>.self).then { res in
+			.catchingThen {
+				let questions = res.items
 				guard let questionId = questions.first(where: { $0.questionId != nil })?.questionId else { throw NetApiError.noResults("No answer with a question ID found") }
-				try HTTPRequest(host: self.host, path: "/\(self.apiVersion)/questions/\(questionId)/answers", query: [
+				return try HTTPRequest(host: self.host, path: "/\(self.apiVersion)/questions/\(questionId)/answers", query: [
 					"order": "desc",
 					"sort": "votes",
 					"site": "stackoverflow",
 					"filter": "!4-(9avC4E*qssXR4f" // Only include owner, title and Markdown body for each answer
-				]).fetchJSONAsync(as: StackOverflowResults<StackOverflowAnswer>.self, then: then)
-			} catch {
-				then(.failure(error))
+				]).fetchJSONAsync(as: StackOverflowResults<StackOverflowAnswer>.self)
 			}
 		}
 	}

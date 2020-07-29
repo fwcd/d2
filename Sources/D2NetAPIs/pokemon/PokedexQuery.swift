@@ -12,7 +12,9 @@ public struct PokedexQuery {
             return Promise.catchingThen {
                 try HTTPRequest(host: "randompokemon.com", path: "/dex/all.json").fetchJSONAsync(as: [PokedexEntry].self)
             }.peekListen {
-                PokedexQuery.cached = $0
+                if case let .success(pokedex) = $0 {
+                    PokedexQuery.cached = pokedex
+                }
             }
         }
     }

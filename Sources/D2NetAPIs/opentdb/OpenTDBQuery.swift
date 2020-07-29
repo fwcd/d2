@@ -8,10 +8,9 @@ public struct OpenTDBQuery {
     }
 
     public func perform() -> Promise<OpenTDBResponse, Error> {
-        do {
-            let request = try HTTPRequest(host: "opentdb.com", path: "/api.php", query: ["amount": String(amount), "encode": "url3986"])
-            request.fetchJSONAsync(as: OpenTDBResponse.self) {
-                do {
+        Promise.catching { try HTTPRequest(host: "opentdb.com", path: "/api.php", query: ["amount": String(amount), "encode": "url3986"]) }
+            .then { $0.fetchJSONAsync(as: OpenTDBResponse.self) }
+            .then {
                     var response = try $0.get()
                     response.results = response.results.map {
                         var r = $0
@@ -28,8 +27,6 @@ public struct OpenTDBQuery {
                     then(.failure(error))
                 }
             }
-        } catch {
-            then(.failure(error))
         }
     }
 }

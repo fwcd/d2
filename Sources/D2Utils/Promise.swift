@@ -89,4 +89,13 @@ extension Promise where E == Error {
     public static func catchingThen(_ block: () throws -> Promise<T, Error>) -> Promise<T, Error> {
         Promise<Promise<T, Error>, Error>.catching(block).then { $0 }
     }
+
+    /// Chains another promise with a callback that may synchronously throw.
+    public func thenCatching<U>(_ next: @escaping (T) throws -> Promise<U, Error>) -> Promise<U, Error> {
+        then { x in
+            .catchingThen {
+                try next(x)
+            }
+        }
+    }
 }

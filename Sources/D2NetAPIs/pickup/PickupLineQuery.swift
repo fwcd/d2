@@ -1,3 +1,5 @@
+import D2Utils
+
 public protocol PickupLineQuery {
-    func perform(then: @escaping (Result<PickupLine, Error>) -> Void)
+    func perform() -> Promise<PickupLine, Error>
 }
