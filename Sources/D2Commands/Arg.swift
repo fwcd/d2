@@ -16,26 +16,26 @@ public protocol Arg: CustomStringConvertible {
     /** Whether this instantiation is a _pattern instantiation_. */
     var isPattern: Bool { get }
     /**
-     * Fetches the maximum number of tokens that this arg can parse.
-     *
-     * **This property should only be fetches if `isPattern` is true.**
-     */
+    * Fetches the maximum number of tokens that this arg can parse.
+    *
+    * **This property should only be fetches if `isPattern` is true.**
+    */
     var maxTokens: Int { get }
     
     /**
-     * Parses the argument structure from a token iterator
-     * of space-delimited words.
-     *
-     * The iterator should be considered
-     * "consumed" if this method returns `nil`.
-     */
+    * Parses the argument structure from a token iterator
+    * of space-delimited words.
+    *
+    * The iterator should be considered
+    * "consumed" if this method returns `nil`.
+    */
     static func parse(from tokens: TokenIterator<String>) -> Self?
 
     /**
-     * Generates up to n usage examples.
-     *
-     * **This method should only be called if `isPattern` is true.**
-     */
+    * Generates up to n usage examples.
+    *
+    * **This method should only be called if `isPattern` is true.**
+    */
     func generateExamples(_ n: Int) -> [String]
 }
 

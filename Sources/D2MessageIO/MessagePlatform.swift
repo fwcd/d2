@@ -14,8 +14,8 @@ public protocol MessagePlatform: Startable {
     var name: String { get }
     
     /**
-     * Performs synchronous setup. This method is expected not
-     * to block and to finish quickly.
-     */
+    * Performs synchronous setup. This method is expected not
+    * to block and to finish quickly.
+    */
     init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: Token) throws
 }

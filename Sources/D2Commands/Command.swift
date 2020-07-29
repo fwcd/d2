@@ -3,36 +3,36 @@ import D2Permissions
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
 public protocol Command: class {
-	var inputValueType: RichValueType { get }
-	var outputValueType: RichValueType { get }
-	var info: CommandInfo { get }
+    var inputValueType: RichValueType { get }
+    var outputValueType: RichValueType { get }
+    var info: CommandInfo { get }
 	
-	func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
+    func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
 	
-	func onSuccessfullySent(context: CommandContext)
+    func onSuccessfullySent(context: CommandContext)
 	
-	func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
+    func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
 
-	func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
+    func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
 
-	func onReceivedUpdated(presence: Presence)
+    func onReceivedUpdated(presence: Presence)
 	
-	func equalTo(_ rhs: Command) -> Bool
+    func equalTo(_ rhs: Command) -> Bool
 }
 
 extension Command {
-	public var inputValueType: RichValueType { .unknown }
-	public var outputValueType: RichValueType { .unknown }
+    public var inputValueType: RichValueType { .unknown }
+    public var outputValueType: RichValueType { .unknown }
 	
-	public func onSuccessfullySent(context: CommandContext) {}
+    public func onSuccessfullySent(context: CommandContext) {}
 	
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
+    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
 
-	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {}
+    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {}
 
-	// TODO: Support reaction removal
+    // TODO: Support reaction removal
 	
-	public func onReceivedUpdated(presence: Presence) {}
+    public func onReceivedUpdated(presence: Presence) {}
 
-	public func equalTo(_ rhs: Command) -> Bool { self === rhs }
+    public func equalTo(_ rhs: Command) -> Bool { self === rhs }
 }

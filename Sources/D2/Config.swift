@@ -1,3 +1,3 @@
 struct Config: Codable {
-	var commandPrefix: String
+    var commandPrefix: String
 }

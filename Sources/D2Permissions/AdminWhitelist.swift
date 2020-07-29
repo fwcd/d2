@@ -1,3 +1,3 @@
 struct AdminWhitelist: Codable {
-	var users: [String]
+    var users: [String]
 }

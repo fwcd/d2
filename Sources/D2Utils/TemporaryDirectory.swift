@@ -8,38 +8,38 @@ fileprivate let log = Logger(label: "D2Utils.TemporaryDirectory")
  * when this instance is deinitialized.
  */
 public class TemporaryDirectory {
-	public let url: URL
-	public var deleteAutomatically: Bool = true
-	public var exists: Bool { return FileManager.default.fileExists(atPath: url.path) }
+    public let url: URL
+    public var deleteAutomatically: Bool = true
+    public var exists: Bool { return FileManager.default.fileExists(atPath: url.path) }
 	
-	public init() {
-		let fileManager = FileManager.default
-		let temporaryDirectory: URL
+    public init() {
+        let fileManager = FileManager.default
+        let temporaryDirectory: URL
 		
-		if #available(macOS 10.12, *) {
-			temporaryDirectory = fileManager.temporaryDirectory
-		} else {
-			temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory())
-		}
+        if #available(macOS 10.12, *) {
+            temporaryDirectory = fileManager.temporaryDirectory
+        } else {
+            temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory())
+        }
 		
-		url = temporaryDirectory.appendingPathComponent(UUID().uuidString)
-	}
+        url = temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    }
 	
-	public func create(withIntermediateDirectories: Bool = true) throws {
-		try FileManager.default.createDirectory(at: url, withIntermediateDirectories: withIntermediateDirectories)
-	}
+    public func create(withIntermediateDirectories: Bool = true) throws {
+        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: withIntermediateDirectories)
+    }
 	
-	public func childFile(named name: String) -> TemporaryFile {
-		return TemporaryFile(url: url.appendingPathComponent(name))
-	}
+    public func childFile(named name: String) -> TemporaryFile {
+        return TemporaryFile(url: url.appendingPathComponent(name))
+    }
 	
-	deinit {
-		do {
-			if deleteAutomatically && exists {
-				try FileManager.default.removeItem(at: url)
-			}
-		} catch {
-			log.error("Error while removing temporary directory: \(error)")
-		}
-	}
+    deinit {
+        do {
+            if deleteAutomatically && exists {
+                try FileManager.default.removeItem(at: url)
+            }
+        } catch {
+            log.error("Error while removing temporary directory: \(error)")
+        }
+    }
 }

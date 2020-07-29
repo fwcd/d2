@@ -1,7 +1,7 @@
 import Foundation
 
 public enum DiskFileError: Error {
-	case fileNotFound(URL)
-	case noData(String)
-	case decodingError(String, String, Error)
+    case fileNotFound(URL)
+    case noData(String)
+    case decodingError(String, String, Error)
 }

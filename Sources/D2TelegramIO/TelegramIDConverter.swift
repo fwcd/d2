@@ -14,7 +14,7 @@ extension Int64: MessageIOConvertible {
 extension ID: TelegramAPIConvertible {
     public var usingTelegramAPI: Int64 {
         guard let value = Int64(value) else {
-			fatalError("Tried to convert non-Telegram ID to Telegram API representation: \(self)")
+            fatalError("Tried to convert non-Telegram ID to Telegram API representation: \(self)")
         }
         return value
     }
