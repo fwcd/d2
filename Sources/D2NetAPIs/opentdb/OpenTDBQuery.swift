@@ -24,6 +24,5 @@ public struct OpenTDBQuery {
                 }
                 return response
             }
-        }
     }
 }

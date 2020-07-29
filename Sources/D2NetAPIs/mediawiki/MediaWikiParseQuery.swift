@@ -16,23 +16,19 @@ public struct MediaWikiParseQuery {
     }
 
     public func perform() -> Promise<MediaWikiParse, Error> {
-        do {
-            var query = [
-                "action": "parse",
-                "page": page,
-                "format": "json",
-                "prop": prop,
-                "formatversion": "2"
-            ]
+        var query = [
+            "action": "parse",
+            "page": page,
+            "format": "json",
+            "prop": prop,
+            "formatversion": "2"
+        ]
 
-            if let s = section {
-                query["section"] = s
-            }
-
-            let request = try HTTPRequest(host: host, path: path, query: query)
-            request.fetchJSONAsync(as: MediaWikiParse.self, then: then)
-        } catch {
-            then(.failure(error))
+        if let s = section {
+            query["section"] = s
         }
+
+        return Promise.catching { try HTTPRequest(host: host, path: path, query: query) }
+            .then { $0.fetchJSONAsync(as: MediaWikiParse.self) }
     }
 }

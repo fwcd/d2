@@ -16,15 +16,13 @@ public struct BingTranslateQuery {
     }
 
     public func perform() -> Promise<[BingTranslateResult], Error> {
-        do {
+        .catchingThen {
             let request = try HTTPRequest(scheme: "https", host: "www.bing.com", path: "/ttranslatev3", method: "POST", query: [
                 "fromLang": sourceLanguage ?? "auto-detect",
                 "to": targetLanguage,
                 "text": text
             ])
-            request.fetchJSONAsync(as: [BingTranslateResult].self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: [BingTranslateResult].self)
         }
     }
 }

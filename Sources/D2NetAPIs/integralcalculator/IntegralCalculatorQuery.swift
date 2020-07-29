@@ -58,26 +58,13 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
 	}
 
 	private func fetchPageVersion() -> Promise<String, Error> {
-		do {
-			try HTTPRequest(
-				scheme: "https",
-				host: "www.integral-calculator.com",
-				path: "/",
-				method: "GET"
-			).fetchUTF8Async {
-				switch $0 {
-					case let .success(rawHTML):
-						if let parsedPageVersion = pageVersionPattern.firstGroups(in: rawHTML) {
-							then(.success(parsedPageVersion[1]))
-						} else {
-							then(.failure(NetApiError.apiError("Could not find page version of integral calculator")))
-						}
-					case let .failure(error):
-						then(.failure(error))
-				}
-			}
-		} catch {
-			then(.failure(error))
-		}
+	    Promise.catching { try HTTPRequest(
+            scheme: "https",
+            host: "www.integral-calculator.com",
+            path: "/",
+            method: "GET"
+        ) }
+            .then { $0.fetchUTF8Async() }
+            .mapCatching { Result.from(pageVersionPattern.firstGroups(in: rawHTML)?[1], errorIfNil: NetApiError.apiError("Could not find page version of integral calculator")) }
 	}
 }

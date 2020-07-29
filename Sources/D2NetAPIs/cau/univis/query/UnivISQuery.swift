@@ -34,27 +34,29 @@ public struct UnivISQuery {
 	}
 
 	public func start() -> Promise<UnivISOutputNode, Error> {
-		log.info("Querying \(url)")
+        Promise { then in
+            log.info("Querying \(url)")
 
-		var request = URLRequest(url: url)
-		request.httpMethod = "GET"
-		URLSession.shared.dataTask(with: request) { data, response, error in
-			guard error == nil else {
-				then(.failure(NetApiError.httpError(error!)))
-				return
-			}
-			guard let data = data else {
-				then(.failure(NetApiError.missingData))
-				return
-			}
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard error == nil else {
+                    then(.failure(NetApiError.httpError(error!)))
+                    return
+                }
+                guard let data = data else {
+                    then(.failure(NetApiError.missingData))
+                    return
+                }
 
-			log.debug("Got \(String(data: data, encoding: .utf8) ?? "nil")")
+                log.debug("Got \(String(data: data, encoding: .utf8) ?? "nil")")
 
-			let delegate = UnivISXMLParserDelegate(then: then)
-			let parser = XMLParser(data: data)
+                let delegate = UnivISXMLParserDelegate(then: then)
+                let parser = XMLParser(data: data)
 
-			parser.delegate = delegate
-			_ = parser.parse()
-		}.resume()
+                parser.delegate = delegate
+                _ = parser.parse()
+            }.resume()
+        }
 	}
 }

@@ -10,16 +10,12 @@ public struct HoogleQuery {
     }
 
     public func perform() -> Promise<[HoogleResult], Error> {
-        do {
-            let request = try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
-                "mode": "json",
-                "hoogle": term,
-                "start": "1",
-                "count": "\(count)"
-            ])
-            request.fetchJSONAsync(as: [HoogleResult].self, then: then)
-        } catch {
-            then(.failure(error))
-        }
+        Promise.catching { try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
+            "mode": "json",
+            "hoogle": term,
+            "start": "1",
+            "count": "\(count)"
+        ]) }
+            .then { $0.fetchJSONAsync(as: [HoogleResult].self) }
     }
 }
