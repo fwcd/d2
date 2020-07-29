@@ -15,15 +15,16 @@ public struct StackOverflowQuery {
 		self.apiVersion = apiVersion
 	}
 
-	public func start() throws -> Promise<StackOverflowResults<StackOverflowAnswer>, Error> {
-		try HTTPRequest(host: host, path: "/\(apiVersion)/search", query: [
+	public func start() -> Promise<StackOverflowResults<StackOverflowAnswer>, Error> {
+		Promise.catching { try HTTPRequest(host: host, path: "/\(apiVersion)/search", query: [
 			"order": "desc",
 			"sort": "relevance",
 			"intitle": input,
 			"site": "stackoverflow",
 			"filter": "!bA1d_KuEt(8tau" // Only include title and question ID for each question
-		]).fetchJSONAsync(as: StackOverflowResults<StackOverflowQuestion>.self).then { res in
-			.catchingThen {
+		]) }
+            .then { $0.fetchJSONAsync(as: StackOverflowResults<StackOverflowQuestion>.self) }
+            .mapCatching {
 				let questions = res.items
 				guard let questionId = questions.first(where: { $0.questionId != nil })?.questionId else { throw NetApiError.noResults("No answer with a question ID found") }
 				return try HTTPRequest(host: self.host, path: "/\(self.apiVersion)/questions/\(questionId)/answers", query: [
@@ -31,8 +32,8 @@ public struct StackOverflowQuery {
 					"sort": "votes",
 					"site": "stackoverflow",
 					"filter": "!4-(9avC4E*qssXR4f" // Only include owner, title and Markdown body for each answer
-				]).fetchJSONAsync(as: StackOverflowResults<StackOverflowAnswer>.self)
+				])
 			}
-		}
+            .thenCatching { $0.fetchJSONAsync(as: StackOverflowResults<StackOverflowAnswer>.self) }
 	}
 }

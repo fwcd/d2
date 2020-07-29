@@ -90,6 +90,15 @@ extension Promise where E == Error {
         Promise<Promise<T, Error>, Error>.catching(block).then { $0 }
     }
 
+    /// Creates another promise from mapping the current one with a callback that may synchronously throw.
+    public func mapCatching<U>(_ transform: @escaping (T) throws -> U) -> Promise<U, E> {
+        then { x in
+            .catching {
+                try transform(x)
+            }
+        }
+    }
+
     /// Chains another promise with a callback that may synchronously throw.
     public func thenCatching<U>(_ next: @escaping (T) throws -> Promise<U, Error>) -> Promise<U, Error> {
         then { x in
