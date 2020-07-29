@@ -30,25 +30,27 @@ public struct MDBQuery {
 	}
 
 	public func start() -> Promise<[MDBModule], Error> {
-		log.info("Querying \(url)")
+        Promise { then in
+            log.info("Querying \(url)")
 
-		var request = URLRequest(url: url)
-		request.httpMethod = "GET"
-		URLSession.shared.dataTask(with: request) { data, response, error in
-			guard error == nil else {
-				then(.failure(NetApiError.httpError(error!)))
-				return
-			}
-			guard let data = data else {
-				then(.failure(NetApiError.missingData))
-				return
-			}
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard error == nil else {
+                    then(.failure(NetApiError.httpError(error!)))
+                    return
+                }
+                guard let data = data else {
+                    then(.failure(NetApiError.missingData))
+                    return
+                }
 
-			let delegate = MDBXMLParserDelegate(then: then)
-			let parser = XMLParser(data: data)
+                let delegate = MDBXMLParserDelegate(then: then)
+                let parser = XMLParser(data: data)
 
-			parser.delegate = delegate
-			_ = parser.parse()
-		}.resume()
+                parser.delegate = delegate
+                _ = parser.parse()
+            }.resume()
+        }
 	}
 }

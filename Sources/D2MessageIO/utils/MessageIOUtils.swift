@@ -59,20 +59,22 @@ extension Message.Attachment {
 	 * Downloads the attachment asynchronously.
 	 */
 	public func download() -> Promise<Data, Error> {
-		guard let url = url else {
-			then(.failure(NetworkError.missingURL))
-			return
-		}
-		URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-			guard error == nil else {
-				then(.failure(NetworkError.ioError(error!)))
-				return
-			}
-			guard let data = data else {
-				then(.failure(NetworkError.missingData))
-				return
-			}
-			then(.success(data))
-		}.resume()
+        Promise { then in
+            guard let url = url else {
+                then(.failure(NetworkError.missingURL))
+                return
+            }
+            URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+                guard error == nil else {
+                    then(.failure(NetworkError.ioError(error!)))
+                    return
+                }
+                guard let data = data else {
+                    then(.failure(NetworkError.missingData))
+                    return
+                }
+                then(.success(data))
+            }.resume()
+        }
 	}
 }

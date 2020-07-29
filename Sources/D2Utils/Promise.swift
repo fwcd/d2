@@ -40,6 +40,12 @@ public class Promise<T, E> where E: Error {
         }
     }
 
+    /// Listens for the result. Only fires once. Returns the promise.
+    public func peekListen(_ listener: @escaping (Result<T, E>) -> Void) -> Self {
+        listen(listener)
+        return self
+    }
+
     /// Chains another asynchronous computation after this one.
     public func then<U>(_ next: @escaping (T) -> Promise<U, E>) -> Promise<U, E> {
         Promise<U, E> { then in

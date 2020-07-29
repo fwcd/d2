@@ -7,21 +7,12 @@ public struct PokedexQuery {
 
     public func perform() -> Promise<[PokedexEntry], Error> {
         if let pokedex = PokedexQuery.cached {
-            then(.success(pokedex))
+            return Promise(.success(pokedex))
         } else {
-            do {
-                let request = try HTTPRequest(host: "randompokemon.com", path: "/dex/all.json")
-                request.fetchJSONAsync(as: [PokedexEntry].self) {
-                    switch $0 {
-                        case .success(let pokedex):
-                            PokedexQuery.cached = pokedex
-                            then(.success(pokedex))
-                        case .failure(let error):
-                            then(.failure(error))
-                    }
-                }
-            } catch {
-                then(.failure(error))
+            return Promise.catchingThen {
+                try HTTPRequest(host: "randompokemon.com", path: "/dex/all.json").fetchJSONAsync(as: [PokedexEntry].self)
+            }.peekListen {
+                PokedexQuery.cached = $0
             }
         }
     }

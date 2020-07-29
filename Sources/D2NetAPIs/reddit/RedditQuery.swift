@@ -10,16 +10,13 @@ public struct RedditQuery {
     }
 
     public func perform() -> Promise<RedditThing<RedditListing<RedditLink>>, Error> {
-        do {
-            let request = try HTTPRequest(
+        .catchingThen {
+            try HTTPRequest(
                 host: "www.reddit.com",
                 path: "/r/\(subreddit)/top.json",
                 query: ["limit": String(maxResults)],
                 headers: ["User-Agent": "swift:d2:v1.0"]
-            )
-            request.fetchJSONAsync(as: RedditThing<RedditListing<RedditLink>>.self, then: then)
-        } catch {
-            then(.failure(error))
+            ).fetchJSONAsync(as: RedditThing<RedditListing<RedditLink>>.self)
         }
     }
 }
