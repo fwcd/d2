@@ -21,11 +21,11 @@ public class D2Delegate: MessageDelegate {
     private var messageHandlers: [MessageHandler]
     private var reactionHandlers: [ReactionHandler]
     private var presenceHandlers: [PresenceHandler]
-	
+
     public init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
         self.commandPrefix = commandPrefix
         self.initialPresence = initialPresence
-		
+
         registry = CommandRegistry()
         messageDB = try MessageDatabase()
         partyGameDB = try PartyGameDatabase()
@@ -302,7 +302,7 @@ public class D2Delegate: MessageDelegate {
             log.warning("Could not setup party game database: \(error)")
         }
     }
-	
+
     public func on(receivePresenceUpdate presence: Presence, client: MessageClient) {
         for (_, entry) in registry {
             if case let .command(command) = entry {
@@ -332,10 +332,10 @@ public class D2Delegate: MessageDelegate {
 
         eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
     }
-	
+
     public func on(createMessage message: Message, client: MessageClient) {
         var m = message
-		
+
         for rewriter in messageRewriters {
             if let rewrite = rewriter.rewrite(message: m, from: client) {
                 m = rewrite

@@ -23,27 +23,27 @@ public class ExpiringList<T>: Sequence {
         let element: T
         let expiry: Date
         var next: Node? = nil
-        
+
         init(element: T, expiry: Date) {
             self.element = element
             self.expiry = expiry
         }
     }
-    
+
     public struct Iterator: IteratorProtocol {
         private var current: Node?
-        
+
         init(from head: Node?) {
             current = head
         }
-        
+
         public mutating func next() -> T? {
             let value = current?.element
             current = current?.next
             return value
         }
     }
-    
+
     public init() {}
 
     public func append(_ element: T, expiry: Date) {
@@ -55,17 +55,17 @@ public class ExpiringList<T>: Sequence {
         if head == nil {
             head = node
         }
-        
+
         currentCount += 1
     }
-    
+
     private func removeExpired() {
         while (head?.expiry.timeIntervalSinceNow ?? 1) < 0 {
             head = head?.next
             currentCount -= 1
         }
     }
-    
+
     public func makeIterator() -> Iterator {
         removeExpired()
         return Iterator(from: head)

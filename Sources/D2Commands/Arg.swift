@@ -6,9 +6,9 @@ import D2Utils
 
 /**
  * A (possibly composed) command argument.
- * 
+ *
  * There are two ways of instantiating an implementing argument type.
- * 
+ *
  * - As a _pattern_, enabling the generation of a usage description and examples
  * - As a _value_, allowing the use of the structured value itself
  */
@@ -21,7 +21,7 @@ public protocol Arg: CustomStringConvertible {
     * **This property should only be fetches if `isPattern` is true.**
     */
     var maxTokens: Int { get }
-    
+
     /**
     * Parses the argument structure from a token iterator
     * of space-delimited words.
@@ -67,7 +67,7 @@ public struct ArgValue<T>: Arg where T: LosslessStringConvertible {
         tokens.next()
         return ArgValue.init(value: parsed)
     }
-    
+
     public func generateExamples(_ n: Int) -> [String] {
         return Array(examples.prefix(n))
     }
@@ -80,7 +80,7 @@ public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
     public let isPattern: Bool
     public var maxTokens: Int { return max(left.maxTokens, right.maxTokens) }
     public var description: String { return "\(left) \(right)" }
-    
+
     public init(patternWithLeft left: L, right: R) {
         isPattern = true
         self.left = left
@@ -93,13 +93,13 @@ public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
         self.left = left
         self.right = right
     }
-    
+
     public static func parse(from tokens: TokenIterator<String>) -> ArgPair<L, R>? {
         guard let left = L.parse(from: tokens) else { return nil }
         guard let right = R.parse(from: tokens) else { return nil }
         return ArgPair.init(left: left, right: right)
     }
-    
+
     public func generateExamples(_ n: Int) -> [String] {
         let leftExamples = left.generateExamples(n)
         let rightExamples = right.generateExamples(n)
@@ -122,32 +122,32 @@ public struct ArgPair<L, R>: Arg where L: Arg, R: Arg {
 //             .joined(separator: " | ")
 //         return "(\(s))"
 //     }
-    
+
 //     /** Creates a _pattern instantiation_ of this argument. */
 //     public init(patternWithLeft left: L, right: R) {
 //         isPattern = true
 //         self.left = left
 //         self.right = right
 //     }
-    
+
 //     /** Creates a _value instantiation_ of the left side. */
 //     public init(left: L) {
 //         isPattern = false
 //         self.left = left
 //         right = nil
 //     }
-    
+
 //     /** Creates a _value instantiation_ of the right side. */
 //     public init(right: R) {
 //         isPattern = false
 //         left = nil
 //         self.right = right
 //     }
-    
+
 //     public static func parse(from tokens: TokenIterator<String>) -> ArgEither<L, R>? {
 //         TODO
 //     }
-    
+
 //     public func generateExamples(_ n: Int) -> [String] {
 //         return (left!.generateExamples(n / 2) + right!.generateExamples(n / 2))
 //             .shuffled()
@@ -160,23 +160,23 @@ public struct ArgOption<T>: Arg where T: Arg {
     public let isPattern: Bool
     public var maxTokens: Int { return value!.maxTokens }
     public var description: String { return "\(value?.description ?? "nil")?" }
-    
+
     /** Creates a _pattern instantiation_ of this argument. */
     public init(patternWithValue value: T) {
         isPattern = true
         self.value = value
     }
-    
+
     /** Creates a _value instantiation_ of this argument. */
     public init(value: T?) {
         isPattern = false
         self.value = value
     }
-    
+
     public static func parse(from tokens: TokenIterator<String>) -> ArgOption<T>? {
         return ArgOption.init(value: T.parse(from: tokens))
     }
-    
+
     public func generateExamples(_ n: Int) -> [String] {
         return value!.generateExamples(n)
     }
@@ -194,19 +194,19 @@ public struct ArgRepeat<T>: Arg where T: Arg {
             return "\(values)"
         }
     }
-    
+
     /** Creates a _pattern instantiation_ of this argument. */
     public init(patternWithValue value: T) {
         values = [value]
         isPattern = true
     }
-    
+
     /** Creates a _value instantiation_ of this argument. */
     public init(values: [T]) {
         self.values = values
         isPattern = false
     }
-    
+
     public static func parse(from tokens: TokenIterator<String>) -> ArgRepeat<T>? {
         var values = [T]()
         while let token = T.parse(from: tokens) {
@@ -214,7 +214,7 @@ public struct ArgRepeat<T>: Arg where T: Arg {
         }
         return ArgRepeat.init(values: values)
     }
-    
+
     public func generateExamples(_ n: Int) -> [String] {
         return self.values.first!.generateExamples(n)
     }
@@ -232,13 +232,13 @@ public struct ArgRepeat1<T>: Arg where T: Arg {
             return "\(values)"
         }
     }
-    
+
     /** Creates a _pattern instantiation_ of this argument. */
     public init(patternWithValue value: T) {
         values = [value]
         isPattern = true
     }
-    
+
     /** Creates a _value instantiation_ of this argument. */
     public init?(values: [T]) {
         if values.isEmpty {
@@ -247,7 +247,7 @@ public struct ArgRepeat1<T>: Arg where T: Arg {
         self.values = values
         isPattern = false
     }
-    
+
     public static func parse(from tokens: TokenIterator<String>) -> ArgRepeat1<T>? {
         guard let firstToken = T.parse(from: tokens) else { return nil }
         var values = [firstToken]
@@ -256,7 +256,7 @@ public struct ArgRepeat1<T>: Arg where T: Arg {
         }
         return ArgRepeat1.init(values: values)
     }
-    
+
     public func generateExamples(_ n: Int) -> [String] {
         return self.values.first!.generateExamples(n)
     }

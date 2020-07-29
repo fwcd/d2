@@ -50,15 +50,15 @@ public struct AnyCodable: Codable, Hashable, CustomStringConvertible {
         // Safe to use `as!` becasue the `base` is just `baseCodable`
         try (box.base.base as! Codable).encode(to: encoder)
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         box.base.hash(into: &hasher)
     }
-    
+
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         lhs.box.base == rhs.box.base
     }
-    
+
     public func base<T>(as: T.Type) -> T {
         box.base.base as! T
     }

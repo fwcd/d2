@@ -17,30 +17,30 @@ func main(rawLogLevel: String, initialPresence: String?) {
     #if DEBUG
     Backtrace.install()
     #endif
-	
+
     let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
     LoggingSystem.bootstrap {
         let level = $0.starts(with: "D2") ? logLevel : .notice
         return D2LogHandler(label: $0, logLevel: level)
     }
-	
+
     let log = Logger(label: "D2.main")
-	
+
     do {
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
-		
+
         // Create platforms
         var combinedClient: CombinedMessageClient! = CombinedMessageClient()
         var platforms: [Startable] = []
         var createdAnyPlatform = false
-		
+
         if let discordToken = tokens.discord {
             createdAnyPlatform = true
             platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, token: discordToken))
         }
-		
+
         if let telegramToken = tokens.telegram {
             do {
                 createdAnyPlatform = true
@@ -58,11 +58,11 @@ func main(rawLogLevel: String, initialPresence: String?) {
                 log.warning("Could not create IRC platform: \(error)")
             }
         }
-		
+
         if !createdAnyPlatform {
             log.notice("No platform was created since no tokens were provided.")
         }
-		
+
         // Setup interrupt signal handler
         signal(SIGINT, SIG_IGN)
         let source = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
@@ -73,7 +73,7 @@ func main(rawLogLevel: String, initialPresence: String?) {
             exit(0)
         }
         source.resume()
-		
+
         // Start the platforms
         for platform in platforms {
             do {

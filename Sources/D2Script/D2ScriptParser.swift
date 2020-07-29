@@ -30,11 +30,11 @@ fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|
 
 public struct D2ScriptParser {
     public init() {}
-	
+
     public func parse(_ input: String) throws -> D2Script {
         return try parse(tokens: try tokenize(input))
     }
-	
+
     func tokenize(_ input: String) throws -> [D2ScriptToken] {
         return try tokenPattern.allGroups(in: input)
             .map {
@@ -66,20 +66,20 @@ public struct D2ScriptParser {
                 }
             }
     }
-	
+
     private func parse(tokens: [D2ScriptToken]) throws -> D2Script {
         return try parseScript(from: TokenIterator(tokens))
     }
-	
+
     // Recursive descent parsing methods for the production rules of D2Script
-	
+
     private func parseScript(from tokens: TokenIterator<D2ScriptToken>) throws -> D2Script {
         guard let commandDeclaration = try parseCommandDeclaration(from: tokens) else {
             throw D2ScriptError.syntaxError("No top-level command declaration")
         }
         return D2Script(topLevelNodes: [commandDeclaration])
     }
-	
+
     private func parseCommandDeclaration(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptCommandDeclaration? {
         guard case let .keyword(commandKeyword)? = tokens.peek() else { return nil }
         guard commandKeyword == "command" else { return nil }
@@ -93,7 +93,7 @@ public struct D2ScriptParser {
         guard tokens.next() == .rightCurlyBracket else { throw D2ScriptError.syntaxError("Command declaration needs closing bracket: }, found '\(describe(token: tokens.current))' instead, maybe the statementList is too long: \(statementList)") }
         return D2ScriptCommandDeclaration(commandName: commandName, statementList: statementList)
     }
-	
+
     private func parseStatementList(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptStatementList? {
         var statements = [D2ScriptStatement]()
         while let statement = try parseStatement(from: tokens) {
@@ -104,16 +104,16 @@ public struct D2ScriptParser {
         }
         return D2ScriptStatementList(statements: statements)
     }
-	
+
     private func parseStatement(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptStatement? {
         return try parseAssignment(from: tokens) ?? parseExpressionStatement(from: tokens)
     }
-	
+
     private func parseExpressionStatement(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptExpressionStatement? {
         guard let expression = try parseExpression(from: tokens) else { return nil }
         return D2ScriptExpressionStatement(expression: expression)
     }
-	
+
     private func parseAssignment(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptAssignment? {
         guard case let .identifier(identifier)? = tokens.peek(1) else { return nil }
         guard case let .anyOperator(assignmentOperator)? = tokens.peek(2) else { return nil }
@@ -123,7 +123,7 @@ public struct D2ScriptParser {
         guard let expression = try parseExpression(from: tokens) else { return nil }
         return D2ScriptAssignment(identifier: identifier, expression: expression)
     }
-	
+
     private func parseExpression(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptExpression? {
         if case let .stringLiteral(literal)? = tokens.peek() {
             tokens.next()
@@ -135,13 +135,13 @@ public struct D2ScriptParser {
             return try parseFunctionCall(from: tokens) ?? parseIdentifierExpression(from: tokens)
         }
     }
-	
+
     private func parseIdentifierExpression(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptIdentifierExpression? {
         guard case let .identifier(name)? = tokens.peek() else { return nil }
         tokens.next()
         return D2ScriptIdentifierExpression(name: name)
     }
-	
+
     private func parseFunctionCall(from tokens: TokenIterator<D2ScriptToken>) throws -> D2ScriptFunctionCall? {
         guard case let .identifier(functionName)? = tokens.peek(1) else { return nil }
         guard tokens.peek(2) == .leftParenthesis else { return nil }
@@ -152,7 +152,7 @@ public struct D2ScriptParser {
         guard tokens.next() == .rightParenthesis else { throw D2ScriptError.syntaxError("Function call needs to end with a closing parenthesis") }
         return D2ScriptFunctionCall(functionName: functionName, arguments: args)
     }
-	
+
     private func parseFunctionArgs(from tokens: TokenIterator<D2ScriptToken>) throws -> [D2ScriptExpression] {
         var expressions = [D2ScriptExpression]()
         while let expression = try parseExpression(from: tokens) {
@@ -165,9 +165,9 @@ public struct D2ScriptParser {
         }
         return expressions
     }
-	
+
     // Utility methods
-	
+
     private func describe(token: D2ScriptToken?) -> String {
         return token.map { "\($0)" } ?? "<nothing>"
     }

@@ -2,7 +2,7 @@ public protocol UnsignedConvertible {
     associatedtype Unsigned: FixedWidthInteger
 
     var bitPatternUnsigned: Unsigned { get }
-    
+
     init(bitPattern: Unsigned)
 }
 

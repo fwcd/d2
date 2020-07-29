@@ -25,7 +25,7 @@ public struct IRCPlatform: MessagePlatform {
 
         ircClient.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient, name: name, channelsToJoin: config.autojoinedChannels ?? [])
     }
-    
+
     public func start() throws {
         log.info("Starting IRC client (\(config.host):\(config.port))")
         ircClient.connect()

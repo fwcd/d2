@@ -15,7 +15,7 @@ public class AutoSerializing<T: Codable> {
             writeToDisk()
         }
     }
-    
+
     public init(wrappedValue: T, filePath: String) {
         self.filePath = filePath
         if let onDiskValue = try? serializer.readJson(as: T.self, fromFile: filePath) {
@@ -25,7 +25,7 @@ public class AutoSerializing<T: Codable> {
             writeToDisk()
         }
     }
-    
+
     private func writeToDisk() {
         do {
             log.info("Auto-serializing to \(filePath)")

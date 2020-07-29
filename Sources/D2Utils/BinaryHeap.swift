@@ -1,19 +1,19 @@
 public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
     public typealias Element = E
-    
+
     // Only accessible (internally) for testing purposes
     private(set) var elements: [E] = []
     public var count: Int { return elements.count }
-    
+
     public init() {}
-    
+
     public mutating func insert(_ element: E) {
         elements.append(element)
         if elements.count > 1 {
             heapifyUp(at: elements.count - 1)
         }
     }
-    
+
     public mutating func popMax() -> E? {
         if elements.count <= 1 {
             return elements.popLast()
@@ -25,7 +25,7 @@ public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
             return removed
         }
     }
-    
+
     private mutating func heapifyUp(at index: Int) {
         let par = parent(of: index)
         if par >= 0 {
@@ -35,18 +35,18 @@ public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
             }
         }
     }
-    
+
     private mutating func heapifyDown(at index: Int) {
         let left = leftChild(of: index)
         let right = rightChild(of: index)
         var child: Int? = nil
-        
+
         if left < elements.count {
             if elements[left] > elements[index] {
                 child = left
             }
         }
-        
+
         if right < elements.count {
             if elements[right] > elements[child ?? index] {
                 child = right
@@ -58,7 +58,7 @@ public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
             heapifyDown(at: c)
         }
     }
-    
+
     /** Internal function to check the validity of this heap. */
     func isValidHeap(at index: Int = 0) -> Bool {
         let left = leftChild(of: index)
@@ -68,20 +68,20 @@ public struct BinaryHeap<E>: PriorityQueue where E: Comparable {
             guard elements[left] <= elements[index] else { return false }
             guard isValidHeap(at: left) else { return false }
         }
-        
+
         if right < elements.count {
             guard elements[right] <= elements[index] else { return false }
             guard isValidHeap(at: right) else { return false }
         }
-        
+
         return true
     }
-    
+
     private func leftChild(of index: Int) -> Int { return 2 * index + 1 }
-    
+
     private func rightChild(of index: Int) -> Int { return 2 * index + 2 }
-    
+
     private func parent(of index: Int) -> Int { return (index - 1) / 2 }
-    
+
     private func isLeaf(_ index: Int) -> Bool { return leftChild(of: index) >= elements.count || rightChild(of: index) >= elements.count }
 }

@@ -20,7 +20,7 @@ public struct Synchronized<T> {
             semaphore.signal()
         }
     }
-    
+
     public init(wrappedValue: T) {
         storedValue = wrappedValue
     }

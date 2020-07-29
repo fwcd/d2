@@ -3,7 +3,7 @@ import D2Utils
 
 protocol TelegramAPIConvertible {
     associatedtype TelegramAPIType
-	
+
     var usingTelegramAPI: TelegramAPIType { get }
 }
 

@@ -10,12 +10,12 @@ public struct CommandContext {
     public let channel: InteractiveTextChannel?
     public let commandPrefix: String
     public let subscriptions: SubscriptionSet
-	
+
     public var author: User? { return message.author }
     public var guild: Guild? { return message.channelId.flatMap { client?.guildForChannel($0) } }
-	
+
     public var isSubscribed: Bool { return (channel?.id).map { subscriptions.contains($0) } ?? false }
-	
+
     public init(
         client: MessageClient?,
         registry: CommandRegistry,
@@ -31,7 +31,7 @@ public struct CommandContext {
 
         channel = client.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, client: c) } }
     }
-	
+
     /** Subscribes to the current channel. */
     public func subscribeToChannel() {
         if let id = channel?.id {
@@ -40,7 +40,7 @@ public struct CommandContext {
             log.warning("Tried to subscribe to current channel without a channel being present.")
         }
     }
-	
+
     /** Unsubscribes from the current channel. */
     public func unsubscribeFromChannel() {
         if let id = channel?.id {

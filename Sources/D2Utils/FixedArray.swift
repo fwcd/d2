@@ -14,9 +14,9 @@ public enum FixedArray<T> {
     case len9(T, T, T, T, T, T, T, T, T)
     case len10(T, T, T, T, T, T, T, T, T, T)
     case lenDyn([T])
-    
+
     public var isEmpty: Bool { return count == 0 }
-    
+
     public var count: Int {
         switch self {
             case .len0: return 0
@@ -33,7 +33,7 @@ public enum FixedArray<T> {
             case .lenDyn(let a): return a.count
         }
     }
-    
+
     public func withAppended(_ value: T) -> FixedArray<T> {
         switch self {
             case .len0: return .len1(value)
@@ -50,7 +50,7 @@ public enum FixedArray<T> {
             case let .lenDyn(a): return .lenDyn(a + [value])
         }
     }
-    
+
     public subscript(_ n: Int) -> T {
         switch self {
             case .len0: fatalError("Cannot subscript an empty array")

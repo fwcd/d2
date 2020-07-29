@@ -10,9 +10,9 @@ import D2Utils
  */
 public protocol MessagePlatform: Startable {
     associatedtype Token
-    
+
     var name: String { get }
-    
+
     /**
     * Performs synchronous setup. This method is expected not
     * to block and to finish quickly.

@@ -14,11 +14,11 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
     public var description: String {
         return "[\(left?.description ?? "_") \(value.map { "\($0)" } ?? "_") \(right?.description ?? "_")]"
     }
-	
+
     public convenience init(value: Element? = nil) {
         self.init(value: value, left: nil, right: nil)
     }
-	
+
     // Internal constructor, the left- and
     // right-tree arguments are used solely
     // for testing.
@@ -30,10 +30,10 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         self.value = value
         self.left = left
         self.right = right
-		
+
         height = (value == nil) ? 0 : 1
     }
-	
+
     @discardableResult
     public func contains(_ element: Element) -> Bool {
         guard let value = self.value else { return false }
@@ -45,7 +45,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
             return right?.contains(element) ?? false
         }
     }
-	
+
     /**
     * Inserts a node into the AVL tree,
     * rebalancing if necessary. The return
@@ -59,21 +59,21 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
             return false
         }
         var rebalanced = false
-		
+
         if element < value {
             rebalanced = insert(element, into: &left)
         } else { // element > value
             rebalanced = insert(element, into: &right)
         }
-		
+
         if !rebalanced {
             updateBalanceAndHeight()
             rebalanced = rebalance()
         }
-		
+
         return rebalanced
     }
-	
+
     private func insert(_ element: Element, into child: inout AvlTree<Element>?) -> Bool {
         if let child = child {
             return child.insert(element)
@@ -82,7 +82,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
             return false
         }
     }
-	
+
     /**
     * Removes a node from the AVL tree,
     * rebalancing if necessary. The return
@@ -93,7 +93,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
     public func remove(_ element: Element) -> Bool {
         guard let value = self.value else { return false }
         var rebalanced = false
-		
+
         if value == element {
             self.value = nil
         } else if element < value {
@@ -101,15 +101,15 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         } else if element > value {
             rebalanced = remove(element, from: &right)
         }
-		
+
         if !rebalanced {
             updateBalanceAndHeight()
             rebalanced = rebalance()
         }
-		
+
         return rebalanced
     }
-	
+
     private func remove(_ element: Element, from child: inout AvlTree<Element>?) -> Bool {
         if let child = child {
             return child.remove(element)
@@ -118,7 +118,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
             return false
         }
     }
-	
+
     private func rebalance() -> Bool {
         if balance > 1 {
             // Left-heavy
@@ -140,7 +140,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         }
         return false
     }
-	
+
     /**
     * Performs a simple rotation lowering this node
     * and lifting up the right child into the current
@@ -151,12 +151,12 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         let newLowered = AvlTree(value: value)
         newLowered.left = left
         newLowered.right = oldLifted.left
-		
+
         left = newLowered
         right = oldLifted.right
         value = oldLifted.value
     }
-	
+
     /**
     * Performs a simple rotation lowering this node
     * and lifting up the left child into the current
@@ -167,12 +167,12 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         let newLowered = AvlTree(value: value)
         newLowered.left = oldLifted.right
         newLowered.right = right
-		
+
         left = oldLifted.left
         right = newLowered
         value = oldLifted.value
     }
-	
+
     /**
     * Performs a double rotation lifting
     * the left-right grandchild up.
@@ -181,7 +181,7 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         left!.rotateLeft()
         rotateRight()
     }
-	
+
     /**
     * Performs a double rotation lifting
     * the right-left grandchild up.
@@ -190,14 +190,14 @@ public class AvlTree<Element: Comparable>: Equatable, CustomStringConvertible, S
         right!.rotateRight()
         rotateLeft()
     }
-	
+
     private func updateBalanceAndHeight() {
         let leftHeight = left?.height ?? 0
         let rightHeight = right?.height ?? 0
         balance = Int8(leftHeight - rightHeight)
         height = max(leftHeight, rightHeight) + 1
     }
-	
+
     public static func ==(lhs: AvlTree<Element>, rhs: AvlTree<Element>) -> Bool {
         return (lhs.value == rhs.value)
             && (lhs.left == rhs.left)

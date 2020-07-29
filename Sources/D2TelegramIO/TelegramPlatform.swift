@@ -7,7 +7,7 @@ fileprivate let log = Logger(label: "D2TelegramIO.TelegramPlatform")
 public struct TelegramPlatform: MessagePlatform {
     private let bot: Bot
     private let dispatcher: Dispatcher
-    
+
     public var name: String { telegramClientName }
 
     public init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String) throws {
@@ -26,7 +26,7 @@ public struct TelegramPlatform: MessagePlatform {
             delegate.on(createMessage: message.usingMessageIO, client: overlayClient)
         })
     }
-    
+
     public func start() throws {
         log.info("Starting longpolling")
         _ = try Updater(bot: bot, dispatcher: dispatcher).startLongpolling()

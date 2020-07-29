@@ -11,7 +11,7 @@ public class MessageIOClientDelegate: IRCClientDelegate {
 
     private var joined: Bool = false
     private var channelsToJoin: [String]
-    
+
     public init(inner: MessageDelegate, sinkClient: MessageClient, name: String, channelsToJoin: [String]) {
         log.debug("Creating delegate for \(name)")
         self.inner = inner

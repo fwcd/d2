@@ -5,7 +5,7 @@ public struct Text {
     public let fontSize: Double
     public let position: Vec2<Double>
     public let color: Color
-	
+
     public init(
         _ value: String,
         withSize fontSize: Double = 12,

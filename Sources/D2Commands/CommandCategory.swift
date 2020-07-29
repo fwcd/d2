@@ -25,7 +25,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case web
     case wolframalpha
     case xkcd
-    
+
     public var description: String {
         switch self {
             case .administration: return ":desktop: Administration"

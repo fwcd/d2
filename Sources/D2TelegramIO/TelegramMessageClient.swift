@@ -7,12 +7,12 @@ fileprivate let log = Logger(label: "D2TelegramIO.TelegramMessageClient")
 
 struct TelegramMessageClient: MessageClient {
     private let bot: Bot
-    
+
     var me: D2MessageIO.User? { nil } // TODO
     var name: String { telegramClientName }
     var guilds: [Guild]? { nil }
     var messageFetchLimit: Int? { nil }
-    
+
     init(bot: Bot) {
         self.bot = bot
     }
@@ -21,11 +21,11 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         nil
     }
-	
+
     func setPresence(_ presence: PresenceUpdate) {
         // TODO
     }
-	
+
     func guildForChannel(_ channelId: ChannelID) -> Guild? {
         // TODO
         nil
@@ -35,7 +35,7 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         []
     }
-	
+
     func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
         // TODO
         then?(false, nil)
@@ -45,12 +45,12 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         then?(false, nil)
     }
-	
+
     func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?) {
         // TODO
         then?(nil, nil)
     }
-    
+
     private func flatten(embed: Embed) -> String {
         let lines: [String?] = [
             embed.title.flatMap { title in embed.url.map { "[\(title)](\($0.absoluteString))" } ?? title },
@@ -62,7 +62,7 @@ struct TelegramMessageClient: MessageClient {
             .compactMap { $0 }
             .joined(separator: "\n")
     }
-	
+
     func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
         let text = [message.content, message.embed.map(flatten(embed:))]
             .compactMap { $0?.nilIfEmpty }
@@ -84,22 +84,22 @@ struct TelegramMessageClient: MessageClient {
             then?(nil, nil)
         }
     }
-	
+
     func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<D2MessageIO.Message?>?) {
         // TODO
         then?(nil, nil)
     }
-	
+
     func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?) {
         // TODO
         then?(false, nil)
     }
-	
+
     func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?) {
         // TODO
         then?(false, nil)
     }
-	
+
     func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[D2MessageIO.Message]>?) {
         // TODO
         then?([], nil)
@@ -109,17 +109,17 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         then?(false, nil)
     }
-	
+
     func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
         // TODO
         then?(false, nil)
     }
-	
+
     func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?) {
         // TODO
         then?(false, nil)
     }
-	
+
     func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<D2MessageIO.Message?>?) {
         // TODO
         then?(nil, nil)

@@ -7,7 +7,7 @@ fileprivate let log = Logger(label: "D2DiscordIO.MessageIOClientDelegate")
 public class MessageIOClientDelegate: DiscordClientDelegate {
     private let inner: MessageDelegate
     private let sinkClient: MessageClient
-    
+
     public init(inner: MessageDelegate, sinkClient: MessageClient) {
         log.debug("Creating delegate")
         self.inner = inner
@@ -113,27 +113,27 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         log.debug("Got presence update")
         inner.on(receivePresenceUpdate: presence.usingMessageIO, client: overlayClient(with: discordClient))
     }
-    
+
     public func client(_ discordClient: DiscordClient, didReceiveReady ready: [String: Any]) {
         log.debug("Received ready")
         inner.on(receiveReady: ready, client: overlayClient(with: discordClient))
     }
-    
+
     public func client(_ discordClient: DiscordClient, didReceiveVoiceStateUpdate voiceState: DiscordVoiceState) {
         log.debug("Got voice state update")
         inner.on(receiveVoiceStateUpdate: voiceState.usingMessageIO, client: overlayClient(with: discordClient))
     }
-    
+
     public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: DiscordLazyDictionary<SwiftDiscord.UserID, DiscordGuildMember>, forGuild guild: DiscordGuild) {
         log.debug("Handling guild member chunk")
         inner.on(handleGuildMemberChunk: chunk.usingMessageIO, for: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
-    
+
     public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [SwiftDiscord.EmojiID: DiscordEmoji], onGuild guild: DiscordGuild) {
         log.debug("Got updated emojis")
         inner.on(updateEmojis: emojis.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
-    
+
     private func overlayClient(with discordClient: DiscordClient) -> MessageClient {
         OverlayMessageClient(inner: sinkClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
     }

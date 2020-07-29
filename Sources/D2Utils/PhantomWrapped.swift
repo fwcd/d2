@@ -11,7 +11,7 @@ public func phantom<P>() -> Phantom<P> { return Phantom(value: ()) }
  */
 public struct PhantomWrapped<T, P> {
     public let value: T
-    
+
     public init(value: T) {
         self.value = value
     }

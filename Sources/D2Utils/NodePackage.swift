@@ -11,11 +11,11 @@ import Foundation
  */
 public struct NodePackage {
     private let directoryURL: URL
-    
+
     public init(name: String) {
         directoryURL = URL(fileURLWithPath: "Node/\(name)")
     }
-    
+
     /** Invokes `npm start` with the given arguments. */
     public func start(withArgs args: [String], then: @escaping (Process) -> Void) throws {
         try Shell().run("npm", in: directoryURL, args: ["start"] + args, then: then)

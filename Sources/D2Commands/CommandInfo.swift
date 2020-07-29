@@ -28,7 +28,7 @@ public struct CommandInfo {
     public var sourceFile: String
     /// If present, the only platforms on which this command is allowed to run.
     public var platformAvailability: Set<String>?
-    
+
     public init(
         category: CommandCategory,
         shortDescription: String = "No description",

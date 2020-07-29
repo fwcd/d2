@@ -4,7 +4,7 @@ import D2Utils
 
 protocol DiscordAPIConvertible {
     associatedtype DiscordAPIType
-	
+
     var usingDiscordAPI: DiscordAPIType { get }
 }
 

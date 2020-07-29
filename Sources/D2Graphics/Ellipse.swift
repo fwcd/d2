@@ -6,7 +6,7 @@ public struct Ellipse<T: IntExpressibleAlgebraicField> {
     public var color: Color
     public var isFilled: Bool
     public var rotation: T
-	
+
     public init(
         center: Vec2<T> = Vec2(x: 0, y: 0),
         radius: Vec2<T> = Vec2(x: 1, y: 1),
@@ -20,7 +20,7 @@ public struct Ellipse<T: IntExpressibleAlgebraicField> {
         self.isFilled = isFilled
         self.rotation = rotation
     }
-	
+
     public init(
         centerX: T = 0,
         y centerY: T = 0,
@@ -32,7 +32,7 @@ public struct Ellipse<T: IntExpressibleAlgebraicField> {
     ) {
         self.init(center: Vec2(x: centerX, y: centerY), radius: Vec2(x: radiusX, y: radiusY), rotation: rotation, color: color, isFilled: isFilled)
     }
-	
+
     public init(
         centerX: T = 0,
         y centerY: T = 0,

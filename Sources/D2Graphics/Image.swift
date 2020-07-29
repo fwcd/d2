@@ -10,11 +10,11 @@ fileprivate let log = Logger(label: "D2Graphics.Image")
  */
 public struct Image {
     let surface: Surface.Image
-	
+
     public var width: Int { return surface.width }
     public var height: Int { return surface.height }
     public var size: Vec2<Int> { return Vec2(x: width, y: height) }
-	
+
     // Source: https://www.cairographics.org/manual/cairo-Image-Surfaces.html#cairo-format-t
     private var bytesPerPixel: Int? {
         switch surface.format {
@@ -25,19 +25,19 @@ public struct Image {
             default: return nil
         }
     }
-	
+
     init(from surface: Surface.Image) {
         self.surface = surface
     }
-	
+
     public init(width: Int, height: Int) throws {
         self.init(from: try Surface.Image(format: .argb32, width: width, height: height))
     }
-	
+
     public init(fromSize size: Vec2<Int>) throws {
         try self.init(width: size.x, height: size.y)
     }
-	
+
     public subscript(_ y: Int, _ x: Int) -> Color {
         get {
             var pixel: Color? = nil
@@ -46,7 +46,7 @@ public struct Image {
                 let colorPtr = UnsafeMutableRawPointer(ptr + i)
                 pixel = readColorFrom(pixel: colorPtr)
             }
-			
+
             return pixel ?? Colors.transparent
         }
         set(newColor) {
@@ -57,7 +57,7 @@ public struct Image {
             }
         }
     }
-	
+
     /** Converts a color to the image's native representation. */
     private func store(color: Color, inPixel ptr: UnsafeMutableRawPointer) {
         switch surface.format {
@@ -69,7 +69,7 @@ public struct Image {
                 log.warning("Could not store color \(color) in an image with the format \(surface.format.map { "\($0)" } ?? "nil")")
         }
     }
-	
+
     /** Convert's a color in the image's native representation to a color. */
     private func readColorFrom(pixel ptr: UnsafeMutableRawPointer) -> Color? {
         switch surface.format {

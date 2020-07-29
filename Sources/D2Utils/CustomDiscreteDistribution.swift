@@ -2,14 +2,14 @@
 /// custom values.
 public struct CustomDiscreteDistribution<T>: Distribution {
     private let distribution: [(T, Double)]
-    
+
     /// Creates a probability distribution that normalizes the given
     /// probabilities to the unit interval.
     public init?<N>(normalizing distribution: [(T, N)]) where N: BinaryInteger {
         let sum = Double(distribution.map { $0.1 }.reduce(0, +))
         self.init(distribution.map { ($0.0, Double($0.1) / sum) })
     }
-    
+
     public init?(_ distribution: [(T, Double)]) {
         // Make sure that the probabilities add up to one
         guard !distribution.isEmpty,
@@ -26,7 +26,7 @@ public struct CustomDiscreteDistribution<T>: Distribution {
                 return value
             }
         }
-        
+
         return distribution.last!.0
     }
 }

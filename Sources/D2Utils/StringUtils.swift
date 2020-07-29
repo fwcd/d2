@@ -40,16 +40,16 @@ extension StringProtocol {
     public func split(by length: Int) -> [String] {
         var start = startIndex
         var output = [String]()
-		
+
         while start < endIndex {
             let end = index(start, offsetBy: length, limitedBy: endIndex) ?? endIndex
             output.append(String(self[start..<end]))
             start = end
         }
-		
+
         return output
     }
-	
+
     public func splitPreservingQuotes(by separator: Character, omitQuotes: Bool = false, omitBackslashes: Bool = false) -> [String] {
         var split = [String]()
         var segment = ""
@@ -62,7 +62,7 @@ extension StringProtocol {
             } else {
                 let isQuote = c.unicodeScalars.first.map { quotes.contains($0) } ?? false
                 let isEscaped = last == "\\"
-				
+
                 if isQuote && !isEscaped {
                     if let quote = quoteStack.last, quote == c {
                         quoteStack.removeLast()
@@ -70,7 +70,7 @@ extension StringProtocol {
                         quoteStack.append(c)
                     }
                 }
-				
+
                 if isQuote && isEscaped && omitBackslashes {
                     segment.removeLast()
                 }
@@ -84,15 +84,15 @@ extension StringProtocol {
         split.append(segment)
         return split
     }
-	
+
     public var asciiOnly: String? {
         return components(separatedBy: asciiCharacters).joined()
     }
-	
+
     public var nilIfEmpty: Self? {
         return isEmpty ? nil : self
     }
-	
+
     public var isAlphabetic: Bool {
         for scalar in unicodeScalars {
             if !CharacterSet.letters.contains(scalar) {
@@ -101,7 +101,7 @@ extension StringProtocol {
         }
         return true
     }
-	
+
     public func truncate(_ length: Int, appending trailing: String = "") -> String {
         if count > length {
             return prefix(length) + trailing
@@ -109,11 +109,11 @@ extension StringProtocol {
             return String(self)
         }
     }
-	
+
     public func pluralize(with value: Int) -> String {
         value == 1 ? String(self) : "\(self)s"
     }
-	
+
     public func levenshteinDistance<S>(to rhs: S, caseSensitive: Bool = true) -> Int where S: StringProtocol {
         let width = count + 1
         let height = rhs.count + 1
@@ -121,14 +121,14 @@ extension StringProtocol {
         let (lhsChars, rhsChars) = caseSensitive
             ? (Array(self), Array(rhs))
             : (Array(lowercased()), Array(rhs.lowercased()))
-		
+
         for i in 0..<width {
             matrix[i] = i
         }
         for i in 0..<height {
             matrix[i * width] = i
         }
-		
+
         for y in 1..<height {
             for x in 1..<width {
                 let equal = lhsChars[x - 1] == rhsChars[y - 1]
@@ -139,7 +139,7 @@ extension StringProtocol {
                 ].min()!
             }
         }
-		
+
         return matrix.last!
     }
 
