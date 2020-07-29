@@ -27,37 +27,34 @@ public struct EitherIOQuery {
     }
 
     public func perform(offset: Int = 0, prepending: [WouldYouRatherQuestion] = []) -> Promise<[WouldYouRatherQuestion], Error> {
-        do {
-            log.info("Querying '\(term)' with offset \(offset) from either.io")
-            let request = try HTTPRequest(host: "either.io", path: "/search", query: ["s": term, "offset": String(offset)], headers: ["X-Requested-With": "XMLHttpRequest"])
-            request.fetchJSONAsync(as: EitherIOResponse.self) {
-                do {
-                    let response = try $0.get()
-                    let node = try SwiftSoup.parseBodyFragment(response.activity)
-                    let questions: [WouldYouRatherQuestion] = try node.getElementsByTag("p").array().compactMap {
-                        let choices = try $0.getElementsByTag("strong").array()
-                        guard
-                            let title = $0.textNodes().first?.text().trimmingCharacters(in: .whitespacesAndNewlines),
-                            let firstChoice = try choices[safely: 0]?.text().trimmingCharacters(in: .whitespacesAndNewlines),
-                            let secondChoice = try choices[safely: 1]?.text().trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
-                        return WouldYouRatherQuestion(
-                            title: title,
-                            firstChoice: firstChoice,
-                            secondChoice: secondChoice
-                        )
-                    }
+        log.info("Querying '\(term)' with offset \(offset) from either.io")
+        return Promise.catching { try HTTPRequest(
+            host: "either.io",
+            path: "/search",
+            query: ["s": term, "offset": String(offset)],
+            headers: ["X-Requested-With": "XMLHttpRequest"]
+        ) }
+            .then { $0.fetchJSONAsync(as: EitherIOResponse.self) }
+            .thenCatching { response in
+                let node = try SwiftSoup.parseBodyFragment(response.activity)
+                let questions: [WouldYouRatherQuestion] = try node.getElementsByTag("p").array().compactMap {
+                    let choices = try $0.getElementsByTag("strong").array()
+                    guard
+                        let title = $0.textNodes().first?.text().trimmingCharacters(in: .whitespacesAndNewlines),
+                        let firstChoice = try choices[safely: 0]?.text().trimmingCharacters(in: .whitespacesAndNewlines),
+                        let secondChoice = try choices[safely: 1]?.text().trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
+                    return WouldYouRatherQuestion(
+                        title: title,
+                        firstChoice: firstChoice,
+                        secondChoice: secondChoice
+                    )
+                }
 
-                    if response.showMore && offset < self.maxOffset {
-                        self.perform(offset: offset + questions.count, prepending: prepending + questions, then: then)
-                    } else {
-                        then(.success(prepending + questions))
-                    }
-                } catch {
-                    then(.failure(error))
+                if response.showMore && offset < self.maxOffset {
+                    return self.perform(offset: offset + questions.count, prepending: prepending + questions)
+                } else {
+                    return Promise(.success(prepending + questions))
                 }
             }
-        } catch {
-            then(.failure(error))
-        }
     }
 }

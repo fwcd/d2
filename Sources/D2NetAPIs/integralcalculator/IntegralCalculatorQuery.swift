@@ -14,47 +14,30 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
 	}
 
 	public func perform() -> Promise<IntegralQueryOutput, Error> {
-		fetchPageVersion {
-			switch $0 {
-				case let .success(pageVersion):
-					do {
-						let params = String(data: try JSONEncoder().encode(self.params), encoding: .utf8) ?? ""
-						log.info("Querying integral calculator v\(pageVersion) with params \(params)...")
+		fetchPageVersion()
+            .mapCatching { pageVersion -> HTTPRequest in
+                let params = String(data: try JSONEncoder().encode(self.params), encoding: .utf8) ?? ""
+                log.info("Querying integral calculator v\(pageVersion) with params \(params)...")
 
-						try HTTPRequest(
-							scheme: "https",
-							host: "www.integral-calculator.com",
-							path: P.endpoint,
-							method: "POST",
-							query: [
-								"q": params,
-								"v": pageVersion
-							]
-						).fetchUTF8Async {
-							switch $0 {
-								case let .success(rawHTML):
-									do {
-										let document = try SwiftSoup.parse(rawHTML)
-										let steps = try document.getElementsByClass("calc-math").map { try $0.text() }
-										if steps.isEmpty {
-											then(.failure(NetApiError.apiError(try document.text())))
-										} else {
-											then(.success(IntegralQueryOutput(steps: steps)))
-										}
-									} catch {
-										then(.failure(error))
-									}
-								case let .failure(error):
-									then(.failure(error))
-							}
-						}
-					} catch {
-						then(.failure(error))
-					}
-				case let .failure(error):
-					then(.failure(error))
-			}
-		}
+                return try HTTPRequest(
+                    scheme: "https",
+                    host: "www.integral-calculator.com",
+                    path: P.endpoint,
+                    method: "POST",
+                    query: [
+                        "q": params,
+                        "v": pageVersion
+                    ]
+				)
+            }
+            .then { $0.fetchHTMLAsync() }
+            .mapCatching { document in
+                let steps = try document.getElementsByClass("calc-math").map { try $0.text() }
+                guard !steps.isEmpty else {
+                    throw NetApiError.apiError(try document.text())
+                }
+                return IntegralQueryOutput(steps: steps)
+            }
 	}
 
 	private func fetchPageVersion() -> Promise<String, Error> {
@@ -65,6 +48,6 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
             method: "GET"
         ) }
             .then { $0.fetchUTF8Async() }
-            .mapCatching { Result.from(pageVersionPattern.firstGroups(in: rawHTML)?[1], errorIfNil: NetApiError.apiError("Could not find page version of integral calculator")) }
+            .mapCatching { try Result.from(pageVersionPattern.firstGroups(in: $0)?[1], errorIfNil: NetApiError.apiError("Could not find page version of integral calculator")).get() }
 	}
 }

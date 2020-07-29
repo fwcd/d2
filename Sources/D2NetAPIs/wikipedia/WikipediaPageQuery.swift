@@ -11,13 +11,10 @@ public struct WikipediaPageQuery {
     }
 
     public func perform() -> Promise<WikipediaPage, Error> {
-        do {
-            try HTTPRequest(
-                host: "en.wikipedia.org",
-                path: "/api/rest_v1/page/summary/\(page)"
-            ).fetchJSONAsync(as: WikipediaPage.self, then: then)
-        } catch {
-            then(.failure(error))
-        }
+        Promise.catching { try HTTPRequest(
+            host: "en.wikipedia.org",
+            path: "/api/rest_v1/page/summary/\(page)"
+        ) }
+            .then { $0.fetchJSONAsync(as: WikipediaPage.self) }
     }
 }
