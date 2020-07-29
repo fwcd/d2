@@ -3,7 +3,7 @@ import Dispatch
 /**
  * Turns a list of thenables into a thenable of lists.
  */
-public func collect<T>(prepending previous: [T] = [], thenables: [(@escaping (Result<T, Error>) -> Void) -> Void], then: @escaping (Result<[T], Error>) -> Void) {
+public func collect<T>(prepending previous: [T] = [], thenables: [(@escaping (Result<T, Error>) -> Void) -> Void], ) -> Promise<[T], Error> {
     guard let nextThenable = thenables.first else {
         then(.success(previous))
         return

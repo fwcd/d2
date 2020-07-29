@@ -4,7 +4,7 @@ public struct StackOverflowQuery {
 	private let input: String
 	private let host: String
 	private let apiVersion: String
-	
+
 	public init(
 		input: String,
 		host: String = "api.stackexchange.com",
@@ -14,8 +14,8 @@ public struct StackOverflowQuery {
 		self.host = host
 		self.apiVersion = apiVersion
 	}
-	
-	public func start(then: @escaping (Result<StackOverflowResults<StackOverflowAnswer>, Error>) -> Void) throws {
+
+	public func start() throws -> Promise<StackOverflowResults<StackOverflowAnswer>, Error> {
 		try HTTPRequest(host: host, path: "/\(apiVersion)/search", query: [
 			"order": "desc",
 			"sort": "relevance",

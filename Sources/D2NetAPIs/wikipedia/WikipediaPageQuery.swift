@@ -2,15 +2,15 @@ import D2Utils
 
 public struct WikipediaPageQuery {
     private let page: String
-    
+
     public init(pageName: String) {
         page = pageName
             .withFirstUppercased
             .replacingOccurrences(of: "/", with: "")
             .replacingOccurrences(of: " ", with: "_")
     }
-    
-    public func perform(then: @escaping (Result<WikipediaPage, Error>) -> Void) {
+
+    public func perform() -> Promise<WikipediaPage, Error> {
         do {
             try HTTPRequest(
                 host: "en.wikipedia.org",

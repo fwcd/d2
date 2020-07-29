@@ -5,7 +5,7 @@ public struct PokedexQuery {
 
     public init() {}
 
-    public func perform(then: @escaping (Result<[PokedexEntry], Error>) -> Void) {
+    public func perform() -> Promise<[PokedexEntry], Error> {
         if let pokedex = PokedexQuery.cached {
             then(.success(pokedex))
         } else {

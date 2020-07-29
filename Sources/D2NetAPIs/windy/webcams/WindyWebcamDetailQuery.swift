@@ -12,7 +12,7 @@ public struct WindyWebcamDetailQuery {
         self.show = show
     }
 
-    public func perform(then: @escaping (Result<WindyResult<WindyWebcams>, Error>) -> Void) {
+    public func perform() -> Promise<WindyResult<WindyWebcams>, Error> {
         do {
             guard let token = storedNetApiKeys?.windy?.webcams else {
                 throw NetApiError.missingApiKey("No API key for Windy webcams")

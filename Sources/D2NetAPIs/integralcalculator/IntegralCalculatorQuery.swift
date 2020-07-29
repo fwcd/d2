@@ -8,12 +8,12 @@ fileprivate let pageVersionPattern = try! Regex(from: "\\bpageVersion\\s*=\\s*(\
 
 public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
 	private let params: P
-	
+
 	public init(params: P) {
 		self.params = params
 	}
-	
-	public func perform(then: @escaping (Result<IntegralQueryOutput, Error>) -> Void) {
+
+	public func perform() -> Promise<IntegralQueryOutput, Error> {
 		fetchPageVersion {
 			switch $0 {
 				case let .success(pageVersion):
@@ -56,8 +56,8 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
 			}
 		}
 	}
-	
-	private func fetchPageVersion(then: @escaping (Result<String, Error>) -> Void) {
+
+	private func fetchPageVersion() -> Promise<String, Error> {
 		do {
 			try HTTPRequest(
 				scheme: "https",

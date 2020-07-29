@@ -9,7 +9,7 @@ public struct OpenWeatherMapQuery {
         self.units = units
     }
 
-    public func perform(then: @escaping (Result<OpenWeatherMapWeather, Error>) -> Void) {
+    public func perform() -> Promise<OpenWeatherMapWeather, Error> {
         do {
             guard let token = storedNetApiKeys?.openweathermap else {
                 throw NetApiError.missingApiKey("Missing OpenWeatherMap API key")

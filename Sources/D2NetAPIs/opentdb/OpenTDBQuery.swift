@@ -7,7 +7,7 @@ public struct OpenTDBQuery {
         self.amount = amount
     }
 
-    public func perform(then: @escaping (Result<OpenTDBResponse, Error>) -> Void) {
+    public func perform() -> Promise<OpenTDBResponse, Error> {
         do {
             let request = try HTTPRequest(host: "opentdb.com", path: "/api.php", query: ["amount": String(amount), "encode": "url3986"])
             request.fetchJSONAsync(as: OpenTDBResponse.self) {

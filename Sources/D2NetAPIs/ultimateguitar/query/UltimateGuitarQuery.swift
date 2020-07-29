@@ -12,7 +12,7 @@ public struct UltimateGuitarQuery<T> where T: Codable {
         self.query = query
     }
 
-    public func perform(then: @escaping (Result<UltimateGuitarResponse<T>, Error>) -> Void) {
+    public func perform() -> Promise<UltimateGuitarResponse<T>, Error> {
         do {
             let request = try HTTPRequest(host: host, path: path, query: query)
             request.fetchHTMLAsync {

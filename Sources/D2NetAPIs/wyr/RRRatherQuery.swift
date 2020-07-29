@@ -7,8 +7,8 @@ public struct RRRatherQuery {
     public init(category: String) {
         self.category = category
     }
-    
-    public func perform(then: @escaping (Result<[WouldYouRatherQuestion], Error>) -> Void) {
+
+    public func perform() -> Promise<[WouldYouRatherQuestion], Error> {
         do {
             let request = try HTTPRequest(host: "www.rrrather.com", path: "/\(category)")
             request.fetchHTMLAsync { result in
@@ -21,7 +21,7 @@ public struct RRRatherQuery {
                             let title = $0.textNodes().first?.text(),
                             let firstChoice = try options[safely: 0]?.text(),
                             let secondChoice = try options[safely: 1]?.text() else { return nil }
-                        
+
                         return WouldYouRatherQuestion(
                             title: title,
                             firstChoice: firstChoice,

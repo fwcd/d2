@@ -16,7 +16,7 @@ public class GitLabCommand: StringCommand {
     )
     @AutoSerializing(filePath: "local/gitLabConfig.json") private var gitLabConfig: GitLabConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) throws -> Void] = [:]
-    
+
     public init() {
         subcommands = [
             "set-server": { [unowned self] arg, output in
@@ -46,7 +46,7 @@ public class GitLabCommand: StringCommand {
                         case .failure(let error):
                             output.append(error, errorText: "Could not fetch pipelines")
                     }
-                    
+
                 }
             },
             "pipeline": { [unowned self] _, output in
@@ -71,7 +71,7 @@ public class GitLabCommand: StringCommand {
             \(subcommands.map { "- `\($0.key)`" }.joined(separator: "\n"))
             """
     }
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         if let parsed = subcommandPattern.firstGroups(in: input) {
             let subcommandName = parsed[1]
@@ -91,7 +91,7 @@ public class GitLabCommand: StringCommand {
             output.append(errorText: "Please use the following pattern: `[subcommand] [...]`")
         }
     }
-    
+
     private func describe(pipeline: GitLabPipeline) -> String {
         let status = pipeline.status
         return """
@@ -101,7 +101,7 @@ public class GitLabCommand: StringCommand {
             Updated At: `\(pipeline.updatedAt ?? "?")`
             """
     }
-    
+
     private func describe(job: GitLabJob, withLog jobLog: String) -> String {
         let status = job.status
         return """
@@ -113,7 +113,7 @@ public class GitLabCommand: StringCommand {
             ```
             """
     }
-    
+
     private func emojiOf(status: String?) -> String {
         switch status {
             case "success"?: return ":white_check_mark:"
@@ -124,22 +124,22 @@ public class GitLabCommand: StringCommand {
             default: return ":question:"
         }
     }
-    
+
     private func remoteGitLab() throws -> RemoteGitLab {
         guard let serverHost = gitLabConfig.serverHost else { throw GitLabConfigurationError.unspecified("server host") }
         return RemoteGitLab(host: serverHost)
     }
-    
+
     private func projectId() throws -> Int {
         guard let projectId = gitLabConfig.projectId else { throw GitLabConfigurationError.unspecified("project id") }
         return projectId
     }
-    
-    private func fetchPipelines(then: @escaping (Result<[GitLabPipeline], Error>) -> Void) throws {
+
+    private func fetchPipelines() throws -> Promise<[GitLabPipeline], Error> {
         try remoteGitLab().fetchPipelines(projectId: try projectId(), then: then)
     }
-    
-    private func fetchMostRecentPipelineJobsAndLogs(then: @escaping (Result<[(GitLabJob, String)], Error>) -> Void) throws {
+
+    private func fetchMostRecentPipelineJobsAndLogs() throws -> Promise<[(GitLabJob, String)], Error> {
         let gitLab = try remoteGitLab()
         let pid = try projectId()
         gitLab.fetchJobs(projectId: pid) {

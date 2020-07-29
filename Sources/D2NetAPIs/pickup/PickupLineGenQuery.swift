@@ -3,7 +3,7 @@ import D2Utils
 public struct PickupLineGenQuery: PickupLineQuery {
     public init() {}
 
-    public func perform(then: @escaping (Result<PickupLine, Error>) -> Void) {
+    public func perform() -> Promise<PickupLine, Error> {
         do {
             let request = try HTTPRequest(scheme: "http", host: "www.pickuplinegen.com", path: "/")
             request.fetchHTMLAsync {

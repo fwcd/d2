@@ -20,8 +20,8 @@ public class DailyFoodMenu {
             ]
         )
     }
-    
-    public func fetchMealsAsync(then: @escaping (Result<[Meal], Error>) -> Void) {
+
+    public func fetchMealsAsync() -> Promise<[Meal], Error> {
         request.fetchHTMLAsync { result in
             then(Result {
                 let document: Document = try result.get()
@@ -41,7 +41,7 @@ public class DailyFoodMenu {
             })
         }
     }
-    
+
     private func parseMealProperty(iconSrc: String) -> MealProperty? {
         mealPropertyIconPattern.firstGroups(in: iconSrc).flatMap {
             switch $0[1] {

@@ -13,7 +13,7 @@ public struct FortuneCookieQuery {
         self.limit = limit
     }
 
-    public func perform(then: @escaping (Result<[FortuneCookie], Error>) -> Void) {
+    public func perform() -> Promise<[FortuneCookie], Error> {
         do {
             let request = try HTTPRequest(host: "fortunecookieapi.herokuapp.com", path: "/v1/cookie")
             request.fetchJSONAsync(as: [FortuneCookie].self, then: then)

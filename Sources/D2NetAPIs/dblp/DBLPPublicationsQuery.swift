@@ -8,7 +8,7 @@ public struct DBLPPublicationsQuery {
         self.term = term
     }
 
-    public func perform(then: @escaping (Result<DBLPPublicationsResult, Error>) -> Void) {
+    public func perform() -> Promise<DBLPPublicationsResult, Error> {
         do {
             let request = try HTTPRequest(host: "dblp.org", path: "/search/publ/api", query: ["q": term])
             request.runAsync {

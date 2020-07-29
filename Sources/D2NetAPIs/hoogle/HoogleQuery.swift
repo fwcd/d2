@@ -3,13 +3,13 @@ import D2Utils
 public struct HoogleQuery {
     private let term: String
     private let count: Int
-    
+
     public init(term: String, count: Int = 4) {
         self.term = term
         self.count = count
     }
-    
-    public func perform(then: @escaping (Result<[HoogleResult], Error>) -> Void) {
+
+    public func perform() -> Promise<[HoogleResult], Error> {
         do {
             let request = try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
                 "mode": "json",

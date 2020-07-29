@@ -6,7 +6,7 @@ public struct MediaWikiParseQuery {
     private let page: String
     private let prop: String
     private let section: String?
-    
+
     public init(host: String, path: String, page: String, prop: String = "wikitext", section: String? = nil) {
         self.host = host
         self.path = path
@@ -14,8 +14,8 @@ public struct MediaWikiParseQuery {
         self.prop = prop
         self.section = section
     }
-    
-    public func perform(then: @escaping (Result<MediaWikiParse, Error>) -> Void) {
+
+    public func perform() -> Promise<MediaWikiParse, Error> {
         do {
             var query = [
                 "action": "parse",
