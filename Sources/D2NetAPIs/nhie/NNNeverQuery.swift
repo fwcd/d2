@@ -8,7 +8,7 @@ public struct NNNEverQuery {
         self.maxPages = maxPages
     }
 
-    public func perform(page: Int? = nil, prepending: [NeverHaveIEverStatement] = [], ) -> Promise<[NeverHaveIEverStatement], Error> {
+    public func perform(page: Int? = nil, prepending: [NeverHaveIEverStatement] = []) -> Promise<[NeverHaveIEverStatement], Error> {
         do {
             let request = try HTTPRequest(host: "nnnever.com", path: "/\(page.map { "\($0)" } ?? "")")
             request.fetchHTMLAsync { result in

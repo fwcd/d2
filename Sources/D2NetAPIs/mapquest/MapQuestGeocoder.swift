@@ -7,7 +7,7 @@ import D2Utils
 public struct MapQuestGeocoder {
 	public init() {}
 
-	public func geocode(location: String, ) -> Promise<GeoCoordinates, Error> {
+	public func geocode(location: String) -> Promise<GeoCoordinates, Error> {
 		let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
 		guard let mapQuestKey = storedNetApiKeys?.mapQuest else {
 			then(.failure(NetApiError.missingApiKey("No API key for MapQuest found")))

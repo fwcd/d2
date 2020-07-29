@@ -3,7 +3,7 @@ import D2Utils
 public struct XkcdQuery {
     public init() {}
 
-    public func fetch(comicId: Int? = nil, ) -> Promise<XkcdComic, Error> {
+    public func fetch(comicId: Int? = nil) -> Promise<XkcdComic, Error> {
         do {
             let request = try HTTPRequest(host: "xkcd.com", path: "\(comicId.map { "/\($0)" } ?? "")/info.0.json")
             request.fetchJSONAsync(as: XkcdComic.self, then: then)

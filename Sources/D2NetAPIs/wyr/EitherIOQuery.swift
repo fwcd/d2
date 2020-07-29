@@ -26,7 +26,7 @@ public struct EitherIOQuery {
         let showMore: Bool
     }
 
-    public func perform(offset: Int = 0, prepending: [WouldYouRatherQuestion] = [], ) -> Promise<[WouldYouRatherQuestion], Error> {
+    public func perform(offset: Int = 0, prepending: [WouldYouRatherQuestion] = []) -> Promise<[WouldYouRatherQuestion], Error> {
         do {
             log.info("Querying '\(term)' with offset \(offset) from either.io")
             let request = try HTTPRequest(host: "either.io", path: "/search", query: ["s": term, "offset": String(offset)], headers: ["X-Requested-With": "XMLHttpRequest"])

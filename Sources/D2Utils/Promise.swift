@@ -76,6 +76,11 @@ public class Promise<T, E> where E: Error {
 extension Promise where E == Error {
     /// Creates a (finished) promise catching the given block.
     public static func catching(_ block: () throws -> T) -> Self {
-        return Self(Result(catching: block))
+        Self(Result(catching: block))
+    }
+
+    /// Creates a promise catching the given block returning another promise.
+    public static func catchingThen(_ block: () throws -> Promise<T, Error>) -> Promise<T, Error> {
+        Promise<Promise<T, Error>, Error>.catching(block).then { $0 }
     }
 }
