@@ -51,7 +51,7 @@ public class GameCommand<G: Game>: Command {
 			do {
 				try subcommand(output)
 			} catch {
-				output.append(errorText: "Error while running subcommand: \(error)")
+				output.append(error, errorText: "Error while running subcommand: \(error)")
 			}
 			return
 		}

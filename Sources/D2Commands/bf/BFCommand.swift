@@ -53,7 +53,7 @@ public class BFCommand: StringCommand {
 				} catch BFError.addressOverflow(let address) {
 					response = "Overflow while dereferencing address \(address)"
 				} catch {
-					response = "Error while executing code"
+					response = "Error while executing code: \(error)"
 				}
 			} else {
 				response = "Syntax error"

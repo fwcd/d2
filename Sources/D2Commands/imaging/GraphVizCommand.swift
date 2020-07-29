@@ -20,7 +20,7 @@ public class GraphVizCommand: StringCommand {
             let data = try DOTRenderer(using: layout, to: .png).render(dotEncoded: input)
             try output.append(try Image(fromPng: data))
         } catch {
-            output.append(errorText: "Could not render graph")
+            output.append(error, errorText: "Could not render graph")
         }
     }
 }

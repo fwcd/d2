@@ -42,14 +42,14 @@ public class AvatarCommand: Command {
 							output.append(.image(try Image(fromPng: data)))
 						}
 					} catch {
-						output.append(errorText: "The image conversion failed: \(error)")
+						output.append(error, errorText: "The image conversion failed: \(error)")
 					}
 				} else if case let .failure(error) = $0 {
 					output.append(errorText: "The avatar could not be fetched \(error)")
 				}
 			}
 		} catch {
-			output.append(errorText: "The avatar request failed")
+			output.append(error, errorText: "The avatar request failed")
 		}
 	}
 }
