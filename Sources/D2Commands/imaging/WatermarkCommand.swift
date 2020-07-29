@@ -3,13 +3,13 @@ import D2Graphics
 import D2Utils
 
 public class WatermarkCommand: Command {
-	public let info = CommandInfo(
-		category: .imaging,
-		shortDescription: "Adds a watermark to an image",
-		requiredPermissionLevel: .basic
-	)
-	public let inputValueType: RichValueType = .compound([.image, .text])
-	public let outputValueType: RichValueType = .image
+    public let info = CommandInfo(
+        category: .imaging,
+        shortDescription: "Adds a watermark to an image",
+        requiredPermissionLevel: .basic
+    )
+    public let inputValueType: RichValueType = .compound([.image, .text])
+    public let outputValueType: RichValueType = .image
     private let fontSize: Double
     private let padding: Double
 
@@ -21,9 +21,9 @@ public class WatermarkCommand: Command {
         self.padding = padding
     }
 
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-		guard let image = input.asImage else {
-			output.append(errorText: "Not an image!")
+    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+        guard let image = input.asImage else {
+            output.append(errorText: "Not an image!")
             return
         }
 
@@ -45,5 +45,5 @@ public class WatermarkCommand: Command {
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")
         }
-	}
+    }
 }
