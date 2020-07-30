@@ -5,7 +5,7 @@ public func all<T, E>(promises: [Promise<T, E>]) -> Promise<[T], E> where E: Err
     Promise { then in
         let queue = DispatchQueue(label: "all(promises:)")
         var values = [T]()
-        var remaining = promises.count
+        var remaining = Synchronized(wrappedValue: promises.count)
         var failed = false
 
         for promise in promises {
@@ -14,8 +14,8 @@ public func all<T, E>(promises: [Promise<T, E>]) -> Promise<[T], E> where E: Err
                     switch result {
                         case let .success(value):
                             values.append(value)
-                            remaining -= 1
-                            if remaining == 0 && !failed {
+                            remaining.wrappedValue -= 1
+                            if remaining.wrappedValue == 0 && !failed {
                                 then(.success(values))
                             }
                         case let .failure(error):
