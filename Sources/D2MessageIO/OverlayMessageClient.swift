@@ -1,6 +1,6 @@
-/**
- * A decorator message client that uses a custom 'name' and 'me'.
- */
+import D2Utils
+
+/// A decorator message client that uses a custom 'name' and 'me'.
 public struct OverlayMessageClient: MessageClient {
     private let inner: MessageClient
 
@@ -31,51 +31,51 @@ public struct OverlayMessageClient: MessageClient {
         inner.permissionsForUser(userId, in: channelId, on: guildId)
     }
 
-    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
-        inner.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason, then: then)
+    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
+        inner.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason)
     }
 
-    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
-        inner.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason, then: then)
+    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
+        inner.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason)
     }
 
-    public func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?) {
-        inner.createDM(with: userId, then: then)
+    public func createDM(with userId: UserID) -> Promise<ChannelID?, Error> {
+        inner.createDM(with: userId)
     }
 
-    public func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?) {
-        inner.sendMessage(message, to: channelId, then: then)
+    public func sendMessage(_ message: Message, to channelId: ChannelID) -> Promise<Message?, Error> {
+        inner.sendMessage(message, to: channelId)
     }
 
-    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<Message?>?) {
-        inner.editMessage(id, on: channelId, content: content, then: then)
+    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Promise<Message?, Error> {
+        inner.editMessage(id, on: channelId, content: content)
     }
 
-    public func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?) {
-        inner.deleteMessage(id, on: channelId, then: then)
+    public func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Promise<Bool, Error> {
+        inner.deleteMessage(id, on: channelId)
     }
 
-    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?) {
-        inner.bulkDeleteMessages(ids, on: channelId, then: then)
+    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Promise<Bool, Error> {
+        inner.bulkDeleteMessages(ids, on: channelId)
     }
 
-    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?) {
-        inner.getMessages(for: channelId, limit: limit, selection: selection, then: then)
+    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error> {
+        inner.getMessages(for: channelId, limit: limit, selection: selection)
     }
 
-    public func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
-        inner.isGuildTextChannel(channelId, then: then)
+    public func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
+        inner.isGuildTextChannel(channelId)
     }
 
-    public func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
-        inner.isDMTextChannel(channelId, then: then)
+    public func isDMTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
+        inner.isDMTextChannel(channelId)
     }
 
-    public func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?) {
-        inner.triggerTyping(on: channelId, then: then)
+    public func triggerTyping(on channelId: ChannelID) -> Promise<Bool, Error> {
+        inner.triggerTyping(on: channelId)
     }
 
-    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<Message?>?) {
-        inner.createReaction(for: messageId, on: channelId, emoji: emoji, then: then)
+    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error> {
+        inner.createReaction(for: messageId, on: channelId, emoji: emoji)
     }
 }

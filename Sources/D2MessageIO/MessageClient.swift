@@ -58,6 +58,6 @@ public extension MessageClient {
     }
 
     func getMessages(for channelId: ChannelID, limit: Int) -> Promise<[Message], Error> {
-        getMessages(for: channelId, limit: limit, selection: nil, then: then)
+        getMessages(for: channelId, limit: limit, selection: nil)
     }
 }

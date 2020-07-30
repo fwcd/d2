@@ -15,7 +15,7 @@ public struct InteractiveTextChannel {
 
     @discardableResult
 	public func send(_ message: Message) -> Promise<Message?, Error> {
-		client.sendMessage(message, to: id, then: then)
+		client.sendMessage(message, to: id)
 	}
 
     @discardableResult
