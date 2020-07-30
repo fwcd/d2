@@ -1,5 +1,8 @@
 import Dispatch
 
+/// Returns a new promise that completes once all results from the
+/// individual promises have returned. This means that they possibly
+/// execute concurrently.
 @discardableResult
 public func all<T, E>(promises: [Promise<T, E>]) -> Promise<[T], E> where E: Error {
     Promise { then in
