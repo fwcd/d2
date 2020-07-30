@@ -139,24 +139,22 @@ public class GitLabCommand: StringCommand {
         Promise.catchingThen { try remoteGitLab().fetchPipelines(projectId: try projectId()) }
     }
 
+    private func fetchJobs() -> Promise<[GitLabJob], Error> {
+        Promise.catchingThen { try remoteGitLab().fetchJobs(projectId: try projectId()) }
+    }
+
     private func fetchMostRecentPipelineJobsAndLogs() -> Promise<[(GitLabJob, String)], Error> {
-        Promise.catchingThen {
-            let gitLab = try remoteGitLab()
-            let pid = try projectId()
-            return gitLab.fetchJobs(projectId: pid) {
-                switch $0.map({ (jobs: [GitLabJob]) -> [GitLabJob] in
-                    let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()
-                    return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
-                }) {
-                    case .success(let pipelineJobs):
-                        let sortedJobs = pipelineJobs.sorted(by: ascendingComparator { $0.id ?? -1 })
-                        collect(thenables: sortedJobs.map { $0.id.map { jid in { gitLab.fetchJobLog(projectId: pid, jobId: jid, then: $0) } } ?? { $0(.success("")) } }) {
-                            then($0.map { jobLogs in Array(zip(sortedJobs, jobLogs)) })
-                        }
-                    case .failure(let error):
-                        then(.failure(error))
-                }
+        fetchJobs()
+            .map { (jobs: [GitLabJob]) -> [GitLabJob] in
+                let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()
+                return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
             }
-        }
+            .thenCatching { pipelineJobs in
+                let sortedJobs = pipelineJobs.sorted(by: ascendingComparator { $0.id ?? -1 })
+                let gitLab = try self.remoteGitLab()
+                let pid = try self.projectId()
+                return sequence(promises: sortedJobs.map { job in { job.id.map { jid in gitLab.fetchJobLog(projectId: pid, jobId: jid) } ?? Promise(.success("")) } })
+                    .map { jobLogs in Array(zip(sortedJobs, jobLogs)) }
+            }
     }
 }
