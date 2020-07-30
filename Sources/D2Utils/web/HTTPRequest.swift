@@ -104,7 +104,12 @@ public struct HTTPRequest {
 					parser.delegate = delegate
 					_ = parser.parse()
 				case .failure(let error):
+                    // Work around the issue that the method is marked optional on macOS but not on Linux
+                    #if os(macOS)
+					delegate.parser?(XMLParser(data: Data()), parseErrorOccurred: error)
+                    #else
 					delegate.parser(XMLParser(data: Data()), parseErrorOccurred: error)
+                    #endif
 			}
 		}
 	}
