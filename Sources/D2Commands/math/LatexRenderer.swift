@@ -27,18 +27,10 @@ class LatexRenderer {
     }
 
     private func renderPNG(from formula: String, to outputFile: TemporaryFile, color: String, scale: Double) -> Promise<Void, Error> {
-        Promise { then in
-            do {
-                cleanUp()
-                log.debug("Invoking latex-renderer")
-                try node.start(withArgs: [formula, color, outputFile.url.path, String(scale)]) { _ in
-                    // TODO: Handle MathJax errors
-                    then(.success(()))
-                }
-            } catch {
-                then(.failure(error))
-            }
-        }
+        cleanUp()
+        log.debug("Invoking latex-renderer")
+        // TODO: Handle MathJax errors
+        return node.start(withArgs: [formula, color, outputFile.url.path, String(scale)]).void()
     }
 
     func cleanUp() {
