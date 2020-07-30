@@ -18,38 +18,33 @@ public class AvatarCommand: Command {
 	)
 	public let inputValueType: RichValueType = .mentions
 	public let outputValueType: RichValueType = .image
-	
+
 	public init() {}
-	
+
 	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
 		guard let user = input.asMentions?.first else {
 			output.append(errorText: "Mention someone to begin!")
 			return
 		}
-		
-		do {
-			try HTTPRequest(
-				scheme: "https",
-				host: "cdn.discordapp.com",
-				path: "/avatars/\(user.id)/\(user.avatar).png",
-				query: ["size": "256"]
-			).runAsync {
-				if case let .success(data) = $0 {
-					do {
-						if data.isEmpty {
-							output.append(errorText: "No avatar available")
-						} else {
-							output.append(.image(try Image(fromPng: data)))
-						}
-					} catch {
-						output.append(error, errorText: "The image conversion failed: \(error)")
-					}
-				} else if case let .failure(error) = $0 {
+
+        Promise.catching { try HTTPRequest(
+            scheme: "https",
+            host: "cdn.discordapp.com",
+            path: "/avatars/\(user.id)/\(user.avatar).png",
+            query: ["size": "256"]
+        ) }
+            .then { $0.runAsync() }
+            .listen {
+				do {
+                    let data = try $0.get()
+                    if data.isEmpty {
+                        output.append(errorText: "No avatar available")
+                    } else {
+                        output.append(.image(try Image(fromPng: data)))
+                    }
+				} catch {
 					output.append(errorText: "The avatar could not be fetched \(error)")
 				}
 			}
-		} catch {
-			output.append(error, errorText: "The avatar request failed")
-		}
 	}
 }

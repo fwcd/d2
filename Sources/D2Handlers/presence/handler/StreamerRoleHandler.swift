@@ -25,7 +25,7 @@ public struct StreamerRoleHandler: PresenceHandler {
             if presence.activities.contains(where: { $0.type == .stream }) {
                 if !member.roleIds.contains(roleId) {
                     log.info("Adding streamer role to \(member.displayName)")
-                    client.addGuildMemberRole(roleId, to: presence.user.id, on: presence.guildId, reason: "Streaming") { success, _ in
+                    client.addGuildMemberRole(roleId, to: presence.user.id, on: presence.guildId, reason: "Streaming").listenOrLogError { success in
                         if !success {
                             log.warning("Adding streamer role to \(member.displayName) failed")
                         }

@@ -11,31 +11,31 @@ public class CycleThroughCommand: StringCommand {
 	)
 	private let loops = 4
 	private let timer = RepeatingTimer(interval: .milliseconds(500))
-	
+
 	public init() {}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !timer.isRunning else {
 			output.append(errorText: "Animation is already running.")
 			return
 		}
-		
+
 		let frames = input.split(separator: " ")
-		
+
 		guard frames.count < 4 else {
 			output.append(errorText: "Too many frames.")
 			return
 		}
-		
+
 		guard let firstFrame = frames.first else {
 			output.append(errorText: "Cannot create empty animation.")
 			return
 		}
-		
+
 		let client = context.client!
 		let channelId = context.channel!.id
-		
-		client.sendMessage(Message(content: String(firstFrame)), to: channelId) { sentMessage, _ in
+
+		client.sendMessage(Message(content: String(firstFrame)), to: channelId).listenOrLogError { sentMessage in
 			self.timer.schedule(nTimes: self.loops * frames.count) { i, _ in
 				let frame = String(frames[i % frames.count])
 				client.editMessage(sentMessage!.id!, on: channelId, content: frame)

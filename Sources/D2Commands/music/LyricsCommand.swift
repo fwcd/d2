@@ -27,7 +27,7 @@ public class LyricsCommand: StringCommand {
         }
 
         // Search for the song
-        UltimateGuitarQuery<UltimateGuitarSearchResults>(host: "www.ultimate-guitar.com", path: "/search.php", query: ["search_type": "title", "value": input]).perform {
+        UltimateGuitarQuery<UltimateGuitarSearchResults>(host: "www.ultimate-guitar.com", path: "/search.php", query: ["search_type": "title", "value": input]).perform().listen {
             do {
                 let searchResults = try $0.get().store.page.data
                 guard let tab = searchResults.results.first(where: \.isChordTab) else {
@@ -42,7 +42,7 @@ public class LyricsCommand: StringCommand {
                 let path = urlComponents.path
 
                 // Query the song's tab page
-                UltimateGuitarQuery<UltimateGuitarTabPage>(host: host, path: path, query: [:]).perform {
+                UltimateGuitarQuery<UltimateGuitarTabPage>(host: host, path: path, query: [:]).perform().listen {
                     do {
                         let tabView = try $0.get().store.page.data.tabView
                         guard let wikiTab = tabView.wikiTab, let content = wikiTab.content else {

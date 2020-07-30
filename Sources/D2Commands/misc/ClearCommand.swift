@@ -23,13 +23,13 @@ public class ClearCommand: StringCommand {
         let message: Message
         let isIntended: Bool // Whether this was NOT a confirmational message during the deletion process
     }
-    
+
     public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80, finalConfirmationDeletionSeconds: Int = 2) {
         self.minDeletableCount = minDeletableCount
         self.maxDeletableCount = maxDeletableCount
         finalConfirmationDeletionTimer = RepeatingTimer(interval: .seconds(finalConfirmationDeletionSeconds))
     }
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client else {
             output.append(errorText: "No MessageIO client available")
@@ -44,7 +44,7 @@ public class ClearCommand: StringCommand {
             return
         }
 
-        client.getMessages(for: channelId, limit: n + 1) { messages, _ in
+        client.getMessages(for: channelId, limit: n + 1).listenOrLogError { messages in
             let deletions = messages.map { Deletion(message: $0, isIntended: $0.id != context.message.id) }
             let intended = deletions.filter { $0.isIntended }.map { $0.message }
 
@@ -55,14 +55,14 @@ public class ClearCommand: StringCommand {
                 title: ":warning: You are about to DELETE \(intended.count) \("message".pluralize(with: intended.count))",
                 description: """
                     \(grouped.map { "\($0.1.count) \("message".pluralize(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
-                    
+
                     Are you sure? Enter `\(confirmationString)` to confirm (any other message will cancel).
                     """
             ))
         }
         context.subscribeToChannel()
     }
-    
+
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         if let client = context.client, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
             let intendedDeletionCount = deletions.filter { $0.isIntended }.count
@@ -72,7 +72,7 @@ public class ClearCommand: StringCommand {
             if content == confirmationString {
                 log.notice("Deleting \(intendedDeletionCount) \("message".pluralize(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralize(with: confirmationDeletionCount))")
                 if deletions.count == 1, let messageId = deletions.first?.message.id {
-                    client.deleteMessage(messageId, on: channel.id) { success, _ in
+                    client.deleteMessage(messageId, on: channel.id).listenOrLogError { success in
                         if success {
                             self.finallyConfirmed.insert(channel.id)
                             output.append(":wastebasket: Deleted message")
@@ -86,7 +86,7 @@ public class ClearCommand: StringCommand {
                         output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
                         return
                     }
-                    client.bulkDeleteMessages(messageIds, on: channel.id) { success, _ in
+                    client.bulkDeleteMessages(messageIds, on: channel.id).listenOrLogError { success in
                         if success {
                             self.finallyConfirmed.insert(channel.id)
                             output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
@@ -102,7 +102,7 @@ public class ClearCommand: StringCommand {
 
         context.unsubscribeFromChannel()
     }
-    
+
     public func onSuccessfullySent(context: CommandContext) {
         let message = context.message
         log.debug("Successfully sent \(message)")

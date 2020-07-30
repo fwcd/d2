@@ -61,17 +61,17 @@ fileprivate let followingWord = Expression<String>("following_word")
 fileprivate let occurrences = Expression<Int64>("occurrences")
 
 fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
-    
+
 public class MessageDatabase: MarkovPredictor {
     private let db: Connection
 
     public private(set) lazy var initialMarkovDistribution: CustomDiscreteDistribution<String>? = queryInitialMarkovDistribution()
     public let markovOrder = 1
-    
+
     public init() throws {
         db = try Connection("local/messages.sqlite3")
     }
-    
+
     public func setupTables(client: MessageClient) throws {
         try db.transaction {
             try db.run(guilds.create(ifNotExists: true) {
@@ -156,40 +156,35 @@ public class MessageDatabase: MarkovPredictor {
             })
         }
     }
-    
+
     public func prepare(_ sql: String, _ values: String...) throws -> Statement {
         try db.prepare(sql, values)
     }
 
     private func insertMessages(with client: MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, Error> {
-        Promise<MessageID?, Error> { then in
-            client.getMessages(for: id, limit: client.messageFetchLimit ?? 20, selection: selection) { messages, _ in
-                do {
-                    if messages.isEmpty {
-                        then(.success(nil))
-                    } else {
-                        try self.db.transaction {
-                            for message in messages {
-                                try self.insertDirectly(message: message)
-                            }
-                        }
-                        then(.success(messages
-                            .filter { $0.id != nil }
-                            .min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture })
-                            .map { $0.id! }))
+        client.getMessages(for: id, limit: client.messageFetchLimit ?? 20, selection: selection)
+            .mapCatching { messages -> MessageID? in
+                guard !messages.isEmpty else { return nil }
+
+                try self.db.transaction {
+                    for message in messages {
+                        try self.insertDirectly(message: message)
                     }
-                } catch {
-                    then(.failure(error))
+                }
+
+                return messages
+                    .filter { $0.id != nil }
+                    .min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture })?
+                    .id
+            }
+            .then {
+                if let msgId = $0 {
+                    log.info("Fetching messages before \(msgId)")
+                    return self.insertMessages(with: client, from: id, selection: .before(msgId))
+                } else {
+                    return Promise(.success(nil))
                 }
             }
-        }.then {
-            if let msgId = $0 {
-                log.info("Fetching messages before \(msgId)")
-                return self.insertMessages(with: client, from: id, selection: .before(msgId))
-            } else {
-                return Promise(.success(nil))
-            }
-        }
     }
 
     public func rebuildMessages(with client: MessageClient, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, Error> {
@@ -201,11 +196,7 @@ public class MessageDatabase: MarkovPredictor {
 
             let guildChannels = debugMode ? guild.channels.prefix(10).compactMap { $0 } : Array(guild.channels)
             let promises: [Promise<Void, Error>] = guildChannels.map { ch in
-                Promise { then in
-                    client.isGuildTextChannel(ch.key) { i, _ in
-                        then(.success(i))
-                    }
-                }.then {
+                client.isGuildTextChannel(ch.key).then {
                     if $0 {
                         log.info("Fetching messages from channel \(ch.value.name)")
                         progressListener?(ch.value.name)
@@ -213,7 +204,7 @@ public class MessageDatabase: MarkovPredictor {
                     } else {
                         return Promise(.success(()))
                     }
-                } 
+                }
             }
             return all(promises: promises).void()
         } catch {
@@ -346,7 +337,7 @@ public class MessageDatabase: MarkovPredictor {
             try insertDirectly(message: message)
         }
     }
-    
+
     private func insertDirectly(message: Message) throws {
         guard let messageMessageId = try message.id.map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing message ID") }
         guard let messageChannelId = try message.channelId.map(convert(id:)) else { throw MessageDatabaseError.missingID("Missing channel ID in message") }
@@ -389,14 +380,14 @@ public class MessageDatabase: MarkovPredictor {
             ))
         }
     }
-    
+
     private func convert(id: ID) throws -> Int64 {
         guard let idValue = Int64(id.value) else {
             throw MessageDatabaseError.invalidID("ID \(id.value) cannot be represented as a 64-bit unsigned int!")
         }
         return idValue
     }
-    
+
     private func convertBack(id: Int64) -> ID {
         ID(String(id), clientName: "Unknown")
     }
@@ -415,7 +406,7 @@ public class MessageDatabase: MarkovPredictor {
     public func generateMarkovTransitions(for message: Message) throws -> Int {
         try generateMarkovTransitions(text: message.content)
     }
-    
+
     @discardableResult
     public func generateMarkovTransitions(text: String? = nil) throws -> Int {
         var count = 0
@@ -439,14 +430,14 @@ public class MessageDatabase: MarkovPredictor {
         } else {
             let msgCount = try db.scalar(messages.count)
             let chunkSize = msgCount / 10
-            
+
             // We assume that all messages fit into memory
             let contents = Array(try db.prepare(messages.select(messageId, content)).enumerated())
 
             try db.transaction {
                 for (i, msg) in contents {
                     count += try generateMarkovTransitions(text: msg[content])
-                    
+
                     if i % chunkSize == 0 {
                         let progress = Double(i) / Double(msgCount)
                         log.info("Markov transitions \(String(format: "%.2f", progress * 100))% complete...")
@@ -454,10 +445,10 @@ public class MessageDatabase: MarkovPredictor {
                 }
             }
         }
-        
+
         return count
     }
-    
+
     public func randomMessage() throws -> Message {
         guard let row = try db.prepare(messages.order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
             throw MessageDatabaseError.missingMessageData("No message data available to sample from")
@@ -469,14 +460,14 @@ public class MessageDatabase: MarkovPredictor {
             id: convertBack(id: row[messageId])
         )
     }
-    
+
     public func randomMarkovWord() throws -> String {
         guard let row = try db.prepare(markovTransitions.select(word).order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
             throw MessageDatabaseError.missingMarkovData("No Markov data available to sample from")
         }
         return row[word]
     }
-    
+
     public func queryInitialMarkovDistribution() -> (CustomDiscreteDistribution<String>)? {
         do {
             let results = try db.prepare(markovTransitions.select(word, occurrences).order(occurrences.desc).limit(300))
@@ -489,7 +480,7 @@ public class MessageDatabase: MarkovPredictor {
             return nil
         }
     }
-    
+
     public func followUps(to suffix: String, on guildId: GuildID) throws -> [(String, String)] {
         // TODO: Use a typed query once they support subqueries properly
 
@@ -501,7 +492,7 @@ public class MessageDatabase: MarkovPredictor {
         //     .filter(m1[content].like("%\(suffix)") && messages.select(timestamp.min).filter(timestamp > m1[timestamp] && m2[timestamp] == timestamp).exists)
         //     .order(Expression<Int>.random())
         //     .limit(10)
-        
+
         let stmt = try db.prepare("""
             select m1.content, m2.content
             from messages as m1 natural join guilds as g1, messages as m2
@@ -512,10 +503,10 @@ public class MessageDatabase: MarkovPredictor {
             order by random()
             limit 10
             """, "%\(suffix)", "\(guildId)")
-        
+
         return stmt.compactMap { row in (row[0] as? String).flatMap { l in (row[1] as? String).map { r in (l, r) } } }
     }
-    
+
     public func predict(_ markovState: [String]) -> String? {
         do {
             guard markovState.count == 1, let stateWord = markovState.first else {

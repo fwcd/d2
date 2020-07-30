@@ -13,14 +13,14 @@ public class SortByCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	public let outputValueType: RichValueType = .embed
-	
+
 	private let sortCriteria: [String: (Message, Message) -> Bool] = [
 		"length": descendingComparator { $0.content.count },
 		"upvotes": descendingComparator { $0.reactions.first { $0.emoji.name == "upvote" }?.count ?? -1000 }
 	]
-	
+
 	public init() {}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard let criterion = sortCriteria[input] else {
 			output.append(errorText: "Unrecognized sort criterion: \(input). Try using one of these: \(sortCriteria.keys)")
@@ -31,7 +31,7 @@ public class SortByCommand: StringCommand {
 			return
 		}
 
-		context.client?.getMessages(for: channel, limit: 80) { messages, _ in
+		context.client?.getMessages(for: channel, limit: 80).listenOrLogError { messages in
 			let sorted = messages.sorted(by: criterion)
 			output.append(Embed(
 				title: ":star: Top messages",

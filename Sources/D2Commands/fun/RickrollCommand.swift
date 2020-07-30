@@ -7,9 +7,9 @@ public class RickrollCommand: Command {
         helpText: "Syntax: [user id]",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else {
             output.append(errorText: "No message/channel id available")
@@ -29,7 +29,7 @@ public class RickrollCommand: Command {
         if keepMessage {
             rickroll(output: output, mentions: mentions)
         } else {
-            client.deleteMessage(messageId, on: channelId) { _, _ in
+            client.deleteMessage(messageId, on: channelId).listenOrLogError { _ in
                 self.rickroll(output: output, mentions: mentions)
             }
         }

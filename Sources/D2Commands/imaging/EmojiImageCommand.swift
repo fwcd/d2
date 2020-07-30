@@ -23,19 +23,20 @@ public class EmojiImageCommand: StringCommand {
             return
         }
 
-        do {
-            let emojis = guild.emojis.values.filter { $0.id != nil }
-            guard let emoji = emojis.first(where: { $0.name == input }) else {
-                let closest = emojis.min(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
-                output.append(errorText: "Could not find such an emoji!\(closest.map { " Did you mean `\($0.name)`?" } ?? "")")
-                return
-            }
+        let emojis = guild.emojis.values.filter { $0.id != nil }
+        guard let emoji = emojis.first(where: { $0.name == input }) else {
+            let closest = emojis.min(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
+            output.append(errorText: "Could not find such an emoji!\(closest.map { " Did you mean `\($0.name)`?" } ?? "")")
+            return
+        }
 
-            try HTTPRequest(
-                scheme: "https",
-                host: "cdn.discordapp.com",
-                path: "/emojis/\(emoji.id!).png"
-            ).runAsync {
+        Promise.catching { try HTTPRequest(
+            scheme: "https",
+            host: "cdn.discordapp.com",
+            path: "/emojis/\(emoji.id!).png"
+        ) }
+            .then { $0.runAsync() }
+            .listen {
                 do {
                     let data = try $0.get()
                     guard !data.isEmpty else {
@@ -48,8 +49,5 @@ public class EmojiImageCommand: StringCommand {
                     output.append(error, errorText: "Could not fetch emoji image")
                 }
             }
-        } catch {
-            output.append(error, errorText: "Could not request emoji image")
-        }
     }
 }

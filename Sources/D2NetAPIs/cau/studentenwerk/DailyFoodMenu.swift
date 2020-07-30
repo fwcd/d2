@@ -20,11 +20,10 @@ public class DailyFoodMenu {
             ]
         )
     }
-    
-    public func fetchMealsAsync(then: @escaping (Result<[Meal], Error>) -> Void) {
-        request.fetchHTMLAsync { result in
-            then(Result {
-                let document: Document = try result.get()
+
+    public func fetchMealsAsync() -> Promise<[Meal], Error> {
+        request.fetchHTMLAsync()
+            .mapCatching { document in
                 guard let menu = try document.getElementsByClass("menuPrint").first() else { throw FoodMenuError.noMenuPrintAvailable }
                 let rows = try menu.getElementsByTag("tr").array()
                 let meals: [Meal] = try rows.compactMap {
@@ -38,10 +37,9 @@ public class DailyFoodMenu {
                     )
                 }
                 return meals
-            })
-        }
+            }
     }
-    
+
     private func parseMealProperty(iconSrc: String) -> MealProperty? {
         mealPropertyIconPattern.firstGroups(in: iconSrc).flatMap {
             switch $0[1] {

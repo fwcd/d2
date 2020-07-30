@@ -11,7 +11,7 @@ public class FortuneCookieCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        FortuneCookieQuery().perform {
+        FortuneCookieQuery().perform().listen {
             do {
                 guard let cookie = try $0.get().first else {
                     output.append(errorText: "No cookies found :(")

@@ -1,3 +1,4 @@
+import D2Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2MessageIO.CombinedMessageClient")
@@ -49,54 +50,54 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: channelId) { $0.permissionsForUser(userId, in: channelId, on: guildId) } ?? []
     }
 
-    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
-        withClient(of: roleId) { $0.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason, then: then) }
+    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
+        withClient(of: roleId) { $0.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason) } ?? Promise(.success(false))
     }
 
-    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
-        withClient(of: roleId) { $0.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason, then: then) }
+    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
+        withClient(of: roleId) { $0.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason) } ?? Promise(.success(false))
     }
 
-    public func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?) {
-        withClient(of: userId) { $0.createDM(with: userId, then: then) }
+    public func createDM(with userId: UserID) -> Promise<ChannelID?, Error> {
+        withClient(of: userId) { $0.createDM(with: userId) } ?? Promise(.success(nil))
     }
 
-    public func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?) {
+    public func sendMessage(_ message: Message, to channelId: ChannelID) -> Promise<Message?, Error> {
         withClient(of: channelId) {
             log.info("Sending message to channel \(channelId) with \($0.name)")
-            $0.sendMessage(message, to: channelId, then: then)
-        }
+            return $0.sendMessage(message, to: channelId)
+        } ?? Promise(.success(nil))
     }
 
-    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<Message?>?) {
-        withClient(of: channelId) { $0.editMessage(id, on: channelId, content: content, then: then) }
+    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Promise<Message?, Error> {
+        withClient(of: channelId) { $0.editMessage(id, on: channelId, content: content) } ?? Promise(.success(nil))
     }
 
-    public func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?) {
-        withClient(of: channelId) { $0.deleteMessage(id, on: channelId, then: then) }
+    public func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.deleteMessage(id, on: channelId) } ?? Promise(.success(false))
     }
 
-    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?) {
-        withClient(of: channelId) { $0.bulkDeleteMessages(ids, on: channelId, then: then) }
+    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.bulkDeleteMessages(ids, on: channelId) } ?? Promise(.success(false))
     }
 
-    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?) {
-        withClient(of: channelId) { $0.getMessages(for: channelId, limit: limit, selection: selection, then: then) }
+    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error> {
+        withClient(of: channelId) { $0.getMessages(for: channelId, limit: limit, selection: selection) } ?? Promise(.success([]))
     }
 
-    public func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
-        withClient(of: channelId) { $0.isGuildTextChannel(channelId, then: then) }
+    public func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.isGuildTextChannel(channelId) } ?? Promise(.success(false))
     }
 
-    public func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
-        withClient(of: channelId) { $0.isDMTextChannel(channelId, then: then) }
+    public func isDMTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.isDMTextChannel(channelId) } ?? Promise(.success(false))
     }
 
-    public func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?) {
-        withClient(of: channelId) { $0.triggerTyping(on: channelId, then: then) }
+    public func triggerTyping(on channelId: ChannelID) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.triggerTyping(on: channelId) } ?? Promise(.success(false))
     }
 
-    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<Message?>?) {
-        withClient(of: channelId) { $0.createReaction(for: messageId, on: channelId, emoji: emoji, then: then) }
+    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error> {
+        withClient(of: channelId) { $0.createReaction(for: messageId, on: channelId, emoji: emoji) } ?? Promise(.success(nil))
     }
 }

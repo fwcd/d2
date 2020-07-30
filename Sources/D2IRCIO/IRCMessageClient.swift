@@ -39,19 +39,19 @@ struct IRCMessageClient: MessageClient {
         []
     }
 
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?) {
+    func createDM(with userId: UserID) -> Promise<ChannelID?, Error> {
         // TODO
-        then?(nil, nil)
+        Promise(.success(nil))
     }
 
     private func flatten(embed: Embed) -> String {
@@ -66,7 +66,7 @@ struct IRCMessageClient: MessageClient {
             .joined(separator: ", ")
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, Error> {
         log.debug("Sending message '\(message.content)'")
 
         var text = [message.content, message.embed.map(flatten(embed:))]
@@ -79,50 +79,51 @@ struct IRCMessageClient: MessageClient {
 
         guard let channelName = IRCChannelName(channelId.value) else {
             log.warning("Could not convert \(channelId.value) (maybe it is missing a leading '#'?)")
-            return
+            return Promise(.failure(IRCMessageClientError.invalidChannelName(channelId.value)))
         }
 
         ircClient.send(.PRIVMSG([.channel(channelName)], text))
-        // TODO: Handle client callback here
+
+        return Promise(.success(message))
     }
 
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<D2MessageIO.Message?>?) {
+    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Promise<D2MessageIO.Message?, Error> {
         // TODO
-        then?(nil, nil)
+        Promise(.success(nil))
     }
 
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[D2MessageIO.Message]>?) {
+    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[D2MessageIO.Message], Error> {
         // TODO
-        then?([], nil)
+        Promise(.success([]))
     }
 
-    func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func isDMTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func triggerTyping(on channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        Promise(.success(false))
     }
 
-    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<D2MessageIO.Message?>?) {
+    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<D2MessageIO.Message?, Error> {
         // TODO
-        then?(nil, nil)
+        Promise(.success(nil))
     }
 }

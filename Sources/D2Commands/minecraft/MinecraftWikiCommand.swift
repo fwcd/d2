@@ -10,11 +10,11 @@ public class MinecraftWikiCommand: StringCommand {
         longDescription: "Queries Minecraft Wiki for an article",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        MediaWikiParseQuery(host: "minecraft.gamepedia.com", path: "/api.php", page: input, prop: "wikitext").perform {
+        MediaWikiParseQuery(host: "minecraft.gamepedia.com", path: "/api.php", page: input, prop: "wikitext").perform().listen {
             do {
                 let wikitextParse = try $0.get().parse
                 guard let raw = wikitextParse.wikitext else {
@@ -40,7 +40,7 @@ public class MinecraftWikiCommand: StringCommand {
             }
         }
     }
-    
+
     private func markdown(from nodes: [WikitextDocument.Section.Node]) -> String {
         nodes.map {
             switch $0 {
@@ -63,7 +63,7 @@ public class MinecraftWikiCommand: StringCommand {
             }
         }.joined(separator: " ")
     }
-    
+
     private func wikiLink(page: String) -> URL? {
         var components = URLComponents()
         components.scheme = "https"
@@ -71,7 +71,7 @@ public class MinecraftWikiCommand: StringCommand {
         components.path = "/\(page)"
         return components.url
     }
-    
+
     private func image(from doc: WikitextDocument) -> URL? {
         doc.sections.flatMap { (s: WikitextDocument.Section) -> [WikitextDocument.Section.Node] in
             s.content

@@ -1,18 +1,5 @@
 import Foundation
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
-import Logging
-
-public typealias ClientCallback<T> = (T, HTTPURLResponse?) -> Void
-
-fileprivate let log = Logger(label: "D2MessageIO.MessageClient")
-
-fileprivate func defaultCallback<T>(_ dummy: T, response: HTTPURLResponse?) {
-    if let rsp = response {
-        log.debug("\(rsp)")
-    }
-}
+import D2Utils
 
 public protocol MessageClient {
     var name: String { get }
@@ -28,73 +15,49 @@ public protocol MessageClient {
 
     func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission
 
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
+    @discardableResult
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error>
 
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?)
+    @discardableResult
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error>
 
-    func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?)
+    @discardableResult
+    func createDM(with userId: UserID) -> Promise<ChannelID?, Error>
 
-    func sendMessage(_ message: Message, to channelId: ChannelID, then: ClientCallback<Message?>?)
+    @discardableResult
+    func sendMessage(_ message: Message, to channelId: ChannelID) -> Promise<Message?, Error>
 
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<Message?>?)
+    @discardableResult
+    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Promise<Message?, Error>
 
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?)
+    @discardableResult
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Promise<Bool, Error>
 
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?)
+    @discardableResult
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Promise<Bool, Error>
 
-    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?)
+    @discardableResult
+    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error>
 
-    func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?)
+    @discardableResult
+    func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error>
 
-    func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?)
+    @discardableResult
+    func isDMTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error>
 
-    func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?)
+    @discardableResult
+    func triggerTyping(on channelId: ChannelID) -> Promise<Bool, Error>
 
-    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<Message?>?)
+    @discardableResult
+    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error>
 }
 
 public extension MessageClient {
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String? = nil) {
-        addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason, then: defaultCallback)
-    }
-
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String? = nil) {
-        removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason, then: defaultCallback)
-    }
-
-    func createDM(with userId: UserID) {
-        createDM(with: userId, then: defaultCallback)
-    }
-
     func sendMessage(_ content: String, to channelId: ChannelID) {
         sendMessage(Message(content: content), to: channelId)
     }
 
-    func sendMessage(_ message: Message, to channelId: ChannelID) {
-        sendMessage(message, to: channelId, then: defaultCallback)
-    }
-
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) {
-        editMessage(id, on: channelId, content: content, then: defaultCallback)
-    }
-
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID) {
-        deleteMessage(id, on: channelId, then: defaultCallback)
-    }
-
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) {
-        bulkDeleteMessages(ids, on: channelId, then: defaultCallback)
-    }
-
-    func getMessages(for channelId: ChannelID, limit: Int, then: ClientCallback<[Message]>?) {
-        getMessages(for: channelId, limit: limit, selection: nil, then: then)
-    }
-
-    func triggerTyping(on channelId: ChannelID) {
-        triggerTyping(on: channelId, then: defaultCallback)
-    }
-
-    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) {
-        createReaction(for: messageId, on: channelId, emoji: emoji, then: defaultCallback)
+    func getMessages(for channelId: ChannelID, limit: Int) -> Promise<[Message], Error> {
+        getMessages(for: channelId, limit: limit, selection: nil)
     }
 }

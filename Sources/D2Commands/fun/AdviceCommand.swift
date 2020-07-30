@@ -7,12 +7,12 @@ public class AdviceCommand: StringCommand {
         shortDescription: "Gives advice",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         if input.isEmpty {
-            AdviceSlipQuery().perform {
+            AdviceSlipQuery().perform().listen {
                 do {
                     output.append(self.embedFrom(slip: try $0.get().slip))
                 } catch {
@@ -20,7 +20,7 @@ public class AdviceCommand: StringCommand {
                 }
             }
         } else {
-            AdviceSlipSearchQuery(searchTerm: input).perform {
+            AdviceSlipSearchQuery(searchTerm: input).perform().listen {
                 do {
                     let results = try $0.get()
                     guard let slip = results.slips.first else {
@@ -34,7 +34,7 @@ public class AdviceCommand: StringCommand {
             }
         }
     }
-    
+
     private func embedFrom(slip: AdviceSlip) -> Embed {
         Embed(
             description: ":scroll: **\(slip.advice)**"

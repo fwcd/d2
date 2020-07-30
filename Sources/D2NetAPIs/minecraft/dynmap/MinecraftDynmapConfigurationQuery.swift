@@ -6,13 +6,11 @@ public struct MinecraftDynmapConfigurationQuery {
     public init(host: String) {
         self.host = host
     }
-    
-    public func perform(then: @escaping (Result<MinecraftDynmapConfiguration, Error>) -> Void) {
-        do {
+
+    public func perform() -> Promise<MinecraftDynmapConfiguration, Error> {
+        Promise.catchingThen {
             let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/configuration")
-            request.fetchJSONAsync(as: MinecraftDynmapConfiguration.self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: MinecraftDynmapConfiguration.self)
         }
     }
 }

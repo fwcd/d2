@@ -3,20 +3,12 @@ import D2Utils
 public struct PickupLineGenQuery: PickupLineQuery {
     public init() {}
 
-    public func perform(then: @escaping (Result<PickupLine, Error>) -> Void) {
-        do {
-            let request = try HTTPRequest(scheme: "http", host: "www.pickuplinegen.com", path: "/")
-            request.fetchHTMLAsync {
-                do {
-                    let doc = try $0.get()
-                    guard let content = try doc.getElementById("content")?.text() else { throw PickupLineGenError.missingContent(doc) }
-                    then(.success(PickupLine(tweet: content)))
-                } catch {
-                    then(.failure(error))
-                }
+    public func perform() -> Promise<PickupLine, Error> {
+        Promise.catching { try HTTPRequest(scheme: "http", host: "www.pickuplinegen.com", path: "/") }
+            .then { $0.fetchHTMLAsync() }
+            .mapCatching { doc in
+                guard let content = try doc.getElementById("content")?.text() else { throw PickupLineGenError.missingContent(doc) }
+                return PickupLine(tweet: content)
             }
-        } catch {
-            then(.failure(error))
-        }
     }
 }

@@ -23,7 +23,7 @@ public class TriviaQuizCommand: StringCommand {
             return
         }
 
-        OpenTDBQuery(amount: 1).perform {
+        OpenTDBQuery(amount: 1).perform().listen {
             do {
                 let response = try $0.get()
                 guard let question = response.results.first else {

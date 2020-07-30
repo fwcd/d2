@@ -30,7 +30,7 @@ public class WebcamCommand: StringCommand {
                     output.append(errorText: "Please enter a radius < \(maxRadius)!")
                     return
                 }
-                WindyWebcamNearbyQuery(latitude: lat, longitude: lon, radius: radius).perform {
+                WindyWebcamNearbyQuery(latitude: lat, longitude: lon, radius: radius).perform().listen {
                     do {
                         guard let webcams = try $0.get().result?.webcams else {
                             output.append(errorText: "Did not find any webcams")
@@ -53,7 +53,7 @@ public class WebcamCommand: StringCommand {
                     output.append(errorText: "Please enter a webcam id (e.g. obtained using `near`)")
                     return
                 }
-                WindyWebcamDetailQuery(id: input).perform {
+                WindyWebcamDetailQuery(id: input).perform().listen {
                     do {
                         guard let webcam = try $0.get().result?.webcams.first else {
                             output.append(errorText: "Did not find any webcams")

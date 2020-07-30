@@ -6,13 +6,11 @@ public struct AdviceSlipSearchQuery {
     public init(searchTerm: String) {
         self.searchTerm = searchTerm
     }
-    
-    public func perform(then: @escaping (Result<AdviceSlipSearchResults, Error>) -> Void) {
-        do {
+
+    public func perform() -> Promise<AdviceSlipSearchResults, Error> {
+        Promise.catchingThen {
             let request = try HTTPRequest(host: "api.adviceslip.com", path: "/advice/search/\(searchTerm)")
-            request.fetchJSONAsync(as: AdviceSlipSearchResults.self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: AdviceSlipSearchResults.self)
         }
     }
 }

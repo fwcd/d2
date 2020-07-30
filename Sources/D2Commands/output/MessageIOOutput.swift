@@ -12,15 +12,15 @@ fileprivate let contentLimit = 2000
 public class MessageIOOutput: CommandOutput {
 	private var context: CommandContext
 	private let messageWriter = MessageWriter()
-	private let onSent: ((Message?, HTTPURLResponse?) -> Void)?
+	private let onSent: ((Result<Message?, Error>) -> Void)?
 
 	public let messageLengthLimit: Int? = 1800
-	
-	public init(context: CommandContext, onSent: ((Message?, HTTPURLResponse?) -> Void)? = nil) {
+
+	public init(context: CommandContext, onSent: ((Result<Message?, Error>) -> Void)? = nil) {
 		self.context = context
 		self.onSent = onSent
 	}
-	
+
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		guard let client = context.client else {
 			log.warning("Cannot append to MessageIO without a client!")
@@ -32,47 +32,47 @@ public class MessageIOOutput: CommandOutput {
 		}
 
 		messageWriter.write(value: value).listen {
-			var messages: [Message]
-			do {
-				messages = self.splitUp(message: try $0.get())
-			} catch {
-				log.error("Error while encoding message: \(error)")
-				messages = [Message(content: """
-					An error occurred while encoding the message:
-					```
-					\(error)
-					```
-					""")]
-			}
+            var messages: [Message]
+            do {
+                messages = self.splitUp(message: try $0.get())
+            } catch {
+                log.error("Error while encoding message: \(error)")
+                messages = [Message(content: """
+                    An error occurred while encoding the message:
+                    ```
+                    \(error)
+                    ```
+                    """)]
+            }
 
-			let _ = sequence(promises: messages.map { m in { self.send(message: m, with: client, to: channel) } })
-		}
+            sequence(promises: messages.map { m in { self.send(message: m, with: client, to: channel) } })
+        }
 	}
 
 	private func send(message: Message, with client: MessageClient, to channel: OutputChannel) -> Promise<Void, Error> {
 		Promise { then in
 			switch channel {
 				case .guildChannel(let id):
-					client.sendMessage(message, to: id) {
-						self.onSent?($0, $1)
+					client.sendMessage(message, to: id).listen {
+						self.onSent?($0)
 						then(.success(()))
 					}
 				case .dmChannel(let id):
-					client.createDM(with: id) { channelId, _ in
+					client.createDM(with: id).listenOrLogError { channelId in
 						guard let id = channelId else {
 							log.error("Could not send direct message, since no channel ID could be fetched")
 							then(.success(()))
 							return
 						}
-						client.sendMessage(message, to: id) {
-							self.onSent?($0, $1)
+						client.sendMessage(message, to: id).listen {
+							self.onSent?($0)
 							then(.success(()))
 						}
 					}
 				case .defaultChannel:
 					if let textChannelId = self.context.channel?.id {
-						client.sendMessage(message, to: textChannelId) {
-							self.onSent?($0, $1)
+						client.sendMessage(message, to: textChannelId).listen {
+							self.onSent?($0)
 							then(.success(()))
 						}
 					} else {

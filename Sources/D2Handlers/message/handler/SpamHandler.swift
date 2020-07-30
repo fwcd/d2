@@ -19,7 +19,7 @@ public struct SpamHandler: MessageHandler {
     @AutoSerializing private var config: SpamConfiguration
     private let lastSpamMessages = ExpiringList<Message>()
     private var cautionedSpammers = Set<UserID>()
-    
+
     public init(config: AutoSerializing<SpamConfiguration>) {
         self._config = config
     }
@@ -27,7 +27,7 @@ public struct SpamHandler: MessageHandler {
     public mutating func handle(message: Message, from client: MessageClient) -> Bool {
         guard isPossiblySpam(message: message) else { return false }
         lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.interval))
-        
+
         guard let channelId = message.channelId,
             let guild = client.guildForChannel(channelId),
             let author = message.author?.id else { return false }
@@ -44,49 +44,48 @@ public struct SpamHandler: MessageHandler {
 
         return true
     }
-    
+
     private func isPossiblySpam(message: Message) -> Bool {
         return message.mentions.count > 4 || message.mentionRoles.count > 1 || message.mentionEveryone
     }
-    
+
     private func isSpamming(user: UserID) -> Bool {
         return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.maxSpamMessagesPerInterval
     }
-    
+
     private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {
         guard let member = guild.members[user] else { return }
 
         if let role = config.spammerRoles[guild.id] {
-            add(role: role, to: user, on: guild, client: client) {
+            add(role: role, to: user, on: guild, client: client).listenOrLogError {
                 if self.config.removeOtherRolesFromSpammer {
                     self.remove(roles: member.roleIds, from: user, on: guild, client: client)
                 }
             }
         }
     }
-    
-    private func add(role: RoleID, to user: UserID, on guild: Guild, client: MessageClient, then: (() -> Void)? = nil) {
-        client.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming") { success, _ in
-            if success {
-                then?()
-            } else {
+
+    @discardableResult
+    private func add(role: RoleID, to user: UserID, on guild: Guild, client: MessageClient) -> Promise<Void, Error> {
+        client.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming").peekListen {
+            if case .success(false) = $0 {
                 log.warning("Could not add role \(role) to spammer \(user)")
             }
-        }
+        }.void()
     }
-    
-    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: MessageClient, then: (() -> Void)? = nil) {
+
+    @discardableResult
+    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: MessageClient) -> Promise<Void, Error> {
         var remainingRoles = roles
         guard let role = remainingRoles.popLast() else {
-            then?()
-            return
+            return Promise(.success(()))
         }
 
-        client.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming") { success, _ in
+        return client.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming").then { success in
             if !success {
                 log.warning("Could not remove role \(role) from spammer \(user)")
             }
-            self.remove(roles: remainingRoles, from: user, on: guild, client: client, then: then)
+            return self.remove(roles: remainingRoles, from: user, on: guild, client: client)
         }
     }
 }

@@ -11,9 +11,9 @@ public class UploadCommand: Command {
     )
 	public let inputValueType: RichValueType = .compound([.text, .attachments])
 	public let outputValueType: RichValueType = .text
-    
+
     public init() {}
-    
+
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let filePath = input.asText else {
             output.append(errorText: info.helpText!)
@@ -23,8 +23,8 @@ public class UploadCommand: Command {
             output.append(errorText: "Please attach a file to upload!")
             return
         }
-        
-        attachment.download {
+
+        attachment.download().listen {
             do {
                 let data = try $0.get()
                 let url = URL(fileURLWithPath: filePath)

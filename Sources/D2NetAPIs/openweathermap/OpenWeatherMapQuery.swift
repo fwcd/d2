@@ -9,15 +9,13 @@ public struct OpenWeatherMapQuery {
         self.units = units
     }
 
-    public func perform(then: @escaping (Result<OpenWeatherMapWeather, Error>) -> Void) {
-        do {
+    public func perform() -> Promise<OpenWeatherMapWeather, Error> {
+        Promise.catchingThen {
             guard let token = storedNetApiKeys?.openweathermap else {
                 throw NetApiError.missingApiKey("Missing OpenWeatherMap API key")
             }
             let request = try HTTPRequest(host: "api.openweathermap.org", path: "/data/2.5/weather", query: ["q": city, "appid": token, "units": units])
-            request.fetchJSONAsync(as: OpenWeatherMapWeather.self, then: then)
-        } catch {
-            then(.failure(error))
+            return request.fetchJSONAsync(as: OpenWeatherMapWeather.self)
         }
     }
 }

@@ -19,7 +19,7 @@ public class LatexCommand: StringCommand {
 	public let outputValueType: RichValueType = .image
 	private let latexRenderer: LatexRenderer?
 	private var running = false
-	
+
 	public init() {
 		do {
 			latexRenderer = try LatexRenderer()
@@ -28,28 +28,28 @@ public class LatexCommand: StringCommand {
 			log.error("Could not initialize latex renderer: \(error)")
 		}
 	}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
 			output.append(errorText: "Wait for the first LaTeX command to finish")
 			return
 		}
 		running = true
-		
+
 		guard let renderer = latexRenderer else {
 			output.append(errorText: "No LaTeX renderer present")
 			return
 		}
-		
+
 		let flags = flagPattern.allGroups(in: input).reduce(into: [String: String]()) { $0[$1[1]] = $1[2] }
 		let color = flags["color"] ?? "white"
 		let processedInput = flagPattern.replace(in: input, with: "")
-		
-		renderLatexImage(with: renderer, from: processedInput, to: output, color: color) {
+
+		renderLatexImage(with: renderer, from: processedInput, to: output, color: color).listenOrLogError {
 			self.running = false
 		}
 	}
-	
+
 	public func onSuccessfullySent(context: CommandContext) {
 		latexRenderer?.cleanUp()
 	}

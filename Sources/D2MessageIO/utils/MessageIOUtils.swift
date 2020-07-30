@@ -8,7 +8,7 @@ extension InteractiveTextChannel {
 	public func send(_ message: String) {
 		send(Message(content: message))
 	}
-	
+
 	public func send(embed: Embed) {
 		send(Message(embed: embed))
 	}
@@ -16,7 +16,7 @@ extension InteractiveTextChannel {
 
 extension Guild {
 	public var allUsers: [User] { return members.map { $0.1.user } }
-	
+
 	public func users(with roles: [RoleID]) -> [User] {
 		return roles.flatMap { role in
 			members
@@ -58,21 +58,23 @@ extension Message.Attachment {
 	/**
 	 * Downloads the attachment asynchronously.
 	 */
-	public func download(then: @escaping (Result<Data, Error>) -> Void) {
-		guard let url = url else {
-			then(.failure(NetworkError.missingURL))
-			return
-		}
-		URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-			guard error == nil else {
-				then(.failure(NetworkError.ioError(error!)))
-				return
-			}
-			guard let data = data else {
-				then(.failure(NetworkError.missingData))
-				return
-			}
-			then(.success(data))
-		}.resume()
+	public func download() -> Promise<Data, Error> {
+        Promise { then in
+            guard let url = url else {
+                then(.failure(NetworkError.missingURL))
+                return
+            }
+            URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+                guard error == nil else {
+                    then(.failure(NetworkError.ioError(error!)))
+                    return
+                }
+                guard let data = data else {
+                    then(.failure(NetworkError.missingData))
+                    return
+                }
+                then(.success(data))
+            }.resume()
+        }
 	}
 }

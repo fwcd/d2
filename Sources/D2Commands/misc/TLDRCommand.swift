@@ -48,7 +48,7 @@ public class TLDRCommand: StringCommand {
 
         // TODO: Support more messages using message db
 
-        client.getMessages(for: tldrChannelName, limit: messageCount) { messages, _ in
+        client.getMessages(for: tldrChannelName, limit: messageCount).listenOrLogError { messages in
             let sentences = messages
                 .sorted(by: ascendingComparator { $0.timestamp ?? .distantPast })
                 .flatMap { $0.content.split(separator: ".").map(String.init) }

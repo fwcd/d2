@@ -30,7 +30,7 @@ public class MinecraftDynmapChatCommand: StringCommand {
             }
             let host = parsedArgs[1]
             let message = "[\(context.author?.username ?? "unknown user")] \(parsedArgs[2])"
-            
+
             log.info("Sending chat message '\(message)' to host '\(host)'")
 
             let jsonData = try JSONEncoder().encode(SendMessageRequest(name: "", message: message))
@@ -39,7 +39,7 @@ public class MinecraftDynmapChatCommand: StringCommand {
                 return
             }
             let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/sendmessage", method: "POST", body: json)
-            request.runAsync {
+            request.runAsync().listen {
                 if case let .failure(error) = $0 {
                     output.append(error, errorText: "An error occurred while sending the message")
                 }

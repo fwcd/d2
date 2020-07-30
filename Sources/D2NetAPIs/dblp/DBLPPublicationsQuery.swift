@@ -8,14 +8,9 @@ public struct DBLPPublicationsQuery {
         self.term = term
     }
 
-    public func perform(then: @escaping (Result<DBLPPublicationsResult, Error>) -> Void) {
-        do {
-            let request = try HTTPRequest(host: "dblp.org", path: "/search/publ/api", query: ["q": term])
-            request.runAsync {
-                then($0.flatMap { r in Result { try XMLDecoder().decode(DBLPPublicationsResult.self, from: r) } })
-            }
-        } catch {
-            then(.failure(error))
-        }
+    public func perform() -> Promise<DBLPPublicationsResult, Error> {
+        Promise.catching { try HTTPRequest(host: "dblp.org", path: "/search/publ/api", query: ["q": term]) }
+            .then { $0.runAsync() }
+            .mapCatching { try XMLDecoder().decode(DBLPPublicationsResult.self, from: $0) }
     }
 }

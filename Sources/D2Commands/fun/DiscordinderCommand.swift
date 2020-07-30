@@ -18,7 +18,7 @@ public class DiscordinderCommand: StringCommand {
     )
     private let inventoryManager: InventoryManager
     private var activeMatches: [MessageID: (ChannelID, UserID)] = [:]
-    
+
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
     }
@@ -97,10 +97,10 @@ public class DiscordinderCommand: StringCommand {
         var nonCandidateIds: Set<UserID> = Set(authorMatches
             .flatMap { [$0.initiator.id, $0.acceptor.id] })
             .filter { !waitingForAcceptor.contains($0) }
-        
+
         waitingForAcceptor.remove(authorId)
         nonCandidateIds.insert(authorId)
-        
+
         guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.filter({ !nonCandidateIds.contains($0.0) && !$0.1.user.bot }).randomElement()?.0 else {
             output.append(errorText: "Sorry, no candidates are left!")
             return false
@@ -111,7 +111,7 @@ public class DiscordinderCommand: StringCommand {
         }
         let candidatePresence = guild.presences[candidateId]
 
-        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId) { sentMessage, _ in
+        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId).listenOrLogError { sentMessage in
             guard let messageId = sentMessage?.id else { return }
 
             context.subscribeToChannel()

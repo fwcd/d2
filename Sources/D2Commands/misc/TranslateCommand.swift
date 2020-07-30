@@ -22,7 +22,7 @@ public class TranslateCommand: StringCommand {
         let targetLanguage = parsedArgs[1]
         let text = parsedArgs[2]
 
-        BingTranslateQuery(targetLanguage: targetLanguage, text: text).perform {
+        BingTranslateQuery(targetLanguage: targetLanguage, text: text).perform().listen {
             switch $0 {
                 case .success(let results):
                     guard let result = results.first else {

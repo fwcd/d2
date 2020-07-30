@@ -35,16 +35,17 @@ public class HTTPRequestCommand: Command {
         let query = Dictionary(uniqueKeysWithValues: url.queryItems?.map { ($0.name, $0.value ?? "") } ?? [])
         let body = (input.asText?.split(separator: " ")[safely: 1]).map(String.init)
 
-        do {
-            try HTTPRequest(
-                scheme: scheme,
-                host: host,
-                port: port,
-                path: path,
-                method: method,
-                query: query,
-                body: body
-            ).fetchUTF8Async {
+        Promise.catching { try HTTPRequest(
+            scheme: scheme,
+            host: host,
+            port: port,
+            path: path,
+            method: method,
+            query: query,
+            body: body
+        ) }
+            .then { $0.fetchUTF8Async() }
+            .listen {
                 do {
                     let response = try $0.get().truncate(1500, appending: "...")
                     output.append(.code(response, language: nil))
@@ -52,8 +53,5 @@ public class HTTPRequestCommand: Command {
                     output.append(error, errorText: "Error while performing request")
                 }
             }
-        } catch {
-            output.append(error, errorText: "Could not create request")
-        }
     }
 }

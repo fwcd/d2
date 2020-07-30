@@ -353,7 +353,7 @@ public class D2Delegate: MessageDelegate {
 
         // Only fire on unhandled messages
         if m.author?.id != client.me?.id {
-            MessageParser().parse(message: m, clientName: client.name, guild: m.guild) {
+            MessageParser().parse(message: m, clientName: client.name, guild: m.guild).listenOrLogError {
                 self.eventListenerBus.fire(event: .createMessage, with: $0, context: CommandContext(
                     client: client,
                     registry: self.registry,
@@ -384,7 +384,7 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateMessage message: Message, client: MessageClient) {
-        MessageParser().parse(message: message, clientName: client.name, guild: message.guild) {
+        MessageParser().parse(message: message, clientName: client.name, guild: message.guild).listenOrLogError {
             self.eventListenerBus.fire(event: .updateMessage, with: $0, context: CommandContext(
                 client: client,
                 registry: self.registry,

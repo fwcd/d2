@@ -10,15 +10,15 @@ public class PokedexCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard !input.isEmpty else {
             output.append(errorText: info.helpText!)
             return
         }
-        PokedexQuery().perform {
+        PokedexQuery().perform().listen {
             switch $0 {
                 case .success(let pokedex):
                     guard let pokemon = pokedex.min(by: ascendingComparator(comparing: { $0.name?.levenshteinDistance(to: input, caseSensitive: false) ?? Int.max })) else {

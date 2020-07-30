@@ -1,3 +1,4 @@
+import D2Utils
 import D2MessageIO
 import Emoji
 import Telegrammer
@@ -36,19 +37,19 @@ struct TelegramMessageClient: MessageClient {
         []
     }
 
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?, then: ClientCallback<Bool>?) {
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func createDM(with userId: UserID, then: ClientCallback<ChannelID?>?) {
+    func createDM(with userId: UserID) -> D2Utils.Promise<ChannelID?, Error> {
         // TODO
-        then?(nil, nil)
+        D2Utils.Promise(.success(nil))
     }
 
     private func flatten(embed: Embed) -> String {
@@ -63,65 +64,67 @@ struct TelegramMessageClient: MessageClient {
             .joined(separator: "\n")
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID, then: ClientCallback<D2MessageIO.Message?>?) {
-        let text = [message.content, message.embed.map(flatten(embed:))]
-            .compactMap { $0?.nilIfEmpty }
-            .joined(separator: "\n")
-            .emojiUnescapedString
-        log.debug("Sending message '\(text)'")
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> D2Utils.Promise<D2MessageIO.Message?, Error> {
+        D2Utils.Promise { then in
+            let text = [message.content, message.embed.map(flatten(embed:))]
+                .compactMap { $0?.nilIfEmpty }
+                .joined(separator: "\n")
+                .emojiUnescapedString
+            log.debug("Sending message '\(text)'")
 
-        do {
-            try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: text, parseMode: .markdown)).whenComplete {
-                do {
-                    then?(try $0.get().usingMessageIO, nil)
-                } catch {
-                    log.warning("Could not send message to Telegram: \(error)")
-                    then?(nil, nil)
+            do {
+                try bot.sendMessage(params: .init(chatId: .chat(channelId.usingTelegramAPI), text: text, parseMode: .markdown)).whenComplete {
+                    do {
+                        then(.success(try $0.get().usingMessageIO))
+                    } catch {
+                        log.warning("Could not send message to Telegram: \(error)")
+                        then(.failure(error))
+                    }
                 }
+            } catch {
+                log.warning("Could not send message to Telegram: \(error)")
+                then(.failure(error))
             }
-        } catch {
-            log.warning("Could not send message to Telegram: \(error)")
-            then?(nil, nil)
         }
     }
 
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String, then: ClientCallback<D2MessageIO.Message?>?) {
+    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> D2Utils.Promise<D2MessageIO.Message?, Error> {
         // TODO
-        then?(nil, nil)
+        D2Utils.Promise(.success(nil))
     }
 
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[D2MessageIO.Message]>?) {
+    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> D2Utils.Promise<[D2MessageIO.Message], Error> {
         // TODO
-        then?([], nil)
+        D2Utils.Promise(.success([]))
     }
 
-    func isGuildTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func isGuildTextChannel(_ channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func isDMTextChannel(_ channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func isDMTextChannel(_ channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func triggerTyping(on channelId: ChannelID, then: ClientCallback<Bool>?) {
+    func triggerTyping(on channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
         // TODO
-        then?(false, nil)
+        D2Utils.Promise(.success(false))
     }
 
-    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, then: ClientCallback<D2MessageIO.Message?>?) {
+    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> D2Utils.Promise<D2MessageIO.Message?, Error> {
         // TODO
-        then?(nil, nil)
+        D2Utils.Promise(.success(nil))
     }
 }

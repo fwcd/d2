@@ -1,3 +1,4 @@
+import D2Utils
 import D2MessageIO
 import Logging
 import SwiftDiscord
@@ -17,7 +18,7 @@ struct DiscordMessageClient: MessageClient {
     }
 
     func guild(for guildId: D2MessageIO.GuildID) -> Guild? {
-        return client.guilds[guildId.usingDiscordAPI]?.usingMessageIO
+        client.guilds[guildId.usingDiscordAPI]?.usingMessageIO
     }
 
     func setPresence(_ presence: PresenceUpdate) {
@@ -25,7 +26,7 @@ struct DiscordMessageClient: MessageClient {
     }
 
     func guildForChannel(_ channelId: D2MessageIO.ChannelID) -> Guild? {
-        return client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
+        client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
     }
 
     func permissionsForUser(_ userId: D2MessageIO.UserID, in channelId: D2MessageIO.ChannelID, on guildId: D2MessageIO.GuildID) -> Permission {
@@ -63,75 +64,99 @@ struct DiscordMessageClient: MessageClient {
         return permissions.usingMessageIO
     }
 
-    func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?, then: ClientCallback<Bool>?) {
-        client.addGuildMemberRole(roleId.usingDiscordAPI, to: userId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
-            then?($0, $1)
+    func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, Error> {
+        Promise { then in
+            client.addGuildMemberRole(roleId.usingDiscordAPI, to: userId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func removeGuildMemberRole(_ roleId: D2MessageIO.RoleID, from userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?, then: ClientCallback<Bool>?) {
-        client.removeGuildMemberRole(roleId.usingDiscordAPI, from: userId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
-            then?($0, $1)
+    func removeGuildMemberRole(_ roleId: D2MessageIO.RoleID, from userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, Error> {
+        Promise { then in
+            client.removeGuildMemberRole(roleId.usingDiscordAPI, from: userId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func createDM(with userId: D2MessageIO.UserID, then: ClientCallback<D2MessageIO.ChannelID?>?) {
-        client.createDM(with: userId.usingDiscordAPI) {
-            then?($0?.id.usingMessageIO, $1)
+    func createDM(with userId: D2MessageIO.UserID) -> Promise<D2MessageIO.ChannelID?, Error> {
+        Promise { then in
+            client.createDM(with: userId.usingDiscordAPI) {
+                then(Result.from($0?.id.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID, then: ClientCallback<Message?>?) {
-        client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) {
-            then?($0?.usingMessageIO, $1)
+    func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID) -> Promise<Message?, Error> {
+        Promise { then in
+            client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, content: String, then: ClientCallback<Message?>?) {
-        client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, content: content) {
-            then?($0?.usingMessageIO, $1)
+    func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, content: String) -> Promise<Message?, Error> {
+        Promise { then in
+            client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, content: content) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func deleteMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
-        client.deleteMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI) {
-            then?($0, $1)
+    func deleteMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.deleteMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func bulkDeleteMessages(_ ids: [D2MessageIO.MessageID], on channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
-        client.bulkDeleteMessages(ids.map { $0.usingDiscordAPI }, on: channelId.usingDiscordAPI) {
-            then?($0, $1)
+    func bulkDeleteMessages(_ ids: [D2MessageIO.MessageID], on channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.bulkDeleteMessages(ids.map { $0.usingDiscordAPI }, on: channelId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?, then: ClientCallback<[Message]>?) {
-        client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) {
-            then?($0.map { $0.usingMessageIO }, $1)
+    func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error> {
+        Promise { then in
+            client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) {
+                then(Result.from($0.map(\.usingMessageIO), errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func isGuildTextChannel(_ channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
-        client.getChannel(channelId.usingDiscordAPI) {
-            then?($0.map { $0 is DiscordGuildTextChannel } ?? false, $1)
+    func isGuildTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.getChannel(channelId.usingDiscordAPI) {
+                then(Result.from($0.map { $0 is DiscordGuildTextChannel } ?? false, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func isDMTextChannel(_ channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
-        client.getChannel(channelId.usingDiscordAPI) {
-            then?($0.map { $0 is DiscordDMChannel || $0 is DiscordGroupDMChannel } ?? false, $1)
+    func isDMTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.getChannel(channelId.usingDiscordAPI) {
+                then(Result.from($0.map { $0 is DiscordDMChannel || $0 is DiscordGroupDMChannel } ?? false, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func triggerTyping(on channelId: D2MessageIO.ChannelID, then: ClientCallback<Bool>?) {
-        client.triggerTyping(on: channelId.usingDiscordAPI) {
-            then?($0, $1)
+    func triggerTyping(on channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.triggerTyping(on: channelId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 
-    func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String, then: ClientCallback<Message?>?) {
-        client.createReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) {
-            then?($0?.usingMessageIO, $1)
+    func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Message?, Error> {
+        Promise { then in
+            client.createReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
         }
     }
 }

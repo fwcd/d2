@@ -11,11 +11,11 @@ public class WikipediaCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        WikipediaPageQuery(pageName: input).perform {
+        WikipediaPageQuery(pageName: input).perform().listen {
             switch $0 {
                 case .success(let page):
                     output.append(Embed(

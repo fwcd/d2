@@ -20,9 +20,9 @@ public class AutoLatexCommand: StringCommand {
         subscribesToNextMessages: true
     )
     private let latexRenderer = try? LatexRenderer()
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         if input == "cancel" {
             output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
@@ -32,33 +32,29 @@ public class AutoLatexCommand: StringCommand {
             context.subscribeToChannel()
         }
     }
-    
+
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         if content == "cancel autolatex" {
             output.append("This syntax has been deprecated, please use `\(context.commandPrefix)autolatex cancel` to cancel.")
             return
         }
-        
+
         if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
-            do {
-                let formula = escapeText(in: content)
-                try renderer.renderImage(from: formula, scale: 1.5, onError: { log.warning("\($0)") }) {
-                    do {
-                        try output.append($0)
-                    } catch {
-                        log.error("\(error)")
-                    }
+            let formula = escapeText(in: content)
+            renderer.renderImage(from: formula, scale: 1.5).listenOrLogError {
+                do {
+                    try output.append($0)
+                } catch {
+                    log.error("\(error)")
                 }
-            } catch {
-                log.warning("\(error)")
             }
         }
     }
-    
+
     private func escapeText(in content: String) -> String {
         return textPattern.replace(in: content, with: "\\\\text{$0}")
     }
-    
+
     public func onSuccessfullySent(context: CommandContext) {
         latexRenderer?.cleanUp()
     }

@@ -68,7 +68,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
             output.append(errorText: "The quadratic equation has no solutions!")
             return
         }
- 
+
         let root = Rational(approximately: underTheRoot.squareRoot())
         let solutions: Set<Rational> = [
             -(b + root) / (2 * a),
@@ -78,7 +78,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
         let formula = "x \\in \\left\\{\(solutions.sorted().map { latexOf(rational: $0) }.joined(separator: ", "))\\right\\}"
 
         running = true
-        renderLatexImage(with: renderer, from: formula, to: output) {
+        renderLatexImage(with: renderer, from: formula, to: output).listenOrLogError {
             self.running = false
         }
     }

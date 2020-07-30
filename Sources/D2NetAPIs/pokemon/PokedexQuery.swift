@@ -5,23 +5,16 @@ public struct PokedexQuery {
 
     public init() {}
 
-    public func perform(then: @escaping (Result<[PokedexEntry], Error>) -> Void) {
+    public func perform() -> Promise<[PokedexEntry], Error> {
         if let pokedex = PokedexQuery.cached {
-            then(.success(pokedex))
+            return Promise(.success(pokedex))
         } else {
-            do {
-                let request = try HTTPRequest(host: "randompokemon.com", path: "/dex/all.json")
-                request.fetchJSONAsync(as: [PokedexEntry].self) {
-                    switch $0 {
-                        case .success(let pokedex):
-                            PokedexQuery.cached = pokedex
-                            then(.success(pokedex))
-                        case .failure(let error):
-                            then(.failure(error))
-                    }
+            return Promise.catchingThen {
+                try HTTPRequest(host: "randompokemon.com", path: "/dex/all.json").fetchJSONAsync(as: [PokedexEntry].self)
+            }.peekListen {
+                if case let .success(pokedex) = $0 {
+                    PokedexQuery.cached = pokedex
                 }
-            } catch {
-                then(.failure(error))
             }
         }
     }

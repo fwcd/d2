@@ -12,11 +12,11 @@ public class MinecraftModSearchCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        MinecraftModSearchQuery(term: input).perform {
+        MinecraftModSearchQuery(term: input).perform().listen {
             switch $0 {
                 case .success(let results):
                     if let mod = results.first {

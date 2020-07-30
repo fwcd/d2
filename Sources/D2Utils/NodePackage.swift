@@ -17,7 +17,15 @@ public struct NodePackage {
     }
 
     /** Invokes `npm start` with the given arguments. */
-    public func start(withArgs args: [String], then: @escaping (Process) -> Void) throws {
-        try Shell().run("npm", in: directoryURL, args: ["start"] + args, then: then)
+    public func start(withArgs args: [String]) -> Promise<Process, Error> {
+        Promise { then in
+            do {
+                try Shell().run("npm", in: directoryURL, args: ["start"] + args) {
+                    then(.success($0))
+                }
+            } catch {
+                then(.failure(error))
+            }
+        }
     }
 }

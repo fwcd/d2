@@ -9,16 +9,16 @@ public class PokeQuizCommand: StringCommand {
         subscribesToNextMessages: true
     )
     private var quizzes: [ChannelID: Quiz] = [:]
-    
+
     private struct Quiz {
         public let pokemon: PokedexEntry
         public let player: UserID?
     }
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        PokedexQuery().perform {
+        PokedexQuery().perform().listen {
             switch $0 {
                 case .success(let pokedex):
                     guard let pokemon = pokedex.randomElement() else {
@@ -29,7 +29,7 @@ public class PokeQuizCommand: StringCommand {
                         output.append(errorText: "No channel ID available.")
                         return
                     }
-                    
+
                     output.append(Embed(
                         title: "Which Pokémon is this?",
                         image: Embed.Image(url: pokemon.gifUrl)
@@ -42,15 +42,15 @@ public class PokeQuizCommand: StringCommand {
             }
         }
     }
-    
+
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id,
             let quiz = quizzes[channelId],
             quiz.player == context.author?.id else { return }
-        
+
         let name = quiz.pokemon.name ?? ""
         let distance = content.levenshteinDistance(to: name, caseSensitive: false)
-        
+
         if distance == 0 {
             output.append(":partying_face: Hooray, you guessed correctly!")
         } else if distance < 2 {
@@ -58,7 +58,7 @@ public class PokeQuizCommand: StringCommand {
         } else {
             output.append(":shrug: Your guess was \(distance) \("character".pluralize(with: distance)) away from the correct name `\(name)`.")
         }
-        
+
         quizzes[channelId] = nil
         context.unsubscribeFromChannel()
     }

@@ -16,7 +16,7 @@ public class WeatherCommand: StringCommand {
             return
         }
 
-        OpenWeatherMapQuery(city: input).perform {
+        OpenWeatherMapQuery(city: input).perform().listen {
             do {
                 let weather = try $0.get()
                 output.append(Embed(

@@ -16,7 +16,7 @@ public class GitLabCommand: StringCommand {
     )
     @AutoSerializing(filePath: "local/gitLabConfig.json") private var gitLabConfig: GitLabConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) throws -> Void] = [:]
-    
+
     public init() {
         subcommands = [
             "set-server": { [unowned self] arg, output in
@@ -34,34 +34,34 @@ public class GitLabCommand: StringCommand {
             "get-server": { [unowned self] _, output in output.append("The current server is `\(self.gitLabConfig.serverHost ?? "none")`") },
             "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.projectId.map { "\($0)" } ?? "none")`") },
             "pipelines": { [unowned self] _, output in
-                try self.fetchPipelines() {
-                    switch $0 {
-                        case .success(let pipelines):
-                            output.append(Embed(
-                                title: ":rocket: Pipelines",
-                                fields: pipelines.prefix(5).map {
-                                    Embed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
-                                }
-                            ))
-                        case .failure(let error):
-                            output.append(error, errorText: "Could not fetch pipelines")
+                self.fetchPipelines().listen {
+                    do {
+                        let pipelines = try $0.get()
+                        output.append(Embed(
+                            title: ":rocket: Pipelines",
+                            fields: pipelines.prefix(5).map {
+                                Embed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
+                            }
+                        ))
+                    } catch {
+                        output.append(error, errorText: "Could not fetch pipelines")
                     }
-                    
+
                 }
             },
             "pipeline": { [unowned self] _, output in
-                try self.fetchMostRecentPipelineJobsAndLogs() {
-                    switch $0 {
-                        case .success(let jobs):
-                            let pipeline = jobs.first?.0.pipeline
-                            output.append(Embed(
-                                title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
-                                fields: (pipeline.map(self.describe(pipeline:)).map { [Embed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
-                                    Embed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
-                                }
-                            ))
-                        case .failure(let error):
-                            output.append(error, errorText: "Could not fetch most recent pipeline")
+                self.fetchMostRecentPipelineJobsAndLogs().listen {
+                    do {
+                        let jobs = try $0.get()
+                        let pipeline = jobs.first?.0.pipeline
+                        output.append(Embed(
+                            title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
+                            fields: (pipeline.map(self.describe(pipeline:)).map { [Embed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
+                                Embed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
+                            }
+                        ))
+                    } catch {
+                        output.append(error, errorText: "Could not fetch most recent pipeline")
                     }
                 }
             }
@@ -71,7 +71,7 @@ public class GitLabCommand: StringCommand {
             \(subcommands.map { "- `\($0.key)`" }.joined(separator: "\n"))
             """
     }
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         if let parsed = subcommandPattern.firstGroups(in: input) {
             let subcommandName = parsed[1]
@@ -91,7 +91,7 @@ public class GitLabCommand: StringCommand {
             output.append(errorText: "Please use the following pattern: `[subcommand] [...]`")
         }
     }
-    
+
     private func describe(pipeline: GitLabPipeline) -> String {
         let status = pipeline.status
         return """
@@ -101,7 +101,7 @@ public class GitLabCommand: StringCommand {
             Updated At: `\(pipeline.updatedAt ?? "?")`
             """
     }
-    
+
     private func describe(job: GitLabJob, withLog jobLog: String) -> String {
         let status = job.status
         return """
@@ -113,7 +113,7 @@ public class GitLabCommand: StringCommand {
             ```
             """
     }
-    
+
     private func emojiOf(status: String?) -> String {
         switch status {
             case "success"?: return ":white_check_mark:"
@@ -124,37 +124,37 @@ public class GitLabCommand: StringCommand {
             default: return ":question:"
         }
     }
-    
+
     private func remoteGitLab() throws -> RemoteGitLab {
         guard let serverHost = gitLabConfig.serverHost else { throw GitLabConfigurationError.unspecified("server host") }
         return RemoteGitLab(host: serverHost)
     }
-    
+
     private func projectId() throws -> Int {
         guard let projectId = gitLabConfig.projectId else { throw GitLabConfigurationError.unspecified("project id") }
         return projectId
     }
-    
-    private func fetchPipelines(then: @escaping (Result<[GitLabPipeline], Error>) -> Void) throws {
-        try remoteGitLab().fetchPipelines(projectId: try projectId(), then: then)
+
+    private func fetchPipelines() -> Promise<[GitLabPipeline], Error> {
+        Promise.catchingThen { try remoteGitLab().fetchPipelines(projectId: try projectId()) }
     }
-    
-    private func fetchMostRecentPipelineJobsAndLogs(then: @escaping (Result<[(GitLabJob, String)], Error>) -> Void) throws {
-        let gitLab = try remoteGitLab()
-        let pid = try projectId()
-        gitLab.fetchJobs(projectId: pid) {
-            switch $0.map({ (jobs: [GitLabJob]) -> [GitLabJob] in
+
+    private func fetchJobs() -> Promise<[GitLabJob], Error> {
+        Promise.catchingThen { try remoteGitLab().fetchJobs(projectId: try projectId()) }
+    }
+
+    private func fetchMostRecentPipelineJobsAndLogs() -> Promise<[(GitLabJob, String)], Error> {
+        fetchJobs()
+            .map { (jobs: [GitLabJob]) -> [GitLabJob] in
                 let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()
                 return jobs.filter { $0.pipeline?.id == mostRecentPipelineId }
-            }) {
-                case .success(let pipelineJobs):
-                    let sortedJobs = pipelineJobs.sorted(by: ascendingComparator { $0.id ?? -1 })
-                    collect(thenables: sortedJobs.map { $0.id.map { jid in { gitLab.fetchJobLog(projectId: pid, jobId: jid, then: $0) } } ?? { $0(.success("")) } }) {
-                        then($0.map { jobLogs in Array(zip(sortedJobs, jobLogs)) })
-                    }
-                case .failure(let error):
-                    then(.failure(error))
             }
-        }
+            .thenCatching { pipelineJobs in
+                let sortedJobs = pipelineJobs.sorted(by: ascendingComparator { $0.id ?? -1 })
+                let gitLab = try self.remoteGitLab()
+                let pid = try self.projectId()
+                return sequence(promises: sortedJobs.map { job in { job.id.map { jid in gitLab.fetchJobLog(projectId: pid, jobId: jid) } ?? Promise(.success("")) } })
+                    .map { jobLogs in Array(zip(sortedJobs, jobLogs)) }
+            }
     }
 }

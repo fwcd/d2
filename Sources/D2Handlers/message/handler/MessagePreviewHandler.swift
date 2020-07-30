@@ -31,7 +31,7 @@ public struct MessagePreviewHandler: MessageHandler {
             let previewedChannelId = ID(parsedLink[2], clientName: client.name)
             let previewedMessageId = ID(parsedLink[3], clientName: client.name)
 
-            client.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId)) { messages, _ in
+            client.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId)).listenOrLogError { messages in
                 if let message = messages.first {
                     client.sendMessage(Message(embed: Embed(
                         title: message.content.truncate(200, appending: "..."),
