@@ -90,6 +90,15 @@ public class Promise<T, E> where E: Error {
         map { _ in }
     }
 
+    /// Voids the result and swallows the error.
+    public func swallow() -> Promise<Void, E> {
+        Promise<Void, E> { then in
+            listen { _ in
+                then(.success(()))
+            }
+        }
+    }
+
     /// Convenience method for discarding the promise in a method chain.
     /// Making this explicit helps preventing accidental race conditions.
     public func forget() {}

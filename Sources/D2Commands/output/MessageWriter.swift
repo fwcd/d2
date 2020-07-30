@@ -55,19 +55,12 @@ public struct MessageWriter {
 			case let .embed(embed):
 				return Promise(Message(embed: embed))
 			case let .ndArrays(ndArrays):
-				return Promise { then in
-					if let renderer = latexRenderer, ndArrays.contains(where: { !$0.isScalar }) {
-						do {
-							try renderer.renderImage(from: latexOf(ndArrays: ndArrays), onError: { then(.failure($0)) }) { img in
-								then(Result { try Message(fromImage: img) })
-							}
-						} catch {
-							then(.failure(error))
-						}
-					} else {
-						then(.success(Message(content: ndArrays.map { "\($0)" }.joined(separator: ", "))))
-					}
-				}
+                if let renderer = latexRenderer, ndArrays.contains(where: { !$0.isScalar }) {
+                    return renderer.renderImage(from: latexOf(ndArrays: ndArrays))
+                        .mapCatching { try Message(fromImage: $0) }
+                } else {
+                    return Promise(Message(content: ndArrays.map { "\($0)" }.joined(separator: ", ")))
+                }
 			case let .error(error, errorText: text):
 				return Promise(Message(embed: Embed(
 					description: ":warning: \(error.map { "\(type(of: $0)): " } ?? "")\(text)",
