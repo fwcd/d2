@@ -23,10 +23,14 @@ public class Promise<T, E> where E: Error {
         state = .pending
         thenable {
             self.state = .finished($0)
-            for listener in self.listeners {
-                listener($0)
+            if self.listeners.isEmpty, case let .failure(error) = $0 {
+                log.error("Unhandled Promise error: \(error)")
+            } else {
+                for listener in self.listeners {
+                    listener($0)
+                }
+                self.listeners = []
             }
-            self.listeners = []
         }
     }
 
