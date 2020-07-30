@@ -14,12 +14,12 @@ public class StackOverflowCommand: StringCommand {
 		longDescription: "Searches Stack Overflow using the given input",
 		requiredPermissionLevel: .vip
 	)
-	
+
 	public init() {}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
-			try StackOverflowQuery(input: input).start {
+			try StackOverflowQuery(input: input).start().listen {
 				do {
 					guard let answer = try $0.get().items?.first else {
 						output.append(errorText: "No answers found")

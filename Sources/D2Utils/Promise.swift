@@ -1,3 +1,7 @@
+import Logging
+
+fileprivate let log = Logger(label: "D2Utils.Promise")
+
 /// Represents an asynchronously computed value.
 public class Promise<T, E> where E: Error {
     private var state: State
@@ -37,6 +41,18 @@ public class Promise<T, E> where E: Error {
             listener(result)
         } else {
             listeners.append(listener)
+        }
+    }
+
+    /// Listens for a successful result or logs an error otherwise. Only fires once.
+    public func listenOrLogError(file: String = #file, line: Int = #line, _ listener: @escaping (T) -> Void) {
+        listen {
+            switch $0 {
+                case .success(let value):
+                    listener(value)
+                case .failure(let error):
+                    log.error("Asynchronous error (listened for at \(file):\(line)): \(error)")
+            }
         }
     }
 

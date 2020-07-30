@@ -47,13 +47,13 @@ public class CommandHandler: MessageHandler {
 
 	private let chainSeparator: Character
 	private let pipeSeparator: Character
-    
+
     private var currentIndex = 0
 	private var maxPipeLengthForUsers: Int = 5
     private let msgParser = MessageParser()
-	
+
 	private let operationQueue: OperationQueue
-    
+
     public init(
         commandPrefix: String,
         registry: CommandRegistry,
@@ -70,7 +70,7 @@ public class CommandHandler: MessageHandler {
 		self._mostRecentPipeRunner = mostRecentPipeRunner
 		self.chainSeparator = chainSeparator
 		self.pipeSeparator = pipeSeparator
-		
+
 		operationQueue = OperationQueue()
 		operationQueue.name = "CommandHandler queue"
 		operationQueue.maxConcurrentOperationCount = 4
@@ -92,9 +92,9 @@ public class CommandHandler: MessageHandler {
 
         currentIndex += 1
 
-  
+
 		let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
-		
+
 		// Precedence: Chain < Pipe
 		for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
 			if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, client: client) {
@@ -115,7 +115,7 @@ public class CommandHandler: MessageHandler {
 						}
 					}
 				}
-				
+
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
 					let sinkCommand = pipeSink.command
@@ -131,16 +131,16 @@ public class CommandHandler: MessageHandler {
 						}
 					}
 				}
-				
+
 				for i in stride(from: pipe.count - 2, through: 0, by: -1) {
 					let pipeNext = pipe[i + 1]
 					pipe[i].output = PipeOutput(withSink: pipeNext.command, context: pipeNext.context, args: pipeNext.args, next: pipeNext.output)
 				}
-				
+
 				guard let pipeSource = pipe.first else { continue }
-				
+
 				operationQueue.addOperation {
-					self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild) { input in
+					self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild).listenOrLogError { input in
 						// Execute the pipe
 						let runner = RunnablePipe(pipeSource: pipeSource, input: input)
 						runner.run()
@@ -153,20 +153,20 @@ public class CommandHandler: MessageHandler {
 				}
 			}
 		}
-        
+
         return true
     }
-	
+
 	private func constructPipe(rawPipeCommand: String, message: Message, client: MessageClient) -> [PipeComponent]? {
 		guard let channelId = message.channelId, let author = message.author else { return nil }
 		let isBot = author.bot
 		var pipe = [PipeComponent]()
 		var userOnly = false
-		
+
 		// Construct the pipe
 		for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: false, omitBackslashes: true) {
 			let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
-			
+
 			if let groups = commandPattern.firstGroups(in: trimmedCommand) {
 				log.info("Got command #\(currentIndex): \(groups.dropFirst())")
 				let name = groups[1]
@@ -191,7 +191,7 @@ public class CommandHandler: MessageHandler {
 						client.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
 						return nil
 					}
-					
+
 					userOnly = userOnly || command.info.userOnly
 				} else {
 					log.notice("Did not recognize command '\(name)'")
@@ -203,7 +203,7 @@ public class CommandHandler: MessageHandler {
 				}
 			}
 		}
-		
+
 		guard !(userOnly && isBot) else { return nil }
 		return pipe
 	}

@@ -18,20 +18,20 @@ public class WolframAlphaCommand: StringCommand {
 		requiredPermissionLevel: .vip
 	)
 	private var isRunning = false
-	
+
 	public init() {}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		guard !isRunning else {
 			output.append(errorText: "Wait for the first input to finish!")
 			return
 		}
 		isRunning = true
-		
+
 		do {
 			let flags = Set(flagPattern.allGroups(in: input).map { $0[1] })
 			let processedInput = flagPattern.replace(in: input, with: "")
-			
+
 			if flags.contains("image") {
 				// Performs a "simple" query and outputs a static image
 				try performSimpleQuery(input: processedInput, output: output)
@@ -43,57 +43,51 @@ public class WolframAlphaCommand: StringCommand {
 			output.append(error)
 		}
 	}
-	
+
 	private func performSimpleQuery(input: String, output: CommandOutput) throws {
 		let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
-		query.start {
-			guard case let .success(data) = $0 else {
-				if case let .failure(error) = $0 {
-					output.append(error, errorText: "An error occurred while querying WolframAlpha.")
-				}
-				self.isRunning = false
-				return
-			}
-			
-			output.append(.files([Message.FileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]))
+		query.start().listen {
+            do {
+                let data = try $0.get()
+                output.append(.files([Message.FileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]))
+            } catch {
+                output.append(error, errorText: "An error occurred while querying WolframAlpha.")
+            }
 			self.isRunning = false
 		}
 	}
-	
+
 	private func performFullQuery(input: String, output: CommandOutput, showSteps: Bool = false) throws {
 		let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
-		query.startAndParse {
-			guard case let .success(result) = $0 else {
-				if case let .failure(error) = $0 {
-					output.append(error, errorText: "An error occurred while querying WolframAlpha.")
-				}
-				self.isRunning = false
-				return
-			}
-			
-			let images = result.pods.flatMap { pod in pod.subpods.compactMap { self.extractImageURL(from: $0) } }
-			let plot = result.pods.filter { $0.title?.lowercased().contains("plot") ?? false }.first?.subpods.first.flatMap { self.extractImageURL(from: $0) }
-			
-			output.append(Embed(
-				title: "Query Output",
-				author: Embed.Author(name: "WolframAlpha"),
-				image: (plot ?? images.last).map { Embed.Image(url: $0) },
-				thumbnail: images.first.map { Embed.Thumbnail(url: $0) },
-				color: 0xfdc81a,
-				footer: Embed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
-				fields: result.pods.map { pod in Embed.Field(
-					// TODO: Investigate why Discord sends 400s for certain queries
-					name: pod.title?.nilIfEmpty?.truncate(50, appending: "...") ?? "Untitled pod",
-					value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...")
-						.trimmingCharacters(in: .whitespacesAndNewlines)
-						.nilIfEmpty
-						?? "No content"
-				) }.truncate(6)
-			))
+		query.startAndParse().listen {
+            do {
+                let result = try $0.get()
+                let images = result.pods.flatMap { pod in pod.subpods.compactMap { self.extractImageURL(from: $0) } }
+                let plot = result.pods.filter { $0.title?.lowercased().contains("plot") ?? false }.first?.subpods.first.flatMap { self.extractImageURL(from: $0) }
+
+                output.append(Embed(
+                    title: "Query Output",
+                    author: Embed.Author(name: "WolframAlpha"),
+                    image: (plot ?? images.last).map { Embed.Image(url: $0) },
+                    thumbnail: images.first.map { Embed.Thumbnail(url: $0) },
+                    color: 0xfdc81a,
+                    footer: Embed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
+                    fields: result.pods.map { pod in Embed.Field(
+                        // TODO: Investigate why Discord sends 400s for certain queries
+                        name: pod.title?.nilIfEmpty?.truncate(50, appending: "...") ?? "Untitled pod",
+                        value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...")
+                            .trimmingCharacters(in: .whitespacesAndNewlines)
+                            .nilIfEmpty
+                            ?? "No content"
+                    ) }.truncate(6)
+                ))
+            } catch {
+                output.append(error, errorText: "An error occurred while querying WolframAlpha.")
+            }
 			self.isRunning = false
 		}
 	}
-	
+
 	private func extractImageURL(from subpod: WolframAlphaSubpod) -> URL? {
 		return (subpod.img?.src).flatMap { URL(string: $0) }
 	}

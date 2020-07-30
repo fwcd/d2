@@ -1,6 +1,6 @@
 import Logging
 import D2MessageIO
-import D2Permissions
+import D2Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.MensaCommand")
@@ -13,33 +13,30 @@ public class MensaCommand: StringCommand {
         longDescription: "Looks up the current menu for a CAU canteen",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let canteen = Canteen.parse(from: input) else {
             output.append(errorText: "Could not parse mensa from \(input), try `i` or `ii`")
             return
         }
-        
-        do {
-            try DailyFoodMenu(canteen: canteen).fetchMealsAsync {
-                guard case let .success(meals) = $0 else {
-                    guard case let .failure(error) = $0 else { fatalError("Result should either be successful or not") }
-                    output.append(error, errorText: "An error occurred while performing the request")
-                    return
+
+        Promise.catching { try DailyFoodMenu(canteen: canteen) }
+            .then { $0.fetchMealsAsync() }
+            .listen {
+                do {
+                    let meals = try $0.get()
+                    output.append(Embed(
+                        title: ":fork_knife_plate: Today's menu for \(canteen)",
+                        fields: meals.map { Embed.Field(name: $0.title, value: "\($0.price) \($0.properties.compactMap(self.emojiOf).joined(separator: " "))") }
+                    ))
+                } catch {
+                    output.append(error, errorText: "An error occurred while constructing the request")
                 }
-                
-                output.append(.embed(Embed(
-                    title: ":fork_knife_plate: Today's menu for \(canteen)",
-                    fields: meals.map { Embed.Field(name: $0.title, value: "\($0.price) \($0.properties.compactMap(self.emojiOf).joined(separator: " "))") }
-                )))
             }
-        } catch {
-            output.append(error, errorText: "An error occurred while constructing the request")
-        }
     }
-    
+
     private func emojiOf(mealProperty: MealProperty) -> String? {
         switch mealProperty {
             case .beef: return ":cow2:"

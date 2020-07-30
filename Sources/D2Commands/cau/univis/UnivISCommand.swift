@@ -29,11 +29,11 @@ public class UnivISCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	let maxResponseEntries: Int
-	
+
 	public init(maxResponseEntries: Int = 15) {
 		self.maxResponseEntries = maxResponseEntries
 	}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			guard let parsedArgs = inputPattern.firstGroups(in: input) else {
@@ -44,11 +44,12 @@ public class UnivISCommand: StringCommand {
 				output.append(errorText: "Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
 				return
 			}
-			
+
 			let queryParams = try queryParameterDict(of: kvArgPattern.allGroups(in: input))
-			
-			try UnivISQuery(search: searchKey, params: queryParams).start { response in
-				if case let .success(result) = response {
+
+			try UnivISQuery(search: searchKey, params: queryParams).start().listen {
+				do {
+                    let result = try $0.get()
 					let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
 					let embed = Embed(
 						title: "UnivIS query result",
@@ -56,9 +57,9 @@ public class UnivISCommand: StringCommand {
 							.map { Embed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
 							.prefix(self.maxResponseEntries))
 					)
-					
+
 					output.append(embed)
-				} else if case let .failure(error) = response {
+                } catch {
 					output.append(error, errorText: "UnivIS query error.")
 				}
 			}
@@ -68,10 +69,10 @@ public class UnivISCommand: StringCommand {
 			output.append(error)
 		}
 	}
-	
+
 	private func queryParameterDict(of parsedKVArgs: [[String]]) throws -> [UnivISSearchParameter: String] {
 		var dict = [UnivISSearchParameter: String]()
-		
+
 		for kvArg in parsedKVArgs {
 			if let searchParameter = UnivISSearchParameter(rawValue: kvArg[1]) {
 				let value = kvArg[2].nilIfEmpty ?? kvArg[3]
@@ -80,7 +81,7 @@ public class UnivISCommand: StringCommand {
 				throw UnivISCommandError.invalidSearchParameter(kvArg[1])
 			}
 		}
-		
+
 		return dict
 	}
 }

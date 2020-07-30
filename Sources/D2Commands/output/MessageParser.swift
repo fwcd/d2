@@ -31,115 +31,116 @@ public struct MessageParser {
 		_ str: String? = nil,
 		message: Message? = nil,
 		clientName: String? = nil,
-		guild: Guild? = nil,
-		then: @escaping (RichValue) -> Void
-	) {
-		var values: [RichValue] = []
-		
-		// Parse message content
-		let content = str ?? message?.content ?? ""
-		
-		let textualContent = codePattern.replace(in: content, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-		if !textualContent.isEmpty {
-			values.append(.text(textualContent))
-		}
-		
-		if let codeGroups = codePattern.firstGroups(in: content) {
-			let language = codeGroups[1].nilIfEmpty
-			let code = codeGroups[2]
-			values.append(.code(code, language: language))
-		}
-		
-		// Append embeds
-		values += message?.embeds.map { .embed($0) } ?? []
+		guild: Guild? = nil
+	) -> Promise<RichValue, Error> {
+        Promise { then in
+            var values: [RichValue] = []
 
-		// Append (explicit and implicit) mentions
-		var mentions = [User]()
+            // Parse message content
+            let content = str ?? message?.content ?? ""
 
-		if let explicitMentions = message?.mentions.nilIfEmpty {
-			mentions += explicitMentions
-		} else {
-			mentions += idPattern.allGroups(in: content)
-				.map { UserID($0[0], clientName: clientName ?? "Dummy") }
-				.compactMap { guild?.members[$0]?.user }
+            let textualContent = codePattern.replace(in: content, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !textualContent.isEmpty {
+                values.append(.text(textualContent))
+            }
 
-			if content.contains("#") {
-				mentions += guild?.members
-					.map { $0.1.user }
-					.filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
-			}
-		}
-		
-		if !mentions.isEmpty {
-			values.append(.mentions(mentions))
-		}
+            if let codeGroups = codePattern.firstGroups(in: content) {
+                let language = codeGroups[1].nilIfEmpty
+                let code = codeGroups[2]
+                values.append(.code(code, language: language))
+            }
 
-		// Append role mentions
-		if let roleMentions = message?.mentionRoles.nilIfEmpty {
-			values.append(.roleMentions(roleMentions))
-		}
+            // Append embeds
+            values += message?.embeds.map { .embed($0) } ?? []
 
-		// Append parsed URLs
-		if let urls = urlPattern.allGroups(in: content).compactMap({ URL(string: $0[1]) }).nilIfEmpty {
-			values.append(.urls(urls))
-		}
+            // Append (explicit and implicit) mentions
+            var mentions = [User]()
 
-		// Parse nd-arrays
-		if let ndArrays = ndArrayParser.parseMultiple(content).nilIfEmpty {
-			values.append(.ndArrays(ndArrays))
-		}
-		
-		// Fetch attachments
-		if let attachments = message?.attachments.nilIfEmpty {
-			values.append(.attachments(attachments))
-		}
-		
-		// Download image attachments
-		var asyncTaskCount = 0
-		let semaphore = DispatchSemaphore(value: 0)
+            if let explicitMentions = message?.mentions.nilIfEmpty {
+                mentions += explicitMentions
+            } else {
+                mentions += idPattern.allGroups(in: content)
+                    .map { UserID($0[0], clientName: clientName ?? "Dummy") }
+                    .compactMap { guild?.members[$0]?.user }
 
-		for attachment in message?.attachments ?? [] {
-			let fileName = attachment.filename.lowercased()
-			
-			if fileName.hasSuffix(".png") {
-				// Download PNG attachment
-				asyncTaskCount += 1
-				attachment.download {
-					do {
-						let data = try $0.get()
-						values.append(.image(try Image(fromPng: data)))
-					} catch {
-						log.error("\(error)")
-					}
-					semaphore.signal()
-				}
-			} else if fileName.hasSuffix(".gif") {
-				// Download GIF attachment
-				
-				// TODO: Implement animated GIF parser
-				
-				// asyncTaskCount += 1
-				// attachment.download {
-				// 	do {
-				// 		let data = try $0.get()
-				// 		values.append(.gif(try AnimatedGif(from: data)))
-				// 	} catch {
-				// 		log.error("\(error)")
-				// 	}
-				// 	semaphore.signal()
-				// }
-			}
-		}
-		
-		DispatchQueue.global(qos: .userInitiated).async {
-			// Return first once all asynchronous
-			// tasks have been completed
-			for _ in 0..<asyncTaskCount {
-				semaphore.wait()
-			}
-			
-			log.debug("Parsed input: \(values)")
-			then(RichValue.of(values: values))
-		}
+                if content.contains("#") {
+                    mentions += guild?.members
+                        .map { $0.1.user }
+                        .filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
+                }
+            }
+
+            if !mentions.isEmpty {
+                values.append(.mentions(mentions))
+            }
+
+            // Append role mentions
+            if let roleMentions = message?.mentionRoles.nilIfEmpty {
+                values.append(.roleMentions(roleMentions))
+            }
+
+            // Append parsed URLs
+            if let urls = urlPattern.allGroups(in: content).compactMap({ URL(string: $0[1]) }).nilIfEmpty {
+                values.append(.urls(urls))
+            }
+
+            // Parse nd-arrays
+            if let ndArrays = ndArrayParser.parseMultiple(content).nilIfEmpty {
+                values.append(.ndArrays(ndArrays))
+            }
+
+            // Fetch attachments
+            if let attachments = message?.attachments.nilIfEmpty {
+                values.append(.attachments(attachments))
+            }
+
+            // Download image attachments
+            var asyncTaskCount = 0
+            let semaphore = DispatchSemaphore(value: 0)
+
+            for attachment in message?.attachments ?? [] {
+                let fileName = attachment.filename.lowercased()
+
+                if fileName.hasSuffix(".png") {
+                    // Download PNG attachment
+                    asyncTaskCount += 1
+                    attachment.download().listen {
+                        do {
+                            let data = try $0.get()
+                            values.append(.image(try Image(fromPng: data)))
+                        } catch {
+                            log.error("\(error)")
+                        }
+                        semaphore.signal()
+                    }
+                } else if fileName.hasSuffix(".gif") {
+                    // Download GIF attachment
+
+                    // TODO: Implement animated GIF parser
+
+                    // asyncTaskCount += 1
+                    // attachment.download {
+                    // 	do {
+                    // 		let data = try $0.get()
+                    // 		values.append(.gif(try AnimatedGif(from: data)))
+                    // 	} catch {
+                    // 		log.error("\(error)")
+                    // 	}
+                    // 	semaphore.signal()
+                    // }
+                }
+            }
+
+            DispatchQueue.global(qos: .userInitiated).async {
+                // Return first once all asynchronous
+                // tasks have been completed
+                for _ in 0..<asyncTaskCount {
+                    semaphore.wait()
+                }
+
+                log.debug("Parsed input: \(values)")
+                then(.success(RichValue.of(values: values)))
+            }
+        }
 	}
 }

@@ -9,14 +9,14 @@ public class PipeOutput: CommandOutput {
 	private var context: CommandContext
 
 	private let msgParser = MessageParser()
-	
+
 	public init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
 		self.sink = sink
 		self.args = args
 		self.context = context
 		self.next = next
 	}
-	
+
 	public func append(_ value: RichValue, to channel: OutputChannel) {
 		let nextOutput = next ?? PrintOutput()
 
@@ -25,8 +25,9 @@ public class PipeOutput: CommandOutput {
 			nextOutput.append(value, to: channel)
 		} else {
 			log.debug("Piping to \(sink)")
-			msgParser.parse(args, clientName: context.client?.name, guild: context.guild) {
-				let nextInput = $0 + value
+			msgParser.parse(args, clientName: context.client?.name, guild: context.guild).listen {
+                guard case let .success(parsed) = $0 else { return }
+				let nextInput = parsed + value
 				log.trace("Invoking sink")
 				self.sink.invoke(input: nextInput, output: nextOutput, context: self.context)
 			}

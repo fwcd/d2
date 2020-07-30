@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import D2Permissions
+import D2Utils
 import D2NetAPIs
 
 public class XkcdCommand: StringCommand {
@@ -11,28 +11,30 @@ public class XkcdCommand: StringCommand {
         helpText: "Syntax: [comic id | 'random']?",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        let handler: (Result<XkcdComic, Error>) -> Void = {
-            switch $0 {
-                case .success(let comic):
-                    output.append(Embed(
-                        title: "xkcd #\(comic.num): \(comic.title ?? "no title")",
-                        url: URL(string: "https://xkcd.com/\(comic.num)")!,
-                        image: comic.img.flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
-                        footer: comic.alt.map { Embed.Footer(text: $0) }
-                    ))
-                case .failure(let error):
-                    output.append(error, errorText: "An error occurred while fetching the comic")
-            }
-        }
+        let comicPromise: Promise<XkcdComic, Error>
 
         if input == "random" {
-            XkcdQuery().fetchRandom(then: handler)
+            comicPromise = XkcdQuery().fetchRandom()
         } else {
-            XkcdQuery().fetch(comicId: Int(input), then: handler)
+            comicPromise = XkcdQuery().fetch(comicId: Int(input))
+        }
+
+        comicPromise.listen {
+            do {
+                let comic = try $0.get()
+                output.append(Embed(
+                    title: "xkcd #\(comic.num): \(comic.title ?? "no title")",
+                    url: URL(string: "https://xkcd.com/\(comic.num)")!,
+                    image: comic.img.flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
+                    footer: comic.alt.map { Embed.Footer(text: $0) }
+                ))
+            } catch {
+                output.append(error, errorText: "An error occurred while fetching the comic")
+            }
         }
     }
 }

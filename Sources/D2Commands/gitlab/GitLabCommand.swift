@@ -34,34 +34,34 @@ public class GitLabCommand: StringCommand {
             "get-server": { [unowned self] _, output in output.append("The current server is `\(self.gitLabConfig.serverHost ?? "none")`") },
             "get-project": { [unowned self] _, output in output.append("The current project is `\(self.gitLabConfig.projectId.map { "\($0)" } ?? "none")`") },
             "pipelines": { [unowned self] _, output in
-                try self.fetchPipelines() {
-                    switch $0 {
-                        case .success(let pipelines):
-                            output.append(Embed(
-                                title: ":rocket: Pipelines",
-                                fields: pipelines.prefix(5).map {
-                                    Embed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
-                                }
-                            ))
-                        case .failure(let error):
-                            output.append(error, errorText: "Could not fetch pipelines")
+                self.fetchPipelines().listen {
+                    do {
+                        let pipelines = try $0.get()
+                        output.append(Embed(
+                            title: ":rocket: Pipelines",
+                            fields: pipelines.prefix(5).map {
+                                Embed.Field(name: "#\($0.id ?? -1)", value: self.describe(pipeline: $0))
+                            }
+                        ))
+                    } catch {
+                        output.append(error, errorText: "Could not fetch pipelines")
                     }
 
                 }
             },
             "pipeline": { [unowned self] _, output in
-                try self.fetchMostRecentPipelineJobsAndLogs() {
-                    switch $0 {
-                        case .success(let jobs):
-                            let pipeline = jobs.first?.0.pipeline
-                            output.append(Embed(
-                                title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
-                                fields: (pipeline.map(self.describe(pipeline:)).map { [Embed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
-                                    Embed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
-                                }
-                            ))
-                        case .failure(let error):
-                            output.append(error, errorText: "Could not fetch most recent pipeline")
+                self.fetchMostRecentPipelineJobsAndLogs().listen {
+                    do {
+                        let jobs = try $0.get()
+                        let pipeline = jobs.first?.0.pipeline
+                        output.append(Embed(
+                            title: ":fireworks: Pipeline #\(pipeline?.id ?? -1) (most recent)",
+                            fields: (pipeline.map(self.describe(pipeline:)).map { [Embed.Field(name: "Information", value: $0)] } ?? []) + jobs.map { (job, jobLog) in
+                                Embed.Field(name: "Job: \((job.stage ?? "?").withFirstUppercased)", value: self.describe(job: job, withLog: jobLog))
+                            }
+                        ))
+                    } catch {
+                        output.append(error, errorText: "Could not fetch most recent pipeline")
                     }
                 }
             }
