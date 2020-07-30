@@ -18,6 +18,7 @@ public func collect<T>(prepending previous: [T] = [], thenables: [(@escaping (Re
 }
 
 /// Aggregates the result of multiple promises asynchronously.
+@discardableResult
 public func all<T, E>(promises: [Promise<T, E>]) -> Promise<[T], E> where E: Error {
     Promise { then in
         let queue = DispatchQueue(label: "all(promises:)")
@@ -48,6 +49,7 @@ public func all<T, E>(promises: [Promise<T, E>]) -> Promise<[T], E> where E: Err
 }
 
 /// Sequentially executes the promises.
+@discardableResult
 public func sequence<T, C, E>(promises: C) -> Promise<[T], E> where E: Error, C: Collection, C.Element == (() -> Promise<T, E>) {
     if let promise = promises.first {
         return promise().then { value in sequence(promises: promises.dropFirst()).map { [value] + $0 } }

@@ -1,12 +1,15 @@
+import Logging
 import D2MessageIO
 import D2Commands
+
+fileprivate let log = Logger(label: "D2Handlers.SubscriptionHandler")
 
 /** Handles messages from command subscriptions. */
 public struct SubscriptionHandler: MessageHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
-    
+
     public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager) {
         self.commandPrefix = commandPrefix
         self.registry = registry
@@ -28,21 +31,26 @@ public struct SubscriptionHandler: MessageHandler {
                 subscriptions: subs
             )
             let command = registry[name]
-            let output = MessageIOOutput(context: context) { sentMessage, _ in
-                if let sent = sentMessage {
-                    command?.onSuccessfullySent(context: CommandContext(
-                        client: client,
-                        registry: self.registry,
-                        message: sent,
-                        commandPrefix: self.commandPrefix,
-                        subscriptions: subs
-                    ))
+            let output = MessageIOOutput(context: context) { sentMessage in
+                switch sentMessage {
+                    case .success((let sent)?):
+                        command?.onSuccessfullySent(context: CommandContext(
+                            client: client,
+                            registry: self.registry,
+                            message: sent,
+                            commandPrefix: self.commandPrefix,
+                            subscriptions: subs
+                        ))
+                    case .failure(let error):
+                        log.warning("Could not send message: \(error)")
+                    default:
+                        break
                 }
             }
             command?.onSubscriptionMessage(withContent: message.content, output: output, context: context)
             handled = true
         }
-        
+
         return handled
     }
 }

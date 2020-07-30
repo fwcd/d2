@@ -13,19 +13,19 @@ public class PollCommand: StringCommand {
 		longDescription: "Creates a message with the given options and 'reaction buttons' that allow users to vote",
 		requiredPermissionLevel: .basic
 	)
-	
+
 	public init() {}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-		
+
 		guard components.count >= 1 else {
 			output.append(errorText: "Syntax: [poll text] [zero or more vote options...]")
 			return
 		}
-		
+
 		let options = Array(components.dropFirst())
-		
+
 		guard options.count < 10 else {
 			output.append(errorText: "Too many options!")
 			return
@@ -38,12 +38,12 @@ public class PollCommand: StringCommand {
 			output.append(errorText: "Missing channel id")
 			return
 		}
-		
+
 		let reactions: [String]
 		var embed = Embed(title: "Poll: \(components.first!)")
-		
+
 		log.info("Creating poll `\(embed.title!)` with options \(options)")
-		
+
 		if options.isEmpty {
 			reactions = ["👍", "👎", "🤷"]
 		} else {
@@ -51,22 +51,22 @@ public class PollCommand: StringCommand {
 			embed.description = "\(range.map { "\n**\($0):** \(options[$0])" }.joined())"
 			reactions = range.compactMap { numberEmojiOf(digit: $0) }
 		}
-		
-		client.sendMessage(Message(embed: embed), to: channelId) { sentMessage, _ in
+
+		client.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
 			if let nextMessageId = sentMessage?.id {
 				self.react(to: nextMessageId, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
 			}
 		}
 	}
-	
+
 	private func react(to messageId: MessageID, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: MessageClient) {
 		if let reaction = remainingReactions.first {
-			client.createReaction(for: messageId, on: channelId, emoji: reaction) { _, _ in
+			client.createReaction(for: messageId, on: channelId, emoji: reaction).listenOrLogError { _ in
 				self.react(to: messageId, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)
 			}
 		}
 	}
-	
+
 	private func numberEmojiStringOf(digit: Int) -> String? {
 		switch digit {
 			case 0: return "zero"
@@ -82,7 +82,7 @@ public class PollCommand: StringCommand {
 			default: return nil
 		}
 	}
-	
+
 	private func numberEmojiOf(digit: Int) -> String? {
 		switch digit {
 			case 0: return "0⃣"
