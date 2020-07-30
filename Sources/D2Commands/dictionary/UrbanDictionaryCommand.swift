@@ -13,16 +13,16 @@ public class UrbanDictionaryCommand: StringCommand {
         helpText: "Syntax: [term]",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard !input.isEmpty else {
             output.append(errorText: "Please enter a term!")
             return
         }
 
-        UrbanDictionaryQuery(term: input).perform {
+        UrbanDictionaryQuery(term: input).perform().listen {
             switch $0 {
                 case .success(let results):
                     if let entry = results.list.first {
@@ -35,7 +35,7 @@ public class UrbanDictionaryCommand: StringCommand {
             }
         }
     }
-    
+
     private func embedOf(entry: UrbanDictionaryEntry) -> Embed {
         Embed(
             title: ":blue_book: \(entry.word)",
@@ -49,7 +49,7 @@ public class UrbanDictionaryCommand: StringCommand {
             ]
         )
     }
-    
+
     private func markdownOf(formattedText: String) -> String {
         linkPattern.replace(in: formattedText) { "[\($0[1])](https://www.urbandictionary.com/define.php?term=\($0[1].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0[1]))" }
     }

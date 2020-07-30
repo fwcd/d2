@@ -14,9 +14,9 @@ public class MinecraftDynmapCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let parsedArgs = argsPattern.firstGroups(in: input) else {
             output.append(errorText: info.helpText!)
@@ -24,11 +24,11 @@ public class MinecraftDynmapCommand: StringCommand {
         }
         let host = parsedArgs[1]
         let playerName = parsedArgs[2].nilIfEmpty
-        MinecraftDynmapConfigurationQuery(host: host).perform {
+        MinecraftDynmapConfigurationQuery(host: host).perform().listen {
             switch $0 {
                 case .success(let config):
                     let worldName = config.defaultworld ?? "world"
-                    MinecraftDynmapWorldQuery(host: host, world: worldName).perform {
+                    MinecraftDynmapWorldQuery(host: host, world: worldName).perform().listen {
                         switch $0 {
                             case .success(let world):
                                 if let name = playerName, let map = config.worlds?.first(where: { $0.name == worldName })?.maps?.first {
@@ -56,11 +56,11 @@ public class MinecraftDynmapCommand: StringCommand {
             }
         }
     }
-    
+
     private func formatBars(bar: String, halfBar: String, value: Int) -> String {
         String(repeating: bar, count: value / 2) + String(repeating: halfBar, count: value % 2)
     }
-    
+
     private func describe(player: MinecraftDynmapWorld.Player) -> String {
         """
         :earth_africa: \(player.world ?? "world")
@@ -69,7 +69,7 @@ public class MinecraftDynmapCommand: StringCommand {
         \(formatBars(bar: ":shirt:", halfBar: ":running_shirt_with_sash:", value: player.armor ?? 0))
         """
     }
-    
+
     private func tilePath(for player: MinecraftDynmapWorld.Player, on map: MinecraftDynmapConfiguration.World.Map, zoomLevel: Int = 2) -> String {
         let zoomPrefix = String(repeating: "z", count: zoomLevel) + (zoomLevel > 0 ? "_" : "")
         let (rawTileX, rawTileY) = map.toTilePos(x: player.x ?? 0, y: player.y ?? 0, z: player.z ?? 0)

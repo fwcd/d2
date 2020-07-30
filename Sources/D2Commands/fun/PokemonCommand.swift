@@ -14,13 +14,13 @@ public class PokemonCommand: StringCommand {
     )
     public let outputValueType: RichValueType = .embed
     private let inventoryManager: InventoryManager
-    
+
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
     }
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        PokedexQuery().perform {
+        PokedexQuery().perform().listen {
             switch $0 {
                 case .success(let pokedex):
                     guard let pokemon = pokedex.randomElement() else {
@@ -38,7 +38,7 @@ public class PokemonCommand: StringCommand {
             }
         }
     }
-    
+
     private func addToInventory(pokemon: PokedexEntry, context: CommandContext) {
         guard let author = context.author else {
             log.warning("Could not add to inventory since no author is present")

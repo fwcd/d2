@@ -8,12 +8,12 @@ public class ChuckNorrisJokeCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         let args = input.split(separator: " ")
-        IcndbJokeQuery(firstName: args[safely: 0].map { String($0) }, lastName: args[safely: 1].map { String($0) }).perform {
+        IcndbJokeQuery(firstName: args[safely: 0].map { String($0) }, lastName: args[safely: 1].map { String($0) }).perform().listen {
             switch $0 {
                 case .success(let result):
                     guard let value = result.value else {

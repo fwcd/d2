@@ -10,11 +10,11 @@ public class FTBModpacksCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        FTBModpacksQuery().perform {
+        FTBModpacksQuery().perform().listen {
             do {
                 let packs = try $0.get().prefix(5)
                 output.append(Embed(

@@ -12,11 +12,11 @@ public class RedditCommand: StringCommand {
 		longDescription: "Fetches a random top post from a given subreddit",
 		requiredPermissionLevel: .vip
 	)
-	
+
 	public init() {}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-		RedditQuery(subreddit: input, maxResults: 40).perform {
+		RedditQuery(subreddit: input, maxResults: 40).perform().listen {
 			output.append($0.flatMap { Result.from($0.data.children?.randomElement()?.data, errorIfNil: RedditError.noResultsFound) }.map {
 				RichValue.embed(Embed(
 					title: $0.title,
@@ -31,7 +31,7 @@ public class RedditCommand: StringCommand {
 			}, errorText: "Reddit search failed")
 		}
 	}
-	
+
 	private func refersToImage(url: URL) -> Bool {
 		let path = url.path
 		return path.hasSuffix(".gif") || path.hasSuffix(".png") || path.hasSuffix(".jpg")

@@ -104,7 +104,7 @@ public class PartyGameDatabase {
     private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
         sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in {
             Promise { then in
-                EitherIOQuery(term: String(c), maxOffset: 1500).perform {
+                EitherIOQuery(term: String(c), maxOffset: 1500).perform().listen {
                     then($0)
                 }
             }
@@ -114,7 +114,7 @@ public class PartyGameDatabase {
     private func fetchRRRatherQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
         sequence(promises: ["conversation-starters", "school", "dating"].map { category in {
             Promise { then in
-                RRRatherQuery(category: category).perform {
+                RRRatherQuery(category: category).perform().listen {
                     then($0)
                 }
             }
@@ -123,7 +123,7 @@ public class PartyGameDatabase {
 
     private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
         Promise { then in
-            NNNEverQuery(maxPages: 40).perform {
+            NNNEverQuery(maxPages: 40).perform().listen {
                 then($0)
             }
         }

@@ -18,7 +18,7 @@ public class DBLPCommand: StringCommand {
             return
         }
 
-        DBLPPublicationsQuery(term: input).perform {
+        DBLPPublicationsQuery(term: input).perform().listen {
             do {
                 let result = try $0.get()
                 var urlComponents = URLComponents()

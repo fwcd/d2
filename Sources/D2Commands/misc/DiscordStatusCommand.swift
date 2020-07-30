@@ -11,7 +11,7 @@ public class DiscordStatusCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        DiscordStatusQuery().perform {
+        DiscordStatusQuery().perform().listen {
             do {
                 let status = try $0.get()
                 output.append(Embed(
