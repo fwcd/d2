@@ -3,6 +3,11 @@ import Logging
 fileprivate let log = Logger(label: "D2Utils.Promise")
 
 /// Represents an asynchronously computed value.
+///
+/// Promises are executed immediately, i.e. is body
+/// runs synchronously with the constructor, similar
+/// to e.g. JavaScript's promises, but different from
+/// Python/Rust.
 public class Promise<T, E> where E: Error {
     private var state: State
     private var listeners: [(Result<T, E>) -> Void] = []
