@@ -119,21 +119,16 @@ public class CommandHandler: MessageHandler {
 				// Setup the pipe outputs
 				if let pipeSink = pipe.last {
 					let sinkCommand = pipeSink.command
-					pipeSink.output = MessageIOOutput(context: pipeSink.context) { sentMessage in
-						switch sentMessage {
-                            case .success((let sent)?):
-                                sinkCommand.onSuccessfullySent(context: CommandContext(
-                                    client: client,
-                                    registry: self.registry,
-                                    message: sent,
-                                    commandPrefix: self.commandPrefix,
-                                    subscriptions: pipeSink.context.subscriptions
-                                ))
-                            case .failure(let error):
-                                log.warning("Could not send message: \(error)")
-                            default:
-                                break
-						}
+					pipeSink.output = MessageIOOutput(context: pipeSink.context) { sentMessages in
+                        for sent in sentMessages {
+                            sinkCommand.onSuccessfullySent(context: CommandContext(
+                                client: client,
+                                registry: self.registry,
+                                message: sent,
+                                commandPrefix: self.commandPrefix,
+                                subscriptions: pipeSink.context.subscriptions
+                            ))
+                        }
 					}
 				}
 

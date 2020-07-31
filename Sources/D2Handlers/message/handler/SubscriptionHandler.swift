@@ -31,20 +31,15 @@ public struct SubscriptionHandler: MessageHandler {
                 subscriptions: subs
             )
             let command = registry[name]
-            let output = MessageIOOutput(context: context) { sentMessage in
-                switch sentMessage {
-                    case .success((let sent)?):
-                        command?.onSuccessfullySent(context: CommandContext(
-                            client: client,
-                            registry: self.registry,
-                            message: sent,
-                            commandPrefix: self.commandPrefix,
-                            subscriptions: subs
-                        ))
-                    case .failure(let error):
-                        log.warning("Could not send message: \(error)")
-                    default:
-                        break
+            let output = MessageIOOutput(context: context) { sentMessages in
+                for sent in sentMessages {
+                    command?.onSuccessfullySent(context: CommandContext(
+                        client: client,
+                        registry: self.registry,
+                        message: sent,
+                        commandPrefix: self.commandPrefix,
+                        subscriptions: subs
+                    ))
                 }
             }
             command?.onSubscriptionMessage(withContent: message.content, output: output, context: context)

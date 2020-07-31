@@ -12,11 +12,11 @@ fileprivate let contentLimit = 2000
 public class MessageIOOutput: CommandOutput {
 	private var context: CommandContext
 	private let messageWriter = MessageWriter()
-	private let onSent: ((Result<Message?, Error>) -> Void)?
+	private let onSent: (([Message]) -> Void)?
 
 	public let messageLengthLimit: Int? = 1800
 
-	public init(context: CommandContext, onSent: ((Result<Message?, Error>) -> Void)? = nil) {
+	public init(context: CommandContext, onSent: (([Message]) -> Void)? = nil) {
 		self.context = context
 		self.onSent = onSent
 	}
@@ -31,56 +31,46 @@ public class MessageIOOutput: CommandOutput {
 			log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
 		}
 
-		messageWriter.write(value: value).listen {
-            var messages: [Message]
-            do {
-                messages = self.splitUp(message: try $0.get())
-            } catch {
-                log.error("Error while encoding message: \(error)")
-                messages = [Message(content: """
-                    An error occurred while encoding the message:
-                    ```
-                    \(error)
-                    ```
-                    """)]
+		messageWriter.write(value: value)
+            .mapResult { (r: Result<Message, Error>) -> Result<[Message], Error> in
+                var messages: [Message]
+                do {
+                    messages = self.splitUp(message: try r.get())
+                } catch {
+                    log.error("Error while encoding message: \(error)")
+                    messages = [Message(content: """
+                        An error occurred while encoding the message:
+                        ```
+                        \(error)
+                        ```
+                        """)]
+                }
+                return .success(messages)
             }
-
-            sequence(promises: messages.map { m in { self.send(message: m, with: client, to: channel) } })
-        }
+            .then { sequence(promises: $0.map { m in { self.send(message: m, with: client, to: channel) } }) }
+            .map { $0.compactMap { $0 } }
+            .listenOrLogError { self.onSent?($0) }
 	}
 
-	private func send(message: Message, with client: MessageClient, to channel: OutputChannel) -> Promise<Void, Error> {
-		Promise { then in
-			switch channel {
-				case .guildChannel(let id):
-					client.sendMessage(message, to: id).listen {
-						self.onSent?($0)
-						then(.success(()))
-					}
-				case .dmChannel(let id):
-					client.createDM(with: id).listenOrLogError { channelId in
-						guard let id = channelId else {
-							log.error("Could not send direct message, since no channel ID could be fetched")
-							then(.success(()))
-							return
-						}
-						client.sendMessage(message, to: id).listen {
-							self.onSent?($0)
-							then(.success(()))
-						}
-					}
-				case .defaultChannel:
-					if let textChannelId = self.context.channel?.id {
-						client.sendMessage(message, to: textChannelId).listen {
-							self.onSent?($0)
-							then(.success(()))
-						}
-					} else {
-						log.warning("No default text channel available")
-						then(.success(()))
-					}
-			}
-		}
+	private func send(message: Message, with client: MessageClient, to channel: OutputChannel) -> Promise<Message?, Error> {
+        switch channel {
+            case .guildChannel(let id):
+                return client.sendMessage(message, to: id)
+            case .dmChannel(let id):
+                return client.createDM(with: id)
+                    .thenCatching { channelId in
+                        guard let id = channelId else {
+                            throw MessageIOOutputError.couldNotSendDM
+                        }
+                        return client.sendMessage(message, to: id)
+                    }
+            case .defaultChannel:
+                if let textChannelId = self.context.channel?.id {
+                    return client.sendMessage(message, to: textChannelId)
+                } else {
+                    return Promise(.failure(MessageIOOutputError.noDefaultChannelAvailable))
+                }
+        }
 	}
 
 	private func splitUp(message: Message) -> [Message] {

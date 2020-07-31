@@ -94,6 +94,15 @@ public class Promise<T, E> where E: Error {
         }
     }
 
+    /// Chains another synchronous computation after this one.
+    public func mapResult<U>(_ transform: @escaping (Result<T, E>) -> Result<U, E>) -> Promise<U, E> {
+        Promise<U, E> { then in
+            self.listen {
+                then(transform($0))
+            }
+        }
+    }
+
     /// Ignores the return value of the promise.
     public func void() -> Promise<Void, E> {
         map { _ in }
