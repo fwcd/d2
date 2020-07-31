@@ -17,8 +17,7 @@ public class ChangeLogCommand: StringCommand {
                 output.append(Embed(
                     title: ":clock: Latest Commits",
                     description: commits
-                        .compactMap(\.commit)
-                        .map { "[\($0.message.split(separator: "\n").first?.truncate(100, appending: "...").nilIfEmpty ?? "_no message_")](\($0.url))" }
+                        .map { "[`\($0.sha.prefix(7))`](\($0.htmlUrl)) \($0.commit?.message.split(separator: "\n").first?.truncate(100, appending: "...").nilIfEmpty ?? "_no message_")" }
                         .truncate(10)
                         .joined(separator: "\n")
                 ))
