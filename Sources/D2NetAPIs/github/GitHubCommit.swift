@@ -1,5 +1,3 @@
-import Foundation
-
 public struct GitHubCommit: Codable {
     public enum CodingKeys: String, CodingKey {
         case sha
@@ -19,15 +17,15 @@ public struct GitHubCommit: Codable {
     public let parents: [GitHubCommit]?
 
     public struct Commit: Codable {
-        public let author: Author?
-        public let committer: Author?
+        public let author: Author
+        public let committer: Author
         public let message: String
         public let url: String
 
         public struct Author: Codable {
             public let name: String
             public let email: String
-            public let date: Date
+            public let date: String
         }
     }
 }
