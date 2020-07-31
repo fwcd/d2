@@ -9,6 +9,7 @@ fileprivate let log = Logger(label: "D2Utils.Promise")
 /// to e.g. JavaScript's promises, but different from
 /// Python/Rust.
 public class Promise<T, E> where E: Error {
+    private let mutex = MutexLock()
     private var state: State
     private var listeners: [(Result<T, E>) -> Void] = []
 
@@ -26,15 +27,17 @@ public class Promise<T, E> where E: Error {
     /// synchronously begins running it.
     public required init(_ thenable: (@escaping (Result<T, E>) -> Void) -> Void) {
         state = .pending
-        thenable {
-            self.state = .finished($0)
-            if self.listeners.isEmpty, case let .failure(error) = $0 {
-                log.error("Unhandled Promise error: \(error)")
-            } else {
-                for listener in self.listeners {
-                    listener($0)
+        thenable { result in
+            self.mutex.lock {
+                self.state = .finished(result)
+                if self.listeners.isEmpty, case let .failure(error) = result {
+                    log.error("Unhandled Promise error: \(error)")
+                } else {
+                    for listener in self.listeners {
+                        listener(result)
+                    }
+                    self.listeners = []
                 }
-                self.listeners = []
             }
         }
     }
@@ -46,10 +49,12 @@ public class Promise<T, E> where E: Error {
 
     /// Listens for the result. Only fires once.
     public func listen(_ listener: @escaping (Result<T, E>) -> Void) {
-        if case let .finished(result) = state {
-            listener(result)
-        } else {
-            listeners.append(listener)
+        self.mutex.lock {
+            if case let .finished(result) = state {
+                listener(result)
+            } else {
+                listeners.append(listener)
+            }
         }
     }
 
