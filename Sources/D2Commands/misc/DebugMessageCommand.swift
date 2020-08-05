@@ -8,6 +8,8 @@ public class DebugMessageCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        output.append(.code("\(context.message)", language: "swift"))
+        var message = context.message
+        message.guild = nil
+        output.append(.code("\(message)", language: "swift"))
     }
 }

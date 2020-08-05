@@ -8,39 +8,39 @@ public struct Message: ExpressibleByStringLiteral {
 	public var embeds: [Embed]
 	public var files: [Message.FileUpload]
 	public var tts: Bool
-	
-	public let attachments: [Attachment]
-	public let activity: MessageActivity?
-	public let application: MessageApplication?
-	public let author: User?
-	public let dm: Bool
-	public let channelId: ChannelID?
-	public let editedTimestamp: Date?
-	public let id: MessageID?
-	public let nonce: ID?
-	public let pinned: Bool
-	public let reactions: [Reaction]
-	public let timestamp: Date?
-	public let type: MessageType?
-	public let guild: Guild?
-	public let guildMember: Guild.Member?
+
+	public var attachments: [Attachment]
+	public var activity: MessageActivity?
+	public var application: MessageApplication?
+	public var author: User?
+	public var dm: Bool
+	public var channelId: ChannelID?
+	public var editedTimestamp: Date?
+	public var id: MessageID?
+	public var nonce: ID?
+	public var pinned: Bool
+	public var reactions: [Reaction]
+	public var timestamp: Date?
+	public var type: MessageType?
+	public var guild: Guild?
+	public var guildMember: Guild.Member?
 
 	public var mentionEveryone: Bool
 	public var mentionRoles: [RoleID]
 	public var mentions: [User]
-	
+
 	public var embed: Embed? { embeds.first }
-	
+
 	/** Pure-string initializer without argument label for convenience. */
 	public init(_ content: String = "") {
 		self.init(content: content)
 	}
-	
+
 	/** Initializer intended for messages that are to be sent. */
 	public init(content: String = "", embed: Embed? = nil, files: [FileUpload] = [], tts: Bool = false) {
 		self.init(content: content, embeds: embed.map { [$0] } ?? [], files: files, tts: tts)
 	}
-	
+
 	/** Initializer intended for received/arbitrary messages. */
 	public init(
 		content: String,
@@ -89,23 +89,23 @@ public struct Message: ExpressibleByStringLiteral {
 		self.guild = guild
 		self.guildMember = guildMember
 	}
-	
+
 	public init(stringLiteral value: String) {
 		self.init(content: value)
 	}
-	
+
 	public struct FileUpload {
 		public let data: Data
 		public let filename: String
 		public let mimeType: String
-		
+
 		public init(data: Data, filename: String, mimeType: String) {
 			self.data = data
 			self.filename = filename
 			self.mimeType = mimeType
 		}
 	}
-	
+
 	public struct Attachment {
 		public let id: AttachmentID
 		public let filename: String
@@ -113,7 +113,7 @@ public struct Message: ExpressibleByStringLiteral {
 		public let url: URL?
 		public let width: Int?
 		public let height: Int?
-		
+
 		public init(id: AttachmentID, filename: String, size: Int, url: URL? = nil, width: Int? = nil, height: Int? = nil) {
 			self.id = id
 			self.filename = filename
@@ -123,16 +123,16 @@ public struct Message: ExpressibleByStringLiteral {
 			self.height = height
 		}
 	}
-	
+
 	public struct MessageActivity {
 		public let type: ActivityType
 		public let partyId: String?
-		
+
 		public init(type: ActivityType, partyId: String? = nil) {
 			self.type = type
 			self.partyId = partyId
 		}
-		
+
 		public enum ActivityType: Int, Codable {
 			case join
 			case spectate
@@ -140,14 +140,14 @@ public struct Message: ExpressibleByStringLiteral {
 			case joinRequest
 		}
 	}
-	
+
 	public struct MessageApplication {
 		public let id: ID
 		public let coverImage: String
 		public let description: String
 		public let icon: String
 		public let name: String
-		
+
 		public init(id: ID, coverImage: String, description: String, icon: String, name: String) {
 			self.id = id
 			self.coverImage = coverImage
@@ -156,14 +156,14 @@ public struct Message: ExpressibleByStringLiteral {
 			self.name = name
 		}
 	}
-	
+
 	public struct Reaction {
 		public let count: Int
 		public let me: Bool
 		public let emoji: Emoji
 
 		public let users: [UserID]?
-		
+
 		public init(count: Int, me: Bool, emoji: Emoji, users: [UserID]? = nil) {
 			self.count = count
 			self.me = me
@@ -171,7 +171,7 @@ public struct Message: ExpressibleByStringLiteral {
 			self.users = users
 		}
 	}
-	
+
 	public enum MessageType: Int, Codable {
         case `default`
         case recipientAdd
