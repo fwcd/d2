@@ -12,8 +12,8 @@ public struct MentionD2Handler: MessageHandler {
     }
 
     public func handleRaw(message: Message, from client: MessageClient) -> Bool {
-        if let id = client.me?.id,
-            message.mentions.contains(where: { $0.id == id }),
+        if let me = client.me,
+            message.mentions(user: me),
             let messageId = message.id,
             let guildId = message.guild?.id,
             let channelId = message.channelId {
