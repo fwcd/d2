@@ -278,6 +278,7 @@ public class D2Delegate: MessageDelegate {
         registry["discordstatus"] = DiscordStatusCommand()
         registry["ioplatform"] = IOPlatformCommand()
         registry["sysinfo"] = SysInfoCommand()
+        registry["debugmessage", aka: ["debug"]] = DebugMessageCommand()
         registry["issuereport", aka: ["bugreport"]] = IssueReportCommand()
         registry["search", aka: ["s"]] = SearchCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
         registry["rerun", aka: ["re"]] = ReRunCommand(permissionManager: permissionManager, mostRecentPipeRunner: mostRecentPipeRunner)
