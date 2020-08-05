@@ -15,10 +15,10 @@ public struct MentionD2Handler: MessageHandler {
         if let me = client.me,
             message.mentions(user: me),
             let messageId = message.id,
-            let guildId = message.guild?.id,
+            let guild = message.guild,
             let channelId = message.channelId {
-            if let answer = try? conversator.answer(input: mentionPattern.replace(in: message.content, with: ""), on: guildId) {
-                client.sendMessage(Message(content: answer), to: channelId)
+            if let answer = try? conversator.answer(input: mentionPattern.replace(in: message.content, with: ""), on: guild.id) {
+                client.sendMessage(Message(content: answer.cleaningMentions(with: guild)), to: channelId)
             } else {
                 client.createReaction(for: messageId, on: channelId, emoji: "🤔")
             }

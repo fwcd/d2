@@ -40,9 +40,10 @@ public struct SpamHandler: MessageHandler {
                 client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author)>!"), to: channelId)
                 cautionedSpammers.insert(author)
             }
+            return true
         }
 
-        return true
+        return false
     }
 
     private func isPossiblySpam(message: Message) -> Bool {
