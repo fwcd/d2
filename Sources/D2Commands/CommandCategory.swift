@@ -35,7 +35,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .coding: return ":currency_exchange: Encoders and decoders"
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":closed_book: Dictionaries"
-            case .essential: return ":sparkles: Fundamental commands (such as `help`)"
+            case .essential: return ":sparkles: Essential commands"
             case .file: return ":file_folder: File IO"
             case .fun: return ":candy: Fun"
             case .game: return ":game_die: Multiplayer games"
