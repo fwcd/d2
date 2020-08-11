@@ -246,6 +246,7 @@ public class D2Delegate: MessageDelegate {
         registry["poll"] = PollCommand()
         registry["concat"] = ConcatCommand()
         registry["revconcat"] = ReverseConcatCommand()
+        registry["repeat"] = RepeatCommand()
         registry["rev"] = ReverseInputCommand()
         registry["identity", aka: ["id"]] = IdentityCommand()
         registry["presence"] = PresenceCommand()
