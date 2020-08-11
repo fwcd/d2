@@ -28,21 +28,26 @@ public class Magic8BallCommand: StringCommand {
             "Most likely.",
             "Outlook good.",
             "Yes.",
-            "Signs point to yes."
+            "Signs point to yes.",
+            "Of course!",
+            "Yep.",
+            "Agreed."
         ],
         .undecided: [
-            "Reply hazy, try again.",
-            "Ask again later.",
-            "Better not tell you now.",
-            "Cannot predict now.",
-            "Concentrate and ask again."
+            "I don't know, sorry.",
+            "I know the answer, but I'm afraid, I can't tell you.",
+            "Please ask a different question."
         ],
         .no: [
             "Don't count on it.",
+            "Don't.",
             "My reply is no.",
             "My sources say no.",
             "Outlook not so good.",
-            "Very doubtful."
+            "Very doubtful.",
+            "No.",
+            "Nope.",
+            "Denied."
         ]
     ]) {
         self.answers = answers
@@ -54,7 +59,9 @@ public class Magic8BallCommand: StringCommand {
         let decisions = Decision.allCases.sorted()
         let i = abs(hasher.finalize()) % decisions.count
         let decision = decisions[i]
-        let answer = answers[decision]?.randomElement() ?? "I am not sure about that!"
+        let answer = Double.random(in: 0..<1) < 0.95
+            ? answers[decision]?.randomElement() ?? "I am not sure about that!"
+            : "Concentrate and ask again!"
         output.append(Embed(
             description: ":8ball: **\(answer)**"
         ))
