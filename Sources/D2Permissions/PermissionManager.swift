@@ -7,12 +7,16 @@ fileprivate let log = Logger(label: "D2Permissions.PermissionManager")
 fileprivate let userPermissionsFilePath = "local/userPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
+fileprivate let nameWithTagPattern = try! Regex(from: "([^#]+)#(\\d+)")
+
 public class PermissionManager: CustomStringConvertible {
     private let storage = DiskJsonSerializer()
     private var adminWhitelist: AdminWhitelist
     private var userPermissions: [String: PermissionLevel]
     private var simulatedPermissions: [String: PermissionLevel] = [:]
     public var description: String { return userPermissions.description }
+
+    private var adminNamesWithTags: [String] { adminWhitelist.users + userPermissions.filter { $0.value == .admin }.map(\.key) }
 
     public init() {
         do {
@@ -38,8 +42,18 @@ public class PermissionManager: CustomStringConvertible {
         }
     }
 
+    public func admins(in guild: Guild) -> Set<User> {
+        Set(adminNamesWithTags.compactMap { decode(nameWithTag: $0, in: guild) })
+    }
+
     private func encode(user: User) -> String {
-        return "\(user.username)#\(user.discriminator)"
+        "\(user.username)#\(user.discriminator)"
+    }
+
+    private func decode(nameWithTag: String, in guild: Guild) -> User? {
+        guard let parsed = nameWithTagPattern.firstGroups(in: nameWithTag) else { return nil }
+        let users: [User] = guild.members.map(\.1.user)
+        return users.first(where: { (user: User) -> Bool in user.username == parsed[1] && String(user.discriminator) == parsed[2] })
     }
 
     public func user(_ theUser: User, hasPermission requiredLevel: PermissionLevel, usingSimulated: Bool = true) -> Bool {
