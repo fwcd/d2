@@ -14,7 +14,7 @@ public class PermissionManager: CustomStringConvertible {
     private var adminWhitelist: AdminWhitelist
     private var userPermissions: [String: PermissionLevel]
     private var simulatedPermissions: [String: PermissionLevel] = [:]
-    public var description: String { return userPermissions.description }
+    public var description: String { userPermissions.description }
 
     private var adminNamesWithTags: [String] { adminWhitelist.users + userPermissions.filter { $0.value == .admin }.map(\.key) }
 

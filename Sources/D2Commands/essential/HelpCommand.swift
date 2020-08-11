@@ -11,12 +11,12 @@ public class HelpCommand: StringCommand {
 	public let outputValueType: RichValueType = .embed
 	private let commandPrefix: String
 	private let permissionManager: PermissionManager
-	
+
 	public init(commandPrefix: String, permissionManager: PermissionManager) {
 		self.commandPrefix = commandPrefix
 		self.permissionManager = permissionManager
 	}
-	
+
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
 		let authorLevel = context.author.map { permissionManager[simulated: $0] ?? permissionManager[$0] } ?? PermissionLevel.basic
 		if input.isEmpty {
@@ -34,7 +34,7 @@ public class HelpCommand: StringCommand {
 			}
 		}
 	}
-	
+
 	private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
 		let commands = context.registry.commandsWithAliases()
 		return Embed(
@@ -56,7 +56,7 @@ public class HelpCommand: StringCommand {
 				}
 		)
 	}
-	
+
 	private func categoryHelpEmbed(for category: CommandCategory, at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
 		let commands = context.registry.commandsWithAliases()
 		let helpGroups = Dictionary(grouping: commands.filter { !$0.command.info.hidden && $0.command.info.category == category }, by: { $0.command.info.requiredPermissionLevel })
@@ -83,7 +83,7 @@ public class HelpCommand: StringCommand {
 			title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
 			description: """
 				\(command.info.longDescription)
-				
+
 				\(command.info.helpText ?? "")
 				""".trimmingCharacters(in: .whitespaces),
 			footer: Embed.Footer(text: "\(command.info.category)")
