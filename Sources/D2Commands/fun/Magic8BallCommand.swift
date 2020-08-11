@@ -1,3 +1,5 @@
+import D2MessageIO
+
 public class Magic8BallCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
@@ -52,7 +54,10 @@ public class Magic8BallCommand: StringCommand {
         let decisions = Decision.allCases.sorted()
         let i = abs(hasher.finalize()) % decisions.count
         let decision = decisions[i]
-        output.append(answers[decision]?.randomElement() ?? "I am not sure about that!")
+        let answer = answers[decision]?.randomElement() ?? "I am not sure about that!"
+        output.append(Embed(
+            description: ":8ball: **\(answer)**"
+        ))
     }
 
     private func normalize(input: String) -> some Hashable {
