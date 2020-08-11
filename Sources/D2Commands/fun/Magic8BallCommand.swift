@@ -34,8 +34,13 @@ public class Magic8BallCommand: StringCommand {
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         var hasher = Hasher()
-        hasher.combine(input)
+        hasher.combine(normalize(input: input))
         let i = abs(hasher.finalize()) % answers.count
         output.append(answers[i])
+    }
+
+    private func normalize(input: String) -> some Hashable {
+        // Make the input case-, space- and translation-invariant
+        Set(input.lowercased().split(separator: " "))
     }
 }
