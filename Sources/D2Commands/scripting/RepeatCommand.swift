@@ -9,17 +9,31 @@ public class RepeatCommand: StringCommand {
         helpText: "Syntax: [n] [string]?",
         requiredPermissionLevel: .basic
     )
+    private let maxCount: Int
+    private let maxTotalLength: Int
 
-	public init() {}
+	public init(maxCount: Int = 100, maxTotalLength: Int = 1800) {
+        self.maxCount = maxCount
+        self.maxTotalLength = maxTotalLength
+    }
 
 	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard
             let parsedArgs = argsPattern.firstGroups(in: input),
-            let times = Int(parsedArgs[1]) else {
+            let count = Int(parsedArgs[1]) else {
             output.append(errorText: info.helpText!)
             return
         }
+        guard count <= maxCount else {
+            output.append(errorText: "Please enter a count lower than or equal to \(maxCount)")
+            return
+        }
         let base = parsedArgs[2]
-        output.append(String(repeating: base, count: times))
+        let result = String(repeating: base, count: count)
+        guard result.count <= maxTotalLength else {
+            output.append(errorText: "Please make sure that the output string is shorter than (or equal in length to) \(maxTotalLength)")
+            return
+        }
+        output.append(result)
     }
 }
