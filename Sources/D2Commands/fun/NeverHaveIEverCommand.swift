@@ -1,3 +1,6 @@
+import D2Utils
+import D2NetAPIs
+
 public class NeverHaveIEverCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
@@ -11,11 +14,16 @@ public class NeverHaveIEverCommand: StringCommand {
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        do {
-            let nhie = try partyGameDB.randomNhieStatement()
-            output.append(nhie.statement)
-        } catch {
-            output.append(error, errorText: "Could not fetch statement")
+        let nhie: Promise<NeverHaveIEverStatement, Error> = Bool.random()
+            ? Promise.catching { try partyGameDB.randomNhieStatement() }
+            : NeverHaveIEverOrgQuery().perform()
+        nhie.listen {
+            do {
+                let nhie = try $0.get()
+                output.append(nhie.statement)
+            } catch {
+                output.append(error, errorText: "Could not fetch statement")
+            }
         }
     }
 
