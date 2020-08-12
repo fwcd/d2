@@ -28,7 +28,7 @@ public class SearchCommand: StringCommand {
             .commandsWithAliases()
             .filter {
                 let info = $0.command.info
-                let names = [$0.name, info.shortDescription, info.longDescription] + $0.aliases
+                let names = [$0.name, info.shortDescription, info.longDescription, "\($0.command.inputValueType) -> \($0.command.outputValueType)"] + $0.aliases
                 return names
                     .map { $0.lowercased() }
                     .contains { $0.contains(input) }
