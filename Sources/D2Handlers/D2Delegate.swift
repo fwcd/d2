@@ -148,6 +148,7 @@ public class D2Delegate: MessageDelegate {
         registry["changelog", aka: ["patchnotes", "releasenotes", "commits"]] = ChangeLogCommand()
         registry["sourcefile"] = SourceFileCommand()
         registry["urbandict", aka: ["urban", "ud"]] = UrbanDictionaryCommand()
+        registry["cocktail"] = CocktailCommand()
         registry["chess"] = GameCommand<ChessGame>()
         registry["cyclethrough"] = CycleThroughCommand()
         registry["dot", aka: ["graphviz"]] = GraphVizCommand(layout: .dot)
