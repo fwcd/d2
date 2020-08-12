@@ -11,7 +11,7 @@ fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .wolframalpha,
+		category: .dictionary,
 		shortDescription: "Queries Wolfram Alpha",
 		longDescription: "Sets the permission level of one or more users",
 		helpText: "[--image]? [--steps]? [query input]",

@@ -21,10 +21,8 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case prolog
     case reddit
     case scripting
-    case stackoverflow
     case support
     case web
-    case wolframalpha
     case xkcd
 
     public var description: String {
@@ -34,7 +32,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .cau: return ":school: CAU-specific utilities"
             case .coding: return ":currency_exchange: Encoders and decoders"
             case .d2script: return ":scroll: D2 scripting"
-            case .dictionary: return ":closed_book: Dictionaries"
+            case .dictionary: return ":books: Dictionaries, online search engines and more"
             case .essential: return ":sparkles: Essential commands"
             case .file: return ":file_folder: File IO"
             case .fun: return ":candy: Fun"
@@ -49,12 +47,10 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .ml: return ":bulb: Machine learning"
             case .music: return ":guitar: Music, theory and chords"
             case .prolog: return ":owl: Prolog"
-            case .reddit: return ":ledger: Reddit API"
+            case .reddit: return ":ledger: Reddit"
             case .scripting: return ":tools: Command scripting"
-            case .stackoverflow: return ":books: Stack Overflow API"
             case .support: return ":grey_question: Support"
-            case .web: return ":globe_with_meridians: In-Discord web browsing"
-            case .wolframalpha: return ":boom: WolframAlpha API"
+            case .web: return ":globe_with_meridians: Web browsing"
             case .xkcd: return ":pencil2: xkcd"
         }
     }

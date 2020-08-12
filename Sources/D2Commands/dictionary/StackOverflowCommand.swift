@@ -9,7 +9,7 @@ fileprivate let log = Logger(label: "D2Commands.StackOverflowCommand")
 
 public class StackOverflowCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .stackoverflow,
+		category: .dictionary,
 		shortDescription: "Queries Stack Overflow",
 		longDescription: "Searches Stack Overflow using the given input",
 		requiredPermissionLevel: .vip
