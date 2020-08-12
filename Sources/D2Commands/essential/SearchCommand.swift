@@ -39,7 +39,7 @@ public class SearchCommand: StringCommand {
         output.append(Embed(
             title: ":mag: Found Commands",
             fields: results.map { Embed.Field(
-                name: "`\(commandPrefix)\($0.name)`\($0.aliases.nilIfEmpty.map { " (aka. `\($0.map { "`\($0)`" }.joined(separator: ", "))`)" } ?? "")",
+                name: "`\(commandPrefix)\($0.name)`\($0.aliases.nilIfEmpty.map { " (aka. \($0.map { "`\($0)`" }.joined(separator: ", ")))" } ?? "")",
                 value: $0.command.info.longDescription
             ) }
         ))
