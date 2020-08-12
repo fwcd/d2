@@ -3,7 +3,7 @@ import D2MessageIO
 
 public class ChangeLogCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .git,
         shortDescription: "Fetches the latest commits to D2's repo",
         requiredPermissionLevel: .basic
     )

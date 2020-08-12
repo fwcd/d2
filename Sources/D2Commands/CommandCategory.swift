@@ -9,7 +9,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case file
     case fun
     case game
-    case gitlab
+    case git
     case gmod
     case haskell
     case imaging
@@ -37,7 +37,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .file: return ":file_folder: File IO"
             case .fun: return ":candy: Fun"
             case .game: return ":game_die: Multiplayer games"
-            case .gitlab: return ":fox: GitLab"
+            case .git: return ":fox: Git"
             case .gmod: return ":regional_indicator_g: Garry's Mod"
             case .haskell: return ":umbrella2: Haskell"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
