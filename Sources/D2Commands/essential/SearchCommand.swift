@@ -11,7 +11,7 @@ public class SearchCommand: StringCommand {
     public let outputValueType: RichValueType = .embed
 	private let commandPrefix: String
 	private let permissionManager: PermissionManager
-	
+
 	public init(commandPrefix: String, permissionManager: PermissionManager) {
 		self.commandPrefix = commandPrefix
 		self.permissionManager = permissionManager
@@ -29,12 +29,13 @@ public class SearchCommand: StringCommand {
             .filter {
                 let info = $0.command.info
                 return $0.name.lowercased().contains(term)
+                    || $0.aliases.contains { $0.lowercased().contains(term) }
                     || info.shortDescription.lowercased().contains(term)
                     || info.longDescription.lowercased().contains(term)
             }
             .sorted(by: descendingComparator { $0.name.levenshteinDistance(to: input) })
             .prefix(5)
-        
+
         output.append(Embed(
             title: ":mag: Found Commands",
             fields: results.map { Embed.Field(
