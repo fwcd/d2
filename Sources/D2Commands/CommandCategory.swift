@@ -5,7 +5,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case coding
     case d2script
     case dictionary
-    case essential
     case file
     case fun
     case game
@@ -14,6 +13,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case haskell
     case imaging
     case math
+    case meta
     case minecraft
     case misc
     case ml
@@ -21,7 +21,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case prolog
     case reddit
     case scripting
-    case support
     case web
     case xkcd
 
@@ -33,7 +32,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .coding: return ":currency_exchange: Encoders and decoders"
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":books: Dictionaries, online search engines and more"
-            case .essential: return ":sparkles: Essential commands"
             case .file: return ":file_folder: File IO"
             case .fun: return ":candy: Fun"
             case .game: return ":game_die: Multiplayer games"
@@ -42,6 +40,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .haskell: return ":umbrella2: Haskell"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
             case .math: return ":bar_chart: Mathematics"
+            case .meta: return ":sparkles: Meta, i.e. commands related to D2 itself"
             case .minecraft: return ":evergreen_tree: Minecraft"
             case .misc: return ":art: Miscellaneous commands"
             case .ml: return ":bulb: Machine learning"
@@ -49,7 +48,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .prolog: return ":owl: Prolog"
             case .reddit: return ":ledger: Reddit"
             case .scripting: return ":tools: Command scripting"
-            case .support: return ":grey_question: Support"
             case .web: return ":globe_with_meridians: Web browsing"
             case .xkcd: return ":pencil2: xkcd"
         }

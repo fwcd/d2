@@ -3,7 +3,7 @@ import D2Permissions
 
 public class HelpCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .essential,
+		category: .meta,
 		shortDescription: "Helps the user",
 		longDescription: "Displays a help embed showing all registered commands",
 		requiredPermissionLevel: .basic

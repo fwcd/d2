@@ -2,7 +2,7 @@ import D2Permissions
 
 public class TechSupportCommand: StringCommand {
     public let info = CommandInfo(
-        category: .support,
+        category: .meta,
         shortDescription: "Pings the bot's admins",
         requiredPermissionLevel: .basic
     )

@@ -3,7 +3,7 @@ import D2MessageIO
 
 public class IssueReportCommand: StringCommand {
     public let info = CommandInfo(
-        category: .support,
+        category: .meta,
         shortDescription: "Provides a link to the bug report form",
         requiredPermissionLevel: .basic
     )

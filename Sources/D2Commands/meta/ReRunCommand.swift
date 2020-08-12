@@ -3,7 +3,7 @@ import D2Permissions
 
 public class ReRunCommand: StringCommand {
     public let info = CommandInfo(
-        category: .essential,
+        category: .meta,
         shortDescription: "Re-runs the last command",
         requiredPermissionLevel: .vip,
         shouldOverwriteMostRecentPipeRunner: false

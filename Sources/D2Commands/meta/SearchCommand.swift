@@ -4,7 +4,7 @@ import D2Utils
 
 public class SearchCommand: StringCommand {
     public let info = CommandInfo(
-        category: .essential,
+        category: .meta,
         shortDescription: "Searches for available commands",
         requiredPermissionLevel: .basic
     )
