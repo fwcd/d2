@@ -28,10 +28,10 @@ public class SearchCommand: StringCommand {
             .commandsWithAliases()
             .filter {
                 let info = $0.command.info
-                return $0.name.lowercased().contains(term)
-                    || $0.aliases.contains { $0.lowercased().contains(term) }
-                    || info.shortDescription.lowercased().contains(term)
-                    || info.longDescription.lowercased().contains(term)
+                let names = [$0.name, info.shortDescription, info.longDescription] + $0.aliases
+                return names
+                    .map { $0.lowercased() }
+                    .contains { $0.contains(input) }
             }
             .sorted(by: descendingComparator { $0.name.levenshteinDistance(to: input) })
             .prefix(5)
