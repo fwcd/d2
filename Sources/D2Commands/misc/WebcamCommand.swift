@@ -5,7 +5,7 @@ import D2MessageIO
 
 fileprivate let argPattern = try! Regex(from: "(\\w+)\\s*(.*)")
 fileprivate let rawFloatPattern = "-?\\d+(?:\\.\\d+)?"
-fileprivate let coordsWithRadiusPattern = try! Regex(from: "(\(rawFloatPattern))[\\s,]+(\(rawFloatPattern))(?:\\s+(\(rawFloatPattern)))")
+fileprivate let coordsWithRadiusPattern = try! Regex(from: "(\(rawFloatPattern))[\\s,]+(\(rawFloatPattern))(?:\\s+(\(rawFloatPattern)))?")
 
 public class WebcamCommand: StringCommand {
     public private(set) var info = CommandInfo(
