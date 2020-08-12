@@ -8,9 +8,7 @@ public struct UrbanDictionaryQuery {
     }
 
     public func perform() -> Promise<UrbanDictionarySearchResults, Error> {
-        Promise.catchingThen {
-            let request = try HTTPRequest(host: "api.urbandictionary.com", path: "/v0/define", query: ["term": term])
-            return request.fetchJSONAsync(as: UrbanDictionarySearchResults.self)
-        }
+        Promise.catching { try HTTPRequest(host: "api.urbandictionary.com", path: "/v0/define", query: ["term": term]) }
+            .then { $0.fetchJSONAsync(as: UrbanDictionarySearchResults.self) }
     }
 }
