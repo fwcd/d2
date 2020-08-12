@@ -1,6 +1,6 @@
 public class CommandCountCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .meta,
         shortDescription: "Counts the number of available commands",
         requiredPermissionLevel: .basic
     )

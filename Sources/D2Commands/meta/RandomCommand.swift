@@ -2,16 +2,16 @@ import D2Permissions
 
 public class RandomCommand: Command {
     public let info = CommandInfo(
-        category: .misc,
+        category: .meta,
         shortDescription: "Invokes a random command",
         requiredPermissionLevel: .basic
     )
     private let permissionManager: PermissionManager
-    
+
     public init(permissionManager: PermissionManager) {
         self.permissionManager = permissionManager
     }
-    
+
     public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author is present!")

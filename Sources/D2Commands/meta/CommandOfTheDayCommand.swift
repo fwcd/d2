@@ -3,7 +3,7 @@ import D2MessageIO
 
 public class CommandOfTheDayCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .meta,
         shortDescription: "Showcases a new command, every day",
         requiredPermissionLevel: .basic
     )
