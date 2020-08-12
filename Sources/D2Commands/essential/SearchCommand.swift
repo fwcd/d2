@@ -24,24 +24,30 @@ public class SearchCommand: StringCommand {
             return
         }
 
-        let results = context.registry
-            .commandsWithAliases()
-            .filter {
-                let info = $0.command.info
-                let names = [$0.name, info.shortDescription, info.longDescription, "\($0.command.inputValueType) -> \($0.command.outputValueType)"] + $0.aliases
-                return names
-                    .map { $0.lowercased() }
-                    .contains { $0.contains(input) }
-            }
-            .sorted(by: descendingComparator { $0.name.levenshteinDistance(to: input) })
-            .prefix(5)
+        do {
+            let parsedPattern = try? Regex(from: term)
+            let pattern = try parsedPattern ?? Regex(from: Regex.escape(term))
+            let results = context.registry
+                .commandsWithAliases()
+                .filter {
+                    let info = $0.command.info
+                    let names = [$0.name, info.shortDescription, info.longDescription, "\($0.command.inputValueType) -> \($0.command.outputValueType)"] + $0.aliases
+                    return names
+                        .map { $0.lowercased() }
+                        .contains { pattern.matchCount(in: $0) > 0 }
+                }
+                .sorted(by: descendingComparator { $0.name.levenshteinDistance(to: input) })
+                .prefix(5)
 
-        output.append(Embed(
-            title: ":mag: Found Commands",
-            fields: results.map { Embed.Field(
-                name: "`\(commandPrefix)\($0.name)`\($0.aliases.nilIfEmpty.map { " (aka. \($0.map { "`\($0)`" }.joined(separator: ", ")))" } ?? "")",
-                value: $0.command.info.longDescription
-            ) }
-        ))
+            output.append(Embed(
+                title: ":mag: Found Commands",
+                fields: results.map { Embed.Field(
+                    name: "`\(commandPrefix)\($0.name)`\($0.aliases.nilIfEmpty.map { " (aka. \($0.map { "`\($0)`" }.joined(separator: ", ")))" } ?? "")",
+                    value: $0.command.info.longDescription
+                ) }
+            ))
+        } catch {
+            output.append(errorText: "Invalid input: `\(input)`")
+        }
     }
 }
