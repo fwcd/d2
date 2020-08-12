@@ -14,7 +14,7 @@ public class CocktailCommand: StringCommand {
         CocktailDBSearchQuery(term: input).perform().listen {
             do {
                 let results = try $0.get()
-                guard let drink = results.drinks.first else {
+                guard let drink = results.drinks?.first else {
                     output.append(errorText: "No such drink found!")
                     return
                 }
