@@ -9,9 +9,9 @@ public struct NNNEverQuery {
     }
 
     public func perform(page: Int? = nil, prepending: [NeverHaveIEverStatement] = []) -> Promise<[NeverHaveIEverStatement], Error> {
-        .catchingThen {
-            let request = try HTTPRequest(host: "nnnever.com", path: "/\(page.map { "\($0)" } ?? "")")
-            return request.fetchHTMLAsync().then { document in
+        Promise.catching { try HTTPRequest(host: "nnnever.com", path: "/\(page.map { "\($0)" } ?? "")") }
+            .then { $0.fetchHTMLAsync() }
+            .then { document in
                 .catchingThen {
                     let rawStatements = try document.select(".question .title").array()
                     let statements = try rawStatements.map { NeverHaveIEverStatement(statement: try $0.text()) }
@@ -26,6 +26,5 @@ public struct NNNEverQuery {
                     }
                 }
             }
-        }
     }
 }
