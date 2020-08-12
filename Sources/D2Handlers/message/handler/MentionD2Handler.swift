@@ -13,6 +13,7 @@ public struct MentionD2Handler: MessageHandler {
 
     public func handleRaw(message: Message, from client: MessageClient) -> Bool {
         if let me = client.me,
+            !message.mentionEveryone,
             message.mentions(user: me),
             let messageId = message.id,
             let guild = message.guild,
