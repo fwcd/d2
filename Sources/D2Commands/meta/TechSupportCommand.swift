@@ -6,6 +6,7 @@ public class TechSupportCommand: StringCommand {
         shortDescription: "Pings the bot's admins",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .mentions
     private let permissionManager: PermissionManager
 
     public init(permissionManager: PermissionManager) {

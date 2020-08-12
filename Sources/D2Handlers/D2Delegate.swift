@@ -284,6 +284,7 @@ public class D2Delegate: MessageDelegate {
         registry["debugmessage", aka: ["debug"]] = DebugMessageCommand()
         registry["issuereport", aka: ["bugreport"]] = IssueReportCommand()
         registry["techsupport", aka: ["helpme", "helpmenowplz"]] = TechSupportCommand(permissionManager: permissionManager)
+        registry["about"] = AboutCommand(commandPrefix: commandPrefix)
         registry["search", aka: ["s"]] = SearchCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
         registry["rerun", aka: ["re"]] = ReRunCommand(permissionManager: permissionManager, mostRecentPipeRunner: mostRecentPipeRunner)
         registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
