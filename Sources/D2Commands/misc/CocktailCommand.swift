@@ -25,7 +25,7 @@ public class CocktailCommand: StringCommand {
                     footer: (drink.tags.nilIfEmpty?.joined(separator: ", ")).map(Embed.Footer.init(text:)),
                     fields: [
                         Embed.Field(name: "Ingredients", value: drink.measuredIngredients.map { [$0.0, $0.1].compactMap { $0 }.joined(separator: " ") }.joined(separator: "\n").nilIfEmpty ?? "_none_", inline: true),
-                        Embed.Field(name: "Category", value: [drink.strCategory, drink.strAlcoholic].compactMap { $0 }.nilIfEmpty?.joined(separator: "\n") ?? "_none_", inline: true),
+                        Embed.Field(name: "Category", value: [drink.strCategory, drink.strIBA, drink.strAlcoholic].compactMap { $0 }.nilIfEmpty?.joined(separator: "\n") ?? "_none_", inline: true),
                         Embed.Field(name: "Glass", value: drink.strGlass ?? "_none_", inline: true),
                         Embed.Field(name: "Instructions", value: drink.strInstructions ?? "_none_")
                     ]
