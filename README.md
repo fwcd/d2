@@ -129,13 +129,14 @@ The program consists of a single executable:
 
 * `D2`, the main Discord frontend
 
-Each executable uses its own implementation of message IO, e.g. `D2` uses `SwiftDiscord` to conform to `D2MessageIO`'s API.
-
-These depend on several library targets:
+This executable depends on several library targets:
+* `D2Handlers`, top-level message/event handling
 * `D2Commands`, the command framework and the implementations
-* `D2Graphics`, 2D graphics and drawing
-* `D2MessageIO`, the messaging framework used by D2 (abstracts over the Discord library)
-* `D2Permissions`, the permission manager
+* `D2MessageIO`, the messaging framework (abstracting over the Discord library)
+    * `D2DiscordIO`, the Discord implementation
+    * `D2TelegramIO`, the Telegram implementation
+    * `D2IRCIO`, the IRC/Twitch implementation
+* `D2Permissions`, permission management
 * `D2Script`, an experimental DSL that can be used to script commands
 * `D2Graphics`, 2D graphics and drawing
 * `D2NetAPIs`, client implementations of various web APIs
@@ -150,9 +151,9 @@ At a basic level, the `Command` protocol consists of a single method named `invo
 ```swift
 protocol Command: class {
     ...
-    
+
     func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
-    
+
     ...
 }
 ```
@@ -173,14 +174,14 @@ class PipeOutput: CommandOutput {
     private let context: CommandContext
     private let args: String
     private let next: CommandOutput?
-    
+
     init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
         self.sink = sink
         self.args = args
         self.context = context
         self.next = next
     }
-    
+
     func append(_ value: RichValue) {
         let nextInput = args.isEmpty ? value : (.text(args) + value)
         sink.invoke(input: nextInput, output: next ?? PrintOutput(), context: context)
@@ -203,7 +204,7 @@ protocol ArgCommand: Command {
     associatedtype Args: Arg
 
     var argPattern: Args { get }
-    
+
     func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
 }
 ```
