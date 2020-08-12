@@ -143,7 +143,7 @@ This executable depends on several library targets:
 * `D2Utils`, a collection of useful utilities
 
 ### D2
-The executable application. The base functionality is provided by `D2ClientHandler`, which is a `DiscordClientDelegate` that handles raw, incoming messages and dispatches them to custom handlers that conform to the `Command` protocol.
+The executable application. Sets up messaging backends (like Discord) and the top-level event handler (`D2Delegate`). Besides other events, the `D2Delegate` handles incoming messages and forwards them to multiple `MessageHandler`s. One of these is `CommandHandler`, which in turn parses the command and invokes the actual command.
 
 ### D2Commands
 At a basic level, the `Command` protocol consists of a single method named `invoke` that carries information about the user's request:
