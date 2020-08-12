@@ -53,13 +53,8 @@ public struct CocktailDBResults: Codable {
         public let dateModified: String?
 
         public var tags: [String] { strTags?.split(separator: ",").map(String.init) ?? [] }
-        public var ingredients: [String] {
-            [strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5, strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10, strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15]
-                .compactMap { $0 }
-        }
-        public var measures: [String] {
-            [strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5, strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10, strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15]
-                .compactMap { $0 }
-        }
+        public var ingredients: [String?] { [strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5, strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10, strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15] }
+        public var measures: [String?] { [strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5, strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10, strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15] }
+        public var measuredIngredients: [(String?, String)] { zip(measures, ingredients).compactMap { (om, oi) in oi.map { i in (om, i) } } }
     }
 }
