@@ -11,10 +11,8 @@ public struct MinecraftDynmapWorldQuery {
     }
 
     public func perform() -> Promise<MinecraftDynmapWorld, Error> {
-        .catchingThen {
-            let timestamp = Int(Date().timeIntervalSince1970)
-            let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/world/\(world)/\(timestamp)")
-            return request.fetchJSONAsync(as: MinecraftDynmapWorld.self)
-        }
+        let timestamp = Int(Date().timeIntervalSince1970)
+        return Promise.catching { try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/world/\(world)/\(timestamp)") }
+            .then { $0.fetchJSONAsync(as: MinecraftDynmapWorld.self) }
     }
 }
