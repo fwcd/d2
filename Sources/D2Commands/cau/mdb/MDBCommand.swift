@@ -23,7 +23,8 @@ public class MDBCommand: StringCommand {
                 do {
                     let result = try $0.get()
                     if let module = result.first {
-                        let embed = Embed(
+                        let converter = DocumentToMarkdownConverter()
+                        let embed = try Embed(
                             title: module.nameEnglish,
                             description: module.summary,
                             url: module.url.flatMap(URL.init(string:)),
@@ -36,9 +37,9 @@ public class MDBCommand: StringCommand {
                                 Embed.Field(name: "Cycle", value: module.cycle ?? "", inline: true),
                                 Embed.Field(name: "Duration", value: "\(module.duration ?? 0)", inline: true),
                                 Embed.Field(name: "Prerequisites", value: module.prerequisites ?? "_none_"),
-                                Embed.Field(name: "Summary", value: module.summary ?? "_none_"),
-                                Embed.Field(name: "Contents", value: module.contents ?? "_none_"),
-                                Embed.Field(name: "Objectives", value: module.objectives ?? "_none_")
+                                Embed.Field(name: "Summary", value: module.summary.map { try converter.convert(htmlFragment: $0) } ?? "_none_"),
+                                Embed.Field(name: "Contents", value: module.contents.map { try converter.convert(htmlFragment: $0) } ?? "_none_"),
+                                Embed.Field(name: "Objectives", value: module.objectives.map { try converter.convert(htmlFragment: $0) } ?? "_none_")
                             ]
                         )
 
