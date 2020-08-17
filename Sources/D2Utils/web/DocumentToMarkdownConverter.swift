@@ -35,13 +35,13 @@ public struct DocumentToMarkdownConverter {
 	public func plainTextOf(htmlFragment: String) throws -> String {
 		try SwiftSoup.parseBodyFragment(htmlFragment).text()
 	}
-	
+
 	/** Converts an HTML element to Markdown. */
 	public func convert(_ element: Element, baseURL: URL? = nil, usedPrefixes: Set<String> = [], usedPostfixes: Set<String> = []) throws -> String {
 		var mdPrefix: String = defaultPrefix
 		var mdPostfix: String = defaultPostfix
 		var mdIfEmpty: String = ""
-		
+
 		var content = try element.getChildNodes().map {
 			if let childElement = $0 as? Element {
 				return try convert(childElement, baseURL: baseURL, usedPrefixes: usedPrefixes.union([mdPrefix]), usedPostfixes: usedPostfixes.union([mdPostfix]))
@@ -54,7 +54,7 @@ public struct DocumentToMarkdownConverter {
 				return ""
 			}
 		}.joined()
-		
+
 		switch element.tagName() {
 			case "a":
 				if let href = try? element.attr("href") {
@@ -97,6 +97,9 @@ public struct DocumentToMarkdownConverter {
 			case "img":
 				mdPrefix = (try? element.attr("alt")) ?? defaultPrefix
 				mdPostfix = defaultPostfix
+            case "li":
+                mdPrefix = "- "
+                mdPostfix = "\n"
 			default:
 				break
 		}
@@ -107,7 +110,7 @@ public struct DocumentToMarkdownConverter {
 		if usedPostfixes.contains(mdPostfix) {
 			mdPostfix = defaultPostfix
 		}
-		
+
 		if content.isEmpty {
 			return mdIfEmpty
 		} else {
