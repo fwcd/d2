@@ -1,3 +1,4 @@
+import Foundation
 import Logging
 import D2MessageIO
 import D2Utils
@@ -25,6 +26,7 @@ public class MDBCommand: StringCommand {
                         let embed = Embed(
                             title: module.nameEnglish,
                             description: module.summary,
+                            url: module.url.flatMap(URL.init(string:)),
                             fields: [
                                 Embed.Field(name: "Person", value: module.person ?? "?", inline: true),
                                 Embed.Field(name: "ECTS", value: "\(module.ects ?? 0)", inline: true),
