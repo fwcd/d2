@@ -36,7 +36,7 @@ public class MDBCommand: StringCommand {
                                 Embed.Field(name: "Presence", value: module.presence ?? "?", inline: true),
                                 Embed.Field(name: "Cycle", value: module.cycle ?? "", inline: true),
                                 Embed.Field(name: "Duration", value: "\(module.duration ?? 0)", inline: true),
-                                Embed.Field(name: "Prerequisites", value: module.prerequisites ?? "_none_"),
+                                Embed.Field(name: "Prerequisites", value: module.prerequisites.map { try converter.convert(htmlFragment: $0) } ?? "_none_"),
                                 Embed.Field(name: "Summary", value: module.summary.map { try converter.convert(htmlFragment: $0) } ?? "_none_"),
                                 Embed.Field(name: "Contents", value: module.contents.map { try converter.convert(htmlFragment: $0) } ?? "_none_"),
                                 Embed.Field(name: "Objectives", value: module.objectives.map { try converter.convert(htmlFragment: $0) } ?? "_none_")
