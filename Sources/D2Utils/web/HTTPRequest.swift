@@ -10,6 +10,10 @@ import SwiftSoup
 public struct HTTPRequest {
 	private var request: URLRequest
 
+    public init(url: URL) {
+        request = URLRequest(url: url)
+    }
+
 	public init(
 		scheme: String = "https",
 		host: String,
@@ -115,8 +119,6 @@ public struct HTTPRequest {
 	}
 
 	public func fetchHTMLAsync() -> Promise<Document, Error> {
-		fetchUTF8Async().then { html in
-			.catching { try SwiftSoup.parse(html) }
-		}
+		fetchUTF8Async().mapCatching { try SwiftSoup.parse($0) }
 	}
 }

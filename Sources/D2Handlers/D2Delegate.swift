@@ -237,6 +237,7 @@ public class D2Delegate: MessageDelegate {
         registry["shell"] = ShellCommand()
         registry["upload"] = UploadCommand()
         registry["download"] = DownloadCommand()
+        registry["downloadimage", aka: ["downloadimg", "di"]] = DownloadImageCommand()
         registry["markov"] = MarkovCommand(messageDB: messageDB)
         registry["conversate"] = ConversateCommand(conversator: FollowUpConversator(messageDB: messageDB))
         registry["emoji", aka: ["emote"]] = EmojiCommand()
