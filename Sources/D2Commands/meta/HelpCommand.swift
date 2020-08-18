@@ -47,10 +47,11 @@ public class HelpCommand: StringCommand {
 						.nilIfEmpty else { return nil }
 
 					return Embed.Field(
-						name: "\(category) (`\(commandPrefix)help \(category.rawValue)`)",
-						value: categoryCommands
-							.map { "`\(commandPrefix)\($0.name)`" }
-							.joined(separator: ", ")
+						name: "\(category) ► `\(commandPrefix)help \(category.rawValue)`",
+						value: "```\n" + categoryCommands
+							.map { "\(commandPrefix)\($0.name)" }
+							.joined(separator: " ") + "\n```",
+                        inline: categoryCommands.count < 20
 					)
 				}
 		)
