@@ -38,22 +38,7 @@ public struct WolframAlphaQuery {
 
 	/** Starts a query and returns the data. */
 	public func start() -> Promise<Data, Error> {
-        Promise { then in
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard error == nil else {
-                    then(.failure(NetApiError.httpError(error!)))
-                    return
-                }
-                guard let data = data else {
-                    then(.failure(NetApiError.missingData))
-                    return
-                }
-                then(.success(data))
-            }.resume()
-        }
+        HTTPRequest(url: url).runAsync()
 	}
 
 	public func startAndParse() -> Promise<WolframAlphaOutput, Error> {
