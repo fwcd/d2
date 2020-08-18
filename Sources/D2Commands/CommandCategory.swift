@@ -3,6 +3,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case bf
     case cau
     case coding
+    case comic
     case d2script
     case dictionary
     case file
@@ -22,7 +23,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case prolog
     case scripting
     case web
-    case xkcd
 
     public var description: String {
         switch self {
@@ -30,6 +30,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .bf: return ":brain: BF interpreter"
             case .cau: return ":school: CAU-specific utilities"
             case .coding: return ":currency_exchange: Encoders and decoders"
+            case .comic: return ":pencil2: Comics"
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":books: Dictionaries, online search engines and more"
             case .file: return ":file_folder: File IO"
@@ -49,7 +50,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .prolog: return ":owl: Prolog"
             case .scripting: return ":tools: Command scripting"
             case .web: return ":globe_with_meridians: Web browsing"
-            case .xkcd: return ":pencil2: xkcd"
         }
     }
 }

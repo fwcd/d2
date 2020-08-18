@@ -5,7 +5,7 @@ import D2NetAPIs
 
 public class XkcdCommand: StringCommand {
     public let info = CommandInfo(
-        category: .xkcd,
+        category: .comic,
         shortDescription: "Fetches xkcd comics",
         longDescription: "Fetches an xkcd comic",
         helpText: "Syntax: [comic id | 'random']?",
