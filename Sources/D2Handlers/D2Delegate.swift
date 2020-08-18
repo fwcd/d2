@@ -221,6 +221,7 @@ public class D2Delegate: MessageDelegate {
         registry["neverhaveiever", aka: ["nhie"]] = NeverHaveIEverCommand(partyGameDB: partyGameDB)
         registry["partygamedb"] = PartyGameDatabaseCommand(partyGameDB: partyGameDB)
         registry["advice"] = AdviceCommand()
+        registry["fact"] = FactCommand()
         registry["magic8ball", aka: ["7ball", "8ball", "9ball", "8b"]] = Magic8BallCommand()
         registry["random"] = RandomCommand(permissionManager: permissionManager)
         registry["commandoftheday", aka: ["cotd"]] = CommandOfTheDayCommand(commandPrefix: commandPrefix)
