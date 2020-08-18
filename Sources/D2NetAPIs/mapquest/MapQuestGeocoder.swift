@@ -1,7 +1,4 @@
 import Foundation
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
 import D2Utils
 
 public struct MapQuestGeocoder {
@@ -26,17 +23,9 @@ public struct MapQuestGeocoder {
 
             // Source: https://stackoverflow.com/questions/39939143/parse-json-response-with-swift-3
 
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data, error == nil else {
-                    if let unwrappedError = error {
-                        then(.failure(NetApiError.httpError(unwrappedError)))
-                    }
-                    return
-                }
+            HTTPRequest(url: url).runAsync().listen {
                 do {
+                    let data = try $0.get()
                     let json = try JSONSerialization.jsonObject(with: data)
                     let latLng = (json as? [String: Any])
                         .flatMap { $0["results"] }
@@ -62,7 +51,7 @@ public struct MapQuestGeocoder {
                 } catch {
                     then(.failure(NetApiError.jsonIOError(error)))
                 }
-            }.resume()
+            }
         }
 	}
 }

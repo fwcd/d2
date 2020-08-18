@@ -1,7 +1,4 @@
 import Foundation
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
 import D2Utils
 
 public struct WolframAlphaSimpleQuery {
