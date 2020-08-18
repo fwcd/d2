@@ -22,14 +22,14 @@ struct MapQuestGeocoding: Codable {
 
     struct GeocodingResult: Codable {
         let providedLocation: ProvidedLocation?
-        let locations: [Location]?
+        let locations: [Location]
 
         struct ProvidedLocation: Codable {
             let location: String?
         }
 
         struct Location: Codable {
-            let latLng: LatLng?
+            let latLng: LatLng
             let displayLatLng: LatLng?
             let mapUrl: String?
 
