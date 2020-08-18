@@ -225,6 +225,7 @@ public class D2Delegate: MessageDelegate {
         registry["thisforthat", aka: ["tft"]] = ThisForThatCommand()
         registry["fact"] = FactCommand()
         registry["magic8ball", aka: ["7ball", "8ball", "9ball", "8b"]] = Magic8BallCommand()
+        registry["slotmachine", aka: ["slots"]] = SlotMachineCommand()
         registry["random"] = RandomCommand(permissionManager: permissionManager)
         registry["commandoftheday", aka: ["cotd"]] = CommandOfTheDayCommand(commandPrefix: commandPrefix)
         registry["commandcount", aka: ["cmdcount"]] = CommandCountCommand()
