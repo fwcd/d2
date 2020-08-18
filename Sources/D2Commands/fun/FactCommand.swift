@@ -10,7 +10,7 @@ public class FactCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        RandomFactQuery().perform().listen {
+        RandomFactQuery(language: "en").perform().listen {
             do {
                 let fact = try $0.get()
                 output.append(fact.text)
