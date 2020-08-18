@@ -7,7 +7,7 @@ import D2Utils
 
 public class RedditCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .reddit,
+		category: .forum,
 		shortDescription: "Fetches a post from Reddit",
 		longDescription: "Fetches a random top post from a given subreddit",
 		requiredPermissionLevel: .vip

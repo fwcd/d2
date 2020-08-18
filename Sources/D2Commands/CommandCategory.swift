@@ -6,6 +6,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case d2script
     case dictionary
     case file
+    case forum
     case fun
     case game
     case git
@@ -19,7 +20,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case ml
     case music
     case prolog
-    case reddit
     case scripting
     case web
     case xkcd
@@ -33,6 +33,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":books: Dictionaries, online search engines and more"
             case .file: return ":file_folder: File IO"
+            case .forum: return ":ledger: Forums"
             case .fun: return ":candy: Fun"
             case .game: return ":game_die: Multiplayer games"
             case .git: return ":fox: Git"
@@ -46,7 +47,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .ml: return ":bulb: Machine learning"
             case .music: return ":guitar: Music, theory and chords"
             case .prolog: return ":owl: Prolog"
-            case .reddit: return ":ledger: Reddit"
             case .scripting: return ":tools: Command scripting"
             case .web: return ":globe_with_meridians: Web browsing"
             case .xkcd: return ":pencil2: xkcd"
