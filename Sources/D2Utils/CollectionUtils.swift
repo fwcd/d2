@@ -92,6 +92,19 @@ public extension Array {
     }
 }
 
+public extension Array where Element: StringProtocol {
+    /// Creates a natural language 'enumeration' of the items, e.g.
+    ///
+    /// ["apples", "bananas", "pears"] -> "apples, bananas and pears"
+    func englishEnumerated() -> String {
+        switch count {
+            case 0: return ""
+            case 1: return String(first!)
+            default: return "\(prefix(count - 1).joined(separator: ", ")) and \(last!)"
+        }
+    }
+}
+
 public extension Array where Element: Equatable {
     func allIndices(of element: Element) -> [Index] {
         return enumerated().filter { $0.1 == element }.map { $0.0 }
