@@ -50,8 +50,7 @@ public class HelpCommand: StringCommand {
 						name: "\(category) ► `\(commandPrefix)help \(category.rawValue)`",
 						value: "```\n" + categoryCommands
 							.map { "\(commandPrefix)\($0.name)" }
-							.joined(separator: " ") + "\n```",
-                        inline: categoryCommands.count < 5
+							.joined(separator: " ") + "\n```"
 					)
 				}
 		)
