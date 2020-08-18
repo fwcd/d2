@@ -30,14 +30,14 @@ public class CommandRegistry: Sequence {
     }
 
     public subscript(_ name: String, aka aliases: [String]) -> Command? {
-        get { entries[resolve(name)]?.asCommand }
+        get { entries[resolve(name.lowercased())]?.asCommand }
         set {
             // TODO: Support unregistration by correctly removing aliases
             // TODO: Enforce invariants when encountering overlapping aliases
             guard let value = newValue else { fatalError("Command unregistration is not yet supported") }
-            entries[name] = .command(value)
+            entries[name.lowercased()] = .command(value)
             for alias in aliases {
-                entries[alias] = .alias(name)
+                entries[alias] = .alias(name.lowercased())
             }
         }
     }
