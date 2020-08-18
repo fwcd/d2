@@ -249,6 +249,7 @@ public class D2Delegate: MessageDelegate {
         registry["watch"] = WatchCommand()
         registry["regexgenerate"] = RegexGenerateCommand()
         registry["poll"] = PollCommand()
+        registry["petition"] = PetitionCommand()
         registry["concat"] = ConcatCommand()
         registry["revconcat"] = ReverseConcatCommand()
         registry["repeat"] = RepeatCommand()
