@@ -6,6 +6,7 @@ public class SlotMachineCommand: StringCommand {
         shortDescription: "Simulates a 'slot machine'",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
     private let slotCount: Int
     private let values: [String]
 
