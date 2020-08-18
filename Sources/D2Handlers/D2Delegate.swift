@@ -79,6 +79,7 @@ public class D2Delegate: MessageDelegate {
         registry["timetable"] = TimeTableCommand()
         registry["univis"] = UnivISCommand()
         registry["mensa"] = MensaCommand()
+        registry["yo"] = YoCommand()
         registry["spieleabend"] = InfoMessageCommand(text: "This command has been migrated to `\(commandPrefix)countdown`")
         registry["countdown"] = CountdownCommand(goals: ["Spieleabend": SpieleabendGoal()])
         registry["reddit"] = RedditCommand()
