@@ -1,8 +1,8 @@
 public struct RecipePuppyResponse: Codable {
-    private let title: String
-    private let version: Double
-    private let href: String
-    private let results: [RecipeResult]
+    public let title: String
+    public let version: Double
+    public let href: String
+    public let results: [RecipeResult]
 
     public struct RecipeResult: Codable {
         public let title: String

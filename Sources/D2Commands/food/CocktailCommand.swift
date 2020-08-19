@@ -6,6 +6,7 @@ public class CocktailCommand: StringCommand {
     public let info = CommandInfo(
         category: .food,
         shortDescription: "Searches for a cocktail recipe",
+        helpText: "Syntax: [search term]",
         requiredPermissionLevel: .basic
     )
 
