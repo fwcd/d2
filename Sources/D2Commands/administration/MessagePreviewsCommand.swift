@@ -3,10 +3,10 @@ import D2Utils
 
 public class MessagePreviewsCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .administration,
         shortDescription: "Enables/disables message previews",
         helpText: "Syntax: [enable|disable]",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .vip
     )
     @AutoSerializing private var configuration: MessagePreviewsConfiguration
     private var subcommands: [String: (CommandOutput, GuildID) -> Void] = [:]
