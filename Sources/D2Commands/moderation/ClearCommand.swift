@@ -7,7 +7,7 @@ fileprivate let confirmationString = "delete"
 
 public class ClearCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .moderation,
         shortDescription: "Clears messages",
         longDescription: "Removes the last n messages",
         requiredPermissionLevel: .vip,
