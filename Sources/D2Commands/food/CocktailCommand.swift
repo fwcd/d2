@@ -4,7 +4,7 @@ import D2NetAPIs
 
 public class CocktailCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .food,
         shortDescription: "Searches for a cocktail recipe",
         requiredPermissionLevel: .basic
     )

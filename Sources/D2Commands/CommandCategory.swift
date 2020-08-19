@@ -7,6 +7,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case d2script
     case dictionary
     case file
+    case food
     case forum
     case fun
     case game
@@ -35,6 +36,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":books: Dictionaries, online search engines and more"
             case .file: return ":file_folder: File IO"
+            case .food: return ":tropical_drink: Food and drinks"
             case .forum: return ":ledger: Forums"
             case .fun: return ":candy: Fun"
             case .game: return ":game_die: Multiplayer games"
