@@ -19,6 +19,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case minecraft
     case misc
     case ml
+    case moderation
     case music
     case prolog
     case scripting
@@ -46,6 +47,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .minecraft: return ":evergreen_tree: Minecraft"
             case .misc: return ":art: Miscellaneous commands"
             case .ml: return ":bulb: Machine learning"
+            case .moderation: return ":loudspeaker: Moderation"
             case .music: return ":guitar: Music, theory and chords"
             case .prolog: return ":owl: Prolog"
             case .scripting: return ":tools: Command scripting"

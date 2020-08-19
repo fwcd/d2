@@ -2,7 +2,7 @@ import D2Utils
 
 public class StreamerRoleCommand: Command {
     public let info = CommandInfo(
-        category: .misc,
+        category: .moderation,
         shortDescription: "Configures a role to auto-assign to streamers",
         requiredPermissionLevel: .admin
     )

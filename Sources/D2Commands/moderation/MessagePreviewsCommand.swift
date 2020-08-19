@@ -3,7 +3,7 @@ import D2Utils
 
 public class MessagePreviewsCommand: StringCommand {
     public let info = CommandInfo(
-        category: .administration,
+        category: .moderation,
         shortDescription: "Enables/disables message previews",
         helpText: "Syntax: [enable|disable]",
         requiredPermissionLevel: .vip

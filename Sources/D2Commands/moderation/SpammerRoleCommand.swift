@@ -7,26 +7,26 @@ fileprivate let resetSubcommand = "reset"
 
 public class SpammerRoleCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .moderation,
         shortDescription: "Sets the spammer role",
         longDescription: "Sets the role which is automatically assigned to spammers",
         requiredPermissionLevel: .admin
     )
     @AutoSerializing private var spamConfiguration: SpamConfiguration
-    
+
     public init(spamConfiguration: AutoSerializing<SpamConfiguration>) {
         self._spamConfiguration = spamConfiguration
     }
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else { return }
         let mentions = context.message.mentionRoles
-        
+
         guard mentions.count <= 1 else {
             output.append(errorText: "Too many roles, please only mention one!")
             return
         }
-        
+
         if let role = mentions.first {
             spamConfiguration.spammerRoles[guild.id] = role
             output.append(":white_check_mark: Successfully updated the spammer role")
