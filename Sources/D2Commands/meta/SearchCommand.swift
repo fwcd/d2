@@ -36,7 +36,7 @@ public class SearchCommand: StringCommand {
                         .map { $0.lowercased() }
                         .contains { pattern.matchCount(in: $0) > 0 }
                 }
-                .sorted(by: descendingComparator { $0.name.levenshteinDistance(to: input) })
+                .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
                 .prefix(5)
 
             output.append(Embed(
