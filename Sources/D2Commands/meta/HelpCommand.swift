@@ -65,7 +65,7 @@ public class HelpCommand: StringCommand {
 			.flatMap { (group: (key: PermissionLevel, value: [CommandRegistry.CommandWithAlias])) -> [Embed.Field] in
 				let splitGroups = group.value
 					.sorted { $0.name < $1.name }
-					.map { "**\(commandPrefix)\($0.name)**: \($0.aliases.nilIfEmpty.map { " (aka. `\($0.joined(separator: ", "))`)" } ?? "") \($0.command.info.shortDescription)" }
+					.map { "**\(commandPrefix)\($0.name)**: \($0.aliases.nilIfEmpty.map { " (aka. `\($0.sorted().joined(separator: ", "))`)" } ?? "") \($0.command.info.shortDescription)" }
 					.chunks(ofLength: 10)
 				return splitGroups
 					.enumerated()
