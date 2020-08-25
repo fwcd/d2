@@ -23,7 +23,7 @@ fileprivate func germanDecodeByte(_ words: [String]) -> UInt8 {
             }
         }
         .enumerated()
-        .map { (i, b) in b << i }
+        .map { (i, b) in b << (7 - i) }
         .reduce(0, |)
 }
 
