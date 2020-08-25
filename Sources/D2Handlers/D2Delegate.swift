@@ -203,6 +203,8 @@ public class D2Delegate: MessageDelegate {
         registry["prolog"] = PrologCommand()
         registry["morseencode", aka: ["morse", "morsify"]] = MorseEncoderCommand()
         registry["morsedecode", aka: ["demorse", "demorsify"]] = MorseDecoderCommand()
+        registry["germanencode", aka: ["german", "germanify"]] = GermanEncoderCommand()
+        registry["germandecode", aka: ["degerman", "degermanify"]] = GermanDecoderCommand()
         registry["robohash"] = RoboHashCommand()
         registry["piglatin"] = PigLatinCommand()
         registry["mockify", aka: ["mock"]] = MockifyCommand()
