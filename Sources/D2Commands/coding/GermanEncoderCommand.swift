@@ -6,7 +6,7 @@ public class GermanEncoderCommand: StringCommand {
     )
     private let maxLength: Int
 
-    public init(maxLength: Int = 35) {
+    public init(maxLength: Int = 200) {
         self.maxLength = maxLength
     }
 
