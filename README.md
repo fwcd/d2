@@ -6,15 +6,15 @@ General-purpose virtual assistant for Discord, IRC and Telegram.
 
 It provides:
 
-* Various useful chat utilities, e.g. polls or coin flips
-* A flexible command system that supports chaining, piping and permissions
-* Multiplayer board and card games, such as chess or Uno
-* Integration with a wide range of web APIs, including WolframAlpha, MediaWiki, Reddit and OpenWeatherMap
-* Image processing capabilities, including generation of animated GIFs
-* Tools for mathematics and linear algebra, e.g. a linear system solver
-* Music theory utilities, including a chord finder
-* Programming tools, including a Haskell API search and a Prolog interpreter
-* Humorous commands, e.g. for jokes
+* 💬 Various useful chat utilities, e.g. polls or coin flips
+* ⚙️ A flexible command system that supports chaining, piping and permissions
+* 🎲 Multiplayer board and card games, such as chess or Uno
+* 📙 Integration with a wide range of web APIs, including WolframAlpha, MediaWiki, Reddit and OpenWeatherMap
+* 🖼 Image processing capabilities, including generation of animated GIFs
+* 📊 Tools for mathematics and linear algebra, e.g. a linear system solver
+* 🎵 Music theory utilities, including a chord finder
+* 🖥 Programming tools, including a Haskell API search and a Prolog interpreter
+* 🍬 Humorous commands, e.g. for jokes
 
 ## Installation
 
