@@ -14,7 +14,7 @@ public class NeverHaveIEverCommand: StringCommand {
     }
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        let nhie: Promise<NeverHaveIEverStatement, Error> = Bool.random()
+        let nhie: Promise<NeverHaveIEverStatement, Error> = Double.random(in: 0..<1) < 0.3
             ? Promise.catching { try partyGameDB.randomNhieStatement() }
             : NeverHaveIEverOrgQuery().perform()
         nhie.listen {
