@@ -1,7 +1,7 @@
 import D2NetAPIs
 import D2Utils
 
-fileprivate let wordPattern = try! Regex(from: "\\w+|\\S+")
+fileprivate let wordPattern = try! Regex(from: "\\w+|\\S+|\\s+")
 
 public class ThesaurizeCommand: StringCommand {
     public let info = CommandInfo(
@@ -30,7 +30,7 @@ public class ThesaurizeCommand: StringCommand {
             do {
                 let mappings = try $0.get()
                 let newWords = words.map { mappings[$0] ?? $0 }
-                output.append(newWords.joined(separator: " "))
+                output.append(newWords.joined())
             } catch {
                 output.append(error, errorText: "Could not fetch thesaurus mappings")
             }
