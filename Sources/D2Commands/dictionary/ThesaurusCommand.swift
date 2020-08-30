@@ -22,7 +22,7 @@ public class ThesaurusCommand: StringCommand {
                 output.append(Embed(
                     title: "Synonym sets from OpenThesaurus",
                     description: results.synsets
-                        .compactMap { $0.terms.map(\.term).joined(separator: ", ").nilIfEmpty }
+                        .compactMap { self.markFirst(from: $0.terms.map(\.term)).joined(separator: ", ").nilIfEmpty }
                         .joined(separator: "\n")
                         .nilIfEmpty ?? "_none :(_"
                 ))
@@ -30,5 +30,9 @@ public class ThesaurusCommand: StringCommand {
                 output.append(error, errorText: "Could not perform thesaurus query")
             }
         }
+    }
+
+    private func markFirst(from strs: [String]) -> [String] {
+        (strs.first.map { ["**\($0)**"] } ?? []) + strs.dropFirst()
     }
 }
