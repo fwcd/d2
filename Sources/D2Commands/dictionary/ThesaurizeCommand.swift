@@ -1,6 +1,8 @@
 import D2NetAPIs
 import D2Utils
 
+fileprivate let wordPattern = try! Regex(from: "\\w+|\\S+")
+
 public class ThesaurizeCommand: StringCommand {
     public let info = CommandInfo(
         category: .dictionary,
@@ -16,7 +18,7 @@ public class ThesaurizeCommand: StringCommand {
             return
         }
 
-        let words = input.split(separator: " ").map(String.init)
+        let words = wordPattern.allGroups(in: input).map { $0[0] }
         let mappingsPromise: Promise<[String: String], Error> = all(promises: Set(words)
             .filter { $0.allSatisfy { $0.isLetter } }
             .map { term in OpenThesaurusQuery(term: term).perform()
