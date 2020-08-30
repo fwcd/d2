@@ -11,11 +11,16 @@ public class ThesaurizeCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+        guard !input.isEmpty else {
+            output.append(errorText: "Please enter some text!")
+            return
+        }
+
         let words = input.split(separator: " ").map(String.init)
         let mappingsPromise: Promise<[String: String], Error> = all(promises: Set(words)
             .filter { $0.allSatisfy { $0.isLetter } }
             .map { term in OpenThesaurusQuery(term: term).perform()
-                .map { ($0.synsets.randomElement()?.terms.randomElement()?.term)
+                .map { ($0.synsets.first { $0.terms.contains { $0.term == term } }?.terms.randomElement()?.term)
                     .map { (term, $0) } } })
             .map { Dictionary(uniqueKeysWithValues: $0.compactMap { $0 }) }
 
