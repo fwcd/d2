@@ -20,7 +20,7 @@ public class ThesaurusCommand: StringCommand {
             do {
                 let results = try $0.get()
                 output.append(Embed(
-                    title: "Synonym sets from OpenThesaurus",
+                    title: ":book: Synonym sets from OpenThesaurus",
                     description: results.synsets
                         .compactMap { self.markFirst(from: $0.terms.map(\.term)).joined(separator: ", ").nilIfEmpty }
                         .joined(separator: "\n")
