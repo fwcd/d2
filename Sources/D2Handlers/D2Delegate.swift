@@ -150,6 +150,7 @@ public class D2Delegate: MessageDelegate {
         registry["sourcefile"] = SourceFileCommand()
         registry["urbandict", aka: ["urban", "ud", "explain"]] = UrbanDictionaryCommand()
         registry["thesaurize"] = ThesaurizeCommand()
+        registry["thesaurus"] = ThesaurusCommand()
         registry["cocktail"] = CocktailCommand()
         registry["recipe"] = RecipeCommand()
         registry["chess"] = GameCommand<ChessGame>()
