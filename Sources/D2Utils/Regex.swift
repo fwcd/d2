@@ -3,11 +3,13 @@ import Foundation
 /** A wrapper around NSRegularExpression with a more modern API. */
 public struct Regex: CustomStringConvertible {
     private let pattern: NSRegularExpression
+
+    public var caseSensitive: Bool { !pattern.options.contains(.caseInsensitive) }
     public var rawPattern: String { return pattern.pattern }
     public var description: String { return rawPattern }
 
-    public init(from str: String) throws {
-        pattern = try NSRegularExpression(pattern: str)
+    public init(from rawPattern: String, caseSensitive: Bool = true) throws {
+        pattern = try NSRegularExpression(pattern: rawPattern, options: caseSensitive ? [] : [.caseInsensitive])
     }
 
     public func matchCount(in str: String) -> Int {
@@ -36,18 +38,29 @@ public struct Regex: CustomStringConvertible {
             .map { groups(from: $0, in: str) }
     }
 
-    public func replace(in str: String, with replacement: String) -> String {
-        return pattern.stringByReplacingMatches(in: str, range: NSRange(str.startIndex..., in: str), withTemplate: replacement)
+    public func replace(in str: String, with replacement: String, casePreserving: Bool = false) -> String {
+        if !casePreserving {
+            return pattern.stringByReplacingMatches(in: str, range: NSRange(str.startIndex..., in: str), withTemplate: replacement)
+        } else {
+            guard !caseSensitive else { fatalError("Case-preserving replacement requires a case-insensitive regex! (...while trying to replace in '\(str)' with '\(replacement)')") }
+            // Note that case-preserving replacement may truncate resulting substitutions if
+            // matched strings are shorter than the replacement.
+            return replace(in: str) { zip($0[0], replacement).map { $0.0.isLowercase ? $0.1.lowercased() : $0.1.uppercased() }.joined() }
+        }
     }
 
     public func replace(in str: String, using replacer: ([String]) -> String) -> String {
+        return replaceImpl(in: str) { replacer(groups(from: $0, in: str)) }
+    }
+
+    private func replaceImpl(in str: String, using replacer: (NSTextCheckingResult) -> String) -> String {
         var result = ""
         var i = str.startIndex
 
         for match in pattern.matches(in: str, range: NSRange(str.startIndex..., in: str)) {
             guard let range = Range(match.range, in: str) else { continue }
             result += str[i..<range.lowerBound]
-            result += replacer(groups(from: match, in: str))
+            result += replacer(match)
             i = range.upperBound
         }
 

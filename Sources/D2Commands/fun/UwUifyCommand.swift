@@ -1,6 +1,6 @@
 import D2Utils
 
-fileprivate let wPattern = try! Regex(from: "[rl]")
+fileprivate let wPattern = try! Regex(from: "[rl]", caseSensitive: false)
 fileprivate let punctuationPattern = try! Regex(from: "[!\\.]")
 
 public class UwUifyCommand: StringCommand {
@@ -13,7 +13,7 @@ public class UwUifyCommand: StringCommand {
     public init() {}
 
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
-        let withWs = wPattern.replace(in: input, with: "w")
+        let withWs = wPattern.replace(in: input, with: "w", casePreserving: true)
         let transformed = punctuationPattern.replace(in: withWs) { "\($0[0]) \(["UwU", "OwO", ">w<", "oωo", ".ω."].randomElement()!)." }
         output.append(transformed)
     }
