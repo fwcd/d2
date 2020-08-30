@@ -8,7 +8,7 @@ public struct OpenThesaurusQuery {
     }
 
     public func perform() -> Promise<OpenThesaurusResults, Error> {
-        Promise.catching { try HTTPRequest(host: "www.openthesaurus.de", path: "/synonyme/search", query: ["q": "test", "format": "application/json"]) }
+        Promise.catching { try HTTPRequest(host: "www.openthesaurus.de", path: "/synonyme/search", query: ["q": term, "format": "application/json"]) }
             .then { $0.fetchJSONAsync(as: OpenThesaurusResults.self) }
     }
 }
