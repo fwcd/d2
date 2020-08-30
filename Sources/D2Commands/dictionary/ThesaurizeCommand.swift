@@ -39,7 +39,7 @@ public class ThesaurizeCommand: StringCommand {
 
     private func pickSynonym(for word: String, from results: OpenThesaurusResults) -> String? {
         results.synsets
-            .map { Set($0.terms.map(\.term)) }
+            .map { Set($0.terms.map(\.term).filter { !$0.contains("...") }) }
             .first { $0.contains(word) && $0.count > 1 }?
             .filter { $0 != word }
             .randomElement()
