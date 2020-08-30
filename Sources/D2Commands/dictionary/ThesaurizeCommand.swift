@@ -22,7 +22,7 @@ public class ThesaurizeCommand: StringCommand {
         let mappingsPromise: Promise<[String: String], Error> = sequence(promises: Set(words)
             .filter { $0.allSatisfy { $0.isLetter } }
             .map { term in { OpenThesaurusQuery(term: term).perform()
-                .map { ($0.synsets.first { $0.terms.contains { $0.term == term } }?.terms.randomElement()?.term)
+                .map { self.pickSynonym(for: term, from: $0)
                     .map { (term, $0) } } } })
             .map { Dictionary(uniqueKeysWithValues: $0.compactMap { $0 }) }
 
@@ -35,5 +35,13 @@ public class ThesaurizeCommand: StringCommand {
                 output.append(error, errorText: "Could not fetch thesaurus mappings")
             }
         }
+    }
+
+    private func pickSynonym(for word: String, from results: OpenThesaurusResults) -> String? {
+        results.synsets
+            .map { Set($0.terms.map(\.term)) }
+            .first { $0.contains(word) && $0.count > 1 }?
+            .filter { $0 != word }
+            .randomElement()
     }
 }
