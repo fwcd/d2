@@ -19,17 +19,16 @@ public class ThesaurizeCommand: StringCommand {
         }
 
         let words = wordPattern.allGroups(in: input).map { $0[0] }
-        let mappingsPromise: Promise<[String: String], Error> = sequence(promises: Set(words)
+        let mappingsPromise: Promise<[String: Set<String>], Error> = sequence(promises: Set(words)
             .filter { $0.allSatisfy { $0.isLetter } }
             .map { term in { OpenThesaurusQuery(term: term).perform()
-                .map { self.pickSynonym(for: term, from: $0)
-                    .map { (term, $0) } } } })
-            .map { Dictionary(uniqueKeysWithValues: $0.compactMap { $0 }) }
+                .map { (term, self.pickSynonyms(for: term, from: $0)) } } })
+            .map { Dictionary(uniqueKeysWithValues: $0) }
 
         mappingsPromise.listen {
             do {
                 let mappings = try $0.get()
-                let newWords = words.map { mappings[$0] ?? $0 }
+                let newWords = words.map { mappings[$0]?.randomElement() ?? $0 }
                 output.append(newWords.joined())
             } catch {
                 output.append(error, errorText: "Could not fetch thesaurus mappings")
@@ -37,11 +36,11 @@ public class ThesaurizeCommand: StringCommand {
         }
     }
 
-    private func pickSynonym(for word: String, from results: OpenThesaurusResults) -> String? {
+    private func pickSynonyms(for word: String, from results: OpenThesaurusResults) -> Set<String> {
         results.synsets
             .map { Set($0.terms.map(\.term).filter { !$0.contains("...") }) }
             .first { $0.contains(word) && $0.count > 1 }?
             .filter { $0 != word }
-            .randomElement()
+            ?? []
     }
 }
