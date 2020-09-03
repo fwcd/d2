@@ -20,22 +20,23 @@ public class CreateEmojiCommand: Command {
             return
         }
 
-        if let image = input.asImage {
-            Promise.catching { try image.pngEncoded().base64EncodedString() }
-                .then { client.createEmoji(on: guild.id, name: name, image: "data:image/png;base64,\($0)") }
-                .listen {
-                    do {
-                        guard let emoji = try $0.get() else {
-                            output.append(errorText: "No emoji created!")
-                            return
-                        }
-                        output.append("Created emoji \(emoji)!")
-                    } catch {
-                        output.append(error, errorText: "Could not create emoji")
-                    }
-                }
-        } else {
+        guard let encoded = try? ((input.asImage?.pngEncoded()).map { "data:image/png;base64,\($0.base64EncodedString())" }
+                               ?? (input.asGif?.encoded()).map { "data:image/gif;base64,\($0.base64EncodedString())" }) else {
             output.append(errorText: "Please input an image or a GIF!")
+            return
         }
+
+        client.createEmoji(on: guild.id, name: name, image: encoded)
+            .listen {
+                do {
+                    guard let emoji = try $0.get() else {
+                        output.append(errorText: "No emoji created!")
+                        return
+                    }
+                    output.append("Created emoji \(emoji)!")
+                } catch {
+                    output.append(error, errorText: "Could not create emoji")
+                }
+            }
     }
 }
