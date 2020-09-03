@@ -85,7 +85,7 @@ public class TradeCommand: Command {
         context.subscribeToChannel()
     }
 
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id,
             let author = context.author,
             let trade = trades[channelId],

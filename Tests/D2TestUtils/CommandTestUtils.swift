@@ -11,10 +11,10 @@ extension Command {
 	}
 
 	public func testSubscriptionMessage(
-		withContent content: String,
+		with content: String,
 		output: CommandOutput,
 		context: CommandContext = CommandContext(client: nil, registry: CommandRegistry(), message: Message(content: ""), commandPrefix: "", subscriptions: SubscriptionSet())
 	) {
-		onSubscriptionMessage(withContent: content, output: output, context: context)
+		onSubscriptionMessage(with: content, output: output, context: context)
 	}
 }

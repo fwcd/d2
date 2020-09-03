@@ -145,7 +145,7 @@ public class GameCommand<G: Game>: Command {
 		return sequence.joined(separator: "\n")
 	}
 
-	public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+	public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
 		guard let author = context.author.map(GamePlayer.init(from:)) else { return }
 
 		if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel {

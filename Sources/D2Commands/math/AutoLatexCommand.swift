@@ -33,7 +33,7 @@ public class AutoLatexCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         if content == "cancel autolatex" {
             output.append("This syntax has been deprecated, please use `\(context.commandPrefix)autolatex cancel` to cancel.")
             return

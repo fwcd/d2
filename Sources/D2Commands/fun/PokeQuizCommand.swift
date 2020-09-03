@@ -43,7 +43,7 @@ public class PokeQuizCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id,
             let quiz = quizzes[channelId],
             quiz.player == context.author?.id else { return }

@@ -63,7 +63,7 @@ public class ClearCommand: StringCommand {
         context.subscribeToChannel()
     }
 
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         if let client = context.client, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
             let intendedDeletionCount = deletions.filter { $0.isIntended }.count
             let confirmationDeletionCount = deletions.count - intendedDeletionCount

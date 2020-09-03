@@ -21,7 +21,7 @@ public class ConversateCommand: StringCommand {
         output.append("Subscribed to this channel. Type anything to talk to me.")
     }
 
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         guard context.author?.id != context.client?.me?.id, let guildId = context.guild?.id else { return }
         if content == "stop" {
             context.unsubscribeFromChannel()

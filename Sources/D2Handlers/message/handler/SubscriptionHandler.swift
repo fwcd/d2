@@ -42,7 +42,7 @@ public struct SubscriptionHandler: MessageHandler {
                     ))
                 }
             }
-            command?.onSubscriptionMessage(withContent: message.content, output: output, context: context)
+            command?.onSubscriptionMessage(with: message.content, output: output, context: context)
             handled = true
         }
 

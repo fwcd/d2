@@ -11,7 +11,7 @@ public protocol Command: class {
 
     func onSuccessfullySent(context: CommandContext)
 
-    func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext)
+    func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext)
 
     func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
 
@@ -26,7 +26,7 @@ extension Command {
 
     public func onSuccessfullySent(context: CommandContext) {}
 
-    public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {}
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {}
 
     public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {}
 
