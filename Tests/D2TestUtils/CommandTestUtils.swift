@@ -3,7 +3,7 @@ import D2Commands
 
 extension Command {
 	public func testInvoke(
-		input: RichValue = .none,
+		with input: RichValue = .none,
 		output: CommandOutput,
 		context: CommandContext = CommandContext(client: nil, registry: CommandRegistry(), message: Message(content: ""), commandPrefix: "", subscriptions: SubscriptionSet())
 	) {
