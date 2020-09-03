@@ -11,7 +11,7 @@ public class Base64DecoderCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let data = Data(base64Encoded: input) else {
             output.append(errorText: "Could not decode data as Base64")
             return

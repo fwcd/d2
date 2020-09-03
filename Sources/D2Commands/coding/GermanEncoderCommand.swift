@@ -10,7 +10,7 @@ public class GermanEncoderCommand: StringCommand {
         self.maxLength = maxLength
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard input.count <= maxLength else {
             output.append(errorText: "Please input a text of length <= \(maxLength)!")
             return

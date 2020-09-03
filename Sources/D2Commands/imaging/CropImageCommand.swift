@@ -16,7 +16,7 @@ public class CropImageCommand: Command {
 
     public init() {}
 
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		guard let img = input.asImage else {
 			output.append(errorText: "Not an image!")
             return
@@ -46,7 +46,7 @@ public class CropImageCommand: Command {
                 output.append(errorText: "Make sure that the width/height of the cropped dimensions are positive!")
                 return
             }
-            
+
             var cropped = try Image(width: width, height: height)
 
             for y in 0..<height {
@@ -54,7 +54,7 @@ public class CropImageCommand: Command {
                     cropped[y, x] = img[y + topLeftY, x + topLeftX]
                 }
             }
-            
+
             output.append(.image(cropped))
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")

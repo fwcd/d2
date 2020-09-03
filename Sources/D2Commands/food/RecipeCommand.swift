@@ -12,7 +12,7 @@ public class RecipeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         RecipePuppyQuery(term: input).perform().listen {
             do {
                 let response = try $0.get()

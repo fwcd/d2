@@ -7,7 +7,7 @@ public class AuthorCommand: Command {
 
     public init() {}
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author available")
             return

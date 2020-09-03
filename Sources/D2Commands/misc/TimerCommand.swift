@@ -68,7 +68,7 @@ public class TimerCommand: StringCommand {
 
             Available Subcommands:
             \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))
-            
+
             Examples:
             - Creation: `timer 4s`, `timer 1m 1s`, `timer myTimer 5m`
             - Cancellation: `timer cancel myTimer`
@@ -78,7 +78,7 @@ public class TimerCommand: StringCommand {
             """
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let parsedArgs = argsPattern.firstGroups(in: input) else {
             output.append(errorText: info.helpText!)
             return

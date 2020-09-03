@@ -10,7 +10,7 @@ public class ReduceFractionCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let fraction = Rational(input) else {
             output.append(errorText: "Please enter a valid fraction!")
             return

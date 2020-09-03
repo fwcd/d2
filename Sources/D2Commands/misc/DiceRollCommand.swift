@@ -28,7 +28,7 @@ public class DiceRollCommand: StringCommand {
         self.fancy = fancy
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let result = Int.random(in: range)
 
         if fancy {

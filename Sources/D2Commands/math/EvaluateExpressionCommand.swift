@@ -11,7 +11,7 @@ fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
 public class EvaluateExpressionCommand: StringCommand {
 	public let info: CommandInfo
 	private let parser: ExpressionParser
-	
+
 	public init(parser: ExpressionParser, name: String) {
 		self.parser = parser
 		info = CommandInfo(
@@ -22,20 +22,20 @@ public class EvaluateExpressionCommand: StringCommand {
 			requiredPermissionLevel: .basic
 		)
 	}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		let flags = Set<String>(flagsPattern.allGroups(in: input).map { $0[1] })
-		
+
 		do {
 			let ast = try parser.parse(flagsPattern.replace(in: input, with: ""))
-			
+
 			if flags.contains("ast") {
 				// Render AST only
 				try output.append(try ASTRenderer().render(ast: ast), name: "ast.png")
 			} else {
 				// Evaluate and print result/graph
 				let variables = ast.occurringVariables
-				
+
 				if variables.isEmpty {
 					output.append(String(try ast.evaluate()))
 				} else if variables.count == 1 {

@@ -25,7 +25,7 @@ public class SongChartsCommand: StringCommand {
     private let maxSongs: Int = 300
 
     private let queryIntervalSeconds: Int = 60
-    
+
     public init() {
         subcommands = [
             "track": { [unowned self] output, context in
@@ -80,12 +80,12 @@ public class SongChartsCommand: StringCommand {
         ]
         info.helpText = """
             Subcommands:
-            
+
             \(subcommands.keys.map { "- \($0)" }.joined(separator: "\n"))
             """
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if input.isEmpty {
             guard let charts = (context.guild?.id).flatMap({ songCharts[$0] }) else {
                 output.append(errorText: "No song charts available for this guild.")

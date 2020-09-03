@@ -17,8 +17,8 @@ public class ScaleImageCommand: Command {
         self.maxWidth = maxWidth
         self.maxHeight = maxHeight
     }
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		guard let img = input.asImage else {
 			output.append(errorText: "Not an image!")
             return
@@ -39,13 +39,13 @@ public class ScaleImageCommand: Command {
                 output.append(errorText: "Please ensure that your size is within the bounds of \(maxWidth), \(maxHeight)!")
                 return
             }
-            
+
             for y in 0..<height {
                 for x in 0..<width {
                     scaled[y, x] = img[Int(Double(y) / factor), Int(Double(x) / factor)]
                 }
             }
-            
+
             output.append(.image(scaled))
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")

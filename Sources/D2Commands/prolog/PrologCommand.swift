@@ -13,7 +13,7 @@ public class PrologCommand: Command {
     )
     private var subcommands: [String: (RichValue, CommandOutput) -> Void] = [:]
     private var loadedProgram: Program? = nil
-    
+
     public init() {
         subcommands = [
             "load": { [unowned self] input, output in
@@ -50,8 +50,8 @@ public class PrologCommand: Command {
             Subcommands: \(subcommands.keys.joined(separator: ", "))
             """
     }
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let subcommandName = input.asText?.split(separator: " ").first else {
             output.append(errorText: info.helpText!)
             return

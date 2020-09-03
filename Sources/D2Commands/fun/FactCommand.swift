@@ -9,7 +9,7 @@ public class FactCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         RandomFactQuery(language: "en").perform().listen {
             do {
                 let fact = try $0.get()

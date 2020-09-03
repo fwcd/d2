@@ -12,7 +12,7 @@ public class InventoryCommand: Command {
     )
     private let inventoryManager: InventoryManager
     private var subcommands: [String: (String, CommandOutput, CommandContext) -> Void] = [:]
-    
+
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
         subcommands = [
@@ -35,8 +35,8 @@ public class InventoryCommand: Command {
         ]
         info.helpText = "Available Subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))"
     }
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         let text = input.asText ?? ""
         if let parsedSubcommand = subcommandPattern.firstGroups(in: text), let subcommand = subcommands[parsedSubcommand[1]] {
             subcommand(parsedSubcommand[2], output, context)

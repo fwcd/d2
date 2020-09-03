@@ -11,12 +11,12 @@ public class ServerInfoCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     private let messageDB: MessageDatabase
-    
+
     public init(messageDB: MessageDatabase) {
         self.messageDB = messageDB
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
             return
@@ -49,7 +49,7 @@ public class ServerInfoCommand: StringCommand {
         var longestPlayTime: TimeInterval = 0
         var longestPlayTimeGame: String = "?"
         var longestPlayTimeUsername: String = "?"
-        
+
         for (_, member) in guild.members {
             memberCount += 1
             let user = member.user
@@ -67,7 +67,7 @@ public class ServerInfoCommand: StringCommand {
                 mostRoles = member.roleIds.compactMap { guild.roles[$0]?.name }
             }
         }
-        
+
         for (_, channel) in guild.channels {
             if channel.isVoiceChannel {
                 voiceChannelCount += 1
@@ -75,7 +75,7 @@ public class ServerInfoCommand: StringCommand {
                 textChannelCount += 1
             }
         }
-        
+
         for (id, presence) in guild.presences {
             presences.append(presence)
             if let game = presence.game, let playTime = game.timestamps?.interval, playTime > longestPlayTime {
@@ -84,7 +84,7 @@ public class ServerInfoCommand: StringCommand {
                 longestPlayTimeUsername = guild.members[id]?.displayName ?? "?"
             }
         }
-        
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
 
@@ -112,7 +112,7 @@ public class ServerInfoCommand: StringCommand {
             """, "\(guild.id)")
                 .makeIterator().next()
                 .map { "\(($0[0] as? Int64) ?? 0) messages on channel `\(($0[1] as? String) ?? "?")`" }
-        
+
         let mostMessagesSent = try? messageDB.prepare("""
             select count(message_id), user_name
             from messages natural join channels
@@ -124,7 +124,7 @@ public class ServerInfoCommand: StringCommand {
             """, "\(guild.id)")
                 .makeIterator().next()
                 .map { "\(($0[0] as? Int64) ?? 0) messages by `\(($0[1] as? String) ?? "?")`" }
-        
+
         let mostActiveDay = try? messageDB.prepare("""
             select count(message_id), strftime("%Y-%m-%d", timestamp) as day
             from messages natural join channels

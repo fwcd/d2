@@ -10,7 +10,7 @@ public class DownloadImageCommand: Command {
 
     public init() {}
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let urls = input.asUrls else {
             output.append(errorText: "Not a URL")
             return

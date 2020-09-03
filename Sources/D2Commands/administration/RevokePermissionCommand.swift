@@ -12,22 +12,22 @@ public class RevokePermissionCommand: StringCommand {
 		requiredPermissionLevel: .admin
 	)
 	private let permissionManager: PermissionManager
-	
+
 	public init(permissionManager: PermissionManager) {
 		self.permissionManager = permissionManager
 	}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		if inputPattern.matchCount(in: input) > 0 {
 			var response = ""
 			var changedPermissions = false
-			
+
 			for mentionedUser in context.message.allMentionedUsers {
 				permissionManager.remove(permissionsFrom: mentionedUser)
 				response += ":x: Revoked permissions from `\(mentionedUser.username)`\n"
 				changedPermissions = true
 			}
-			
+
 			if changedPermissions {
 				output.append(response)
 				permissionManager.writeToDisk()

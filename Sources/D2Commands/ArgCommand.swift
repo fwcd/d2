@@ -7,16 +7,16 @@ public protocol ArgCommand: StringCommand {
     /** Fetches the _pattern instantation_ of the required argument format. */
     var argPattern: Args { get }
 
-    func invoke(withArgInput input: Args, output: CommandOutput, context: CommandContext)
+    func invoke(with input: Args, output: CommandOutput, context: CommandContext)
 }
 
 extension ArgCommand {
     public var inputValueType: RichValueType { .text }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let words = input.split(separator: " ").map { String($0) }
         if let args = Args.parse(from: TokenIterator(words)) {
-            invoke(withArgInput: args, output: output, context: context)
+            invoke(with: args, output: output, context: context)
         } else {
             output.append(errorText: "Syntax: `\(argPattern)`")
         }

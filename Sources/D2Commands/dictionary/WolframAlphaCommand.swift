@@ -21,7 +21,7 @@ public class WolframAlphaCommand: StringCommand {
 
 	public init() {}
 
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		guard !isRunning else {
 			output.append(errorText: "Wait for the first input to finish!")
 			return

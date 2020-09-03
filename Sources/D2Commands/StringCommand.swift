@@ -5,13 +5,13 @@ import D2Permissions
  * Usually, these are commands that expect exactly one argument.
  */
 public protocol StringCommand: Command {
-    func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext)
+    func invoke(with input: String, output: CommandOutput, context: CommandContext)
 }
 
 extension StringCommand {
     public var inputValueType: RichValueType { .text }
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
-        invoke(withStringInput: input.asText ?? input.asCode ?? "", output: output, context: context)
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+        invoke(with: input.asText ?? input.asCode ?? "", output: output, context: context)
     }
 }

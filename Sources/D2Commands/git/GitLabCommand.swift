@@ -72,7 +72,7 @@ public class GitLabCommand: StringCommand {
             """
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if let parsed = subcommandPattern.firstGroups(in: input) {
             let subcommandName = parsed[1]
             let arg = parsed[2]

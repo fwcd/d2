@@ -14,20 +14,20 @@ public class GrepCommand: ArgCommand {
 		patternWithLeft: ArgValue(name: "regex", examples: ["\\d+", "(?:test|demo)*"]),
 		right: ArgRepeat(patternWithValue: ArgValue(name: "line", examples: ["something"]))
 	)
-	
+
 	public init() {}
-	
-	public func invoke(withArgInput input: Args, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: Args, output: CommandOutput, context: CommandContext) {
 		do {
 			let regex = try Regex(from: input.left.value)
 			var result = ""
-			
+
 			for line in input.right.values.map({ $0.value }) {
 				if regex.matchCount(in: line) > 0 {
 					result += line + "\n"
 				}
 			}
-			
+
 			if result.isEmpty {
 				output.append(errorText: "Grep result is empty!")
 			} else {

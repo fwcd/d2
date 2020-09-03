@@ -9,7 +9,7 @@ public class Base64EncoderCommand: Command {
 
     public init() {}
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         do {
             guard let data = try input.asImage?.pngEncoded() ?? input.asText?.data(using: .utf8), !data.isEmpty else {
                 output.append(errorText: "Please append some text or an image to encode!")

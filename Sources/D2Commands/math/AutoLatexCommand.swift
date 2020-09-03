@@ -23,7 +23,7 @@ public class AutoLatexCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if input == "cancel" {
             output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
             context.unsubscribeFromChannel()

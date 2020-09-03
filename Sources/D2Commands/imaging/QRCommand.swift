@@ -10,10 +10,10 @@ public class QRCommand: StringCommand {
         longDescription: "Generates a QR code from given text",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let qr = try QRCode.encode(text: input, ecl: .medium)
             let scale = 4
@@ -21,7 +21,7 @@ public class QRCommand: StringCommand {
             let imageSize = (qr.size + 2 * margin) * scale
             let image = try Image(width: imageSize, height: imageSize)
             var graphics = CairoGraphics(fromImage: image)
-            
+
             for y in 0..<qr.size {
                 for x in 0..<qr.size {
                     let module = qr.getModule(x: x, y: y)

@@ -10,12 +10,12 @@ public class InfoMessageCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     private let text: String
-    
+
     public init(text: String) {
         self.text = text
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         output.append(":information_source: \(text)")
     }
 }

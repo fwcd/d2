@@ -18,10 +18,10 @@ public class SourceFileCommand: StringCommand {
 		longDescription: "Looks up the source code of a command on D2's GitHub repository",
 		requiredPermissionLevel: .basic
 	)
-	
+
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		guard let command = context.registry[input] else {
 			output.append(errorText: "Unknown command `\(input)`")
 			return
@@ -30,16 +30,16 @@ public class SourceFileCommand: StringCommand {
 			output.append(errorText: "Could not locate source file for command `\(input)`")
 			return
 		}
-		
+
 		let relativeRepoPath = "Sources/\(relativeFilePath)"
 		guard let url = URL(string: "\(repositoryUrl)/\(relativeRepoPath)"),
 			let rawURL = URL(string: "\(rawRepositoryUrl)/\(relativeRepoPath)") else {
 			output.append(errorText: "Could not create URLs for command `\(input)`")
 			return
 		}
-		
+
 		// TODO: Use HTTPRequest from D2Utils
-		
+
 		var request = URLRequest(url: rawURL)
 		request.httpMethod = "GET"
 		URLSession.shared.dataTask(with: request) { data, response, error in
@@ -56,7 +56,7 @@ public class SourceFileCommand: StringCommand {
 				output.append(errorText: "Could not decode code as UTF-8")
 				return
 			}
-			
+
 			output.append(Embed(
 				title: relativeFilePath.split(separator: "/").last.map { String($0) } ?? "?",
 				description: "```swift\n\(code)\n```",

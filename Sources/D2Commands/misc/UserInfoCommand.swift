@@ -11,10 +11,10 @@ public class UserInfoCommand: Command {
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append("Not on a guild.")
             return
@@ -59,7 +59,7 @@ public class UserInfoCommand: Command {
             } } ?? [])
         ))
     }
-    
+
     private func stringOf(status: Presence.Status) -> String {
         switch status {
             case .idle: return ":yellow_circle: Idle"
@@ -68,7 +68,7 @@ public class UserInfoCommand: Command {
             case .doNotDisturb: return ":red_circle: Do not disturb"
         }
     }
-    
+
     private func stringOf(activityType: Presence.Activity.ActivityType) -> String {
         switch activityType {
             case .game: return ":video_game: Playing"

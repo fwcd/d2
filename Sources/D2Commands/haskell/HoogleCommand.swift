@@ -24,7 +24,7 @@ public class HoogleCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         HoogleQuery(term: input, count: 50).perform().listen {
             do {
                 let searchResults = try $0.get()

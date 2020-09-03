@@ -10,10 +10,10 @@ public class EchoCommand: StringCommand {
 		requiredPermissionLevel: .basic
 	)
 	public let outputValueType: RichValueType = .text
-	
+
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		output.append(input)
 	}
 }

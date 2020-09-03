@@ -11,16 +11,16 @@ public class ConversateCommand: StringCommand {
     )
     private let conversator: Conversator
 	private let maxWords = 60
-    
+
     public init(conversator: Conversator) {
         self.conversator = conversator
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         context.subscribeToChannel()
         output.append("Subscribed to this channel. Type anything to talk to me.")
     }
-    
+
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         guard context.author?.id != context.client?.me?.id, let guildId = context.guild?.id else { return }
         if content == "stop" {
@@ -36,5 +36,5 @@ public class ConversateCommand: StringCommand {
             }
         }
     }
-   
+
 }

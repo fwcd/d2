@@ -9,10 +9,10 @@ public class ReverseCommand: Command {
     )
     public let inputValueType: RichValueType = .gif
     public let outputValueType: RichValueType = .gif
-    
+
     public init() {}
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         if case let .gif(gif) = input {
             var reversed = gif
             reversed.frames = gif.frames.reversed()

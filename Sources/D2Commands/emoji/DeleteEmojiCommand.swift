@@ -10,7 +10,7 @@ public class DeleteEmojiCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client, let guild = context.guild else {
             output.append(errorText: "Please make sure that a client and a guild exists!")
             return

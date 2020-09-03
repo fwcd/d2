@@ -45,7 +45,7 @@ public class MessageDatabaseQueryCommand: StringCommand {
         self.maxRows = maxRows
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let parsed = selectStmtPattern.firstGroups(in: input.lowercased()) else {
             output.append(errorText: "Please enter a limiting SELECT statement! Note that currently not all SELECT statements are understood. If your query is valid SQL, please file a bug [here](https://github.com/fwcd/d2/issues).")
             return

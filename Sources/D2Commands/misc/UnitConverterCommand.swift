@@ -85,7 +85,7 @@ public class UnitConverterCommand: StringCommand {
 
     // The unit conversion graph
     private let edges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Double>]]
-    
+
     public init() {
         let originalEdges: [ConvertableUnit: [ConvertableUnit: AnyBijection<Double>]] = [
             .m: [
@@ -153,7 +153,7 @@ public class UnitConverterCommand: StringCommand {
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
             .mapValues { Dictionary(uniqueKeysWithValues: $0.map { ($0.1, $0.2) }) }
-        
+
         edges = originalEdges.merging(invertedEdges, uniquingKeysWith: { $0.merging($1, uniquingKeysWith: { v, _ in v }) })
         subcommands = [
             "visualize": { output in
@@ -204,7 +204,7 @@ public class UnitConverterCommand: StringCommand {
             """
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if let subcommand = subcommands[input] {
             subcommand(output)
         } else {
@@ -260,7 +260,7 @@ public class UnitConverterCommand: StringCommand {
         }
 
         // Uses Dijkstra's algorithm to find the shortest path from the src unit to the dest unit
-        
+
         var visited = Set<ConvertableUnit>()
         var queue = BinaryHeap<Prioritized<ConvertableUnit, Double>>()
         var current = Prioritized(value: srcUnit, priority: 0, bijection: AnyBijection(IdentityBijection<Double>()))

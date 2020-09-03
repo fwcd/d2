@@ -4,10 +4,10 @@ public class CoinFlipCommand: StringCommand {
         shortDescription: "Flips a coin",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let result = Bool.random()
         output.append(result ? "Heads!" : "Tails!")
     }

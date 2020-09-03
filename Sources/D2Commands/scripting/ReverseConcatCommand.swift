@@ -9,10 +9,10 @@ public class ReverseConcatCommand: Command {
 	)
 	public let inputValueType: RichValueType = .compound([.text])
 	public let outputValueType: RichValueType = .text
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		output.append(input.values.compactMap { $0.asText }.reversed().joined(separator: " "))
 	}
 }

@@ -9,10 +9,10 @@ public class TriggerTypingCommand: Command {
 	)
 	public let inputValueType: RichValueType = .none
 	public let outputValueType: RichValueType = .none
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		context.channel?.triggerTyping()
 	}
 }

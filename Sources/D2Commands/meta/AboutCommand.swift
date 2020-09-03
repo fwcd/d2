@@ -13,7 +13,7 @@ public class AboutCommand: StringCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         output.append(Embed(
             title: "D2",
             description: """

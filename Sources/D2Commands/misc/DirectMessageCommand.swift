@@ -15,10 +15,10 @@ public class DirectMessageCommand: Command {
 	)
 	public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .text
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		let text = input.asText ?? ""
 		guard let parsedArgs = inputPattern.firstGroups(in: text) else {
 			output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")
@@ -28,7 +28,7 @@ public class DirectMessageCommand: Command {
 			output.append(errorText: "Did not mention anyone")
 			return
 		}
-		
+
 		output.append(parsedArgs[1], to: .dmChannel(mentioned.id))
 	}
 }

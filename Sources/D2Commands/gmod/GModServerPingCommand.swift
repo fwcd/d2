@@ -9,16 +9,16 @@ public class GModServerPingCommand: StringCommand {
         helpText: "Syntax: [address]:[port]?",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let (host, customPort) = parseHostPort(from: input) else {
             output.append(info.helpText!)
             return
         }
         let port = customPort ?? 27015
-        
+
         do {
             let info: SourceServerInfoResponse = try SourceServerQuery(
                 request: SourceServerInfoRequest(),

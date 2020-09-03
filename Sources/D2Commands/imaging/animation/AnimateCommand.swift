@@ -7,7 +7,7 @@ fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
 
 /**
  * Matches a single integer vector.
- * 
+ *
  * The first capture describes the x-coordinate
  * and the second capture the y-coordinate of the
  * position where the transform is applied.
@@ -30,7 +30,7 @@ public class AnimateCommand<A>: Command where A: Animation {
     private let kvParameters: [String]
     private let defaultFrameCount: Int
     private let delayTime: Int
-    
+
     public init(description: String, defaultFrameCount: Int = 30, delayTime: Int = 2) {
         let kvParameters = [framesParameter] + A.Key.allCases.map { $0.rawValue }
         info = CommandInfo(
@@ -50,8 +50,8 @@ public class AnimateCommand<A>: Command where A: Animation {
         self.defaultFrameCount = defaultFrameCount
         self.delayTime = delayTime
     }
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         let args = input.asText ?? ""
         let typingIndicator = context.channel.map { TypingIndicator(on: $0) }
         typingIndicator?.startAsync()
@@ -82,17 +82,17 @@ public class AnimateCommand<A>: Command where A: Animation {
 
                 log.debug("Creating gif")
                 var gif = AnimatedGif(quantizingImage: image)
-                
+
                 for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")
                     var frame = try Image(width: width, height: height)
                     let percent = Double(i) / Double(frameCount)
-                    
+
                     log.debug("Rendering frame \(i)")
                     try animation.renderFrame(from: image, to: &frame, percent: percent)
                     gif.append(frame: .init(image: frame, delayTime: delayTime))
                 }
-                
+
                 output.append(.gif(gif))
             } else if let sourceGif = input.asGif {
                 var gif = sourceGif
@@ -105,7 +105,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                     try animation.renderFrame(from: f.image, to: &frame, percent: percent)
                     return .init(image: frame, delayTime: f.delayTime)
                 }
-                
+
                 output.append(.gif(gif))
             } else {
                 output.append(errorText: "No image passed to AnimateCommand")

@@ -17,10 +17,10 @@ public class AddD2ScriptCommand: StringCommand {
 		requiredPermissionLevel: .admin
 	)
 	private let parser = D2ScriptParser()
-	
+
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		if let code = codePattern.firstGroups(in: input)?[1] {
 			do {
 				let command = try D2ScriptCommand(script: try parser.parse(code))
@@ -29,7 +29,7 @@ public class AddD2ScriptCommand: StringCommand {
 					output.append(errorText: "Command name '\(name)' may not contain spaces")
 					return
 				}
-				
+
 				let registry = context.registry
 				registry[name] = command
 				output.append(":ballot_box_with_check: Added/updated command `\(name)`")

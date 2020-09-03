@@ -17,12 +17,12 @@ public class MarkovCommand: StringCommand {
 	)
 	private let messageDB: MessageDatabase
 	private let maxWords = 60
-	
+
 	public init(messageDB: MessageDatabase) {
 		self.messageDB = messageDB
 	}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
 		let cleanedInput = flagPattern.replace(in: input, with: "").nilIfEmpty
 
@@ -32,11 +32,11 @@ public class MarkovCommand: StringCommand {
 			let initialWord = try cleanedInput ?? sampleMessage.content.split(separator: " ").map { String($0) }.first?.nilIfEmpty ?? messageDB.randomMarkovWord()
 			let stateMachine = MarkovStateMachine(predictor: messageDB, initialState: [initialWord], maxLength: self.maxWords)
 			var result = [String]()
-			
+
 			for word in stateMachine {
 				result.append(word)
 			}
-			
+
 			var formattedResult = result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results"
 
 			if !flags.contains("withpings") {

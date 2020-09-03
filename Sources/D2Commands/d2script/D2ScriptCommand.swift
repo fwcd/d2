@@ -17,17 +17,17 @@ public class D2ScriptCommand: StringCommand {
 	private let script: D2Script
 	private var running = false
 	private var semaphore = DispatchSemaphore(value: 0)
-	
+
 	public init(script: D2Script) throws {
 		self.script = script
-		
+
 		let executor = D2ScriptExecutor()
 		executor.run(script)
-		
+
 		let commandNames = executor.topLevelStorage.commandNames
 		guard let name = commandNames.first else { throw D2ScriptCommandError.noCommandDefined("Script defines no 'command { ... }' blocks") }
 		guard commandNames.count == 1 else { throw D2ScriptCommandError.multipleCommandsDefined("Currently only one command declaration per script is supported") }
-		
+
 		self.name = name
 		info = CommandInfo(
 			category: .d2script,
@@ -36,7 +36,7 @@ public class D2ScriptCommand: StringCommand {
 			requiredPermissionLevel: executor.topLevelStorage[string: "requiredPermissionLevel"].flatMap { PermissionLevel.of($0) } ?? .vip
 		)
 	}
-	
+
 	private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: CommandOutput) {
 		// Output to Discord
 		storage[function: "output"] = {
@@ -54,13 +54,13 @@ public class D2ScriptCommand: StringCommand {
 			}
 			return nil
 		}
-		
+
 		// Print something to the console
 		storage[function: "print"] = {
 			log.info("\($0.first.flatMap { $0 } ?? .string(""))")
 			return nil
 		}
-		
+
 		// Perform a synchronous GET request
 		storage[function: "httpGet"] = {
 			guard case let .string(rawUrl)?? = $0.first else {
@@ -71,9 +71,9 @@ public class D2ScriptCommand: StringCommand {
 				output.append(errorText: "Invalid URL: \(rawUrl)")
 				return nil
 			}
-			
+
 			var result: String? = nil
-			
+
 			URLSession.shared.dataTask(with: url) { (data, response, error) in
 				guard error == nil else {
 					output.append(error!, errorText: "An error occurred while performing the HTTP request")
@@ -88,32 +88,32 @@ public class D2ScriptCommand: StringCommand {
 				result = str
 				self.semaphore.signal()
 			}.resume()
-			
+
 			self.semaphore.wait()
 			return result.map { .string($0) }
 		}
 	}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		guard !running else {
 			output.append(errorText: "This command is already running, wait for it to finish")
 			return
 		}
-		
+
 		running = true
-		
+
 		let executor = D2ScriptExecutor()
 		executor.run(script)
 		addBuiltInFunctions(storage: executor.topLevelStorage, input: input, output: output)
-		
+
 		let queue = DispatchQueue(label: "D2Script command \(name)")
 		let task = DispatchWorkItem {
 			executor.call(command: self.name)
 		}
-		
+
 		let timeout = DispatchTime.now() + .seconds(15)
 		queue.async(execute: task)
-		
+
 		DispatchQueue.global(qos: .utility).async {
 			_ = task.wait(timeout: timeout)
 			self.semaphore.signal()

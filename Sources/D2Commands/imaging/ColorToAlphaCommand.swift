@@ -9,10 +9,10 @@ public class ColorToAlphaCommand: Command {
 	)
 	public let inputValueType: RichValueType = .image
 	public let outputValueType: RichValueType = .image
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let rawColor = input.asText,
             let colorRGB = UInt32(rawColor, radix: 16) else {
             output.append(errorText: "Please specify an RGB color (to be converted to alpha) in hex notation!")
@@ -30,7 +30,7 @@ public class ColorToAlphaCommand: Command {
 				let width = image.width
 				let height = image.height
 				var processed = try Image(width: width, height: height)
-				
+
 				for y in 0..<height {
 					for x in 0..<width {
                         let inColor = image[y, x]
@@ -45,7 +45,7 @@ public class ColorToAlphaCommand: Command {
 						processed[y, x] = outColor
 					}
 				}
-				
+
 				output.append(.image(processed))
 			} catch {
 				output.append(error, errorText: "An error occurred while creating a new image")

@@ -6,12 +6,12 @@ final class EchoCommandTests: XCTestCase {
 	static var allTests = [
 		("testInvocation", testInvocation)
 	]
-	
+
 	func testInvocation() throws {
 		let command = EchoCommand()
 		let output = CommandTestOutput()
-		
-		command.testInvoke(input: .text("demo"), output: output)
+
+		command.testinvoke(with: .text("demo"), output: output)
 		XCTAssertEqual(output.lastContent, "demo")
 	}
 }

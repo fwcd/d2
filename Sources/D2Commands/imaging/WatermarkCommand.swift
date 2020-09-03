@@ -21,7 +21,7 @@ public class WatermarkCommand: Command {
         self.padding = padding
     }
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let image = input.asImage else {
             output.append(errorText: "Not an image!")
             return

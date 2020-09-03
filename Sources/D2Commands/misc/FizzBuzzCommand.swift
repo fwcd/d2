@@ -7,7 +7,7 @@ public class FizzBuzzCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         output.append((1...100).map {
             var s = [String]()
             if $0 % 3 == 0 {

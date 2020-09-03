@@ -14,16 +14,16 @@ public class ToFileCommand: Command {
 	)
 	public let inputValueType: RichValueType = .text
 	public let outputValueType: RichValueType = .files
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		if case let .compound(values) = input {
 			guard let name = values.first else {
 				output.append(errorText: "Missing file name")
 				return
 			}
-			
+
 			guard let content = values[safely: 1] else {
 				output.append(errorText: "Missing content (try piping some value into this invocation)")
 				return
@@ -33,7 +33,7 @@ public class ToFileCommand: Command {
 				output.append(errorText: "Could not encode file data as UTF-8")
 				return
 			}
-			
+
 			output.append(.files([Message.FileUpload(data: data, filename: name.asText ?? "", mimeType: "plain/text")]))
 		} else {
 			output.append(errorText: info.helpText!)

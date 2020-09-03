@@ -9,9 +9,9 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 		patternWithLeft: ArgValue(name: "lhs", examples: []),
 		right: ArgValue(name: "rhs", examples: [])
 	)
-	
+
 	private let operation: (T, T) -> T
-	
+
 	public init(name: String, operation: @escaping (T, T) -> T) {
 		self.name = name
 		self.operation = operation
@@ -22,11 +22,11 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 			requiredPermissionLevel: .basic
 		)
 	}
-	
-	public func invoke(withArgInput input: Args, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: Args, output: CommandOutput, context: CommandContext) {
 		let rawLHS = input.left.value
 		let rawRHS = input.right.value
-		
+
 		guard let lhs = T.init(rawLHS) else {
 			output.append(errorText: "Left-hand side `\(rawLHS)` could not be parsed")
 			return
@@ -35,7 +35,7 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
 			output.append(errorText: "Right-hand side `\(rawRHS)` could not be parsed")
 			return
 		}
-		
+
 		output.append(String(operation(lhs, rhs)))
 	}
 }

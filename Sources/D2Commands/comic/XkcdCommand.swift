@@ -14,7 +14,7 @@ public class XkcdCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let comicPromise: Promise<XkcdComic, Error>
 
         if input == "random" {

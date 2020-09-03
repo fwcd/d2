@@ -11,7 +11,7 @@ public class ComplimentCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         ComplimentrQuery().perform().listen {
             do {
                 let compliment = try $0.get()

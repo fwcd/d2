@@ -10,12 +10,12 @@ public class LogsCommand: StringCommand {
         requiredPermissionLevel: .admin
     )
     private let defaultLineCount: Int
-    
+
     public init(defaultLineCount: Int = 10) {
         self.defaultLineCount = defaultLineCount
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let lineCount = Int(input) ?? defaultLineCount
         output.append(.code(D2LogHandler.lastOutputs.suffix(lineCount).joined(separator: "\n"), language: nil))
     }

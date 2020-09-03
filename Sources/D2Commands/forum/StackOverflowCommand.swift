@@ -17,7 +17,7 @@ public class StackOverflowCommand: StringCommand {
 
 	public init() {}
 
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		do {
 			try StackOverflowQuery(input: input).start().listen {
 				do {

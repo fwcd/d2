@@ -15,8 +15,8 @@ public class MatrixMultiplicationCommand: Command {
     public let outputValueType: RichValueType = .ndArrays
 
     public init() {}
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let factors = allNonNil(input.asNDArrays?.map { $0.asMatrix } ?? [nil]) else {
             output.append(errorText: "Please specify the input in the form of matrices, e.g. `((1, 2), (3, 4)) ((1, 1), (1, 1))`")
             return
@@ -36,12 +36,12 @@ public class MatrixMultiplicationCommand: Command {
                     current = rhs
                 }
             }
-            
+
             guard let product = current else {
                 output.append(errorText: "Empty product")
                 return
             }
-            
+
             log.debug("Computed matrix product \(product)")
             output.append(.ndArrays([product.asNDArray]))
         } catch {

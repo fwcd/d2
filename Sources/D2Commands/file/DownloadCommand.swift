@@ -11,15 +11,15 @@ public class DownloadCommand: Command {
     )
 	public let inputValueType: RichValueType = .text
 	public let outputValueType: RichValueType = .compound([.text, .files])
-    
+
     public init() {}
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let filePath = input.asText else {
             output.append(errorText: info.helpText!)
             return
         }
-        
+
         do {
             let url = URL(fileURLWithPath: filePath)
             let data = try Data(contentsOf: url)

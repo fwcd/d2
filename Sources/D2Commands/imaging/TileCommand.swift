@@ -13,10 +13,10 @@ public class TileCommand: Command {
 	)
 	public let inputValueType: RichValueType = .compound([.text, .image])
 	public let outputValueType: RichValueType = .image
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		guard let text = input.asText,
 			let parsed = argsPattern.firstGroups(in: text),
 			let axis = parsed[1].isEmpty ? .x : Axis(rawValue: parsed[1]),
@@ -39,7 +39,7 @@ public class TileCommand: Command {
 
 				let pixels = (0..<height).map { y in (0..<width).map { x in img[y, x] } }
 				var tiled = try Image(width: newWidth, height: newHeight)
-				
+
 				for y in 0..<height {
 					for x in 0..<width {
 						for i in 0..<replicas {
@@ -50,7 +50,7 @@ public class TileCommand: Command {
 						}
 					}
 				}
-				
+
 				output.append(.image(tiled))
 			} catch {
 				output.append(error, errorText: "An error occurred while creating a new image")

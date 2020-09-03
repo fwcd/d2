@@ -8,10 +8,10 @@ public class ColorCommand: StringCommand {
         longDescription: "Previews a color by it's hex code",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             guard let hexCode = UInt32(input, radix: 16) else {
                 output.append(errorText: "Please enter a hex code as argument!")

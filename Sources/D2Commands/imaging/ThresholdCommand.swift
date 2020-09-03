@@ -14,10 +14,10 @@ public class ThresholdCommand: Command {
 
     private let minThreshold: UInt8 = 0
     private let maxThreshold: UInt8 = 255
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		guard let img = input.asImage else {
 			output.append(errorText: "Not an image!")
             return
@@ -35,7 +35,7 @@ public class ThresholdCommand: Command {
             let width = img.width
             let height = img.height
             var thresholded = try Image(width: width, height: height)
-            
+
             for y in 0..<height {
                 for x in 0..<width {
                     thresholded[y, x] = img[y, x].luminance > threshold
@@ -43,7 +43,7 @@ public class ThresholdCommand: Command {
                         : Colors.black
                 }
             }
-            
+
             output.append(.image(thresholded))
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")

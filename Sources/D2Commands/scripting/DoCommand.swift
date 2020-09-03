@@ -5,10 +5,10 @@ public class DoCommand: Command {
         longDescription: "Ignores the input and passes an empty value. Useful for piping.",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         output.append(.none)
     }
 }

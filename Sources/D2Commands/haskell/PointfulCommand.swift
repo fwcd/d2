@@ -12,10 +12,10 @@ public class PointfulCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .code
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let pointful = try Shell().outputSync(for: "pointful", args: [input])
             output.append(.code(pointful ?? "No results", language: "haskell"))

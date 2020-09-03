@@ -11,7 +11,7 @@ public class DotProductCommand: Command {
 
     public init() {}
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let factors = input.asNDArrays else {
             output.append(errorText: "Please specify the input in the form of vectors, e.g. `(1, 2, 3, 4) (1, 1, (1, 1)`")
             return

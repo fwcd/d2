@@ -28,7 +28,7 @@ public class CountdownCommand: StringCommand {
     public let outputValueType: RichValueType = .embed
     private var goals: [String: CountdownGoal]
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
-    
+
     public init(goals: [String: CountdownGoal] = [:]) {
         self.goals = goals
 
@@ -66,8 +66,8 @@ public class CountdownCommand: StringCommand {
         ]
         info.helpText = makeHelpText()
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if let date = parseDate(from: input) {
             show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
         } else if let parsedArgs = subcommandPattern.firstGroups(in: input) {
@@ -85,11 +85,11 @@ public class CountdownCommand: StringCommand {
             showRunningGoals(to: output)
         }
     }
-    
+
     private func parseDate(from input: String) -> Date? {
         return inputDateFormatters.compactMap { $0.date(from: input) }.first
     }
-    
+
     private func show(_ name: String, as goal: CountdownGoal, to output: CommandOutput) {
         output.append(.embed(Embed(
             title: ":hourglass: \(name) Countdown",
@@ -97,14 +97,14 @@ public class CountdownCommand: StringCommand {
             footer: Embed.Footer(text: outputDateFormatter.string(from: goal.date))
         )))
     }
-    
+
     private func showRunningGoals(to output: CommandOutput) {
         output.append(.embed(Embed(
             title: ":hourglass: Running Countdowns",
             fields: goals.map { Embed.Field(name: $0.key, value: "will take place in **\(describeRemainingTimeUntil(goal: $0.value))** (on \(outputDateFormatter.string(from: $0.value.date)))") }
         )))
     }
-    
+
     private func describeRemainingTimeUntil(goal: CountdownGoal) -> String {
         let date = Calendar.current.dateComponents([.day, .hour, .minute], from: Date(), to: goal.date)
         let days = date.day!
@@ -113,11 +113,11 @@ public class CountdownCommand: StringCommand {
 
         return "\(days) \("day".pluralize(with: days)), \(hours) \("hour".pluralize(with: hours)) and \(minutes) \("minute".pluralize(with: minutes))"
     }
-    
+
     private func removeCompletedGoals() {
         goals = goals.filter { !$0.value.removeAfterCompletion || !$0.value.hasCompleted }
     }
-    
+
     private func makeHelpText() -> String {
         return "Available subcommands: \(subcommands.keys)"
     }

@@ -17,20 +17,20 @@ public class PresenceCommand: StringCommand {
 		longDescription: "Updates the game activity and status",
 		requiredPermissionLevel: .admin
 	)
-	
+
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		if let parsedArgs = argsPattern.firstGroups(in: input) {
 			let activityType = activityTypes[parsedArgs[1]]!
 			let status = parsedArgs[2].nilIfEmpty.flatMap { Presence.Status(rawValue: $0) } ?? .online
 			let customText = parsedArgs[3]
-			
+
 			guard let client = context.client else {
 				output.append(errorText: "No client found")
 				return
 			}
-			
+
 			client.setPresence(PresenceUpdate(game: Presence.Activity(name: customText, type: activityType), status: status))
 		} else {
 			output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")

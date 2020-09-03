@@ -7,9 +7,9 @@ extension Command {
 		output: CommandOutput,
 		context: CommandContext = CommandContext(client: nil, registry: CommandRegistry(), message: Message(content: ""), commandPrefix: "", subscriptions: SubscriptionSet())
 	) {
-		invoke(input: input, output: output, context: context)
+		invoke(with: input, output: output, context: context)
 	}
-	
+
 	public func testSubscriptionMessage(
 		withContent content: String,
 		output: CommandOutput,

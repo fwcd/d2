@@ -10,7 +10,7 @@ public class FortuneCookieCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         FortuneCookieQuery().perform().listen {
             do {
                 guard let cookie = try $0.get().first else {

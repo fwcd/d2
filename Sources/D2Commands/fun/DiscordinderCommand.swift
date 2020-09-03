@@ -23,7 +23,7 @@ public class DiscordinderCommand: StringCommand {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if input == cancelSubcommand {
             guard context.isSubscribed else {
                 output.append(errorText: "No session is running on this channel!")

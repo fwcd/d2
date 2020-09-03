@@ -11,13 +11,13 @@ public class BFToCCommand: StringCommand {
 	public let outputValueType: RichValueType = .code
 
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		if let bfProgram = bfCodePattern.firstGroups(in: input)?[1] {
 			var outputCode = ""
 			var last: String? = nil
 			var repeats: Int = 1
-			
+
 			for character in bfProgram {
 				let translated: String
 				switch character {
@@ -44,10 +44,10 @@ public class BFToCCommand: StringCommand {
 				}
 				last = translated
 			}
-			
+
 			outputCode += String(repeating: last ?? "", count: repeats)
 			let outputC = "#include <stdio.h>\n#include <stdlib.h>\ntypedef struct {int *d;int n;int y;} Vec;Vec vn(){Vec vec = {.d = malloc(sizeof(int)*10),.n=0,.y=10};for (int i=0;i<vec.y;i++) vec.d[i]=0;return vec;}void vcp(Vec *v,int nc){if (v->y<nc) {v->d = realloc(v->d, sizeof(int)*nc);for (int i=v->y;i<nc;i++) v->d[i]=0;v->y=nc;}}int indexOf(int p){if(p>=0){return p*2;}else{return(p*-2)-1;};}int vg(Vec *v, int p){int i=indexOf(p);vcp(v,i+10);return v->d[i];}void vs(Vec *v, int p, int value){int i=indexOf(p);vcp(v,i+10);v->d[i]=value;}void vi(Vec *v, int p){int i=indexOf(p);vcp(v,i+10);v->d[i]++;}void vd(Vec *v, int p) {int i=indexOf(p);vcp(v,i+10);v->d[i]--;}void vdb(Vec *v, int p) {int i=indexOf(p);vcp(v,i+10);v->d[i]*=2;}void vdl(Vec *v) {free(v->d);}int main(void) {Vec t=vn();int p=0;\(outputCode)vdl(&t);return 0;}"
-			
+
 			if let lengthLimit = output.messageLengthLimit {
 				for chunk in outputC.split(by: lengthLimit) {
 					output.append(.code(chunk, language: "c"))

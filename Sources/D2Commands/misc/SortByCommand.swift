@@ -21,7 +21,7 @@ public class SortByCommand: StringCommand {
 
 	public init() {}
 
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		guard let criterion = sortCriteria[input] else {
 			output.append(errorText: "Unrecognized sort criterion: \(input). Try using one of these: \(sortCriteria.keys)")
 			return

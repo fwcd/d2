@@ -22,7 +22,7 @@ public class MinecraftDynmapChatCommand: StringCommand {
         let message: String
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             guard let parsedArgs = argsPattern.firstGroups(in: input) else {
                 output.append("Syntax: \(info.helpText!)")

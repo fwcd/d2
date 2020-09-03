@@ -14,15 +14,15 @@ public class MandelbrotCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .image
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let width = 400
             let height = 300
             var image = try Image(width: width, height: height)
-            
+
             var hasher = Hasher()
             let time = Int(Date().timeIntervalSince1970 * 10) % 256
             let userId = context.author?.id
@@ -36,19 +36,19 @@ public class MandelbrotCommand: StringCommand {
                     image[y, x] = color(at: c, paletteHash: paletteHash)
                 }
             }
-            
+
             try output.append(image)
         } catch {
             output.append(error, errorText: "Could not create image")
         }
     }
-    
+
     public func color(at c: Complex, paletteHash: Int) -> Color {
         let v = convergence(at: c)
         let step = (2 - paletteHash % 3)
         return Color(red: UInt8((v * paletteHash * step) % 256), green: UInt8((v * paletteHash * (step + 1)) % 256), blue: UInt8((v * paletteHash * (step + 2)) % 256))
     }
-    
+
     /** Tests how many iterations it takes to reach the bound (or returns iterations if it does not). */
     private func convergence(at c: Complex, iterations: Int = 16, boundSquared: Double = 1_000_000.0) -> Int {
         var value: Complex = 0

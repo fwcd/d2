@@ -12,7 +12,7 @@ public class UwUifyCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let withWs = wPattern.replace(in: input, with: "w", casePreserving: true)
         let transformed = punctuationPattern.replace(in: withWs) { "\($0[0]) \(["UwU", "OwO", ">w<", "oωo", ".ω."].randomElement()!)." }
         output.append(transformed)

@@ -17,7 +17,7 @@ public class RepeatCommand: StringCommand {
         self.maxTotalLength = maxTotalLength
     }
 
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard
             let parsedArgs = argsPattern.firstGroups(in: input),
             let count = Int(parsedArgs[1]) else {

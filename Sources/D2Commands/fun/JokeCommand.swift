@@ -10,7 +10,7 @@ public class JokeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         RandomJokeQuery().perform().listen {
             do {
                 let joke = try $0.get()

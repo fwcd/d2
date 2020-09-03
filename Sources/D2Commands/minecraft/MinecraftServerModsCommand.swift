@@ -10,15 +10,15 @@ public class MinecraftServerModsCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             if let (host, port) = parseHostPort(from: input) {
                 let serverInfo = try MinecraftServerPing(host: host, port: port ?? 25565, timeoutMs: 1000).perform()
                 let modList = serverInfo.forgeData?.mods?.map { "\($0)" } ?? serverInfo.modinfo?.modList?.map { "\($0)" } ?? [String]()
-                
+
                 output.append(Embed(
                     title: "Minecraft Server Mods at `\(host)\(port.map { ":\($0)" } ?? "")`",
                     description: modList

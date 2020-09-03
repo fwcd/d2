@@ -11,10 +11,10 @@ public class MessageDatabaseCommand: StringCommand {
     public let outputValueType: RichValueType = .table
     private let messageDB: MessageDatabase
     private var subcommands: [String: (CommandOutput, CommandContext) throws -> Void] = [:]
-    
+
     public init(messageDB: MessageDatabase) {
         self.messageDB = messageDB
-        
+
         subcommands = [
             "generateMarkovTransitions": { [unowned self] output, _ throws in
                 let count = try self.messageDB.generateMarkovTransitions()
@@ -66,8 +66,8 @@ public class MessageDatabaseCommand: StringCommand {
             }
         ]
     }
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             if let subcommand = subcommands[input] {
                 try subcommand(output, context)

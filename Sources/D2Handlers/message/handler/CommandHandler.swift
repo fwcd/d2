@@ -29,7 +29,7 @@ fileprivate struct RunnablePipe: Runnable {
 	let input: RichValue
 
 	func run() {
-		pipeSource.command.invoke(input: input, output: pipeSource.output!, context: pipeSource.context)
+		pipeSource.command.invoke(with: input, output: pipeSource.output!, context: pipeSource.context)
 	}
 }
 

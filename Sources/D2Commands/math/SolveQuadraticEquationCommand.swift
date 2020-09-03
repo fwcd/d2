@@ -25,7 +25,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
 		}
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let equation = input.split(separator: "=")
         guard equation.count == 2 else {
             output.append(errorText: "Make sure that your equation has the form `... = ...`")

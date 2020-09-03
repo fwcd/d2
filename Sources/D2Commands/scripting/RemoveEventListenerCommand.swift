@@ -13,7 +13,7 @@ public class RemoveEventListenerCommand: StringCommand {
         self.eventListenerBus = eventListenerBus
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         eventListenerBus.removeListener(name: input)
         output.append("Removed listener (if present)!")
     }

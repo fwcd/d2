@@ -17,7 +17,7 @@ public class PokeQuizCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         PokedexQuery().perform().listen {
             switch $0 {
                 case .success(let pokedex):

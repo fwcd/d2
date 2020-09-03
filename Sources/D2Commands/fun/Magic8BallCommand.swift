@@ -53,7 +53,7 @@ public class Magic8BallCommand: StringCommand {
         self.answers = answers
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         var hasher = Hasher()
         hasher.combine(normalize(input: input))
         let decisions = Decision.allCases.sorted()

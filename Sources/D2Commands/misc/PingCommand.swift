@@ -10,10 +10,10 @@ public class PingCommand: Command {
 	)
 	public let inputValueType: RichValueType = .none
 	public let outputValueType: RichValueType = .text
-	
+
 	public init() {}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		let deltaMs = (context.message.timestamp?.timeIntervalSinceNow).map { $0 * -1000.0 }
 		output.append("Pong\(deltaMs.map { " in \(String(format: "%.2f", $0)) ms" } ?? "")!")
 	}

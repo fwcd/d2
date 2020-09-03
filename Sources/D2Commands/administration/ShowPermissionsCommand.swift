@@ -10,12 +10,12 @@ public class ShowPermissionsCommand: Command {
 	public let inputValueType: RichValueType = .none
 	public let outputValueType: RichValueType = .code
 	private let permissionManager: PermissionManager
-	
+
 	public init(permissionManager: PermissionManager) {
 		self.permissionManager = permissionManager
 	}
-	
-	public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
 		output.append(.code("\(permissionManager)", language: nil))
 	}
 }

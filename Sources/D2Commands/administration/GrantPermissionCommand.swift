@@ -12,24 +12,24 @@ public class GrantPermissionCommand: StringCommand {
 		requiredPermissionLevel: .admin
 	)
 	private let permissionManager: PermissionManager
-	
+
 	public init(permissionManager: PermissionManager) {
 		self.permissionManager = permissionManager
 	}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		if let parsedArgs = inputPattern.firstGroups(in: input) {
 			let rawLevel = parsedArgs[1]
 			if let level = PermissionLevel.of(rawLevel) {
 				var response = ""
 				var changedPermissions = false
-				
+
 				for mentionedUser in context.message.allMentionedUsers {
 					permissionManager[mentionedUser] = level
 					response += ":white_check_mark: Granted `\(mentionedUser.username)` \(rawLevel) permissions\n"
 					changedPermissions = true
 				}
-				
+
 				if changedPermissions {
 					output.append(response)
 					permissionManager.writeToDisk()

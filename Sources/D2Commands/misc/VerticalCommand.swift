@@ -8,10 +8,10 @@ public class VerticalCommand: StringCommand {
 		longDescription: "Inserts newlines between the input characters",
 		requiredPermissionLevel: .basic
 	)
-	
+
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		output.append(input.reduce("") { "\($0)\n\($1)" })
 	}
 }

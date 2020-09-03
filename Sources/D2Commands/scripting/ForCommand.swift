@@ -17,25 +17,25 @@ public class ForCommand: StringCommand {
 	public let outputValueType: RichValueType = .text
 	private let timer: RepeatingTimer
 	private let maxRangeLength: Int
-	
+
 	public init(intervalSeconds: Int = 1, maxRangeLength: Int = 6) {
 		timer = RepeatingTimer(interval: .seconds(intervalSeconds))
 		self.maxRangeLength = maxRangeLength
 	}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		guard !timer.isRunning else {
 			output.append(errorText: "Cannot run multiple `for`-loops concurrently")
 			return
 		}
-		
+
 		guard let parsedArgs = inputPattern.firstGroups(in: input) else {
 			output.append(errorText: "Syntax error: For arguments need to match `[number](...|..<)[number]`")
 			return
 		}
-		
+
 		let rawRange = parsedArgs[1]
-		
+
 		if let range: LowBoundedIntRange = parseIntRange(from: rawRange) ?? parseClosedIntRange(from: rawRange) {
 			if range.count <= maxRangeLength {
 				timer.schedule(nTimes: range.count) { i, _ in

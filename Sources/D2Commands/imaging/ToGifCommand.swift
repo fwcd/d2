@@ -15,10 +15,10 @@ public class ToGifCommand: Command {
         "uniform": { UniformQuantization(fromImage: $0, colorCount: gifColorCount) },
         "octree": { OctreeQuantization(fromImage: $0, colorCount: gifColorCount) }
     ]
-    
+
     public init() {}
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let image = input.asImage else {
             output.append(errorText: "Input does not have an image")
             return

@@ -13,17 +13,17 @@ public class TradeCommand: Command {
     )
     private let inventoryManager: InventoryManager
     private var trades: [ChannelID: Trade] = [:]
-    
+
     private struct ItemWithUser {
         public let category: String
         public let item: Inventory.Item
         public let userId: UserID
     }
-    
+
     private struct Trade {
         public let author: ItemWithUser
         public let other: ItemWithUser
-        
+
         public func perform(with inventoryManager: InventoryManager) {
             inventoryManager[author.userId].remove(item: author.item, from: author.category)
             inventoryManager[other.userId].append(item: author.item, to: author.category)
@@ -36,8 +36,8 @@ public class TradeCommand: Command {
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
     }
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author available")
             return
@@ -78,13 +78,13 @@ public class TradeCommand: Command {
             description: """
                 1x \(authorsItem) (\(authorsCategory)) for you
                 1x \(othersItem) (\(othersCategory)) for \(author.username)
-                
+
                 Do you accept it? [yes/no]
                 """
         ))
         context.subscribeToChannel()
     }
-    
+
     public func onSubscriptionMessage(withContent content: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id,
             let author = context.author,

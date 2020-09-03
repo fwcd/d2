@@ -12,7 +12,7 @@ public class PrimeFactorizationCommand: StringCommand {
         self.upperLimit = upperLimit
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let input = UInt64(input), input >= 1 else {
             output.append(errorText: "Only positive integers >= 1 can be prime-factorized!")
             return

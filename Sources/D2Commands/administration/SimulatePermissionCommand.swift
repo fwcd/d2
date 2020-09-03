@@ -15,7 +15,7 @@ public class SimulatePermissionCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author present")
             return
@@ -34,7 +34,7 @@ public class SimulatePermissionCommand: StringCommand {
                 output.append(errorText: "Not a valid permission level: \(input)")
                 return
             }
-            
+
             permissionManager[simulated: author] = level
             output.append("Simulating permission level `\(input)` for you. Invoke this command with `\(cancelSubcommand)` to exit the simulation.")
         }

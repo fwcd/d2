@@ -28,7 +28,7 @@ public class PipeOutput: CommandOutput {
 			msgParser.parse(args, clientName: context.client?.name, guild: context.guild).listenOrLogError {
 				let nextInput = $0 + value
 				log.trace("Invoking sink")
-				self.sink.invoke(input: nextInput, output: nextOutput, context: self.context)
+				self.sink.invoke(with: nextInput, output: nextOutput, context: self.context)
 			}
 		}
 	}

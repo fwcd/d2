@@ -12,10 +12,10 @@ public class PointfreeCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .code
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let pointfree = try Shell().outputSync(for: "pointfree", args: [input])
             output.append(.code(pointfree ?? "No results", language: "haskell"))

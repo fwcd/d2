@@ -9,10 +9,10 @@ public class TimeTableCommand: StringCommand {
 		requiredPermissionLevel: .basic,
 		hidden: true
 	)
-	
+
 	public init() {}
-	
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		// TODO
 	}
 }

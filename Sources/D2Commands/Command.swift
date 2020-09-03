@@ -7,7 +7,7 @@ public protocol Command: class {
     var outputValueType: RichValueType { get }
     var info: CommandInfo { get }
 
-    func invoke(input: RichValue, output: CommandOutput, context: CommandContext)
+    func invoke(with input: RichValue, output: CommandOutput, context: CommandContext)
 
     func onSuccessfullySent(context: CommandContext)
 

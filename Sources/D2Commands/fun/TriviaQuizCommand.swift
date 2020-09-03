@@ -13,7 +13,7 @@ public class TriviaQuizCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             output.append(errorText: "No channel ID available")
             return

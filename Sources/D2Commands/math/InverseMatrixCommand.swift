@@ -13,8 +13,8 @@ public class InverseMatrixCommand: Command {
     public init(sizeLimit: Int = 16) {
         self.sizeLimit = sizeLimit
     }
-    
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
             output.append(errorText: "Please input a matrix")
             return

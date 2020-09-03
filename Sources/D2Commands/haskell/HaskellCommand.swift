@@ -13,10 +13,10 @@ public class HaskellCommand: StringCommand {
     )
     public let outputValueType: RichValueType = .code
     private let timeout: Int = 4
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let value = try Shell().outputSync(for: "mueval", args: ["-e", input, "-t", String(timeout)])
             output.append(.code(value ?? "No output", language: "haskell"))

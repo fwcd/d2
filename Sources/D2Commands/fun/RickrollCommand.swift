@@ -10,7 +10,7 @@ public class RickrollCommand: Command {
 
     public init() {}
 
-    public func invoke(input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else {
             output.append(errorText: "No message/channel id available")
             return

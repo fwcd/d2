@@ -13,7 +13,7 @@ public class CommandOfTheDayCommand: StringCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let calendar = Calendar(identifier: .gregorian)
         var hasher = Hasher()
         hasher.combine(calendar.dateComponents([.year, .month, .day], from: Date()))

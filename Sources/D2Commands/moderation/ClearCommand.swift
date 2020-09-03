@@ -30,7 +30,7 @@ public class ClearCommand: StringCommand {
         finalConfirmationDeletionTimer = RepeatingTimer(interval: .seconds(finalConfirmationDeletionSeconds))
     }
 
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client else {
             output.append(errorText: "No MessageIO client available")
             return

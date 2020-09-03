@@ -7,10 +7,10 @@ public class ShellCommand: StringCommand {
         helpText: "Syntax: [executable] [args]?",
         requiredPermissionLevel: .admin
     )
-    
+
     public init() {}
-    
-    public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let out = try Shell().outputSync(for: input, useBash: true)?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty ?? "no output"
             output.append(.code(out, language: nil))

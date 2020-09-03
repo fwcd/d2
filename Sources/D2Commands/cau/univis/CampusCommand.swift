@@ -23,7 +23,7 @@ public class CampusCommand: StringCommand {
 
 	public init() {}
 
-	public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
+	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         Promise.catching { try UnivISQuery(search: .rooms, params: [.name: input]) }
             .then { $0.start() }
             .thenCatching { (queryOutput: UnivISOutputNode) throws -> Promise<Embed, Error> in
