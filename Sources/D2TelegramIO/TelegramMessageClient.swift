@@ -127,4 +127,14 @@ struct TelegramMessageClient: MessageClient {
         // TODO
         D2Utils.Promise(.success(nil))
     }
+
+    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> D2Utils.Promise<D2MessageIO.Emoji?, Error> {
+        // TODO
+        Promise(.success(nil))
+    }
+
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> D2Utils.Promise<Bool, Error> {
+        // TODO
+        Promise(.success(false))
+    }
 }

@@ -50,6 +50,12 @@ public protocol MessageClient {
 
     @discardableResult
     func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error>
+
+    @discardableResult
+    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<Emoji?, Error>
+
+    @discardableResult
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, Error>
 }
 
 public extension MessageClient {

@@ -126,4 +126,14 @@ struct IRCMessageClient: MessageClient {
         // TODO
         Promise(.success(nil))
     }
+
+    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<D2MessageIO.Emoji?, Error> {
+        // TODO
+        Promise(.success(nil))
+    }
+
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, Error> {
+        // TODO
+        Promise(.success(false))
+    }
 }

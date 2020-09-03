@@ -159,4 +159,20 @@ struct DiscordMessageClient: MessageClient {
             }
         }
     }
+
+    public func createEmoji(on guildId: D2MessageIO.GuildID, name: String, image: String, roles: [D2MessageIO.RoleID]) -> Promise<Emoji?, Error> {
+        Promise { then in
+            client.createGuildEmoji(on: guildId.usingDiscordAPI, name: name, image: image, roles: roles.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
+    }
+
+    public func deleteEmoji(from guildId: D2MessageIO.GuildID, emojiId: D2MessageIO.EmojiID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.deleteGuildEmoji(on: guildId.usingDiscordAPI, for: emojiId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
+    }
 }

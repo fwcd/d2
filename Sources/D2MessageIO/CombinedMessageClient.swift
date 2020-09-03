@@ -100,4 +100,12 @@ public class CombinedMessageClient: MessageClient {
     public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error> {
         withClient(of: channelId) { $0.createReaction(for: messageId, on: channelId, emoji: emoji) } ?? Promise(.success(nil))
     }
+
+    public func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<Emoji?, Error> {
+        withClient(of: guildId) { $0.createEmoji(on: guildId, name: name, image: image, roles: roles) } ?? Promise(.success(nil))
+    }
+
+    public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, Error> {
+        withClient(of: guildId) { $0.deleteEmoji(from: guildId, emojiId: emojiId) } ?? Promise(.success(false))
+    }
 }
