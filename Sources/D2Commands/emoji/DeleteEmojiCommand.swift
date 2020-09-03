@@ -5,7 +5,7 @@ public class DeleteEmojiCommand: StringCommand {
         category: .emoji,
         shortDescription: "Deletes an emoji on the current guild",
         helpText: "Syntax: [name]",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .admin
     )
 
     public init() {}
