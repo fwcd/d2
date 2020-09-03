@@ -5,6 +5,7 @@ public class CreateEmojiCommand: Command {
     public let info = CommandInfo(
         category: .emoji,
         shortDescription: "Creates an emoji on the current guild",
+        helpText: "Syntax: [name]",
         requiredPermissionLevel: .vip
     )
 
