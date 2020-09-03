@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Permissions
 
 /** Encapsulates functionality that can conveniently be invoked using inputs and arguments. */
-public protocol Command: class {
+public protocol Command: AnyObject {
     var inputValueType: RichValueType { get }
     var outputValueType: RichValueType { get }
     var info: CommandInfo { get }
