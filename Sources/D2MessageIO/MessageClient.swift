@@ -66,4 +66,8 @@ public extension MessageClient {
     func getMessages(for channelId: ChannelID, limit: Int) -> Promise<[Message], Error> {
         getMessages(for: channelId, limit: limit, selection: nil)
     }
+
+    func createEmoji(on guildId: GuildID, name: String, image: String) -> Promise<Emoji?, Error> {
+        createEmoji(on: guildId, name: name, image: image, roles: [])
+    }
 }
