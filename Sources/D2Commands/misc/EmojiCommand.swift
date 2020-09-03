@@ -6,9 +6,9 @@ public class EmojiCommand: StringCommand {
         shortDescription: "Outputs a custom emoji by name",
         requiredPermissionLevel: .basic
     )
-    
+
     public init() {}
-    
+
     public func invoke(withStringInput input: String, output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "Not in a guild!")
@@ -21,14 +21,10 @@ public class EmojiCommand: StringCommand {
         }
         output.append(formatted)
    }
-   
+
    private func formatEmoji(name: String, in guild: Guild) -> String {
        if let (_, emoji) = guild.emojis.first(where: { $0.1.name == name }) {
-            if let id = emoji.id {
-                return "<\(emoji.animated ? "a" : ""):\(emoji.name):\(id)>"
-            } else {
-                return emoji.name
-            }
+            return "\(emoji)"
         } else {
             return ":\(name):"
         }
