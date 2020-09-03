@@ -251,6 +251,7 @@ public class D2Delegate: MessageDelegate {
         registry["emojis"] = EmojisCommand()
         registry["emojiusage"] = EmojiUsageCommand(messageDB: messageDB)
         registry["emojiimage", aka: ["emoteimage"]] = EmojiImageCommand()
+        registry["createemoji"] = CreateEmojiCommand()
         registry["uwu", aka: ["owo"]] = UwUCommand()
         registry["uwuify", aka: ["owoify"]] = UwUifyCommand()
         registry["karma", aka: ["upvotes"]] = ReactionLeaderboardCommand(title: "Upvote Karma", name: "upvote", emojiName: "upvote", useReactor: false, messageDB: messageDB)
