@@ -2,7 +2,7 @@ import D2MessageIO
 
 public class EmojiCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .emoji,
         shortDescription: "Outputs a custom emoji by name",
         requiredPermissionLevel: .basic
     )

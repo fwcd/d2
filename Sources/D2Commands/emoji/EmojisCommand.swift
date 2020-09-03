@@ -3,7 +3,7 @@ import D2Utils
 
 public class EmojisCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .emoji,
         shortDescription: "Fetches/searches the current guild's custom emojis",
         requiredPermissionLevel: .basic
     )

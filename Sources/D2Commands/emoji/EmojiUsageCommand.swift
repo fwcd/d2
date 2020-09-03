@@ -4,7 +4,7 @@ import D2Utils
 
 public class EmojiUsageCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .emoji,
         shortDescription: "Lists the most used emojis on the guild",
         requiredPermissionLevel: .basic
     )

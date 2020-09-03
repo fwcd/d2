@@ -3,7 +3,7 @@ import D2Graphics
 
 public class CreateEmojiCommand: Command {
     public let info = CommandInfo(
-        category: .misc,
+        category: .emoji,
         shortDescription: "Creates an emoji on the current guild",
         requiredPermissionLevel: .vip
     )
