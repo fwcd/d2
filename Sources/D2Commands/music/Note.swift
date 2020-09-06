@@ -39,7 +39,9 @@ struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
 
 	var numValue: Int { ((octave ?? 0) * twelveToneOctave.count) + semitone }
 	var description: String { return "\("\(letter)".uppercased())\(accidental.rawValue)\(octave.map { String($0) } ?? "")" }
-	
+
+    var withoutOctave: Note { Note(letter: letter, accidental: accidental, semitone: semitone) }
+
 	private init(letter: NoteLetter, accidental: Accidental, semitone: Int, octave: Int? = nil) {
 		self.letter = letter
 		self.octave = octave
@@ -57,40 +59,40 @@ struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
 		octave = numValue / twelveToneOctave.count
 		semitone = numValue % twelveToneOctave.count
 	}
-	
+
 	init(of str: String) throws {
 		guard let parsed = notePattern.firstGroups(in: str) else { throw NoteError.invalidNote(str) }
 		guard let letter = NoteLetter.of(parsed[1]) else { throw NoteError.invalidNoteLetter(parsed[1]) }
 		let accidental = Accidental(rawValue: parsed[2]) ?? .none
 		let octave = parsed[3].nilIfEmpty.flatMap { Int($0) }
 		guard let (semitone, _) = twelveToneOctave.enumerated().first(where: { $0.1.contains(UnoctavedNote(letter: letter, accidental: accidental)) }) else { throw NoteError.notInTwelveToneOctave(str) }
-		
+
 		self.init(letter: letter, accidental: accidental, semitone: semitone, octave: octave)
 	}
-	
+
 	static func +(lhs: Note, rhs: NoteInterval) -> Note {
 		let octavesDelta: Int
-		
+
 		if rhs.degrees >= 0 {
 			octavesDelta = rhs.degrees / 7
 		} else {
 			octavesDelta = (rhs.degrees - 6) / 7
 		}
-		
+
 		let nextSemitone = (lhs.semitone + rhs.semitones).clockModulo(twelveToneOctave.count)
 		let nextLetter = lhs.letter + rhs.degrees
 		let candidates = twelveToneOctave[nextSemitone]
 		guard let twelveToneNote = candidates.first(where: { $0.letter == nextLetter }) ?? candidates.first else {
 			fatalError("Could not locate note with semitone \(nextSemitone) and letter \(nextLetter) in twelve-tone octave (from: \(lhs) with interval: \(rhs))")
 		}
-		
+
 		return Note(letter: nextLetter, accidental: twelveToneNote.accidental, semitone: nextSemitone, octave: lhs.octave.map { $0 + octavesDelta })
 	}
-	
+
 	static func -(lhs: Note, rhs: NoteInterval) -> Note {
 		return lhs + (-rhs)
 	}
-	
+
 	func matches(_ rhs: Note) -> Bool {
 		return (semitone == rhs.semitone)
 			&& (octave == nil || rhs.octave == nil || octave == rhs.octave)

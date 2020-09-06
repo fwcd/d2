@@ -70,6 +70,6 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
     }
 
     func advanced(by n: Int) -> CommonChord {
-        CommonChord(over: root.advanced(by: n), intervals: intervals, isMinor: isMinor)
+        CommonChord(over: root.advanced(by: n).withoutOctave, intervals: intervals, isMinor: isMinor)
     }
 }
