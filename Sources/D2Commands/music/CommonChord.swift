@@ -15,7 +15,7 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0
  */
 fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
 
-/// A triad or power chord.
+/// A (possibly stacked) triad or power chord.
 struct CommonChord: Chord, Hashable, CustomStringConvertible {
     let root: Note
     let intervals: [NoteInterval]
