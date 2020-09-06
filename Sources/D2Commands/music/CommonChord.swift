@@ -21,8 +21,10 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
     let intervals: [NoteInterval]
     let isMinor: Bool
 
+    /// The associated scale, either diatonic major or minor
+    var scale: Scale { isMinor ? DiatonicMinorScale(key: root) : DiatonicMajorScale(key: root) }
     var notes: [Note] { intervals.map { root + $0 } }
-	var description: String { intervals.isEmpty ? "\(notes)" :  "\(notes.first!)\(isMinor ? "m" : "")\(intervals.count == 3 ? "" : String(intervals.last!.degrees + 1))" }
+	var description: String { intervals.isEmpty ? "\(notes)" :  "\(root)\(isMinor ? "m" : "")\(intervals.count == 3 ? "" : String(intervals.last!.degrees + 1))" }
 
 	init(of str: String) throws {
 		guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }
