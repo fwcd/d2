@@ -22,7 +22,7 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
     let isMinor: Bool
 
     var notes: [Note] { intervals.map { root + $0 } }
-	var description: String { intervals.isEmpty ? "\(notes)" :  "\(notes.first!)\(isMinor ? "m" : "")\(intervals.last!.degrees + 1)" }
+	var description: String { intervals.isEmpty ? "\(notes)" :  "\(notes.first!)\(isMinor ? "m" : "")\(intervals.count == 3 ? "" : String(intervals.last!.degrees + 1))" }
 
 	init(of str: String) throws {
 		guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }
