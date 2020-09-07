@@ -1,9 +1,9 @@
 import D2Utils
 
-public class GuessKeyCommand: StringCommand {
+public class FindKeyCommand: StringCommand {
     public let info = CommandInfo(
         category: .music,
-        shortDescription: "Guesses a key from a list of possible",
+        shortDescription: "Determines a list of possible major/minor keys given a list of notes",
         helpText: "Syntax: [note]...",
         requiredPermissionLevel: .basic
     )
