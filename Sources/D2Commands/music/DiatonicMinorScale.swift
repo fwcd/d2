@@ -1,15 +1,18 @@
-struct DiatonicMinorScale: Scale {
-    let notes: [Note]
+struct DiatonicMinorScale: Scale, CustomStringConvertible {
+    let key: Note
+
+    var description: String { "\(key)m" }
+    var notes: [Note] { [
+        key,
+        key + .majorSecond,
+        key + .minorThird,
+        key + .perfectFourth,
+        key + .perfectFifth,
+        key + .minorSixth,
+        key + .minorSeventh
+    ] }
 
     init(key: Note) {
-        notes = [
-            key,
-            key + .majorSecond,
-            key + .minorThird,
-            key + .perfectFourth,
-            key + .perfectFifth,
-            key + .minorSixth,
-            key + .minorSeventh
-        ]
+        self.key = key
     }
 }

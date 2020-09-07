@@ -279,6 +279,7 @@ public class D2Delegate: MessageDelegate {
         registry["chord"] = FretboardChordCommand()
         registry["chords"] = LyricsCommand(showChords: true)
         registry["transposechords", aka: ["transposenotes", "transposemusic"]] = TransposeChordsCommand()
+        registry["guesskey"] = GuessKeyCommand()
         registry["lyrics"] = LyricsCommand(showChords: false)
         registry["pianoscale", aka: ["piano"]] = PianoScaleCommand()
         registry["web"] = WebCommand()
