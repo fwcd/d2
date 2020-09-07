@@ -12,7 +12,7 @@ fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(sep
 
 public class PresenceCommand: StringCommand {
 	public let info = CommandInfo(
-		category: .misc,
+		category: .meta,
 		shortDescription: "Updates D2's presence",
 		longDescription: "Updates the game activity and status",
 		requiredPermissionLevel: .admin
