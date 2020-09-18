@@ -54,15 +54,9 @@ public class PollCommand: StringCommand {
 
 		client.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
 			if let nextMessageId = sentMessage?.id {
-				self.react(to: nextMessageId, on: channelId, remainingReactions: ArraySlice(reactions), client: client)
-			}
-		}
-	}
-
-	private func react(to messageId: MessageID, on channelId: ChannelID, remainingReactions: ArraySlice<String>, client: MessageClient) {
-		if let reaction = remainingReactions.first {
-			client.createReaction(for: messageId, on: channelId, emoji: reaction).listenOrLogError { _ in
-				self.react(to: messageId, on: channelId, remainingReactions: remainingReactions.dropFirst(), client: client)
+                for reaction in reactions {
+                    client.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
+                }
 			}
 		}
 	}
