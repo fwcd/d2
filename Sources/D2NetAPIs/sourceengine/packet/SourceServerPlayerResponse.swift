@@ -1,13 +1,13 @@
 public struct SourceServerPlayerResponse: FromSourceServerPacket {
     public let players: [Player]
-    
+
     public init?(packet: SourceServerPacket) {
         var p = packet
-        
+
         // Check header
         if p.readByte() == 0x44, let playerCount = p.readByte() {
             var players = [Player]()
-            
+
             for _ in 0..<playerCount {
                 guard let index = p.readByte(),
                     let name = p.readString(),
@@ -26,7 +26,7 @@ public struct SourceServerPlayerResponse: FromSourceServerPacket {
             return nil
         }
     }
-    
+
     public struct Player {
         public let index: UInt8
         public let name: String

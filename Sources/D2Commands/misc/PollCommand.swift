@@ -8,28 +8,28 @@ fileprivate let log = Logger(label: "D2Commands.PollCommand")
 // TODO: Use Arg API
 
 public class PollCommand: StringCommand {
-	public let info = CommandInfo(
-		category: .misc,
-		shortDescription: "Creates a simple poll",
-		longDescription: "Creates a message with the given options and 'reaction buttons' that allow users to vote",
-		requiredPermissionLevel: .basic
-	)
+    public let info = CommandInfo(
+        category: .misc,
+        shortDescription: "Creates a simple poll",
+        longDescription: "Creates a message with the given options and 'reaction buttons' that allow users to vote",
+        requiredPermissionLevel: .basic
+    )
     private let interpolatables: [[String]]
 
-	public init(interpolatables: [[String]] = [
+    public init(interpolatables: [[String]] = [
         ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].repeated(count: 2),
         ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"].repeated(count: 2)
     ]) {
         self.interpolatables = interpolatables
     }
 
-	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-		let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+        let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
 
-		guard components.count >= 1 else {
-			output.append(errorText: "Syntax: [poll text] [zero or more vote options...]")
-			return
-		}
+        guard components.count >= 1 else {
+            output.append(errorText: "Syntax: [poll text] [zero or more vote options...]")
+            return
+        }
 
         do {
             let options = try expand(options: components.dropFirst())
@@ -72,7 +72,7 @@ public class PollCommand: StringCommand {
         } catch {
             output.append(error, errorText: "Could not create poll")
         }
-	}
+    }
 
     private enum ExpansionError: Error {
         case noInterpolatableFound
@@ -103,35 +103,35 @@ public class PollCommand: StringCommand {
         return expanded
     }
 
-	private func numberEmojiStringOf(digit: Int) -> String? {
-		switch digit {
-			case 0: return "zero"
-			case 1: return "one"
-			case 2: return "two"
-			case 3: return "three"
-			case 4: return "four"
-			case 5: return "five"
-			case 6: return "six"
-			case 7: return "seven"
-			case 8: return "eight"
-			case 9: return "nine"
-			default: return nil
-		}
-	}
+    private func numberEmojiStringOf(digit: Int) -> String? {
+        switch digit {
+            case 0: return "zero"
+            case 1: return "one"
+            case 2: return "two"
+            case 3: return "three"
+            case 4: return "four"
+            case 5: return "five"
+            case 6: return "six"
+            case 7: return "seven"
+            case 8: return "eight"
+            case 9: return "nine"
+            default: return nil
+        }
+    }
 
-	private func numberEmojiOf(digit: Int) -> String? {
-		switch digit {
-			case 0: return "0⃣"
-			case 1: return "1⃣"
-			case 2: return "2⃣"
-			case 3: return "3⃣"
-			case 4: return "4⃣"
-			case 5: return "5⃣"
-			case 6: return "6⃣"
-			case 7: return "7⃣"
-			case 8: return "8⃣"
-			case 9: return "9⃣"
-			default: return nil
-		}
-	}
+    private func numberEmojiOf(digit: Int) -> String? {
+        switch digit {
+            case 0: return "0⃣"
+            case 1: return "1⃣"
+            case 2: return "2⃣"
+            case 3: return "3⃣"
+            case 4: return "4⃣"
+            case 5: return "5⃣"
+            case 6: return "6⃣"
+            case 7: return "7⃣"
+            case 8: return "8⃣"
+            case 9: return "9⃣"
+            default: return nil
+        }
+    }
 }

@@ -94,7 +94,7 @@ public class ServerInfoCommand: StringCommand {
         let longestMessage = try? messageDB.prepare("""
             select content, user_name
             from messages natural join channels
-                                  join users on (author_id == user_id)
+                                join users on (author_id == user_id)
             where guild_id == ?
             order by length(content) desc
             limit 1
@@ -116,7 +116,7 @@ public class ServerInfoCommand: StringCommand {
         let mostMessagesSent = try? messageDB.prepare("""
             select count(message_id), user_name
             from messages natural join channels
-                                  join users on (user_id == author_id)
+                                join users on (user_id == author_id)
             where channels.guild_id == ?
             group by user_id
             order by count(message_id) desc

@@ -2,25 +2,25 @@ import D2MessageIO
 import D2Graphics
 
 public class ScaleImageCommand: Command {
-	public let info = CommandInfo(
-		category: .imaging,
-		shortDescription: "Scales an image by a factor",
-		requiredPermissionLevel: .basic
-	)
-	public let inputValueType: RichValueType = .compound([.image, .text])
-	public let outputValueType: RichValueType = .image
+    public let info = CommandInfo(
+        category: .imaging,
+        shortDescription: "Scales an image by a factor",
+        requiredPermissionLevel: .basic
+    )
+    public let inputValueType: RichValueType = .compound([.image, .text])
+    public let outputValueType: RichValueType = .image
 
     private let maxWidth: Int
     private let maxHeight: Int
 
-	public init(maxWidth: Int = 800, maxHeight: Int = 800) {
+    public init(maxWidth: Int = 800, maxHeight: Int = 800) {
         self.maxWidth = maxWidth
         self.maxHeight = maxHeight
     }
 
-	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
-		guard let img = input.asImage else {
-			output.append(errorText: "Not an image!")
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+        guard let img = input.asImage else {
+            output.append(errorText: "Not an image!")
             return
         }
 
@@ -50,5 +50,5 @@ public class ScaleImageCommand: Command {
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")
         }
-	}
+    }
 }

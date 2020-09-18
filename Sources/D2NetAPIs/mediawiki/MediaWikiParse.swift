@@ -1,12 +1,12 @@
 public struct MediaWikiParse: Codable {
     public let parse: Parse
-    
+
     public struct Parse: Codable {
         public let title: String?
         public let pageid: Int?
         public let wikitext: String?
         public let sections: [Section]?
-        
+
         public struct Section: Codable {
             public let toclevel: Int?
             public let level: String?

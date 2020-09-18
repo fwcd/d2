@@ -2,7 +2,7 @@
 /// be stochastically generated.
 public protocol MarkovPredictor {
     associatedtype Element
-    
+
     var markovOrder: Int { get }
 
     func predict(_ state: [Element]) -> Element?

@@ -10,7 +10,7 @@ public class ConversateCommand: StringCommand {
         userOnly: false
     )
     private let conversator: Conversator
-	private let maxWords = 60
+    private let maxWords = 60
 
     public init(conversator: Conversator) {
         self.conversator = conversator

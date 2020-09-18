@@ -1,4 +1,4 @@
 public enum CheckType: String, Hashable {
-	case check
-	case checkmate
+    case check
+    case checkmate
 }

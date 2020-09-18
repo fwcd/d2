@@ -25,7 +25,7 @@ struct PianoRenderer: ScaleRenderer {
         self.range = range
     }
 
-	func render(scale: Scale) throws -> Image {
+    func render(scale: Scale) throws -> Image {
         let scaleSemitones = Set(scale.notes.map(\.semitone))
 
         let whiteKeyCount = range.count(forWhich: { $0.accidental == .none })

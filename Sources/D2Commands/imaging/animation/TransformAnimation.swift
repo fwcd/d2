@@ -14,7 +14,7 @@ public struct TransformAnimation<T>: Animation where T: ImageTransform {
 
     private let transform: T
     private let useVirtualEdges: Bool
-    
+
     public init(pos: Vec2<Int>?, kvArgs: [Key: String]) {
         let transformKvArgs = Dictionary(uniqueKeysWithValues: kvArgs.compactMap { (k, v) in T.Key(rawValue: k.rawValue).map { ($0, v) } })
         transform = T.init(at: pos, kvArgs: transformKvArgs)

@@ -9,7 +9,7 @@ public enum Canteen: Int, CustomStringConvertible {
     case kielMensaI = 411
     case kielMensaII = 421
     case kielMensaGaarden = 903
-    
+
     public var description: String {
         switch self {
             case .kielMensaI: return "Mensa I"
@@ -17,7 +17,7 @@ public enum Canteen: Int, CustomStringConvertible {
             case .kielMensaGaarden: return "Mensa Gaarden"
         }
     }
-    
+
     public static func parse(from raw: String) -> Canteen? {
         if let _ = kielMensaIPattern.firstGroups(in: raw) {
             return .kielMensaI

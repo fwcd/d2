@@ -1,3 +1,3 @@
 public struct EmptyRichValueConvertible: RichValueConvertible {
-	public var asRichValue: RichValue { return .none }
+    public var asRichValue: RichValue { return .none }
 }

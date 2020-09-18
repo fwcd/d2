@@ -10,7 +10,7 @@ public struct WikitextParser {
         case text(String)
         case symbol(String)
         case unknown
-        
+
         var description: String {
             switch self {
                 case .text(let s): return "<\(s)>"
@@ -21,13 +21,13 @@ public struct WikitextParser {
     }
 
     public init() {}
-    
+
     public func parse(raw: String) throws -> WikitextDocument {
         let tokens = tokenize(raw: raw)
         log.trace("Tokens: \(tokens)")
         return try parseWikitext(from: TokenIterator(tokens))
     }
-    
+
     private func tokenize(raw: String) -> [Token] {
         tokenPattern.allGroups(in: raw).map {
             if let text = $0[1].nilIfEmpty {
@@ -46,7 +46,7 @@ public struct WikitextParser {
         }
         return WikitextDocument(sections: sections)
     }
-    
+
     private func parseSection(from tokens: TokenIterator<Token>) throws -> WikitextDocument.Section? {
         log.trace("Parsing section")
         let title = try parseTitle(from: tokens)
@@ -54,7 +54,7 @@ public struct WikitextParser {
         guard title != nil || !nodes.isEmpty else { return nil }
         return .init(title: title, content: nodes)
     }
-    
+
     private func parseNodes(from tokens: TokenIterator<Token>) throws -> [WikitextDocument.Section.Node] {
         log.trace("Parsing nodes")
         var nodes = [WikitextDocument.Section.Node]()
@@ -63,7 +63,7 @@ public struct WikitextParser {
         }
         return nodes
     }
-    
+
     private func parseNode(from tokens: TokenIterator<Token>) throws -> WikitextDocument.Section.Node? {
         log.trace("Parsing node")
         guard let token = tokens.peek() else { return nil }
@@ -81,10 +81,10 @@ public struct WikitextParser {
                 return nil
         }
     }
-    
+
     private func parseLink(from tokens: TokenIterator<Token>) throws -> WikitextDocument.Section.Node {
         log.trace("Parsing link")
-        guard case .symbol("[[")? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected opening [[") } 
+        guard case .symbol("[[")? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected opening [[") }
         var nodes = [try parseNodes(from: tokens)]
         while case .symbol("|")? = tokens.peek() {
             tokens.next()
@@ -93,10 +93,10 @@ public struct WikitextParser {
         guard case .symbol("]]")? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected closing ]] (after link: \(nodes))") }
         return .link(nodes)
     }
-    
+
     private func parseTemplate(from tokens: TokenIterator<Token>) throws -> WikitextDocument.Section.Node {
         log.trace("Parsing template")
-        guard case .symbol("{{")? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected opening {{") } 
+        guard case .symbol("{{")? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected opening {{") }
         guard case let .text(name)? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected template title") }
         var params = [WikitextDocument.Section.Node.TemplateParameter]()
         while case .symbol("|")? = tokens.peek() {
@@ -106,7 +106,7 @@ public struct WikitextParser {
         guard case .symbol("}}") = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected closing }} (after params: \(params))") }
         return .template(name, params)
     }
-    
+
     private func parseTemplateParameter(from tokens: TokenIterator<Token>) throws -> WikitextDocument.Section.Node.TemplateParameter {
         log.trace("Parsing template parameter")
         if let key = parseTemplateParameterKey(from: tokens) {
@@ -115,7 +115,7 @@ public struct WikitextParser {
             return .value(try parseNodes(from: tokens))
         }
     }
-    
+
     private func parseTemplateParameterKey(from tokens: TokenIterator<Token>) -> String? {
         log.trace("Parsing template parameter key")
         guard case let .text(key)? = tokens.peek() else { return nil }
@@ -124,13 +124,13 @@ public struct WikitextParser {
         tokens.next()
         return key
     }
-    
+
     private func parseText(from tokens: TokenIterator<Token>) throws -> WikitextDocument.Section.Node {
         log.trace("Parsing text")
         guard case let .text(text)? = tokens.next() else { throw WikitextParseError.noMoreTokens("Expected text") }
         return .text(text)
     }
-    
+
     private func parseTitle(from tokens: TokenIterator<Token>) throws -> String? {
         log.trace("Parsing title")
         guard case let .symbol(opening)? = tokens.peek(), opening.starts(with: "=") else { return nil }

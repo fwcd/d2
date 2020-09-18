@@ -10,6 +10,6 @@ public struct SpamConfiguration: Codable, DefaultInitializable {
     public var spammerRoles: [GuildID: RoleID] = [:]
     /** Clears previously obtained roles from a spammer. Only used if spammerRole is not nil. */
     public var removeOtherRolesFromSpammer: Bool = true
-    
+
     public init() {}
 }

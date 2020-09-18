@@ -24,7 +24,7 @@ public struct MinecraftDynmapConfiguration: Codable {
     public let webprefix: String?
     public let showplayerfacesinmenu: Bool?
     public let defaultworld: String?
-    
+
     public struct World: Codable {
         public let sealevel: Int?
         public let protected: Bool?
@@ -34,7 +34,7 @@ public struct MinecraftDynmapConfiguration: Codable {
         public let name: String?
         public let title: String?
         public let worldheight: Int?
-        
+
         public struct Map: Codable {
             public let inclination: Double?
             public let nightandday: Bool?
@@ -54,10 +54,10 @@ public struct MinecraftDynmapConfiguration: Codable {
             public let mapzoomin: Int?
             public let maptoworld: [Double]?
             public let worldtomap: [Double]?
-            
+
             private var maptoworldMatrix: Matrix<Double> { maptoworld.map { Matrix(width: 3, height: 3, values: $0) } ?? .identity(width: 3) }
             private var worldtomapMatrix: Matrix<Double> { worldtomap.map { Matrix(width: 3, height: 3, values: $0) } ?? .identity(width: 3) }
-            
+
             /// Converts a Minecraft location to a tile position.
             public func toTilePos(x: Double, y: Double, z: Double) -> (Double, Double) {
                 let mcPos = Matrix(width: 1, height: 3, values: [x, y, z])
@@ -66,7 +66,7 @@ public struct MinecraftDynmapConfiguration: Codable {
                 return (tilePos[0, 0] / scale, (tilePos[1, 0] - scale) / scale)
             }
         }
-        
+
         public struct Position: Codable {
             public let x: Double
             public let y: Double

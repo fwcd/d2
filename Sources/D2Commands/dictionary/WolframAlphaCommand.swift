@@ -10,56 +10,56 @@ fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
-	public let info = CommandInfo(
-		category: .dictionary,
-		shortDescription: "Queries Wolfram Alpha",
-		longDescription: "Sets the permission level of one or more users",
-		helpText: "[--image]? [--steps]? [query input]",
-		requiredPermissionLevel: .vip
-	)
-	private var isRunning = false
+    public let info = CommandInfo(
+        category: .dictionary,
+        shortDescription: "Queries Wolfram Alpha",
+        longDescription: "Sets the permission level of one or more users",
+        helpText: "[--image]? [--steps]? [query input]",
+        requiredPermissionLevel: .vip
+    )
+    private var isRunning = false
 
-	public init() {}
+    public init() {}
 
-	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-		guard !isRunning else {
-			output.append(errorText: "Wait for the first input to finish!")
-			return
-		}
-		isRunning = true
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+        guard !isRunning else {
+            output.append(errorText: "Wait for the first input to finish!")
+            return
+        }
+        isRunning = true
 
-		do {
-			let flags = Set(flagPattern.allGroups(in: input).map { $0[1] })
-			let processedInput = flagPattern.replace(in: input, with: "")
+        do {
+            let flags = Set(flagPattern.allGroups(in: input).map { $0[1] })
+            let processedInput = flagPattern.replace(in: input, with: "")
 
-			if flags.contains("image") {
-				// Performs a "simple" query and outputs a static image
-				try performSimpleQuery(input: processedInput, output: output)
-			} else {
-				// Performs a full query and outputs an embed
-				try performFullQuery(input: processedInput, output: output, showSteps: flags.contains("steps"))
-			}
-		} catch {
-			output.append(error)
-		}
-	}
+            if flags.contains("image") {
+                // Performs a "simple" query and outputs a static image
+                try performSimpleQuery(input: processedInput, output: output)
+            } else {
+                // Performs a full query and outputs an embed
+                try performFullQuery(input: processedInput, output: output, showSteps: flags.contains("steps"))
+            }
+        } catch {
+            output.append(error)
+        }
+    }
 
-	private func performSimpleQuery(input: String, output: CommandOutput) throws {
-		let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
-		query.start().listen {
+    private func performSimpleQuery(input: String, output: CommandOutput) throws {
+        let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
+        query.start().listen {
             do {
                 let data = try $0.get()
                 output.append(.files([Message.FileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]))
             } catch {
                 output.append(error, errorText: "An error occurred while querying WolframAlpha.")
             }
-			self.isRunning = false
-		}
-	}
+            self.isRunning = false
+        }
+    }
 
-	private func performFullQuery(input: String, output: CommandOutput, showSteps: Bool = false) throws {
-		let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
-		query.startAndParse().listen {
+    private func performFullQuery(input: String, output: CommandOutput, showSteps: Bool = false) throws {
+        let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
+        query.startAndParse().listen {
             do {
                 let result = try $0.get()
                 let images = result.pods.flatMap { pod in pod.subpods.compactMap { self.extractImageURL(from: $0) } }
@@ -84,11 +84,11 @@ public class WolframAlphaCommand: StringCommand {
             } catch {
                 output.append(error, errorText: "An error occurred while querying WolframAlpha.")
             }
-			self.isRunning = false
-		}
-	}
+            self.isRunning = false
+        }
+    }
 
-	private func extractImageURL(from subpod: WolframAlphaSubpod) -> URL? {
-		return (subpod.img?.src).flatMap { URL(string: $0) }
-	}
+    private func extractImageURL(from subpod: WolframAlphaSubpod) -> URL? {
+        return (subpod.img?.src).flatMap { URL(string: $0) }
+    }
 }

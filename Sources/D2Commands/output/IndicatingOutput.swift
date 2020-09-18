@@ -7,7 +7,7 @@ public class IndicatingOutput: CommandOutput {
     public init(_ next: CommandOutput? = nil) {
         self.next = next
     }
-    
+
     public func append(_ value: RichValue, to channel: OutputChannel) {
         used = true
         next?.append(value, to: channel)

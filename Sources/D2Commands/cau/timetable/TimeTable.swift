@@ -1,3 +1,3 @@
 struct TimeTable {
-	var entries = [TimeTableEntry]()
+    var entries = [TimeTableEntry]()
 }

@@ -1,8 +1,8 @@
 /** Describes a (signed) type that has an additive inverse. */
 public protocol Negatable {
-	mutating func negate()
+    mutating func negate()
 
-	prefix static func -(operand: Self) -> Self
+    prefix static func -(operand: Self) -> Self
 }
 
 extension Int: Negatable {}

@@ -1,5 +1,5 @@
 enum ChordError: Error {
-	case invalidChord(String)
-	case invalidRootNote(String)
-	case notOnFretboard(Chord)
+    case invalidChord(String)
+    case invalidRootNote(String)
+    case notOnFretboard(Chord)
 }

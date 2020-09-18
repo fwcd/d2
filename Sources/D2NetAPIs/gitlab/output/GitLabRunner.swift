@@ -9,7 +9,7 @@ public struct GitLabRunner: Codable {
         case online
         case status
     }
-    
+
     public let id: Int?
     public let description: String?
     public let ipAddress: String?

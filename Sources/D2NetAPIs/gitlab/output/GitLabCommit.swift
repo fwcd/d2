@@ -13,7 +13,7 @@ public struct GitLabCommit: Codable {
         case committerEmail = "committer_email"
         case committedDate = "committed_date"
     }
-    
+
     public let id: String?
     public let shortId: String?
     public let createdAt: String?

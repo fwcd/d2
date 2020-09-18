@@ -13,16 +13,16 @@ public class SolveQuadraticEquationCommand: StringCommand {
         longDescription: "Solves a quadratic equation of the form ax^2 + bx + c = d",
         requiredPermissionLevel: .basic
     )
-	private let latexRenderer: LatexRenderer?
+    private let latexRenderer: LatexRenderer?
     private var running: Bool = false
 
     public init() {
         do {
-			latexRenderer = try LatexRenderer()
-		} catch {
-			latexRenderer = nil
-			log.error("Could not initialize latex renderer: \(error)")
-		}
+            latexRenderer = try LatexRenderer()
+        } catch {
+            latexRenderer = nil
+            log.error("Could not initialize latex renderer: \(error)")
+        }
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {

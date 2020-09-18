@@ -9,13 +9,13 @@ public class SearchCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-	private let commandPrefix: String
-	private let permissionManager: PermissionManager
+    private let commandPrefix: String
+    private let permissionManager: PermissionManager
 
-	public init(commandPrefix: String, permissionManager: PermissionManager) {
-		self.commandPrefix = commandPrefix
-		self.permissionManager = permissionManager
-	}
+    public init(commandPrefix: String, permissionManager: PermissionManager) {
+        self.commandPrefix = commandPrefix
+        self.permissionManager = permissionManager
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let term = input.lowercased()

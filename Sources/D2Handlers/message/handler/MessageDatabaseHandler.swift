@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2Handlers.MessageDatabaseHandler")
 
 public struct MessageDatabaseHandler: MessageHandler {
     private let messageDB: MessageDatabase
-    
+
     public init(messageDB: MessageDatabase) {
         self.messageDB = messageDB
     }

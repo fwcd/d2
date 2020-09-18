@@ -5,19 +5,19 @@
  * sense.
  */
 public protocol Multiplayer {
-	var players: [GamePlayer] { get }
+    var players: [GamePlayer] { get }
 }
 
 extension GameState where Self: Multiplayer, Self.Role == Int {
-	public func playerOf(role: Role) -> GamePlayer? {
-		return players[safely: role]
-	}
-	
-	public func rolesOf(player: GamePlayer) -> [Role] {
-		return players.allIndices(of: player)
-	}
+    public func playerOf(role: Role) -> GamePlayer? {
+        return players[safely: role]
+    }
+
+    public func rolesOf(player: GamePlayer) -> [Role] {
+        return players.allIndices(of: player)
+    }
 }
 
 extension GameState where Self: Multiplayer {
-	public var playersDescription: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
+    public var playersDescription: String { return players.map { "`\($0.username)`" }.joined(separator: " vs. ") }
 }

@@ -19,7 +19,7 @@ public struct SubscriptionHandler: MessageHandler {
     public func handle(message: Message, from client: MessageClient) -> Bool {
         guard !manager.isEmpty, let channelId = message.channelId else { return false }
 
-		let isBot = message.author?.bot ?? false
+        let isBot = message.author?.bot ?? false
         var handled = false
 
         manager.notifySubscriptions(on: channelId, isBot: isBot) { name, subs in

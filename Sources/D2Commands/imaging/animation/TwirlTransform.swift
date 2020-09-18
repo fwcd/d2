@@ -18,7 +18,7 @@ public struct TwirlTransform: ImageTransform {
         rotationBias = kvArgs[.rotationBias].flatMap { Double($0) } ?? 0
         rotationStrength = kvArgs[.rotationStrength].flatMap { Double($0) } ?? 1
     }
-    
+
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
         let center = pos ?? (imageSize / 2)
         let delta = (destPos - center).asDouble

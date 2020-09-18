@@ -9,8 +9,8 @@ public class UploadCommand: Command {
         helpText: "Pipe a file path into an invocation of upload, e.g. `... | upload local/test.txt`",
         requiredPermissionLevel: .admin
     )
-	public let inputValueType: RichValueType = .compound([.text, .attachments])
-	public let outputValueType: RichValueType = .text
+    public let inputValueType: RichValueType = .compound([.text, .attachments])
+    public let outputValueType: RichValueType = .text
 
     public init() {}
 

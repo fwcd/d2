@@ -10,8 +10,8 @@ public class AsciiArtCommand: Command {
         shortDescription: "Turns an image into ASCII art",
         requiredPermissionLevel: .basic
     )
-	public let inputValueType: RichValueType = .image
-	public let outputValueType: RichValueType = .code
+    public let inputValueType: RichValueType = .image
+    public let outputValueType: RichValueType = .code
 
     private let maxAsciiWidth: Int
     private let maxAsciiHeight: Int

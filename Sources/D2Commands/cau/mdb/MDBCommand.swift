@@ -7,16 +7,16 @@ import D2NetAPIs
 fileprivate let log = Logger(label: "D2Commands.MDBCommand")
 
 public class MDBCommand: StringCommand {
-	public let info = CommandInfo(
-		category: .cau,
-		shortDescription: "Queries the MDB",
-		longDescription: "Queries the Computer Science module database from the CAU",
-		requiredPermissionLevel: .basic
-	)
+    public let info = CommandInfo(
+        category: .cau,
+        shortDescription: "Queries the MDB",
+        longDescription: "Queries the Computer Science module database from the CAU",
+        requiredPermissionLevel: .basic
+    )
 
-	public init() {}
+    public init() {}
 
-	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         Promise.catching { try MDBQuery(moduleCode: input.nilIfEmpty) }
             .then { $0.start() }
             .listen {
@@ -51,5 +51,5 @@ public class MDBCommand: StringCommand {
                     output.append(error, errorText: "An error occurred while querying.")
                 }
             }
-	}
+    }
 }

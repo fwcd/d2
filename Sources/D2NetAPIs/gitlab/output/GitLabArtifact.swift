@@ -4,7 +4,7 @@ public struct GitLabArtifact: Codable {
         case size
         case filename
     }
-    
+
     public let fileType: String?
     public let size: Int?
     public let filename: String?

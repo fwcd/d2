@@ -9,18 +9,18 @@ public class UwUCommand: StringCommand {
         requiredPermissionLevel: .basic,
         hidden: true
     )
-	public let outputValueType: RichValueType = .image
-	private let latexRenderer: LatexRenderer?
+    public let outputValueType: RichValueType = .image
+    private let latexRenderer: LatexRenderer?
     private var running: Bool = false
 
     public init() {
-		do {
-			latexRenderer = try LatexRenderer()
-		} catch {
-			latexRenderer = nil
-			log.error("Could not initialize latex renderer: \(error)")
-		}
-	}
+        do {
+            latexRenderer = try LatexRenderer()
+        } catch {
+            latexRenderer = nil
+            log.error("Could not initialize latex renderer: \(error)")
+        }
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard !running else {
@@ -33,7 +33,7 @@ public class UwUCommand: StringCommand {
         }
         running = true
         renderLatexImage(with: renderer, from: "\\mathcal{O}\\omega\\mathcal{O}", to: output).listenOrLogError {
-			self.running = false
-		}
+            self.running = false
+        }
     }
 }

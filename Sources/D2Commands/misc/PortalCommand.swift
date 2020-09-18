@@ -69,7 +69,7 @@ public class PortalCommand: StringCommand {
         subcommand(output, context)
     }
 
-	public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             log.warning("No channel id available, despite being subscribed!")
             return

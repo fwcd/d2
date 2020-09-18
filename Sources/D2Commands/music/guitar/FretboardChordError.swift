@@ -1,3 +1,3 @@
 enum FretboardChordError: Error {
-	case noFretboardChordFound(Chord)
+    case noFretboardChordFound(Chord)
 }

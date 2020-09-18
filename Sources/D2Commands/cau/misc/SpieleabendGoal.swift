@@ -4,7 +4,7 @@ import Foundation
 public struct SpieleabendGoal: CountdownGoal {
     public var date: Date { return nextGamesEveningFromNow() }
     public var removeAfterCompletion: Bool { return false }
-    
+
     public init() {}
 
     private func nextGamesEveningFromNow() -> Date {
@@ -17,7 +17,7 @@ public struct SpieleabendGoal: CountdownGoal {
             return gamesEvening(inMonthOf: Calendar.current.date(byAdding: .month, value: 1, to: now)!)
         }
     }
-    
+
     /** The games evening occurs on the second thursday each month. */
     private func gamesEvening(inMonthOf baseDate: Date) -> Date {
         let calendar = Calendar.current

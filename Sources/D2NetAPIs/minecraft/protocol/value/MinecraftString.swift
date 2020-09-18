@@ -6,11 +6,11 @@ public struct MinecraftString: MinecraftProtocolValue {
         let data = value.data(using: .utf8)!
         return MinecraftVarInt(Int32(data.count)).data + data
     }
-    
+
     public init(_ value: String) {
         self.value = value
     }
-    
+
     public static func from(_ data: Data) -> (MinecraftString, Int)? {
         guard let (length, lengthByteCount) = MinecraftVarInt.from(data) else { return nil }
         let content = data.advanced(by: lengthByteCount)

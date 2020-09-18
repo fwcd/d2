@@ -8,7 +8,7 @@ public struct MinecraftPacket {
         let lenData = MinecraftVarInt(Int32(content.count + idData.count)).data
         return lenData + idData + content
     }
-    
+
     public init?(data: Data) {
         guard let (_, lenByteCount) = MinecraftVarInt.from(data) else { return nil }
         let restData = data.advanced(by: lenByteCount)
@@ -16,16 +16,16 @@ public struct MinecraftPacket {
         self.id = id.value
         content = restData.advanced(by: idByteCount)
     }
-    
+
     public init(id: Int32, content: Data = Data()) {
         self.id = id
         self.content = content
     }
-    
+
     public mutating func write<V>(_ value: V) where V: MinecraftProtocolValue {
         content += value.data
     }
-    
+
     public mutating func read<V>() -> V? where V: MinecraftProtocolValue {
         guard let (v, byteCount) = V.from(content) else { return nil }
         if byteCount < content.count {

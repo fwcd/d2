@@ -28,7 +28,7 @@ public struct WikipediaPage: Codable {
     public let descriptionSource: String?
     public let extract: String?
     public let extractHtml: String?
-    
+
     public struct Thumbnail: Codable {
         public let source: String
         public let width: Int

@@ -1,4 +1,4 @@
 public struct UnivISOfficeHour: Hashable {
-	public var comment: String? = nil
-	public var office: String? = nil
+    public var comment: String? = nil
+    public var office: String? = nil
 }

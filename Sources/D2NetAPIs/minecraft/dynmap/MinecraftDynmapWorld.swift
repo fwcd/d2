@@ -6,7 +6,7 @@ public struct MinecraftDynmapWorld: Codable {
     public let confighash: Int?
     public let servertime: Int?
     public let timestamp: Int?
-    
+
     public struct Player: Codable {
         public let world: String?
         public let armor: Int?

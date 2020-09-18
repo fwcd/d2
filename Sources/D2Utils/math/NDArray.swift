@@ -106,7 +106,7 @@ public struct NDArray<T: IntExpressibleAlgebraicField>: Addable, Subtractable, N
     public func map<U>(_ f: (T) throws -> U) rethrows -> NDArray<U> where U: IntExpressibleAlgebraicField {
         try! NDArray<U>(try values.map(f), shape: shape)
     }
-    
+
     public func zip<U>(_ rhs: NDArray<T>, with f: (T, T) throws -> U) throws -> NDArray<U> where U: IntExpressibleAlgebraicField {
         guard shape == rhs.shape else {
             throw NDArrayError.shapeMismatch("Cannot zip two differently shaped NDArrays: \(shape), \(rhs.shape)")

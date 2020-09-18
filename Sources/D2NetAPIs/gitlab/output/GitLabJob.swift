@@ -19,7 +19,7 @@ public struct GitLabJob: Codable {
         case runner
         case artifactsExpireAt = "artifactsExpireAt"
     }
-    
+
     public let id: Int?
     public let status: String?
     public let stage: String?

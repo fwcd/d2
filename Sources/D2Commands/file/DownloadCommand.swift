@@ -9,8 +9,8 @@ public class DownloadCommand: Command {
         helpText: "Pipe a file path into an invocation of upload, e.g. `... | download local/test.txt`",
         requiredPermissionLevel: .admin
     )
-	public let inputValueType: RichValueType = .text
-	public let outputValueType: RichValueType = .compound([.text, .files])
+    public let inputValueType: RichValueType = .text
+    public let outputValueType: RichValueType = .compound([.text, .files])
 
     public init() {}
 
@@ -23,7 +23,7 @@ public class DownloadCommand: Command {
         do {
             let url = URL(fileURLWithPath: filePath)
             let data = try Data(contentsOf: url)
-			output.append(.files([Message.FileUpload(data: data, filename: url.lastPathComponent, mimeType: "application/octet-stream")]))
+            output.append(.files([Message.FileUpload(data: data, filename: url.lastPathComponent, mimeType: "application/octet-stream")]))
         } catch {
             output.append(error, errorText: "Could not download file")
         }

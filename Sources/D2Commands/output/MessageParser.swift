@@ -18,21 +18,21 @@ fileprivate let idPattern = try! Regex(from: "\\d+")
  * Parses Discord messages into rich values.
  */
 public struct MessageParser {
-	private let ndArrayParser = NDArrayParser()
+    private let ndArrayParser = NDArrayParser()
 
-	public init() {}
+    public init() {}
 
-	/**
-	 * Asynchronously parses a string with its
-	 * parent message and downloads
-	 * the attachments of a message.
-	 */
-	public func parse(
-		_ str: String? = nil,
-		message: Message? = nil,
-		clientName: String? = nil,
-		guild: Guild? = nil
-	) -> Promise<RichValue, Error> {
+    /**
+    * Asynchronously parses a string with its
+    * parent message and downloads
+    * the attachments of a message.
+    */
+    public func parse(
+        _ str: String? = nil,
+        message: Message? = nil,
+        clientName: String? = nil,
+        guild: Guild? = nil
+    ) -> Promise<RichValue, Error> {
         Promise { then in
             var values: [RichValue] = []
 
@@ -142,5 +142,5 @@ public struct MessageParser {
                 then(.success(RichValue.of(values: values)))
             }
         }
-	}
+    }
 }

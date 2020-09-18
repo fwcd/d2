@@ -1,6 +1,6 @@
 public struct ComposedBijection<B, C>: Bijection where B: Bijection, C: Bijection, B.Value == C.Value {
     public typealias Value = B.Value
-    
+
     private let outer: B
     private let inner: C
 
@@ -19,11 +19,11 @@ public struct ComposedBijection<B, C>: Bijection where B: Bijection, C: Bijectio
 }
 
 extension Bijection {
-	public func then<B: Bijection>(_ outer: B) -> ComposedBijection<B, Self> where B.Value == Value {
-		ComposedBijection(outer: outer, inner: self)
-	}
-	
-	public func compose<B: Bijection>(_ inner: B) -> ComposedBijection<Self, B> where B.Value == Value {
-		ComposedBijection(outer: self, inner: inner)
-	}
+    public func then<B: Bijection>(_ outer: B) -> ComposedBijection<B, Self> where B.Value == Value {
+        ComposedBijection(outer: outer, inner: self)
+    }
+
+    public func compose<B: Bijection>(_ inner: B) -> ComposedBijection<Self, B> where B.Value == Value {
+        ComposedBijection(outer: self, inner: inner)
+    }
 }

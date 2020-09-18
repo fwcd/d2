@@ -134,36 +134,36 @@ public struct RedditLink: Codable {
     public let createdUtc: Int?
     public let numCrossposts: Int?
     public let isVideo: Bool?
-    
+
     public struct UrlWithSize: Codable {
         public let url: String?
         public let width: Int?
         public let height: Int?
     }
-    
+
     public struct Preview: Codable {
         public let images: [Resource]?
         public let enabled: Bool?
-        
+
         public var firstGif: Resource? { images?.compactMap { $0.variants?.gif }.first }
-        
+
         public class Resource: Codable {
             public let source: UrlWithSize?
             public let resolutions: [UrlWithSize]?
             public let variants: Variants?
-            
+
             public struct Variants: Codable {
                 public let gif: Resource?
                 public let mp4: Resource?
             }
         }
     }
-    
+
     public struct RichTextFragment: Codable {
         public let e: String?
         public let t: String?
     }
-    
+
     public struct Awarding: Codable {
         public enum CodingKeys: String, CodingKey {
             case id

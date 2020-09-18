@@ -12,7 +12,7 @@ public struct XkcdComic: Codable {
         case alt
         case img
     }
-    
+
     public let num: Int
     public let title: String?
     public let safeTitle: String?

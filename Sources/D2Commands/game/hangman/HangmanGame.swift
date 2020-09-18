@@ -31,6 +31,6 @@ public struct HangmanGame: Game {
         `try a`
         `try house`
         """
-    
+
     public init() {}
 }

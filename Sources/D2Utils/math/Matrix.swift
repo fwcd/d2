@@ -100,7 +100,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         }
         return t
     }
-    
+
     public init(width: Int, height: Int, values: [T]) {
         assert(values.count == (width * height))
         self.width = width
@@ -125,7 +125,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         height = 1
         self.values = values
     }
-    
+
     public init(_ rows: [[T]]) {
         height = rows.count
         width = rows.first?.count ?? 0
@@ -136,19 +136,19 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         get { values[y + x * width] }
         set { values[y + x * width] = newValue }
     }
-    
+
     public subscript(row y: Int) -> Row {
         Row(matrix: self, y: y)
     }
-    
+
     public subscript(column x: Int) -> Column {
         Column(matrix: self, x: x)
     }
-    
+
     public static func zero(width: Int, height: Int) -> Matrix<T> {
         Matrix(width: width, height: height, values: [T](repeating: 0, count: width * height))
     }
-    
+
     public static func identity(width: Int) -> Matrix<T> {
         var values = [T](repeating: 0, count: width * width)
         for i in 0..<width {
@@ -156,7 +156,7 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
         }
         return Matrix(width: width, height: width, values: values)
     }
-    
+
     public static func diagonal(_ diagonalValues: [T]) -> Matrix<T> {
         let width = diagonalValues.count
         var values = [T](repeating: 0, count: width * width)
@@ -204,11 +204,11 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             self[y2, x] = self[y2, x] + (self[y1, x] * factor)
         }
     }
-    
+
     public func map<U>(_ f: (T) throws -> U) rethrows -> Matrix<U> where U: IntExpressibleAlgebraicField {
         Matrix<U>(width: width, height: height, values: try values.map(f))
     }
-    
+
     public func zip<U>(_ rhs: Matrix<T>, with f: (T, T) throws -> U) rethrows -> Matrix<U> where U: IntExpressibleAlgebraicField {
         assert(width == rhs.width && height == rhs.height)
         var zipped = [U](repeating: 0, count: values.count)
@@ -225,17 +225,17 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public mutating func zipInPlace(_ rhs: Matrix<T>, with f: (T, T) throws -> T) rethrows {
         values = try Swift.zip(values, rhs.values).map(f)
     }
-    
+
     public static func +(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> { lhs.zip(rhs, with: +) }
 
     public static func -(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> { lhs.zip(rhs, with: -) }
-    
+
     public static func *(lhs: Matrix<T>, rhs: T) -> Matrix<T> { lhs.map { $0 * rhs } }
-    
+
     public static func *(lhs: T, rhs: Matrix<T>) -> Matrix<T> { rhs * lhs }
 
     public static func /(lhs: Matrix<T>, rhs: T) -> Matrix<T> { lhs.map { $0 / rhs } }
-    
+
     public static func *(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
         assert(lhs.width == rhs.height)
         var product = Matrix.zero(width: rhs.width, height: lhs.height)
@@ -256,34 +256,34 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
     public static func -=(lhs: inout Matrix<T>, rhs: Matrix<T>) { lhs.zipInPlace(rhs, with: -) }
 
     public static func *=(lhs: inout Matrix<T>, rhs: T) { lhs.mapInPlace { $0 * rhs } }
-    
+
     public static func /=(lhs: inout Matrix<T>, rhs: T) { lhs.mapInPlace { $0 / rhs } }
 
     public static func *=(lhs: inout Matrix<T>, rhs: Matrix<T>) {
         assert(lhs.width == rhs.width && lhs.height == rhs.height && lhs.width == lhs.height)
         lhs.values = (lhs * rhs).values
     }
-    
+
     public struct Row: Sequence {
         private let matrix: Matrix<T>
         public let y: Int
         private var i: Int = 0
-        
+
         fileprivate init(matrix: Matrix<T>, y: Int) {
             self.matrix = matrix
             self.y = y
         }
-        
+
         public func makeIterator() -> Iterator { Iterator(row: self) }
-        
+
         public struct Iterator: IteratorProtocol {
             private let row: Row
             private var i: Int = 0
-            
+
             fileprivate init(row: Row) {
                 self.row = row
             }
-        
+
             public mutating func next() -> T? {
                 guard i < row.matrix.width else { return nil }
                 let x = i
@@ -292,22 +292,22 @@ public struct Matrix<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Ha
             }
         }
     }
-    
+
     public struct Column: Sequence {
         private let matrix: Matrix<T>
         public let x: Int
-        
+
         fileprivate init(matrix: Matrix<T>, x: Int) {
             self.matrix = matrix
             self.x = x
         }
-        
+
         public func makeIterator() -> Iterator { Iterator(column: self) }
-        
+
         public struct Iterator: IteratorProtocol {
             private let column: Column
             private var i: Int = 0
-            
+
             fileprivate init(column: Column) {
                 self.column = column
             }

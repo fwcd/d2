@@ -5,7 +5,7 @@ public struct SourceServerPlayerRequest: ToSourceServerPacket {
         p.write(long: challenge)
         return p
     }
-    
+
     public init(challenge: UInt32 = 0xFFFFFFFF) {
         self.challenge = challenge
     }

@@ -7,12 +7,12 @@ public struct RadialTransform<R>: ImageTransform where R: RadialDistortion {
 
     private let pos: Vec2<Int>?
     private let scale: Double
-    
+
     public init(at pos: Vec2<Int>?, kvArgs: [Key: String]) {
         self.pos = pos
         scale = kvArgs[.scale].flatMap { Double($0) } ?? 1
     }
-    
+
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
         let center = pos ?? (imageSize / 2)
         let intDelta = destPos - center

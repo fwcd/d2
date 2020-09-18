@@ -3,23 +3,23 @@ import D2Permissions
 import D2Graphics
 
 public class ThresholdCommand: Command {
-	public let info = CommandInfo(
-		category: .imaging,
-		shortDescription: "Thresholds an image",
-		longDescription: "Produces a black/white image with a specified luminance threshold",
-		requiredPermissionLevel: .basic
-	)
-	public let inputValueType: RichValueType = .compound([.image, .text])
-	public let outputValueType: RichValueType = .image
+    public let info = CommandInfo(
+        category: .imaging,
+        shortDescription: "Thresholds an image",
+        longDescription: "Produces a black/white image with a specified luminance threshold",
+        requiredPermissionLevel: .basic
+    )
+    public let inputValueType: RichValueType = .compound([.image, .text])
+    public let outputValueType: RichValueType = .image
 
     private let minThreshold: UInt8 = 0
     private let maxThreshold: UInt8 = 255
 
-	public init() {}
+    public init() {}
 
-	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
-		guard let img = input.asImage else {
-			output.append(errorText: "Not an image!")
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+        guard let img = input.asImage else {
+            output.append(errorText: "Not an image!")
             return
         }
 
@@ -48,5 +48,5 @@ public class ThresholdCommand: Command {
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")
         }
-	}
+    }
 }

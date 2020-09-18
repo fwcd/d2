@@ -1,3 +1,3 @@
 public struct IntegralQueryOutput {
-	public var steps: [String]
+    public var steps: [String]
 }

@@ -8,14 +8,14 @@ public struct WikitextDocument: Equatable {
     public struct Section: Equatable {
         public let title: String?
         public fileprivate(set) var content: [Node]
-        
+
         public enum Node: CustomStringConvertible, Equatable {
             case text(String)
             case link([[Node]])
             case template(String, [TemplateParameter])
             case other(String)
             case unknown
-            
+
             public var description: String {
                 switch self {
                     case let .text(text): return text
@@ -25,11 +25,11 @@ public struct WikitextDocument: Equatable {
                     case .unknown: return "?"
                 }
             }
-            
+
             public enum TemplateParameter: CustomStringConvertible, Equatable {
                 case value([Node])
                 case keyValue(String, [Node])
-                
+
                 public var description: String {
                     switch self {
                         case let .value(nodes): return "\(nodes)"

@@ -35,14 +35,14 @@ public struct NDArrayParser {
             return try NDArray(ndArrays: try parseCommaSeparatedList("nd-array", from: tokens, valueParser: parseNDArray))
         }
     }
-    
+
     private func parseValue(from tokens: TokenIterator<String>) throws -> Rational {
         let token = tokens.peek()
         guard let value = token.flatMap({ Rational($0)?.reduced() }) else { throw NDArrayParserError.unrecognizedToken("Expected value, but got '\(token ?? "nil")'") }
         tokens.next()
         return value
     }
-    
+
     private func parseCommaSeparatedList<T>(_ what: String, from tokens: TokenIterator<String>, valueParser: (TokenIterator<String>) throws -> T) throws -> [T] {
         var values = [T]()
         let lparen = tokens.next()

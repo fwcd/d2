@@ -8,12 +8,12 @@ public struct SquiggleTransform: ImageTransform {
 
     private let pos: Vec2<Int>?
     private let scale: Double
-    
+
     public init(at pos: Vec2<Int>?, kvArgs: [Key: String]) {
         self.pos = pos
         scale = kvArgs[.scale].flatMap { Double($0) } ?? 1
     }
-    
+
     public func sourcePos(from destPos: Vec2<Int>, imageSize: Vec2<Int>, percent: Double) -> Vec2<Int> {
         guard scale != 0 else { return destPos }
         let x = Double(destPos.x)

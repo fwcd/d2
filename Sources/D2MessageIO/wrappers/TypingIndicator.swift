@@ -12,16 +12,16 @@ public class TypingIndicator {
     public init(on channel: InteractiveTextChannel) {
         self.channel = channel
     }
-    
+
     public func startAsync() {
         running = true
         repeatedlyTriggerTypingInBackground()
     }
-    
+
     private func repeatedlyTriggerTypingInBackground() {
         guard running else { return }
         channel.triggerTyping()
-        
+
         let timeout = DispatchTime.now() + .seconds(9)
         queue.asyncAfter(deadline: timeout) {
             self.repeatedlyTriggerTypingInBackground()

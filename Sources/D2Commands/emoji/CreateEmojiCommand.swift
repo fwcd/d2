@@ -22,7 +22,7 @@ public class CreateEmojiCommand: Command {
         }
 
         guard let encoded = try? ((input.asImage?.pngEncoded()).map { "data:image/png;base64,\($0.base64EncodedString())" }
-                               ?? (input.asGif?.encoded()).map { "data:image/gif;base64,\($0.base64EncodedString())" }) else {
+                                ?? (input.asGif?.encoded()).map { "data:image/gif;base64,\($0.base64EncodedString())" }) else {
             output.append(errorText: "Please input an image or a GIF!")
             return
         }

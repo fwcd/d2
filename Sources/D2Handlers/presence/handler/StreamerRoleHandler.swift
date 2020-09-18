@@ -16,7 +16,7 @@ public struct StreamerRoleHandler: PresenceHandler {
         self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 
-	public func handle(presenceUpdate presence: Presence, client: MessageClient) {
+    public func handle(presenceUpdate presence: Presence, client: MessageClient) {
         log.trace("Presence activities: \(presence.activities)")
         if
             let roleId = streamerRoleConfiguration.streamerRoles[presence.guildId],

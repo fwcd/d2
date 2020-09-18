@@ -46,7 +46,7 @@ public class DiscordinderCommand: StringCommand {
         }
     }
 
-	public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
         guard
             let guild = context.guild,
             let messageId = context.message.id,

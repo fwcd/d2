@@ -8,7 +8,7 @@ public class EmojiImageCommand: StringCommand {
         requiredPermissionLevel: .basic,
         platformAvailability: ["Discord"] // Due to Discord-specific CDN URLs
     )
-	public let outputValueType: RichValueType = .image
+    public let outputValueType: RichValueType = .image
 
     public init() {}
 

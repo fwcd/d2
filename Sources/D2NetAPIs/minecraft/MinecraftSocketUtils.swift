@@ -12,14 +12,14 @@ extension Socket {
 
         guard let (packetId, packetIdByteCount) = MinecraftVarInt.from(data) else { throw MinecraftPacketError.couldNotReadPacketId(data) }
         data = data.advanced(by: packetIdByteCount)
-        
+
         while bytesRead < length.value {
             bytesRead += try read(into: &data)
         }
 
         return MinecraftPacket(id: packetId.value, content: data)
     }
-    
+
     func write<P>(from packetable: P) throws where P: ToMinecraftPacket {
         try write(from: packetable.packet.data)
     }

@@ -2,9 +2,9 @@ import Foundation
 import D2Utils
 
 public struct MapQuestGeocoder {
-	public init() {}
+    public init() {}
 
-	public func geocode(location: String) -> Promise<GeoCoordinates, Error> {
+    public func geocode(location: String) -> Promise<GeoCoordinates, Error> {
         Promise.catching { () throws -> HTTPRequest in
             let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
             guard let mapQuestKey = storedNetApiKeys?.mapQuest else {
@@ -23,5 +23,5 @@ public struct MapQuestGeocoder {
                 }
                 return GeoCoordinates(latitude: latLng.lat, longitude: latLng.lng)
             }
-	}
+    }
 }

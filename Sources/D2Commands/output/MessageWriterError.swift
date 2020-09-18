@@ -1,4 +1,4 @@
 public enum MessageWriterError: Error {
-	case emptyMessage
-	case triedToConvertNone
+    case emptyMessage
+    case triedToConvertNone
 }

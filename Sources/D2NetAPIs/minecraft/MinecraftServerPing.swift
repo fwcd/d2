@@ -11,16 +11,16 @@ public struct MinecraftServerPing {
         self.port = port
         self.timeoutMs = timeoutMs
     }
-    
+
     public func perform() throws -> MinecraftServerInfo {
         let socket = try Socket.create()
         try socket.connect(to: host, port: port, timeout: timeoutMs)
         try socket.write(from: MinecraftHandshake(serverAddress: host, serverPort: UInt16(port), nextState: .status))
         try socket.write(from: MinecraftPacket(id: 0x00))
-        
+
         var packet = try socket.readMinecraftPacket()
         socket.close()
-        
+
         guard let response: MinecraftString = packet.read() else { throw MinecraftPacketError.malformedPacket(packet) }
         let json = response.value
         guard let jsonData = json.data(using: .utf8) else { throw MinecraftPacketError.couldNotEncode(response.value) }

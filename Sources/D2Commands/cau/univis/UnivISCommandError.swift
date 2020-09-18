@@ -1,3 +1,3 @@
 enum UnivISCommandError: Error {
-	case invalidSearchParameter(String)
+    case invalidSearchParameter(String)
 }

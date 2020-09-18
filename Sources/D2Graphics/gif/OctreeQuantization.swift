@@ -19,7 +19,7 @@ public struct OctreeQuantization: ColorQuantization {
 
         let depth: Int
         private(set) var childs: [OctreeNode?] = Array(repeating: nil, count: 8)
-        
+
         var refsOrOne: UInt { return (refs == 0) ? 1 : refs }
         var childRefSum: UInt { return childs.compactMap { $0?.refs }.reduce(0, +) }
         var bitShift: Int { return 7 - depth }
@@ -41,17 +41,17 @@ public struct OctreeQuantization: ColorQuantization {
                 return nil
             }
         }
-        
+
         init(depth: Int) {
             self.depth = depth
         }
-        
+
         private func ensureBitShiftNotNegative() {
             if bitShift < 0 {
                 fatalError("RGB octree is too deep, depth: \(depth)")
             }
         }
-        
+
         private func childIndex(of childColor: Color) -> Int {
             ensureBitShiftNotNegative()
             let leftRed = ((childColor.red >> bitShift) & 1) << 2
@@ -59,7 +59,7 @@ public struct OctreeQuantization: ColorQuantization {
             let leftBlue = (childColor.blue >> bitShift) & 1
             return Int(leftRed | leftGreen | leftBlue)
         }
-        
+
         func insert(color insertedColor: Color) {
             if depth == maxDepth {
                 red = UInt(insertedColor.red)
@@ -74,7 +74,7 @@ public struct OctreeQuantization: ColorQuantization {
                 childs[i]!.insert(color: insertedColor)
             }
         }
-        
+
         func lookup(color lookupColor: Color) -> Int {
             if isLeaf {
                 return colorTableIndex!
@@ -91,11 +91,11 @@ public struct OctreeQuantization: ColorQuantization {
                 }
             }
         }
-        
+
         /**
-         * "Mixes" all child nodes in this node. This method assumes all children are leaves
-         * and returns the number of reduced leaves.
-         */
+        * "Mixes" all child nodes in this node. This method assumes all children are leaves
+        * and returns the number of reduced leaves.
+        */
         @discardableResult
         func reduce() -> Int {
             var reduced = 0
@@ -114,7 +114,7 @@ public struct OctreeQuantization: ColorQuantization {
 
             return reduced
         }
-        
+
         func fill(colorTable: inout [Color]) {
             if isLeaf {
                 colorTableIndex = colorTable.count
@@ -125,7 +125,7 @@ public struct OctreeQuantization: ColorQuantization {
                 }
             }
         }
-        
+
         /** Performs a pre-order traversal on this octree. */
         func walk(onNode: (OctreeNode) -> Void) {
             onNode(self)
@@ -133,41 +133,41 @@ public struct OctreeQuantization: ColorQuantization {
                 child?.walk(onNode: onNode)
             }
         }
-        
+
         static func ==(lhs: OctreeNode, rhs: OctreeNode) -> Bool { return lhs === rhs }
-        
+
         func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
     }
-    
+
     /**
-     * A wrapper around a reducible octree node that
-     * defines comparability and equatability via the
-     * sum of child refs.
-     */
+    * A wrapper around a reducible octree node that
+    * defines comparability and equatability via the
+    * sum of child refs.
+    */
     private struct QueuedReducibleNode: Comparable {
         let inner: OctreeNode
-        
+
         init(_ inner: OctreeNode) { self.inner = inner }
-        
+
         static func <(lhs: QueuedReducibleNode, rhs: QueuedReducibleNode) -> Bool { return lhs.inner.childRefSum < rhs.inner.childRefSum }
-        
+
         static func ==(lhs: QueuedReducibleNode, rhs: QueuedReducibleNode) -> Bool { return lhs.inner.childRefSum == rhs.inner.childRefSum }
     }
-    
+
     private var octree: OctreeNode
     public private(set) var colorTable: [Color]
-    
+
     public init(fromImage image: Image, colorCount: Int) {
         colorTable = []
         octree = OctreeNode(depth: 0)
-        
+
         log.debug("Inserting colors")
         for y in 0..<image.height {
             for x in 0..<image.width {
                 octree.insert(color: image[y, x])
             }
         }
-        
+
         var leafCount = 0
         var reduceQueues = [[QueuedReducibleNode]]()
 
@@ -182,11 +182,11 @@ public struct OctreeQuantization: ColorQuantization {
                 reduceQueues[$0.depth].append(QueuedReducibleNode($0))
             }
         }
-        
+
         for i in 0..<reduceQueues.count {
             reduceQueues[i].sort(by: <)
         }
-        
+
         log.debug("Reducing octree, leafCount = \(leafCount)")
         while leafCount > colorCount {
             // Find deepest reducible node
@@ -198,7 +198,7 @@ public struct OctreeQuantization: ColorQuantization {
                     break
                 }
             }
-            
+
             guard let reducibleNode = reducible?.inner else { fatalError("Too few reducible nodes") }
             leafCount -= reducibleNode.reduce() - 1
         }
@@ -214,7 +214,7 @@ public struct OctreeQuantization: ColorQuantization {
         log.debug("Filling color table")
         octree.fill(colorTable: &colorTable)
     }
-    
+
     public func quantize(color: Color) -> Int {
         return octree.lookup(color: color)
     }

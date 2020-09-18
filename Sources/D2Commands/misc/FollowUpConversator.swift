@@ -14,7 +14,7 @@ public struct FollowUpConversator: Conversator {
             .last
             .map({ String($0) })?.nilIfEmpty else { return nil }
         let followUps = try messageDB.followUps(to: last, on: guildId)
-        
+
         if !followUps.isEmpty {
             let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, input)) }
             guard let distribution = CustomDiscreteDistribution(normalizing: candidates) else { return nil }
@@ -25,7 +25,7 @@ public struct FollowUpConversator: Conversator {
         }
 
         return nil
-    } 
+    }
 
     private func matchingSuffixLength(_ lhs: String, _ rhs: String) -> Int {
         var i = 0

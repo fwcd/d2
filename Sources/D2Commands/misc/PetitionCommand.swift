@@ -1,16 +1,16 @@
 import D2MessageIO
 
 public class PetitionCommand: StringCommand {
-	public let info = CommandInfo(
-		category: .misc,
-		shortDescription: "Creates an 'signable petition' using a single reaction",
-		requiredPermissionLevel: .basic
-	)
+    public let info = CommandInfo(
+        category: .misc,
+        shortDescription: "Creates an 'signable petition' using a single reaction",
+        requiredPermissionLevel: .basic
+    )
 
-	public init() {}
+    public init() {}
 
-	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-		guard !input.isEmpty else {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+        guard !input.isEmpty else {
             output.append(errorText: "Please enter something!")
             return
         }
@@ -19,7 +19,7 @@ public class PetitionCommand: StringCommand {
             title: "Petition",
             description: input
         ))
-	}
+    }
 
     public func onSuccessfullySent(context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }

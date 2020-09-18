@@ -11,12 +11,12 @@ public struct UniformQuantization: ColorQuantization {
     public private(set) var colorTable: [Color]
     private let colorsPerChannel: Int
     private let colorStride: Int
-    
+
     public init(fromImage image: Image, colorCount: Int) {
         colorTable = []
         colorsPerChannel = Int(pow(Double(colorCount), 1.0 / Double(CHANNELS)))
         colorStride = 256 / colorsPerChannel
-        
+
         for r in 0..<colorsPerChannel {
             for g in 0..<colorsPerChannel {
                 for b in 0..<colorsPerChannel {
@@ -29,11 +29,11 @@ public struct UniformQuantization: ColorQuantization {
             }
         }
     }
-    
+
     private func tableIndexOf(r: Int, g: Int, b: Int) -> Int {
         return (colorsPerChannel * colorsPerChannel * r) + (colorsPerChannel * g) + b
     }
-    
+
     public func quantize(color: Color) -> Int {
         let maxChannelColorIndex = colorsPerChannel - 1
         let r = min(maxChannelColorIndex, Int(color.red) / colorStride)

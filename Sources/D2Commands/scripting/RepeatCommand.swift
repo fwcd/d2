@@ -12,12 +12,12 @@ public class RepeatCommand: StringCommand {
     private let maxCount: Int
     private let maxTotalLength: Int
 
-	public init(maxCount: Int = 100, maxTotalLength: Int = 1800) {
+    public init(maxCount: Int = 100, maxTotalLength: Int = 1800) {
         self.maxCount = maxCount
         self.maxTotalLength = maxTotalLength
     }
 
-	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard
             let parsedArgs = argsPattern.firstGroups(in: input),
             let count = Int(parsedArgs[1]) else {

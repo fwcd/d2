@@ -11,25 +11,25 @@ import D2Utils
 fileprivate let log = Logger(label: "D2NetAPIs.MDBQuery")
 
 public struct MDBQuery {
-	public let url: URL
+    public let url: URL
 
-	public init(
-		moduleCode: String? = nil,
-		scheme: String = "https",
-		host: String = "mdb.ps.informatik.uni-kiel.de",
-		path: String = "/show.cgi"
-	) throws {
-		var components = URLComponents()
-		components.scheme = scheme
-		components.host = host
-		components.path = path
-		components.query = "xml\(moduleCode.map { "=\($0)" } ?? "")"
+    public init(
+        moduleCode: String? = nil,
+        scheme: String = "https",
+        host: String = "mdb.ps.informatik.uni-kiel.de",
+        path: String = "/show.cgi"
+    ) throws {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = host
+        components.path = path
+        components.query = "xml\(moduleCode.map { "=\($0)" } ?? "")"
 
-		guard let url = components.url else { throw NetApiError.urlError(components) }
-		self.url = url
-	}
+        guard let url = components.url else { throw NetApiError.urlError(components) }
+        self.url = url
+    }
 
-	public func start() -> Promise<[MDBModule], Error> {
+    public func start() -> Promise<[MDBModule], Error> {
         Promise { then in
             log.info("Querying \(url)")
 
@@ -52,5 +52,5 @@ public struct MDBQuery {
                 _ = parser.parse()
             }.resume()
         }
-	}
+    }
 }

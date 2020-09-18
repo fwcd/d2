@@ -6,7 +6,7 @@ public class CookieCommand: Command {
         shortDescription: "Gives someone a cookie",
         requiredPermissionLevel: .basic
     )
-	public let inputValueType: RichValueType = .mentions
+    public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .text
     private let inventoryManager: InventoryManager
     private let cookies: [Cookie]

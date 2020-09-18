@@ -2,17 +2,17 @@ import D2MessageIO
 import D2Graphics
 
 public class ColorToAlphaCommand: Command {
-	public let info = CommandInfo(
-		category: .imaging,
-		shortDescription: "Converts a color to transparency",
-		requiredPermissionLevel: .basic
-	)
-	public let inputValueType: RichValueType = .image
-	public let outputValueType: RichValueType = .image
+    public let info = CommandInfo(
+        category: .imaging,
+        shortDescription: "Converts a color to transparency",
+        requiredPermissionLevel: .basic
+    )
+    public let inputValueType: RichValueType = .image
+    public let outputValueType: RichValueType = .image
 
-	public init() {}
+    public init() {}
 
-	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let rawColor = input.asText,
             let colorRGB = UInt32(rawColor, radix: 16) else {
             output.append(errorText: "Please specify an RGB color (to be converted to alpha) in hex notation!")
@@ -25,14 +25,14 @@ public class ColorToAlphaCommand: Command {
         // Tolerance is specified in squared [0, 1] RGB space
         let tolerance = 0.1
 
-		if let image = input.asImage {
-			do {
-				let width = image.width
-				let height = image.height
-				var processed = try Image(width: width, height: height)
+        if let image = input.asImage {
+            do {
+                let width = image.width
+                let height = image.height
+                var processed = try Image(width: width, height: height)
 
-				for y in 0..<height {
-					for x in 0..<width {
+                for y in 0..<height {
+                    for x in 0..<width {
                         let inColor = image[y, x]
                         let outColor: Color
 
@@ -42,16 +42,16 @@ public class ColorToAlphaCommand: Command {
                             outColor = inColor
                         }
 
-						processed[y, x] = outColor
-					}
-				}
+                        processed[y, x] = outColor
+                    }
+                }
 
-				output.append(.image(processed))
-			} catch {
-				output.append(error, errorText: "An error occurred while creating a new image")
-			}
-		} else {
-			output.append(errorText: "Not an image!")
-		}
-	}
+                output.append(.image(processed))
+            } catch {
+                output.append(error, errorText: "An error occurred while creating a new image")
+            }
+        } else {
+            output.append(errorText: "Not an image!")
+        }
+    }
 }

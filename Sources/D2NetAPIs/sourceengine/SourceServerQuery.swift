@@ -6,7 +6,7 @@ public struct SourceServerQuery<R, S> where R: ToSourceServerPacket, S: FromSour
     private let host: String
     private let port: Int32
     private let timeoutMs: UInt
-    
+
     public init(request: R, host: String, port: Int32, timeoutMs: UInt = 0) {
         self.request = request
         self.host = host
@@ -20,11 +20,11 @@ public struct SourceServerQuery<R, S> where R: ToSourceServerPacket, S: FromSour
 
         try socket.setReadTimeout(value: timeoutMs)
         try socket.write(from: request.packet.data, to: address)
-        
+
         var buffer = Data(capacity: 2048)
         let (bytesRead, _) = try socket.readDatagram(into: &buffer)
         socket.close()
-        
+
         guard bytesRead > 0 else { throw SourceServerQueryError.noResponse }
         var packet = SourceServerPacket(data: buffer[..<bytesRead])
         guard let header = packet.readLong(), header == 0xFFFFFFFF else { throw SourceServerQueryError.invalidHeader }

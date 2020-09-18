@@ -1,4 +1,4 @@
 enum UnaryOperatorPosition {
-	case prefixPosition
-	case postfixPosition
+    case prefixPosition
+    case postfixPosition
 }

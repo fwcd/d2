@@ -3,4 +3,3 @@ enum RegexParseError: Error {
     case invalidCharacterSet
     case missingChoiceBranch(String)
 }
-

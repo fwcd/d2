@@ -1,4 +1,4 @@
 enum Associativity {
-	case left
-	case right
+    case left
+    case right
 }

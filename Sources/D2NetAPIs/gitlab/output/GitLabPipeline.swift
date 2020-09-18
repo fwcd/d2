@@ -29,9 +29,9 @@ public struct GitLabPipeline: Codable {
     public let orderBy: String?
     public let sort: String?
     public let webUrl: String?
-    
+
     // Detail info
-    
+
     public let beforeSha: String?
     public let tag: Bool?
     public let user: GitLabUser?

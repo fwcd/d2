@@ -60,7 +60,7 @@ public struct Permission: OptionSet {
     public static let manageWebhooks = Permission(rawValue: 0x20000000)
     /// This user can manage emojis
     public static let manageEmojis = Permission(rawValue: 0x40000000)
-    
+
     /// All the channel permissions set to true.
     public static let allChannel = Permission(rawValue: 0x33F7FC51)
 
@@ -69,7 +69,7 @@ public struct Permission: OptionSet {
 
     /// User has all permissions.
     public static let all = Permission(rawValue: Int.max >> 10)
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }

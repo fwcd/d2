@@ -12,7 +12,7 @@ public struct UrbanDictionaryEntry: Codable {
         case currentVote = "current_vote"
         case writtenOn = "written_on"
     }
-    
+
     public let defid: Int
     public let word: String
     public let definition: String

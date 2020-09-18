@@ -20,13 +20,13 @@ public class EmojiCommand: StringCommand {
             return
         }
         output.append(formatted)
-   }
+    }
 
-   private func formatEmoji(name: String, in guild: Guild) -> String {
-       if let (_, emoji) = guild.emojis.first(where: { $0.1.name == name }) {
+    private func formatEmoji(name: String, in guild: Guild) -> String {
+        if let (_, emoji) = guild.emojis.first(where: { $0.1.name == name }) {
             return "\(emoji)"
         } else {
             return ":\(name):"
         }
-   }
+    }
 }

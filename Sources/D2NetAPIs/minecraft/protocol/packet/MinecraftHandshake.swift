@@ -3,7 +3,7 @@ public struct MinecraftHandshake: ToMinecraftPacket {
     public let serverAddress: String
     public let serverPort: UInt16
     public let nextState: NextState
-    
+
     public var packet: MinecraftPacket {
         var p = MinecraftPacket(id: 0x00)
 

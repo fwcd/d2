@@ -25,7 +25,7 @@ public struct SourceServerInfoResponse: FromSourceServerPacket {
     public let isPublic: Bool
     /// Whether the server uses VAC
     public let usesVAC: Bool
-    
+
     public init?(packet: SourceServerPacket) {
         var p = packet
 
@@ -67,7 +67,7 @@ public struct SourceServerInfoResponse: FromSourceServerPacket {
         case nonDedicated = 0x6c // 'l'
         case proxy = 0x70 // 'p'
     }
-    
+
     public enum Environment: UInt8 {
         case linux = 0x6c // 'l'
         case windows = 0x77 // 'w'

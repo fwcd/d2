@@ -1,16 +1,16 @@
 public struct Vector<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Multipliable, Divisible, Negatable, Hashable, CustomStringConvertible {
-	public var values: [T]
+    public var values: [T]
 
-	public var asNDArray: NDArray<T> { NDArray(values) }
-	public var description: String { "(\(values.map { "\($0)" }.joined(separator: ", ")))" }
-	
-	public init(_ values: [T]) {
-		self.values = values
-	}
-	
-	public static func zero(size: Int) -> Self {
-		Vector(Array(repeating: 0, count: size))
-	}
+    public var asNDArray: NDArray<T> { NDArray(values) }
+    public var description: String { "(\(values.map { "\($0)" }.joined(separator: ", ")))" }
+
+    public init(_ values: [T]) {
+        self.values = values
+    }
+
+    public static func zero(size: Int) -> Self {
+        Vector(Array(repeating: 0, count: size))
+    }
 
     public subscript(_ i: Int) -> T {
         get { values[i] }
@@ -25,61 +25,61 @@ public struct Vector<T: IntExpressibleAlgebraicField>: Addable, Subtractable, Mu
         Vector<R>(try Swift.zip(values, rhs.values).map(zipper))
     }
 
-	public mutating func mapInPlace(_ transform: (T) throws -> T) rethrows {
+    public mutating func mapInPlace(_ transform: (T) throws -> T) rethrows {
         values = try values.map(transform)
     }
 
-	public mutating func zipInPlace<U>(_ rhs: Vector<U>, _ zipper: (T, U) throws -> T) rethrows where U: IntExpressibleAlgebraicField {
+    public mutating func zipInPlace<U>(_ rhs: Vector<U>, _ zipper: (T, U) throws -> T) rethrows where U: IntExpressibleAlgebraicField {
         values = try Swift.zip(values, rhs.values).map(zipper)
     }
-	
-	public static func +(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, +) }
-	
-	public static func -(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, -) }
-	
-	public static func *(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, *) }
-	
-	public static func /(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, /) }
-	
-	public static func *(lhs: Self, rhs: T) -> Self { lhs.map { $0 * rhs } }
-	
-	public static func /(lhs: Self, rhs: T) -> Self { lhs.map { $0 / rhs } }
-		
-	public static func *(lhs: T, rhs: Self) -> Self { rhs.map { lhs * $0 } }
-	
-	public static func /(lhs: T, rhs: Self) -> Self { rhs.map { lhs / $0 } }
-	
-	public prefix static func -(operand: Self) -> Self { operand.map { -$0 } }
 
-	public static func +=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, +) }
+    public static func +(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, +) }
 
-	public static func -=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, -) }
+    public static func -(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, -) }
 
-	public static func *=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, *) }
+    public static func *(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, *) }
 
-	public static func /=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, /) }
+    public static func /(lhs: Self, rhs: Self) -> Self { lhs.zip(rhs, /) }
 
-	public mutating func negate() { mapInPlace { -$0 } }
-	
-	public func dot(_ other: Self) -> T {
-		(self * other).values.reduce(0, +)
-	}
+    public static func *(lhs: Self, rhs: T) -> Self { lhs.map { $0 * rhs } }
 
-	public func projected(onto other: Self) -> Vector<T> {
-		let factor: T = dot(other) / other.dot(other)
-		return factor * other
-	}
+    public static func /(lhs: Self, rhs: T) -> Self { lhs.map { $0 / rhs } }
+
+    public static func *(lhs: T, rhs: Self) -> Self { rhs.map { lhs * $0 } }
+
+    public static func /(lhs: T, rhs: Self) -> Self { rhs.map { lhs / $0 } }
+
+    public prefix static func -(operand: Self) -> Self { operand.map { -$0 } }
+
+    public static func +=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, +) }
+
+    public static func -=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, -) }
+
+    public static func *=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, *) }
+
+    public static func /=(lhs: inout Self, rhs: Self) { lhs.zipInPlace(rhs, /) }
+
+    public mutating func negate() { mapInPlace { -$0 } }
+
+    public func dot(_ other: Self) -> T {
+        (self * other).values.reduce(0, +)
+    }
+
+    public func projected(onto other: Self) -> Vector<T> {
+        let factor: T = dot(other) / other.dot(other)
+        return factor * other
+    }
 }
 
 extension Vector where T: BinaryFloatingPoint {
-	public var magnitude: T { dot(self).squareRoot() }
-	public var normalized: Self { self / magnitude }
-	public var floored: Vector<Int> { map { Int($0.rounded(.down)) } }
+    public var magnitude: T { dot(self).squareRoot() }
+    public var normalized: Self { self / magnitude }
+    public var floored: Vector<Int> { map { Int($0.rounded(.down)) } }
 }
 
 extension Vector where T: BinaryInteger {
-	public var magnitude: Double { Double(dot(self)).squareRoot() }
-	public var asDouble: Vector<Double> { map { Double($0) } }
+    public var magnitude: Double { Double(dot(self)).squareRoot() }
+    public var asDouble: Vector<Double> { map { Double($0) } }
 }
 
 extension Vector where T == Rational {

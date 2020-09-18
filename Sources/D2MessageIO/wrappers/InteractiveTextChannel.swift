@@ -5,21 +5,21 @@ import D2Utils
  * client reference.
  */
 public struct InteractiveTextChannel {
-	public let id: ChannelID
-	private let client: MessageClient
+    public let id: ChannelID
+    private let client: MessageClient
 
-	public init(id: ChannelID, client: MessageClient) {
-		self.id = id
-		self.client = client
-	}
-
-    @discardableResult
-	public func send(_ message: Message) -> Promise<Message?, Error> {
-		client.sendMessage(message, to: id)
-	}
+    public init(id: ChannelID, client: MessageClient) {
+        self.id = id
+        self.client = client
+    }
 
     @discardableResult
-	public func triggerTyping() -> Promise<Bool, Error> {
-		client.triggerTyping(on: id)
-	}
+    public func send(_ message: Message) -> Promise<Message?, Error> {
+        client.sendMessage(message, to: id)
+    }
+
+    @discardableResult
+    public func triggerTyping() -> Promise<Bool, Error> {
+        client.triggerTyping(on: id)
+    }
 }

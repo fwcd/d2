@@ -1,4 +1,4 @@
 struct UnaryOperatorEntry {
-	let position: UnaryOperatorPosition
-	let factory: (ExpressionASTNode) -> ExpressionASTNode
+    let position: UnaryOperatorPosition
+    let factory: (ExpressionASTNode) -> ExpressionASTNode
 }

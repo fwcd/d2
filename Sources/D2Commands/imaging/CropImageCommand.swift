@@ -5,20 +5,20 @@ import D2Graphics
 fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
 
 public class CropImageCommand: Command {
-	public let info = CommandInfo(
-		category: .imaging,
-		shortDescription: "Crops an image",
+    public let info = CommandInfo(
+        category: .imaging,
+        shortDescription: "Crops an image",
         helpText: "Syntax: [top left x] [top left y] [bottom right x] [bottom right y]",
-		requiredPermissionLevel: .basic
-	)
-	public let inputValueType: RichValueType = .compound([.image, .text])
-	public let outputValueType: RichValueType = .image
+        requiredPermissionLevel: .basic
+    )
+    public let inputValueType: RichValueType = .compound([.image, .text])
+    public let outputValueType: RichValueType = .image
 
     public init() {}
 
-	public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
-		guard let img = input.asImage else {
-			output.append(errorText: "Not an image!")
+    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+        guard let img = input.asImage else {
+            output.append(errorText: "Not an image!")
             return
         }
 
@@ -59,5 +59,5 @@ public class CropImageCommand: Command {
         } catch {
             output.append(error, errorText: "An error occurred while creating a new image")
         }
-	}
+    }
 }

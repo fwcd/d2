@@ -497,9 +497,9 @@ public class MessageDatabase: MarkovPredictor {
             select m1.content, m2.content
             from messages as m1 natural join guilds as g1, messages as m2
             where m1.content like ?
-              and m2.timestamp == (select min(timestamp) from messages where timestamp > m1.timestamp)
-              and g1.guild_id == ?
-              and m1.channel_id == m2.channel_id
+            and m2.timestamp == (select min(timestamp) from messages where timestamp > m1.timestamp)
+            and g1.guild_id == ?
+            and m1.channel_id == m2.channel_id
             order by random()
             limit 10
             """, "%\(suffix)", "\(guildId)")
