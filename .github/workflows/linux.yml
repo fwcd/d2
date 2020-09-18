@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        # Build using only Swift 5.2
-        swift: ['5.2']
-    
+        # Build using only Swift 5.3
+        swift: ['5.3']
+
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies with APT

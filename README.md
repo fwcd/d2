@@ -26,7 +26,7 @@ It provides:
 
 #### System Dependencies
 * Linux or macOS 10.15+
-* Swift 5.2
+* Swift 5.3
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
         * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
