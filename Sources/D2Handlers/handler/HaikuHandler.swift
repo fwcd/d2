@@ -9,9 +9,9 @@ public struct HaikuHandler: MessageHandler {
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
-        if let haiku = haikuOf(message.content), let channelId = message.channelId, let author = message.author {
+        if let haiku = haikuOf(message.content), let channelId = message.channelId, let author = message.guildMember {
             client.sendMessage(Message(embed: Embed(
-                title: "A Haiku by `\(author.username)`",
+                title: "A Haiku by `\(author.displayName)`",
                 description: haiku.joined(separator: "\n")
             )), to: channelId)
         }
@@ -26,7 +26,7 @@ public struct HaikuHandler: MessageHandler {
         var totalSyllables = 0
         var wordIt = words.makeIterator()
         var syllableCountsIt = syllableCounts.makeIterator()
-        
+
         while let expectedCount = syllableCountsIt.next() {
             var syllablesInVerse = 0
 
