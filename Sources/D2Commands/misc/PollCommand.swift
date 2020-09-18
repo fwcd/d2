@@ -40,7 +40,7 @@ public class PollCommand: StringCommand {
 		}
 
 		let reactions: [String]
-		var embed = Embed(title: "Poll: \(components.first!)")
+		var embed = Embed(title: ":bar_chart: Poll: \(components.first!)")
 
 		log.info("Creating poll `\(embed.title!)` with options \(options)")
 
@@ -48,7 +48,7 @@ public class PollCommand: StringCommand {
 			reactions = ["👍", "👎", "🤷"]
 		} else {
 			let range = 0..<options.count
-			embed.description = "\(range.map { "\n**\($0):** \(options[$0])" }.joined())"
+			embed.description = "\(range.map { "\n\(numberEmojiOf(digit: $0) ?? "**\($0)**") \(options[$0])" }.joined())"
 			reactions = range.compactMap { numberEmojiOf(digit: $0) }
 		}
 
