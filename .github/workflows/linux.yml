@@ -1,6 +1,8 @@
 name: Linux
 
-on: [push]
+# TODO: Disabled until swiftenv supports 5.3 (https://github.com/kylef/swiftenv-api/pull/90)
+# on: [push]
+on: []
 
 jobs:
   build:

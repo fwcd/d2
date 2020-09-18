@@ -1,11 +1,13 @@
 name: macOS
 
-on: [push]
+# TODO: Disabled until macOS Big Sur with Swift 5.3 is available
+# on: [push]
+on: []
 
 jobs:
   build:
     runs-on: macOS-latest
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies with Homebrew
