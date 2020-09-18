@@ -13,8 +13,14 @@ public class PollCommand: StringCommand {
 		longDescription: "Creates a message with the given options and 'reaction buttons' that allow users to vote",
 		requiredPermissionLevel: .basic
 	)
+    private let interpolatables: [[String]]
 
-	public init() {}
+	public init(interpolatables: [[String]] = [
+        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    ]) {
+        self.interpolatables = interpolatables
+    }
 
 	public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
 		let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
