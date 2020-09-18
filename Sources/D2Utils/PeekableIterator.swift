@@ -2,6 +2,8 @@ public struct PeekableIterator<I>: IteratorProtocol where I: IteratorProtocol {
     private var inner: I
     private var peeked: I.Element? = nil
 
+    public private(set) var current: I.Element? = nil
+
     public init(_ inner: I) {
         self.inner = inner
     }
@@ -9,10 +11,11 @@ public struct PeekableIterator<I>: IteratorProtocol where I: IteratorProtocol {
     public mutating func next() -> I.Element? {
         if let p = peeked {
             peeked = nil
-            return p
+            current = p
         } else {
-            return inner.next()
+            current = inner.next()
         }
+        return current
     }
 
     public mutating func peek() -> I.Element? {
