@@ -17,8 +17,8 @@ public class PollCommand: StringCommand {
     private let interpolatables: [[String]]
 
 	public init(interpolatables: [[String]] = [
-        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+        ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].repeated(count: 2),
+        ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"].repeated(count: 2)
     ]) {
         self.interpolatables = interpolatables
     }
@@ -85,15 +85,18 @@ public class PollCommand: StringCommand {
 
         while let option = interpolationIterator?.next() ?? optionIterator.next() {
             if option == "..." {
-                guard let start = expanded.last, let sequence = interpolatables.first(where: { $0.contains(start) })?.drop(while: { $0 != start }) else {
+                guard let start = expanded.last,
+                    let sequence = interpolatables
+                        .first(where: { $0.contains { $0.caseInsensitiveCompare(start) == .orderedSame } })?
+                        .drop(while: { $0.caseInsensitiveCompare(start) != .orderedSame })
+                        .dropFirst() else {
                     throw ExpansionError.noInterpolatableFound
                 }
                 interpolationIterator = PeekableIterator(Array(sequence).makeIterator())
+            } else if optionIterator.peek()?.caseInsensitiveCompare(interpolationIterator?.current ?? "") == .orderedSame {
+                interpolationIterator = nil
             } else {
                 expanded.append(option)
-                if optionIterator.peek() == interpolationIterator?.current {
-                    interpolationIterator = nil
-                }
             }
         }
 
