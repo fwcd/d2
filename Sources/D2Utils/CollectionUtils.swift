@@ -84,6 +84,15 @@ public extension Array {
         return stride(from: 0, to: count, by: chunkLength).map { Array(self[$0..<Swift.min($0 + chunkLength, count)]) }
     }
 
+    func repeated(count: Int) -> [Element] {
+        assert(count >= 0)
+        var result = [Element]()
+        for _ in 0..<count {
+            result += self
+        }
+        return result
+    }
+
     /// The longest prefix satisfying the predicate and the rest of the list
     func span(_ inPrefix: (Element) throws -> Bool) rethrows -> (ArraySlice<Element>, ArraySlice<Element>) {
         let pre = try prefix(while: inPrefix)
