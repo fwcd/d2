@@ -1,16 +1,15 @@
 name: Linux
 
-# TODO: Disabled until swiftenv supports 5.3 (https://github.com/kylef/swiftenv-api/pull/90)
-# on: [push]
-on: []
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        # Build using only Swift 5.3
-        swift: ['5.3']
+        swift: ['https://swift.org/builds/swift-5.3-release/ubuntu1804/swift-5.3-RELEASE/swift-5.3-RELEASE-ubuntu18.04.tar.gz']
+        # TODO: Use once swiftenv supports 5.3 officially (https://github.com/kylef/swiftenv-api/pull/90)
+        # swift: ['5.3']
 
     steps:
     - uses: actions/checkout@v1
