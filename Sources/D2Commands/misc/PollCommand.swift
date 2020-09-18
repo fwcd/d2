@@ -1,4 +1,5 @@
 import Logging
+import D2Utils
 import D2MessageIO
 import D2Permissions
 
@@ -30,42 +31,74 @@ public class PollCommand: StringCommand {
 			return
 		}
 
-		let options = Array(components.dropFirst())
+        do {
+            let options = try expand(options: components.dropFirst())
 
-		guard options.count < 10 else {
-			output.append(errorText: "Too many options!")
-			return
-		}
-		guard let client = context.client else {
-			output.append(errorText: "Missing client")
-			return
-		}
-		guard let channelId = context.channel?.id else {
-			output.append(errorText: "Missing channel id")
-			return
-		}
+            guard options.count < 10 else {
+                output.append(errorText: "Too many options!")
+                return
+            }
+            guard let client = context.client else {
+                output.append(errorText: "Missing client")
+                return
+            }
+            guard let channelId = context.channel?.id else {
+                output.append(errorText: "Missing channel id")
+                return
+            }
 
-		let reactions: [String]
-		var embed = Embed(title: ":bar_chart: Poll: \(components.first!)")
+            let reactions: [String]
+            var embed = Embed(title: ":bar_chart: Poll: \(components.first!)")
 
-		log.info("Creating poll `\(embed.title!)` with options \(options)")
+            log.info("Creating poll `\(embed.title!)` with options \(options)")
 
-		if options.isEmpty {
-			reactions = ["👍", "👎", "🤷"]
-		} else {
-			let range = 0..<options.count
-			embed.description = "\(range.map { "\n\(numberEmojiOf(digit: $0) ?? "**\($0)**") \(options[$0])" }.joined())"
-			reactions = range.compactMap { numberEmojiOf(digit: $0) }
-		}
+            if options.isEmpty {
+                reactions = ["👍", "👎", "🤷"]
+            } else {
+                let range = 0..<options.count
+                embed.description = "\(range.map { "\n\(numberEmojiOf(digit: $0) ?? "**\($0)**") \(options[$0])" }.joined())"
+                reactions = range.compactMap { numberEmojiOf(digit: $0) }
+            }
 
-		client.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
-			if let nextMessageId = sentMessage?.id {
-                for reaction in reactions {
-                    client.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
+            client.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
+                if let nextMessageId = sentMessage?.id {
+                    for reaction in reactions {
+                        client.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
+                    }
                 }
-			}
-		}
+            }
+        } catch ExpansionError.noInterpolatableFound {
+            output.append(errorText: "Could not find an interpolatable value before `...`! Try e.g. a weekday.")
+        } catch {
+            output.append(error, errorText: "Could not create poll")
+        }
 	}
+
+    private enum ExpansionError: Error {
+        case noInterpolatableFound
+    }
+
+    private func expand<S>(options: S) throws -> [String] where S: Sequence, S.Element == String {
+        var expanded = [String]()
+        var optionIterator = PeekableIterator(options.makeIterator())
+        var interpolationIterator: PeekableIterator<Array<String>.Iterator>? = nil
+
+        while let option = interpolationIterator?.next() ?? optionIterator.next() {
+            if option == "..." {
+                guard let start = expanded.last, let sequence = interpolatables.first(where: { $0.contains(start) })?.drop(while: { $0 != start }) else {
+                    throw ExpansionError.noInterpolatableFound
+                }
+                interpolationIterator = PeekableIterator(Array(sequence).makeIterator())
+            } else {
+                expanded.append(option)
+                if optionIterator.peek() == interpolationIterator?.current {
+                    interpolationIterator = nil
+                }
+            }
+        }
+
+        return expanded
+    }
 
 	private func numberEmojiStringOf(digit: Int) -> String? {
 		switch digit {
