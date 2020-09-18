@@ -245,6 +245,15 @@
         }
       },
       {
+        "package": "SyllableCounter",
+        "repositoryURL": "https://github.com/wfreitag/syllable-counter-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "08cd024da5f30ac32939e718a2a964445a4aab4a",
+          "version": null
+        }
+      },
+      {
         "package": "Telegrammer",
         "repositoryURL": "https://github.com/givip/Telegrammer.git",
         "state": {

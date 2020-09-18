@@ -47,6 +47,7 @@ public class D2Delegate: MessageDelegate {
             SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
+            HaikuHandler(),
             MessagePreviewHandler(configuration: messagePreviewsConfiguration),
             TriggerReactionHandler(),
             CountToNHandler(),

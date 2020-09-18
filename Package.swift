@@ -28,7 +28,8 @@ let package = Package(
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
         // TODO: Update to an actual version number once the PR #5 is merged
-        .package(url: "https://github.com/fwcd/GraphViz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef"))
+        .package(url: "https://github.com/fwcd/GraphViz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef")),
+        .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("08cd024da5f30ac32939e718a2a964445a4aab4a"))
         // TODO: Integrate swiftplot, this is however blocked on https://bugs.swift.org/browse/SR-679
         //       due to a dependency target collision (CFreeType)
     ],
@@ -53,7 +54,7 @@ let package = Package(
         ),
         .target(
             name: "D2Handlers",
-            dependencies: ["Logging", "D2Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
+            dependencies: ["Logging", "SyllableCounter", "D2Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
         ),
         .target(
             name: "D2Commands",
