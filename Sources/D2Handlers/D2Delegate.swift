@@ -35,6 +35,7 @@ public class D2Delegate: MessageDelegate {
         let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
         let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
         let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
+        let haikuConfiguration = AutoSerializing<HaikuConfiguration>(wrappedValue: .init(), filePath: "local/haikuConfig.json")
         let permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
 
@@ -47,7 +48,7 @@ public class D2Delegate: MessageDelegate {
             SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
-            HaikuHandler(),
+            HaikuHandler(configuration: haikuConfiguration),
             MessagePreviewHandler(configuration: messagePreviewsConfiguration),
             TriggerReactionHandler(),
             CountToNHandler(),
@@ -90,6 +91,7 @@ public class D2Delegate: MessageDelegate {
         registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
         registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: streamerRoleConfiguration)
         registry["messagepreviews"] = MessagePreviewsCommand(configuration: messagePreviewsConfiguration)
+        registry["haikus"] = HaikusCommand(configuration: haikuConfiguration)
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()

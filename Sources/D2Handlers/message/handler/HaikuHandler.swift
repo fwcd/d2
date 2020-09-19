@@ -1,15 +1,22 @@
+import D2Commands
+import D2Utils
 import D2MessageIO
 import SyllableCounter
 
 public struct HaikuHandler: MessageHandler {
     private let syllableCounts: [Int]
+    @AutoSerializing private var configuration: HaikuConfiguration
 
-    public init(syllableCounts: [Int] = [5, 7, 5]) {
+    public init(configuration: AutoSerializing<HaikuConfiguration>, syllableCounts: [Int] = [5, 7, 5]) {
         self.syllableCounts = syllableCounts
+        self._configuration = configuration
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
-        if let haiku = haikuOf(message.content), let channelId = message.channelId, let author = message.guildMember {
+        if let channelId = message.channelId,
+            configuration.enabledChannelIds.contains(channelId),
+            let author = message.guildMember,
+            let haiku = haikuOf(message.content) {
             client.sendMessage(Message(embed: Embed(
                 title: "A Haiku by `\(author.displayName)`",
                 description: haiku.joined(separator: "\n")
