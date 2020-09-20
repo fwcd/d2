@@ -1,6 +1,6 @@
 import D2Utils
 
-fileprivate let punctuationPattern = try! Regex(from: "[\\.,!\\?]")
+fileprivate let punctuationPattern = try! Regex(from: "[\\.!\\?]")
 
 public class PirateSpeakCommand: StringCommand {
     public let info = CommandInfo(
@@ -54,8 +54,8 @@ public class PirateSpeakCommand: StringCommand {
             return
         }
 
-        let preprocessed = punctuationPattern.replace(in: input) { "\($0[0])\(interjections.randomElement().filter { _ in Bool.random() }.map { " \($0)" } ?? "")" }
-        let result = substitutions.reduce(preprocessed) { $0.replacingOccurrences(of: $1.key, with: $1.value, options: [.caseInsensitive, .regularExpression]) }
+        let preprocessed = punctuationPattern.replace(in: input) { "\($0[0])\(interjections.randomElement().filter { _ in Int.random(in: 0..<4) < 3 }.map { " \($0)" } ?? "")" }
+        let result = substitutions.reduce(preprocessed) { try! Regex(from: $1.key, caseSensitive: false).replace(in: $0, with: $1.value, casePreserving: true) }
         output.append(result)
     }
 }
