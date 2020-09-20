@@ -212,6 +212,7 @@ public class D2Delegate: MessageDelegate {
         registry["germandecode", aka: ["degerman", "degermanify"]] = GermanDecoderCommand()
         registry["robohash"] = RoboHashCommand()
         registry["piglatin"] = PigLatinCommand()
+        registry["piratespeak", aka: ["pirate", "piratify"]] = PirateSpeakCommand()
         registry["mockify", aka: ["mock"]] = MockifyCommand()
         registry["leet", aka: ["leetspeak"]] = LeetCommand()
         registry["rickroll"] = RickrollCommand()
