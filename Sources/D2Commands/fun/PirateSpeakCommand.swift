@@ -11,12 +11,20 @@ public class PirateSpeakCommand: StringCommand {
         "hello": "ahoy",
         "yes": "aye",
         "this": "'tis",
-        "whoa": "avast",
-        "very": "mighty",
-        "ing": "in'",
+        "the": "th'",
+        "my": "me",
+        "and": "'n",
+        "as": "'s",
+        "of": "o'",
+        "\\bthose\\b": "'ose",
+        "\\bwhoa\\b": "avast",
+        "\\bvery\\b": "mighty",
+        "ng\\b": "n'",
+        "ngs\\b": "n's",
+        "st\\b": "s'",
         "you": "ye",
-        "the": "t'",
-        "is": "be"
+        "\\bto": "t'",
+        "\\bis": "be"
     ]) {
         self.substitutions = substitutions
     }
@@ -27,7 +35,7 @@ public class PirateSpeakCommand: StringCommand {
             return
         }
 
-        let result = substitutions.reduce(input) { $0.replacingOccurrences(of: $1.key, with: $1.value, options: .caseInsensitive) }
-        output.append(result)
+        let result = substitutions.reduce(input) { $0.replacingOccurrences(of: $1.key, with: $1.value, options: [.caseInsensitive, .regularExpression]) }
+        output.append(result.replacingOccurrences(of: ".", with: ". Arr!"))
     }
 }
