@@ -105,6 +105,24 @@ public extension Array {
         return popLast()
     }
 
+    /// Randomly removes `count` elements by swapping them
+    /// to the end. This should only be used if the order of
+    /// the list does not matter.
+    mutating func removeRandomlyChosenBySwap(count chosenCount: Int) -> [Element] {
+        guard chosenCount <= count else { fatalError("Cannot choose \(chosenCount) elements from an array of size \(count)!") }
+        var elements = [Element]()
+        for _ in 0..<chosenCount {
+            elements.append(removeRandomElementBySwap()!)
+        }
+        return elements
+    }
+
+    /// Randomly chooses `count` elements from the array.
+    func randomlyChosen(count chosenCount: Int) -> [Element] {
+        var copy = self
+        return copy.removeRandomlyChosenBySwap(count: chosenCount)
+    }
+
     /// The longest prefix satisfying the predicate and the rest of the list
     func span(_ inPrefix: (Element) throws -> Bool) rethrows -> (ArraySlice<Element>, ArraySlice<Element>) {
         let pre = try prefix(while: inPrefix)
