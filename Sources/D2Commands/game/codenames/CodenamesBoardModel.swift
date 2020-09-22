@@ -15,7 +15,7 @@ public struct CodenamesBoardModel {
 
         let teamAgents = CodenamesRole.allCases.flatMap { Array(repeating: Agent.role($0), count: teamAgentCount) }
         let innocents = Array(repeating: Agent.innocent, count: innocentCount)
-        var words = Array(Words.nouns.shuffled().prefix(cardCount))
+        var words = Words.nouns.randomlyChosen(count: cardCount)
         var agents = teamAgents + innocents + [.assasin]
 
         cards = (0..<height).map { y in (0..<width).map { x in
