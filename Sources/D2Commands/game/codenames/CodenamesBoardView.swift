@@ -26,11 +26,15 @@ struct CodenamesBoardView {
     }
 
     private static func colorOf(card: CodenamesBoardModel.Card) -> Color {
-        switch card.agent {
-            case .role(.red): return Color(rgb: 0xad2a10)
-            case .role(.blue): return Color(rgb: 0x101dad)
-            case .innocent: return Color(rgb: 0xf5efc6)
-            case .assasin: return Colors.black
+        if card.hidden {
+            return Color(rgb: 0xe0e0e0)
+        } else {
+            switch card.agent {
+                case .role(.red): return Color(rgb: 0xad2a10)
+                case .role(.blue): return Color(rgb: 0x101dad)
+                case .innocent: return Color(rgb: 0xf5efc6)
+                case .assasin: return Colors.black
+            }
         }
     }
 }

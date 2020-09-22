@@ -33,6 +33,7 @@ public struct CodenamesBoardModel {
     public struct Card {
         public let word: String
         public let agent: Agent
+        public var hidden: Bool = true
     }
 
     public subscript(y: Int, x: Int) -> Card {
