@@ -1,7 +1,10 @@
 import D2Utils
 
 public struct CodenamesBoardModel {
-    public let cards: [[Card]]
+    public private(set) var cards: [[Card]]
+
+    public var width: Int { cards[0].count }
+    public var height: Int { cards.count }
 
     public init(width: Int = 5, height: Int = 5) {
         assert(width >= 3 && height >= 3, "Codenames board should be at least 3x3")
@@ -30,5 +33,10 @@ public struct CodenamesBoardModel {
     public struct Card {
         public let word: String
         public let agent: Agent
+    }
+
+    public subscript(y: Int, x: Int) -> Card {
+        get { cards[y][x] }
+        set { cards[y][x] = newValue }
     }
 }
