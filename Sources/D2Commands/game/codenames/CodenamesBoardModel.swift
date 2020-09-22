@@ -15,10 +15,11 @@ public struct CodenamesBoardModel {
 
         let teamAgents = CodenamesRole.allCases.flatMap { Array(repeating: Agent.role($0), count: teamAgentCount) }
         let innocents = Array(repeating: Agent.innocent, count: innocentCount)
+        var words = Array(Words.nouns.shuffled().prefix(cardCount))
         var agents = teamAgents + innocents + [.assasin]
 
-        cards = (0..<height).map { _ in (0..<width).map { _ in
-            guard let word = Words.english.randomElement() else { fatalError("English word list is empty") }
+        cards = (0..<height).map { y in (0..<width).map { x in
+            guard let word = words.removeRandomElementBySwap() else { fatalError("Too few words for the codenames board, currently at y = \(y), x = \(x)") }
             guard let agent = agents.removeRandomElementBySwap() else { fatalError("Too few agents generated, this is a bug") }
             return Card(word: word, agent: agent)
         } }
