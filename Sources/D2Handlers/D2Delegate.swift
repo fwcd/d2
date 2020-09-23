@@ -227,6 +227,7 @@ public class D2Delegate: MessageDelegate {
         registry["pickupline"] = PickupLineCommand()
         registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
         registry["joke"] = JokeCommand()
+        registry["pat"] = PatCommand()
         registry["wouldyourather", aka: ["wyr"]] = WouldYouRatherCommand(partyGameDB: partyGameDB)
         registry["neverhaveiever", aka: ["nhie"]] = NeverHaveIEverCommand(partyGameDB: partyGameDB)
         registry["partygamedb"] = PartyGameDatabaseCommand(partyGameDB: partyGameDB)
