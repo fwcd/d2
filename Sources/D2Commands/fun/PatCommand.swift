@@ -1,6 +1,7 @@
 import D2MessageIO
 import D2Graphics
 import D2Utils
+import Logging
 
 public class PatCommand: Command {
     public let info = CommandInfo(
@@ -25,6 +26,8 @@ public class PatCommand: Command {
             return
         }
 
+        context.channel?.triggerTyping()
+
         // TODO: Add MessageClient API for fetching avatars to reduce
         //       code duplication among this command and e.g. AvatarCommand
         Promise.catching { try HTTPRequest(
@@ -42,13 +45,27 @@ public class PatCommand: Command {
                         return
                     }
 
-                    // Generate the animation
                     let patHand = try Image(fromPngFile: "Resources/fun/patHand.png")
-                    let avatarImage = try Image(fromPng: data)
+                    var avatarImage = try Image(fromPng: data)
+                    let width = avatarImage.width
+                    let height = avatarImage.height
+                    let radiusSquared = (width * height) / 4
                     var gif = AnimatedGif(quantizingImage: avatarImage)
 
+                    // Cut out round avatar
+                    for y in 0..<height {
+                        for x in 0..<width {
+                            let cx = x - (width / 2)
+                            let cy = y - (height / 2)
+                            if (cx * cx) + (cy * cy) > radiusSquared {
+                                avatarImage[y, x] = Colors.transparent
+                            }
+                        }
+                    }
+
+                    // Render the animation
                     for _ in 0..<self.frameCount {
-                        let frame = try Image(width: avatarImage.width, height: avatarImage.height)
+                        let frame = try Image(width: width, height: height)
                         var graphics = CairoGraphics(fromImage: frame)
 
                         graphics.draw(avatarImage)
