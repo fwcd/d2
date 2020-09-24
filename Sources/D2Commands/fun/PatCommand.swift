@@ -13,24 +13,29 @@ public class PatCommand: Command {
     )
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
+
     private let frameCount: Int
     private let delayTime: Int
     private let patOffset: Vec2<Double>
     private let patScale: Double
     private let patPower: Int
 
+    private let inventoryManager: InventoryManager
+
     public init(
         frameCount: Int = 25,
         delayTime: Int = 3,
         patOffset: Vec2<Double> = .init(x: -10),
         patScale: Double = -10,
-        patPower: Int = 2
+        patPower: Int = 2,
+        inventoryManager: InventoryManager
     ) {
         self.frameCount = frameCount
         self.delayTime = delayTime
         self.patOffset = patOffset
         self.patScale = patScale
         self.patPower = patPower
+        self.inventoryManager = inventoryManager
     }
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
@@ -89,6 +94,9 @@ public class PatCommand: Command {
                     }
 
                     output.append(.gif(gif))
+
+                    // Place the pat in the recipient's inventory
+                    self.inventoryManager[user].append(item: .init(id: "pat", name: "Pat"), to: "Pats")
                 } catch {
                     output.append(errorText: "The avatar could not be fetched \(error)")
                 }
