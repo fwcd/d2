@@ -43,6 +43,10 @@ public class PatCommand: Command {
             output.append(errorText: "Please mention someone!")
             return
         }
+        guard let author = context.author else {
+            output.append(errorText: "No author")
+            return
+        }
 
         context.channel?.triggerTyping()
 
@@ -96,7 +100,7 @@ public class PatCommand: Command {
                     output.append(.gif(gif))
 
                     // Place the pat in the recipient's inventory
-                    self.inventoryManager[user].append(item: .init(id: "pat", name: "Pat"), to: "Pats")
+                    self.inventoryManager[user].append(item: .init(id: "pat-\(author.username)", name: "Pat by \(author.username)"), to: "Pats")
                 } catch {
                     output.append(errorText: "The avatar could not be fetched \(error)")
                 }
