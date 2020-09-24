@@ -1,3 +1,4 @@
+import Foundation
 import D2MessageIO
 import D2Graphics
 import D2Utils
@@ -15,7 +16,7 @@ public class PatCommand: Command {
     private let frameCount: Int
     private let delayTime: Int
 
-    public init(frameCount: Int = 25, delayTime: Int = 2) {
+    public init(frameCount: Int = 25, delayTime: Int = 3) {
         self.frameCount = frameCount
         self.delayTime = delayTime
     }
@@ -64,12 +65,13 @@ public class PatCommand: Command {
                     }
 
                     // Render the animation
-                    for _ in 0..<self.frameCount {
+                    for i in 0..<self.frameCount {
                         let frame = try Image(width: width, height: height)
+                        let phase = (Double(i) * 2 * Double.pi) / Double(self.frameCount)
                         var graphics = CairoGraphics(fromImage: frame)
 
                         graphics.draw(avatarImage)
-                        graphics.draw(patHand)
+                        graphics.draw(patHand, at: Vec2(y: 10 * (sin(phase) - 1)))
 
                         gif.append(frame: .init(image: frame, delayTime: self.delayTime))
                     }
