@@ -23,8 +23,8 @@ public class PatCommand: Command {
         frameCount: Int = 25,
         delayTime: Int = 3,
         patOffset: Vec2<Double> = .init(x: -10),
-        patScale: Double = -30,
-        patPower: Int = 4
+        patScale: Double = -10,
+        patPower: Int = 2
     ) {
         self.frameCount = frameCount
         self.delayTime = delayTime
