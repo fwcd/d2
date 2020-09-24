@@ -15,10 +15,22 @@ public class PatCommand: Command {
     public let outputValueType: RichValueType = .gif
     private let frameCount: Int
     private let delayTime: Int
+    private let patOffset: Vec2<Double>
+    private let patScale: Double
+    private let patPower: Int
 
-    public init(frameCount: Int = 25, delayTime: Int = 3) {
+    public init(
+        frameCount: Int = 25,
+        delayTime: Int = 3,
+        patOffset: Vec2<Double> = .init(x: -10),
+        patScale: Double = -30,
+        patPower: Int = 4
+    ) {
         self.frameCount = frameCount
         self.delayTime = delayTime
+        self.patOffset = patOffset
+        self.patScale = patScale
+        self.patPower = patPower
     }
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
@@ -67,11 +79,11 @@ public class PatCommand: Command {
                     // Render the animation
                     for i in 0..<self.frameCount {
                         let frame = try Image(width: width, height: height)
-                        let phase = (Double(i) * 2 * Double.pi) / Double(self.frameCount)
+                        let percent = Double(i) / Double(self.frameCount)
                         var graphics = CairoGraphics(fromImage: frame)
 
                         graphics.draw(avatarImage)
-                        graphics.draw(patHand, at: Vec2(y: 10 * (sin(phase) - 1)))
+                        graphics.draw(patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
 
                         gif.append(frame: .init(image: frame, delayTime: self.delayTime))
                     }
