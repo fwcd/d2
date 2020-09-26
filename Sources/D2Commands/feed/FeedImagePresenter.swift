@@ -24,7 +24,7 @@ public struct FeedImagePresenter: FeedPresenter {
         let document = try SwiftSoup.parseBodyFragment(description)
         guard let imgSrc = try document.getElementsByTag("img").array().first?.attr("src") else { return nil }
         return Embed(
-            title: [rss.title, item.title].compactMap { $0 }.joined(separator: " - ").nilIfEmpty,
+            title: item.title,
             url: item.link.flatMap(URL.init(string:)),
             image: URL(string: imgSrc).map(Embed.Image.init(url:))
         )
