@@ -192,7 +192,7 @@ public class D2Delegate: MessageDelegate {
         registry["ripple"] = AnimateCommand<TransformAnimation<RadialTransform<RippleDistortion>>>(description: "Applies a rippling distortion effect")
         registry["squiggle"] = AnimateCommand<TransformAnimation<SquiggleTransform>>(description: "Applies a 'squiggling' distortion effect")
         registry["bounce"] = AnimateCommand<TransformAnimation<BounceTransform>>(description: "Slides the image up and down smoothly")
-        registry["scroll"] = AnimateCommand<TransformAnimation<ScrollTransform>>(description: "Slides the image into a direction (by default to the right) with linear speed")
+        registry["slide", aka: ["scroll"]] = AnimateCommand<TransformAnimation<SlideTransform>>(description: "Slides the image into a direction (by default to the right) with linear speed")
         registry["tile"] = TileCommand()
         registry["pingpong"] = PingPongCommand()
         registry["reverse"] = ReverseCommand()

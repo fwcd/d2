@@ -1,6 +1,6 @@
 import D2Utils
 
-public struct ScrollTransform: ImageTransform {
+public struct SlideTransform: ImageTransform {
     public enum Key: String, StringEnum {
         case speed
         case direction
