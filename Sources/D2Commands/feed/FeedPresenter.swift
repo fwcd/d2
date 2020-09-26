@@ -2,5 +2,5 @@ import FeedKit
 import D2MessageIO
 
 public protocol FeedPresenter {
-    func present(feed: Feed) -> Embed?
+    func present(feed: Feed) throws -> Embed?
 }

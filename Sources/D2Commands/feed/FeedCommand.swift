@@ -25,7 +25,7 @@ public class FeedCommand<P>: StringCommand where P: FeedPresenter {
             .listen {
                 do {
                     let feed = try $0.get()
-                    guard let embed = self.presenter.present(feed: feed) else {
+                    guard let embed = try self.presenter.present(feed: feed) else {
                         output.append(errorText: "Could not present feed")
                         return
                     }

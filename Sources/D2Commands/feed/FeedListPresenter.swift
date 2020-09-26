@@ -1,24 +1,33 @@
 import FeedKit
 import D2MessageIO
+import D2Utils
 
 public struct FeedListPresenter: FeedPresenter {
-    public init() {}
+    private let itemCount: Int
+    private let converter = DocumentToMarkdownConverter()
 
-    public func present(feed: Feed) -> Embed? {
+    public init(itemCount: Int = 4) {
+        self.itemCount = itemCount
+    }
+
+    public func present(feed: Feed) throws -> Embed? {
         // TODO: Atom, ...
         switch feed {
-            case .rss(let rss): return present(rss: rss)
+            case .rss(let rss): return try present(rss: rss)
             default: return nil
         }
     }
 
-    private func present(rss: RSSFeed) -> Embed {
-        Embed(
+    private func present(rss: RSSFeed) throws -> Embed {
+        try Embed(
             title: rss.title,
             description: rss.description,
-            fields: rss.items?.prefix(5).compactMap {
+            fields: rss.items?.prefix(itemCount).compactMap {
                 guard let title = $0.title else { return nil }
-                return Embed.Field(name: title, value: $0.description ?? "_no description_")
+                return try Embed.Field(
+                    name: title,
+                    value: $0.description.map { try converter.convert(htmlFragment: $0) } ?? "_no description_"
+                )
             } ?? []
         )
     }
