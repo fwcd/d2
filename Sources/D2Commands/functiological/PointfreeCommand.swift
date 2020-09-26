@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2Commands.PointfreeCommand")
 
 public class PointfreeCommand: StringCommand {
     public let info = CommandInfo(
-        category: .haskell,
+        category: .functiological,
         shortDescription: "Pointfree notation converter",
         longDescription: "Converts a Haskell expression into pointfree notation",
         requiredPermissionLevel: .basic

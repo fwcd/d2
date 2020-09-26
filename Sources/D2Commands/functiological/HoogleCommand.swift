@@ -14,7 +14,7 @@ fileprivate struct HoogleResultKey: Hashable {
 
 public class HoogleCommand: StringCommand {
     public let info = CommandInfo(
-        category: .haskell,
+        category: .functiological,
         shortDescription: "Hoogles a type signature",
         longDescription: "Searches for a function matching a type signature using the Hoogle search engine",
         requiredPermissionLevel: .basic

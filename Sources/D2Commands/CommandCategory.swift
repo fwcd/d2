@@ -11,10 +11,10 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case food
     case forum
     case fun
+    case functiological
     case game
     case git
     case gmod
-    case haskell
     case imaging
     case math
     case meta
@@ -41,10 +41,10 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .food: return ":tropical_drink: Food and drinks"
             case .forum: return ":ledger: Forums"
             case .fun: return ":candy: Fun"
+            case .functiological: return ":umbrella2: Functional and logical programming"
             case .game: return ":game_die: Multiplayer games"
             case .git: return ":fox: Git"
             case .gmod: return ":regional_indicator_g: Garry's Mod"
-            case .haskell: return ":umbrella2: Haskell"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
             case .math: return ":bar_chart: Mathematics"
             case .meta: return ":sparkles: Meta, i.e. commands related to D2 itself"
@@ -53,7 +53,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .ml: return ":bulb: Machine learning"
             case .moderation: return ":loudspeaker: Moderation"
             case .music: return ":guitar: Music, theory and chords"
-            case .prolog: return ":owl: Prolog"
             case .scripting: return ":tools: Command scripting"
             case .web: return ":globe_with_meridians: Web browsing"
         }
