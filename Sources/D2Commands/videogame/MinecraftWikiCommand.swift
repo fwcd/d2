@@ -5,7 +5,7 @@ import D2Utils
 
 public class MinecraftWikiCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Queries Minecraft Wiki",
         longDescription: "Queries Minecraft Wiki for an article",
         requiredPermissionLevel: .basic

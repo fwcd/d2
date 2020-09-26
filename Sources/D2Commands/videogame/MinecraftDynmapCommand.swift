@@ -7,7 +7,7 @@ fileprivate let argsPattern = try! Regex(from: "(\\S+)(?:\\s+(.+))?")
 
 public class MinecraftDynmapCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Queries the dynmap of a Minecraft server",
         longDescription: "Fetches world information from a Minecraft server running the 'dynmap' plugin",
         helpText: "Syntax: [server host] [player name]?",

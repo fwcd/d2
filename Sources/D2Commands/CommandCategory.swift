@@ -14,15 +14,14 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case functiological
     case game
     case git
-    case gmod
     case imaging
     case math
     case meta
-    case minecraft
     case misc
     case moderation
     case music
     case scripting
+    case videogame
     case web
 
     public var description: String {
@@ -42,15 +41,14 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .functiological: return ":umbrella2: Functional and logical programming"
             case .game: return ":game_die: Multiplayer games"
             case .git: return ":fox: Git"
-            case .gmod: return ":regional_indicator_g: Garry's Mod"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
             case .math: return ":bar_chart: Mathematics"
             case .meta: return ":sparkles: Meta, i.e. commands related to D2 itself"
-            case .minecraft: return ":evergreen_tree: Minecraft"
             case .misc: return ":art: Miscellaneous commands"
             case .moderation: return ":loudspeaker: Moderation"
             case .music: return ":guitar: Music, theory and chords"
             case .scripting: return ":tools: Command scripting"
+            case .videogame: return ":evergreen_tree: Video games"
             case .web: return ":globe_with_meridians: Web browsing"
         }
     }

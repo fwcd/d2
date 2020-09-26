@@ -8,7 +8,7 @@ fileprivate let log = Logger(label: "D2Commands.MinecraftServerPingCommand")
 
 public class MinecraftServerPingCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Pings a Minecraft server",
         longDescription: "Fetches the Message of the Day (MOTD) and the current player list of a Minecraft server",
         requiredPermissionLevel: .basic

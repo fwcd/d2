@@ -5,7 +5,7 @@ import D2Utils
 
 public class MinecraftModSearchCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Finds a Minecraft mod online",
         longDescription: "Finds a Minecraft mod on CurseForge",
         helpText: "Syntax: [mod name]",

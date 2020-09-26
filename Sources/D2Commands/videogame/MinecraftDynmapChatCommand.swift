@@ -8,7 +8,7 @@ fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(.+)")
 
 public class MinecraftDynmapChatCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Sends a message to a Minecraft server using Dynmap",
         longDescription: "Sends a chat message to a Minecraft Spigot server through the Dynmap API",
         helpText: "Syntax: [server host] [message]",

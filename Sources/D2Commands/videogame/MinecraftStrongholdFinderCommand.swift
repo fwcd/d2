@@ -7,7 +7,7 @@ fileprivate let argsPattern = try! Regex(from: "\(rawPointPattern)\\s+\(rawPoint
 
 public class MinecraftStrongholdFinderCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Locates the next stronghold on a Minecraft map",
         longDescription: "Locates the next stronghold on a Minecraft map by intersecting the lines traced by successive ender eye throws",
         helpText: """

@@ -4,8 +4,8 @@ import D2NetAPIs
 
 public class GModServerPingCommand: StringCommand {
     public let info = CommandInfo(
-        category: .gmod,
-        shortDescription: "Pings a GMod server",
+        category: .videogame,
+        shortDescription: "Pings a Garry's mod (Source) server",
         helpText: "Syntax: [address]:[port]?",
         requiredPermissionLevel: .basic
     )

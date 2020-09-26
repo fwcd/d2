@@ -4,7 +4,7 @@ import D2NetAPIs
 
 public class MinecraftServerModsCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Fetches a Minecraft server's modlist",
         longDescription: "Fetches a list of mods used by a given server",
         requiredPermissionLevel: .basic

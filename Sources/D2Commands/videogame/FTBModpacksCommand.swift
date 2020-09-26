@@ -4,7 +4,7 @@ import D2NetAPIs
 
 public class FTBModpacksCommand: StringCommand {
     public let info = CommandInfo(
-        category: .minecraft,
+        category: .videogame,
         shortDescription: "Fetches a list of FTB modpacks",
         longDescription: "Fetches a list of recent Feed The Beast modpacks with descriptions and download links",
         requiredPermissionLevel: .basic
