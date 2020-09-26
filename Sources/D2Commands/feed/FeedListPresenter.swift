@@ -21,14 +21,13 @@ public struct FeedListPresenter: FeedPresenter {
     private func present(rss: RSSFeed) throws -> Embed {
         try Embed(
             title: rss.title,
-            description: rss.description,
-            fields: rss.items?.prefix(itemCount).compactMap {
-                guard let title = $0.title else { return nil }
-                return try Embed.Field(
-                    name: title,
-                    value: $0.description.map { try converter.convert(htmlFragment: $0) } ?? "_no description_"
-                )
-            } ?? []
+            description: rss.items?.prefix(itemCount).compactMap {
+                guard let title = $0.title, let link = $0.link else { return nil }
+                return """
+                    **[\(title)](\(link))**
+                    \(try $0.description.map { try converter.convert(htmlFragment: $0) }?.truncate(200, appending: "...") ?? "_no description_")
+                    """
+            }.joined(separator: "\n")
         )
     }
 }
