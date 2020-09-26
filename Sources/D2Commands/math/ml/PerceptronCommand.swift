@@ -18,7 +18,7 @@ fileprivate let dataSamplePattern = try! Regex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\
 
 public class PerceptronCommand: StringCommand {
     public let info = CommandInfo(
-        category: .ml,
+        category: .math,
         shortDescription: "Creates and trains a single-layered perceptron",
         longDescription: "Invokes a subcommand on the single-layered perceptron",
         helpText: """

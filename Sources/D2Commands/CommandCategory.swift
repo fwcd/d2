@@ -20,10 +20,8 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case meta
     case minecraft
     case misc
-    case ml
     case moderation
     case music
-    case prolog
     case scripting
     case web
 
@@ -50,7 +48,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .meta: return ":sparkles: Meta, i.e. commands related to D2 itself"
             case .minecraft: return ":evergreen_tree: Minecraft"
             case .misc: return ":art: Miscellaneous commands"
-            case .ml: return ":bulb: Machine learning"
             case .moderation: return ":loudspeaker: Moderation"
             case .music: return ":guitar: Music, theory and chords"
             case .scripting: return ":tools: Command scripting"
