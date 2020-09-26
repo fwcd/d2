@@ -1,3 +1,4 @@
+import Foundation
 import FeedKit
 import D2MessageIO
 import D2Utils
@@ -27,7 +28,8 @@ public struct FeedListPresenter: FeedPresenter {
                     **[\(title)](\(link))**
                     \(try $0.description.map { try converter.convert(htmlFragment: $0) }?.truncate(200, appending: "...") ?? "_no description_")
                     """
-            }.joined(separator: "\n")
+            }.joined(separator: "\n"),
+            thumbnail: rss.image?.url.flatMap(URL.init(string:)).map(Embed.Thumbnail.init(url:))
         )
     }
 }
