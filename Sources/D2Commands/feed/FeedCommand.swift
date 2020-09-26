@@ -6,20 +6,20 @@ import D2Utils
 public class FeedCommand<P>: StringCommand where P: FeedPresenter {
     public let info: CommandInfo
     private let presenter: P
-    private let feedUrl: URL
+    private let url: URL
 
-    public init(feedUrl: String, description: String, presenter: P) {
+    public init(url: String, description: String, presenter: P) {
         info = CommandInfo(
             category: .feed,
             shortDescription: description,
             requiredPermissionLevel: .basic
         )
-        self.feedUrl = URL(string: feedUrl)!
+        self.url = URL(string: url)!
         self.presenter = presenter
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        let parser = FeedParser(URL: feedUrl)
+        let parser = FeedParser(URL: url)
 
         Promise { then in parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: then) }
             .listen {

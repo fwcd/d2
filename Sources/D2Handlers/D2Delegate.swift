@@ -273,6 +273,7 @@ public class D2Delegate: MessageDelegate {
         registry["identity", aka: ["id"]] = IdentityCommand()
         registry["presence"] = PresenceCommand()
         registry["xkcd"] = XkcdCommand()
+        registry["smbc"] = FeedCommand(url: "https://www.smbc-comics.com/comic/rss", description: "Saturday Morning Breakfast Cereal", presenter: FeedListPresenter())
         registry["coinflip", aka: ["coin"]] = CoinFlipCommand()
         registry["diceroll", aka: ["dice", "roll"]] = DiceRollCommand(1...6)
         registry["pickrandom", aka: ["pick"]] = PickRandomCommand()
