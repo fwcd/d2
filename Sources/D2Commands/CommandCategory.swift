@@ -3,10 +3,10 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case bf
     case cau
     case coding
-    case comic
     case d2script
     case dictionary
     case emoji
+    case feed
     case file
     case food
     case forum
@@ -30,10 +30,10 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .bf: return ":brain: BF interpreter"
             case .cau: return ":school: CAU-specific utilities"
             case .coding: return ":currency_exchange: Encoders and decoders"
-            case .comic: return ":pencil2: Comics"
             case .d2script: return ":scroll: D2 scripting"
             case .dictionary: return ":books: Dictionaries, online search engines and more"
             case .emoji: return ":sunglasses: Emoji"
+            case .feed: return ":newspaper2: Feeds"
             case .file: return ":file_folder: File IO"
             case .food: return ":tropical_drink: Food and drinks"
             case .forum: return ":ledger: Forums"
