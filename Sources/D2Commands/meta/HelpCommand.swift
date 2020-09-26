@@ -75,6 +75,7 @@ public class HelpCommand: StringCommand {
             }
         return Embed(
             title: "\(category) | Available Commands",
+            footer: Embed.Footer(text: "Hint: You can use \(commandPrefix)help [commandname] to get help for an individual command!"),
             fields: helpFields
         )
     }
