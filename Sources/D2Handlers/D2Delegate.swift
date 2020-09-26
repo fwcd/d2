@@ -275,6 +275,7 @@ public class D2Delegate: MessageDelegate {
         registry["xkcd"] = XkcdCommand()
         registry["smbc"] = FeedCommand(url: "https://www.smbc-comics.com/comic/rss", description: "Saturday Morning Breakfast Cereal", presenter: FeedListPresenter())
         registry["tagesschau"] = FeedCommand(url: "https://www.tagesschau.de/xml/rss2_https/", description: "Tagesschau", presenter: FeedListPresenter())
+        registry["nytimes", aka: ["nyt"]] = FeedCommand(url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", description: "New York Times - Top Stories", presenter: FeedListPresenter())
         registry["spiegel"] = FeedCommand(url: "https://www.spiegel.de/schlagzeilen/tops/index.rss", description: "Spiegel Online", presenter: FeedListPresenter())
         registry["coinflip", aka: ["coin"]] = CoinFlipCommand()
         registry["diceroll", aka: ["dice", "roll"]] = DiceRollCommand(1...6)
