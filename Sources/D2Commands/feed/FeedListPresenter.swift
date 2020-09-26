@@ -3,6 +3,7 @@ import FeedKit
 import D2MessageIO
 import D2Utils
 
+/// Presents the n most recent items as a list.
 public struct FeedListPresenter: FeedPresenter {
     private let itemCount: Int
     private let converter = DocumentToMarkdownConverter()
