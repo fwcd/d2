@@ -20,7 +20,10 @@ public struct CodenamesState: GameState, Multiplayer {
     public private(set) var currentRole: Role = .team(.red)
 
     public var possibleMoves: Set<Move> {
-        return [] // TODO
+        switch currentRole {
+            case .team(let team): return []
+            case .spymaster(let team): return []
+        }
     }
 
     public var winner: Role? { nil } // TODO

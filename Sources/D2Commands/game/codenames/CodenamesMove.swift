@@ -1,9 +1,13 @@
 import D2Utils
 
-public struct CodenamesMove: Hashable {
-    public let words: [String]
+public enum CodenamesMove: Hashable, CustomStringConvertible {
+    case codeword(String)
+    case guess([String])
 
-    public init(fromString str: String) throws {
-        words = str.split(separator: " ").map(String.init)
+    public var description: String {
+        switch self {
+            case .codeword(let word): return "Codeword \(word)"
+            case .guess(let words): return "Guess \(words.joined(separator: ", "))"
+        }
     }
 }
