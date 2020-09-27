@@ -2,19 +2,26 @@ import D2Utils
 
 public enum CodenamesRole: Hashable, RichValueConvertible {
     case team(CodenamesTeam)
-    case spymaster
+    case spymaster(CodenamesTeam)
 
     public var asRichValue: RichValue {
         switch self {
             case .team(let team): return team.asRichValue
-            case .spymaster: return .text(":detective:")
+            case .spymaster(let team): return .compound([.text(":detective:"), team.asRichValue])
         }
     }
 
-    var opponent: CodenamesRole? {
+    public var team: CodenamesTeam {
+        switch self {
+            case .team(let team): return team
+            case .spymaster(let team): return team
+        }
+    }
+
+    var opponent: CodenamesRole {
         switch self {
             case .team(let team): return .team(team.opponent)
-            default: return nil
+            case .spymaster(let team): return .spymaster(team.opponent)
         }
     }
 }

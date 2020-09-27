@@ -35,7 +35,8 @@ public struct CodenamesState: GameState, Multiplayer {
         rolePlayers = [
             .team(.red): Array(players[..<half]),
             .team(.blue): Array(players[half...]),
-            .spymaster: [players[0], players[half]]
+            .spymaster(.red): [players[0]],
+            .spymaster(.blue): [players[1]]
         ]
     }
 
@@ -52,12 +53,16 @@ public struct CodenamesState: GameState, Multiplayer {
     }
 
     private func spymasterOf(team: CodenamesTeam) -> GamePlayer? {
-        rolePlayers[.spymaster]?.first { rolesOf(player: $0).contains(.team(team)) }
+        rolePlayers[.spymaster(team)]?.first
+    }
+
+    private func isSpymaster(player: GamePlayer) -> Bool {
+        let roles = rolesOf(player: player)
+        return CodenamesTeam.allCases.contains { roles.contains(.spymaster($0)) }
     }
 
     private func playerDescriptionOf(player: GamePlayer) -> String {
-        let isSpymaster = rolesOf(player: player).contains(.spymaster)
-        let icon = CodenamesRole.spymaster.asRichValue.asText.filter { _ in isSpymaster } ?? "?"
+        let icon = isSpymaster(player: player) ? ":detective:" : ""
         return [icon, player.username].compactMap { $0 }.joined(separator: " ")
     }
 }
