@@ -49,7 +49,7 @@ public extension GameState {
             try next.perform(move: move, by: role)
             return next
         } else {
-            throw GameError.invalidMove("Move `\(move)` is not in `possibleMoves`")
+            throw GameError.invalidMove("Move `\(move)` is not allowed!")
         }
     }
 }

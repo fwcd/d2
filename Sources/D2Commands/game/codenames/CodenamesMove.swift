@@ -6,8 +6,8 @@ public enum CodenamesMove: Hashable, CustomStringConvertible {
 
     public var description: String {
         switch self {
-            case .codeword(let count, let word): return "\(count) \("word".pluralize(with: count)) for codeword \(word)"
-            case .guess(let words): return "Guess \(words.joined(separator: ", "))"
+            case .codeword(let count, let word): return "\(count) \("hint word".pluralize(with: count)) for codeword '\(word)'"
+            case .guess(let words): return "Guess \(words.map { "'\($0)'" }.joined(separator: ", "))"
         }
     }
 }

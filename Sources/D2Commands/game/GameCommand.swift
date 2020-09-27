@@ -136,10 +136,11 @@ public class GameCommand<G: Game>: Command {
                 .embed(Embed(
                     title: "New match: \(state.playersDescription)",
                     color: game.themeColor.map { Int($0.rgb) },
-                    footer: Embed.Footer(text: "Type 'help' to begin!"),
+                    footer: Embed.Footer(text: "Type 'help' for details!"),
                     fields: [
                         Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
-                        Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
+                        Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true),
+                        Embed.Field(name: "Info", value: describeTurn(in: state), inline: false)
                     ]
                 ))
             ]))
@@ -227,7 +228,7 @@ public class GameCommand<G: Game>: Command {
                         description: [
                             actionResult.text,
                             next.handsDescription.map { "Hands: \($0)" },
-                            game.isRealTime ? "Next turn!" : "It is now \(game.hasPrettyRoles ? "\(describe(role: next.currentRole, in: next))'s" : next.playersOf(role: next.currentRole).map { "`\($0.username)`'s" }.englishEnumerated()) turn"
+                            describeTurn(in: next)
                         ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
                     )
 
@@ -263,9 +264,20 @@ public class GameCommand<G: Game>: Command {
     private func describe(role: G.State.Role, in state: G.State) -> String {
         let players = state.playersOf(role: role)
         if game.hasPrettyRoles {
-            return "\(role.asRichValue.asText ?? "")\(players.map { " aka. `\($0.username)`" }.englishEnumerated())"
+            return "\(role.asRichValue.asText ?? "") aka \(players.map { "`\($0.username)`" }.englishEnumerated())"
         } else {
             return players.map { "`\($0.username)`" }.englishEnumerated()
+        }
+    }
+
+    private func describeTurn(in state: G.State) -> String {
+        if game.isRealTime {
+            return "Next turn!"
+        } else {
+            let roleDescription = game.hasPrettyRoles
+                ? "\(describe(role: state.currentRole, in: state))'s"
+                : state.playersOf(role: state.currentRole).map { "`\($0.username)`'s" }.englishEnumerated()
+            return "It is now \(roleDescription) turn."
         }
     }
 }
