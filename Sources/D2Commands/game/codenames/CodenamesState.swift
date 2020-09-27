@@ -18,6 +18,7 @@ public struct CodenamesState: GameState, Multiplayer {
 
     public private(set) var board = Board()
     public private(set) var currentRole: Role = .spymaster(.red)
+    private var expectedCount: Int? = nil
 
     public private(set) var winner: Role? = nil
     public let isDraw: Bool = false
@@ -38,9 +39,8 @@ public struct CodenamesState: GameState, Multiplayer {
 
     public mutating func perform(move: Move, by role: Role) throws {
         switch (move, role) {
-            case (.codeword(_, _), .spymaster(_)):
-                // Nothing happens, the codeword/count only serves as an information to the teammates
-                break
+            case (.codeword(let count, _), .spymaster(_)):
+                expectedCount = count
             case (.guess(let words), .team(_)):
                 for word in words {
                     if let card = board.model.unhide(word: word) {
@@ -86,10 +86,13 @@ public struct CodenamesState: GameState, Multiplayer {
     }
 
     public func isPossible(move: Move, by role: Role) -> Bool {
-        switch (move, currentRole) {
-            case (.codeword(let count, let codeword), .spymaster(_)): return count > 0 && !codeword.isEmpty
-            case (.guess(let words), .team(_)): return words.allSatisfy { board.model.remainingWords.contains($0) }
-            default: return false
+        switch (move, currentRole, expectedCount) {
+            case (.codeword(let count, let codeword), .spymaster(_), _):
+                return count > 0 && !codeword.isEmpty
+            case (.guess(let words), .team(_), let count?):
+                return words.count <= count && words.allSatisfy { board.model.remainingWords.contains($0) }
+            default:
+                return false
         }
     }
 }
