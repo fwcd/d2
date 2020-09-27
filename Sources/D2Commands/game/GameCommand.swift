@@ -264,7 +264,7 @@ public class GameCommand<G: Game>: Command {
     private func describe(role: G.State.Role, in state: G.State) -> String {
         let players = state.playersOf(role: role)
         if game.hasPrettyRoles {
-            return "\(role.asRichValue.asText ?? "") aka \(players.map { "`\($0.username)`" }.englishEnumerated())"
+            return "\(role.asRichValue.asText ?? "") aka. \(players.map { "`\($0.username)`" }.englishEnumerated())"
         } else {
             return players.map { "`\($0.username)`" }.englishEnumerated()
         }
