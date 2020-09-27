@@ -1,3 +1,4 @@
+import D2Utils
 import D2MessageIO
 import D2Permissions
 
@@ -75,7 +76,7 @@ public struct UnoState: GameState, Multiplayer {
         }
 
         hands[currentRole] = nextHand
-        currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))).clockModulo(players.count)
+        currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))) %% players.count
 
         hands[currentRole]!.cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
     }

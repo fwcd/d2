@@ -48,7 +48,7 @@ struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
-        self.semitone = semitone.clockModulo(twelveToneOctaveBlueprints.count)
+        self.semitone = semitone %% twelveToneOctaveBlueprints.count
     }
 
     fileprivate init(blueprint: NoteBlueprint, semitone: Int, octave: Int? = nil)  {
@@ -73,7 +73,7 @@ struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
     static func enharmonicEquivalents(numValue: Int) -> [Note] {
         assert(numValue >= 0) // TODO: Investigate supporting negative numValues by using floor/clock modulo and division
 
-        let enharmonics = twelveToneOctaveBlueprints[numValue.clockModulo(twelveToneOctaveBlueprints.count)]
+        let enharmonics = twelveToneOctaveBlueprints[numValue %% twelveToneOctaveBlueprints.count]
 
         return enharmonics.map { Note(
             letter: $0.letter,
@@ -92,7 +92,7 @@ struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
             octavesDelta = (rhs.degrees - 6) / 7
         }
 
-        let nextSemitone = (lhs.semitone + rhs.semitones).clockModulo(twelveToneOctaveBlueprints.count)
+        let nextSemitone = (lhs.semitone + rhs.semitones) %% twelveToneOctaveBlueprints.count
         let nextLetter = lhs.letter + rhs.degrees
         let candidates = twelveToneOctaveBlueprints[nextSemitone]
         guard let twelveToneNote = candidates.first(where: { $0.letter == nextLetter }) ?? candidates.first else {

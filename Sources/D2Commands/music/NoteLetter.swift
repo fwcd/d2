@@ -1,3 +1,5 @@
+import D2Utils
+
 enum NoteLetter: Int, CaseIterable, Hashable {
     case c = 0
     case d = 1
@@ -26,7 +28,7 @@ enum NoteLetter: Int, CaseIterable, Hashable {
     }
 
     static func +(lhs: NoteLetter, rhs: Int) -> NoteLetter {
-        return NoteLetter(rawValue: (lhs.rawValue + rhs).clockModulo(allCases.count))!
+        return NoteLetter(rawValue: (lhs.rawValue + rhs) %% allCases.count)!
     }
 
     static func -(lhs: NoteLetter, rhs: Int) -> NoteLetter {
