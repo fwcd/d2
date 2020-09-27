@@ -17,7 +17,7 @@ struct CodenamesBoardView {
         for y in 0..<model.height {
             for x in 0..<model.width {
                 var card = model[y, x]
-                card.hidden = card.hidden || allUncovered
+                card.hidden = card.hidden && !allUncovered
 
                 let color = Self.colorOf(card: card)
                 let modelPos = Vec2(x: x, y: y)
