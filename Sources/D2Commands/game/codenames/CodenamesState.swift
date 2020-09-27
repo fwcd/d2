@@ -19,8 +19,8 @@ public struct CodenamesState: GameState, Multiplayer {
     public private(set) var board = Board()
     public private(set) var currentRole: Role = .team(.red)
 
-    public var winner: Role? { nil } // TODO
-    public var isDraw: Bool { false }
+    public private(set) var winner: Role? = nil
+    public let isDraw: Bool = false
 
     public init(players: [GamePlayer]) throws {
         guard players.count >= Self.minPlayerCount else { throw GameError.invalidPlayerCount("Too few players for Codenames, requires at least \(Self.minPlayerCount) (preferably an even number of players for fairness).") }
@@ -37,7 +37,30 @@ public struct CodenamesState: GameState, Multiplayer {
     }
 
     public mutating func perform(move: Move, by role: Role) throws {
-        // TODO
+        switch (move, role) {
+            case (.codeword(_), .spymaster(_)):
+                // Nothing happens, the codeword only serves as an information to the teammates
+                break
+            case (.guess(let words), .team(_)):
+                for word in words {
+                    if let card = board.model.unhide(word: word) {
+                        switch card.agent {
+                            case .assasin:
+                                winner = role.opponent
+                            case .team(let cardTeam):
+                                if board.model.isWinner(team: cardTeam) {
+                                    winner = .team(cardTeam)
+                                }
+                            case .innocent:
+                                break
+                        }
+                    }
+                }
+            default:
+                throw GameError.invalid("role", "Role \(role) cannot perform \(move)!")
+        }
+
+        currentRole = currentRole.next
     }
 
     public func playersOf(role: Role) -> [GamePlayer] {

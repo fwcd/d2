@@ -26,7 +26,7 @@ public struct CodenamesBoardModel {
         } }
     }
 
-    public enum Agent {
+    public enum Agent: Hashable {
         case team(CodenamesTeam)
         case innocent
         case assasin
@@ -45,6 +45,14 @@ public struct CodenamesBoardModel {
 
     public func locate(word: String) -> (Int, Int)? {
         (0..<height).flatMap { y in (0..<width).map { x in (y, x) } }.first { (y, x) in self[y, x].word == word }
+    }
+
+    public func isAssasinUncovered() -> Bool {
+        cards.flatMap { $0 }.contains { $0.agent == .assasin && !$0.hidden }
+    }
+
+    public func isWinner(team: CodenamesTeam) -> Bool {
+        !isAssasinUncovered() && cards.flatMap { $0 }.filter { $0.agent == .team(team) }.allSatisfy { !$0.hidden }
     }
 
     @discardableResult
