@@ -4,6 +4,7 @@ public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible {
     case team(CodenamesTeam)
     case spymaster(CodenamesTeam)
 
+    // Order matters
     public static var allCases: [CodenamesRole] = CodenamesTeam.allCases.flatMap { [.spymaster($0), .team($0)] }
 
     public var asRichValue: RichValue {

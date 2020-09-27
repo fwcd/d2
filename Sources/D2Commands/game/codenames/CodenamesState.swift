@@ -17,7 +17,7 @@ public struct CodenamesState: GameState, Multiplayer {
     }
 
     public private(set) var board = Board()
-    public private(set) var currentRole: Role = .team(.red)
+    public private(set) var currentRole: Role = .spymaster(.red)
 
     public private(set) var winner: Role? = nil
     public let isDraw: Bool = false
