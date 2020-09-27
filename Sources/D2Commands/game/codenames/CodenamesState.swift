@@ -10,7 +10,12 @@ public struct CodenamesState: GameState, Multiplayer {
 
     private let rolePlayers: [Role: [GamePlayer]]
     public var players: [GamePlayer] { rolePlayers.values.flatMap { $0 } }
-    public var playersDescription: String { rolePlayers.map { "\($0.key.asRichValue.asText ?? "?"): \($0.value.map(\.username).englishEnumerated())" }.joined(separator: ", ") }
+    public var playersDescription: String {
+        CodenamesTeam.allCases
+            .map { "\($0.asRichValue.asText ?? "?") (\(playersOf(role: .team($0)).map { playerDescriptionOf(player: $0) }.englishEnumerated()))" }
+            .joined(separator: " vs ")
+    }
+
     public private(set) var board = Board()
     public private(set) var currentRole: Role = .team(.red)
 
@@ -22,7 +27,7 @@ public struct CodenamesState: GameState, Multiplayer {
     public var isDraw: Bool { false }
 
     public init(players: [GamePlayer]) throws {
-        guard players.count >= Self.minPlayerCount - 1 else { throw GameError.invalidPlayerCount("Too few players for Codenames, requires at least \(Self.minPlayerCount) (preferably an even number of players for fairness).") }
+        guard players.count >= Self.minPlayerCount else { throw GameError.invalidPlayerCount("Too few players for Codenames, requires at least \(Self.minPlayerCount) (preferably an even number of players for fairness).") }
 
         // The first player in each team is assigned the spymaster
         // For more details, see the helpText in CodenamesGame
@@ -44,5 +49,15 @@ public struct CodenamesState: GameState, Multiplayer {
 
     public func rolesOf(player: GamePlayer) -> [Role] {
         rolePlayers.filter { $0.value.contains(player) }.map(\.key)
+    }
+
+    private func spymasterOf(team: CodenamesTeam) -> GamePlayer? {
+        rolePlayers[.spymaster]?.first { rolesOf(player: $0).contains(.team(team)) }
+    }
+
+    private func playerDescriptionOf(player: GamePlayer) -> String {
+        let isSpymaster = rolesOf(player: player).contains(.spymaster)
+        let icon = CodenamesRole.spymaster.asRichValue.asText.filter { _ in isSpymaster } ?? "?"
+        return [icon, player.username].compactMap { $0 }.joined(separator: " ")
     }
 }
