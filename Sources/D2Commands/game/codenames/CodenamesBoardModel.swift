@@ -13,7 +13,7 @@ public struct CodenamesBoardModel {
         let teamAgentCount = (cardCount / 2) - 3
         let innocentCount = (cardCount - (2 * teamAgentCount)) - 1
 
-        let teamAgents = CodenamesRole.allCases.flatMap { Array(repeating: Agent.role($0), count: teamAgentCount) }
+        let teamAgents = CodenamesTeam.allCases.flatMap { Array(repeating: Agent.team($0), count: teamAgentCount) }
         let innocents = Array(repeating: Agent.innocent, count: innocentCount)
         var words = Words.nouns.randomlyChosen(count: cardCount)
         var agents = teamAgents + innocents + [.assasin]
@@ -26,7 +26,7 @@ public struct CodenamesBoardModel {
     }
 
     public enum Agent {
-        case role(CodenamesRole)
+        case team(CodenamesTeam)
         case innocent
         case assasin
     }

@@ -11,7 +11,7 @@ public struct CodenamesState: GameState, Multiplayer {
     private let rolePlayers: [Role: [GamePlayer]]
     public var players: [GamePlayer] { rolePlayers.values.flatMap { $0 } }
     public private(set) var board = Board()
-    public private(set) var currentRole: Role = .red
+    public private(set) var currentRole: Role = .team(.red)
 
     public var possibleMoves: Set<Move> {
         return [] // TODO
@@ -27,8 +27,8 @@ public struct CodenamesState: GameState, Multiplayer {
         // For more details, see the helpText in CodenamesGame
         let half = players.count / 2
         rolePlayers = [
-            .red: Array(players[..<half]),
-            .blue: Array(players[half...]),
+            .team(.red): Array(players[..<half]),
+            .team(.blue): Array(players[half...]),
             .spymaster: [players[0], players[half]]
         ]
     }
