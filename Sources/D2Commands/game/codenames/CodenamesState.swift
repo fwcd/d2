@@ -10,6 +10,7 @@ public struct CodenamesState: GameState, Multiplayer {
 
     private let rolePlayers: [Role: [GamePlayer]]
     public var players: [GamePlayer] { rolePlayers.values.flatMap { $0 } }
+    public var playersDescription: String { rolePlayers.map { "\($0.key.asRichValue.asText ?? "?"): \($0.value.map(\.username).englishEnumerated())" }.joined(separator: ", ") }
     public private(set) var board = Board()
     public private(set) var currentRole: Role = .team(.red)
 
