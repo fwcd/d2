@@ -25,7 +25,7 @@ public protocol GameState {
     var winner: Role? { get }
     var isDraw: Bool { get }
 
-    init(players: [GamePlayer])
+    init(players: [GamePlayer]) throws
 
     func rolesOf(player: GamePlayer) -> [Role]
 

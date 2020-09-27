@@ -106,39 +106,45 @@ public class GameCommand<G: Game>: Command {
     }
 
     func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: CommandOutput, flags: Set<String> = []) {
-        var additionalMsg: RichValue = .none
-        if let previousMatch = matches[channelID] {
-            additionalMsg = .text("The old match \(previousMatch.playersDescription) has been cancelled in favor of this one")
-        }
-
-        let state = G.State.init(players: players)
-        matches[channelID] = state
-        apiEnabled = flags.contains("api")
-        silent = flags.contains("silent")
-
-        var encodedBoard: RichValue = .none
-        if game.renderFirstBoard {
-            encodedBoard = state.board.asRichValue
-
-            if case .embed(_) = encodedBoard {
-                log.warning("Embed-encoded boards are currently not supported by GameCommand")
+        do {
+            var additionalMsg: RichValue = .none
+            if let previousMatch = matches[channelID] {
+                additionalMsg = .text("The old match \(previousMatch.playersDescription) has been cancelled in favor of this one")
             }
-        }
 
-        output.append(.compound([
-            encodedBoard,
-            additionalMsg,
-            .embed(Embed(
-                title: "New match: \(state.playersDescription)",
-                color: game.themeColor.map { Int($0.rgb) },
-                footer: Embed.Footer(text: "Type 'help' to begin!"),
-                fields: [
-                    Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
-                    Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
-                ]
-            ))
-        ]))
-        sendHandsAsDMs(fromState: state, to: output)
+            let state = try G.State.init(players: players)
+            matches[channelID] = state
+            apiEnabled = flags.contains("api")
+            silent = flags.contains("silent")
+
+            var encodedBoard: RichValue = .none
+            if game.renderFirstBoard {
+                encodedBoard = state.board.asRichValue
+
+                if case .embed(_) = encodedBoard {
+                    log.warning("Embed-encoded boards are currently not supported by GameCommand")
+                }
+            }
+
+            output.append(.compound([
+                encodedBoard,
+                additionalMsg,
+                .embed(Embed(
+                    title: "New match: \(state.playersDescription)",
+                    color: game.themeColor.map { Int($0.rgb) },
+                    footer: Embed.Footer(text: "Type 'help' to begin!"),
+                    fields: [
+                        Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
+                        Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
+                    ]
+                ))
+            ]))
+            sendHandsAsDMs(fromState: state, to: output)
+        } catch let GameError.invalidPlayerCount(reason) {
+            output.append(errorText: "Invalid player count: \(reason)")
+        } catch {
+            output.append(error, errorText: "Could not create match")
+        }
     }
 
     private func listFormat<T: Sequence>(_ sequence: T) -> String where T.Element: StringProtocol {
