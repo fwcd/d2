@@ -11,6 +11,9 @@ public struct CodenamesState: GameState, Multiplayer {
 
     private let rolePlayers: [Role: [GamePlayer]]
     public var players: [GamePlayer] { rolePlayers.values.flatMap { $0 } }
+    public var hands: [Role: Hand] {
+        Dictionary(uniqueKeysWithValues: CodenamesTeam.allCases.map { (CodenamesRole.spymaster($0), CodenamesHand(model: board.model)) })
+    }
     public var playersDescription: String {
         CodenamesTeam.allCases
             .map { "\($0.asRichValue.asText ?? "?") (\(playersOf(role: .team($0)).map { playerDescriptionOf(player: $0) }.englishEnumerated()))" }
