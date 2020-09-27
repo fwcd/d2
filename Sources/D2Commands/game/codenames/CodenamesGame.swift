@@ -31,6 +31,16 @@ public struct CodenamesGame: Game {
 
         For more information, check out the Wikipedia article:
         https://en.wikipedia.org/wiki/Codenames_(board_game)
+
+        When creating a Codenames game with D2, the first
+        player in each team is assigned the role of the spymaster,
+        i.e. if A invokes
+
+        `codenames @B @C @D @E @F`
+
+        (in that order), A, B, C are going to be the first team
+        (with A being a spymaster) and D, E, F the second
+        team (with D being a spymaster).
         """
 
     public init() {}

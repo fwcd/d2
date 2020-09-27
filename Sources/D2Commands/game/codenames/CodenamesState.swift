@@ -18,6 +18,7 @@ public struct CodenamesState: GameState, Multiplayer {
     public var isDraw: Bool { false }
 
     public init(players: [GamePlayer]) {
+        // The first player in each team is assigned the spymaster
         self.players = players
     }
 
