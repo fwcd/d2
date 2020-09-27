@@ -6,6 +6,7 @@ public struct CodenamesState: GameState, Multiplayer {
 
     public typealias Role = CodenamesRole
     public typealias Board = CodenamesBoard
+    public typealias Hand = CodenamesHand
     public typealias Move = CodenamesMove
 
     private let rolePlayers: [Role: [GamePlayer]]

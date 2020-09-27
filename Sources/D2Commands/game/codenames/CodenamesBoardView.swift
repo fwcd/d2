@@ -4,7 +4,7 @@ import D2Graphics
 struct CodenamesBoardView {
     let image: Image
 
-    init(model: CodenamesBoardModel) throws {
+    init(model: CodenamesBoardModel, allUncovered: Bool = false) throws {
         let intPadding = 5
         let padding = Double(intPadding)
         let fieldIntSize = Vec2<Int>(x: 100, y: 50)
@@ -16,7 +16,9 @@ struct CodenamesBoardView {
 
         for y in 0..<model.height {
             for x in 0..<model.width {
-                let card = model[y, x]
+                var card = model[y, x]
+                card.hidden = card.hidden || allUncovered
+
                 let color = Self.colorOf(card: card)
                 let modelPos = Vec2(x: x, y: y)
                 let viewPos = (modelPos * (fieldIntSize + Vec2(both: intPadding))).asDouble
