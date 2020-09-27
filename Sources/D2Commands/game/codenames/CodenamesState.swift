@@ -19,13 +19,6 @@ public struct CodenamesState: GameState, Multiplayer {
     public private(set) var board = Board()
     public private(set) var currentRole: Role = .team(.red)
 
-    public var possibleMoves: Set<Move> {
-        switch currentRole {
-            case .team(let team): return []
-            case .spymaster(let team): return []
-        }
-    }
-
     public var winner: Role? { nil } // TODO
     public var isDraw: Bool { false }
 
@@ -67,5 +60,13 @@ public struct CodenamesState: GameState, Multiplayer {
     private func playerDescriptionOf(player: GamePlayer) -> String {
         let icon = isSpymaster(player: player) ? ":detective:" : ""
         return [icon, player.username].compactMap { $0 }.joined(separator: " ")
+    }
+
+    public func isPossible(move: Move, by role: Role) -> Bool {
+        switch (move, currentRole) {
+            case (.codeword(let word), .spymaster(_)): return !word.isEmpty
+            case (.guess(let words), .team(_)): return words.allSatisfy { board.model.remainingWords.contains($0) }
+            default: return false
+        }
     }
 }

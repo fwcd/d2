@@ -4,7 +4,7 @@ import D2Permissions
 
 fileprivate let initialPlayerTries: Int = 10
 
-public struct HangmanState: GameState, Multiplayer {
+public struct HangmanState: GameState, Multiplayer, FinitePossibleMoves {
     public typealias Role = Int
     public typealias Board = HangmanBoard
     public typealias Move = HangmanMove

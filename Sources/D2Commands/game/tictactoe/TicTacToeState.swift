@@ -1,7 +1,7 @@
 import Foundation
 import D2MessageIO
 
-public struct TicTacToeState: GameState {
+public struct TicTacToeState: GameState, FinitePossibleMoves {
     public typealias Role = TicTacToeRole
     public typealias Board = TicTacToeBoard
     public typealias Move = TicTacToeMove

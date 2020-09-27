@@ -5,6 +5,7 @@ public struct CodenamesBoardModel {
 
     public var width: Int { cards[0].count }
     public var height: Int { cards.count }
+    public var remainingWords: [String] { cards.flatMap { $0.filter(\.hidden).map(\.word) } }
 
     public init(width: Int = 5, height: Int = 5) {
         assert(width >= 3 && height >= 3, "Codenames board should be at least 3x3")
@@ -40,5 +41,18 @@ public struct CodenamesBoardModel {
     public subscript(y: Int, x: Int) -> Card {
         get { cards[y][x] }
         set { cards[y][x] = newValue }
+    }
+
+    public func locate(word: String) -> (Int, Int)? {
+        (0..<height).flatMap { y in (0..<width).map { x in (y, x) } }.first { (y, x) in self[y, x].word == word }
+    }
+
+    @discardableResult
+    public mutating func unhide(word: String) -> Card? {
+        guard let (y, x) = locate(word: word) else { return nil }
+        var card = self[y, x]
+        card.hidden = false
+        self[y, x] = card
+        return card
     }
 }

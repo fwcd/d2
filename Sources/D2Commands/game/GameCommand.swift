@@ -198,7 +198,6 @@ public class GameCommand<G: Game>: Command {
                 // Output next board and user's hands
                 var embed: Embed? = nil
 
-                log.debug("Next possible moves: \(next.possibleMoves)")
                 sendHandsAsDMs(fromState: next, to: output)
 
                 if let winner = next.winner {

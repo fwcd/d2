@@ -3,7 +3,7 @@ public struct CodenamesGame: Game {
 
     public let name: String = "Codenames"
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
-        "move": { ActionResult(nextState: try $0.state.childState(after: try CodenamesGame.parse(move: $0.args))) },
+        "move": { ActionResult(nextState: try $0.state.childState(after: try CodenamesGame.parse(move: $0.args, from: $0.state.currentRole))) },
     ]
     public let helpText: String? = """
         Codenames is a board game where the players have
@@ -45,7 +45,10 @@ public struct CodenamesGame: Game {
 
     public init() {}
 
-    private static func parse(move rawMove: String) throws -> State.Move {
-        return try State.Move(fromString: rawMove)
+    private static func parse(move rawMove: String, from role: CodenamesRole) throws -> State.Move {
+        switch role {
+            case .spymaster(_): return State.Move.codeword(rawMove)
+            case .team(_): return State.Move.guess(rawMove.split(separator: " ").map(String.init))
+        }
     }
 }

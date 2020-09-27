@@ -2,7 +2,7 @@ import D2Utils
 import D2MessageIO
 import D2Permissions
 
-public struct UnoState: GameState, Multiplayer {
+public struct UnoState: GameState, Multiplayer, FinitePossibleMoves {
     public typealias Role = Int
     public typealias Board = UnoBoard
     public typealias Move = UnoMove
