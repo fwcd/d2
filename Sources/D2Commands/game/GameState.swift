@@ -29,7 +29,7 @@ public protocol GameState {
 
     func rolesOf(player: GamePlayer) -> [Role]
 
-    func playerOf(role: Role) -> GamePlayer?
+    func playersOf(role: Role) -> [GamePlayer]
 
     func isPossible(move: Move, by role: Role) -> Bool
 

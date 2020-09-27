@@ -37,9 +37,8 @@ public struct CodenamesState: GameState, Multiplayer {
         // TODO
     }
 
-    public func playerOf(role: Role) -> GamePlayer? {
-        // TODO
-        rolePlayers[role]?.first
+    public func playersOf(role: Role) -> [GamePlayer] {
+        rolePlayers[role] ?? []
     }
 
     public func rolesOf(player: GamePlayer) -> [Role] {

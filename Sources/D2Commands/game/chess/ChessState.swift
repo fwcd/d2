@@ -171,10 +171,10 @@ public struct ChessState: GameState {
         return resolvedMoves.first!
     }
 
-    public func playerOf(role: Role) -> GamePlayer? {
+    public func playersOf(role: Role) -> [GamePlayer] {
         switch role {
-            case .white: return whitePlayer
-            case .black: return blackPlayer
+            case .white: return [whitePlayer]
+            case .black: return [blackPlayer]
         }
     }
 

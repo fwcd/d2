@@ -92,13 +92,17 @@ public class GameCommand<G: Game>: Command {
     }
 
     private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
-        if game.onlySendHandToCurrentRole, !game.isRealTime, let player = state.playerOf(role: state.currentRole) {
+        let currentPlayers = state.playersOf(role: state.currentRole)
+
+        if game.onlySendHandToCurrentRole && !game.isRealTime && !currentPlayers.isEmpty {
             if let hand = state.hands[state.currentRole] {
-                output.append(hand.asRichValue, to: .dmChannel(player.id))
+                for player in currentPlayers {
+                    output.append(hand.asRichValue, to: .dmChannel(player.id))
+                }
             }
         } else {
             for (role, hand) in state.hands {
-                if let player = state.playerOf(role: role) {
+                for player in state.playersOf(role: role) {
                     output.append(hand.asRichValue, to: .dmChannel(player.id))
                 }
             }
@@ -224,7 +228,7 @@ public class GameCommand<G: Game>: Command {
                         description: [
                             actionResult.text,
                             next.handsDescription.map { "Hands: \($0)" },
-                            game.isRealTime ? "Next turn!" : "It is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
+                            game.isRealTime ? "Next turn!" : "It is now \(next.playersOf(role: next.currentRole).map { "`\($0.username)`'s" }.englishEnumerated()) turn"
                         ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
                     )
 
@@ -258,11 +262,11 @@ public class GameCommand<G: Game>: Command {
     }
 
     private func describe(role: G.State.Role, in state: G.State) -> String {
-        let player = state.playerOf(role: role)
+        let players = state.playersOf(role: role)
         if game.hasPrettyRoles {
-            return "\(role.asRichValue.asText ?? "")\(player.map { " aka. `\($0.username)`" } ?? "")"
+            return "\(role.asRichValue.asText ?? "")\(players.map { " aka. `\($0.username)`" }.englishEnumerated())"
         } else {
-            return player.map { "`\($0.username)`" } ?? "?"
+            return players.map { "`\($0.username)`" }.englishEnumerated()
         }
     }
 }

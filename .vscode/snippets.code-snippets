@@ -61,7 +61,7 @@
 			"\t\t$9",
 			"\t}",
 			"\t",
-			"\tpublic func playerOf(role: Role) -> GamePlayer? {",
+			"\tpublic func playersOf(role: Role) -> [GamePlayer] {",
 			"\t\t$10",
 			"\t}",
 			"\t",

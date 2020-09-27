@@ -9,12 +9,12 @@ public protocol Multiplayer {
 }
 
 extension GameState where Self: Multiplayer, Self.Role == Int {
-    public func playerOf(role: Role) -> GamePlayer? {
-        return players[safely: role]
+    public func playersOf(role: Role) -> [GamePlayer] {
+        [players[safely: role]].compactMap { $0 }
     }
 
     public func rolesOf(player: GamePlayer) -> [Role] {
-        return players.allIndices(of: player)
+        players.allIndices(of: player)
     }
 }
 
