@@ -227,7 +227,7 @@ public class GameCommand<G: Game>: Command {
                         description: [
                             actionResult.text,
                             next.handsDescription.map { "Hands: \($0)" },
-                            game.isRealTime ? "Next turn!" : "It is now \(next.playersOf(role: next.currentRole).map { "`\($0.username)`'s" }.englishEnumerated()) turn"
+                            game.isRealTime ? "Next turn!" : "It is now \(game.hasPrettyRoles ? "\(describe(role: next.currentRole, in: next))'s" : next.playersOf(role: next.currentRole).map { "`\($0.username)`'s" }.englishEnumerated()) turn"
                         ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
                     )
 

@@ -9,6 +9,7 @@ public struct CodenamesGame: Game {
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
         "move": { ActionResult(nextState: try $0.state.childState(after: try CodenamesGame.parse(move: $0.args, from: $0.state.currentRole))) },
     ]
+    public let hasPrettyRoles: Bool = true
     public let helpText: String = """
         Codenames is a board game where the players have to guess words based on a set of hint-words. Each team has a spymaster that dictates a codeword and a count, from which the rest of the team has to guess the hint-words on the board.
 
