@@ -1,3 +1,7 @@
+import D2Utils
+
+fileprivate let spymasterMovePattern = try! Regex(from: "(\\d+)\\s+(\\w+)")
+
 public struct CodenamesGame: Game {
     public typealias State = CodenamesState
 
@@ -15,15 +19,15 @@ public struct CodenamesGame: Game {
 
         If you've just started a new game, you are the spymaster for team red. Enter `move [word count] [codeword]` to begin, e.g.:
 
-        - `move fruit 3` if you want your teammates to find 3 hint words on the board related to fruits
-        - `move planet 2` if you want your teammates to find 2 hint words on the board related to hotels
+        - `move 3 fruit` if you want your teammates to find 3 hint words on the board related to fruits
+        - `move 2 planet` if you want your teammates to find 2 hint words on the board related to hotels
 
         In general you want to think of a term that is as abstract as possible to cover as many words of your team color as possible. Beware of your opponent's cards and the assasin though!
 
         After that, _one_ of your teammates can perform a guess by entering `move [word1] [word2]...` with the words on the board, e.g.:
 
-        - `move apple banana orange` as a guess for the codeword/count `fruit 3`
-        - `move earth mars` as a guess for the codeword/count `planet 2`
+        - `move apple banana orange` as a guess for the codeword/count `3 fruit`
+        - `move earth mars` as a guess for the codeword/count `2 planet`
 
         You might want to coordinate your guess among your teammates beforehand here.
 
@@ -34,8 +38,13 @@ public struct CodenamesGame: Game {
 
     private static func parse(move rawMove: String, from role: CodenamesRole) throws -> State.Move {
         switch role {
-            case .spymaster(_): return State.Move.codeword(rawMove)
-            case .team(_): return State.Move.guess(rawMove.split(separator: " ").map(String.init))
+            case .spymaster(_):
+                guard let parsedMove = spymasterMovePattern.firstGroups(in: rawMove), let wordCount = Int(parsedMove[1]) else {
+                    throw GameError.invalidMove("Moves of the Spymaster should follow the pattern `[word count] [codeword]`")
+                }
+                return State.Move.codeword(wordCount, parsedMove[2])
+            case .team(_):
+                return State.Move.guess(rawMove.split(separator: " ").map(String.init))
         }
     }
 }

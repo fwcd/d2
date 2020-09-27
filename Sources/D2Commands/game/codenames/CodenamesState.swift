@@ -38,8 +38,8 @@ public struct CodenamesState: GameState, Multiplayer {
 
     public mutating func perform(move: Move, by role: Role) throws {
         switch (move, role) {
-            case (.codeword(_), .spymaster(_)):
-                // Nothing happens, the codeword only serves as an information to the teammates
+            case (.codeword(_, _), .spymaster(_)):
+                // Nothing happens, the codeword/count only serves as an information to the teammates
                 break
             case (.guess(let words), .team(_)):
                 for word in words {
@@ -87,7 +87,7 @@ public struct CodenamesState: GameState, Multiplayer {
 
     public func isPossible(move: Move, by role: Role) -> Bool {
         switch (move, currentRole) {
-            case (.codeword(let word), .spymaster(_)): return !word.isEmpty
+            case (.codeword(let count, let codeword), .spymaster(_)): return count > 0 && !codeword.isEmpty
             case (.guess(let words), .team(_)): return words.allSatisfy { board.model.remainingWords.contains($0) }
             default: return false
         }
