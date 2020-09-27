@@ -8,13 +8,12 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.MessageIOOutput")
 fileprivate let contentLimit = 2000
+fileprivate let maxSplitFragments = 4
 
 public class MessageIOOutput: CommandOutput {
     private var context: CommandContext
     private let messageWriter = MessageWriter()
     private let onSent: (([Message]) -> Void)?
-
-    public let messageLengthLimit: Int? = 1800
 
     public init(context: CommandContext, onSent: (([Message]) -> Void)? = nil) {
         self.context = context
@@ -36,6 +35,10 @@ public class MessageIOOutput: CommandOutput {
                 var messages: [Message]
                 do {
                     messages = self.splitUp(message: try r.get())
+                    if messages.count > maxSplitFragments {
+                        log.warning("Splitting up message resulted in \(messages.count) fragments, truncating to \(maxSplitFragments) messages...")
+                        messages = Array(messages.prefix(5))
+                    }
                 } catch {
                     log.error("Error while encoding message: \(error)")
                     messages = [Message(content: """
