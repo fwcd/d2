@@ -21,7 +21,7 @@ public struct CodenamesState: GameState, Multiplayer {
     public var isDraw: Bool { false }
 
     public init(players: [GamePlayer]) throws {
-        guard players.count >= Self.minPlayerCount else { throw GameError.invalidPlayerCount("Too few players for Codenames, requires at least \(Self.minPlayerCount) (preferably an even number of players for fairness).") }
+        guard players.count >= Self.minPlayerCount - 1 else { throw GameError.invalidPlayerCount("Too few players for Codenames, requires at least \(Self.minPlayerCount) (preferably an even number of players for fairness).") }
 
         // The first player in each team is assigned the spymaster
         // For more details, see the helpText in CodenamesGame
