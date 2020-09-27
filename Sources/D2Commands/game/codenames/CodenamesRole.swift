@@ -1,14 +1,20 @@
 import D2Utils
 
-public enum CodenamesRole: Hashable, RichValueConvertible {
+public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible {
     case team(CodenamesTeam)
     case spymaster(CodenamesTeam)
+
+    public static var allCases: [CodenamesRole] = CodenamesTeam.allCases.flatMap { [.spymaster($0), .team($0)] }
 
     public var asRichValue: RichValue {
         switch self {
             case .team(let team): return team.asRichValue
             case .spymaster(let team): return .compound([.text(":detective:"), team.asRichValue])
         }
+    }
+
+    public var next: CodenamesRole {
+        Self.allCases[(Self.allCases.firstIndex(of: self)! + 1) %% Self.allCases.count]
     }
 
     public var team: CodenamesTeam {
