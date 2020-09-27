@@ -3,12 +3,6 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Utils.MathUtils")
 
-extension Int {
-    public func clockModulo(_ rhs: Int) -> Int {
-        return (self % rhs + rhs) % rhs
-    }
-}
-
 extension Double {
     public func roundedTo(decimalPlaces: UInt) -> Double {
         let scale = pow(10.0, Double(decimalPlaces))
@@ -45,7 +39,7 @@ public func **(lhs: Int, rhs: Int) -> Int {
 
 infix operator %%: MultiplicationPrecedence
 
-/// Computes the floor modulus. Useful for cyclic indexing.
+/// Computes the floor/clock modulus. Useful for cyclic indexing.
 public func %%(lhs: Int, rhs: Int) -> Int {
     (lhs % rhs + rhs) % rhs
 }

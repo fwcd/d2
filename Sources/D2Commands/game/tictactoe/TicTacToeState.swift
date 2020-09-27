@@ -1,7 +1,7 @@
 import Foundation
 import D2MessageIO
 
-public struct TicTacToeState: GameState {
+public struct TicTacToeState: GameState, FinitePossibleMoves {
     public typealias Role = TicTacToeRole
     public typealias Board = TicTacToeBoard
     public typealias Move = TicTacToeMove
@@ -40,11 +40,11 @@ public struct TicTacToeState: GameState {
         currentRole = currentRole.opponent
     }
 
-    public func playerOf(role: Role) -> GamePlayer? {
+    public func playersOf(role: Role) -> [GamePlayer] {
         switch role {
-            case .x: return playerX
-            case .o: return playerO
-            default: return nil
+            case .x: return [playerX]
+            case .o: return [playerO]
+            default: return []
         }
     }
 

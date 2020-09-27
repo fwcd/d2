@@ -1,7 +1,8 @@
+import D2Utils
 import D2MessageIO
 import D2Permissions
 
-public struct UnoState: GameState, Multiplayer {
+public struct UnoState: GameState, Multiplayer, FinitePossibleMoves {
     public typealias Role = Int
     public typealias Board = UnoBoard
     public typealias Move = UnoMove
@@ -12,7 +13,7 @@ public struct UnoState: GameState, Multiplayer {
     public private(set) var board: Board
     public private(set) var currentRole: Role = 0
     public var hands: [Role: Hand]
-    public var handsDescription: String? { return hands.map { "`\(playerOf(role: $0.key)?.username ?? "?")`: \($0.value.cards.count)" }.joined(separator: ",") }
+    public var handsDescription: String? { return hands.map { "\(playersOf(role: $0.key).map { "`\($0.username)`" }.joined(separator: ", ")): \($0.value.cards.count)" }.joined(separator: ",") }
 
     public var possibleMoves: Set<Move> {
         var moves = hands[currentRole]?.cards
@@ -75,7 +76,7 @@ public struct UnoState: GameState, Multiplayer {
         }
 
         hands[currentRole] = nextHand
-        currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))).clockModulo(players.count)
+        currentRole = (currentRole + ((1 + skipDistance) * (advanceForward ? 1 : -1))) %% players.count
 
         hands[currentRole]!.cards.append(contentsOf: board.deck.drawRandomCards(count: opponentDrawCardCount))
     }

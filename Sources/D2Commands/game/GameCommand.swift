@@ -92,13 +92,17 @@ public class GameCommand<G: Game>: Command {
     }
 
     private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
-        if game.onlySendHandToCurrentRole, !game.isRealTime, let player = state.playerOf(role: state.currentRole) {
+        let currentPlayers = state.playersOf(role: state.currentRole)
+
+        if game.onlySendHandToCurrentRole && !game.isRealTime && !currentPlayers.isEmpty {
             if let hand = state.hands[state.currentRole] {
-                output.append(hand.asRichValue, to: .dmChannel(player.id))
+                for player in currentPlayers {
+                    output.append(hand.asRichValue, to: .dmChannel(player.id))
+                }
             }
         } else {
             for (role, hand) in state.hands {
-                if let player = state.playerOf(role: role) {
+                for player in state.playersOf(role: role) {
                     output.append(hand.asRichValue, to: .dmChannel(player.id))
                 }
             }
@@ -106,39 +110,46 @@ public class GameCommand<G: Game>: Command {
     }
 
     func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: CommandOutput, flags: Set<String> = []) {
-        var additionalMsg: RichValue = .none
-        if let previousMatch = matches[channelID] {
-            additionalMsg = .text("The old match \(previousMatch.playersDescription) has been cancelled in favor of this one")
-        }
-
-        let state = G.State.init(players: players)
-        matches[channelID] = state
-        apiEnabled = flags.contains("api")
-        silent = flags.contains("silent")
-
-        var encodedBoard: RichValue = .none
-        if game.renderFirstBoard {
-            encodedBoard = state.board.asRichValue
-
-            if case .embed(_) = encodedBoard {
-                log.warning("Embed-encoded boards are currently not supported by GameCommand")
+        do {
+            var additionalMsg: RichValue = .none
+            if let previousMatch = matches[channelID] {
+                additionalMsg = .text("The old match \(previousMatch.playersDescription) has been cancelled in favor of this one")
             }
-        }
 
-        output.append(.compound([
-            encodedBoard,
-            additionalMsg,
-            .embed(Embed(
-                title: "New match: \(state.playersDescription)",
-                color: game.themeColor.map { Int($0.rgb) },
-                footer: Embed.Footer(text: "Type 'help' to begin!"),
-                fields: [
-                    Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
-                    Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true)
-                ]
-            ))
-        ]))
-        sendHandsAsDMs(fromState: state, to: output)
+            let state = try G.State.init(players: players)
+            matches[channelID] = state
+            apiEnabled = flags.contains("api")
+            silent = flags.contains("silent")
+
+            var encodedBoard: RichValue = .none
+            if game.renderFirstBoard {
+                encodedBoard = state.board.asRichValue
+
+                if case .embed(_) = encodedBoard {
+                    log.warning("Embed-encoded boards are currently not supported by GameCommand")
+                }
+            }
+
+            output.append(.compound([
+                encodedBoard,
+                additionalMsg,
+                .embed(Embed(
+                    title: "New match: \(state.playersDescription)",
+                    color: game.themeColor.map { Int($0.rgb) },
+                    footer: Embed.Footer(text: "Type 'help' for details!"),
+                    fields: [
+                        Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
+                        Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true),
+                        Embed.Field(name: "Info", value: describeTurn(in: state), inline: false)
+                    ]
+                ))
+            ]))
+            sendHandsAsDMs(fromState: state, to: output)
+        } catch let GameError.invalidPlayerCount(reason) {
+            output.append(errorText: "Invalid player count: \(reason)")
+        } catch {
+            output.append(error, errorText: "Could not create match")
+        }
     }
 
     private func listFormat<T: Sequence>(_ sequence: T) -> String where T.Element: StringProtocol {
@@ -188,7 +199,6 @@ public class GameCommand<G: Game>: Command {
                 // Output next board and user's hands
                 var embed: Embed? = nil
 
-                log.debug("Next possible moves: \(next.possibleMoves)")
                 sendHandsAsDMs(fromState: next, to: output)
 
                 if let winner = next.winner {
@@ -218,7 +228,7 @@ public class GameCommand<G: Game>: Command {
                         description: [
                             actionResult.text,
                             next.handsDescription.map { "Hands: \($0)" },
-                            game.isRealTime ? "Next turn!" : "It is now `\(next.playerOf(role: next.currentRole).map { $0.username } ?? "?")`'s turn"
+                            describeTurn(in: next)
                         ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
                     )
 
@@ -252,11 +262,22 @@ public class GameCommand<G: Game>: Command {
     }
 
     private func describe(role: G.State.Role, in state: G.State) -> String {
-        let player = state.playerOf(role: role)
+        let players = state.playersOf(role: role)
         if game.hasPrettyRoles {
-            return "\(role.asRichValue.asText ?? "")\(player.map { " aka. `\($0.username)`" } ?? "")"
+            return "\(role.asRichValue.asText ?? "") aka \(players.map { "`\($0.username)`" }.englishEnumerated())"
         } else {
-            return player.map { "`\($0.username)`" } ?? "?"
+            return players.map { "`\($0.username)`" }.englishEnumerated()
+        }
+    }
+
+    private func describeTurn(in state: G.State) -> String {
+        if game.isRealTime {
+            return "Next turn!"
+        } else {
+            let roleDescription = game.hasPrettyRoles
+                ? "\(describe(role: state.currentRole, in: state))'s"
+                : state.playersOf(role: state.currentRole).map { "`\($0.username)`'s" }.englishEnumerated()
+            return "It is now \(roleDescription) turn."
         }
     }
 }

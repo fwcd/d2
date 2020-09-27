@@ -19,8 +19,11 @@ fileprivate let idPattern = try! Regex(from: "\\d+")
  */
 public struct MessageParser {
     private let ndArrayParser = NDArrayParser()
+    private let useExplicitMentions: Bool
 
-    public init() {}
+    public init(useExplicitMentions: Bool = false) {
+        self.useExplicitMentions = useExplicitMentions
+    }
 
     /**
     * Asynchronously parses a string with its
@@ -56,7 +59,8 @@ public struct MessageParser {
             // Append (explicit and implicit) mentions
             var mentions = [User]()
 
-            if let explicitMentions = message?.mentions.nilIfEmpty {
+            if useExplicitMentions, let explicitMentions = message?.mentions.nilIfEmpty {
+                // Note that explicit mentions don't count duplicates
                 mentions += explicitMentions
             } else {
                 mentions += idPattern.allGroups(in: content)

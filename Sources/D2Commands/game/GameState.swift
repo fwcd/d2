@@ -18,18 +18,17 @@ public protocol GameState {
     var board: Board { get }
     var currentRole: Role { get }
     var hands: [Role: Hand] { get }
-    var possibleMoves: Set<Move> { get }
     var playersDescription: String { get }
     var handsDescription: String? { get }
 
     var winner: Role? { get }
     var isDraw: Bool { get }
 
-    init(players: [GamePlayer])
+    init(players: [GamePlayer]) throws
 
     func rolesOf(player: GamePlayer) -> [Role]
 
-    func playerOf(role: Role) -> GamePlayer?
+    func playersOf(role: Role) -> [GamePlayer]
 
     func isPossible(move: Move, by role: Role) -> Bool
 
@@ -39,8 +38,6 @@ public protocol GameState {
 public extension GameState {
     var hands: [Role: Hand] { [:] }
     var handsDescription: String? { nil }
-
-    func isPossible(move: Move, by role: Role) -> Bool { possibleMoves.contains(move) }
 
     func childState(after move: Move) throws -> Self {
         try childState(after: move, by: currentRole)
@@ -52,7 +49,7 @@ public extension GameState {
             try next.perform(move: move, by: role)
             return next
         } else {
-            throw GameError.invalidMove("Move `\(move)` is not in `possibleMoves`")
+            throw GameError.invalidMove("Move `\(move)` is not allowed!")
         }
     }
 }

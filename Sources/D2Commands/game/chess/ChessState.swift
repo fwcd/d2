@@ -5,7 +5,7 @@ import D2Permissions
 
 fileprivate let log = Logger(label: "D2Commands.ChessState")
 
-public struct ChessState: GameState {
+public struct ChessState: GameState, FinitePossibleMoves {
     public typealias Role = ChessRole
     public typealias Board = ChessBoard
     public typealias Move = ChessMove
@@ -171,10 +171,10 @@ public struct ChessState: GameState {
         return resolvedMoves.first!
     }
 
-    public func playerOf(role: Role) -> GamePlayer? {
+    public func playersOf(role: Role) -> [GamePlayer] {
         switch role {
-            case .white: return whitePlayer
-            case .black: return blackPlayer
+            case .white: return [whitePlayer]
+            case .black: return [blackPlayer]
         }
     }
 
