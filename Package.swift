@@ -18,8 +18,8 @@ let package = Package(
         .package(url: "https://github.com/Kitura/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
-        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2"),
-        .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932")),
+        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", .revision("835a0005597380a0459fab9a8135616de355a992")),
+        .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("edc7aa228ed342c28f58e4036639562ac6c801f0")),
         .package(url: "https://github.com/fwcd/swift-utils.git", from: "1.0.0"),
         .package(url: "https://github.com/fwcd/swift-graphics.git", .revision("5e5e5240ca7ff0a849c7cf6c3d57904af059f68a")),
         .package(url: "https://github.com/fwcd/swift-gif.git", .revision("7143de87e8e7c67b4ae38d9b1da73d76a85c02c1")),
@@ -31,7 +31,7 @@ let package = Package(
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
         // TODO: Update to an actual version number once the PR #5 is merged
         .package(url: "https://github.com/fwcd/GraphViz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef")),
-        .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("08cd024da5f30ac32939e718a2a964445a4aab4a")),
+        .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("1c677a1bc7ffc96843e9cd7ca2a619c34e8158b0")),
         // TODO: Integrate swiftplot, this is however blocked on https://bugs.swift.org/browse/SR-679
         //       due to a dependency target collision (CFreeType)
         .package(url: "https://github.com/nmdias/FeedKit.git", from: "9.1.2")

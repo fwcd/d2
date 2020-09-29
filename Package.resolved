@@ -236,21 +236,21 @@
         }
       },
       {
-        "package": "Prolog",
+        "package": "swift-prolog",
         "repositoryURL": "https://github.com/fwcd/swift-prolog.git",
         "state": {
           "branch": null,
-          "revision": "9cb83791eda7ec9861a26a3b5ae28aded78e1932",
+          "revision": "edc7aa228ed342c28f58e4036639562ac6c801f0",
           "version": null
         }
       },
       {
-        "package": "QRCodeGenerator",
+        "package": "swift-qrcode-generator",
         "repositoryURL": "https://github.com/fwcd/swift-qrcode-generator.git",
         "state": {
           "branch": null,
-          "revision": "8e785d4b915bed178503648b6b68fa79482c5f79",
-          "version": "0.0.2"
+          "revision": "835a0005597380a0459fab9a8135616de355a992",
+          "version": null
         }
       },
       {
@@ -281,11 +281,11 @@
         }
       },
       {
-        "package": "SyllableCounter",
+        "package": "syllable-counter-swift",
         "repositoryURL": "https://github.com/wfreitag/syllable-counter-swift.git",
         "state": {
           "branch": null,
-          "revision": "08cd024da5f30ac32939e718a2a964445a4aab4a",
+          "revision": "1c677a1bc7ffc96843e9cd7ca2a619c34e8158b0",
           "version": null
         }
       },
