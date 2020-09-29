@@ -66,6 +66,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "Emoji", package: "Emoji"),
+                .product(name: "Telegrammer", package: "Telegrammer"),
                 .target(name: "D2MessageIO")
             ]
         ),
