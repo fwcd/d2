@@ -15,7 +15,6 @@ let package = Package(
         .package(url: "https://github.com/fwcd/SwiftDiscord.git", .revision("c1e527ae9f3e9057600dec6292f40703d126caac")),
         .package(url: "https://github.com/givip/Telegrammer.git", .revision("32657287befddf3d303287bf319901f5c7a6f24e")),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
-        .package(url: "https://github.com/Kitura/BlueSocket.git", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
         .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", .revision("835a0005597380a0459fab9a8135616de355a992")),
