@@ -1,8 +1,9 @@
 # D2
-General-purpose virtual assistant for Discord, IRC and Telegram.
 
 [![Linux](https://github.com/fwcd/d2/workflows/Linux/badge.svg)](https://github.com/fwcd/d2/actions)
 [![macOS](https://github.com/fwcd/d2/workflows/macOS/badge.svg)](https://github.com/fwcd/d2/actions)
+
+General-purpose virtual assistant for Discord, IRC and Telegram.
 
 It provides:
 
