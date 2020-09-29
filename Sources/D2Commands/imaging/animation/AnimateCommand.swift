@@ -29,9 +29,10 @@ public class AnimateCommand<A>: Command where A: Animation {
 
     private let kvParameters: [String]
     private let defaultFrameCount: Int
+    private let maxFrameCount: Int
     private let delayTime: Int
 
-    public init(description: String, defaultFrameCount: Int = 30, delayTime: Int = 2) {
+    public init(description: String, defaultFrameCount: Int = 30, maxFrameCount: Int = 300, delayTime: Int = 2) {
         let kvParameters = [framesParameter] + A.Key.allCases.map { $0.rawValue }
         info = CommandInfo(
             category: .imaging,
@@ -48,6 +49,7 @@ public class AnimateCommand<A>: Command where A: Animation {
 
         self.kvParameters = kvParameters
         self.defaultFrameCount = defaultFrameCount
+        self.maxFrameCount = maxFrameCount
         self.delayTime = delayTime
     }
 
@@ -61,6 +63,11 @@ public class AnimateCommand<A>: Command where A: Animation {
         let kvArgs: [String: String] = Dictionary(uniqueKeysWithValues: kvPattern.allGroups(in: args).map { ($0[1], $0[2]) })
 
         let frameCount = kvArgs[framesParameter].flatMap(Int.init) ?? defaultFrameCount
+
+        guard frameCount <= maxFrameCount else {
+            output.append(errorText: "Please specify less than \(maxFrameCount) frames!")
+            return
+        }
 
         // Render the animation
         do {
