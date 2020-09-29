@@ -1,5 +1,5 @@
 import XMLCoder
-import D2Utils
+import Utils
 
 public struct DBLPPublicationsQuery {
     public let term: String

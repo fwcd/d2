@@ -1,5 +1,5 @@
 import XCTest
-import D2Utils
+import Utils
 @testable import D2Commands
 
 final class ChessPieceUtilsTests: XCTestCase {
@@ -7,7 +7,7 @@ final class ChessPieceUtilsTests: XCTestCase {
 		("testNeighborFields", testNeighborFields),
 		("testPieceLetters", testPieceLetters)
 	]
-	
+
 	func testNeighborFields() throws {
 		XCTAssertEqual(Set(neighborFields()), Set([
 			Vec2(x: -1, y: -1),
@@ -20,7 +20,7 @@ final class ChessPieceUtilsTests: XCTestCase {
 			Vec2(x: 1, y: 1),
 		]))
 	}
-	
+
 	func testPieceLetters() throws {
 		assert("Q", matchesPiece: .queen)
 		assert("D", matchesPiece: .queen)
@@ -31,7 +31,7 @@ final class ChessPieceUtilsTests: XCTestCase {
 		assert("N", matchesPiece: .knight)
 		assert("S", matchesPiece: .knight)
 	}
-	
+
 	private func assert(_ letter: Character, matchesPiece pieceType: ChessPieceType) {
 		XCTAssertEqual(pieceOf(letter: letter)?.pieceType, pieceType)
 	}

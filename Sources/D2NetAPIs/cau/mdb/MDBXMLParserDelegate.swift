@@ -2,7 +2,7 @@ import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
-import D2Utils
+import Utils
 
 // Matches the contents of an HTML paragraph
 fileprivate let htmlParagraphPattern = try! Regex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")

@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 fileprivate let mentionPattern = try! Regex(from: "<@(\\d+)>")
 

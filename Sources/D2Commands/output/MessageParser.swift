@@ -1,8 +1,9 @@
 import Foundation
 import Logging
 import D2MessageIO
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
+import GIF
 import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
@@ -126,7 +127,7 @@ public struct MessageParser {
                     // attachment.download {
                     // 	do {
                     // 		let data = try $0.get()
-                    // 		values.append(.gif(try AnimatedGif(from: data)))
+                    // 		values.append(.gif(try AnimatedGIF(from: data)))
                     // 	} catch {
                     // 		log.error("\(error)")
                     // 	}

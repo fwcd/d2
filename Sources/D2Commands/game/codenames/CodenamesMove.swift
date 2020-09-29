@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public enum CodenamesMove: Hashable, CustomStringConvertible {
     case codeword(Int, String)

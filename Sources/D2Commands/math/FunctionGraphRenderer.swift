@@ -1,5 +1,5 @@
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 
 struct FunctionGraphRenderer {
     private let inputVariable: String

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct OpenWeatherMapQuery {
     public let city: String

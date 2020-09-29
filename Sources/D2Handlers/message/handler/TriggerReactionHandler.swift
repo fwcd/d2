@@ -1,6 +1,6 @@
 import D2Commands
 import D2MessageIO
-import D2Utils
+import Utils
 
 public struct TriggerReactionHandler: MessageHandler {
     private let keywords: [String: String]

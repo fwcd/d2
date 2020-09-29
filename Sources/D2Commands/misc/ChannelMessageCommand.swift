@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import D2MessageIO
 
 fileprivate let argPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\d+)\\s+(.+)")

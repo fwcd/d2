@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 import D2MessageIO
 
 fileprivate let argsPattern = try! Regex(from: "(<#(\\d+)>)?\\s*(\\d+)?")

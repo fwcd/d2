@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public enum ChessRole: String, Hashable, CaseIterable, Codable, RichValueConvertible {
     case white

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /** Encapsulates an unpositioned chess piece. */
 public protocol ChessPiece {

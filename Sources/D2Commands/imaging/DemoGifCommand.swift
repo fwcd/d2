@@ -1,8 +1,9 @@
 import Logging
 import D2MessageIO
 import D2Permissions
-import D2Graphics
-import D2Utils
+import Graphics
+import GIF
+import Utils
 
 fileprivate let log = Logger(label: "D2Commands.DemoGifCommand")
 
@@ -21,7 +22,7 @@ public class DemoGifCommand: StringCommand {
         do {
             let width = 200
             let height = 200
-            var gif = AnimatedGif(width: width, height: height)
+            var gif = AnimatedGIF(width: width, height: height)
 
             let angleCount = 4
             let angle = (2.0 * Double.pi) / Double(angleCount)

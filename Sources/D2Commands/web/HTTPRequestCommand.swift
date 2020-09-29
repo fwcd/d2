@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import Foundation
 
 public class HTTPRequestCommand: Command {

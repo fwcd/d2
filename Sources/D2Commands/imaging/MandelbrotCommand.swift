@@ -1,7 +1,7 @@
 import Logging
 import D2MessageIO
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
 import Foundation
 
 fileprivate let log = Logger(label: "D2Commands.MandelbrotCommand")

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let argsPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\w+[b#]?)")
 fileprivate let scales: [String: (Note) -> Scale] = [

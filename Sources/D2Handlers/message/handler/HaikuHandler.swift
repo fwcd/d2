@@ -1,5 +1,5 @@
 import D2Commands
-import D2Utils
+import Utils
 import D2MessageIO
 import SyllableCounter
 

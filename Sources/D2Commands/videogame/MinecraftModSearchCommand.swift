@@ -1,7 +1,7 @@
 import Foundation
 import D2MessageIO
 import D2NetAPIs
-import D2Utils
+import Utils
 
 public class MinecraftModSearchCommand: StringCommand {
     public let info = CommandInfo(

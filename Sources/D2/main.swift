@@ -7,7 +7,7 @@ import D2MessageIO
 import D2DiscordIO
 import D2TelegramIO
 import D2IRCIO
-import D2Utils
+import Utils
 
 #if DEBUG
 import Backtrace
@@ -21,7 +21,7 @@ func main(rawLogLevel: String, initialPresence: String?) {
     let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
     LoggingSystem.bootstrap {
         let level = $0.starts(with: "D2") ? logLevel : .notice
-        return D2LogHandler(label: $0, logLevel: level)
+        return StoringLogHandler(label: $0, logLevel: level)
     }
 
     let log = Logger(label: "D2.main")

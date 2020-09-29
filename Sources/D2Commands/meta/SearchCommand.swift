@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 
 public class SearchCommand: StringCommand {
     public let info = CommandInfo(

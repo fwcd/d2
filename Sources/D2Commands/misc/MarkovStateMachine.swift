@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 struct MarkovStateMachine<P: MarkovPredictor>: Sequence, IteratorProtocol where P.Element: Hashable {
     private let predictor: P

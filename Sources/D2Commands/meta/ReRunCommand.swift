@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import D2Permissions
 
 public class ReRunCommand: StringCommand {

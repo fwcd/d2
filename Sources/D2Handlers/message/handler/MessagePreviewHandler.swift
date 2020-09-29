@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import D2Commands
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let log = Logger(label: "D2Handlers.MessagePreviewHandler")
 

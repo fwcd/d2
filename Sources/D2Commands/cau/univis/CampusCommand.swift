@@ -5,7 +5,7 @@ import Foundation
 import FoundationNetworking
 #endif
 import Logging
-import D2Utils
+import Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.CampusCommand")

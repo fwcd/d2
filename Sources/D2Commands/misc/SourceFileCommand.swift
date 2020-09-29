@@ -38,7 +38,7 @@ public class SourceFileCommand: StringCommand {
             return
         }
 
-        // TODO: Use HTTPRequest from D2Utils
+        // TODO: Use HTTPRequest from Utils
 
         var request = URLRequest(url: rawURL)
         request.httpMethod = "GET"

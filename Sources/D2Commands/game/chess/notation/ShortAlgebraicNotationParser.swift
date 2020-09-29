@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /**
  * The regular expression that matches a string in short algebraic notation.

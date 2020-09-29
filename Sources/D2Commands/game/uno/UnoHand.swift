@@ -1,5 +1,5 @@
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
 
 public struct UnoHand: RichValueConvertible {
     public var cards: [UnoCard]

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 struct DifferenceNode: ExpressionASTNode {
     let lhs: ExpressionASTNode

@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let inventoryCategory = "Discordinder Matches"
 fileprivate let cancelSubcommand = "cancel"

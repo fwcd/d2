@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 // TODO: Make this a protocol and add roles/members properties
 public struct Guild {

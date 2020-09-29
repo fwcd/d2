@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 let encodedZero = "SCHNITZEL"
 let encodedOne = "BEER"

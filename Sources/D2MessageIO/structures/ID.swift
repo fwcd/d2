@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public typealias ChannelID = ID
 public typealias MessageID = ID

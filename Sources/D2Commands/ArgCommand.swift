@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /** A command that takes a parsed argument structure. */
 public protocol ArgCommand: StringCommand {

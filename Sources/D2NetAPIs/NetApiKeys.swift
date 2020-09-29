@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 let storedNetApiKeys = try? DiskJsonSerializer().readJson(as: NetApiKeys.self, fromFile: "local/netApiKeys.json")
 

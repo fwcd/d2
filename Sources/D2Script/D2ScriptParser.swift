@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Script.D2ScriptParser")

@@ -2,7 +2,7 @@ import Foundation
 import FeedKit
 import SwiftSoup
 import D2MessageIO
-import D2Utils
+import Utils
 
 /// Presents only the most recent item as image.
 public struct FeedImagePresenter: FeedPresenter {

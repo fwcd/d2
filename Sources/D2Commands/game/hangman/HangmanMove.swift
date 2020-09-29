@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct HangmanMove: CustomStringConvertible, Hashable {
     public let word: String

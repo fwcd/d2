@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct HoogleQuery {
     private let term: String

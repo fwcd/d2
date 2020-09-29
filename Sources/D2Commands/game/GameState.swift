@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 
 /**
  * Represents a mutable game state. Implementing classes are

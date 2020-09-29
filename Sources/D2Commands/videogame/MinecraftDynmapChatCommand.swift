@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(.+)")

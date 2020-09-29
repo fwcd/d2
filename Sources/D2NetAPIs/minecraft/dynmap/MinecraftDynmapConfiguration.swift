@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct MinecraftDynmapConfiguration: Codable {
     public let updaterate: Double?

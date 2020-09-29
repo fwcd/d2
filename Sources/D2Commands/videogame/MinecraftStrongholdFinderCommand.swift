@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let rawFloatPattern = "(?:-?\\d+(?:\\.\\d+)?)"
 fileprivate let rawPointPattern = "(?:\\(\\s*(\(rawFloatPattern))\\s*,\\s*(\(rawFloatPattern))\\s*\\))"

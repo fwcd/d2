@@ -1,5 +1,5 @@
 import Logging
-import D2Utils
+import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.WikitextParser")
 fileprivate let tokenPattern = try! Regex(from: "\\s*(?:([^=\\[\\]\\{\\}\\|]+)|(=+|\\[+|\\]+|\\{+|\\}+|\\|))\\s*")

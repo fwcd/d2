@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let alphabetLength: Int = 26
 fileprivate let alphabetRange = 0..<alphabetLength

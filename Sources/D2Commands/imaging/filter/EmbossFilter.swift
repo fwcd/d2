@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct EmbossFilter: ImageFilter {
     public let matrices: [Matrix<Double>]

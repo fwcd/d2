@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /**
  * A wrapper around a channel ID holding a

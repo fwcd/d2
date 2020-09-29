@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import D2NetAPIs
 
 public class NeverHaveIEverCommand: StringCommand {

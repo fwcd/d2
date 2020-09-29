@@ -1,6 +1,7 @@
 import D2MessageIO
-import D2Graphics
-import D2Utils
+import Graphics
+import GIF
+import Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
@@ -88,7 +89,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                 let height = image.height
 
                 log.debug("Creating gif")
-                var gif = AnimatedGif(quantizingImage: image)
+                var gif = AnimatedGIF(quantizingImage: image)
 
                 for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")

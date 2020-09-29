@@ -3,7 +3,7 @@ import Logging
 import D2MessageIO
 import D2NetAPIs
 import D2Permissions
-import D2Utils
+import Utils
 
 public class RedditCommand: StringCommand {
     public let info = CommandInfo(

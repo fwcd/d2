@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 
 public struct ChessTheme {
     public static let defaultTheme: ChessTheme = ChessTheme(

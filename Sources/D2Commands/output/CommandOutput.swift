@@ -1,6 +1,6 @@
 import D2MessageIO
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
 
 /// A sink for rich values.
 public protocol CommandOutput {

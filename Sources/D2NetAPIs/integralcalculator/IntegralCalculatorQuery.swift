@@ -1,6 +1,6 @@
 import Foundation
 import Logging
-import D2Utils
+import Utils
 import SwiftSoup
 
 fileprivate let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")

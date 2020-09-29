@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct PickupLineGenQuery: PickupLineQuery {
     public init() {}

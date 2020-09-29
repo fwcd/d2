@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /**
  * A mask "cutting out" a certain part

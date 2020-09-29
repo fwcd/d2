@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 
 struct PerceptronRenderer {
     private let width: Int

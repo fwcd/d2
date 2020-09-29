@@ -1,7 +1,7 @@
 import D2MessageIO
 import Foundation
 import Logging
-import D2Utils
+import Utils
 
 fileprivate let log = Logger(label: "D2Permissions.PermissionManager")
 fileprivate let userPermissionsFilePath = "local/userPermissions.json"

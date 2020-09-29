@@ -1,7 +1,7 @@
 import Logging
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 
 fileprivate let log = Logger(label: "D2Commands.FretboardChordCommand")
 fileprivate let argPattern = try! Regex(from: "(\\w+)(?:\\s+(\\w+))?")

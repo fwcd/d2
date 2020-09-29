@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 
 public class LogsCommand: StringCommand {
     public let info = CommandInfo(
@@ -17,6 +17,6 @@ public class LogsCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let lineCount = Int(input) ?? defaultLineCount
-        output.append(.code(D2LogHandler.lastOutputs.suffix(lineCount).joined(separator: "\n"), language: nil))
+        output.append(.code(StoringLogHandler.lastOutputs.suffix(lineCount).joined(separator: "\n"), language: nil))
     }
 }

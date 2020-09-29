@@ -1,7 +1,8 @@
 import Foundation
 import D2MessageIO
-import D2Graphics
-import D2Utils
+import Graphics
+import GIF
+import Utils
 import Logging
 
 public class PatCommand: Command {
@@ -72,7 +73,7 @@ public class PatCommand: Command {
                     let width = avatarImage.width
                     let height = avatarImage.height
                     let radiusSquared = (width * height) / 4
-                    var gif = AnimatedGif(quantizingImage: avatarImage)
+                    var gif = AnimatedGIF(quantizingImage: avatarImage)
 
                     // Cut out round avatar
                     for y in 0..<height {

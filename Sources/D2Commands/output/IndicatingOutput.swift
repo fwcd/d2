@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public class IndicatingOutput: CommandOutput {
     private let next: CommandOutput?

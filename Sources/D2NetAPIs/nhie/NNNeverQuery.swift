@@ -1,5 +1,5 @@
 import SwiftSoup
-import D2Utils
+import Utils
 
 public struct NNNEverQuery {
     private let maxPages: Int

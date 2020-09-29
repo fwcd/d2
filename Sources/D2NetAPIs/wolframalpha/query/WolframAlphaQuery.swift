@@ -2,7 +2,7 @@ import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
 #endif
-import D2Utils
+import Utils
 
 public struct WolframAlphaQuery {
     private let url: URL

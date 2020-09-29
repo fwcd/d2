@@ -2,7 +2,7 @@
 // of types to statically determine the "pattern" of arguments
 // and can automatically generate usage examples.
 
-import D2Utils
+import Utils
 
 /**
  * A (possibly composed) command argument.

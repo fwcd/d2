@@ -1,7 +1,7 @@
 import Foundation
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 
 fileprivate func makeDateFormatter(_ format: String) -> DateFormatter {
     let formatter = DateFormatter()

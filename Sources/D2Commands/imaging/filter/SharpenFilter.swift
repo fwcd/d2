@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 public struct SharpenFilter: ImageFilter {
     public let matrices: [Matrix<Double>]

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct ChessMove: Hashable, CustomStringConvertible {
     public var pieceType: ChessPieceType?

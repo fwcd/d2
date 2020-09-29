@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public enum TicTacToeRole: String, CaseIterable, RichValueConvertible {
     case x = "x"

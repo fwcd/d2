@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /// Parses a token in UG's markup.
 ///

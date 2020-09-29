@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 func createPiece(_ pieceType: ChessPieceType) -> ChessPiece {
     switch pieceType {

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct RandomFactQuery {
     private let language: String?

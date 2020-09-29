@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 import Foundation
 
 public class Base64DecoderCommand: StringCommand {

@@ -1,7 +1,7 @@
 import Foundation
 import Logging
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
 
 fileprivate let log = Logger(label: "D2Commands.LatexRenderer")
 fileprivate let latexPrefix = "latex"

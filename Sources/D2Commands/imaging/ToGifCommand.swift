@@ -1,6 +1,7 @@
 import D2Permissions
-import D2Graphics
-import D2Utils
+import Graphics
+import GIF
+import Utils
 
 public class ToGifCommand: Command {
     public let info = CommandInfo(
@@ -26,7 +27,7 @@ public class ToGifCommand: Command {
         let quantizer = input.asText.flatMap { quantizers[$0]?(image) } ?? OctreeQuantization(fromImage: image, colorCount: gifColorCount)
         let width = image.width
         let height = image.height
-        var gif = AnimatedGif(width: width, height: height, globalQuantization: quantizer)
+        var gif = AnimatedGIF(width: width, height: height, globalQuantization: quantizer)
 
         gif.append(frame: .init(image: image, delayTime: 0))
         output.append(.gif(gif))

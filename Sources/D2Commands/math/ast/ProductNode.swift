@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 struct ProductNode: ExpressionASTNode {
     let lhs: ExpressionASTNode

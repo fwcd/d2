@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 public struct SquiggleTransform: ImageTransform {
     public enum Key: String, StringEnum {

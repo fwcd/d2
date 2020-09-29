@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import D2Utils
+import Utils
 
 public class EmojiUsageCommand: StringCommand {
     public let info = CommandInfo(

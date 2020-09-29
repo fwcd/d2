@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct RecipePuppyQuery {
     private let ingredients: [String]?

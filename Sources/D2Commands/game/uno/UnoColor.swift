@@ -1,5 +1,5 @@
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 
 public enum UnoColor: String, Hashable, CaseIterable, RichValueConvertible {
     case yellow = "yellow"

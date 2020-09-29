@@ -1,5 +1,5 @@
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 
 public class MaskCommand<M>: Command where M: ImageMask {
     public private(set) var info = CommandInfo(

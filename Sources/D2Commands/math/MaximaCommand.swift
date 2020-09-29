@@ -1,7 +1,7 @@
 import Logging
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MaximaCommand")

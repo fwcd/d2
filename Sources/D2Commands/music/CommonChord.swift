@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let majorSymbols: Set<String> = ["maj", "M"]
 fileprivate let minorSymbols: Set<String> = ["min", "m"]

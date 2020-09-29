@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 
 fileprivate let inputPattern = try! Regex(from: "(?:(?:<\\S+>)|(?:@\\S+))(?:\\s+(?:(?:<\\S+>)|(?:@\\S+)))*\\s*")
 

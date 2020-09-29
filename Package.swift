@@ -21,6 +21,9 @@ let package = Package(
         .package(url: "https://github.com/kylef/Commander.git", from: "0.9.1"),
         .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "0.0.2"),
         .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("9cb83791eda7ec9861a26a3b5ae28aded78e1932")),
+        .package(url: "https://github.com/fwcd/swift-utils.git", from: "1.0.0"),
+        .package(url: "https://github.com/fwcd/swift-graphics.git", .revision("5e5e5240ca7ff0a849c7cf6c3d57904af059f68a")),
+        .package(url: "https://github.com/fwcd/swift-gif.git", .revision("7143de87e8e7c67b4ae38d9b1da73d76a85c02c1")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
@@ -39,67 +42,51 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "D2",
-            dependencies: ["Logging", "Backtrace", "Commander", "D2Utils", "D2Handlers", "D2DiscordIO", "D2TelegramIO", "D2IRCIO"]
+            dependencies: ["Logging", "Backtrace", "Commander", "Utils", "D2Handlers", "D2DiscordIO", "D2TelegramIO", "D2IRCIO"]
         ),
         .target(
             name: "D2DiscordIO",
-            dependencies: ["Logging", "SwiftDiscord", "D2MessageIO", "D2Utils"]
+            dependencies: ["Logging", "SwiftDiscord", "D2MessageIO", "Utils"]
         ),
         .target(
             name: "D2TelegramIO",
-            dependencies: ["Logging", "Telegrammer", "Emoji", "D2MessageIO", "D2Utils"]
+            dependencies: ["Logging", "Telegrammer", "Emoji", "D2MessageIO", "Utils"]
         ),
         .target(
             name: "D2IRCIO",
-            dependencies: ["Logging", "IRC", "Emoji", "D2MessageIO", "D2Utils"]
+            dependencies: ["Logging", "IRC", "Emoji", "D2MessageIO", "Utils"]
         ),
         .target(
             name: "D2Handlers",
-            dependencies: ["Logging", "SyllableCounter", "D2Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
+            dependencies: ["Logging", "SyllableCounter", "Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["Logging", "SwiftSoup", "QRCodeGenerator", "FeedKit", "SQLite", "GraphViz", "PrologInterpreter", "PerfectSysInfo", "D2Utils", "D2MessageIO", "D2Permissions", "D2Graphics", "D2Script", "D2NetAPIs"]
+            dependencies: ["Logging", "SwiftSoup", "QRCodeGenerator", "FeedKit", "SQLite", "GraphViz", "PrologInterpreter", "PerfectSysInfo", "Utils", "D2MessageIO", "D2Permissions", "Graphics", "GIF", "D2Script", "D2NetAPIs"]
         ),
         .target(
             name: "D2Permissions",
-            dependencies: ["Logging", "D2Utils", "D2MessageIO"]
+            dependencies: ["Logging", "Utils", "D2MessageIO"]
         ),
         .target(
             name: "D2Script",
-            dependencies: ["Logging", "D2Utils"]
+            dependencies: ["Logging", "Utils"]
         ),
         .target(
             name: "D2NetAPIs",
-            dependencies: ["Logging", "D2Utils", "SwiftSoup", "Socket", "XMLCoder"]
-        ),
-        .target(
-            name: "D2Graphics",
-            dependencies: ["Logging", "D2Utils", "D2MessageIO", "Cairo"]
+            dependencies: ["Logging", "Utils", "SwiftSoup", "Socket", "XMLCoder"]
         ),
         .target(
             name: "D2MessageIO",
-            dependencies: ["Logging", "D2Utils"]
-        ),
-        .target(
-            name: "D2Utils",
-            dependencies: ["Logging", "Socket", "SwiftSoup", "SQLite"]
+            dependencies: ["Logging", "Utils", "Graphics", "GIF"]
         ),
         .testTarget(
             name: "D2CommandTests",
-            dependencies: ["D2Utils", "D2MessageIO", "D2TestUtils", "D2Commands"]
+            dependencies: ["Utils", "D2MessageIO", "D2TestUtils", "D2Commands"]
         ),
         .testTarget(
             name: "D2ScriptTests",
-            dependencies: ["D2Utils", "D2Script"]
-        ),
-        .testTarget(
-            name: "D2UtilsTests",
-            dependencies: ["D2Utils", "D2MessageIO", "D2TestUtils"]
-        ),
-        .testTarget(
-            name: "D2GraphicsTests",
-            dependencies: ["D2MessageIO", "D2TestUtils", "D2Graphics"]
+            dependencies: ["Utils", "D2Script"]
         ),
         .testTarget(
             name: "D2NetAPITests",

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /** An immutable tic-tac-toe board. */
 public struct TicTacToeBoard: RichValueConvertible {

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct CodenamesBoardModel {
     public private(set) var cards: [[Card]]

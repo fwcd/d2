@@ -3,8 +3,8 @@ import Foundation
 import Logging
 import D2Permissions
 import D2NetAPIs
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 
 fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")

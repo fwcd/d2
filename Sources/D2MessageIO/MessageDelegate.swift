@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public protocol MessageDelegate {
     func on(connect connected: Bool, client: MessageClient)

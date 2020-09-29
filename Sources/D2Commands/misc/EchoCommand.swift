@@ -1,7 +1,7 @@
 import D2Permissions
 import Foundation
 import Dispatch
-import D2Utils
+import Utils
 
 public class EchoCommand: StringCommand {
     public let info = CommandInfo(

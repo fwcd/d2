@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct MediaWikiParseQuery {
     private let host: String

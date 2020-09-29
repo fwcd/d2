@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.SongChartsCommand")

@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 
 protocol ChordRenderer {
     func render(chord: Chord) throws -> Image

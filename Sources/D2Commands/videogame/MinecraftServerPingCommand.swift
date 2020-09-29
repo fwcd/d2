@@ -1,7 +1,7 @@
 import Logging
 import Socket
 import D2MessageIO
-import D2Utils
+import Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.MinecraftServerPingCommand")

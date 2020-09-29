@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 import Emoji
 import IRC
 import Logging

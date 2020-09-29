@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let someonePattern = try! Regex(from: "@someone")
 

@@ -1,7 +1,7 @@
 import Foundation
 import FeedKit
 import D2MessageIO
-import D2Utils
+import Utils
 
 /// Presents the n most recent items as a list.
 public struct FeedListPresenter: FeedPresenter {

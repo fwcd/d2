@@ -1,8 +1,8 @@
 import Foundation
 import GraphViz
 import DOT
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
 

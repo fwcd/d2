@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 struct QuotientNode: ExpressionASTNode {
     let lhs: ExpressionASTNode

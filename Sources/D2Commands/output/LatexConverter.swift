@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 func latexOf(ndArrays: [NDArray<Rational>]) -> String {
     ndArrays.map { latexOf(ndArray: $0) }.joined(separator: " ")

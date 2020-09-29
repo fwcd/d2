@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let rawColorPattern = "(?:\(UnoColor.allCases.map { $0.rawValue }.joined(separator: "|")))"
 fileprivate let rawLabelPattern = "(?:\(UnoActionLabel.allCases.map { $0.rawValue }.joined(separator: "|")))"

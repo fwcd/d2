@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let allFlag = "--all"
 fileprivate let subcommandPattern = try! Regex(from: "^(\\w+)(?:\\s+(.+))?")

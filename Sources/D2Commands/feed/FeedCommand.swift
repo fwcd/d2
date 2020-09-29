@@ -1,7 +1,7 @@
 import Foundation
 import FeedKit
 import Dispatch
-import D2Utils
+import Utils
 
 public class FeedCommand<P>: StringCommand where P: FeedPresenter {
     public let info: CommandInfo

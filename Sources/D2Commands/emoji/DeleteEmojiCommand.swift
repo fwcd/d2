@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public class DeleteEmojiCommand: StringCommand {
     public let info = CommandInfo(

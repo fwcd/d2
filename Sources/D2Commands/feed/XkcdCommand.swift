@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import D2Utils
+import Utils
 import D2NetAPIs
 
 public class XkcdCommand: StringCommand {

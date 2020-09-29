@@ -1,5 +1,5 @@
 import Foundation
-import D2Graphics
+import Graphics
 
 public struct ChessGame: Game {
     public typealias State = ChessState

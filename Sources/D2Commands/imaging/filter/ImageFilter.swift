@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 /// A filter used for image processing.
 public protocol ImageFilter {

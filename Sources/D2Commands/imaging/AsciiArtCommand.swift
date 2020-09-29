@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 
 fileprivate let asciiShades = [
     "@", "o", ":", "-", ".", " "

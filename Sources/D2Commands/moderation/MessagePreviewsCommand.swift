@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 
 public class MessagePreviewsCommand: StringCommand {
     public let info = CommandInfo(

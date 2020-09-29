@@ -1,5 +1,5 @@
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 
 public struct SpinTransform: ImageTransform {
     public enum Key: String, StringEnum {

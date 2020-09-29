@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible {
     case team(CodenamesTeam)

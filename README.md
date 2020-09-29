@@ -139,9 +139,7 @@ This executable depends on several library targets:
     * `D2IRCIO`, the IRC/Twitch implementation
 * `D2Permissions`, permission management
 * `D2Script`, an experimental DSL that can be used to script commands
-* `D2Graphics`, 2D graphics and drawing
 * `D2NetAPIs`, client implementations of various web APIs
-* `D2Utils`, a collection of useful utilities
 
 ### D2
 The executable application. Sets up messaging backends (like Discord) and the top-level event handler (`D2Delegate`). Besides other events, the `D2Delegate` handles incoming messages and forwards them to multiple `MessageHandler`s. One of these is `CommandHandler`, which in turn parses the command and invokes the actual command.

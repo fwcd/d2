@@ -1,6 +1,6 @@
 import GraphViz
 import DOT
-import D2Graphics
+import Graphics
 
 public class GraphVizCommand: StringCommand {
     public private(set) var info = CommandInfo(

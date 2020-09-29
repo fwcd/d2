@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public class DeterminantCommand: Command {
     public let info = CommandInfo(

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let sectionTitlePattern = try! Regex(from: "=+\\s*([^=\\s]+)\\s*=+")
 

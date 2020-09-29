@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 
 public protocol Game {
     associatedtype State: GameState

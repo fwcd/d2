@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import D2Graphics
+import Graphics
 
 public class ThresholdCommand: Command {
     public let info = CommandInfo(

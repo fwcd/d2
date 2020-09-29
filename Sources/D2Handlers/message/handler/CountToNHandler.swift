@@ -1,6 +1,6 @@
 import D2Commands
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let countToNPattern = try! Regex(from: "count\\s+to\\s+(\\d+)")
 

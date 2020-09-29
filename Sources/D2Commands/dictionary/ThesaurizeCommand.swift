@@ -1,5 +1,5 @@
 import D2NetAPIs
-import D2Utils
+import Utils
 
 fileprivate let wordPattern = try! Regex(from: "\\w+|\\S+|\\s+")
 

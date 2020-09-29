@@ -1,5 +1,5 @@
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
 
 func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) -> [[Color]] {
     let height = pixels.count

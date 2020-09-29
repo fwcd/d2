@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import SwiftSoup
 
 public struct RRRatherQuery {

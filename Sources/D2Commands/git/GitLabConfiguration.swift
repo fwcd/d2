@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 struct GitLabConfiguration: Codable, DefaultInitializable {
     var serverHost: String? = nil

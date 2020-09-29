@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let spymasterMovePattern = try! Regex(from: "(\\d+)\\s+(\\w+)")
 

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let morseTable: BiDictionary<String, String> = [
     "A": ".-",

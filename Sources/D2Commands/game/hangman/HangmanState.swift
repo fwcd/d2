@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 import D2Permissions
 
 fileprivate let initialPlayerTries: Int = 10

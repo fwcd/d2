@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import SQLite
 import D2MessageIO
-import D2Utils
+import Utils
 
 fileprivate let guilds = Table("guilds")
 fileprivate let guildId = Expression<Int64>("guild_id")

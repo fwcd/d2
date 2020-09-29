@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let punctuationPattern = try! Regex(from: "[\\.!\\?]")
 

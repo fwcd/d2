@@ -1,5 +1,5 @@
-import D2Utils
-import D2Graphics
+import Utils
+import Graphics
 
 public protocol Animation: KeyParameterizable {
     init(pos: Vec2<Int>?, kvArgs: [Key: String]) throws

@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import D2Utils
+import Utils
 
 fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
 fileprivate let pingPattern = try! Regex(from: "<@&?.+?>")

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public class PrimeFactorizationCommand: StringCommand {
     public let info = CommandInfo(

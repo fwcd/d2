@@ -72,7 +72,7 @@
 		"prefix": "cardgamehand",
 		"scope": "swift",
 		"body": [
-			"import D2Utils",
+			"import Utils",
 			"",
 			"public struct $1Hand: RichValueConvertible {",
 			"\tpublic var cards: [$1Card]",
@@ -85,7 +85,7 @@
 		"prefix": "gamerole",
 		"scope": "swift",
 		"body": [
-			"import D2Utils",
+			"import Utils",
 			"",
 			"public enum $1Role: Hashable, CaseIterable, RichValueConvertible {",
 			"\tcase $2",
@@ -111,7 +111,7 @@
 		"prefix": "gamemove",
 		"scope": "swift",
 		"body": [
-			"import D2Utils",
+			"import Utils",
 			"",
 			"fileprivate let argsRegex = try! Regex(from: \"$2\")",
 			"",
@@ -132,7 +132,7 @@
 		"prefix": "gameboard",
 		"scope": "swift",
 		"body": [
-			"import D2Utils",
+			"import Utils",
 			"",
 			"public struct $1Board: RichValueConvertible {",
 			"\t$0",
@@ -161,7 +161,7 @@
 		"prefix": "chesspiece",
 		"scope": "swift",
 		"body": [
-			"import D2Utils",
+			"import Utils",
 			"",
 			"public struct $1: ChessPiece {",
 			"\tpublic let pieceType: ChessPieceType = .$2",

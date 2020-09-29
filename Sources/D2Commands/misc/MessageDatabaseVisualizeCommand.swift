@@ -1,9 +1,9 @@
 import Foundation
 import GraphViz
 import DOT
-import D2Graphics
+import Graphics
 import D2MessageIO
-import D2Utils
+import Utils
 
 public class MessageDatabaseVisualizeCommand: StringCommand {
     public private(set) var info = CommandInfo(

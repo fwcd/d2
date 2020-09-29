@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 import D2MessageIO
 import Emoji
 import Telegrammer
@@ -37,19 +37,19 @@ struct TelegramMessageClient: MessageClient {
         []
     }
 
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> D2Utils.Promise<Bool, Error> {
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> D2Utils.Promise<Bool, Error> {
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func createDM(with userId: UserID) -> D2Utils.Promise<ChannelID?, Error> {
+    func createDM(with userId: UserID) -> Utils.Promise<ChannelID?, Error> {
         // TODO
-        D2Utils.Promise(.success(nil))
+        Utils.Promise(.success(nil))
     }
 
     private func flatten(embed: Embed) -> String {
@@ -64,8 +64,8 @@ struct TelegramMessageClient: MessageClient {
             .joined(separator: "\n")
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> D2Utils.Promise<D2MessageIO.Message?, Error> {
-        D2Utils.Promise { then in
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Utils.Promise<D2MessageIO.Message?, Error> {
+        Utils.Promise { then in
             let text = [message.content, message.embed.map(flatten(embed:))]
                 .compactMap { $0?.nilIfEmpty }
                 .joined(separator: "\n")
@@ -88,52 +88,52 @@ struct TelegramMessageClient: MessageClient {
         }
     }
 
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> D2Utils.Promise<D2MessageIO.Message?, Error> {
+    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Utils.Promise<D2MessageIO.Message?, Error> {
         // TODO
-        D2Utils.Promise(.success(nil))
+        Utils.Promise(.success(nil))
     }
 
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> D2Utils.Promise<[D2MessageIO.Message], Error> {
+    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Utils.Promise<[D2MessageIO.Message], Error> {
         // TODO
-        D2Utils.Promise(.success([]))
+        Utils.Promise(.success([]))
     }
 
-    func isGuildTextChannel(_ channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
+    func isGuildTextChannel(_ channelId: ChannelID) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func isDMTextChannel(_ channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
+    func isDMTextChannel(_ channelId: ChannelID) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func triggerTyping(on channelId: ChannelID) -> D2Utils.Promise<Bool, Error> {
+    func triggerTyping(on channelId: ChannelID) -> Utils.Promise<Bool, Error> {
         // TODO
-        D2Utils.Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 
-    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> D2Utils.Promise<D2MessageIO.Message?, Error> {
+    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Utils.Promise<D2MessageIO.Message?, Error> {
         // TODO
-        D2Utils.Promise(.success(nil))
+        Utils.Promise(.success(nil))
     }
 
-    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> D2Utils.Promise<D2MessageIO.Emoji?, Error> {
+    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Utils.Promise<D2MessageIO.Emoji?, Error> {
         // TODO
         Promise(.success(nil))
     }
 
-    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> D2Utils.Promise<Bool, Error> {
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Utils.Promise<Bool, Error> {
         // TODO
         Promise(.success(false))
     }

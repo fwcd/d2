@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 struct NegationNode: ExpressionASTNode {
     let value: ExpressionASTNode

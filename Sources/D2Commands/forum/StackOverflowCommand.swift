@@ -1,7 +1,7 @@
 import D2MessageIO
 import Foundation
 import Logging
-import D2Utils
+import Utils
 import D2Permissions
 import D2NetAPIs
 

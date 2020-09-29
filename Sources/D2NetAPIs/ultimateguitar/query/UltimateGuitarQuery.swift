@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 public struct UltimateGuitarQuery<T> where T: Codable {
     private let host: String

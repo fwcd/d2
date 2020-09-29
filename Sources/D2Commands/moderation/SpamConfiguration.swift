@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import D2Utils
+import Utils
 
 public struct SpamConfiguration: Codable, DefaultInitializable {
     public var interval: TimeInterval = 30.0

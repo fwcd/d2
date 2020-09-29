@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct Knight: ChessPiece {
     public let pieceType: ChessPieceType = .knight

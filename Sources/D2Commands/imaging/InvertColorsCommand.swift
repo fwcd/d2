@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Graphics
+import Graphics
 
 public class InvertColorsCommand: Command {
     public let info = CommandInfo(

@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct FortuneCookieQuery {
     private let fortuneId: String?

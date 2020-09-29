@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct TwirlTransform: ImageTransform {
     public enum Key: String, StringEnum {

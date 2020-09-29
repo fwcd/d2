@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 import D2NetAPIs
 import D2MessageIO
 

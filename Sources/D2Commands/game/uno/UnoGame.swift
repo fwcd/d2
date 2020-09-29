@@ -1,4 +1,4 @@
-import D2Graphics
+import Graphics
 
 public struct UnoGame: Game {
     public typealias State = UnoState

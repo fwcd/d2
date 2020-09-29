@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 // Source: https://www.sqlite.org/lang_select.html
 

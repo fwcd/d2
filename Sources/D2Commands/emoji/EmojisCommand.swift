@@ -1,5 +1,5 @@
 import D2MessageIO
-import D2Utils
+import Utils
 
 public class EmojisCommand: StringCommand {
     public let info = CommandInfo(

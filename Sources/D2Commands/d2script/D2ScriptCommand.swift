@@ -5,7 +5,7 @@ import FoundationNetworking
 import Dispatch
 import Logging
 import D2MessageIO
-import D2Utils
+import Utils
 import D2Permissions
 import D2Script
 

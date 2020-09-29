@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 fileprivate let rawMensaPattern = "(?:[Mm]ensa\\s*)?"
 fileprivate let kielMensaIPattern = try! Regex(from: "\(rawMensaPattern)?[1Ii]")

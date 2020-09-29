@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 public struct BounceTransform: ImageTransform {
     private let pos: Vec2<Int>?

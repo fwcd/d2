@@ -1,6 +1,6 @@
 import D2MessageIO
-import D2Graphics
-import D2Utils
+import Graphics
+import Utils
 import QRCodeGenerator
 
 public class QRCommand: StringCommand {

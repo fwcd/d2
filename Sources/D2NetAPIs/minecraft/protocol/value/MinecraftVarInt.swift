@@ -1,5 +1,5 @@
 import Foundation
-import D2Utils
+import Utils
 
 public struct MinecraftVarInt: MinecraftProtocolValue {
     // Encoding and decoding algorithms adapted from https://wiki.vg/Protocol#VarInt_and_VarLong

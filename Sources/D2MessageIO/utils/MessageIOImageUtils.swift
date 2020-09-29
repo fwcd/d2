@@ -1,12 +1,13 @@
-import D2MessageIO
-import D2Utils
+import Utils
+import Graphics
+import GIF
 
 extension InteractiveTextChannel {
     public func send(image: Image) throws {
         send(try Message(fromImage: image))
     }
 
-    public func send(gif: AnimatedGif) throws {
+    public func send(gif: AnimatedGIF) throws {
         send(try Message(fromGif: gif))
     }
 }
@@ -18,7 +19,7 @@ extension Message {
         ], tts: false)
     }
 
-    public init(fromGif gif: AnimatedGif, name: String? = nil) throws {
+    public init(fromGif gif: AnimatedGIF, name: String? = nil) throws {
         self.init(content: "", embed: nil, files: [
             Message.FileUpload(data: try gif.encoded(), filename: name ?? "image.gif", mimeType: "image/gif")
         ], tts: false)

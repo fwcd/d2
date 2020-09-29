@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public class ReduceFractionCommand: StringCommand {
     public let info = CommandInfo(

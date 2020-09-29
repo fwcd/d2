@@ -6,7 +6,7 @@ import FoundationNetworking
 import FoundationXML
 #endif
 import Logging
-import D2Utils
+import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.UnivISQuery")
 

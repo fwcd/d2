@@ -1,4 +1,4 @@
-import D2Utils
+import Utils
 
 public struct RedditQuery {
     private let subreddit: String

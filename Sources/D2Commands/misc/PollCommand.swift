@@ -1,5 +1,5 @@
 import Logging
-import D2Utils
+import Utils
 import D2MessageIO
 import D2Permissions
 
