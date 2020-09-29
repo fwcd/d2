@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -24,10 +24,10 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-graphics.git", .revision("5e5e5240ca7ff0a849c7cf6c3d57904af059f68a")),
         .package(url: "https://github.com/fwcd/swift-gif.git", .revision("7143de87e8e7c67b4ae38d9b1da73d76a85c02c1")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
-        .package(url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
+        .package(name: "Emoji", url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
+        .package(name: "PerfectSysInfo", url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
-        .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
         // TODO: Update to an actual version number once the PR #5 is merged
         .package(url: "https://github.com/fwcd/GraphViz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef")),
@@ -41,59 +41,139 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "D2",
-            dependencies: ["Logging", "Backtrace", "Commander", "Utils", "D2Handlers", "D2DiscordIO", "D2TelegramIO", "D2IRCIO"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "Backtrace", package: "swift-backtrace"),
+                .product(name: "Commander", package: "Commander"),
+                .target(name: "D2Handlers"),
+                .target(name: "D2DiscordIO"),
+                .target(name: "D2TelegramIO"),
+                .target(name: "D2IRCIO")
+            ]
         ),
         .target(
             name: "D2DiscordIO",
-            dependencies: ["Logging", "SwiftDiscord", "D2MessageIO", "Utils"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "SwiftDiscord", package: "SwiftDiscord"),
+                .target(name: "D2MessageIO")
+            ]
         ),
         .target(
             name: "D2TelegramIO",
-            dependencies: ["Logging", "Telegrammer", "Emoji", "D2MessageIO", "Utils"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "Emoji", package: "Emoji"),
+                .target(name: "D2MessageIO")
+            ]
         ),
         .target(
             name: "D2IRCIO",
-            dependencies: ["Logging", "IRC", "Emoji", "D2MessageIO", "Utils"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "IRC", package: "swift-nio-irc-client"),
+                .product(name: "Emoji", package: "Emoji"),
+                .target(name: "D2MessageIO")
+            ]
         ),
         .target(
             name: "D2Handlers",
-            dependencies: ["Logging", "SyllableCounter", "Utils", "D2MessageIO", "D2Permissions", "D2Commands"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "SyllableCounter", package: "syllable-counter-swift"),
+                .target(name: "D2MessageIO"),
+                .target(name: "D2Permissions"),
+                .target(name: "D2Commands")
+            ]
         ),
         .target(
             name: "D2Commands",
-            dependencies: ["Logging", "SwiftSoup", "QRCodeGenerator", "FeedKit", "SQLite", "GraphViz", "PrologInterpreter", "PerfectSysInfo", "Utils", "D2MessageIO", "D2Permissions", "Graphics", "GIF", "D2Script", "D2NetAPIs"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "QRCodeGenerator", package: "swift-qrcode-generator"),
+                .product(name: "PrologInterpreter", package: "swift-prolog"),
+                .product(name: "Graphics", package: "swift-graphics"),
+                .product(name: "GIF", package: "swift-gif"),
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+                .product(name: "FeedKit", package: "FeedKit"),
+                .product(name: "SQLite", package: "SQLite.swift"),
+                .product(name: "GraphViz", package: "GraphViz"),
+                .product(name: "PerfectSysInfo", package: "PerfectSysInfo"),
+                .target(name: "D2MessageIO"),
+                .target(name: "D2Permissions"),
+                .target(name: "D2Script"),
+                .target(name: "D2NetAPIs")
+            ]
         ),
         .target(
             name: "D2Permissions",
-            dependencies: ["Logging", "Utils", "D2MessageIO"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .target(name: "D2MessageIO")
+            ]
         ),
         .target(
             name: "D2Script",
-            dependencies: ["Logging", "Utils"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils")
+            ]
         ),
         .target(
             name: "D2NetAPIs",
-            dependencies: ["Logging", "Utils", "SwiftSoup", "Socket", "XMLCoder"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+                .product(name: "XMLCoder", package: "XMLCoder")
+            ]
         ),
         .target(
             name: "D2MessageIO",
-            dependencies: ["Logging", "Utils", "Graphics", "GIF"]
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Utils", package: "swift-utils"),
+                .product(name: "Graphics", package: "swift-graphics"),
+                .product(name: "GIF", package: "swift-gif")
+            ]
         ),
         .testTarget(
             name: "D2CommandTests",
-            dependencies: ["Utils", "D2MessageIO", "D2TestUtils", "D2Commands"]
+            dependencies: [
+                .product(name: "Utils", package: "swift-utils"),
+                .target(name: "D2TestUtils"),
+                .target(name: "D2MessageIO"),
+                .target(name: "D2Commands")
+            ]
         ),
         .testTarget(
             name: "D2ScriptTests",
-            dependencies: ["Utils", "D2Script"]
+            dependencies: [
+                .product(name: "Utils", package: "swift-utils"),
+                .target(name: "D2Script")
+            ]
         ),
         .testTarget(
             name: "D2NetAPITests",
-            dependencies: ["D2MessageIO", "D2TestUtils", "D2NetAPIs"]
+            dependencies: [
+                .target(name: "D2MessageIO"),
+                .target(name: "D2TestUtils"),
+                .target(name: "D2NetAPIs")
+            ]
         ),
         .testTarget(
             name: "D2TestUtils",
-            dependencies: ["D2MessageIO", "D2Commands"]
+            dependencies: [
+                .target(name: "D2MessageIO"),
+                .target(name: "D2Commands")
+            ]
         )
     ]
 )
