@@ -1,6 +1,7 @@
 import Foundation
 import D2MessageIO
 import D2NetAPIs
+import Utils
 
 public class RecipeCommand: StringCommand {
     public let info = CommandInfo(

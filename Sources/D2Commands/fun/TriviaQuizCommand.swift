@@ -1,5 +1,6 @@
 import D2NetAPIs
 import D2MessageIO
+import Utils
 
 public class TriviaQuizCommand: StringCommand {
     public let info = CommandInfo(

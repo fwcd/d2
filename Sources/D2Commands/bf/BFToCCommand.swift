@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2Permissions
+import Utils
 
 public class BFToCCommand: StringCommand {
     public let info = CommandInfo(

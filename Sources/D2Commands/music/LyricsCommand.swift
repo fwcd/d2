@@ -1,6 +1,7 @@
 import Foundation
 import D2MessageIO
 import D2NetAPIs
+import Utils
 
 public class LyricsCommand: StringCommand {
     public private(set) var info = CommandInfo(

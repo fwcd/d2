@@ -1,3 +1,5 @@
+import Utils
+
 fileprivate let inventoryCategory = "Cookies"
 
 public class CookieCommand: Command {

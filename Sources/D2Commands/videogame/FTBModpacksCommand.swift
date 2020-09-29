@@ -1,6 +1,7 @@
 import Foundation
 import D2MessageIO
 import D2NetAPIs
+import Utils
 
 public class FTBModpacksCommand: StringCommand {
     public let info = CommandInfo(

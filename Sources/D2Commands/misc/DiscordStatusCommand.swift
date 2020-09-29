@@ -1,5 +1,6 @@
 import D2NetAPIs
 import D2MessageIO
+import Utils
 
 public class DiscordStatusCommand: StringCommand {
     public let info = CommandInfo(

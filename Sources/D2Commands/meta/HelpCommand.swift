@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2Permissions
+import Utils
 
 public class HelpCommand: StringCommand {
     public let info = CommandInfo(

@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2NetAPIs
+import Utils
 
 public class ThesaurusCommand: StringCommand {
     public let info = CommandInfo(
