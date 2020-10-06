@@ -31,7 +31,7 @@ public class AvatarCommand: Command {
             scheme: "https",
             host: "cdn.discordapp.com",
             path: "/avatars/\(user.id)/\(user.avatar).png",
-            query: ["size": "256"]
+            query: ["size": "512"]
         ) }
             .then { $0.runAsync() }
             .listen {
