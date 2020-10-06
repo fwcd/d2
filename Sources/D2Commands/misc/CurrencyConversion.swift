@@ -8,7 +8,7 @@ public struct CurrencyConversion: Bijection {
     private let dest: String
     private var exchangeRate: Double { (Self.exchangeRates?.rates[source] ?? 1) / (Self.exchangeRates?.rates[dest] ?? 1) }
 
-    public init(from source: String, to dest: String) {
+    public init(from source: String = "EUR", to dest: String) {
         self.source = source
         self.dest = dest
     }
