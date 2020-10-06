@@ -32,7 +32,7 @@ public class ServerInfoCommand: StringCommand {
                     .compactMap { (k, v) in v.map { "\(k): \($0)" } }
                     .joined(separator: "\n")
                     .nilIfEmpty
-                    ?? "_none_", inline: true) }
+                    ?? "_none_", inline: false) }
         ))
     }
 
