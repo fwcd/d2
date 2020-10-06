@@ -24,7 +24,8 @@ public class LinePlotCommand: Command {
 
         let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
-        graph.addSeries(columns[0], columns[1], label: "Plot", color: .lightBlue)
+        graph.addSeries(columns[0], columns[1], label: "Plot", color: .blue)
+        graph.plotLineThickness = 3
         graph.drawGraph(renderer: renderer)
 
         guard let data = Data(base64Encoded: renderer.base64Png()), let image = try? Image(fromPng: data) else {
