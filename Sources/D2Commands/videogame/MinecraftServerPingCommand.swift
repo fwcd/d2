@@ -33,7 +33,7 @@ public class MinecraftServerPingCommand: StringCommand {
                         Embed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
                         Embed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n") ?? "_no information_"),
                         Embed.Field(name: "Version", value: serverInfo.version.name),
-                        Embed.Field(name: "Mods", value: modCount.map { "\($0) \("mod".pluralize(with: $0))" } ?? "_vanilla_")
+                        Embed.Field(name: "Mods", value: modCount.map { "\($0) \("mod".pluralized(with: $0))" } ?? "_vanilla_")
                     ]
                 ))
             } else {

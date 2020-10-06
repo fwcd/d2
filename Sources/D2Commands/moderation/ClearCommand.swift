@@ -52,9 +52,9 @@ public class ClearCommand: StringCommand {
             let grouped = Dictionary(grouping: intended, by: { $0.author?.username ?? "<unnamed>" })
 
             output.append(Embed(
-                title: ":warning: You are about to DELETE \(intended.count) \("message".pluralize(with: intended.count))",
+                title: ":warning: You are about to DELETE \(intended.count) \("message".pluralized(with: intended.count))",
                 description: """
-                    \(grouped.map { "\($0.1.count) \("message".pluralize(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
+                    \(grouped.map { "\($0.1.count) \("message".pluralized(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
 
                     Are you sure? Enter `\(confirmationString)` to confirm (any other message will cancel).
                     """
@@ -70,7 +70,7 @@ public class ClearCommand: StringCommand {
             preparedDeletions[channel.id] = nil
 
             if content == confirmationString {
-                log.notice("Deleting \(intendedDeletionCount) \("message".pluralize(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralize(with: confirmationDeletionCount))")
+                log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
                 if deletions.count == 1, let messageId = deletions.first?.message.id {
                     client.deleteMessage(messageId, on: channel.id).listenOrLogError { success in
                         if success {

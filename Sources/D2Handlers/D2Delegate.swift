@@ -126,6 +126,7 @@ public class D2Delegate: MessageDelegate {
         registry["transpose"] = TransposeCommand()
         registry["solvelinearsystem", aka: ["solvelinear"]] = SolveLinearSystemCommand()
         registry["solvequadratic"] = SolveQuadraticEquationCommand()
+        registry["shape"] = ShapeCommand()
         registry["maxima"] = MaximaCommand()
         registry["integral"] = IntegralCalculatorCommand()
         registry["translate"] = TranslateCommand()
@@ -248,6 +249,8 @@ public class D2Delegate: MessageDelegate {
         registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
         registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
         registry["messagedbvisualize"] = MessageDatabaseVisualizeCommand(messageDB: messageDB)
+        registry["messagedbchannelactivity", aka: ["channelactivity"]] = MessageDatabaseChannelActivityCommand(messageDB: messageDB)
+        registry["lineplot", aka: ["linegraph", "plot"]] = LinePlotCommand()
         registry["shell"] = ShellCommand()
         registry["upload"] = UploadCommand()
         registry["download"] = DownloadCommand()
@@ -326,7 +329,7 @@ public class D2Delegate: MessageDelegate {
 
     public func on(receiveReady: [String: Any], client: MessageClient) {
         let guildCount = client.guilds?.count ?? 0
-        log.info("Received ready! \(guildCount) \("guild".pluralize(with: guildCount)) found.")
+        log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
         client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
         eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?

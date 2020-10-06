@@ -41,7 +41,7 @@ public class WebcamCommand: StringCommand {
                             description: webcams
                                 .map { "**\($0.title)**: \($0.status) - id: \($0.id)" }
                                 .joined(separator: "\n")
-                                .truncate(1800, appending: "...")
+                                .truncated(to: 1800, appending: "...")
                         ))
                     } catch {
                         output.append(error, errorText: "Could not query nearby webcams")

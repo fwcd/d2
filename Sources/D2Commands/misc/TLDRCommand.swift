@@ -42,7 +42,7 @@ public class TLDRCommand: StringCommand {
         let tldrChannelName = parsedArgs[2].nilIfEmpty.map { ID($0, clientName: client.name) } ?? channelId
 
         guard messageCount <= maxMessageCount else {
-            output.append(errorText: "More than \(maxMessageCount) \("message".pluralize(with: maxMessageCount)) messages are currently not supported")
+            output.append(errorText: "More than \(maxMessageCount) \("message".pluralized(with: maxMessageCount)) messages are currently not supported")
             return
         }
 
@@ -55,7 +55,7 @@ public class TLDRCommand: StringCommand {
             let summary = self.summarize(sentences: sentences, summarySentenceCount: min(self.maxSentenceCount, messageCount / 2))
 
             output.append(Embed(
-                title: "TL;DR of the last \(messageCount) \("message".pluralize(with: messageCount))",
+                title: "TL;DR of the last \(messageCount) \("message".pluralized(with: messageCount))",
                 description: summary.joined(separator: " [...] ").nilIfEmpty
             ))
         }

@@ -9,16 +9,20 @@ public typealias EmojiID = ID
 public typealias GuildID = ID
 public typealias OverwriteID = ID
 
-public let dummyId: ID = ID("", clientName: "Dummy")
+public let dummyId: ID = ID("")
 
 /**
  * A container for a type-erased ID.
  */
-public struct ID: Hashable, Codable, CustomStringConvertible {
+public struct ID: Hashable, Codable, LosslessStringConvertible {
     public let value: String
     public let clientName: String
 
     public var description: String { "\(value)" }
+
+    public init(_ value: String) {
+        self.init(value, clientName: "Dummy")
+    }
 
     public init(_ value: String, clientName: String) {
         self.value = value

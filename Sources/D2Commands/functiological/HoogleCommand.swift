@@ -47,13 +47,13 @@ public class HoogleCommand: StringCommand {
                                     ?? "_no docs_"
                             )
                         }).map { (key, results) in
-                            let name = try self.converter.plainTextOf(htmlFragment: key.item).truncate(250, appending: "...")
+                            let name = try self.converter.plainTextOf(htmlFragment: key.item).truncated(to: 250, appending: "...")
                             let modules = results
                                 .grouped(by: \.package)
-                                .map { "\($0.0?.markdown ?? "?") \($0.1.map { $0.module?.markdown ?? "?" }.truncate(4, appending: "...").joined(separator: " "))" }
-                                .truncate(3, appending: "...")
+                                .map { "\($0.0?.markdown ?? "?") \($0.1.map { $0.module?.markdown ?? "?" }.truncated(to: 4, appending: "...").joined(separator: " "))" }
+                                .truncated(to: 3, appending: "...")
                                 .joined(separator: ", ")
-                            let doc = key.renderedDoc.truncate(1000 - modules.count, appending: "...")
+                            let doc = key.renderedDoc.truncated(to: 1000 - modules.count, appending: "...")
                             return Embed.Field(
                                 name: "`\(name)`",
                                 value: """

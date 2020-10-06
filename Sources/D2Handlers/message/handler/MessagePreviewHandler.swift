@@ -34,7 +34,7 @@ public struct MessagePreviewHandler: MessageHandler {
             client.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId)).listenOrLogError { messages in
                 if let message = messages.first {
                     client.sendMessage(Message(embed: Embed(
-                        title: message.content.truncate(200, appending: "..."),
+                        title: message.content.truncated(to: 200, appending: "..."),
                         author: message.author.map { Embed.Author(
                             name: $0.username,
                             iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\($0.id)/\($0.avatar).png?size=64")

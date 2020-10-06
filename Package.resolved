@@ -20,15 +20,6 @@
         }
       },
       {
-        "package": "Cairo",
-        "repositoryURL": "https://github.com/PureSwift/Cairo.git",
-        "state": {
-          "branch": null,
-          "revision": "b5f867a56a20d2f0064ccb975ae4a669b374e9e0",
-          "version": null
-        }
-      },
-      {
         "package": "Commander",
         "repositoryURL": "https://github.com/kylef/Commander.git",
         "state": {
@@ -71,15 +62,6 @@
           "branch": null,
           "revision": "68493a33d862c33c9a9f67ec729b3b7df1b20ade",
           "version": "9.1.2"
-        }
-      },
-      {
-        "package": "GraphViz",
-        "repositoryURL": "https://github.com/fwcd/GraphViz.git",
-        "state": {
-          "branch": null,
-          "revision": "1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef",
-          "version": null
         }
       },
       {
@@ -155,11 +137,20 @@
         }
       },
       {
+        "package": "Cairo",
+        "repositoryURL": "https://github.com/fwcd/swift-cairo.git",
+        "state": {
+          "branch": null,
+          "revision": "6aaae4301a6ee611bb3977547bbef62d3e4c9ac8",
+          "version": null
+        }
+      },
+      {
         "package": "swift-gif",
         "repositoryURL": "https://github.com/fwcd/swift-gif.git",
         "state": {
           "branch": null,
-          "revision": "7143de87e8e7c67b4ae38d9b1da73d76a85c02c1",
+          "revision": "c246b3e01ad7df3c7543d41115a0290b41919db9",
           "version": null
         }
       },
@@ -168,7 +159,16 @@
         "repositoryURL": "https://github.com/fwcd/swift-graphics.git",
         "state": {
           "branch": null,
-          "revision": "5e5e5240ca7ff0a849c7cf6c3d57904af059f68a",
+          "revision": "19a7abdbbc5af8f55fb0d1e27a5d03c336f54779",
+          "version": null
+        }
+      },
+      {
+        "package": "GraphViz",
+        "repositoryURL": "https://github.com/fwcd/swift-graphviz.git",
+        "state": {
+          "branch": null,
+          "revision": "1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef",
           "version": null
         }
       },
@@ -258,7 +258,7 @@
         "repositoryURL": "https://github.com/fwcd/swift-utils.git",
         "state": {
           "branch": null,
-          "revision": "5a321a3dad471284e2b8282286f8df291edcd0eb",
+          "revision": "b68ef50b209562195ad33693564baaeb7574d809",
           "version": null
         }
       },
@@ -269,6 +269,15 @@
           "branch": null,
           "revision": "c1e527ae9f3e9057600dec6292f40703d126caac",
           "version": null
+        }
+      },
+      {
+        "package": "SwiftPlot",
+        "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
+        "state": {
+          "branch": null,
+          "revision": "c5424eb8688217029d44e941d3a1d2ccc18c3a82",
+          "version": "2.0.0"
         }
       },
       {

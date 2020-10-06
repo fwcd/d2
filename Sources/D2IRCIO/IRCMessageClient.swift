@@ -73,7 +73,7 @@ struct IRCMessageClient: MessageClient {
             .compactMap { $0?.nilIfEmpty }
             .joined(separator: ", ")
             .emojiUnescapedString
-            .truncate(480, appending: "...")
+            .truncated(to: 480, appending: "...")
 
         text = mentionPattern.replace(in: text, with: "@mention")
 

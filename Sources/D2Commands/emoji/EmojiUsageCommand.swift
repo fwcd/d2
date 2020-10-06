@@ -53,7 +53,7 @@ public class EmojiUsageCommand: StringCommand {
 
     private func format(emojis: [(emoji: Emoji, count: Int)]) -> String {
         emojis
-            .compactMap { (emoji, count) in emoji.id.map { "<\(emoji.animated ? "a" : ""):\(emoji.name):\($0)> was used \(count) \("time".pluralize(with: count))" } }
+            .compactMap { (emoji, count) in emoji.id.map { "<\(emoji.animated ? "a" : ""):\(emoji.name):\($0)> was used \(count) \("time".pluralized(with: count))" } }
             .joined(separator: "\n")
     }
 }

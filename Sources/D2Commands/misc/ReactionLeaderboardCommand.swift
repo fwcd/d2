@@ -43,7 +43,7 @@ public class ReactionLeaderboardCommand: Command {
                         : try messageDB.countReactions(authorId: $0.id, emojiName: emojiName), $0.username) }
                     .filter { $0.0 > 0 }
                     .sorted(by: descendingComparator { $0.0 })
-                    .map { "**\($0.1)**: \($0.0) \(name.pluralize(with: $0.0))" }
+                    .map { "**\($0.1)**: \($0.0) \(name.pluralized(with: $0.0))" }
                     .prefix(20)
                     .joined(separator: "\n")
                     .nilIfEmpty
