@@ -102,7 +102,7 @@ public class ServerInfoCommand: StringCommand {
         let mostUsedRole: String?
 
         if let (mostUsedRoleId, mostUsedRoleCount) = roleCounts.max(by: ascendingComparator(comparing: \.value)) {
-            mostUsedRole = "`\(guild.roles[mostUsedRoleId]?.name ?? "?")` with \(mostUsedRoleCount) members"
+            mostUsedRole = "`\(guild.roles[mostUsedRoleId]?.name ?? "?")` with \(mostUsedRoleCount) \("member".pluralized(with: mostUsedRoleCount))"
         } else {
             mostUsedRole = nil
         }
