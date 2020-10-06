@@ -9,7 +9,7 @@ fileprivate let substitutions: [Character: Character] = [
     "I": "!"
 ]
 
-public class LeetCommand: StringCommand {
+public class LeetSpeakCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Converts text into leetspeak",
