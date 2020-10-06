@@ -248,6 +248,7 @@ public class D2Delegate: MessageDelegate {
         registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
         registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
         registry["messagedbvisualize"] = MessageDatabaseVisualizeCommand(messageDB: messageDB)
+        registry["messagedbchannelactivity", aka: ["channelactivity"]] = MessageDatabaseChannelActivityCommand(messageDB: messageDB)
         registry["shell"] = ShellCommand()
         registry["upload"] = UploadCommand()
         registry["download"] = DownloadCommand()
