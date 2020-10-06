@@ -25,15 +25,13 @@ let package = Package(
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
         .package(name: "Emoji", url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
         .package(name: "PerfectSysInfo", url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
+        .package(name: "SwiftPlot", url: "https://github.com/KarthikRIyer/swiftplot.git", from: "2.0.0"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
         // TODO: Update to an actual version number once the PR #5 is merged
         .package(url: "https://github.com/fwcd/GraphViz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef")),
         .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("1c677a1bc7ffc96843e9cd7ca2a619c34e8158b0")),
-        .package(url: "https://github.com/KarthikRIyer/swiftplot.git", from: "2.0.0"),
-        // TODO: Integrate swiftplot, this is however blocked on https://bugs.swift.org/browse/SR-679
-        //       due to a dependency target collision (CFreeType)
         .package(url: "https://github.com/nmdias/FeedKit.git", from: "9.1.2")
     ],
     targets: [
@@ -106,6 +104,7 @@ let package = Package(
                 .product(name: "SQLite", package: "SQLite.swift"),
                 .product(name: "GraphViz", package: "GraphViz"),
                 .product(name: "PerfectSysInfo", package: "PerfectSysInfo"),
+                .product(name: "SwiftPlot", package: "SwiftPlot"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),
