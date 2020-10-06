@@ -179,8 +179,8 @@ public class ServerInfoCommand: StringCommand {
                 ("Longest Username", "`\(longestUsername ?? "?")`"),
                 ("Most Roles", "\(mostRoles.count) \("role".pluralized(with: mostRoles.count)) by `\(mostRolesUsername)`"),
                 ("Most Used Role", mostUsedRole),
-                ("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
-                ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralized(with: mostPlayed?.1.count ?? 0))")
+                ("Longest Play Time", "`\(longestPlayTimeUsername)` playing `\(longestPlayTimeGame)` for \(longestPlayTime.displayString)"),
+                ("Currently Most Played Game", "`\(mostPlayed?.0 ?? "None")` by \(mostPlayed?.1.count ?? 0) \("player".pluralized(with: mostPlayed?.1.count ?? 0))")
             ]),
             (":incoming_envelope: Messages", [
                 ("Longest Message", longestMessage),
