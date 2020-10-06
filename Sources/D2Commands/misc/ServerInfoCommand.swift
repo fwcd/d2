@@ -40,6 +40,7 @@ public class ServerInfoCommand: StringCommand {
         var memberCount: Int = 0
         var userCount: Int = 0
         var botCount: Int = 0
+        var shortestUsername: String? = nil
         var longestUsername: String? = nil
         var mostRolesUsername: String = "?"
         var mostRoles: [String] = []
@@ -57,6 +58,9 @@ public class ServerInfoCommand: StringCommand {
                 botCount += 1
             } else {
                 userCount += 1
+            }
+            if user.username.count < (shortestUsername?.count ?? Int.max) {
+                shortestUsername = user.username
             }
             if user.username.count > (longestUsername?.count ?? 0) {
                 longestUsername = user.username
@@ -159,6 +163,7 @@ public class ServerInfoCommand: StringCommand {
                 ("Text Channels", "`\(textChannelCount)`"),
             ]),
             (":triangular_flag_on_post: Highscores", [
+                ("Shortest Username", "`\(shortestUsername ?? "?")`"),
                 ("Longest Username", "`\(longestUsername ?? "?")`"),
                 ("Most Roles", "\(mostRoles.count) \("role".pluralized(with: mostRoles.count)) by `\(mostRolesUsername)`"),
                 ("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
