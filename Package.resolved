@@ -65,15 +65,6 @@
         }
       },
       {
-        "package": "GraphViz",
-        "repositoryURL": "https://github.com/fwcd/GraphViz.git",
-        "state": {
-          "branch": null,
-          "revision": "1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef",
-          "version": null
-        }
-      },
-      {
         "package": "LineNoise",
         "repositoryURL": "https://github.com/andybest/linenoise-swift.git",
         "state": {
@@ -169,6 +160,15 @@
         "state": {
           "branch": null,
           "revision": "19a7abdbbc5af8f55fb0d1e27a5d03c336f54779",
+          "version": null
+        }
+      },
+      {
+        "package": "GraphViz",
+        "repositoryURL": "https://github.com/fwcd/swift-graphviz.git",
+        "state": {
+          "branch": null,
+          "revision": "1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef",
           "version": null
         }
       },
