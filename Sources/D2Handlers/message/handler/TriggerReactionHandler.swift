@@ -7,8 +7,10 @@ public struct TriggerReactionHandler: MessageHandler {
 
     public init(keywords: [String: String] = [
         "hello": "👋",
-        "hmmmmm": "🤔",
-        "hai": "🦈"
+        "hmmm": "🤔",
+        "hai": "🦈",
+        "spooky": "🎃",
+        "ghost": "👻"
     ]) {
         self.keywords = keywords
     }
