@@ -27,6 +27,11 @@ public class LinePlotCommand: Command {
             columns.insert(indices, at: 0)
         }
 
+        guard columns[0].count > 1 else {
+            output.append(errorText: "2 or more data points are needed!")
+            return
+        }
+
         let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         graph.addSeries(columns[0], columns[1], label: "Plot", color: .blue)
