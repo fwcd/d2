@@ -138,22 +138,22 @@ public class ServerInfoCommand: StringCommand {
 
         return [
             (":island: General", [
-                ("Owner", guild.members[guild.ownerId]?.displayName ?? "?"),
-                ("Region", guild.region),
-                ("Created at", (guild.members[guild.ownerId]?.joinedAt).map(dateFormatter.string(from:))),
-                ("MFA Level", String(guild.mfaLevel)),
-                ("Verification Level", String(guild.verificationLevel)),
-                ("ID", "\(guild.id)")
+                ("Owner", "`\(guild.members[guild.ownerId]?.displayName ?? "?")`"),
+                ("Region", "`\(guild.region)`"),
+                ("Created at", "`\((guild.members[guild.ownerId]?.joinedAt).map(dateFormatter.string(from:)) ?? "?")`"),
+                ("MFA Level", "`\(guild.mfaLevel)`"),
+                ("Verification Level", "`\(guild.verificationLevel)`"),
+                ("ID", "`\(guild.id)`")
             ]),
             (":tophat: Counts", [
-                ("Members", String(memberCount)),
-                ("Users", String(userCount)),
-                ("Bots", String(botCount)),
-                ("Voice Channels", String(voiceChannelCount)),
-                ("Text Channels", String(textChannelCount)),
+                ("Members", "`\(memberCount)`"),
+                ("Users", "`\(userCount)`"),
+                ("Bots", "`\(botCount)`"),
+                ("Voice Channels", "`\(voiceChannelCount)`"),
+                ("Text Channels", "`\(textChannelCount)`"),
             ]),
             (":triangular_flag_on_post: Highscores", [
-                ("Longest Username", longestUsername),
+                ("Longest Username", "`\(longestUsername ?? "?")`"),
                 ("Most Roles", "\(mostRoles.count) \("role".pluralized(with: mostRoles.count)) by `\(mostRolesUsername)`"),
                 ("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
                 ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralized(with: mostPlayed?.1.count ?? 0))")
