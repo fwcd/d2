@@ -1,9 +1,12 @@
+import Utils
+
 public class MessageDatabaseChannelActivityCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Queries the messages from a channel on the current guild",
         requiredPermissionLevel: .vip
     )
+    public let outputValueType: RichValueType = .ndArrays
     private let messageDB: MessageDatabase
 
     public init(messageDB: MessageDatabase) {
@@ -22,16 +25,17 @@ public class MessageDatabaseChannelActivityCommand: StringCommand {
 
         do {
             let sql = """
-                select strftime("%d-%m-%Y", timestamp) as day, count(*)
+                select count(*)
                 from messages natural join channels
                 where guild_id == ?
                   and channel_name == ?
-                group by day
+                group by strftime("%d-%m-%Y", timestamp)
                 order by timestamp desc
                 """
             let result = try messageDB.prepare(sql, String(guildId), input)
-                .map { $0.map { $0.map { "\($0)" } ?? "?" } }
-            output.append(.table(result))
+                .map { $0.map { $0.flatMap { Rational("\($0)") } ?? 0 } }
+            let matrix = Matrix(result)
+            output.append(.ndArrays([matrix.asNDArray]))
         } catch {
             output.append(error, errorText: "Could not query message database")
         }
