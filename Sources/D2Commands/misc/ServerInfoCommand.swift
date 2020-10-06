@@ -32,7 +32,7 @@ public class ServerInfoCommand: StringCommand {
                     .compactMap { (k, v) in v.map { "\(k): \($0)" } }
                     .joined(separator: "\n")
                     .nilIfEmpty
-                    ?? "_none_", inline: false) }
+                    ?? "_none_", inline: true) }
         ))
     }
 
@@ -44,6 +44,7 @@ public class ServerInfoCommand: StringCommand {
         var longestUsername: String? = nil
         var mostRolesUsername: String = "?"
         var mostRoles: [String] = []
+        var roleCounts: [RoleID: Int] = [:]
         var voiceChannelCount: Int = 0
         var textChannelCount: Int = 0
         var presences: [Presence] = []
@@ -70,6 +71,9 @@ public class ServerInfoCommand: StringCommand {
                 // TODO: Proper roles API in MessageIO guild structures
                 mostRoles = member.roleIds.compactMap { guild.roles[$0]?.name }
             }
+            for roleId in member.roleIds {
+                roleCounts[roleId] = (roleCounts[roleId] ?? 0) + 1
+            }
         }
 
         for (_, channel) in guild.channels {
@@ -94,6 +98,14 @@ public class ServerInfoCommand: StringCommand {
 
         let mostPlayed = Dictionary(grouping: presences.filter { $0.game != nil }, by: { $0.game?.name ?? "" })
             .max { $0.1.count < $1.1.count }
+
+        let mostUsedRole: String?
+
+        if let (mostUsedRoleId, mostUsedRoleCount) = roleCounts.max(by: ascendingComparator(comparing: \.value)) {
+            mostUsedRole = "`\(guild.roles[mostUsedRoleId]?.name ?? "?")` with \(mostUsedRoleCount) members"
+        } else {
+            mostUsedRole = nil
+        }
 
         let longestMessage = try? messageDB.prepare("""
             select content, user_name
@@ -166,6 +178,7 @@ public class ServerInfoCommand: StringCommand {
                 ("Shortest Username", "`\(shortestUsername ?? "?")`"),
                 ("Longest Username", "`\(longestUsername ?? "?")`"),
                 ("Most Roles", "\(mostRoles.count) \("role".pluralized(with: mostRoles.count)) by `\(mostRolesUsername)`"),
+                ("Most Used Role", mostUsedRole),
                 ("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
                 ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralized(with: mostPlayed?.1.count ?? 0))")
             ]),
