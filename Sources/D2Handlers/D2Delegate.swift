@@ -126,6 +126,7 @@ public class D2Delegate: MessageDelegate {
         registry["transpose"] = TransposeCommand()
         registry["solvelinearsystem", aka: ["solvelinear"]] = SolveLinearSystemCommand()
         registry["solvequadratic"] = SolveQuadraticEquationCommand()
+        registry["shape"] = ShapeCommand()
         registry["maxima"] = MaximaCommand()
         registry["integral"] = IntegralCalculatorCommand()
         registry["translate"] = TranslateCommand()
