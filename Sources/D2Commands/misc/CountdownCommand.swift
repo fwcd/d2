@@ -111,7 +111,7 @@ public class CountdownCommand: StringCommand {
         let hours = date.hour!
         let minutes = date.minute!
 
-        return "\(days) \("day".pluralize(with: days)), \(hours) \("hour".pluralize(with: hours)) and \(minutes) \("minute".pluralize(with: minutes))"
+        return "\(days) \("day".pluralized(with: days)), \(hours) \("hour".pluralized(with: hours)) and \(minutes) \("minute".pluralized(with: minutes))"
     }
 
     private func removeCompletedGoals() {

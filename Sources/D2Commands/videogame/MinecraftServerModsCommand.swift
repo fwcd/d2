@@ -23,7 +23,7 @@ public class MinecraftServerModsCommand: StringCommand {
                     title: "Minecraft Server Mods at `\(host)\(port.map { ":\($0)" } ?? "")`",
                     description: modList
                         .joined(separator: "\n")
-                        .truncate(1800, appending: "\n...and more")
+                        .truncated(to: 1800, appending: "\n...and more")
                         .nilIfEmpty ?? "_vanilla_"
                 ))
             }

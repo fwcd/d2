@@ -74,12 +74,12 @@ public class WolframAlphaCommand: StringCommand {
                     footer: Embed.Footer(text: "success: \(result.success.map { String($0) } ?? "?"), error: \(result.error.map { String($0) } ?? "?"), timing: \(result.timing.map { String($0) } ?? "?")"),
                     fields: result.pods.map { pod in Embed.Field(
                         // TODO: Investigate why Discord sends 400s for certain queries
-                        name: pod.title?.nilIfEmpty?.truncate(50, appending: "...") ?? "Untitled pod",
-                        value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncate(1000, appending: "...")
+                        name: pod.title?.nilIfEmpty?.truncated(to: 50, appending: "...") ?? "Untitled pod",
+                        value: pod.subpods.map { "\($0.title?.nilIfEmpty.map { "**\($0)** " } ?? "")\($0.plaintext ?? "")" }.joined(separator: "\n").truncated(to: 1000, appending: "...")
                             .trimmingCharacters(in: .whitespacesAndNewlines)
                             .nilIfEmpty
                             ?? "No content"
-                    ) }.truncate(6)
+                    ) }.truncated(to: 6)
                 ))
             } catch {
                 output.append(error, errorText: "An error occurred while querying WolframAlpha.")

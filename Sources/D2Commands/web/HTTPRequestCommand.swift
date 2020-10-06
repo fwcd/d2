@@ -47,7 +47,7 @@ public class HTTPRequestCommand: Command {
             .then { $0.fetchUTF8Async() }
             .listen {
                 do {
-                    let response = try $0.get().truncate(1500, appending: "...")
+                    let response = try $0.get().truncated(to: 1500, appending: "...")
                     output.append(.code(response, language: nil))
                 } catch {
                     output.append(error, errorText: "Error while performing request")

@@ -328,7 +328,7 @@ public class D2Delegate: MessageDelegate {
 
     public func on(receiveReady: [String: Any], client: MessageClient) {
         let guildCount = client.guilds?.count ?? 0
-        log.info("Received ready! \(guildCount) \("guild".pluralize(with: guildCount)) found.")
+        log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
         client.setPresence(PresenceUpdate(game: Presence.Activity(name: initialPresence ?? "\(commandPrefix)help", type: .listening)))
         eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?

@@ -18,7 +18,7 @@ public class MessageDatabaseCommand: StringCommand {
         subcommands = [
             "generateMarkovTransitions": { [unowned self] output, _ throws in
                 let count = try self.messageDB.generateMarkovTransitions()
-                output.append("Successfully generated/updated \(count) \("transition".pluralize(with: count))")
+                output.append("Successfully generated/updated \(count) \("transition".pluralized(with: count))")
             },
             "debugRebuild": { [unowned self] output, context in
                 guard let client = context.client, let guildId = context.guild?.id else {

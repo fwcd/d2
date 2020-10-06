@@ -126,7 +126,7 @@ public class TimerCommand: StringCommand {
             }
             timers[timerId] = NamedTimer(name: name, guildId: guildId, timer: timer, elapseDate: Date() + TimeInterval(duration))
 
-            output.append("Created a timer\(name.map { " named `\($0)`" } ?? "") that runs for \(duration) \("second".pluralize(with: duration))!")
+            output.append("Created a timer\(name.map { " named `\($0)`" } ?? "") that runs for \(duration) \("second".pluralized(with: duration))!")
             timer.resume()
         }
     }

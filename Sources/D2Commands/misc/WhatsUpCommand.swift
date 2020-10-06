@@ -38,7 +38,7 @@ public class WhatsUpCommand: StringCommand {
                 .filter { $0.1.type == activityType && $0.1.name == name }
                 .compactMap { format(activity: $0.1, for: $0.0, showGameName: false) }
                 .joined(separator: "\n")
-                .truncate(500, appending: "...")
+                .truncated(to: 500, appending: "...")
                 .nilIfEmpty ?? "_no one currently :(_")
         }
         let restFields = (rest.flatMap { $0.1 }.nilIfEmpty.map { mas in
@@ -47,7 +47,7 @@ public class WhatsUpCommand: StringCommand {
                 .filter { $0.1.type == activityType }
                 .compactMap { format(activity: $0.1, for: $0.0) }
                 .joined(separator: "\n")
-                .truncate(500, appending: "...")
+                .truncated(to: 500, appending: "...")
                 .nilIfEmpty ?? "_no one currently :(_")]
         } ?? [])
         return groupFields + restFields

@@ -57,7 +57,7 @@ public class PokeQuizCommand: StringCommand {
         } else if distance < 2 {
             output.append(":ok_hand: You were close, the correct answer was `\(name)`.")
         } else {
-            output.append(":shrug: Your guess was \(distance) \("character".pluralize(with: distance)) away from the correct name `\(name)`.")
+            output.append(":shrug: Your guess was \(distance) \("character".pluralized(with: distance)) away from the correct name `\(name)`.")
         }
 
         quizzes[channelId] = nil

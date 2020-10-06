@@ -47,7 +47,7 @@ public class EmojisCommand: StringCommand {
                     res.append($1)
                     return res.count <= emojiLimit ? res : $0
                 }
-                .map { ("\($0.0.truncate(10, appending: "..."))", value: $0.1.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncate(10, appending: "...").joined().nilIfEmpty) }
+                .map { ("\($0.0.truncated(to: 10, appending: "..."))", value: $0.1.map { "<:\($0.name):\($0.id.map { "\($0)" } ?? "?")>" }.truncated(to: 10, appending: "...").joined().nilIfEmpty) }
                 .compactMap { (k, v) in v.map { Embed.Field(name: k, value: $0, inline: true) } }
         ))
     }

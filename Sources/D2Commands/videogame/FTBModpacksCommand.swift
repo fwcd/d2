@@ -29,7 +29,7 @@ public class FTBModpacksCommand: StringCommand {
                                 \($0.description?
                                     .replacingOccurrences(of: "<br>", with: "\n")
                                     .replacingOccurrences(of: "\n\n", with: "\n")
-                                    .truncate(300, appending: "...") ?? "_no description_")
+                                    .truncated(to: 300, appending: "...") ?? "_no description_")
                                 """
                         )
                     }

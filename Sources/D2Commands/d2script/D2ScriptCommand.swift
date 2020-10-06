@@ -80,7 +80,7 @@ public class D2ScriptCommand: StringCommand {
                     self.semaphore.signal()
                     return
                 }
-                guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncate(1000) else {
+                guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncated(to: 1000) else {
                     output.append(errorText: "Could not fetch data as UTF-8 string")
                     self.semaphore.signal()
                     return

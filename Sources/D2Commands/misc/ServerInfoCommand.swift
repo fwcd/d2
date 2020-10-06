@@ -100,7 +100,7 @@ public class ServerInfoCommand: StringCommand {
             limit 1
             """, "\(guild.id)")
                 .makeIterator().next()
-                .map { "`\(($0[0] as? String)?.truncate(80, appending: "...") ?? "?")` by `\(($0[1] as? String) ?? "?")`" }
+                .map { "`\(($0[0] as? String)?.truncated(to: 80, appending: "...") ?? "?")` by `\(($0[1] as? String) ?? "?")`" }
 
         let mostMessagedChannel = try? messageDB.prepare("""
             select count(message_id), channel_name
@@ -154,9 +154,9 @@ public class ServerInfoCommand: StringCommand {
             ]),
             (":triangular_flag_on_post: Highscores", [
                 ("Longest Username", longestUsername),
-                ("Most Roles", "\(mostRoles.count) \("role".pluralize(with: mostRoles.count)) by `\(mostRolesUsername)`"),
+                ("Most Roles", "\(mostRoles.count) \("role".pluralized(with: mostRoles.count)) by `\(mostRolesUsername)`"),
                 ("Longest Play Time", "`\(longestPlayTimeUsername)` playing \(longestPlayTimeGame) for \(longestPlayTime.displayString)"),
-                ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralize(with: mostPlayed?.1.count ?? 0))")
+                ("Currently Most Played Game", "\(mostPlayed?.0 ?? "None") by \(mostPlayed?.1.count ?? 0) \("player".pluralized(with: mostPlayed?.1.count ?? 0))")
             ]),
             (":incoming_envelope: Messages", [
                 ("Longest Message", longestMessage),
