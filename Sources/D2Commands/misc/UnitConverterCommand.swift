@@ -75,6 +75,40 @@ public class UnitConverterCommand: StringCommand {
         case celsius = "°C"
         case fahrenheit = "°F"
 
+        // Currency
+        case eur = "EUR"
+        case cad = "CAD"
+        case hkd = "HKD"
+        case isk = "ISK"
+        case php = "PHP"
+        case dkk = "DKK"
+        case huf = "HUF"
+        case czk = "CZK"
+        case aud = "AUD"
+        case ron = "RON"
+        case sek = "SEK"
+        case idr = "IDR"
+        case inr = "INR"
+        case brl = "BRL"
+        case rub = "RUB"
+        case hrk = "HRK"
+        case jpy = "JPY"
+        case thb = "THB"
+        case chf = "CHF"
+        case sgd = "SGD"
+        case pln = "pln"
+        case bgn = "BGN"
+        case cny = "CNY"
+        case nok = "NOK"
+        case nzd = "NZD"
+        case zar = "ZAR"
+        case usd = "USD"
+        case mxn = "MXN"
+        case ils = "ILS"
+        case gbp = "GBP"
+        case krw = "KRW"
+        case myr = "MYR"
+
         var description: String { rawValue }
 
         static func of(_ s: String) -> Self? {
@@ -149,6 +183,39 @@ public class UnitConverterCommand: StringCommand {
             ],
             .fahrenheit: [
                 .celsius: AnyBijection(Translation(by: -32).then(Scaling(by: 0.555555555555555)))
+            ],
+            .eur: [
+                .cad: AnyBijection(CurrencyConversion(to: "CAD")),
+                .hkd: AnyBijection(CurrencyConversion(to: "HKD")),
+                .isk: AnyBijection(CurrencyConversion(to: "ISK")),
+                .php: AnyBijection(CurrencyConversion(to: "PHP")),
+                .dkk: AnyBijection(CurrencyConversion(to: "DKK")),
+                .huf: AnyBijection(CurrencyConversion(to: "HUF")),
+                .czk: AnyBijection(CurrencyConversion(to: "CZK")),
+                .aud: AnyBijection(CurrencyConversion(to: "AUD")),
+                .ron: AnyBijection(CurrencyConversion(to: "RON")),
+                .sek: AnyBijection(CurrencyConversion(to: "SEK")),
+                .idr: AnyBijection(CurrencyConversion(to: "IDR")),
+                .inr: AnyBijection(CurrencyConversion(to: "INR")),
+                .brl: AnyBijection(CurrencyConversion(to: "BRL")),
+                .rub: AnyBijection(CurrencyConversion(to: "RUB")),
+                .hrk: AnyBijection(CurrencyConversion(to: "HRK")),
+                .jpy: AnyBijection(CurrencyConversion(to: "JPY")),
+                .thb: AnyBijection(CurrencyConversion(to: "THB")),
+                .chf: AnyBijection(CurrencyConversion(to: "CHF")),
+                .sgd: AnyBijection(CurrencyConversion(to: "SGD")),
+                .pln: AnyBijection(CurrencyConversion(to: "PLN")),
+                .bgn: AnyBijection(CurrencyConversion(to: "BGN")),
+                .cny: AnyBijection(CurrencyConversion(to: "CNY")),
+                .nok: AnyBijection(CurrencyConversion(to: "NOK")),
+                .nzd: AnyBijection(CurrencyConversion(to: "NZD")),
+                .zar: AnyBijection(CurrencyConversion(to: "ZAR")),
+                .usd: AnyBijection(CurrencyConversion(to: "USD")),
+                .mxn: AnyBijection(CurrencyConversion(to: "MXN")),
+                .ils: AnyBijection(CurrencyConversion(to: "ILS")),
+                .gbp: AnyBijection(CurrencyConversion(to: "GBP")),
+                .krw: AnyBijection(CurrencyConversion(to: "KRW")),
+                .myr: AnyBijection(CurrencyConversion(to: "MYR")),
             ]
         ]
         let invertedEdges = Dictionary(grouping: originalEdges.flatMap { (src, es) in es.map { (dest, b) in (dest, src, AnyBijection(b.inverse)) } }, by: \.0)
