@@ -68,7 +68,7 @@ struct DiscordMessageClient: MessageClient {
     func avatarUrlForUser(_ userId: D2MessageIO.UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
         var components = URLComponents()
 
-        let inferredExtension = avatarId.starts(with: "_a") ? "gif" : "png"
+        let inferredExtension = avatarId.starts(with: "a_") ? "gif" : "png"
 
         components.scheme = "https"
         components.host = "cdn.discordapp.com"
