@@ -14,7 +14,7 @@ public enum RichValue: Addable {
     case text(String)
     case image(Image)
     case table([[String]])
-    case gif(AnimatedGIF)
+    case gif(GIF)
     case urls([URL])
     case domNode(Element)
     case code(String, language: String?)
@@ -48,7 +48,7 @@ public enum RichValue: Addable {
     public var asDomNode: Element? {
         extract { if case let .domNode(node) = $0 { return node } else { return nil } }.first
     }
-    public var asGif: AnimatedGIF? {
+    public var asGif: GIF? {
         extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
     }
     public var asUrls: [URL]? {

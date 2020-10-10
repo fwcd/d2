@@ -127,7 +127,7 @@ public struct MessageParser {
                     // attachment.download {
                     // 	do {
                     // 		let data = try $0.get()
-                    // 		values.append(.gif(try AnimatedGIF(from: data)))
+                    // 		values.append(.gif(try GIF(from: data)))
                     // 	} catch {
                     // 		log.error("\(error)")
                     // 	}

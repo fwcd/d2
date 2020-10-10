@@ -73,7 +73,7 @@ public class PatCommand: Command {
                     let width = avatarImage.width
                     let height = avatarImage.height
                     let radiusSquared = (width * height) / 4
-                    var gif = AnimatedGIF(quantizingImage: avatarImage)
+                    var gif = GIF(quantizingImage: avatarImage)
 
                     // Cut out round avatar
                     for y in 0..<height {
@@ -95,7 +95,7 @@ public class PatCommand: Command {
                         graphics.draw(avatarImage)
                         graphics.draw(patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
 
-                        gif.append(frame: .init(image: frame, delayTime: self.delayTime))
+                        gif.frames.append(.init(image: frame, delayTime: self.delayTime))
                     }
 
                     output.append(.gif(gif))

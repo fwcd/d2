@@ -89,7 +89,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                 let height = image.height
 
                 log.debug("Creating gif")
-                var gif = AnimatedGIF(quantizingImage: image)
+                var gif = GIF(quantizingImage: image)
 
                 for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")
@@ -98,7 +98,7 @@ public class AnimateCommand<A>: Command where A: Animation {
 
                     log.debug("Rendering frame \(i)")
                     try animation.renderFrame(from: image, to: &frame, percent: percent)
-                    gif.append(frame: .init(image: frame, delayTime: delayTime))
+                    gif.frames.append(.init(image: frame, delayTime: delayTime))
                 }
 
                 output.append(.gif(gif))

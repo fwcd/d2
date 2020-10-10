@@ -7,7 +7,7 @@ extension InteractiveTextChannel {
         send(try Message(fromImage: image))
     }
 
-    public func send(gif: AnimatedGIF) throws {
+    public func send(gif: GIF) throws {
         send(try Message(fromGif: gif))
     }
 }
@@ -19,7 +19,7 @@ extension Message {
         ], tts: false)
     }
 
-    public init(fromGif gif: AnimatedGIF, name: String? = nil) throws {
+    public init(fromGif gif: GIF, name: String? = nil) throws {
         self.init(content: "", embed: nil, files: [
             Message.FileUpload(data: try gif.encoded(), filename: name ?? "image.gif", mimeType: "image/gif")
         ], tts: false)
