@@ -25,12 +25,12 @@ public class AvatarCommand: Command {
             output.append(errorText: "Mention someone to begin!")
             return
         }
-        guard let url = context.client?.avatarUrlForUser(user.id, with: user.avatar) else {
+        guard let avatarUrl = context.client?.avatarUrlForUser(user.id, with: user.avatar) else {
             output.append(errorText: "Could not fetch avatar URL")
             return
         }
 
-        Promise.catching { HTTPRequest(url: url) }
+        Promise(.success(HTTPRequest(url: avatarUrl)))
             .then { $0.runAsync() }
             .listen {
                 do {
