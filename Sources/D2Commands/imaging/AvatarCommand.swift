@@ -13,8 +13,7 @@ public class AvatarCommand: Command {
         shortDescription: "Fetches the avatar of a user",
         longDescription: "Fetches the user's profile picture and outputs it in PNG form",
         helpText: "Syntax: [@user]",
-        requiredPermissionLevel: .basic,
-        platformAvailability: ["Discord"] // Due to Discord-specific CDN URLs
+        requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .image
@@ -26,13 +25,12 @@ public class AvatarCommand: Command {
             output.append(errorText: "Mention someone to begin!")
             return
         }
+        guard let url = context.client?.avatarUrlForUser(user.id, with: user.avatar) else {
+            output.append(errorText: "Could not fetch avatar URL")
+            return
+        }
 
-        Promise.catching { try HTTPRequest(
-            scheme: "https",
-            host: "cdn.discordapp.com",
-            path: "/avatars/\(user.id)/\(user.avatar).png",
-            query: ["size": "512"]
-        ) }
+        Promise.catching { HTTPRequest(url: url) }
             .then { $0.runAsync() }
             .listen {
                 do {
