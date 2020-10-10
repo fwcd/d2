@@ -125,9 +125,17 @@ public struct MessageParser {
                     attachment.download().listen {
                     	do {
                     		let data = try $0.get()
-                    		values.append(.gif(try GIF(data: data)))
+                    		values.append(.supplied {
+                                do {
+                                    log.info("Decoding GIF...")
+                                    return .gif(try GIF(data: data))
+                                } catch {
+                                    log.error("Could not parse GIF: \(error)")
+                                    return .none
+                                }
+                            })
                     	} catch {
-                    		log.error("Could not download/read GIF attachment: \(error)")
+                    		log.error("Could not download GIF attachment: \(error)")
                     	}
                     	semaphore.signal()
                     }
