@@ -15,6 +15,8 @@ public protocol MessageClient {
 
     func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission
 
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) -> URL?
+
     @discardableResult
     func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error>
 
@@ -69,5 +71,9 @@ public extension MessageClient {
 
     func createEmoji(on guildId: GuildID, name: String, image: String) -> Promise<Emoji?, Error> {
         createEmoji(on: guildId, name: name, image: image, roles: [])
+    }
+
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String) -> URL? {
+        avatarUrlForUser(userId, with: avatarId, size: 512)
     }
 }

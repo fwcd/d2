@@ -1,3 +1,4 @@
+import Foundation
 import Utils
 
 /// A decorator message client that uses a custom 'name' and 'me'.
@@ -29,6 +30,10 @@ public struct OverlayMessageClient: MessageClient {
 
     public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
         inner.permissionsForUser(userId, in: channelId, on: guildId)
+    }
+
+    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) -> URL? {
+        inner.avatarUrlForUser(userId, with: avatarId, size: size)
     }
 
     public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {

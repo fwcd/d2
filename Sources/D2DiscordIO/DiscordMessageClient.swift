@@ -1,3 +1,4 @@
+import Foundation
 import Utils
 import D2MessageIO
 import Logging
@@ -62,6 +63,17 @@ struct DiscordMessageClient: MessageClient {
         }
 
         return permissions.usingMessageIO
+    }
+
+    func avatarUrlForUser(_ userId: D2MessageIO.UserID, with avatarId: String, size: Int) -> URL? {
+        var components = URLComponents()
+
+        components.scheme = "https"
+        components.host = "cdn.discordapp.com"
+        components.path = "/avatars/\(userId.usingDiscordAPI)/\(avatarId)"
+        components.queryItems = [URLQueryItem(name: "size", value: String(size))]
+
+        return components.url
     }
 
     func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, Error> {
