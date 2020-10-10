@@ -38,7 +38,7 @@ struct TelegramMessageClient: MessageClient {
         []
     }
 
-    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) -> URL? {
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
         // TODO
         nil
     }

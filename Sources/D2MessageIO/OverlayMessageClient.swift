@@ -32,8 +32,8 @@ public struct OverlayMessageClient: MessageClient {
         inner.permissionsForUser(userId, in: channelId, on: guildId)
     }
 
-    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) -> URL? {
-        inner.avatarUrlForUser(userId, with: avatarId, size: size)
+    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
+        inner.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension)
     }
 
     public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {

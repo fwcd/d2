@@ -65,12 +65,14 @@ struct DiscordMessageClient: MessageClient {
         return permissions.usingMessageIO
     }
 
-    func avatarUrlForUser(_ userId: D2MessageIO.UserID, with avatarId: String, size: Int) -> URL? {
+    func avatarUrlForUser(_ userId: D2MessageIO.UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
         var components = URLComponents()
+
+        let inferredExtension = avatarId.starts(with: "_a") ? "gif" : "png"
 
         components.scheme = "https"
         components.host = "cdn.discordapp.com"
-        components.path = "/avatars/\(userId.usingDiscordAPI)/\(avatarId)"
+        components.path = "/avatars/\(userId.usingDiscordAPI)/\(avatarId).\(preferredExtension ?? inferredExtension)"
         components.queryItems = [URLQueryItem(name: "size", value: String(size))]
 
         return components.url

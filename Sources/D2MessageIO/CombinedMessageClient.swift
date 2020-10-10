@@ -51,8 +51,8 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: channelId) { $0.permissionsForUser(userId, in: channelId, on: guildId) } ?? []
     }
 
-    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) -> URL? {
-        withClient(of: userId) { $0.avatarUrlForUser(userId, with: avatarId, size: size) }
+    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
+        withClient(of: userId) { $0.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension) }
     }
 
     public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
