@@ -199,6 +199,7 @@ public class D2Delegate: MessageDelegate {
         registry["pingpong"] = PingPongCommand()
         registry["reverse"] = ReverseCommand()
         registry["togif"] = ToGifCommand()
+        registry["framecount", aka: ["frames"]] = FrameCountCommand()
         registry["avatar"] = AvatarCommand()
         registry["qr"] = QRCommand()
         registry["latex"] = LatexCommand()
