@@ -201,6 +201,7 @@ public class D2Delegate: MessageDelegate {
         registry["togif"] = ToGifCommand()
         registry["framecount", aka: ["frames"]] = FrameCountCommand()
         registry["avatar"] = AvatarCommand()
+        registry["avatarurl"] = AvatarUrlCommand()
         registry["qr"] = QRCommand()
         registry["latex"] = LatexCommand()
         registry["autolatex"] = AutoLatexCommand()
