@@ -1,6 +1,7 @@
 import D2MessageIO
 import D2Permissions
 import Graphics
+import GIF
 import Utils
 import Foundation
 import Logging
@@ -37,8 +38,12 @@ public class AvatarCommand: Command {
                     let data = try $0.get()
                     if data.isEmpty {
                         output.append(errorText: "No avatar available")
-                    } else {
+                    } else if avatarUrl.path.hasSuffix(".png") {
                         output.append(.image(try Image(fromPng: data)))
+                    } else if avatarUrl.path.hasSuffix(".gif") {
+                        output.append(.gif(try GIF(data: data)))
+                    } else {
+                        output.append(errorText: "Unsupported image format in avatar URL: \(avatarUrl). Most likely this is a bug, since inferred image formats should be handled exhaustively in AvatarCommand.")
                     }
                 } catch {
                     output.append(errorText: "The avatar could not be fetched \(error)")
