@@ -114,25 +114,23 @@ public struct MessageParser {
                             let data = try $0.get()
                             values.append(.image(try Image(fromPng: data)))
                         } catch {
-                            log.error("\(error)")
+                            log.error("Could not download/read PNG attachment: \(error)")
                         }
                         semaphore.signal()
                     }
                 } else if fileName.hasSuffix(".gif") {
                     // Download GIF attachment
 
-                    // TODO: Implement animated GIF parser
-
-                    // asyncTaskCount += 1
-                    // attachment.download {
-                    // 	do {
-                    // 		let data = try $0.get()
-                    // 		values.append(.gif(try GIF(from: data)))
-                    // 	} catch {
-                    // 		log.error("\(error)")
-                    // 	}
-                    // 	semaphore.signal()
-                    // }
+                    asyncTaskCount += 1
+                    attachment.download().listen {
+                    	do {
+                    		let data = try $0.get()
+                    		values.append(.gif(try GIF(data: data)))
+                    	} catch {
+                    		log.error("Could not download/read GIF attachment: \(error)")
+                    	}
+                    	semaphore.signal()
+                    }
                 }
             }
 
