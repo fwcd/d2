@@ -18,15 +18,18 @@ public class AvatarCommand: Command {
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .image
+    private let preferredExtension: String?
 
-    public init() {}
+    public init(preferredExtension: String? = "") {
+        self.preferredExtension = preferredExtension
+    }
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let user = input.asMentions?.first else {
             output.append(errorText: "Mention someone to begin!")
             return
         }
-        guard let avatarUrl = context.client?.avatarUrlForUser(user.id, with: user.avatar) else {
+        guard let avatarUrl = context.client?.avatarUrlForUser(user.id, with: user.avatar, preferredExtension: preferredExtension) else {
             output.append(errorText: "Could not fetch avatar URL")
             return
         }
