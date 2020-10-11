@@ -9,8 +9,7 @@ public class PatCommand: Command {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Creates a pat animation",
-        requiredPermissionLevel: .basic,
-        platformAvailability: ["Discord"] // Due to Discord-specific CDN URLs
+        requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
@@ -48,17 +47,14 @@ public class PatCommand: Command {
             output.append(errorText: "No author")
             return
         }
+        guard let avatarUrl = context.client?.avatarUrlForUser(user.id, with: user.avatar, preferredExtension: "png") else {
+            output.append(errorText: "Could not fetch avatar URL")
+            return
+        }
 
         context.channel?.triggerTyping()
 
-        // TODO: Add MessageClient API for fetching avatars to reduce
-        //       code duplication among this command and e.g. AvatarCommand
-        Promise.catching { try HTTPRequest(
-            scheme: "https",
-            host: "cdn.discordapp.com",
-            path: "/avatars/\(user.id)/\(user.avatar).png",
-            query: ["size": "128"]
-        ) }
+        Promise(.success(HTTPRequest(url: avatarUrl)))
             .then { $0.runAsync() }
             .listen {
                 do {
@@ -73,7 +69,7 @@ public class PatCommand: Command {
                     let width = avatarImage.width
                     let height = avatarImage.height
                     let radiusSquared = (width * height) / 4
-                    var gif = AnimatedGIF(quantizingImage: avatarImage)
+                    var gif = GIF(quantizingImage: avatarImage)
 
                     // Cut out round avatar
                     for y in 0..<height {
@@ -95,7 +91,7 @@ public class PatCommand: Command {
                         graphics.draw(avatarImage)
                         graphics.draw(patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
 
-                        gif.append(frame: .init(image: frame, delayTime: self.delayTime))
+                        gif.frames.append(.init(image: frame, delayTime: self.delayTime))
                     }
 
                     output.append(.gif(gif))

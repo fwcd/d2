@@ -1,6 +1,7 @@
 import D2MessageIO
 import D2Permissions
 import Graphics
+import GIF
 import Utils
 import Foundation
 import Logging
@@ -13,34 +14,39 @@ public class AvatarCommand: Command {
         shortDescription: "Fetches the avatar of a user",
         longDescription: "Fetches the user's profile picture and outputs it in PNG form",
         helpText: "Syntax: [@user]",
-        requiredPermissionLevel: .basic,
-        platformAvailability: ["Discord"] // Due to Discord-specific CDN URLs
+        requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .image
+    private let preferredExtension: String?
 
-    public init() {}
+    public init(preferredExtension: String? = "") {
+        self.preferredExtension = preferredExtension
+    }
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let user = input.asMentions?.first else {
             output.append(errorText: "Mention someone to begin!")
             return
         }
+        guard let avatarUrl = context.client?.avatarUrlForUser(user.id, with: user.avatar, preferredExtension: preferredExtension) else {
+            output.append(errorText: "Could not fetch avatar URL")
+            return
+        }
 
-        Promise.catching { try HTTPRequest(
-            scheme: "https",
-            host: "cdn.discordapp.com",
-            path: "/avatars/\(user.id)/\(user.avatar).png",
-            query: ["size": "512"]
-        ) }
+        Promise(.success(HTTPRequest(url: avatarUrl)))
             .then { $0.runAsync() }
             .listen {
                 do {
                     let data = try $0.get()
                     if data.isEmpty {
                         output.append(errorText: "No avatar available")
-                    } else {
+                    } else if avatarUrl.path.hasSuffix(".png") {
                         output.append(.image(try Image(fromPng: data)))
+                    } else if avatarUrl.path.hasSuffix(".gif") {
+                        output.append(.gif(try GIF(data: data)))
+                    } else {
+                        output.append(errorText: "Unsupported image format in avatar URL: \(avatarUrl). Most likely this is a bug, since inferred image formats should be handled exhaustively in AvatarCommand.")
                     }
                 } catch {
                     output.append(errorText: "The avatar could not be fetched \(error)")

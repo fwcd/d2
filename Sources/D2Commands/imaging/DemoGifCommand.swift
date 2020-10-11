@@ -22,7 +22,7 @@ public class DemoGifCommand: StringCommand {
         do {
             let width = 200
             let height = 200
-            var gif = AnimatedGIF(width: width, height: height)
+            var gif = GIF(width: width, height: height)
 
             let angleCount = 4
             let angle = (2.0 * Double.pi) / Double(angleCount)
@@ -36,7 +36,7 @@ public class DemoGifCommand: StringCommand {
                 graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 100, y: 100))
                 graphics.draw(Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: Colors.blue))
 
-                gif.append(frame: .init(image: image, delayTime: 100))
+                gif.frames.append(.init(image: image, delayTime: 100))
             }
 
             output.append(.gif(gif))

@@ -13,8 +13,7 @@ public class DiscordinderCommand: StringCommand {
         category: .fun,
         shortDescription: "Play a matching game with other people on the server!",
         requiredPermissionLevel: .basic,
-        subscribesToNextMessages: true,
-        platformAvailability: ["Discord"] // Due to Discord-specific avatar URLs
+        subscribesToNextMessages: true
     )
     private let inventoryManager: InventoryManager
     private var activeMatches: [MessageID: (ChannelID, UserID)] = [:]
@@ -111,7 +110,7 @@ public class DiscordinderCommand: StringCommand {
         }
         let candidatePresence = guild.presences[candidateId]
 
-        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence)), to: channelId).listenOrLogError { sentMessage in
+        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, client: client)), to: channelId).listenOrLogError { sentMessage in
             guard let messageId = sentMessage?.id else { return }
 
             context.subscribeToChannel()
@@ -133,11 +132,11 @@ public class DiscordinderCommand: StringCommand {
         context.unsubscribeFromChannel()
     }
 
-    private func embedOf(member: Guild.Member, presence: Presence?) -> Embed {
+    private func embedOf(member: Guild.Member, presence: Presence?, client: MessageClient) -> Embed {
         Embed(
             title: member.displayName,
             description: (presence?.game).map { descriptionOf(activity: $0) },
-            image: URL(string: "https://cdn.discordapp.com/avatars/\(member.user.id)/\(member.user.avatar).png?size=256").map(Embed.Image.init)
+            image: client.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
         )
     }
 

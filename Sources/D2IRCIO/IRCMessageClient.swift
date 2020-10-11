@@ -1,3 +1,4 @@
+import Foundation
 import D2MessageIO
 import Utils
 import Emoji
@@ -37,6 +38,11 @@ struct IRCMessageClient: MessageClient {
     func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
         // TODO
         []
+    }
+
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
+        // TODO
+        nil
     }
 
     func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {

@@ -1,3 +1,4 @@
+import Foundation
 import Utils
 import D2MessageIO
 import Emoji
@@ -35,6 +36,11 @@ struct TelegramMessageClient: MessageClient {
     func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
         // TODO
         []
+    }
+
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
+        // TODO
+        nil
     }
 
     func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Utils.Promise<Bool, Error> {

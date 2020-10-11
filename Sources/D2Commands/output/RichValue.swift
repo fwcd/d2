@@ -14,7 +14,7 @@ public enum RichValue: Addable {
     case text(String)
     case image(Image)
     case table([[String]])
-    case gif(AnimatedGIF)
+    case gif(GIF)
     case urls([URL])
     case domNode(Element)
     case code(String, language: String?)
@@ -25,6 +25,7 @@ public enum RichValue: Addable {
     case error(Error?, errorText: String)
     case files([Message.FileUpload])
     case attachments([Message.Attachment])
+    case lazy(Lazy<RichValue>)
     case compound([RichValue])
 
     public var asText: String? {
@@ -48,7 +49,7 @@ public enum RichValue: Addable {
     public var asDomNode: Element? {
         extract { if case let .domNode(node) = $0 { return node } else { return nil } }.first
     }
-    public var asGif: AnimatedGIF? {
+    public var asGif: GIF? {
         extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
     }
     public var asUrls: [URL]? {
@@ -73,6 +74,7 @@ public enum RichValue: Addable {
         switch self {
             case .none: return []
             case let .compound(values): return values
+            case let .lazy(wrapper): return [wrapper.wrappedValue]
             default: return [self]
         }
     }
@@ -82,6 +84,8 @@ public enum RichValue: Addable {
             return [extracted]
         } else if case let .compound(values) = self {
             return values.flatMap { $0.extract(using: extractor) }
+        } else if case let .lazy(wrapper) = self {
+            return wrapper.wrappedValue.extract(using: extractor)
         } else {
             return []
         }

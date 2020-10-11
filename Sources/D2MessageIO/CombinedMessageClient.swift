@@ -1,3 +1,4 @@
+import Foundation
 import Utils
 import Logging
 
@@ -48,6 +49,10 @@ public class CombinedMessageClient: MessageClient {
 
     public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
         withClient(of: channelId) { $0.permissionsForUser(userId, in: channelId, on: guildId) } ?? []
+    }
+
+    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
+        withClient(of: userId) { $0.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension) }
     }
 
     public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, Error> {
