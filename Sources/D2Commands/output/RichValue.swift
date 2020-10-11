@@ -25,7 +25,7 @@ public enum RichValue: Addable {
     case error(Error?, errorText: String)
     case files([Message.FileUpload])
     case attachments([Message.Attachment])
-    case supplied(() -> RichValue)
+    case lazy(Lazy<RichValue>)
     case compound([RichValue])
 
     public var asText: String? {
@@ -74,7 +74,7 @@ public enum RichValue: Addable {
         switch self {
             case .none: return []
             case let .compound(values): return values
-            case let .supplied(getter): return [getter()]
+            case let .lazy(wrapper): return [wrapper.wrappedValue]
             default: return [self]
         }
     }
@@ -84,8 +84,8 @@ public enum RichValue: Addable {
             return [extracted]
         } else if case let .compound(values) = self {
             return values.flatMap { $0.extract(using: extractor) }
-        } else if case let .supplied(getter) = self {
-            return getter().extract(using: extractor)
+        } else if case let .lazy(wrapper) = self {
+            return wrapper.wrappedValue.extract(using: extractor)
         } else {
             return []
         }

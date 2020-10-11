@@ -71,8 +71,8 @@ public struct MessageWriter {
             case .attachments(_):
                 // TODO: Download attachments and re-attach them as fileuploads
                 return write(value: .error(nil, errorText: "Cannot write attachments yet!"))
-            case let .supplied(getter):
-                return write(value: getter())
+            case let .lazy(wrapper):
+                return write(value: wrapper.wrappedValue)
             case let .compound(components):
                 return all(promises: components.map { write(value: $0) }).map { encoded in
                     Message(

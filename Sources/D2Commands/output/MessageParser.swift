@@ -125,7 +125,7 @@ public struct MessageParser {
                     attachment.download().listen {
                     	do {
                     		let data = try $0.get()
-                    		values.append(.supplied {
+                    		values.append(.lazy(.lazy {
                                 do {
                                     log.info("Decoding GIF...")
                                     return .gif(try GIF(data: data))
@@ -133,7 +133,7 @@ public struct MessageParser {
                                     log.error("Could not parse GIF: \(error)")
                                     return .none
                                 }
-                            })
+                            }))
                     	} catch {
                     		log.error("Could not download GIF attachment: \(error)")
                     	}
