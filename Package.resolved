@@ -128,6 +128,15 @@
         }
       },
       {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
+        "state": {
+          "branch": null,
+          "revision": "92646c0cdbaca076c8d3d0207891785b3379cbff",
+          "version": "0.3.1"
+        }
+      },
+      {
         "package": "swift-backtrace",
         "repositoryURL": "https://github.com/swift-server/swift-backtrace.git",
         "state": {
@@ -150,7 +159,7 @@
         "repositoryURL": "https://github.com/fwcd/swift-gif.git",
         "state": {
           "branch": null,
-          "revision": "74b6c1460507922daefcd02485b7e32718f109ce",
+          "revision": "e3cebbbd62e26ef0f2536f9232a4bcaffc7094d9",
           "version": null
         }
       },

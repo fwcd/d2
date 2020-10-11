@@ -21,7 +21,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-prolog.git", .revision("edc7aa228ed342c28f58e4036639562ac6c801f0")),
         .package(url: "https://github.com/fwcd/swift-utils.git", .revision("b68ef50b209562195ad33693564baaeb7574d809")),
         .package(url: "https://github.com/fwcd/swift-graphics.git", .revision("b889c8af7f791abd1a303f001842077093401697")),
-        .package(url: "https://github.com/fwcd/swift-gif.git", .revision("74b6c1460507922daefcd02485b7e32718f109ce")),
+        .package(url: "https://github.com/fwcd/swift-gif.git", .revision("e3cebbbd62e26ef0f2536f9232a4bcaffc7094d9")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
         .package(name: "Emoji", url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
         .package(name: "PerfectSysInfo", url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
