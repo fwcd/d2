@@ -1,5 +1,4 @@
 import Utils
-import D2MessageIO
 import Graphics
 
 fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")

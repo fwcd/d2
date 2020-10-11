@@ -173,7 +173,7 @@ public class D2Delegate: MessageDelegate {
         registry["mandelbrot"] = MandelbrotCommand()
         registry["invertcolors"] = MapImageCommand<InvertImageMapping>(description: "Inverts every color in the image")
         registry["colortoalpha"] = MapImageCommand<ColorToAlphaImageMapping>(description: "Makes a color transparent in the image")
-        registry["threshold"] = ThresholdCommand()
+        registry["threshold"] = MapImageCommand<ThresholdImageMapping>(description: "Produces a black/white image with a specified luminance threshold")
         registry["watermark"] = MapImageCommand<WatermarkImageMapping>(description: "Adds a watermark to an image")
         registry["scaleimage", aka: ["scale"]] = MapImageCommand<ScaleImageMapping>(description: "Scales an image")
         registry["cropimage", aka: ["crop"]] = MapImageCommand<CropImageMapping>(description: "Crops an image")

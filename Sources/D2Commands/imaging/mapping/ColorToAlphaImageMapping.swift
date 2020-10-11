@@ -1,4 +1,3 @@
-import D2MessageIO
 import Graphics
 
 public struct ColorToAlphaImageMapping: ImageMapping {
