@@ -24,10 +24,13 @@ public class MapImageCommand<M>: Command where M: ImageMapping {
             if let img = input.asImage {
                 try output.append(.image(mapping.apply(to: img)))
             } else if let gif = input.asGif {
-                var newGif = GIF(width: gif.width, height: gif.height)
+                let mappedImages = try gif.frames.map { try mapping.apply(to: $0.image) }
+                let width = mappedImages.map(\.width).max() ?? 1
+                let height = mappedImages.map(\.height).max() ?? 1
+                var newGif = GIF(width: width, height: height)
 
-                for frame in gif.frames {
-                    try newGif.frames.append(.init(image: mapping.apply(to: frame.image), delayTime: frame.delayTime))
+                for (frame, mappedImage) in zip(gif.frames, mappedImages) {
+                    newGif.frames.append(.init(image: mappedImage, delayTime: frame.delayTime))
                 }
 
                 output.append(.gif(newGif))
