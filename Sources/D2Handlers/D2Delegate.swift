@@ -175,7 +175,7 @@ public class D2Delegate: MessageDelegate {
         registry["colortoalpha"] = ColorToAlphaCommand()
         registry["threshold"] = ThresholdCommand()
         registry["watermark"] = WatermarkCommand()
-        registry["scaleimage", aka: ["scale"]] = ScaleImageCommand()
+        registry["scaleimage", aka: ["scale"]] = MapImageCommand<ScaleMapping>(description: "Scales an image")
         registry["cropimage", aka: ["crop"]] = CropImageCommand()
         registry["filterimage", aka: ["filter"]] = FilterImageDirectlyCommand()
         registry["boxblur"] = FilterImageCommand<BoxBlurFilter>(maxSize: 400)
