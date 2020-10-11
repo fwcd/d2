@@ -1,6 +1,6 @@
 import Graphics
 
-public struct ScaleMapping: ImageMapping {
+public struct ScaleImageMapping: ImageMapping {
     private let factor: Double
     private let maxWidth: Int = 800
     private let maxHeight: Int = 800
