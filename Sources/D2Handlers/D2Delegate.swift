@@ -174,7 +174,7 @@ public class D2Delegate: MessageDelegate {
         registry["invertcolors"] = InvertColorsCommand()
         registry["colortoalpha"] = ColorToAlphaCommand()
         registry["threshold"] = ThresholdCommand()
-        registry["watermark"] = WatermarkCommand()
+        registry["watermark"] = MapImageCommand<WatermarkImageMapping>(description: "Adds a watermark to an image")
         registry["filterimage", aka: ["filter"]] = FilterImageDirectlyCommand()
         registry["boxblur"] = FilterImageCommand<BoxBlurFilter>(maxSize: 400)
         registry["gaussianblur", aka: ["blur"]] = FilterImageCommand<GaussianBlurFilter>(maxSize: 100)
