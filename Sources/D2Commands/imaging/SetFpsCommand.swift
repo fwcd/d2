@@ -5,7 +5,8 @@ public class SetFpsCommand: Command {
         category: .imaging,
         shortDescription: "Sets a GIF's inverse frame delay",
         helpText: "Syntax: [new fps]",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .basic,
+        hidden: true // until fixed
     )
     public let inputValueType: RichValueType = .gif
     public let outputValueType: RichValueType = .gif
