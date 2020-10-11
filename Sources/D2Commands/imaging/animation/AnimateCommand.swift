@@ -25,7 +25,7 @@ fileprivate let framesParameter = "frames"
 
 public class AnimateCommand<A>: Command where A: Animation {
     public let info: CommandInfo
-    public let inputValueType: RichValueType = .image
+    public let inputValueType: RichValueType = .either([.gif, .image])
     public let outputValueType: RichValueType = .gif
 
     private let kvParameters: [String]
