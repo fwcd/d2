@@ -20,7 +20,7 @@ public class AvatarCommand: Command {
     public let outputValueType: RichValueType = .image
     private let preferredExtension: String?
 
-    public init(preferredExtension: String? = "") {
+    public init(preferredExtension: String? = nil) {
         self.preferredExtension = preferredExtension
     }
 
