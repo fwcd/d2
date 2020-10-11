@@ -13,7 +13,7 @@ public class PingPongCommand: Command {
     public init() {}
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
-        if case let .gif(gif) = input {
+        if let gif = input.asGif {
             var pingPonged = gif
             pingPonged.frames += pingPonged.frames.reversed()
             output.append(.gif(pingPonged))

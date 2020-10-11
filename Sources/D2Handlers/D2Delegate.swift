@@ -198,6 +198,7 @@ public class D2Delegate: MessageDelegate {
         registry["slide", aka: ["scroll"]] = AnimateCommand<TransformAnimation<SlideTransform>>(description: "Slides the image into a direction (by default to the right) with linear speed")
         registry["pingpong"] = PingPongCommand()
         registry["reverse"] = ReverseCommand()
+        registry["setfps"] = SetFpsCommand()
         registry["togif"] = ToGifCommand()
         registry["framecount", aka: ["frames"]] = FrameCountCommand()
         registry["avatar"] = AvatarCommand()

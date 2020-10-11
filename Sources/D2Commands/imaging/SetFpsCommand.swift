@@ -24,11 +24,11 @@ public class SetFpsCommand: Command {
 
         let delayTime = Int(1.0 / fps)
 
-        if case var .gif(gif) = input {
+        if var gif = input.asGif {
             gif.frames = gif.frames.map { .init(image: $0.image, delayTime: delayTime, localQuantization: $0.localQuantization, disposalMethod: $0.disposalMethod ?? .clearCanvas) }
             output.append(.gif(gif))
         } else {
-            output.append(errorText: "ReverseCommand needs a GIF as input")
+            output.append(errorText: "SetFpsCommand needs a GIF as input")
         }
     }
 }
