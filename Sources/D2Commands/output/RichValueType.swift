@@ -14,6 +14,7 @@ public enum RichValueType {
     case files
     case attachments
     case compound([RichValueType])
+    case either([RichValueType])
     case unknown
     case any
 }
