@@ -171,7 +171,7 @@ public class D2Delegate: MessageDelegate {
         registry["demogif"] = DemoGifCommand()
         registry["color"] = ColorCommand()
         registry["mandelbrot"] = MandelbrotCommand()
-        registry["invertcolors"] = InvertColorsCommand()
+        registry["invertcolors"] = MapImageCommand<InvertImageMapping>(description: "Inverts every color in the image")
         registry["colortoalpha"] = MapImageCommand<ColorToAlphaImageMapping>(description: "Makes a color transparent in the image")
         registry["threshold"] = ThresholdCommand()
         registry["watermark"] = MapImageCommand<WatermarkImageMapping>(description: "Adds a watermark to an image")
