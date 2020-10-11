@@ -34,8 +34,8 @@ public enum RichValueType: CustomStringConvertible {
             case .error: return "error"
             case .files: return "files"
             case .attachments: return "attachments"
-            case .compound(let values): return values.map(\.description).joined(separator: " & ")
-            case .either(let values): return values.map(\.description).joined(separator: " | ")
+            case .compound(let values): return "(\(values.map(\.description).joined(separator: " & ")))"
+            case .either(let values): return "(\(values.map(\.description).joined(separator: " | ")))"
             case .unknown: return "?"
             case .any: return "any"
         }
