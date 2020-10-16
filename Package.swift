@@ -37,6 +37,7 @@ let package = Package(
         .package(url: "https://github.com/nmdias/FeedKit.git", from: "9.1.2"),
         .package(url: "https://github.com/dehesa/CodableCSV.git", from: "0.6.7"),
         .package(url: "https://github.com/MihaelIsaev/NIOCronScheduler.git", from: "2.0.2"),
+        .package(url: "https://github.com/JCTec/iCalendarKit.git", .revision("58c1cbfad574b1b423ac4dedcb010f2c89e89b0b")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -103,6 +104,7 @@ let package = Package(
                 .product(name: "AGGRenderer", package: "swiftplot"),
                 .product(name: "NIOCronScheduler", package: "NIOCronScheduler"),
                 .product(name: "Socket", package: "BlueSocket"),
+                .product(name: "iCalendarKit", package: "iCalendarKit"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),
