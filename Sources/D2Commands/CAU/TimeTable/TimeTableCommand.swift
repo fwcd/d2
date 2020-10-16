@@ -28,8 +28,14 @@ public class TimeTableCommand: StringCommand {
             do {
                 let lectures = try $0.get().compactMap { $0.childs.compactMap { $0 as? UnivISLecture }.first }
 
-                // TODO
-                output.append("Found lectures: \(lectures.map { $0.name })")
+                output.append(.compound([
+                    .embed(Embed(
+                        title: ":calendar_spiral: TimeTable",
+                        fields: [
+                            Embed.Field(name: "Lectures", value: lectures.map { $0.name ?? "?" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
+                        ]
+                    ))
+                ]))
             } catch {
                 output.append(error, errorText: "Could not query lectures from UnivIS!")
             }
