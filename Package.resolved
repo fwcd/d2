@@ -182,6 +182,15 @@
         }
       },
       {
+        "package": "swift-icalendar",
+        "repositoryURL": "https://github.com/fwcd/swift-icalendar.git",
+        "state": {
+          "branch": null,
+          "revision": "b0d2972d9f92788710eb3eb48da05c57a6bc1401",
+          "version": null
+        }
+      },
+      {
         "package": "swift-log",
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
