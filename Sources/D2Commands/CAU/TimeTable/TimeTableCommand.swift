@@ -28,6 +28,8 @@ public class TimeTableCommand: StringCommand {
             do {
                 let lectures = try $0.get().compactMap { $0.childs.compactMap { $0 as? UnivISLecture }.first }
 
+                // TODO: Generate proper timetable, along with an image visualizing it and an iCalendar
+
                 output.append(.compound([
                     .embed(Embed(
                         title: ":calendar_spiral: TimeTable",
