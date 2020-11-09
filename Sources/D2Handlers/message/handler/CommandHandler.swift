@@ -43,17 +43,18 @@ public class CommandHandler: MessageHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
     private let subscriptionManager: SubscriptionManager
-    @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
 
+    private let msgParser = MessageParser()
     private let chainSeparator: Character
     private let pipeSeparator: Character
 
-    private let maxPipeLengthForUsers: Int = 7
-    private let maxConcurrentlyRunningCommands: Int = 4
-    private let msgParser = MessageParser()
+    private let maxPipeLengthForUsers: Int
+    private let maxConcurrentlyRunningCommands: Int
+    private let unconditionallyAllowedCommands: Set<String>
 
     @Synchronized private var currentIndex = 0
     @Synchronized private var currentlyRunningCommands = 0
+    @Synchronized @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
 
     private let commandQueue = DispatchQueue(label: "CommandHandler", attributes: [.concurrent])
 
@@ -62,7 +63,10 @@ public class CommandHandler: MessageHandler {
         registry: CommandRegistry,
         permissionManager: PermissionManager,
         subscriptionManager: SubscriptionManager,
-        mostRecentPipeRunner: Box<(Runnable, PermissionLevel)?>,
+        mostRecentPipeRunner: Synchronized<Box<(Runnable, PermissionLevel)?>>,
+        maxPipeLengthForUsers: Int = 7,
+        maxConcurrentlyRunningCommands: Int = 4,
+        unconditionallyAllowedCommands: Set<String> = ["quit"],
         chainSeparator: Character = ";",
         pipeSeparator: Character = "|"
     ) {
@@ -71,6 +75,9 @@ public class CommandHandler: MessageHandler {
         self.permissionManager = permissionManager
         self.subscriptionManager = subscriptionManager
         self._mostRecentPipeRunner = mostRecentPipeRunner
+        self.maxPipeLengthForUsers = maxPipeLengthForUsers
+        self.maxConcurrentlyRunningCommands = maxConcurrentlyRunningCommands
+        self.unconditionallyAllowedCommands = unconditionallyAllowedCommands
         self.chainSeparator = chainSeparator
         self.pipeSeparator = pipeSeparator
     }
@@ -83,7 +90,7 @@ public class CommandHandler: MessageHandler {
             log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
             return false
         }
-        guard currentlyRunningCommands < maxConcurrentlyRunningCommands else {
+        guard currentlyRunningCommands < maxConcurrentlyRunningCommands && message.content != "\(commandPrefix)quit" else {
             client.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
             log.notice("Command invocation not processed, since max concurrent operation count was reached")
             return false

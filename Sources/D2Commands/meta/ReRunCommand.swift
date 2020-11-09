@@ -9,9 +9,9 @@ public class ReRunCommand: StringCommand {
         shouldOverwriteMostRecentPipeRunner: false
     )
     private let permissionManager: PermissionManager
-    @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
+    @Synchronized @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
 
-    public init(permissionManager: PermissionManager, mostRecentPipeRunner: Box<(Runnable, PermissionLevel)?>) {
+    public init(permissionManager: PermissionManager, mostRecentPipeRunner: Synchronized<Box<(Runnable, PermissionLevel)?>>) {
         self.permissionManager = permissionManager
         self._mostRecentPipeRunner = mostRecentPipeRunner
     }
