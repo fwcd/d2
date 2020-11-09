@@ -36,7 +36,9 @@ public class RoleReactionsCommand: StringCommand {
             },
             "detach": { [unowned self] output, _, _, messageId, _ in
                 self.configuration.roleMessages[messageId] = nil
-                output.append("Successfully removed role reactions from the message.")
+                output.append("Successfully removed role reaction handling from the message.")
+
+                // TODO: Actually remove the reactions instead of just removing the mappings internally
             }
         ]
         info.helpText = """
