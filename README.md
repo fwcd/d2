@@ -36,7 +36,7 @@ It provides:
 * `timeout` and `kill` (for `MaximaCommand`)
 
 #### Linux
-* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima libsqlite3-dev graphviz`
+* `sudo apt-get install libopus-dev libsodium-dev libssl1.0-dev libcairo2-dev poppler-utils maxima libsqlite3-dev graphviz libtesseract-dev libleptonica-dev`
     * Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
     * If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
         * `mkdir /usr/include/freetype2/freetype`
