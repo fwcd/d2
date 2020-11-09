@@ -118,6 +118,12 @@ public struct Pokemon: Codable {
         public let frontFemale: URL?
         public let frontShiny: URL?
         public let frontShinyFemale: URL?
+
+        public var url: URL? {
+            [frontDefault, frontFemale, frontShiny, frontShinyFemale, backDefault, backFemale, backShiny, backShinyFemale]
+                .compactMap { $0 }
+                .first
+        }
     }
 
     public struct Stat: Codable {

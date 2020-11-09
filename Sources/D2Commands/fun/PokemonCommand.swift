@@ -20,26 +20,25 @@ public class PokemonCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        PokedexQuery().perform().listen {
-            switch $0 {
-                case .success(let pokedex):
-                    guard let pokemon = pokedex.randomElement() else {
-                        output.append(errorText: "No Pokémon could be found.")
-                        return
-                    }
+        PokedexQuery().perform()
+            .map { $0.results[Int.random(in: 0..<$0.results.count)] }
+            .then { PokemonQuery(url: $0.url).perform() }
+            .listen {
+                do {
+                    let pokemon = try $0.get()
                     let author = context.author?.username ?? "You"
                     output.append(Embed(
-                        title: "**\(author)**, you've caught a **\(pokemon.name ?? "?")**",
-                        image: Embed.Image(url: pokemon.gifUrl)
+                        title: "**\(author)**, you've caught a **\(pokemon.name)**",
+                        image: (pokemon.sprites?.url).map(Embed.Image.init(url:))
                     ))
                     self.addToInventory(pokemon: pokemon, context: context)
-                case .failure(let error):
-                    output.append(error, errorText: "Could not fetch Pokédex.")
+                } catch {
+                    output.append(error, errorText: "Could not fetch Pokémon.")
+                }
             }
-        }
     }
 
-    private func addToInventory(pokemon: PokedexEntry, context: CommandContext) {
+    private func addToInventory(pokemon: Pokemon, context: CommandContext) {
         guard let author = context.author else {
             log.warning("Could not add to inventory since no author is present")
             return
