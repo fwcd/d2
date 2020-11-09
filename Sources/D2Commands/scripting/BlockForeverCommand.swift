@@ -1,4 +1,4 @@
-import Dispatch
+import Foundation
 
 public class BlockForeverCommand: StringCommand {
     public let info = CommandInfo(
@@ -11,6 +11,8 @@ public class BlockForeverCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        semaphore.wait()
+        while true {
+            sleep(10)
+        }
     }
 }

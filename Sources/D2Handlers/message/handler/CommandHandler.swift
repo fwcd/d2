@@ -48,11 +48,14 @@ public class CommandHandler: MessageHandler {
     private let chainSeparator: Character
     private let pipeSeparator: Character
 
-    private var currentIndex = 0
-    private var maxPipeLengthForUsers: Int = 7
+    private let maxPipeLengthForUsers: Int = 7
+    private let maxConcurrentlyRunningCommands: Int = 4
     private let msgParser = MessageParser()
 
-    private let operationQueue: OperationQueue
+    @Synchronized private var currentIndex = 0
+    @Synchronized private var currentlyRunningCommands = 0
+
+    private let commandQueue = DispatchQueue(label: "CommandHandler", attributes: [.concurrent])
 
     public init(
         commandPrefix: String,
@@ -70,10 +73,6 @@ public class CommandHandler: MessageHandler {
         self._mostRecentPipeRunner = mostRecentPipeRunner
         self.chainSeparator = chainSeparator
         self.pipeSeparator = pipeSeparator
-
-        operationQueue = OperationQueue()
-        operationQueue.name = "CommandHandler queue"
-        operationQueue.maxConcurrentOperationCount = 4
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
@@ -84,14 +83,13 @@ public class CommandHandler: MessageHandler {
             log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
             return false
         }
-        guard operationQueue.operationCount < operationQueue.maxConcurrentOperationCount else {
+        guard currentlyRunningCommands < maxConcurrentlyRunningCommands else {
             client.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
             log.notice("Command invocation not processed, since max concurrent operation count was reached")
             return false
         }
 
         currentIndex += 1
-
 
         let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 
@@ -139,7 +137,10 @@ public class CommandHandler: MessageHandler {
 
                 guard let pipeSource = pipe.first else { continue }
 
-                operationQueue.addOperation {
+                commandQueue.async {
+                    self.currentlyRunningCommands += 1
+                    print(self.currentlyRunningCommands)
+
                     self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild).listenOrLogError { input in
                         // Execute the pipe
                         let runner = RunnablePipe(pipeSource: pipeSource, input: input)
@@ -149,6 +150,8 @@ public class CommandHandler: MessageHandler {
                         if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
                             self.mostRecentPipeRunner = (runner, minPermissionLevel)
                         }
+
+                        self.currentlyRunningCommands -= 1
                     }
                 }
             }
