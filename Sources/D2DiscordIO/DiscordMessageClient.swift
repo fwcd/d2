@@ -174,7 +174,23 @@ struct DiscordMessageClient: MessageClient {
         }
     }
 
-    public func createEmoji(on guildId: D2MessageIO.GuildID, name: String, image: String, roles: [D2MessageIO.RoleID]) -> Promise<Emoji?, Error> {
+    func deleteOwnReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Bool, Error> {
+        Promise { then in
+            client.deleteOwnReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
+    }
+
+    func deleteUserReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String, by userId: D2MessageIO.UserID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.deleteUserReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji, by: userId.usingDiscordAPI) {
+                then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
+    }
+
+    func createEmoji(on guildId: D2MessageIO.GuildID, name: String, image: String, roles: [D2MessageIO.RoleID]) -> Promise<Emoji?, Error> {
         Promise { then in
             client.createGuildEmoji(on: guildId.usingDiscordAPI, name: name, image: image, roles: roles.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -182,7 +198,7 @@ struct DiscordMessageClient: MessageClient {
         }
     }
 
-    public func deleteEmoji(from guildId: D2MessageIO.GuildID, emojiId: D2MessageIO.EmojiID) -> Promise<Bool, Error> {
+    func deleteEmoji(from guildId: D2MessageIO.GuildID, emojiId: D2MessageIO.EmojiID) -> Promise<Bool, Error> {
         Promise { then in
             client.deleteGuildEmoji(on: guildId.usingDiscordAPI, for: emojiId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))

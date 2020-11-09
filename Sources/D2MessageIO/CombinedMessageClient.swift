@@ -106,6 +106,14 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: channelId) { $0.createReaction(for: messageId, on: channelId, emoji: emoji) } ?? Promise(.success(nil))
     }
 
+    public func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji) } ?? Promise(.success(false))
+    }
+
+    public func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) -> Promise<Bool, Error> {
+        withClient(of: channelId) { $0.deleteUserReaction(for: messageId, on: channelId, emoji: emoji, by: userId) } ?? Promise(.success(false))
+    }
+
     public func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<Emoji?, Error> {
         withClient(of: guildId) { $0.createEmoji(on: guildId, name: name, image: image, roles: roles) } ?? Promise(.success(nil))
     }

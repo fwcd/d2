@@ -134,13 +134,23 @@ struct TelegramMessageClient: MessageClient {
         Utils.Promise(.success(nil))
     }
 
+    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Utils.Promise<Bool, Error> {
+        // TODO
+        Utils.Promise(.success(false))
+    }
+
+    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) -> Utils.Promise<Bool, Error> {
+        // TODO
+        Utils.Promise(.success(false))
+    }
+
     func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Utils.Promise<D2MessageIO.Emoji?, Error> {
         // TODO
-        Promise(.success(nil))
+        Utils.Promise(.success(nil))
     }
 
     func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Utils.Promise<Bool, Error> {
         // TODO
-        Promise(.success(false))
+        Utils.Promise(.success(false))
     }
 }

@@ -84,6 +84,14 @@ public struct OverlayMessageClient: MessageClient {
         inner.createReaction(for: messageId, on: channelId, emoji: emoji)
     }
 
+    public func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Bool, Error> {
+        inner.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji)
+    }
+
+    public func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) -> Promise<Bool, Error> {
+        inner.deleteUserReaction(for: messageId, on: channelId, emoji: emoji, by: userId)
+    }
+
     public func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<Emoji?, Error> {
         inner.createEmoji(on: guildId, name: name, image: image, roles: roles)
     }
