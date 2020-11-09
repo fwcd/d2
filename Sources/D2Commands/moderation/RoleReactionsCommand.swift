@@ -36,5 +36,20 @@ public class RoleReactionsCommand: StringCommand {
             output.append(errorText: info.helpText!)
             return
         }
+        guard let client = context.client else {
+            output.append(errorText: "No client available")
+            return
+        }
+
+        let subcommandName = parsedArgs[1]
+        let messageId = ID(parsedArgs[2], clientName: client.name)
+        let subcommandArgs = parsedArgs[3]
+
+        guard let subcommand = subcommands[subcommandName] else {
+            output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            return
+        }
+
+        subcommand(output, messageId, subcommandArgs)
     }
 }
