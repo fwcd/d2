@@ -43,6 +43,8 @@ It provides:
         * `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
         * `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
     * Note that you might need to `apt-get install clang` separately on a Raspberry Pi
+    * Also make sure that you are installing Tesseract 4. If you are on an older version of Ubuntu, try adding the following repository:
+        * `sudo add-apt-repository ppa:alex-p/tesseract-ocr`
 
 #### macOS
 * Install `maxima`
