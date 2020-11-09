@@ -18,6 +18,7 @@ public struct RoleReactionHandler: ReactionHandler {
             let guild = client.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
+            !member.user.bot,
             !member.roleIds.contains(roleId) {
             log.info("Adding role \(role.name) upong reaction to \(member.displayName)")
             client.addGuildMemberRole(roleId, to: userId, on: guild.id, reason: "Reaction")
@@ -30,6 +31,7 @@ public struct RoleReactionHandler: ReactionHandler {
             let guild = client.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
+            !member.user.bot,
             member.roleIds.contains(roleId) {
             log.info("Removing role \(role.name) upong reaction from \(member.displayName)")
             client.removeGuildMemberRole(roleId, from: userId, on: guild.id, reason: "Reaction")
