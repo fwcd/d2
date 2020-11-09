@@ -1,16 +1,19 @@
 import Utils
 
 public struct PokedexQuery {
-    private static var cached: [PokedexEntry]? = nil
+    private static var cached: Pokedex? = nil
+    private let limit: Int
 
-    public init() {}
+    public init(limit: Int = 1000) {
+        self.limit = limit
+    }
 
-    public func perform() -> Promise<[PokedexEntry], Error> {
+    public func perform() -> Promise<Pokedex, Error> {
         if let pokedex = PokedexQuery.cached {
             return Promise(.success(pokedex))
         } else {
             return Promise.catchingThen {
-                try HTTPRequest(host: "randompokemon.com", path: "/dex/all.json").fetchJSONAsync(as: [PokedexEntry].self)
+                try HTTPRequest(host: "pokeapi.co", path: "/api/v2/pokemon", query: ["limit": String(limit)]).fetchJSONAsync(as: Pokedex.self)
             }.peekListen {
                 if case let .success(pokedex) = $0 {
                     PokedexQuery.cached = pokedex
