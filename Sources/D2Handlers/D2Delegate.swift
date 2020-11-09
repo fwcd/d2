@@ -36,6 +36,7 @@ public class D2Delegate: MessageDelegate {
         let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
         let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
         let haikuConfiguration = AutoSerializing<HaikuConfiguration>(wrappedValue: .init(), filePath: "local/haikuConfig.json")
+        let roleReactionsConfiguration = AutoSerializing<RoleReactionsConfiguration>(wrappedValue: .init(), filePath: "local/roleReactionsConfig.json")
         let permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
 
@@ -95,7 +96,7 @@ public class D2Delegate: MessageDelegate {
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()
-        registry["addrolereactions"] = AddRoleReactionsCommand()
+        registry["rolereactions"] = RoleReactionsCommand(configuration: roleReactionsConfiguration)
         registry["logs"] = LogsCommand()
         registry["for"] = ForCommand()
         registry["void"] = VoidCommand()
