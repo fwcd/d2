@@ -4,6 +4,9 @@ FROM swift:5.3-xenial
 RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
+# Install add-apt-repository
+RUN apt-get update && apt-get install -y add-apt-repository
+
 # Install native dependencies
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
     nodejs \
