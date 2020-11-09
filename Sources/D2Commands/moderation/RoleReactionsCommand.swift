@@ -16,14 +16,23 @@ public class RoleReactionsCommand: StringCommand {
         self._configuration = configuration
         subcommands = [
             "attach": { [unowned self] output, client, channelId, messageId, args in
-                let mappings = RoleReactionsConfiguration.Mappings(fromString: args, clientName: client.name)
-                self.configuration.roleMessages[messageId] = mappings
-
-                for (emoji, _) in mappings {
-                    client.createReaction(for: messageId, on: channelId, emoji: emoji)
+                guard let guild = client.guildForChannel(channelId) else {
+                    output.append(errorText: "Not on a guild!")
+                    return
                 }
 
-                output.append("Successfully turned the message into an auto-assigning-role-reacting message.")
+                do {
+                    let mappings = try self.parseReactionMappings(from: args, on: guild)
+                    self.configuration.roleMessages[messageId] = mappings
+
+                    for (emoji, _) in mappings {
+                        client.createReaction(for: messageId, on: channelId, emoji: emoji)
+                    }
+
+                    output.append("Successfully added role reactions to the message.")
+                } catch {
+                    output.append(error, errorText: "Could not attach role reactions.")
+                }
             },
             "detach": { [unowned self] output, _, _, messageId, _ in
                 self.configuration.roleMessages[messageId] = nil
@@ -60,5 +69,26 @@ public class RoleReactionsCommand: StringCommand {
         }
 
         subcommand(output, client, channelId, messageId, subcommandArgs)
+    }
+
+    private func parseReactionMappings(from s: String, on guild: Guild) throws -> RoleReactionsConfiguration.Mappings {
+        let mappings = try s
+            .split(separator: ",")
+            .map { $0
+                .split(separator: "=")
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } }
+            .map { try ($0[0], parseRoleId(from: $0[1], on: guild)) }
+
+        return .init(roleMappings: Dictionary(uniqueKeysWithValues: mappings))
+    }
+
+    private func parseRoleId(from s: String, on guild: Guild) throws -> RoleID {
+        for (roleId, role) in guild.roles {
+            if s == "\(roleId)" || role.name == s {
+                return role.id
+            }
+        }
+
+        throw RoleReactionsError.couldNotParseRole(s)
     }
 }

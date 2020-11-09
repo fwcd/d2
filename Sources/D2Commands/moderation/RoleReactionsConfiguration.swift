@@ -16,17 +16,6 @@ public struct RoleReactionsConfiguration: Codable {
             self.roleMappings = roleMappings
         }
 
-        public init(fromString s: String, clientName: String) {
-            let mappings = s
-                .split(separator: ",")
-                .map { $0
-                    .split(separator: "=")
-                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } }
-                .map { ($0[0], RoleID($0[1], clientName: clientName)) }
-
-            roleMappings = Dictionary(uniqueKeysWithValues: mappings)
-        }
-
         public func makeIterator() -> Dictionary<String, RoleID>.Iterator {
             roleMappings.makeIterator()
         }
