@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+(\\d+)\\s*(.*)")
+fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+<#(\\d+)>\\s+(\\d+)\\s*(.*)")
 
 public class RoleReactionsCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -10,24 +10,32 @@ public class RoleReactionsCommand: StringCommand {
         requiredPermissionLevel: .vip
     )
     @AutoSerializing private var configuration: RoleReactionsConfiguration
-    private var subcommands: [String: (CommandOutput, MessageID, String) -> Void] = [:]
+    private var subcommands: [String: (CommandOutput, MessageClient, ChannelID, MessageID, String) -> Void] = [:]
 
     public init(configuration: AutoSerializing<RoleReactionsConfiguration>) {
         self._configuration = configuration
         subcommands = [
-            "attach": { [unowned self] output, messageId, args in
-                // TODO
+            "attach": { [unowned self] output, client, channelId, messageId, args in
+                let mappings = RoleReactionsConfiguration.Mappings(fromString: args, clientName: client.name)
+                self.configuration.roleMessages[messageId] = mappings
+
+                for (emoji, _) in mappings {
+                    client.createReaction(for: messageId, on: channelId, emoji: emoji)
+                }
+
+                output.append("Successfully turned the message into an auto-assigning-role-reacting message.")
             },
-            "detach": { [unowned self] output, messageId, _ in
-                // TODO
+            "detach": { [unowned self] output, _, _, messageId, _ in
+                self.configuration.roleMessages[messageId] = nil
+                output.append("Successfully removed role reactions from the message.")
             }
         ]
         info.helpText = """
-            Syntax: `[subcommand] [message id] [args...]`
+            Syntax: `[subcommand] [#channel] [message id] [args...]`
 
             For example:
-            `attach 123456789012345678 😁=Role a, 👍=Role b`
-            `detach 123456789012345678`
+            `attach #my-awesome-channel 123456789012345678 😁=Role a, 👍=Role b`
+            `detach #my-awesome-channel 123456789012345678`
             """
     }
 
@@ -42,14 +50,15 @@ public class RoleReactionsCommand: StringCommand {
         }
 
         let subcommandName = parsedArgs[1]
-        let messageId = ID(parsedArgs[2], clientName: client.name)
-        let subcommandArgs = parsedArgs[3]
+        let channelId = ID(parsedArgs[2], clientName: client.name)
+        let messageId = ID(parsedArgs[3], clientName: client.name)
+        let subcommandArgs = parsedArgs[4]
 
         guard let subcommand = subcommands[subcommandName] else {
             output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
-        subcommand(output, messageId, subcommandArgs)
+        subcommand(output, client, channelId, messageId, subcommandArgs)
     }
 }
