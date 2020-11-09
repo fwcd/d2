@@ -1,6 +1,11 @@
 import SwiftyTesseract
 import Graphics
 
+fileprivate struct ResourceLanguageModelDataSource: LanguageModelDataSource {
+    let path: String
+    var pathToTrainedData: String { "Resources\(path)" }
+}
+
 public class OCRCommand: Command {
     public let info = CommandInfo(
         category: .imaging,
@@ -10,11 +15,9 @@ public class OCRCommand: Command {
     )
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .text
-    private let tesseract: Tesseract
+    private lazy var tesseract: Tesseract = Tesseract(language: .english, dataSource: ResourceLanguageModelDataSource(path: "/ocr"))
 
-    public init(languages: [RecognitionLanguage] = [.english, .german]) {
-        tesseract = Tesseract(languages: languages)
-    }
+    public init() {}
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard let image = input.asImage else {
