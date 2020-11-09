@@ -95,6 +95,7 @@ public class D2Delegate: MessageDelegate {
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()
+        registry["addrolereactions"] = AddRoleReactionsCommand()
         registry["logs"] = LogsCommand()
         registry["for"] = ForCommand()
         registry["void"] = VoidCommand()
