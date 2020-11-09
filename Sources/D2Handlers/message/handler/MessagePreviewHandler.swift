@@ -23,8 +23,8 @@ public struct MessagePreviewHandler: MessageHandler {
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
         if client.name == "Discord",
-            let guildId = message.guild?.id,
-            configuration.enabledGuildIds.contains(guildId),
+            let guild = message.guild,
+            configuration.enabledGuildIds.contains(guild.id),
             let parsedLink = messageLinkPattern.firstGroups(in: message.content),
             let channelId = message.channelId {
 
@@ -32,13 +32,15 @@ public struct MessagePreviewHandler: MessageHandler {
             let previewedMessageId = ID(parsedLink[3], clientName: client.name)
 
             client.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId)).listenOrLogError { messages in
-                if let message = messages.first {
+                if let message = messages.first,
+                    let author = message.author,
+                    let member = guild.members[author.id] {
                     client.sendMessage(Message(embed: Embed(
                         title: message.content.truncated(to: 200, appending: "..."),
-                        author: message.author.map { Embed.Author(
-                            name: $0.username,
-                            iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\($0.id)/\($0.avatar).png?size=64")
-                        ) },
+                        author: Embed.Author(
+                            name: member.displayName,
+                            iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\(author.id)/\(author.avatar).png?size=64")
+                        ),
                         image: (message.attachments.first?.url).map(Embed.Image.init(url:))
                     )), to: channelId)
                 } else {
