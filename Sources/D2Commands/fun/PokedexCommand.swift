@@ -33,13 +33,13 @@ public class PokedexCommand: StringCommand {
                         ("Order", pokemon.order.map { String($0) }),
                         ("Abilities", pokemon.abilities.flatMap { $0.map(\.ability.name).joined(separator: ", ").nilIfEmpty }),
                         ("Forms", pokemon.forms.flatMap { $0.map(\.name).joined(separator: ", ").nilIfEmpty }),
-                        ("Stats", pokemon.stats.flatMap { $0.map { "\($0.stat.name): Base \($0.baseStat), effort \($0.effort)" }.joined(separator: ", ").nilIfEmpty })
+                        ("Stats", pokemon.stats.flatMap { $0.map { "\($0.stat.name): base \($0.baseStat), effort \($0.effort)" }.joined(separator: "\n").nilIfEmpty })
                     ]
 
                     output.append(Embed(
-                        title: pokemon.name,
+                        title: pokemon.name.withFirstUppercased,
                         thumbnail: (pokemon.sprites?.url).map(Embed.Thumbnail.init(url:)),
-                        fields: fields.compactMap { (k, v) in v.map { Embed.Field(name: k, value: $0) } }
+                        fields: fields.compactMap { (k, v) in v.map { Embed.Field(name: k, value: $0, inline: true) } }
                     ))
                 } catch {
                     output.append(error, errorText: "Could not find Pokémon.")
