@@ -299,6 +299,15 @@
         }
       },
       {
+        "package": "SwiftyTesseract",
+        "repositoryURL": "https://github.com/SwiftyTesseract/SwiftyTesseract.git",
+        "state": {
+          "branch": null,
+          "revision": "1b4f0ef0c2ba08ae92254af730f2013af4ebdc4f",
+          "version": "4.0.0"
+        }
+      },
+      {
         "package": "syllable-counter-swift",
         "repositoryURL": "https://github.com/wfreitag/syllable-counter-swift.git",
         "state": {
