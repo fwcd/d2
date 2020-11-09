@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
     maxima \
     cabal-install \
     libsqlite3-dev \
-    graphviz
+    graphviz \
+    libtesseract-dev \
+    libleptonica-dev
 
 RUN cabal update && cabal install happy
 RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
