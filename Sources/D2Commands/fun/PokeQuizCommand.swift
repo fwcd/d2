@@ -12,20 +12,19 @@ public class PokeQuizCommand: StringCommand {
     private var quizzes: [ChannelID: Quiz] = [:]
 
     private struct Quiz {
-        public let pokemon: PokedexEntry
+        public let pokemon: Pokemon
         public let player: UserID?
     }
 
     public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        PokedexQuery().perform().listen {
-            switch $0 {
-                case .success(let pokedex):
-                    guard let pokemon = pokedex.randomElement() else {
-                        output.append(errorText: "No Pokémon could be found.")
-                        return
-                    }
+        PokedexQuery().perform()
+            .map { $0.results[Int.random(in: 0..<$0.results.count)] }
+            .then { PokemonQuery(url: $0.url).perform() }
+            .listen {
+                do {
+                    let pokemon = try $0.get()
                     guard let channelId = context.channel?.id else {
                         output.append(errorText: "No channel ID available.")
                         return
@@ -33,15 +32,15 @@ public class PokeQuizCommand: StringCommand {
 
                     output.append(Embed(
                         title: "Which Pokémon is this?",
-                        image: Embed.Image(url: pokemon.gifUrl)
+                        image: pokemon.sprites?.url.map(Embed.Image.init(url:))
                     ))
 
                     self.quizzes[channelId] = Quiz(pokemon: pokemon, player: context.author?.id)
                     context.subscribeToChannel()
-                case .failure(let error):
+                } catch {
                     output.append(error, errorText: "Could not fetch Pokédex.")
+                }
             }
-        }
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
@@ -49,7 +48,7 @@ public class PokeQuizCommand: StringCommand {
             let quiz = quizzes[channelId],
             quiz.player == context.author?.id else { return }
 
-        let name = quiz.pokemon.name ?? ""
+        let name = quiz.pokemon.name
         let distance = content.levenshteinDistance(to: name, caseSensitive: false)
 
         if distance == 0 {
