@@ -38,8 +38,8 @@ public class RoleReactionsCommand: StringCommand {
                     output.append(error, errorText: "Could not attach role reactions.")
                 }
             },
-            "detach": { [unowned self] output, _, _, messageId, _ in
-                guard self.configuration.roleMessages.keys.contains(messageId) else {
+            "detach": { [unowned self] output, client, channelId, messageId, _ in
+                guard let mappings = self.configuration.roleMessages[messageId] else {
                     output.append(errorText: "This message is not a (known) reaction message!")
                     return
                 }
@@ -47,7 +47,9 @@ public class RoleReactionsCommand: StringCommand {
                 self.configuration.roleMessages[messageId] = nil
                 output.append("Successfully removed role reaction handling from the message.")
 
-                // TODO: Actually remove the reactions instead of just removing the mappings internally
+                for (emoji, _) in mappings {
+                    client.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji)
+                }
             }
         ]
         info.helpText = """
