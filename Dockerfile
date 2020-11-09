@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Install native dependencies
-RUN apt-get update && apt-get install -y \
+RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
     nodejs \
     libopus-dev \
     libsodium-dev \
