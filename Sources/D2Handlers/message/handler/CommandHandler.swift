@@ -146,7 +146,7 @@ public class CommandHandler: MessageHandler {
 
                 commandQueue.async {
                     self.currentlyRunningCommands += 1
-                    print(self.currentlyRunningCommands)
+                    log.debug("Currently running \(self.currentlyRunningCommands) commands")
 
                     self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild).listenOrLogError { input in
                         // Execute the pipe
