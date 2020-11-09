@@ -30,7 +30,7 @@ public struct RoleReactionHandler: ReactionHandler {
             let guild = client.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
-            !member.roleIds.contains(roleId) {
+            member.roleIds.contains(roleId) {
             log.info("Removing role \(role.name) upong reaction from \(member.displayName)")
             client.removeGuildMemberRole(roleId, from: userId, on: guild.id, reason: "Reaction")
         }
