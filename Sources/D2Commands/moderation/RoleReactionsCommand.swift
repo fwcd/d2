@@ -29,7 +29,7 @@ public class RoleReactionsCommand: StringCommand {
                     let mappings = try self.parseReactionMappings(from: args, on: guild)
                     self.configuration.roleMessages[messageId] = mappings
 
-                    for (emoji, _) in mappings {removeOwnReaction
+                    for (emoji, _) in mappings {
                         // TODO: Handle asynchronous errors
                         client.createReaction(for: messageId, on: channelId, emoji: emoji)
                     }
