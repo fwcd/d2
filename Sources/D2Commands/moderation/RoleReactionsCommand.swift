@@ -20,6 +20,10 @@ public class RoleReactionsCommand: StringCommand {
                     output.append(errorText: "Not on a guild!")
                     return
                 }
+                guard !self.configuration.roleMessages.keys.contains(messageId) else {
+                    output.append(errorText: "Please detach this message first!")
+                    return
+                }
 
                 do {
                     let mappings = try self.parseReactionMappings(from: args, on: guild)
@@ -35,6 +39,11 @@ public class RoleReactionsCommand: StringCommand {
                 }
             },
             "detach": { [unowned self] output, _, _, messageId, _ in
+                guard self.configuration.roleMessages.keys.contains(messageId) else {
+                    output.append(errorText: "This message is not a (known) reaction message!")
+                    return
+                }
+
                 self.configuration.roleMessages[messageId] = nil
                 output.append("Successfully removed role reaction handling from the message.")
 
