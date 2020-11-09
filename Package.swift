@@ -107,6 +107,7 @@ let package = Package(
                 .product(name: "PerfectSysInfo", package: "PerfectSysInfo"),
                 .product(name: "SwiftPlot", package: "SwiftPlot"),
                 .product(name: "AGGRenderer", package: "SwiftPlot"),
+                .product(name: "SwiftyTesseract", package: "SwiftyTesseract"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),
