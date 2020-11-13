@@ -64,7 +64,7 @@ public class ComposeMemeCommand: Command {
 
         log.info("Found alpha rectangle in meme template at (\(topLeft), \(bottomRight))")
 
-        if bottomRight.x > topLeft.x || bottomRight.y > topLeft.y {
+        if bottomRight.x < topLeft.x || bottomRight.y < topLeft.y {
             return (Vec2(both: 0), image.size)
         } else {
             return (topLeft, bottomRight)
