@@ -109,6 +109,8 @@ It provides:
 }
 ```
 
+* Create a folder named `memeTemplates` in `local` containing PNG images. Any fully transparent sections will be filled by a user-defined image, once the corresponding command is invoked.
+
 ## Building
 * Using Docker: `docker-compose build`
 * On Linux: `swift build`
