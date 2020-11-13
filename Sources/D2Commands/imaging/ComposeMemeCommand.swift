@@ -1,8 +1,10 @@
 import Foundation
+import Logging
 import Utils
 import Graphics
 
 fileprivate let memeTemplatesFilePath = "local/memeTemplates"
+fileprivate let log = Logger(label: "D2Commands.ComposeMemeCommand")
 
 public class ComposeMemeCommand: Command {
     public let info = CommandInfo(
@@ -28,7 +30,7 @@ public class ComposeMemeCommand: Command {
             let template = try pickMemeTemplate()
 
             do {
-                let (topLeft, bottomRight) = findAlphaRectangle(of: image)
+                let (topLeft, bottomRight) = findAlphaRectangle(of: template)
                 let composition = try composeMeme(from: template, with: image, between: topLeft, and: bottomRight)
                 try output.append(composition)
             } catch {
@@ -54,11 +56,13 @@ public class ComposeMemeCommand: Command {
             for x in 0..<image.width {
                 let pixel = image[y, x]
                 if pixel.alpha <= alphaThreshold {
-                    topLeft = Vec2(x: max(x, topLeft.x), y: min(y, topLeft.y))
+                    topLeft = Vec2(x: min(x, topLeft.x), y: min(y, topLeft.y))
                     bottomRight = Vec2(x: max(x, bottomRight.x), y: max(y, bottomRight.y))
                 }
             }
         }
+
+        log.info("Found alpha rectangle in meme template at (\(topLeft), \(bottomRight))")
 
         if bottomRight.x > topLeft.x || bottomRight.y > topLeft.y {
             return (Vec2(both: 0), image.size)
