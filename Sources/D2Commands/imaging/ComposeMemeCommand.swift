@@ -2,6 +2,8 @@ import Foundation
 import Utils
 import Graphics
 
+fileprivate let memeTemplatesFilePath = "local/memeTemplates"
+
 public class ComposeMemeCommand: Command {
     public let info = CommandInfo(
         category: .imaging,
@@ -33,13 +35,13 @@ public class ComposeMemeCommand: Command {
                 output.append(error, errorText: "Could not compose image!")
             }
         } catch {
-            output.append(error, errorText: "Could not get meme template")
+            output.append(error, errorText: "Could not get meme template. Please make sure that `\(memeTemplatesFilePath)` exists and contains suitable templates.")
         }
     }
 
     private func pickMemeTemplate() throws -> Image {
         let fileManager = FileManager.default
-        let urls = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: "local/memeTemplates"), includingPropertiesForKeys: nil)
+        let urls = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: memeTemplatesFilePath), includingPropertiesForKeys: nil)
         guard let url = urls.filter({ $0.path.hasSuffix(".png") }).randomElement() else { throw ComposeMemeError.noMemeTemplateFound }
         return try Image(fromPngFile: url)
     }
@@ -66,7 +68,12 @@ public class ComposeMemeCommand: Command {
     }
 
     private func composeMeme(from template: Image, with image: Image, between topLeft: Vec2<Int>, and bottomRight: Vec2<Int>) throws -> Image {
-        // TODO
-        fatalError("TODO")
+        let composition = try Image(width: template.width, height: template.height)
+        var graphics = CairoGraphics(fromImage: composition)
+
+        graphics.draw(image, at: topLeft.asDouble, withSize: bottomRight - topLeft)
+        graphics.draw(template)
+
+        return composition
     }
 }
