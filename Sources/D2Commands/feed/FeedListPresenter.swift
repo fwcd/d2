@@ -32,7 +32,7 @@ public struct FeedListPresenter: FeedPresenter {
                     \(try $0.description
                         .map { newlinesPattern.replace(in: try converter.convert(htmlFragment: $0), with: "\n") }?
                         .trimmingCharacters(in: .whitespacesAndNewlines)
-                        .truncated(to: 200, appending: "...")
+                        .truncated(to: 300, appending: "...")
                         ?? "_no description_")
                     """
             }.joined(separator: "\n"),
