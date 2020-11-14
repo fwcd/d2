@@ -52,9 +52,9 @@ public class InventoryCommand: Command {
             output.append(Embed(
                 title: "Inventory for `\(user.username)`",
                 fields: inventory.items.map {
-                    Embed.Field(name: $0.key, value: Dictionary(grouping: $0.value, by: { $0.id })
+                    Embed.Field(name: $0.key, value: Dictionary(grouping: $0.value, by: { $0.name })
                         .filter { showAll || !$0.value.contains { $0.hidden } }
-                        .map { "\($0.value.count)x \($0.value.first?.name ?? "?")" }
+                        .map { "\($0.value.count)x \($0.key)" }
                         .joined(separator: "\n")
                         .nilIfEmpty ?? "_nothing_")
                 }
