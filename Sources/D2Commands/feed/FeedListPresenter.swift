@@ -3,6 +3,8 @@ import FeedKit
 import D2MessageIO
 import Utils
 
+fileprivate let newlinesPattern = try! Regex(from: "[\\r\\n]+")
+
 /// Presents the n most recent items as a list.
 public struct FeedListPresenter: FeedPresenter {
     private let itemCount: Int
@@ -28,7 +30,7 @@ public struct FeedListPresenter: FeedPresenter {
                 return """
                     **[\(title)](\(link))**
                     \(try $0.description
-                        .map { try converter.convert(htmlFragment: $0) }?
+                        .map { newlinesPattern.replace(in: try converter.convert(htmlFragment: $0), with: "\n") }?
                         .trimmingCharacters(in: .whitespacesAndNewlines)
                         .truncated(to: 200, appending: "...")
                         ?? "_no description_")
