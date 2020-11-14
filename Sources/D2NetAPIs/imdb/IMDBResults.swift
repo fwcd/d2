@@ -18,7 +18,7 @@ public struct IMDBResults: Codable {
             case title = "l"
             case type = "q"
             case rank
-            case starring = "s"
+            case summary = "s"
             case videos = "v"
             case vt
             case year = "y"
@@ -30,7 +30,7 @@ public struct IMDBResults: Codable {
         public let title: String?
         public let type: String?
         public let rank: Int?
-        public let starring: String?
+        public let summary: String?
         public let videos: [Video]?
         public let vt: Int?
         public let year: Int?
