@@ -15,7 +15,7 @@ public struct MessageDatabaseReactionHandler: ReactionHandler {
         do {
             if try messageDB.isTracked(channelId: channelId) {
                 try messageDB.add(reaction: emoji, to: messageId, by: userId)
-                log.info("Wrote reaction '\(emoji.name)' to database")
+                log.debug("Wrote reaction '\(emoji.name)' to database")
             }
         } catch {
             log.warning("Could not insert reaction into DB: \(error)")
