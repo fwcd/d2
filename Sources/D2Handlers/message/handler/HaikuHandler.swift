@@ -28,6 +28,16 @@ public struct HaikuHandler: MessageHandler {
             let author = message.guildMember,
             let haiku = haikuOf(message.content) {
             log.info("\(author.displayName) wrote a haiku: \(haiku.joined(separator: " - "))")
+
+            let item = Inventory.Item(
+                id: "Haiku \(message.id.map { "\($0)" } ?? "?")",
+                name: "Haiku",
+                attributes: [
+                    "text": haiku.joined(separator: "\n")
+                ]
+            )
+            inventoryManager[author.user].append(item: item, to: "Haikus")
+
             client.sendMessage(Message(embed: Embed(
                 title: "A Haiku by `\(author.displayName)`",
                 description: haiku.joined(separator: "\n")
