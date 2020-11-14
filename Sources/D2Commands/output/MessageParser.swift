@@ -112,9 +112,16 @@ public struct MessageParser {
                     attachment.download().listen {
                         do {
                             let data = try $0.get()
-                            values.append(.image(try Image(fromPng: data)))
+                            values.append(.lazy(.lazy {
+                                do {
+                                    return .image(try Image(fromPng: data))
+                                } catch {
+                                    log.error("Could not decode PNG: \(error)")
+                                    return .none
+                                }
+                            }))
                         } catch {
-                            log.error("Could not download/read PNG attachment: \(error)")
+                            log.error("Could not download PNG attachment: \(error)")
                         }
                         semaphore.signal()
                     }
