@@ -18,7 +18,7 @@ public struct MessageDatabaseHandler: MessageHandler {
                     if try messageDB.isTracked(guildId: guildId) {
                         try messageDB.insert(message: message)
                         try messageDB.generateMarkovTransitions(for: message)
-                        log.info("Wrote message '\(message.content.truncated(to: 10, appending: "..."))' to database")
+                        log.debug("Wrote message '\(message.content.truncated(to: 10, appending: "..."))' to database")
                     } else {
                         log.debug("Not inserting message from untracked guild into DB")
                     }
