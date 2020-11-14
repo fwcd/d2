@@ -12,11 +12,12 @@ public struct IMDBQuery {
     }
 
     public init(query: String) {
+        assert(!query.isEmpty)
         self.query = query
     }
 
     public func perform() -> Promise<IMDBResults, Error> {
-        Promise.catching { try HTTPRequest(host: "v2.sg.media-imdb.com", path: "/suggestion/h/\(formattedQuery).json") }
+        Promise.catching { try HTTPRequest(host: "v2.sg.media-imdb.com", path: "/suggestion/\(formattedQuery.first!)/\(formattedQuery).json") }
             .then { $0.fetchJSONAsync(as: IMDBResults.self) }
     }
 }
