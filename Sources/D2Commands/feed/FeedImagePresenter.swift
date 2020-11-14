@@ -21,10 +21,11 @@ public struct FeedImagePresenter: FeedPresenter {
     private func present(rss: RSSFeed) throws -> Embed? {
         // TODO: Produce proper error messages instead of just returning nil
         guard let item = rss.items?.first else { return nil }
+        let base = rss.link.flatMap(URL.init(string:))
         return Embed(
             title: item.title,
-            url: item.link.flatMap(URL.init(string:)),
-            image: try extractImageUrl(item: item, base: rss.link.flatMap(URL.init(string:)))
+            url: item.link.flatMap { absolutize(urlString: $0, against: base) },
+            image: try extractImageUrl(item: item, base: base)
                 .map(Embed.Image.init(url:))
         )
     }
