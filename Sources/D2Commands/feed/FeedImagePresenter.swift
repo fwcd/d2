@@ -24,26 +24,35 @@ public struct FeedImagePresenter: FeedPresenter {
         return Embed(
             title: item.title,
             url: item.link.flatMap(URL.init(string:)),
-            image: try extractImageUrl(item: item).map(Embed.Image.init(url:))
+            image: try extractImageUrl(item: item, base: rss.link.flatMap(URL.init(string:)))
+                .map(Embed.Image.init(url:))
         )
     }
 
-    private func extractImageUrl(item: RSSFeedItem) throws -> URL? {
-        try extractImageUrlFromEnclosure(item: item) ?? extractImageUrlFromHtml(item: item)
+    private func extractImageUrl(item: RSSFeedItem, base: URL? = nil) throws -> URL? {
+        (try extractImageLinkFromEnclosure(item: item) ?? extractImageLinkFromHtml(item: item))
+            .flatMap { absolutize(urlString: $0, against: base) }
     }
 
-    private func extractImageUrlFromEnclosure(item: RSSFeedItem) -> URL? {
+    private func extractImageLinkFromEnclosure(item: RSSFeedItem) -> String? {
         item.enclosure
             .flatMap(\.attributes)
             .filter { $0.type?.starts(with: "image/") ?? false }
             .flatMap(\.url)
-            .flatMap(URL.init(string:))
     }
 
-    private func extractImageUrlFromHtml(item: RSSFeedItem) throws -> URL? {
+    private func extractImageLinkFromHtml(item: RSSFeedItem) throws -> String? {
         guard let description = item.description else { return nil }
         let document = try SwiftSoup.parseBodyFragment(description)
         guard let imgSrc = try document.getElementsByTag("img").array().first?.attr("src") else { return nil }
-        return URL(string: imgSrc)
+        return imgSrc
+    }
+
+    private func absolutize(urlString: String, against base: URL?) -> URL? {
+        if urlString.starts(with: "/"), let base = base, let scheme = base.scheme, let host = base.host {
+            return URL(string: "\(scheme)://\(host)\(urlString)")
+        } else {
+            return URL(string: urlString)
+        }
     }
 }
