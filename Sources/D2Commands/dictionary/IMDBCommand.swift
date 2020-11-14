@@ -23,7 +23,7 @@ public class IMDBCommand: StringCommand {
 
                 output.append(Embed(
                     title: ":film_frames: IMDB Results",
-                    thumbnail: (entries.first?.info.imageUrl).map(Embed.Thumbnail.init(url:)),
+                    thumbnail: (entries.first?.info?.imageUrl).map(Embed.Thumbnail.init(url:)),
                     color: 0xf7c936,
                     fields: entries
                         .prefix(5)

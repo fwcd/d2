@@ -25,9 +25,9 @@ public struct IMDBResults: Codable {
             case years = "yr"
         }
 
-        public let info: Info
-        public let id: String
-        public let title: String
+        public let info: Info?
+        public let id: String?
+        public let title: String?
         public let type: String?
         public let rank: Int?
         public let starring: String?
