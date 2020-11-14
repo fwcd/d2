@@ -1,15 +1,25 @@
 import D2Commands
 import Utils
+import Logging
 import D2MessageIO
 import SyllableCounter
 
+fileprivate let log = Logger(label: "D2Handlers.HaikuHandler")
+
 public struct HaikuHandler: MessageHandler {
     private let syllableCounts: [Int]
-    @AutoSerializing private var configuration: HaikuConfiguration
 
-    public init(configuration: AutoSerializing<HaikuConfiguration>, syllableCounts: [Int] = [5, 7, 5]) {
+    @AutoSerializing private var configuration: HaikuConfiguration
+    private let inventoryManager: InventoryManager
+
+    public init(
+        configuration: AutoSerializing<HaikuConfiguration>,
+        inventoryManager: InventoryManager,
+        syllableCounts: [Int] = [5, 7, 5]
+    ) {
         self.syllableCounts = syllableCounts
         self._configuration = configuration
+        self.inventoryManager = inventoryManager
     }
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
@@ -17,6 +27,7 @@ public struct HaikuHandler: MessageHandler {
             configuration.enabledChannelIds.contains(channelId),
             let author = message.guildMember,
             let haiku = haikuOf(message.content) {
+            log.info("\(author.displayName) wrote a haiku: \(haiku.joined(separator: " - "))")
             client.sendMessage(Message(embed: Embed(
                 title: "A Haiku by `\(author.displayName)`",
                 description: haiku.joined(separator: "\n")

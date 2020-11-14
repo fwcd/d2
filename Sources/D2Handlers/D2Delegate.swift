@@ -49,7 +49,7 @@ public class D2Delegate: MessageDelegate {
             SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
-            HaikuHandler(configuration: haikuConfiguration),
+            HaikuHandler(configuration: haikuConfiguration, inventoryManager: inventoryManager),
             MessagePreviewHandler(configuration: messagePreviewsConfiguration),
             TriggerReactionHandler(),
             CountToNHandler(),
