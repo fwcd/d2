@@ -28,7 +28,7 @@ public struct IMDBResults: Codable {
         public let info: Info
         public let id: String
         public let title: String
-        public let type: String
+        public let type: String?
         public let rank: Int?
         public let starring: String?
         public let videos: [Video]?

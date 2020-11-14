@@ -38,7 +38,7 @@ public class IMDBCommand: StringCommand {
     private func embedFieldOf(entry: IMDBResults.Entry) -> Embed.Field {
         Embed.Field(
             name: [entry.title, entry.year.map { "(\($0))" }].compactMap { $0 }.joined(separator: " "),
-            value: [entry.years, entry.starring].compactMap { $0 }.joined(separator: ", ")
+            value: [entry.type, entry.years, entry.starring].compactMap { $0 }.joined(separator: ", ")
         )
     }
 }
