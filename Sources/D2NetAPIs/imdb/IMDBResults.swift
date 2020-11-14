@@ -1,11 +1,13 @@
+import Foundation
+
 public struct IMDBResults: Codable {
     public enum CodingKeys: String, CodingKey {
-        case data = "d"
+        case entries = "d"
         case query = "q"
         case v
     }
 
-    public let data: [Entry]
+    public let entries: [Entry]
     public let query: String?
     public let v: Int?
 
@@ -37,7 +39,7 @@ public struct IMDBResults: Codable {
         public struct Info: Codable {
             public let width: Int?
             public let height: Int?
-            public let imageUrl: String?
+            public let imageUrl: URL?
         }
 
         public struct Video: Codable {
