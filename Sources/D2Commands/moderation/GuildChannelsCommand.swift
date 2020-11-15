@@ -35,8 +35,7 @@ public class GuildChannelsCommand: StringCommand {
 
         output.append(Embed(
             title: ":accordion: Channels on `\(guild.name)`",
-            description: guild.channels.values
-                .sorted(by: ascendingComparator(comparing: \.position))
+            description: guild.channelsInOrder
                 .map {
                     switch $0.type {
                         case .text: return "#\($0.name)"
