@@ -77,16 +77,24 @@ public struct Guild {
         public let name: String
         public let parentId: ChannelID?
         public let position: Int
-        public let isVoiceChannel: Bool
+        public let type: ChannelType
         public let permissionOverwrites: [OverwriteID: PermissionOverwrite]
 
-        public init(guildId: GuildID, name: String, parentId: ChannelID? = nil, position: Int, isVoiceChannel: Bool, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
+        public var isVoiceChannel: Bool { type == .voice }
+
+        public init(guildId: GuildID, name: String, parentId: ChannelID? = nil, position: Int, type: ChannelType, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
             self.guildId = guildId
             self.name = name
             self.parentId = parentId
             self.position = position
-            self.isVoiceChannel = isVoiceChannel
+            self.type = type
             self.permissionOverwrites = permissionOverwrites
+        }
+
+        public enum ChannelType {
+            case text
+            case voice
+            case category
         }
 
         public struct PermissionOverwrite {
