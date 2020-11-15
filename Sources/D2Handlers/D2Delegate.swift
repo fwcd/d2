@@ -217,6 +217,7 @@ public class D2Delegate: MessageDelegate {
         registry["qr"] = QRCommand()
         registry["latex"] = LatexCommand()
         registry["autolatex"] = AutoLatexCommand()
+        registry["enterprisify"] = EnterprisifyCommand()
         registry["hoogle"] = HoogleCommand()
         registry["haskell"] = HaskellCommand()
         registry["pointfree"] = PointfreeCommand()
