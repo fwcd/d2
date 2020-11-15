@@ -28,7 +28,7 @@ func main(rawLogLevel: String, initialPresence: String?) {
 
     do {
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
-        let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence)
+        let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence.filter { _ in config?.setPresenceInitially ?? true })
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
         // Create platforms
