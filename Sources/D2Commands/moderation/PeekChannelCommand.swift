@@ -31,7 +31,7 @@ public class PeekChannelCommand: StringCommand {
             return
         }
 
-        client.getMessages(for: channelId, limit: 10).listen {
+        client.getMessages(for: channelId, limit: 20).listen {
             do {
                 let messages = try $0.get()
                 output.append(Embed(
@@ -39,7 +39,7 @@ public class PeekChannelCommand: StringCommand {
                     description: messages
                         .compactMap { m in m.timestamp.map { ($0, m) } }
                         .sorted(by: ascendingComparator(comparing: \.0))
-                        .map { "[\($0.0)] `\($0.1.author?.username ?? "<unnamed>")`: \($0.1.content.truncated(to: 200, appending: "..."))" }
+                        .map { "[\($0.0)] `\($0.1.author?.username ?? "<unnamed>")`: \($0.1.content.truncated(to: 100, appending: "..."))" }
                         .joined(separator: "\n")
                 ))
             } catch {
