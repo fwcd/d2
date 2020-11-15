@@ -17,6 +17,7 @@ public class GuildChannelsCommand: StringCommand {
         }
 
         let guildId: GuildID
+        let useChannelLinks: Bool
 
         if input.isEmpty {
             guard let guild = context.guild else {
@@ -24,8 +25,10 @@ public class GuildChannelsCommand: StringCommand {
                 return
             }
             guildId = guild.id
+            useChannelLinks = true
         } else {
             guildId = GuildID(input, clientName: client.name)
+            useChannelLinks = false
         }
 
         guard let guild = client.guild(for: guildId) else {
@@ -57,7 +60,7 @@ public class GuildChannelsCommand: StringCommand {
                         value: channels
                             .compactMap {
                                 switch $0.type {
-                                    case .text: return "#\($0.name)"
+                                    case .text: return useChannelLinks ? "<#\($0.id)>" : "#\($0.name)"
                                     case .voice: return ":speaker: \($0.name)"
                                     default: return nil
                                 }
