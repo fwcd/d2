@@ -7,7 +7,7 @@ public class PeekChannelCommand: StringCommand {
     public let info = CommandInfo(
         category: .moderation,
         shortDescription: "Peeks a channel's most recent messages",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .admin
     )
 
     public init() {}
