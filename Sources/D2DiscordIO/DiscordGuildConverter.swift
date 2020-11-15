@@ -33,6 +33,7 @@ extension DiscordGuild: MessageIOConvertible {
 extension DiscordGuildChannel /* TODO: No protocol inheritance clauses: MessageIOConvertible */ {
     public var usingMessageIO: Guild.Channel {
         return Guild.Channel(
+            id: id.usingMessageIO,
             guildId: guildId.usingMessageIO,
             name: name,
             parentId: parentId?.usingMessageIO,
