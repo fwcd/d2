@@ -39,9 +39,9 @@ public class GuildChannelsCommand: StringCommand {
                 .sorted(by: ascendingComparator(comparing: \.position))
                 .map {
                     switch $0.type {
-                        case .text: return ":hash: \($0.name)"
+                        case .text: return "#\($0.name)"
                         case .voice: return ":speaker: \($0.name)"
-                        case .category: return ":arrow_down_small: **\($0.name)**"
+                        case .category: return "**▾ \($0.name)**"
                     }
                 }
                 .joined(separator: "\n")
