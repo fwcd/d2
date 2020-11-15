@@ -23,7 +23,7 @@ public class GuildInfoCommand: StringCommand {
         }
 
         output.append(Embed(
-            title: ":chart_with_upwards_trend: Server Statistics for `\(guild.name)`",
+            title: ":chart_with_upwards_trend: Guild Info for `\(guild.name)`",
             thumbnail: context.client?.name == "Discord"
                 ? URL(string: "https://cdn.discordapp.com/icons/\(guild.id)/\(guild.icon).png").map(Embed.Thumbnail.init(url:))
                 : nil,
