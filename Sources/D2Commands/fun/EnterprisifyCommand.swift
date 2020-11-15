@@ -1,3 +1,5 @@
+import Utils
+
 public class EnterprisifyCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
@@ -136,7 +138,7 @@ public class EnterprisifyCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        var result = input
+        var result = input.withFirstUppercased
 
         for _ in 0..<iterations {
             result = enterprisify(name: result)
