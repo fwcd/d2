@@ -37,7 +37,9 @@ public class PeekChannelCommand: StringCommand {
                 output.append(Embed(
                     title: ":roll_of_paper: Most Recent Messages",
                     description: messages
-                        .map { "[\($0.timestamp.map { "\($0)" } ?? "?")] `\($0.author?.username ?? "<unnamed>")`: \($0.content.truncated(to: 200, appending: "..."))" }
+                        .compactMap { m in m.timestamp.map { ($0, m) } }
+                        .sorted(by: ascendingComparator(comparing: \.0))
+                        .map { "[\($0.0)] `\($0.1.author?.username ?? "<unnamed>")`: \($0.1.content.truncated(to: 200, appending: "..."))" }
                         .joined(separator: "\n")
                 ))
             } catch {
