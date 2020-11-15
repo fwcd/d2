@@ -21,7 +21,11 @@ public class HelpCommand: StringCommand {
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let authorLevel = context.author.map { permissionManager[simulated: $0] ?? permissionManager[$0] } ?? PermissionLevel.basic
         if input.isEmpty {
-            output.append(generalHelpEmbed(at: authorLevel, context: context))
+            if Int.random(in: 0..<1000) == 0 {
+                output.append("https://www.youtube.com/watch?v=2Q_ZzBGPdqE") // easter egg
+            } else {
+                output.append(generalHelpEmbed(at: authorLevel, context: context))
+            }
         } else {
             if let category = CommandCategory(rawValue: input) {
                 output.append(categoryHelpEmbed(for: category, at: authorLevel, context: context))
