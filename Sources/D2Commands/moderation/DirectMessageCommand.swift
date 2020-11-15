@@ -8,7 +8,7 @@ fileprivate let inputPattern = try! Regex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+
 
 public class DirectMessageCommand: Command {
     public let info = CommandInfo(
-        category: .misc,
+        category: .moderation,
         shortDescription: "Sends a direct message to a user",
         longDescription: "Sends a direct message to a mentioned user",
         requiredPermissionLevel: .admin

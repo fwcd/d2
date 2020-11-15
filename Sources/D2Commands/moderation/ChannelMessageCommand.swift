@@ -5,7 +5,7 @@ fileprivate let argPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\d+)\\s+(.+)")
 
 public class ChannelMessageCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .moderation,
         shortDescription: "Sends a message to an arbitrary channel on an arbitrary platform",
         helpText: "Syntax: [platform]? [channel id] [message]",
         requiredPermissionLevel: .vip
