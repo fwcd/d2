@@ -6,11 +6,11 @@ public class EnterprisifyCommand: StringCommand {
     )
     private let prefixes: [String]
     private let postfixes: [String]
+    private let iterations: Int
 
     public init(prefixes: [String] = [
         "Abstract",
         "Wrapping",
-        "Prototype",
         "Test",
         "Mock",
         "Delegating",
@@ -123,16 +123,26 @@ public class EnterprisifyCommand: StringCommand {
         "Item",
         "Command",
         "Extractor",
-        "Agent"
-    ]) {
+        "Agent",
+        "Prototype"
+    ], iterations: Int = 3) {
         assert(!prefixes.isEmpty)
         assert(!postfixes.isEmpty)
+        assert(iterations > 0)
+
         self.prefixes = prefixes
         self.postfixes = postfixes
+        self.iterations = iterations
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        output.append(enterprisify(name: input))
+        var result = input
+
+        for _ in 0..<iterations {
+            result = enterprisify(name: result)
+        }
+
+        output.append(result)
     }
 
     private func enterprisify(name: String) -> String {
