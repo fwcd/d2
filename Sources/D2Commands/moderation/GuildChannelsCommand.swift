@@ -33,17 +33,37 @@ public class GuildChannelsCommand: StringCommand {
             return
         }
 
+        let uncategorized = "Uncategorized"
+        var categories: [String: [Guild.Channel]] = [uncategorized: []]
+
+        for treeNode in guild.channelTree {
+            let channel = treeNode.channel
+            if channel.type == .category {
+                categories[channel.name] = treeNode.traversed
+            } else {
+                categories[uncategorized]!.append(channel)
+            }
+        }
+
         output.append(Embed(
             title: ":accordion: Channels on `\(guild.name)`",
-            description: guild.channelsInOrder
-                .map {
-                    switch $0.type {
-                        case .text: return "#\($0.name)"
-                        case .voice: return ":speaker: \($0.name)"
-                        case .category: return "**▾ \($0.name)**"
-                    }
+            fields: categories
+                .filter { !$0.value.isEmpty }
+                .map { (category, channels) in
+                    Embed.Field(
+                        name: "▾ \(category)",
+                        value: channels
+                            .compactMap {
+                                switch $0.type {
+                                    case .text: return "#\($0.name)"
+                                    case .voice: return ":speaker: \($0.name)"
+                                    default: return nil
+                                }
+                            }
+                            .joined(separator: "\n")
+                            .nilIfEmpty ?? "_none_"
+                    )
                 }
-                .joined(separator: "\n")
         ))
     }
 }
