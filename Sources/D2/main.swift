@@ -13,7 +13,7 @@ import Utils
 import Backtrace
 #endif
 
-func main(rawLogLevel: String, initialPresence: String?) {
+func main(rawLogLevel: String, initialPresence initialPresenceFromArg: String?) {
     #if DEBUG
     Backtrace.install()
     #endif
@@ -28,7 +28,9 @@ func main(rawLogLevel: String, initialPresence: String?) {
 
     do {
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
-        let handler = try D2Delegate(withPrefix: config?.commandPrefix ?? "%", initialPresence: initialPresence.filter { _ in config?.setPresenceInitially ?? true })
+        let commandPrefix = config?.commandPrefix ?? "%"
+        let initialPresence = (config?.setPresenceInitially ?? true) ? initialPresenceFromArg ?? "\(commandPrefix)help" : nil
+        let handler = try D2Delegate(withPrefix: commandPrefix, initialPresence: initialPresence)
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
         // Create platforms
