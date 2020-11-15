@@ -328,6 +328,7 @@ public class D2Delegate: MessageDelegate {
         registry["cssselect", aka: ["cssselector", "selector", "select"]] = CSSSelectorCommand()
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
+        registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
         registry["guilds"] = GuildsCommand()
         registry["whatsup"] = WhatsUpCommand()
         registry["songcharts"] = SongChartsCommand()
