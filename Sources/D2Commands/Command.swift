@@ -16,8 +16,6 @@ public protocol Command: AnyObject {
     func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
 
     func onReceivedUpdated(presence: Presence)
-
-    func equalTo(_ rhs: Command) -> Bool
 }
 
 extension Command {
@@ -33,6 +31,4 @@ extension Command {
     // TODO: Support reaction removal
 
     public func onReceivedUpdated(presence: Presence) {}
-
-    public func equalTo(_ rhs: Command) -> Bool { self === rhs }
 }
