@@ -22,9 +22,10 @@ public class GuildsCommand: StringCommand {
                 Embed.Field(
                     name: $0.name,
                     value: [
-                        $0.members[$0.ownerId].map { "owned by <@\($0.user.id)> (\($0.user.username)#\($0.user.discriminator))" },
+                        $0.members[$0.ownerId].map { "owned by `\($0.user.username)#\($0.user.discriminator)` (<@\($0.user.id)>)" },
                         "\($0.members.count) \("member".pluralized(with: $0.members.count))",
-                        "\($0.channels.count) \("channel".pluralized(with: $0.channels.count))"
+                        "\($0.channels.count) \("channel".pluralized(with: $0.channels.count))",
+                        "\($0.id)"
                     ].compactMap { $0 }.joined(separator: "\n"),
                     inline: true
                 )
