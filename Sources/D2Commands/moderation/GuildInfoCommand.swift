@@ -3,9 +3,9 @@ import D2Permissions
 import Utils
 import Foundation
 
-public class ServerInfoCommand: StringCommand {
+public class GuildInfoCommand: StringCommand {
     public let info = CommandInfo(
-        category: .misc,
+        category: .moderation,
         shortDescription: "Fetches statistics about the current server/guild",
         longDescription: "Outputs a range of interesting statistics about the current guild",
         requiredPermissionLevel: .basic
