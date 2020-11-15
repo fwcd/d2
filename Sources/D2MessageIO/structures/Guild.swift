@@ -43,6 +43,11 @@ public struct Guild {
             .filter { $0.channel.parentId == nil }
     }
 
+    /// Fetches the channels, correctly ordered. Since this requires
+    /// building a channel tree, it is generally considered an expensive
+    /// property to compute.
+    public var channelsInOrder: [Channel] { channelTree.flatMap(\.traversed) }
+
     public init(
         id: GuildID,
         ownerId: UserID,
@@ -135,6 +140,8 @@ public struct Guild {
     public class ChannelTreeNode {
         public let channel: Channel
         public fileprivate(set) var childs: [ChannelTreeNode] = []
+
+        public var traversed: [Channel] { [channel] + childs.flatMap(\.traversed) }
 
         fileprivate init(channel: Channel) {
             self.channel = channel
