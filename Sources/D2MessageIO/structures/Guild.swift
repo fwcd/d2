@@ -24,6 +24,25 @@ public struct Guild {
     public let emojis: [EmojiID: Emoji]
     public let channels: [ChannelID: Channel]
 
+    /// Fetches the guild's channels as a tree.
+    public var channelTree: [ChannelTreeNode] {
+        let treeNodes = channels.mapValues { ChannelTreeNode(channel: $0) }
+
+        for treeNode in treeNodes.values {
+            if let parentId = treeNode.channel.parentId, let parent = treeNodes[parentId] {
+                parent.childs.append(treeNode)
+            }
+        }
+
+        for treeNode in treeNodes.values {
+            treeNode.childs.sort(by: ascendingComparator(comparing: \.channel.position))
+        }
+
+        return treeNodes.values
+            .sorted(by: ascendingComparator(comparing: \.channel.position))
+            .filter { $0.channel.parentId == nil }
+    }
+
     public init(
         id: GuildID,
         ownerId: UserID,
@@ -110,6 +129,15 @@ public struct Guild {
                 case role
                 case member
             }
+        }
+    }
+
+    public class ChannelTreeNode {
+        public let channel: Channel
+        public fileprivate(set) var childs: [ChannelTreeNode] = []
+
+        fileprivate init(channel: Channel) {
+            self.channel = channel
         }
     }
 
