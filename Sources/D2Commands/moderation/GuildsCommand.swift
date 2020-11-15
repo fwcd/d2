@@ -1,4 +1,5 @@
 import D2MessageIO
+import Utils
 
 public class GuildsCommand: StringCommand {
     public let info = CommandInfo(
@@ -18,7 +19,7 @@ public class GuildsCommand: StringCommand {
 
         output.append(Embed(
             title: ":accordion: Guilds",
-            fields: guilds.map {
+            fields: guilds.sorted(by: descendingComparator { $0.members.count }).map {
                 Embed.Field(
                     name: $0.name,
                     value: [
