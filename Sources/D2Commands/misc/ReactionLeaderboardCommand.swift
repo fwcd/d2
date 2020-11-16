@@ -5,7 +5,8 @@ public class ReactionLeaderboardCommand: Command {
     public private(set) var info = CommandInfo(
         category: .misc,
         helpText: "Syntax: [users...]?",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .basic,
+        platformAvailability: ["Discord"]
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .embed

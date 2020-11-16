@@ -2,12 +2,14 @@ import D2MessageIO
 import Utils
 
 fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+<#(\\d+)>\\s+(\\d+)\\s*(.*)")
+fileprivate let emojiPattern = try! Regex(from: "<a?:(.+):(\\d+)>")
 
 public class RoleReactionsCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .moderation,
         shortDescription: "Adds reactions to a message that automatically assign roles",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .vip,
+        platformAvailability: ["Discord"]
     )
     @AutoSerializing private var configuration: RoleReactionsConfiguration
     private var subcommands: [String: (CommandOutput, MessageClient, ChannelID, MessageID, String) -> Void] = [:]
@@ -93,9 +95,18 @@ public class RoleReactionsCommand: StringCommand {
             .map { $0
                 .split(separator: "=")
                 .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } }
-            .map { try ($0[0], parseRoleId(from: $0[1], on: guild)) }
+            .map { try (parseEmoji(from: $0[0]), parseRoleId(from: $0[1], on: guild)) }
 
         return .init(roleMappings: Dictionary(uniqueKeysWithValues: mappings))
+    }
+
+    private func parseEmoji(from s: String) -> String {
+        if let parsedEmoji = emojiPattern.firstGroups(in: s) {
+            // Custom emoji reactions use a special syntax
+            return "\(parsedEmoji[1]):\(parsedEmoji[2])"
+        } else {
+            return s
+        }
     }
 
     private func parseRoleId(from s: String, on guild: Guild) throws -> RoleID {
