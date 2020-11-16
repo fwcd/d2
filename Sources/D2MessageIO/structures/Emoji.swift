@@ -6,7 +6,10 @@ public struct Emoji: Hashable, CustomStringConvertible {
     public let requireColons: Bool
     public let roles: [RoleID]
 
+    /// Uses the standard syntax for custom emojis on Discord.
     public var description: String { id.map { "<\(animated ? "a" : ""):\(name):\($0)>" } ?? name }
+    /// Uses the alternate syntax for custom emojis on Discord that is used by the createReaction endpoint.
+    public var compactDescription: String { id.map { "\(name):\($0)" } ?? name }
 
     public init(
         id: EmojiID? = nil,

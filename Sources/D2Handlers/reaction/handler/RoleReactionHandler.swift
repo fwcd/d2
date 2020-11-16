@@ -14,7 +14,7 @@ public struct RoleReactionHandler: ReactionHandler {
 
     public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
         if
-            let roleId = configuration.roleMessages[messageId]?.roleMappings["\(emoji)"],
+            let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
             let guild = client.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
@@ -27,7 +27,7 @@ public struct RoleReactionHandler: ReactionHandler {
 
     public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
         if
-            let roleId = configuration.roleMessages[messageId]?.roleMappings["\(emoji)"],
+            let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
             let guild = client.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
