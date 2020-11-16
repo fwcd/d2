@@ -30,8 +30,8 @@ public class RoleReactionsCommand: StringCommand {
                     self.configuration.roleMessages[messageId] = mappings
 
                     for (emoji, _) in mappings {
-                        // TODO: Handle asynchronous errors
-                        client.createReaction(for: messageId, on: channelId, emoji: emoji)
+                        // TODO: Handle asynchronous errors properly
+                        client.createReaction(for: messageId, on: channelId, emoji: emoji).listenOrLogError { _ in }
                     }
 
                     output.append("Successfully added role reactions to the message.")
@@ -48,8 +48,8 @@ public class RoleReactionsCommand: StringCommand {
                 self.configuration.roleMessages[messageId] = nil
 
                 for (emoji, _) in mappings {
-                    // TODO: Handle asynchronous errors
-                    client.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji)
+                    // TODO: Handle asynchronous errors properly
+                    client.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji).listenOrLogError { _ in }
                 }
 
                 output.append("Successfully removed role reactions from the message.")
