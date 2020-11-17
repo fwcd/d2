@@ -40,15 +40,15 @@ public class CampusCommand: StringCommand {
                 return self.geocoder.geocode(location: address)
                     .mapCatching { coords in
                         try MapQuestStaticMap(
-                            latitude: coords.latitude,
-                            longitude: coords.longitude
+                            center: coords,
+                            locations: [coords]
                         ).url
                     }
                     .map { mapURL in
                         Embed(
                             title: address,
                             url: self.googleMapsURLFor(address: address),
-                            image: Embed.Image(url: URL(string: mapURL)!)
+                            image: Embed.Image(url: mapURL)
                         )
                     }
             }
