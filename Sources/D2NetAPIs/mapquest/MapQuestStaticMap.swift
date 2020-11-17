@@ -23,7 +23,7 @@ public struct MapQuestStaticMap {
             URLQueryItem(name: "key", value: mapQuestKey),
             URLQueryItem(name: "size", value: "\(width),\(height)"),
             URLQueryItem(name: "zoom", value: String(zoom)),
-            URLQueryItem(name: "locations", value: locations.map { "\($0.latitude),\($0.longitude)" }.joined(separator: "|"))
+            URLQueryItem(name: "locations", value: locations.map { "\($0.latitude),\($0.longitude)" }.joined(separator: "||"))
         ]
 
         if let center = center {
