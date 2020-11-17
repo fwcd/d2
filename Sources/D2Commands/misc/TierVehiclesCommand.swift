@@ -24,7 +24,17 @@ public class TierVehiclesCommand: Command {
 
         TierVehiclesQuery(coords: coords, radius: radius).perform()
             .map(\.data)
-            .then { vehicles in Promise.catching { try MapQuestStaticMap(pins: vehicles.map { .init(coords: $0.attributes.coords, marker: $0.attributes.batteryLevel.map { "marker-\($0)" }) }) }
+            .then { vehicles in Promise
+                .catching {
+                    try MapQuestStaticMap(
+                        pins: vehicles
+                            .enumerated()
+                            .map { (i, vehicle) in .init(
+                                coords: vehicle.attributes.coords,
+                                marker: "flag-\(i + 1)\(vehicle.attributes.batteryLevel.map { ":\($0)%25" } ?? "")"
+                            ) }
+                    )
+                }
                 .then { $0.download() }
                 .map { (vehicles, $0) } }
             .listen {
@@ -34,9 +44,9 @@ public class TierVehiclesCommand: Command {
                         .files([Message.FileUpload(data: mapImageData, filename: "vehicles.jpg", mimeType: "image/jpeg")]),
                         .embed(Embed(
                             title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
-                            fields: vehicles.prefix(5).map { vehicle in
+                            fields: vehicles.enumerated().prefix(5).map { (i, vehicle) in
                                 Embed.Field(
-                                    name: "\(vehicle.attributes.vehicleType ?? vehicle.type) \(vehicle.id)",
+                                    name: "Vehicle \(i + 1): \(vehicle.id)",
                                     value: [
                                         ("State", vehicle.attributes.state),
                                         ("Battery Level", vehicle.attributes.batteryLevel.map(String.init)),
