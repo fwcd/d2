@@ -12,21 +12,21 @@ public struct SunriseSunsetResults: Codable {
             case civilTwilightEnd = "civil_twilight_end"
             case nauticalTwilightBegin = "nautical_twilight_begin"
             case nauticalTwilightEnd = "nautical_twilight_end"
-            case astronomialTwilightBegin = "astronomical_twilight_begin"
-            case astronomialTwilightEnd = "astronomical_twilight_end"
+            case astronomicalTwilightBegin = "astronomical_twilight_begin"
+            case astronomicalTwilightEnd = "astronomical_twilight_end"
         }
 
         // TODO: Parse to Foundation's Date (the format is "hh:mm:ss AM/PM")
 
-        public let sunrise: String
-        public let sunset: String
-        public let solarNoon: String
-        public let dayLength: String
-        public let civilTwilightBegin: String
-        public let civilTwilightEnd: String
-        public let nauticalTwilightBegin: String
-        public let nauticalTwilightEnd: String
-        public let astronomialTwilightBegin: String
-        public let astronomialTwilightEnd: String
+        public let sunrise: String?
+        public let sunset: String?
+        public let solarNoon: String?
+        public let dayLength: String?
+        public let civilTwilightBegin: String?
+        public let civilTwilightEnd: String?
+        public let nauticalTwilightBegin: String?
+        public let nauticalTwilightEnd: String?
+        public let astronomicalTwilightBegin: String?
+        public let astronomicalTwilightEnd: String?
     }
 }

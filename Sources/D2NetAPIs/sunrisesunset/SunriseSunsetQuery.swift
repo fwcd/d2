@@ -3,7 +3,7 @@ import Utils
 public struct SunriseSunsetQuery {
     public let coords: GeoCoordinates
 
-    public init(coords: GeoCoordinates) {
+    public init(at coords: GeoCoordinates) {
         self.coords = coords
     }
 
