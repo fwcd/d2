@@ -41,7 +41,7 @@ public class CampusCommand: StringCommand {
                     .thenCatching { coords in
                         try MapQuestStaticMap(
                             center: coords,
-                            locations: [coords]
+                            pins: [.init(coords: coords)]
                         ).download()
                     }
                     .map {

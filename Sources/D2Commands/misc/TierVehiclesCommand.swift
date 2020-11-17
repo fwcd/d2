@@ -24,7 +24,7 @@ public class TierVehiclesCommand: Command {
 
         TierVehiclesQuery(coords: coords, radius: radius).perform()
             .map(\.data)
-            .then { vehicles in Promise.catching { try MapQuestStaticMap(locations: vehicles.map(\.attributes.coords)) }
+            .then { vehicles in Promise.catching { try MapQuestStaticMap(pins: vehicles.map { .init(coords: $0.attributes.coords, marker: $0.attributes.batteryLevel.map { "marker-\($0)" }) }) }
                 .then { $0.download() }
                 .map { (vehicles, $0) } }
             .listen {

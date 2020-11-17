@@ -4,9 +4,21 @@ import Utils
 public struct MapQuestStaticMap {
     public let url: URL
 
+    public struct Pin: CustomStringConvertible {
+        public let coords: GeoCoordinates
+        public let marker: String?
+
+        public var description: String { ["\(coords.latitude),\(coords.longitude)", marker].compactMap { $0 }.joined(separator: "|") }
+
+        public init(coords: GeoCoordinates, marker: String? = nil) {
+            self.coords = coords
+            self.marker = marker
+        }
+    }
+
     public init(
         center: GeoCoordinates? = nil,
-        locations: [GeoCoordinates] = [],
+        pins: [Pin] = [],
         width: Int = 300,
         height: Int = 300,
         imageType: String = "png",
@@ -24,7 +36,7 @@ public struct MapQuestStaticMap {
             URLQueryItem(name: "key", value: mapQuestKey),
             URLQueryItem(name: "size", value: "\(width),\(height)"),
             URLQueryItem(name: "zoom", value: String(zoom)),
-            URLQueryItem(name: "locations", value: locations.map { "\($0.latitude),\($0.longitude)" }.joined(separator: "||"))
+            URLQueryItem(name: "locations", value: pins.map(\.description).joined(separator: "||"))
         ]
 
         if let center = center {
