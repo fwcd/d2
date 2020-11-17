@@ -26,7 +26,7 @@ public class CampusCommand: StringCommand {
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         Promise.catching { try UnivISQuery(search: .rooms, params: [.name: input]) }
             .then { $0.start() }
-            .thenCatching { (queryOutput: UnivISOutputNode) throws -> Promise<Embed, Error> in
+            .thenCatching { (queryOutput: UnivISOutputNode) throws -> Promise<RichValue, Error> in
                 // Successfully received and parsed UnivIS query output
                 guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
                     throw CampusCommandError.noRoomFound
@@ -38,24 +38,26 @@ public class CampusCommand: StringCommand {
                 let address = self.format(rawAddress: rawAddress)
 
                 return self.geocoder.geocode(location: address)
-                    .mapCatching { coords in
+                    .thenCatching { coords in
                         try MapQuestStaticMap(
                             center: coords,
                             locations: [coords]
-                        ).url
+                        ).download()
                     }
-                    .map { mapURL in
-                        Embed(
-                            title: address,
-                            url: self.googleMapsURLFor(address: address),
-                            image: Embed.Image(url: mapURL)
-                        )
+                    .map {
+                        RichValue.compound([
+                            .files([Message.FileUpload(data: $0, filename: "campus.jpg", mimeType: "image/jpeg")]),
+                            .embed(Embed(
+                                title: address,
+                                url: self.googleMapsURLFor(address: address)
+                            ))
+                        ])
                     }
             }
             .listen {
                 do {
-                    let embed = try $0.get()
-                    output.append(embed)
+                    let value = try $0.get()
+                    output.append(value)
                 } catch {
                     output.append(error, errorText: "Could not create static map: `\(error)`")
                 }

@@ -134,7 +134,6 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
-                .product(name: "Graphics", package: "swift-graphics"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "XMLCoder", package: "XMLCoder")
             ]
