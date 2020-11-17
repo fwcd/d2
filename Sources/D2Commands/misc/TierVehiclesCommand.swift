@@ -33,7 +33,7 @@ public class TierVehiclesCommand: Command {
                                 coords: vehicle.attributes.coords,
                                 marker: [
                                     "flag", // type
-                                    "md", // size
+                                    "sm", // size
                                     "000000", // bg color
                                     vehicle.attributes.state == "ACTIVE" ? "dcffb8" : "ffe7b8", // fg color
                                     "\(i + 1)\(vehicle.attributes.batteryLevel.map { ":\($0)%25" } ?? "")" // text
@@ -50,23 +50,29 @@ public class TierVehiclesCommand: Command {
                         .files([Message.FileUpload(data: mapImageData, filename: "vehicles.jpg", mimeType: "image/jpeg")]),
                         .embed(Embed(
                             title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
-                            fields: vehicles.enumerated().prefix(5).map { (i, vehicle) in
-                                Embed.Field(
-                                    name: "Vehicle \(i + 1): \(vehicle.id)",
-                                    value: [
-                                        ("State", vehicle.attributes.state),
-                                        ("Battery Level", vehicle.attributes.batteryLevel.map(String.init)),
-                                        ("Latitude", String(vehicle.attributes.lat)),
-                                        ("Longitude", String(vehicle.attributes.lng)),
-                                        ("Max Speed", vehicle.attributes.maxSpeed.map(String.init)),
-                                        ("License Plate", vehicle.attributes.licensePlate),
-                                        ("Has Helmet", vehicle.attributes.hasHelmet.map(String.init))
-                                    ]
-                                        .compactMap { (k, v) in v.map { "\(k): \($0)" } }
-                                        .joined(separator: "\n")
-                                        .nilIfEmpty ?? "_no attributes_"
-                                )
-                            }
+                            fields: vehicles
+                                .enumerated()
+                                .prefix(5)
+                                .map { (i, vehicle) in
+                                    let attributes = vehicle.attributes
+                                    let badges = [
+                                        attributes.hasHelmet.filter { $0 }.map { _ in ":military_helmet:" },
+                                        attributes.hasHelmetBox.filter { $0 }.map { _ in ":toolbox:" },
+                                        attributes.isRentable.filter { $0 }.map { _ in ":dollar:" },
+                                    ].compactMap { $0 }.joined(separator: " ")
+
+                                    return Embed.Field(
+                                        name: "Vehicle \(i + 1): \(attributes.state) (\(attributes.batteryLevel.map(String.init) ?? "?")%) \(badges)".trimmingCharacters(in: .whitespacesAndNewlines),
+                                        value: [
+                                            ("Max Speed", attributes.maxSpeed.map { "\($0) km/h" }),
+                                            ("License Plate", attributes.licensePlate),
+                                            ("ID", vehicle.id)
+                                        ]
+                                            .compactMap { (k, v) in v.map { "\(k): \($0)" } }
+                                            .joined(separator: "\n")
+                                            .nilIfEmpty ?? "_no attributes_"
+                                    )
+                                }
                         ))
                     ]))
                 } catch {
