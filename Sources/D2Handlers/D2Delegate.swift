@@ -149,7 +149,7 @@ public class D2Delegate: MessageDelegate {
         registry["stackoverflow"] = StackOverflowCommand()
         registry["wikipedia"] = WikipediaCommand()
         registry["dblp"] = DBLPCommand()
-        registry["universities"] = UniversitiesCommand()
+        registry["universities", aka: ["unis"]] = UniversitiesCommand()
         registry["gitlab"] = GitLabCommand()
         registry["perceptron"] = PerceptronCommand()
         registry["fizzbuzz"] = FizzBuzzCommand()
