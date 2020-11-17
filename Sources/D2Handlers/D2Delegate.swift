@@ -334,6 +334,7 @@ public class D2Delegate: MessageDelegate {
         registry["parsedom", aka: ["parsehtml"]] = ParseDOMCommand()
         registry["cssselect", aka: ["cssselector", "selector", "select"]] = CSSSelectorCommand()
         registry["geocode", aka: ["geo", "geocoords", "coords"]] = GeocodeCommand()
+        registry["tiervehicles", aka: ["tier", "tierscooters"]] = TierVehiclesCommand()
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
         registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
