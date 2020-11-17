@@ -12,6 +12,6 @@ public struct University: Codable {
     public let webPages: [String]?
     public let alphaTwoCode: String?
     public let country: String?
-    public let name: String?
+    public let name: String
     public let stateProvince: String?
 }
