@@ -17,7 +17,7 @@ public struct MapQuestStaticMap {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "www.mapquestapi.com"
-        components.path = "/staticmap/v5/getmap"
+        components.path = "/staticmap/v5/map"
         components.queryItems = [
             URLQueryItem(name: "key", value: mapQuestKey),
             URLQueryItem(name: "size", value: "\(width),\(height)"),
