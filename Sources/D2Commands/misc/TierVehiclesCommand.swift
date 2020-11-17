@@ -18,11 +18,14 @@ public class TierVehiclesCommand: Command {
             return
         }
 
-        TierVehiclesQuery(coords: coords).perform().listen {
+        // TODO: Let user specify radius (with this one as default)
+        let radius = 300 // meters
+
+        TierVehiclesQuery(coords: coords, radius: radius).perform().listen {
             do {
                 let vehicles = try $0.get().data
                 output.append(Embed(
-                    title: ":scooter: Tier Vehicles near \(coords.latitude), \(coords.longitude)",
+                    title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
                     fields: vehicles.prefix(5).map { vehicle in
                         Embed.Field(
                             name: "\(vehicle.attributes.vehicleType ?? vehicle.type) \(vehicle.id)",
