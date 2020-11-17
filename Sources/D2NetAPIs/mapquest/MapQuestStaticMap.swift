@@ -1,4 +1,5 @@
 import Foundation
+import Graphics
 import Utils
 
 public struct MapQuestStaticMap {
@@ -27,5 +28,11 @@ public struct MapQuestStaticMap {
 
         guard let url = components.url else { throw NetApiError.urlError(components) }
         self.url = url
+    }
+
+    public func download() -> Promise<Image, Error> {
+        HTTPRequest(url: url)
+            .runAsync()
+            .mapCatching { try Image(fromPng: $0) }
     }
 }
