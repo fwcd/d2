@@ -1,34 +1,31 @@
 import Foundation
+import Utils
 
 public struct MapQuestStaticMap {
-    public let url: String
+    public let url: URL
 
     public init(
-        latitude: Double,
-        longitude: Double,
+        center: GeoCoordinates,
+        locations: [GeoCoordinates] = [],
         width: Int = 300,
         height: Int = 300,
         imageType: String = "png",
-        zoomLevel: Int = 16
+        zoom: Int = 16
     ) throws {
-        var formattedURL: String? = nil
         guard let mapQuestKey = storedNetApiKeys?.mapQuest else { throw NetApiError.missingApiKey("No API key for MapQuest found") }
 
-        // TODO: Output a more detailed error message
-        mapQuestKey.withCString { key in
-            formattedURL = String(
-                format: "https://www.mapquestapi.com/staticmap/v4/getmap?key=%s&size=%d,%d&type=map&zoom=%d&scalebar=false&traffic=false&center=%.6f,%.6f&pois=mcenter,%.6f,%.6f",
-                key,
-                width,
-                height,
-                zoomLevel,
-                latitude,
-                longitude,
-                latitude,
-                longitude
-            )
-        }
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "www.mapquestapi.com"
+        components.path = "/staticmap/v5/getmap"
+        components.queryItems = [
+            URLQueryItem(name: "key", value: mapQuestKey),
+            URLQueryItem(name: "size", value: "\(width),\(height)"),
+            URLQueryItem(name: "zoom", value: String(zoom)),
+            URLQueryItem(name: "locations", value: locations.map { "\($0.latitude),\($0.longitude)" }.joined(separator: "|"))
+        ]
 
-        url = formattedURL!
+        guard let url = components.url else { throw NetApiError.urlError(components) }
+        self.url = url
     }
 }
