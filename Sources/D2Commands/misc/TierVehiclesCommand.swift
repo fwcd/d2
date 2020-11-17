@@ -31,7 +31,13 @@ public class TierVehiclesCommand: Command {
                             .enumerated()
                             .map { (i, vehicle) in .init(
                                 coords: vehicle.attributes.coords,
-                                marker: "flag-md-\(vehicle.attributes.state == "ACTIVE" ? "dcffb8" : "ffe7b8")-\(i + 1)\(vehicle.attributes.batteryLevel.map { ":\($0)%25" } ?? "")"
+                                marker: [
+                                    "flag", // type
+                                    "md", // size
+                                    "000000", // bg color
+                                    vehicle.attributes.state == "ACTIVE" ? "dcffb8" : "ffe7b8", // fg color
+                                    "\(i + 1)\(vehicle.attributes.batteryLevel.map { ":\($0)%25" } ?? "")" // text
+                                ].joined(separator: "-")
                             ) }
                     )
                 }
