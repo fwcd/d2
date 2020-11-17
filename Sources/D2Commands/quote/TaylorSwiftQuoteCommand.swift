@@ -3,7 +3,7 @@ import D2NetAPIs
 
 public class TaylorSwiftQuoteCommand: StringCommand {
     public let info = CommandInfo(
-        category: .fun,
+        category: .quote,
         shortDescription: "Fetches a random Taylor Swift quote",
         requiredPermissionLevel: .basic
     )

@@ -20,6 +20,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case misc
     case moderation
     case music
+    case quote
     case scripting
     case videogame
     case web
@@ -47,6 +48,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .misc: return ":art: Miscellaneous commands"
             case .moderation: return ":loudspeaker: Moderation"
             case .music: return ":guitar: Music, theory and chords"
+            case .quote: return ":speech_left: Quotes"
             case .scripting: return ":tools: Command scripting"
             case .videogame: return ":evergreen_tree: Video games"
             case .web: return ":globe_with_meridians: Web browsing"

@@ -7,7 +7,7 @@ fileprivate let htmlTagPattern = try! Regex(from: "<[^>]+>")
 
 public class DesignQuoteCommand: StringCommand {
     public let info = CommandInfo(
-        category: .fun,
+        category: .quote,
         shortDescription: "Fetches a random quote about design",
         requiredPermissionLevel: .basic
     )

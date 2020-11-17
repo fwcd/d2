@@ -3,7 +3,7 @@ import D2NetAPIs
 
 public class KanyeWestQuoteCommand: StringCommand {
     public let info = CommandInfo(
-        category: .fun,
+        category: .quote,
         shortDescription: "Fetches a random Kanye West quote",
         requiredPermissionLevel: .basic
     )
