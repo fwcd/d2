@@ -8,6 +8,7 @@ public enum RichValueType: CustomStringConvertible {
     case urls
     case code
     case embed
+    case geoCoordinates
     case mentions
     case ndArrays
     case error
@@ -29,6 +30,7 @@ public enum RichValueType: CustomStringConvertible {
             case .urls: return "urls"
             case .code: return "code"
             case .embed: return "embed"
+            case .geoCoordinates: return "geoCoordinates"
             case .mentions: return "mentions"
             case .ndArrays: return "ndArrays"
             case .error: return "error"

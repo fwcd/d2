@@ -54,6 +54,8 @@ public struct MessageWriter {
                     """))
             case let .embed(embed):
                 return Promise(Message(embed: embed))
+            case let .geoCoordinates(geo):
+                return Promise(Message(content: "Latitude: \(geo.latitude), Longitude: \(geo.longitude)"))
             case let .ndArrays(ndArrays):
                 if let renderer = latexRenderer, ndArrays.contains(where: { !$0.isScalar }) {
                     return renderer.renderImage(from: latexOf(ndArrays: ndArrays))

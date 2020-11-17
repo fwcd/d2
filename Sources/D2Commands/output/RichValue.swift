@@ -19,6 +19,7 @@ public enum RichValue: Addable {
     case domNode(Element)
     case code(String, language: String?)
     case embed(Embed?)
+    case geoCoordinates(GeoCoordinates)
     case mentions([User])
     case roleMentions([RoleID])
     case ndArrays([NDArray<Rational>])
@@ -51,6 +52,9 @@ public enum RichValue: Addable {
     }
     public var asGif: GIF? {
         extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
+    }
+    public var asGeoCoordinates: GeoCoordinates? {
+        extract { if case let .geoCoordinates(geoCoordinates) = $0 { return geoCoordinates } else { return nil } }.first
     }
     public var asUrls: [URL]? {
         extract { r -> [URL]? in if case let .urls(urls) = r { return urls } else { return nil } }.flatMap { $0 }
