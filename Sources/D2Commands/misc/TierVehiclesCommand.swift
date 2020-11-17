@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2NetAPIs
+import Utils
 
 public class TierVehiclesCommand: Command {
     public let info = CommandInfo(
@@ -21,32 +22,40 @@ public class TierVehiclesCommand: Command {
         // TODO: Let user specify radius (with this one as default)
         let radius = 300 // meters
 
-        TierVehiclesQuery(coords: coords, radius: radius).perform().listen {
-            do {
-                let vehicles = try $0.get().data
-                output.append(Embed(
-                    title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
-                    fields: vehicles.prefix(5).map { vehicle in
-                        Embed.Field(
-                            name: "\(vehicle.attributes.vehicleType ?? vehicle.type) \(vehicle.id)",
-                            value: [
-                                ("State", vehicle.attributes.state),
-                                ("Battery Level", vehicle.attributes.batteryLevel.map(String.init)),
-                                ("Latitude", String(vehicle.attributes.lat)),
-                                ("Longitude", String(vehicle.attributes.lng)),
-                                ("Max Speed", vehicle.attributes.maxSpeed.map(String.init)),
-                                ("License Plate", vehicle.attributes.licensePlate),
-                                ("Has Helmet", vehicle.attributes.hasHelmet.map(String.init))
-                            ]
-                                .compactMap { (k, v) in v.map { "\(k): \($0)" } }
-                                .joined(separator: "\n")
-                                .nilIfEmpty ?? "_no attributes_"
-                        )
-                    }
-                ))
-            } catch {
-                output.append(error, errorText: "Could not query vehicles")
+        TierVehiclesQuery(coords: coords, radius: radius).perform()
+            .map(\.data)
+            .then { vehicles in Promise.catching { try MapQuestStaticMap(locations: vehicles.map(\.attributes.coords)) }
+                .then { $0.download() }
+                .map { (vehicles, $0) } }
+            .listen {
+                do {
+                    let (vehicles, mapImageData) = try $0.get()
+                    output.append(.compound([
+                        .files([Message.FileUpload(data: mapImageData, filename: "vehicles.jpg", mimeType: "image/jpeg")]),
+                        .embed(Embed(
+                            title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
+                            fields: vehicles.prefix(5).map { vehicle in
+                                Embed.Field(
+                                    name: "\(vehicle.attributes.vehicleType ?? vehicle.type) \(vehicle.id)",
+                                    value: [
+                                        ("State", vehicle.attributes.state),
+                                        ("Battery Level", vehicle.attributes.batteryLevel.map(String.init)),
+                                        ("Latitude", String(vehicle.attributes.lat)),
+                                        ("Longitude", String(vehicle.attributes.lng)),
+                                        ("Max Speed", vehicle.attributes.maxSpeed.map(String.init)),
+                                        ("License Plate", vehicle.attributes.licensePlate),
+                                        ("Has Helmet", vehicle.attributes.hasHelmet.map(String.init))
+                                    ]
+                                        .compactMap { (k, v) in v.map { "\(k): \($0)" } }
+                                        .joined(separator: "\n")
+                                        .nilIfEmpty ?? "_no attributes_"
+                                )
+                            }
+                        ))
+                    ]))
+                } catch {
+                    output.append(error, errorText: "Could not query vehicles")
+                }
             }
-        }
     }
 }
