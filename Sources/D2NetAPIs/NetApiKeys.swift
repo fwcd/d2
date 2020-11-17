@@ -4,6 +4,7 @@ let storedNetApiKeys = try? DiskJsonSerializer().readJson(as: NetApiKeys.self, f
 
 struct NetApiKeys: Codable {
     var mapQuest: String? = nil
+    var tier: String? = nil
     var wolframAlpha: String? = nil
     var gitlab: String? = nil
     var openweathermap: String? = nil
