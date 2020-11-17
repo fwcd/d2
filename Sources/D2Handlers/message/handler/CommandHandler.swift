@@ -90,7 +90,7 @@ public class CommandHandler: MessageHandler {
             log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
             return false
         }
-        guard currentlyRunningCommands < maxConcurrentlyRunningCommands && message.content != "\(commandPrefix)quit" else {
+        guard currentlyRunningCommands < maxConcurrentlyRunningCommands || unconditionallyAllowedCommands.contains(where: { message.content.starts(with: "\(commandPrefix)\($0)") }) else {
             client.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
             log.notice("Command invocation not processed, since max concurrent operation count was reached")
             return false
