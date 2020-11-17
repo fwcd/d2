@@ -2,7 +2,7 @@ import Foundation
 
 public struct DesignQuote: Codable {
     public let title: RenderedText
-    public let content: RenderedText?
+    public let content: RenderedText
     public let excerpt: RenderedText?
     public let link: URL?
     public let date: String?

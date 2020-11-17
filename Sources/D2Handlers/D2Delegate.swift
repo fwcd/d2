@@ -263,6 +263,7 @@ public class D2Delegate: MessageDelegate {
         registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
         registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
         registry["cookie"] = CookieCommand(inventoryManager: inventoryManager)
+        registry["designquote", aka: ["quoteondesign"]] = DesignQuoteCommand()
         registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
         registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
         registry["messagedbvisualize"] = MessageDatabaseVisualizeCommand(messageDB: messageDB)

@@ -8,6 +8,7 @@ public class AgifyCommand: StringCommand {
         shortDescription: "Predicts the age of a person given their name",
         requiredPermissionLevel: .basic
     )
+    public let outputValueType: RichValueType = .embed
 
     public init() {}
 
