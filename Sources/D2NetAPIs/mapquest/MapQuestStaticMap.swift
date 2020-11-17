@@ -10,7 +10,8 @@ public struct MapQuestStaticMap {
         width: Int = 300,
         height: Int = 300,
         imageType: String = "png",
-        zoom: Int = 16
+        zoom: Int = 16,
+        defaultMarker: String? = nil // See https://developer.mapquest.com/documentation/static-map-api/v5/getting-started/#marker-types
     ) throws {
         guard let mapQuestKey = storedNetApiKeys?.mapQuest else { throw NetApiError.missingApiKey("No API key for MapQuest found") }
 
@@ -28,6 +29,10 @@ public struct MapQuestStaticMap {
 
         if let center = center {
             query.append(URLQueryItem(name: "center", value: "\(center.latitude),\(center.longitude)"))
+        }
+
+        if let defaultMarker = defaultMarker {
+            query.append(URLQueryItem(name: "defaultMarker", value: defaultMarker))
         }
 
         components.queryItems = query
