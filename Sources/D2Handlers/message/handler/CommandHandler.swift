@@ -84,7 +84,7 @@ public class CommandHandler: MessageHandler {
 
     public func handle(message: Message, from client: MessageClient) -> Bool {
         guard message.content.starts(with: commandPrefix),
-            !message.dm || (message.author.map { permissionManager[$0] >= PermissionLevel.admin } ?? false),
+            !message.dm || (message.author.map { permissionManager.user($0, hasPermission: .vip) } ?? false),
             let channelId = message.channelId else { return false }
         guard let author = message.author else {
             log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
@@ -103,7 +103,7 @@ public class CommandHandler: MessageHandler {
         // Precedence: Chain < Pipe
         for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
             if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, client: client) {
-                guard (permissionManager[author].rawValue >= PermissionLevel.admin.rawValue) || (pipe.count <= maxPipeLengthForUsers) else {
+                guard permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
                     client.sendMessage("Your pipe is too long.", to: channelId)
                     log.notice("Too long pipe")
                     return true
