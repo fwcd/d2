@@ -20,27 +20,6 @@ public struct ColorToAlphaImageMapping: ImageMapping {
     public func apply(to image: Image) throws -> Image {
         // TODO: Add a key-value argument that optionally specifies this
         // Tolerance is specified in squared [0, 1] RGB space
-        let tolerance = 0.1
-
-        let width = image.width
-        let height = image.height
-        var processed = try Image(width: width, height: height)
-
-        for y in 0..<height {
-            for x in 0..<width {
-                let inColor = image[y, x]
-                let outColor: Color
-
-                if inColor.euclideanDistance(to: color, useAlpha: false) < tolerance {
-                    outColor = Colors.transparent
-                } else {
-                    outColor = inColor
-                }
-
-                processed[y, x] = outColor
-            }
-        }
-
-        return processed
+        return try colorToAlpha(in: image, color: color)
     }
 }
