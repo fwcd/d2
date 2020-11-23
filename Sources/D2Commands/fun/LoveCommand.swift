@@ -30,14 +30,14 @@ public class LoveCommand: Command {
         hasher.combine(Set([author.id, other.id]))
 
         let basePrecision = 1000
-        let components = [
-            Double(abs(hasher.finalize() % basePrecision)) / Double(basePrecision),
-            1 - min(1, Double(author.username.levenshteinDistance(to: other.username)) / 10),
-            author.bot == other.bot ? 0.8 : 0.1
+        let components: [(weight: Double, value: Double)] = [
+            (weight: 8, value: Double(abs(hasher.finalize() % basePrecision)) / Double(basePrecision)),
+            (weight: 1, value: 1 - min(1, Double(author.username.levenshteinDistance(to: other.username)) / 40)),
+            (weight: 2, value: author.bot == other.bot ? 0.8 : 0.1)
         ]
-        let chance = components.reduce(0, +) / Double(components.count)
+        let chance = components.map { $0.weight * $0.value }.reduce(0, +) / components.map(\.weight).reduce(0, +)
 
-        log.info("Components: \(components)")
+        log.debug("Components: \(components)")
         output.append(":heart: There is a \(Int(chance * 100))% chance of love between <@\(author.id)> and <@\(other.id)>")
     }
 }
