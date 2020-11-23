@@ -306,6 +306,7 @@ public class D2Delegate: MessageDelegate {
         registry["tagesschau"] = FeedCommand(url: "https://www.tagesschau.de/xml/rss2_https/", description: "Tagesschau", presenter: FeedListPresenter())
         registry["spiegel"] = FeedCommand(url: "https://www.spiegel.de/schlagzeilen/tops/index.rss", description: "Spiegel Online", presenter: FeedListPresenter())
         registry["bild"] = FeedCommand(url: "https://www.bild.de/rssfeeds/rss3-20745882,feed=alles.bild.html", description: "BILD", presenter: FeedListPresenter())
+        registry["sueddeutsche", aka: ["sz"]] = FeedCommand(url: "https://rss.sueddeutsche.de/rss/Topthemen", description: "Süddeutsche Zeitung", presenter: FeedListPresenter())
         registry["frankfurterallgemeine", aka: ["faz"]] = FeedCommand(url: "https://www.faz.net/rss/aktuell/", description: "Frankfurter Allgemeine Zeitung - Aktuell", presenter: FeedListPresenter())
         registry["kielernachrichten", aka: ["kn"]] = FeedCommand(url: "http://www.kn-online.de/rss/feed/kn_kiel", description: "Kieler Nachrichten", presenter: FeedListPresenter())
         registry["nytimes", aka: ["nyt"]] = FeedCommand(url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", description: "New York Times - Top Stories", presenter: FeedListPresenter())
