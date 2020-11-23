@@ -3,7 +3,7 @@
 [![Linux](https://github.com/fwcd/d2/workflows/Linux/badge.svg)](https://github.com/fwcd/d2/actions)
 [![macOS](https://github.com/fwcd/d2/workflows/macOS/badge.svg)](https://github.com/fwcd/d2/actions)
 
-General-purpose assistant for Discord, IRC and Telegram featuring more than 300 commands, including, but not limited to:
+General-purpose assistant for Discord, IRC and Telegram featuring more than 300 commands, including:
 
 * 💬 Various useful chat utilities, e.g. polls or coin flips
 * ⚙️ A flexible command system that supports chaining, piping and permissions
