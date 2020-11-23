@@ -30,8 +30,8 @@ public class ComposeMemeCommand: Command {
             let template = try pickMemeTemplate()
 
             do {
-                let (topLeft, bottomRight) = findAlphaRectangle(of: template)
-                let composition = try composeMeme(from: template, with: image, between: topLeft, and: bottomRight)
+                let (topLeft, bottomRight) = findBoundingBox(in: template) { $0.alpha < alphaThreshold }
+                let composition = try composeImage(from: template, with: image, between: topLeft, and: bottomRight)
                 try output.append(composition)
             } catch {
                 output.append(error, errorText: "Could not compose image!")
@@ -46,38 +46,5 @@ public class ComposeMemeCommand: Command {
         let urls = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: memeTemplatesFilePath), includingPropertiesForKeys: nil)
         guard let url = urls.filter({ $0.path.hasSuffix(".png") }).randomElement() else { throw ComposeMemeError.noMemeTemplateFound }
         return try Image(fromPngFile: url)
-    }
-
-    private func findAlphaRectangle(of image: Image) -> (Vec2<Int>, Vec2<Int>) {
-        var topLeft = image.size
-        var bottomRight = Vec2<Int>(both: 0)
-
-        for y in 0..<image.height {
-            for x in 0..<image.width {
-                let pixel = image[y, x]
-                if pixel.alpha <= alphaThreshold {
-                    topLeft = Vec2(x: min(x, topLeft.x), y: min(y, topLeft.y))
-                    bottomRight = Vec2(x: max(x, bottomRight.x), y: max(y, bottomRight.y))
-                }
-            }
-        }
-
-        log.info("Found alpha rectangle in meme template at (\(topLeft), \(bottomRight))")
-
-        if bottomRight.x < topLeft.x || bottomRight.y < topLeft.y {
-            return (Vec2(both: 0), image.size)
-        } else {
-            return (topLeft, bottomRight)
-        }
-    }
-
-    private func composeMeme(from template: Image, with image: Image, between topLeft: Vec2<Int>, and bottomRight: Vec2<Int>) throws -> Image {
-        let composition = try Image(width: template.width, height: template.height)
-        var graphics = CairoGraphics(fromImage: composition)
-
-        graphics.draw(image, at: topLeft.asDouble, withSize: bottomRight - topLeft)
-        graphics.draw(template)
-
-        return composition
     }
 }
