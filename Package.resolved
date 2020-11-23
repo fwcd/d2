@@ -159,7 +159,7 @@
         "repositoryURL": "https://github.com/fwcd/swift-gif.git",
         "state": {
           "branch": null,
-          "revision": "50f99eae1e756eb514a2c5ca65ea8c2818ddbf67",
+          "revision": "9e0e383340b0ca28f6ce60a7a9e1e1d496a5f7d0",
           "version": null
         }
       },
@@ -168,7 +168,7 @@
         "repositoryURL": "https://github.com/fwcd/swift-graphics.git",
         "state": {
           "branch": null,
-          "revision": "44686c07f5a83c8d5e176a526767b249b4d282e4",
+          "revision": "c7183ea8ca9de2d07750a209b23eba40ea91c375",
           "version": null
         }
       },
