@@ -314,6 +314,7 @@ public class D2Delegate: MessageDelegate {
         registry["nasa"] = FeedCommand(url: "https://www.nasa.gov/rss/dyn/breaking_news.rss", description: "NASA: Breaking News", presenter: FeedListPresenter())
         registry["nasaimage"] = FeedCommand(url: "https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss", description: "NASA: Image of the Day", presenter: FeedImagePresenter())
         registry["bingimage"] = FeedCommand(url: "https://www.bing.com/HPImageArchive.aspx?format=rss&idx=0&n=1&mkt=en-US", description: "Bing's Image of the Day", presenter: FeedImagePresenter())
+        registry["derpostillon", aka: ["postillon"]] = FeedCommand(url: "http://feeds.feedburner.com/blogspot/rkEL", description: "Der Postillon", presenter: FeedListPresenter())
         registry["coinflip", aka: ["coin"]] = CoinFlipCommand()
         registry["diceroll", aka: ["dice", "roll"]] = DiceRollCommand(1...6)
         registry["pickrandom", aka: ["pick"]] = PickRandomCommand()
