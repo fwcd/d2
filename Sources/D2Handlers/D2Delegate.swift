@@ -314,6 +314,7 @@ public class D2Delegate: MessageDelegate {
         registry["theguardian"] = FeedCommand(url: "https://www.theguardian.com/world/rss", description: "The Guardian - World News", presenter: FeedListPresenter())
         registry["thetelegraph", aka: ["telegraph"]] = FeedCommand(url: "https://www.telegraph.co.uk/rss.xml", description: "The Telegraph", presenter: FeedListPresenter())
         registry["bbc"] = FeedCommand(url: "https://feeds.bbci.co.uk/news/rss.xml", description: "BBC News - Top Stories", presenter: FeedListPresenter())
+        registry["cnn"] = FeedCommand(url: "http://rss.cnn.com/rss/edition.rss", description: "CNN", presenter: FeedListPresenter())
         registry["washingtonpost"] = FeedCommand(url: "http://feeds.washingtonpost.com/rss/world", description: "Washington Post - World", presenter: FeedListPresenter())
         registry["hackernews", aka: ["hn"]] = FeedCommand(url: "https://hnrss.org/frontpage", description: "Hacker News: Front Page", presenter: FeedListPresenter())
         registry["nasa"] = FeedCommand(url: "https://www.nasa.gov/rss/dyn/breaking_news.rss", description: "NASA: Breaking News", presenter: FeedListPresenter())
