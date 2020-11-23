@@ -16,10 +16,14 @@ public class LoveCommand: Command {
             output.append(errorText: info.helpText!)
             return
         }
+        guard author.id != other.id else {
+            output.append(errorText: "Please mention someone other than yourself!")
+            return
+        }
 
         var hasher = Hasher()
         hasher.combine(Set([author.id, other.id]))
-        let chance = hasher.finalize() % 100
+        let chance = abs(hasher.finalize() % 100)
 
         output.append(":heart: There is a \(chance)% chance of love between <@\(author.id)> and <@\(other.id)>")
     }
