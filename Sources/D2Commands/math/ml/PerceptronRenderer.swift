@@ -18,9 +18,9 @@ struct PerceptronRenderer {
         guard model.dimensions == 2 else { return nil }
 
         let image = try Image(width: width, height: height)
-        var graphics: Graphics = CairoGraphics(fromImage: image)
+        let graphics: Graphics = CairoGraphics(fromImage: image)
 
-        plotter.render(to: &graphics) { try? model.boundaryY(atX: $0) }
+        plotter.render(to: graphics) { try? model.boundaryY(atX: $0) }
 
         for (point, output) in model.dataset {
             guard point.count == 2 else { throw MLError.sizeMismatch("Dataset contains point that is not of dimension 2: \(point)") }

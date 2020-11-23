@@ -22,7 +22,7 @@ public class ColorCommand: StringCommand {
             let width = 100
             let height = 50
             let image = try Image(width: width, height: height)
-            var graphics = CairoGraphics(fromImage: image)
+            let graphics = CairoGraphics(fromImage: image)
             graphics.draw(Rectangle(fromX: 0, y: 0, width: Double(width), height: Double(height), color: color, isFilled: true))
             try output.append(image)
         } catch {

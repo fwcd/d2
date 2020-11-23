@@ -65,7 +65,7 @@ public enum UnoCard: Hashable {
             let cardPadding = size.x / 12
             let renderColor = color?.color ?? Colors.black
             let img = try Image(fromSize: intSize)
-            var graphics = CairoGraphics(fromImage: img)
+            let graphics = CairoGraphics(fromImage: img)
 
             graphics.draw(Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, cornerRadius: cardPadding, color: Colors.white))
             graphics.draw(Rectangle(fromX: cardPadding, y: cardPadding, width: size.x - (cardPadding * 2), height: size.y - (cardPadding * 2), cornerRadius: cardPadding, color: renderColor))

@@ -40,7 +40,7 @@ public struct CropImageMapping: ImageMapping {
             throw CropError.invalidDimensions("Make sure that the width/height of the cropped dimensions are positive!")
         }
 
-        var cropped = try Image(width: width, height: height)
+        let cropped = try Image(width: width, height: height)
 
         for y in 0..<height {
             for x in 0..<width {

@@ -23,7 +23,7 @@ public struct ThresholdImageMapping: ImageMapping {
     public func apply(to image: Image) throws -> Image {
         let width = image.width
         let height = image.height
-        var thresholded = try Image(width: width, height: height)
+        let thresholded = try Image(width: width, height: height)
 
         for y in 0..<height {
             for x in 0..<width {

@@ -21,7 +21,7 @@ public class MandelbrotCommand: StringCommand {
         do {
             let width = 400
             let height = 300
-            var image = try Image(width: width, height: height)
+            let image = try Image(width: width, height: height)
 
             var hasher = Hasher()
             let time = Int(Date().timeIntervalSince1970 * 10) % 256

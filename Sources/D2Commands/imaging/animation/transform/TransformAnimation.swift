@@ -21,7 +21,7 @@ public struct TransformAnimation<T>: Animation where T: ImageTransform {
         useVirtualEdges = kvArgs[Key.virtualedges].flatMap(Bool.init) ?? false
     }
 
-    public func renderFrame(from image: Image, to frame: inout Image, percent: Double) {
+    public func renderFrame(from image: Image, to frame: Image, percent: Double) {
         let width = image.width
         let height = image.height
         let size = Vec2<Int>(x: width, y: height)

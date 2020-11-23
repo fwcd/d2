@@ -24,7 +24,7 @@ struct ChessBoardView {
             let bottomTextY = Double(intBoardSize.y) + padding + topTextY + (fontSize / 2)
 
             let img = try Image(fromSize: intSize)
-            var graphics = CairoGraphics(fromImage: img)
+            let graphics = CairoGraphics(fromImage: img)
 
             for row in 0..<model.ranks {
                 let y = (Double(row) * fieldSize) + padding

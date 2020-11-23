@@ -28,7 +28,7 @@ func findBoundingBox(in image: Image, where predicate: (Color) -> Bool) -> (Vec2
 }
 
 func colorToAlpha(in image: Image, color: Color, squaredThreshold: Double = 0.01) throws -> Image {
-    var output = try Image(width: image.width, height: image.height)
+    let output = try Image(width: image.width, height: image.height)
 
     for y in 0..<image.height {
         for x in 0..<image.width {
@@ -46,7 +46,7 @@ func colorToAlpha(in image: Image, color: Color, squaredThreshold: Double = 0.01
 
 func composeImage(from template: Image, with image: Image, between topLeft: Vec2<Int>, and bottomRight: Vec2<Int>) throws -> Image {
     let composition = try Image(width: template.width, height: template.height)
-    var graphics = CairoGraphics(fromImage: composition)
+    let graphics = CairoGraphics(fromImage: composition)
 
     graphics.draw(image, at: topLeft.asDouble, withSize: bottomRight - topLeft)
     graphics.draw(template)

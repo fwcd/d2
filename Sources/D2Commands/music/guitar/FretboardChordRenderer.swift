@@ -30,7 +30,7 @@ struct FretboardChordRenderer: ChordRenderer {
 
     func render(chord: Chord) throws -> Image {
         let image = try Image(width: width, height: height)
-        var graphics = CairoGraphics(fromImage: image)
+        let graphics = CairoGraphics(fromImage: image)
         let guitarChord = try FretboardChord(from: chord, on: fretboard)
         let fretCount = max(minFrets, guitarChord.maxFret + 1)
         let stringCount = fretboard.stringCount

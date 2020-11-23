@@ -65,7 +65,7 @@ public class PatCommand: Command {
                     }
 
                     let patHand = try Image(fromPngFile: "Resources/fun/patHand.png")
-                    var avatarImage = try Image(fromPng: data)
+                    let avatarImage = try Image(fromPng: data)
                     let width = avatarImage.width
                     let height = avatarImage.height
                     let radiusSquared = (width * height) / 4
@@ -86,7 +86,7 @@ public class PatCommand: Command {
                     for i in 0..<self.frameCount {
                         let frame = try Image(width: width, height: height)
                         let percent = Double(i) / Double(self.frameCount)
-                        var graphics = CairoGraphics(fromImage: frame)
+                        let graphics = CairoGraphics(fromImage: frame)
 
                         graphics.draw(avatarImage)
                         graphics.draw(patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))

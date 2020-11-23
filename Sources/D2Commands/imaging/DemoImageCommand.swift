@@ -21,7 +21,7 @@ public class DemoImageCommand: StringCommand {
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
             let image = try Image(width: 200, height: 200)
-            var graphics = CairoGraphics(fromImage: image)
+            let graphics = CairoGraphics(fromImage: image)
 
             graphics.draw(LineSegment(fromX: 20, y: 20, toX: 50, y: 30))
             graphics.draw(Rectangle(fromX: 50, y: 50, width: 10, height: 35, color: Colors.yellow))

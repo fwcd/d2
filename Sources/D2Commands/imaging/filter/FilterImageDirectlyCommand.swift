@@ -40,7 +40,7 @@ public class FilterImageDirectlyCommand: Command {
             let pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
             let resultPixels = convolve(pixels: pixels, with: matrix.map(\.asDouble))
 
-            var result = try Image(width: width, height: height)
+            let result = try Image(width: width, height: height)
 
             for (y, row) in resultPixels.enumerated() {
                 for (x, value) in row.enumerated() {

@@ -10,7 +10,7 @@ public struct MaskImageMapping<M>: ImageMapping where M: ImageMask {
         let width = image.width
         let height = image.height
         let mask = M.init()
-        var masked = try Image(width: width, height: height)
+        let masked = try Image(width: width, height: height)
 
         for y in 0..<height {
             for x in 0..<width {

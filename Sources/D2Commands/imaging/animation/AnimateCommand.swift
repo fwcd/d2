@@ -93,11 +93,11 @@ public class AnimateCommand<A>: Command where A: Animation {
 
                 for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")
-                    var frame = try Image(width: width, height: height)
+                    let frame = try Image(width: width, height: height)
                     let percent = Double(i) / Double(frameCount)
 
                     log.debug("Rendering frame \(i)")
-                    try animation.renderFrame(from: image, to: &frame, percent: percent)
+                    try animation.renderFrame(from: image, to: frame, percent: percent)
                     gif.frames.append(.init(image: frame, delayTime: delayTime))
                 }
 
@@ -107,10 +107,10 @@ public class AnimateCommand<A>: Command where A: Animation {
                 let frameCount = sourceGif.frames.count
 
                 gif.frames = try sourceGif.frames.enumerated().map { (i, f) in
-                    var frame = try Image(width: f.image.width, height: f.image.height)
+                    let frame = try Image(width: f.image.width, height: f.image.height)
                     let percent = Double(i) / Double(frameCount)
 
-                    try animation.renderFrame(from: f.image, to: &frame, percent: percent)
+                    try animation.renderFrame(from: f.image, to: frame, percent: percent)
                     return .init(image: frame, delayTime: f.delayTime)
                 }
 

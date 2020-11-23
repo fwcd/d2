@@ -33,14 +33,14 @@ struct FunctionGraphRenderer {
 
     func render(ast: ExpressionASTNode) throws -> Image {
         let image = try Image(width: width, height: height)
-        var graphics: Graphics = CairoGraphics(fromImage: image)
+        let graphics: Graphics = CairoGraphics(fromImage: image)
 
-        render(to: &graphics) { try? ast.evaluate(with: [inputVariable: $0]) }
+        render(to: graphics) { try? ast.evaluate(with: [inputVariable: $0]) }
 
         return image
     }
 
-    func render(to graphics: inout Graphics, _ plottedFunction: (Double) -> Double?) {
+    func render(to graphics: Graphics, _ plottedFunction: (Double) -> Double?) {
         var lastPos: Vec2<Double>? = nil
 
         // Draw axes

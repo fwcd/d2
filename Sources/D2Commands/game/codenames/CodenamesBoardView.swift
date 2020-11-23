@@ -12,7 +12,7 @@ struct CodenamesBoardView {
         let intSize = (fieldIntSize + Vec2<Int>(both: intPadding)) * Vec2<Int>(x: model.width, y: model.height)
 
         let image = try Image(fromSize: intSize)
-        var graphics = CairoGraphics(fromImage: image)
+        let graphics = CairoGraphics(fromImage: image)
 
         for y in 0..<model.height {
             for x in 0..<model.width {

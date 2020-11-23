@@ -38,7 +38,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
                 pixels = convolve(pixels: pixels, with: filterMatrix)
             }
 
-            var result = try Image(width: width, height: height)
+            let result = try Image(width: width, height: height)
 
             for (y, row) in pixels.enumerated() {
                 for (x, value) in row.enumerated() {

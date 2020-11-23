@@ -20,7 +20,7 @@ public class QRCommand: StringCommand {
             let margin = 4 // in modules
             let imageSize = (qr.size + 2 * margin) * scale
             let image = try Image(width: imageSize, height: imageSize)
-            var graphics = CairoGraphics(fromImage: image)
+            let graphics = CairoGraphics(fromImage: image)
 
             for y in 0..<qr.size {
                 for x in 0..<qr.size {

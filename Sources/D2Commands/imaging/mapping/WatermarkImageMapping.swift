@@ -21,7 +21,7 @@ public struct WatermarkImageMapping: ImageMapping {
         let width = image.width
         let height = image.height
         let result = try Image(width: width, height: height)
-        var graphics = CairoGraphics(fromImage: result)
+        let graphics = CairoGraphics(fromImage: result)
 
         graphics.draw(image)
         graphics.draw(Text(text, withSize: fontSize, at: Vec2(x: padding, y: Double(height) - fontSize - padding), color: Colors.white.with(alpha: 128)))

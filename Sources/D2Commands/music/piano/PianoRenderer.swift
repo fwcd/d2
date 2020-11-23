@@ -31,7 +31,7 @@ struct PianoRenderer: ScaleRenderer {
         let whiteKeyCount = range.count(forWhich: { $0.accidental == .none })
         let width = whiteKeyWidth * whiteKeyCount + whiteKeyPadding * (whiteKeyCount - 1)
         let image = try Image(width: width, height: whiteKeyHeight)
-        var graphics = CairoGraphics(fromImage: image)
+        let graphics = CairoGraphics(fromImage: image)
         var whiteKeys = [Rectangle<Double>]()
         var blackKeys = [Rectangle<Double>]()
         var x = 0

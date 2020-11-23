@@ -42,7 +42,7 @@ public struct TileImageMapping: ImageMapping {
         }
 
         let pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
-        var tiled = try Image(width: newWidth, height: newHeight)
+        let tiled = try Image(width: newWidth, height: newHeight)
 
         for y in 0..<height {
             for x in 0..<width {

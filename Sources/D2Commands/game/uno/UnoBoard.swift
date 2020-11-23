@@ -31,7 +31,7 @@ public struct UnoBoard: RichValueConvertible {
             let intSize = Vec2<Int>(x: 200, y: 200)
             let center = (intSize / 2).asDouble
             let img = try Image(fromSize: intSize)
-            var graphics = CairoGraphics(fromImage: img)
+            let graphics = CairoGraphics(fromImage: img)
 
             for card in discardPile {
                 if let cardImage = card.card.image {

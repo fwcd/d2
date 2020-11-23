@@ -32,7 +32,7 @@ public class HugCommand: Command {
                     let (topLeft, bottomRight) = findBoundingBox(in: rawTemplate) { $0.squaredEuclideanDistance(to: green) < 0.01 }
                     let template = try colorToAlpha(in: rawTemplate, color: green)
                     let composition = try composeImage(from: template, with: image, between: topLeft, and: bottomRight)
-                    try output.append(template)
+                    try output.append(composition)
                 } catch {
                     output.append(error, errorText: "Could not create hug image. :(")
                 }
