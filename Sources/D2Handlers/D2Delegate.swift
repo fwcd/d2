@@ -319,6 +319,7 @@ public class D2Delegate: MessageDelegate {
         registry["theonion"] = FeedCommand(url: "https://www.theonion.com/rss", description: "The Onion", presenter: FeedListPresenter())
         registry["financialtimes", aka: ["ft"]] = FeedCommand(url: "https://www.ft.com/?format=rss", description: "Financial Times", presenter: FeedListPresenter())
         registry["dagensnyheter", aka: ["dn"]] = FeedCommand(url: "https://www.dn.se/nyheter/m/rss/", description: "Dagens Nyheter", presenter: FeedListPresenter())
+        registry["elpais"] = FeedCommand(url: "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada", description: "EL PAÍS", presenter: FeedListPresenter())
         registry["coinflip", aka: ["coin"]] = CoinFlipCommand()
         registry["diceroll", aka: ["dice", "roll"]] = DiceRollCommand(1...6)
         registry["pickrandom", aka: ["pick"]] = PickRandomCommand()
