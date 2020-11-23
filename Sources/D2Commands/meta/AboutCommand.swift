@@ -17,7 +17,7 @@ public class AboutCommand: StringCommand {
         output.append(Embed(
             title: "D2",
             description: """
-                **I am a versatile virtual assistent that can perform a wide range of more or less useful tasks.**
+                **I am a versatile assistant that can perform a wide range of more or less useful tasks.**
 
                 Polls? Board games? Image processing? Linear algebra? Music theory? Jokes? There is probably a command for what you need!
 
