@@ -29,7 +29,7 @@ public class HugCommand: Command {
                     let image = try Image(fromPng: $0.get())
                     let template = try Image(fromPngFile: "Resources/fun/hugTemplate.png")
                     let green = Color(rgb: 0x00FF03)
-                    let (topLeft, bottomRight) = findBoundingBox(in: template) { $0.squaredEuclideanDistance(to: green) < 4 }
+                    let (topLeft, bottomRight) = findBoundingBox(in: template) { $0.squaredEuclideanDistance(to: green) < 0.01 }
                     let composition = try composeImage(from: template, with: image, between: topLeft, and: bottomRight)
                     try output.append(composition)
                 } catch {
