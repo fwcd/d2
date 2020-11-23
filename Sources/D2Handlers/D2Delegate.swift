@@ -302,6 +302,7 @@ public class D2Delegate: MessageDelegate {
         registry["presence"] = PresenceCommand()
         registry["xkcd"] = XkcdCommand()
         registry["smbc"] = FeedCommand(url: "https://www.smbc-comics.com/comic/rss", description: "Saturday Morning Breakfast Cereal", presenter: FeedImagePresenter())
+        registry["theindependent", aka: ["independent"]] = FeedCommand(url: "https://www.independent.co.uk/news/world/rss", description: "The Independent", presenter: FeedListPresenter())
         registry["tagesschau"] = FeedCommand(url: "https://www.tagesschau.de/xml/rss2_https/", description: "Tagesschau", presenter: FeedListPresenter())
         registry["spiegel"] = FeedCommand(url: "https://www.spiegel.de/schlagzeilen/tops/index.rss", description: "Spiegel Online", presenter: FeedListPresenter())
         registry["bild"] = FeedCommand(url: "https://www.bild.de/rssfeeds/rss3-20745882,feed=alles.bild.html", description: "BILD", presenter: FeedListPresenter())
