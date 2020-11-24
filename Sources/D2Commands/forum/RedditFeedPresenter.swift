@@ -24,7 +24,7 @@ public struct RedditFeedPresenter: RedditPresenter {
         let title = link.title ?? "<untitled post>"
         return [
             "**\(link.permalink.map { "[\(title)](https://www.reddit.com\($0))" } ?? title)**",
-            link.selftext,
+            link.selftext?.nilIfEmpty,
             link.ups.map { "\($0) \("upvote".pluralized(with: $0))" }
         ].compactMap { $0 }.joined(separator: "\n")
     }
