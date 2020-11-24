@@ -32,9 +32,11 @@ public class HelpCommand: StringCommand {
             } else if let command = context.registry[input] {
                 output.append(commandHelpEmbed(for: input, command: command))
             } else {
+                let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.map(\.key)
+                let alternative = cmdsAndCategories.min(by: ascendingComparator { $0.levenshteinDistance(to: input) }) ?? "?"
                 output.append(Embed(
-                    title: ":warning: Did not recognize command `\(input)`",
-                    description: "Could not fetch any help"
+                    title: ":warning: Did not recognize command or category `\(input)`",
+                    description: "Did you mean `\(alternative)`?"
                 ))
             }
         }
