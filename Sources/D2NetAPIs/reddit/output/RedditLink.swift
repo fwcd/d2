@@ -39,7 +39,7 @@ public struct RedditLink: Codable {
         case linkFlairTextColor = "link_flair_text_color"
         case linkFlairType = "link_flair_type"
         case linkFlairBackgroundColor = "link_flair_background_color"
-        case linkFlairRichText = "link_flair_rich_text"
+        case linkFlairRichText = "link_flair_richtext"
         case wls
         case domain
         case allowLiveComments = "allow_live_comments"
