@@ -5,30 +5,28 @@ import D2NetAPIs
 import D2Permissions
 import Utils
 
-public class RedditCommand: StringCommand {
+public class RedditCommand<P>: StringCommand where P: RedditPresenter {
     public let info = CommandInfo(
         category: .forum,
         shortDescription: "Fetches a post from Reddit",
         longDescription: "Fetches a random top post from a given subreddit",
         requiredPermissionLevel: .vip
     )
+    private let presenter: P
 
-    public init() {}
+    public init(presenter: P) {
+        self.presenter = presenter
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         RedditQuery(subreddit: input, maxResults: 5).perform().listen {
-            output.append($0.flatMap { Result.from($0.data.children?.randomElement()?.data, errorIfNil: RedditError.noResultsFound) }.map {
-                RichValue.embed(Embed(
-                    title: $0.title,
-                    description: $0.selftext,
-                    url: $0.permalink.flatMap { URL(string: "https://www.reddit.com\($0)") },
-                    image: ($0.preview?.firstGif?.source?.url ?? $0.url)
-                        .flatMap(URL.init(string:))
-                        .filter(self.refersToImage(url:))
-                        .map(Embed.Image.init(url:)),
-                    footer: Embed.Footer(text: "\($0.ups ?? -1) upvotes, \($0.downs ?? -1) downvotes")
-                ))
-            }, errorText: "Reddit search failed")
+            do {
+                let links = try $0.get().data.children?.map(\.data) ?? []
+                let embed = try self.presenter.present(links: links)
+                output.append(embed)
+            } catch {
+                output.append(errorText: "Reddit search failed")
+            }
         }
     }
 

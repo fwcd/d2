@@ -1,5 +1,3 @@
-import Foundation
-
 public struct RedditLink: Codable {
     public enum CodingKeys: String, CodingKey {
         case subreddit
@@ -74,8 +72,8 @@ public struct RedditLink: Codable {
     public let id: String?
     public let title: String?
     public let selftext: String?
-    public let url: URL?
-    public let permalink: URL?
+    public let url: String?
+    public let permalink: String?
     public let author: String?
     public let authorFlairType: String?
     public let authorFullname: String?
@@ -138,7 +136,7 @@ public struct RedditLink: Codable {
     public let isVideo: Bool?
 
     public struct UrlWithSize: Codable {
-        public let url: URL?
+        public let url: String?
         public let width: Int?
         public let height: Int?
     }
@@ -191,7 +189,7 @@ public struct RedditLink: Codable {
         public let isEnabled: Bool?
         public let description: String?
         public let coinReward: Int?
-        public let iconUrl: URL?
+        public let iconUrl: String?
         public let daysOfPremium: Int?
         public let coinPrice: Int?
         public let isNew: Bool?

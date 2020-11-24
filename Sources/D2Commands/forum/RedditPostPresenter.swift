@@ -1,10 +1,11 @@
+import Foundation
 import D2MessageIO
 import D2NetAPIs
 
 public struct RedditPostPresenter: RedditPresenter {
     public init() {}
 
-    public func present(links: [RedditLink]) throws -> Embed? {
+    public func present(links: [RedditLink]) throws -> Embed {
         guard let link = links.first else { throw RedditError.noResultsFound }
         return present(link: link)
     }
@@ -13,7 +14,7 @@ public struct RedditPostPresenter: RedditPresenter {
         Embed(
             title: link.title,
             description: link.selftext,
-            url: link.permalink,
+            url: link.permalink.flatMap { URL(string: "https://www.reddit.com\($0)") },
             image: (link.preview?.firstGif?.source?.url ?? link.url)
                 .flatMap(URL.init(string:))
                 .filter(self.refersToImage(url:))

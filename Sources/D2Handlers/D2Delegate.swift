@@ -88,7 +88,7 @@ public class D2Delegate: MessageDelegate {
         registry["yo"] = YoCommand()
         registry["spieleabend"] = InfoMessageCommand(text: "This command has been migrated to `\(commandPrefix)countdown`")
         registry["countdown"] = CountdownCommand(goals: ["Spieleabend": SpieleabendGoal()])
-        registry["reddit"] = RedditCommand()
+        registry["reddit"] = RedditCommand(presenter: RedditPostPresenter())
         registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
         registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
         registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
