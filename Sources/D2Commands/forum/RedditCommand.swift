@@ -19,6 +19,11 @@ public class RedditCommand<P>: StringCommand where P: RedditPresenter {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+        guard !input.isEmpty else {
+            output.append(errorText: "Enter a subreddit to get started!")
+            return
+        }
+
         RedditQuery(subreddit: input, maxResults: 5).perform().listen {
             do {
                 let links = try $0.get().data.children?.map(\.data) ?? []
