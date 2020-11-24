@@ -15,7 +15,7 @@ public class WolframAlphaCommand: StringCommand {
         shortDescription: "Queries Wolfram Alpha",
         longDescription: "Sets the permission level of one or more users",
         helpText: "[--image]? [--steps]? [query input]",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .basic
     )
     private var isRunning = false
 
