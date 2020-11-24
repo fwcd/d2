@@ -16,7 +16,7 @@ public class RedditCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        RedditQuery(subreddit: input, maxResults: 40).perform().listen {
+        RedditQuery(subreddit: input, maxResults: 5).perform().listen {
             output.append($0.flatMap { Result.from($0.data.children?.randomElement()?.data, errorIfNil: RedditError.noResultsFound) }.map {
                 RichValue.embed(Embed(
                     title: $0.title,
