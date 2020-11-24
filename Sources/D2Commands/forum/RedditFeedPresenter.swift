@@ -8,24 +8,25 @@ public struct RedditFeedPresenter: RedditPresenter {
     public func present(links: [RedditLink]) throws -> Embed {
         Embed(
             title: "Subreddit Feed",
+            description: links
+                .map(self.present(link:))
+                .joined(separator: "\n")
+                .nilIfEmpty
+                ?? "_none_",
             thumbnail: (links.first?.url)
                 .flatMap(URL.init(string:))
                 .filter(self.refersToImage(url:))
-                .map(Embed.Thumbnail.init(url:)),
-            fields: links.map(self.present(link:))
+                .map(Embed.Thumbnail.init(url:))
         )
     }
 
-    private func present(link: RedditLink) -> Embed.Field {
-        Embed.Field(
-            name: link.title ?? link.permalink ?? "<untitled post>",
-            value: [link.selftext, link.ups.map { "\($0) \("upvote".pluralized(with: $0))" }]
-                .compactMap { $0 }
-                .joined(separator: "\n")
-                .nilIfEmpty
-                ?? "_no description_"
-            // url: link.permalink.flatMap { URL(string: "https://www.reddit.com\($0)") },
-        )
+    private func present(link: RedditLink) -> String {
+        let title = link.title ?? "<untitled post>"
+        return [
+            "**\(link.permalink.map { "[\(title)](https://www.reddit.com\($0))" } ?? title)**",
+            link.selftext,
+            link.ups.map { "\($0) \("upvote".pluralized(with: $0))" }
+        ].compactMap { $0 }.joined(separator: "\n")
     }
 
     private func refersToImage(url: URL) -> Bool {
