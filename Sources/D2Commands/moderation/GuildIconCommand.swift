@@ -14,7 +14,7 @@ public class GuildIconCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
-            output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
+            output.append(errorText: "Not on a guild!")
             return
         }
 
