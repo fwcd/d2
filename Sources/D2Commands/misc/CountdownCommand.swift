@@ -26,10 +26,11 @@ public class CountdownCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    private var builtInGoals: [String: CountdownGoal]
-    private var userGoals: [String: CountdownGoal] = [:]
-    private var goals: [String: CountdownGoal] { builtInGoals.merging(userGoals) { v, _ in v } }
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
+
+    @AutoSerializing(filePath: "local/countdownGoals.json") private var userGoals: [String: FixedCountdownGoal] = [:]
+    private var builtInGoals: [String: CountdownGoal]
+    private var goals: [String: CountdownGoal] { builtInGoals.merging(userGoals) { v, _ in v } }
 
     public init(builtInGoals: [String: CountdownGoal] = [:]) {
         self.builtInGoals = builtInGoals

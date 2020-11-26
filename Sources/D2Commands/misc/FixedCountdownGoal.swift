@@ -1,6 +1,6 @@
 import Foundation
 
-public struct FixedCountdownGoal: CountdownGoal {
+public struct FixedCountdownGoal: Codable, CountdownGoal {
     public let date: Date
 
     public init(date: Date) {
