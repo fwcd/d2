@@ -58,11 +58,6 @@ public class CountdownCommand: StringCommand {
                 self.show(name, as: goal, to: output)
             },
             "remove": { [unowned self] input, output in
-                guard !(self.goals[input]?.protectedFromRemoval ?? false) else {
-                    output.append(errorText: ":no_entry: `\(input)` is protected from removal")
-                    return
-                }
-
                 if let goal = self.userGoals.removeValue(forKey: input) {
                     output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
                 } else {
@@ -121,7 +116,7 @@ public class CountdownCommand: StringCommand {
     }
 
     private func removeCompletedGoals() {
-        userGoals = userGoals.filter { !$0.value.removeAfterCompletion || !$0.value.hasCompleted }
+        userGoals = userGoals.filter { !$0.value.hasCompleted }
     }
 
     private func makeHelpText() -> String {
