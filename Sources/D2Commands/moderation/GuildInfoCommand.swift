@@ -8,7 +8,8 @@ public class GuildInfoCommand: StringCommand {
         category: .moderation,
         shortDescription: "Fetches statistics about the current server/guild",
         longDescription: "Outputs a range of interesting statistics about the current guild",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .basic,
+        platformAvailability: ["Discord"]
     )
     private let messageDB: MessageDatabase
 

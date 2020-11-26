@@ -7,7 +7,8 @@ public class UserInfoCommand: Command {
         category: .misc,
         shortDescription: "Fetches a user's presence",
         longDescription: "Fetches information about a user's status and currently played game",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .basic,
+        platformAvailability: ["Discord"]
     )
     public let inputValueType: RichValueType = .mentions
     public let outputValueType: RichValueType = .embed
