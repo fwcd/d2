@@ -26,11 +26,13 @@ public class CountdownCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    private var goals: [String: CountdownGoal]
+    private var builtInGoals: [String: CountdownGoal]
+    private var userGoals: [String: CountdownGoal] = [:]
+    private var goals: [String: CountdownGoal] { builtInGoals.merging(userGoals) { v, _ in v } }
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
 
-    public init(goals: [String: CountdownGoal] = [:]) {
-        self.goals = goals
+    public init(builtInGoals: [String: CountdownGoal] = [:]) {
+        self.builtInGoals = builtInGoals
 
         subcommands = [
             "add": { [unowned self] input, output in
@@ -42,13 +44,17 @@ public class CountdownCommand: StringCommand {
                 let name = parsedInput[1]
                 let rawDate = parsedInput[2]
 
+                guard !goals.keys.contains(name) else {
+                    output.append(errorText: "A goal with name `\(name)` already exists!")
+                    return
+                }
                 guard let date = self.parseDate(from: rawDate) else {
                     output.append(errorText: "Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
                     return
                 }
 
                 let goal = FixedCountdownGoal(date: date)
-                self.goals[name] = goal
+                self.userGoals[name] = goal
                 self.show(name, as: goal, to: output)
             },
             "remove": { [unowned self] input, output in
@@ -57,10 +63,10 @@ public class CountdownCommand: StringCommand {
                     return
                 }
 
-                if let goal = self.goals.removeValue(forKey: input) {
+                if let goal = self.userGoals.removeValue(forKey: input) {
                     output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
                 } else {
-                    output.append(errorText: ":question: No goal named `\(input)` is currently running")
+                    output.append(errorText: ":question: No user-defined goal named `\(input)` is currently running")
                 }
             }
         ]
@@ -115,7 +121,7 @@ public class CountdownCommand: StringCommand {
     }
 
     private func removeCompletedGoals() {
-        goals = goals.filter { !$0.value.removeAfterCompletion || !$0.value.hasCompleted }
+        userGoals = userGoals.filter { !$0.value.removeAfterCompletion || !$0.value.hasCompleted }
     }
 
     private func makeHelpText() -> String {
