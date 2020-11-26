@@ -86,7 +86,7 @@ public class D2Delegate: MessageDelegate {
         registry["univis"] = UnivISCommand()
         registry["mensa"] = MensaCommand()
         registry["yo"] = YoCommand()
-        registry["countdown"] = CountdownCommand(builtInGoals: ["Christmas Eve": ChristmasEveGoal(), "New Year's Eve": NewYearsEveGoal()])
+        registry["countdown", aka: ["countdowns", "events"]] = CountdownCommand(builtInGoals: ["Christmas Eve": ChristmasEveGoal(), "New Year's Eve": NewYearsEveGoal()])
         registry["reddit", aka: ["r", "sub", "subreddit"]] = RedditCommand(presenter: RedditFeedPresenter())
         registry["redditpost", aka: ["rp"]] = RedditCommand(presenter: RedditPostPresenter())
         registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
