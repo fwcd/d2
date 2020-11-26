@@ -2,7 +2,7 @@ import Foundation
 
 /** Represents the next CS/CAU games evening. */
 public struct SpieleabendGoal: CountdownGoal {
-    public var date: Date { return nextGamesEveningFromNow() }
+    public var date: Date { nextGamesEveningFromNow() }
 
     public init() {}
 
