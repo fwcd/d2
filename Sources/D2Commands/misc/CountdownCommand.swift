@@ -16,7 +16,7 @@ fileprivate let inputDateFormatters = [
     outputDateFormatter
 ]
 fileprivate let subcommandPattern = try! Regex(from: "(\\w+)\\s*(.*)")
-fileprivate let namedDatePattern = try! Regex(from: "(\\w+)\\s+(.+)")
+fileprivate let namedDatePattern = try! Regex(from: "(\\w+[\\sa-zA-Z]+)\\s+(.+)")
 
 public class CountdownCommand: StringCommand {
     public private(set) var info = CommandInfo(
