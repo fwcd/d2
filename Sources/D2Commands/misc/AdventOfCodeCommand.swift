@@ -89,7 +89,7 @@ public class AdventOfCodeCommand: StringCommand {
         for member in members {
             let scores = member.starScores
             if !scores.isEmpty {
-                graph.addSeries(scores.map(\.date.timeIntervalSince1970), scores.map(\.score).map(Double.init), label: member.displayName)
+                graph.addSeries(scores.map(\.date.timeIntervalSince1970), scores.map(\.score).map(Double.init), label: member.displayName, color: .random())
             }
         }
 
