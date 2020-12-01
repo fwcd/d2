@@ -61,14 +61,11 @@ public class AdventOfCodeCommand: StringCommand {
             AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
                 do {
                     let board = try $0.get()
-                    let n = 15
-                    let topMembers = Array(board.members.values
-                        .sorted(by: descendingComparator(comparing: \.stars))
-                        .prefix(n))
+                    let members = board.members.values.sorted(by: descendingComparator(comparing: \.stars))
 
                     output.append(RichValue.compound([
-                        (try? self.presentAsGraph(members: topMembers)).map { RichValue.image($0) },
-                        try RichValue.embed(self.presentAsEmbed(members: topMembers))
+                        (try? self.presentAsGraph(members: Array(members.prefix(20)))).map { RichValue.image($0) },
+                        try RichValue.embed(self.presentAsEmbed(members: Array(members.prefix(15))))
                     ].compactMap { $0 }))
                 } catch {
                     output.append(error, errorText: "Could not query leaderboard")
