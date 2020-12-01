@@ -88,7 +88,9 @@ public class AdventOfCodeCommand: StringCommand {
 
         for member in members {
             let stars = member.starsPerDayCumulative
-            graph.addSeries(stars.indices.map { Double($0 + 1) }, stars.map(Double.init), label: member.displayName)
+            if stars.count >= 2 {
+                graph.addSeries(stars.indices.map { Double($0 + 1) }, stars.map(Double.init), label: member.displayName)
+            }
         }
 
         graph.plotLineThickness = 3
