@@ -17,7 +17,8 @@ public struct AdventOfCodeLeaderboardQuery {
         return Promise
             .catching { try HTTPRequest(
                 host: "adventofcode.com",
-                path: "/\(event)/leaderboard/private/view/\(ownerId).json"
+                path: "/\(event)/leaderboard/private/view/\(ownerId).json",
+                headers: ["Cookie": "session=\(key)"]
             ) }
             .then { $0.fetchJSONAsync(as: AdventOfCodeLeaderboard.self) }
     }
