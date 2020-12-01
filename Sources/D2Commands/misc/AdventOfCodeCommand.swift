@@ -2,6 +2,7 @@ import D2MessageIO
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "(\\w+)\\s*(.*)")
+fileprivate let adventOfCodeYear = "2020"
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -9,7 +10,7 @@ public class AdventOfCodeCommand: StringCommand {
         shortDescription: "Fetches a private Advent of Code leaderboard",
         requiredPermissionLevel: .vip
     )
-    @AutoSerializing(filePath: "local/adventOfCode2020Config.json") private var configuration: AdventOfCodeConfiguration = .init()
+    @AutoSerializing(filePath: "local/adventOfCode\(adventOfCodeYear)Config.json") private var configuration: AdventOfCodeConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
 
     public init() {
