@@ -1,5 +1,9 @@
 import D2MessageIO
 import D2NetAPIs
+import Foundation
+import SwiftPlot
+import AGGRenderer
+import Graphics
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
@@ -45,20 +49,19 @@ public class AdventOfCodeCommand: StringCommand {
                 output.append(errorText: "Please set a leaderboard before querying it!")
                 return
             }
+
             AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
                 do {
                     let board = try $0.get()
                     let n = 15
-                    output.append(Embed(
-                        title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(n)",
-                        description: board.members.values
-                            .sorted(by: descendingComparator(comparing: \.stars))
-                            .prefix(n)
-                            .map { "**\($0.name ?? "<anonymous user \($0.id ?? "?")>")**: \($0.stars) :star:" }
-                            .joined(separator: "\n")
-                            .nilIfEmpty
-                            ?? "_no one here yet :(_"
-                    ))
+                    let topMembers = Array(board.members.values
+                        .sorted(by: descendingComparator(comparing: \.stars))
+                        .prefix(n))
+
+                    output.append(RichValue.compound([
+                        (try? self.presentAsGraph(members: topMembers)).map { RichValue.image($0) },
+                        try RichValue.embed(self.presentAsEmbed(members: topMembers))
+                    ].compactMap { $0 }))
                 } catch {
                     output.append(error, errorText: "Could not query leaderboard")
                 }
@@ -77,5 +80,36 @@ public class AdventOfCodeCommand: StringCommand {
             }
             subcommand(subcommandArgs, output)
         }
+    }
+
+    private func presentAsGraph(members: [AdventOfCodeLeaderboard.Member]) throws -> Image {
+        let renderer = AGGRenderer()
+        var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
+
+        for member in members {
+            let stars = member.starsPerDayCumulative
+            graph.addSeries(stars.indices.map { Double($0 + 1) }, stars.map(Double.init), label: member.displayName)
+        }
+
+        graph.plotLineThickness = 3
+        graph.drawGraph(renderer: renderer)
+
+        guard let pngData = Data(base64Encoded: renderer.base64Png()) else {
+            throw AdventOfCodeError.noPlotImageData
+        }
+        let image = try Image(fromPng: pngData)
+
+        return image
+    }
+
+    private func presentAsEmbed(members: [AdventOfCodeLeaderboard.Member]) throws -> Embed {
+        Embed(
+            title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(members.count)",
+            description: members
+                .map { "**\($0.displayName)**: \($0.stars) :star:" }
+                .joined(separator: "\n")
+                .nilIfEmpty
+                ?? "_no one here yet :(_"
+        )
     }
 }

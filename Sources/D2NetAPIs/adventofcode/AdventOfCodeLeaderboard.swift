@@ -1,4 +1,5 @@
 import Foundation
+import Utils
 
 public struct AdventOfCodeLeaderboard: Decodable {
     public enum CodingKeys: String, CodingKey {
@@ -29,6 +30,16 @@ public struct AdventOfCodeLeaderboard: Decodable {
         public let id: String?
         public let completionDayLevel: [String: [String: StarCompletion]]?
         public let name: String?
+
+        public var displayName: String { name ?? "<anonymous user \(id ?? "?")>" }
+        public var starsPerDay: [Int] { completionDayLevel?.sorted(by: ascendingComparator(comparing: \.key)).map(\.value.count) ?? [] }
+        public var starsPerDayCumulative: [Int] {
+            var res = [Int]()
+            for delta in starsPerDay {
+                res.append((res.last ?? 0) + delta)
+            }
+            return res
+        }
 
         public struct StarCompletion: Decodable {
             public enum CodingKeys: String, CodingKey {
