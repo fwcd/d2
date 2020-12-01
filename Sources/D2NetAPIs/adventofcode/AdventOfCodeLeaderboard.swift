@@ -32,13 +32,26 @@ public struct AdventOfCodeLeaderboard: Decodable {
         public let name: String?
 
         public var displayName: String { name ?? "<anonymous user \(id ?? "?")>" }
-        public var starsPerDay: [Int] { completionDayLevel?.sorted(by: ascendingComparator(comparing: \.key)).map(\.value.count) ?? [] }
-        public var starsPerDayCumulative: [Int] {
-            var res = [Int]()
-            for delta in starsPerDay {
-                res.append((res.last ?? 0) + delta)
+        public var starCompletions: [StarCompletion] {
+            completionDayLevel?
+                .values
+                .flatMap(\.values)
+                .sorted(by: ascendingComparator { $0.getStarTs?.date ?? Date.distantFuture })
+                ?? []
+        }
+        public var starScores: [StarScore] {
+            var res = [StarScore]()
+            for completion in starCompletions {
+                if let date = completion.getStarTs?.date ?? res.last?.date {
+                    res.append(StarScore(score: (res.last?.score ?? 0) + 1, date: date))
+                }
             }
             return res
+        }
+
+        public struct StarScore {
+            public let score: Int
+            public let date: Date
         }
 
         public struct StarCompletion: Decodable {

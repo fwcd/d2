@@ -87,9 +87,9 @@ public class AdventOfCodeCommand: StringCommand {
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
 
         for member in members {
-            let stars = member.starsPerDayCumulative
-            if stars.count >= 2 {
-                graph.addSeries(stars.indices.map { Double($0 + 1) }, stars.map(Double.init), label: member.displayName)
+            let scores = member.starScores
+            if !scores.isEmpty {
+                graph.addSeries(scores.map(\.date.timeIntervalSince1970), scores.map(\.score).map(Double.init), label: member.displayName)
             }
         }
 
