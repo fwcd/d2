@@ -48,11 +48,13 @@ public class AdventOfCodeCommand: StringCommand {
             AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
                 do {
                     let board = try $0.get()
+                    let n = 15
                     output.append(Embed(
-                        title: "Advent of Code \(adventOfCodeEvent) Leaderboard",
+                        title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(n)",
                         description: board.members.values
                             .sorted(by: descendingComparator(comparing: \.stars))
-                            .map { "\($0.name ?? "<anonymous user \($0.id ?? "?")>"): \($0.stars) :star:" }
+                            .prefix(n)
+                            .map { "**\($0.name ?? "<anonymous user \($0.id ?? "?")>")**: \($0.stars) :star:" }
                             .joined(separator: "\n")
                             .nilIfEmpty
                             ?? "_no one here yet :(_"
