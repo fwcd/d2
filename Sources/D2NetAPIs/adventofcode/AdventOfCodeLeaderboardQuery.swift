@@ -2,9 +2,9 @@ import Utils
 
 public struct AdventOfCodeLeaderboardQuery {
     public let event: String
-    public let ownerId: String
+    public let ownerId: Int
 
-    public init(event: String, ownerId: String) {
+    public init(event: String, ownerId: Int) {
         self.event = event
         self.ownerId = ownerId
     }

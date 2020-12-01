@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2NetAPIs
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "(\\w+)\\s*(.*)")
@@ -38,16 +39,41 @@ public class AdventOfCodeCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        guard let parsedSubcommand = subcommandPattern.firstGroups(in: input) else {
-            output.append(errorText: info.helpText!)
-            return
+        if input.isEmpty {
+            // Present leaderboard
+            guard let ownerId = configuration.leaderboardOwnerId else {
+                output.append(errorText: "Please set a leaderboard before querying it!")
+                return
+            }
+            AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
+                do {
+                    let board = try $0.get()
+                    output.append(Embed(
+                        title: "Advent of Code \(adventOfCodeEvent) Leaderboard",
+                        description: board.members.values
+                            .sorted(by: descendingComparator(comparing: \.stars))
+                            .map { "\($0.name): \($0.stars) :star:" }
+                            .joined(separator: "\n")
+                            .nilIfEmpty
+                            ?? "_no one here yet :(_"
+                    ))
+                } catch {
+                    output.append(error, errorText: "Could not query leaderboard")
+                }
+            }
+        } else {
+            // Invoke subcommand
+            guard let parsedSubcommand = subcommandPattern.firstGroups(in: input) else {
+                output.append(errorText: info.helpText!)
+                return
+            }
+            let subcommandName = parsedSubcommand[1]
+            let subcommandArgs = parsedSubcommand[2]
+            guard let subcommand = subcommands[subcommandName] else {
+                output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+                return
+            }
+            subcommand(subcommandArgs, output)
         }
-        let subcommandName = parsedSubcommand[1]
-        let subcommandArgs = parsedSubcommand[2]
-        guard let subcommand = subcommands[subcommandName] else {
-            output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
-            return
-        }
-        subcommand(subcommandArgs, output)
     }
 }
