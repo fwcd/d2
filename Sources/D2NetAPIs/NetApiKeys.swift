@@ -9,6 +9,7 @@ struct NetApiKeys: Codable {
     var gitlab: String? = nil
     var openweathermap: String? = nil
     var windy: Windy? = nil
+    var adventOfCode2020: String? = nil
 
     struct Windy: Codable {
         var webcams: String? = nil
