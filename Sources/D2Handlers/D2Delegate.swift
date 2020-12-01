@@ -358,6 +358,7 @@ public class D2Delegate: MessageDelegate {
         registry["guilds"] = GuildsCommand()
         registry["whatsup"] = WhatsUpCommand()
         registry["songcharts"] = SongChartsCommand()
+        registry["adventofcode", aka: ["aoc"]] = AdventOfCodeCommand()
         registry["tldr", aka: ["summarize", "summary"]] = TLDRCommand()
         registry["sortby"] = SortByCommand()
         registry["addscript"] = AddD2ScriptCommand()
