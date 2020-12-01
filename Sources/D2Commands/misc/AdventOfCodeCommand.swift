@@ -7,7 +7,15 @@ import Graphics
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
-fileprivate let adventOfCodeEvent = "2020"
+fileprivate let adventOfCodeYear: Int = 2020
+fileprivate let adventOfCodeEvent: String = String(adventOfCodeYear)
+fileprivate let adventOfCodeStart: Date = {
+    var components = DateComponents()
+    components.year = adventOfCodeYear
+    components.month = 12
+    components.day = 1
+    return Calendar.current.date(from: components)!
+}()
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -85,10 +93,15 @@ public class AdventOfCodeCommand: StringCommand {
     private func presentAsGraph(members: [AdventOfCodeLeaderboard.Member]) throws -> Image {
         let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
+        let now = Date()
 
         for member in members {
-            let scores = member.starScores
-            if !scores.isEmpty {
+            var scores = member.starScores.flatMap { [$0.shortlyBefore, $0] }
+
+            if let last = scores.last {
+                scores.insert(.init(score: 0, date: adventOfCodeStart), at: 0)
+                scores.append(.init(score: last.score, date: now))
+
                 graph.addSeries(scores.map(\.date.timeIntervalSince1970), scores.map(\.score).map(Double.init), label: member.displayName, color: .random())
             }
         }

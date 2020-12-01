@@ -52,6 +52,13 @@ public struct AdventOfCodeLeaderboard: Decodable {
         public struct StarScore {
             public let score: Int
             public let date: Date
+
+            public var shortlyBefore: StarScore { StarScore(score: score - 1, date: date - 0.0001) }
+
+            public init(score: Int, date: Date) {
+                self.score = score
+                self.date = date
+            }
         }
 
         public struct StarCompletion: Decodable {
