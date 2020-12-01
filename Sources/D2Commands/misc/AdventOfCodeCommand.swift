@@ -21,7 +21,7 @@ public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Fetches a private Advent of Code leaderboard",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .basic
     )
     @AutoSerializing(filePath: "local/adventOfCode\(adventOfCodeEvent)Config.json") private var configuration: AdventOfCodeConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
