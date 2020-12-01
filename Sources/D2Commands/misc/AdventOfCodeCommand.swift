@@ -64,7 +64,7 @@ public class AdventOfCodeCommand: StringCommand {
                     let members = board.members.values.sorted(by: descendingComparator(comparing: \.stars))
 
                     output.append(RichValue.compound([
-                        (try? self.presentAsGraph(members: Array(members.prefix(20)))).map { RichValue.image($0) },
+                        (try? self.presentAsGraph(members: Array(members.prefix(25)))).map { RichValue.image($0) },
                         try RichValue.embed(self.presentAsEmbed(members: Array(members.prefix(15))))
                     ].compactMap { $0 }))
                 } catch {
