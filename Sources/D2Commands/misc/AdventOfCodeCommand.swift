@@ -2,7 +2,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let subcommandPattern = try! Regex(from: "(\\w+)\\s*(.*)")
+fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
 fileprivate let adventOfCodeEvent = "2020"
 
 public class AdventOfCodeCommand: StringCommand {
