@@ -52,7 +52,7 @@ public class AdventOfCodeCommand: StringCommand {
                         title: "Advent of Code \(adventOfCodeEvent) Leaderboard",
                         description: board.members.values
                             .sorted(by: descendingComparator(comparing: \.stars))
-                            .map { "\($0.name): \($0.stars) :star:" }
+                            .map { "\($0.name ?? "<anonymous user \($0.id ?? "?")>"): \($0.stars) :star:" }
                             .joined(separator: "\n")
                             .nilIfEmpty
                             ?? "_no one here yet :(_"
