@@ -9,7 +9,7 @@ public class PickRandomCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let value = input.split(separator: " ").randomElement().map(String.init) else {
-            output.append("Please enter space-separated values, e.g. `heads tails`.")
+            output.append(errorText: "Please enter space-separated values, e.g. `heads tails`.")
             return
         }
 

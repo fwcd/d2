@@ -330,6 +330,7 @@ public class D2Delegate: MessageDelegate {
         registry["coinflip", aka: ["coin"]] = CoinFlipCommand()
         registry["diceroll", aka: ["dice", "roll"]] = DiceRollCommand(1...6)
         registry["pickrandom", aka: ["pick"]] = PickRandomCommand()
+        registry["pickprogramminglanguage", aka: ["picklanguage", "picklang"]] = PickProgrammingLanguageCommand()
         registry["directmessage", aka: ["dm", "whisper"]] = DirectMessageCommand()
         registry["channelmessage", aka: ["m"]] = ChannelMessageCommand()
         registry["asciiart", aka: ["ascii"]] = AsciiArtCommand()
