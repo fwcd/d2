@@ -120,10 +120,22 @@ public class AdventOfCodeCommand: StringCommand {
             title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
             description: topMembers
                 .enumerated()
-                .map { (i, member) in "\(i + 1). \(member.localScore ?? 0), \(member.stars) :star: **\(member.displayName)**" }
+                .map { (i, member) in [
+                    "\(i + 1). \(member.localScore ?? 0)",
+                    board.lastTimeToCompletion(member: member).map(self.format(timeInterval:)),
+                    "\(member.stars) :star: **\(member.displayName)**"
+                 ].compactMap { $0 }.joined(separator: ", ") }
                 .joined(separator: "\n")
                 .nilIfEmpty
                 ?? "_no one here yet :(_"
         )
+    }
+
+    private func format(timeInterval: TimeInterval) -> String {
+        let total = Int(timeInterval)
+        let seconds = total % 60
+        let minutes = (total / 60) % 60
+        let hours = total / 3600
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }

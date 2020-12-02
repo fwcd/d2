@@ -12,6 +12,27 @@ public struct AdventOfCodeLeaderboard: Decodable {
     public let event: String
     public let members: [String: Member]
 
+    public var year: Int? { Int(event) }
+    public var startDate: Date? { challengeReleaseDate(day: 1) }
+
+    public func challengeReleaseDate(day: Int) -> Date? {
+        var components = DateComponents()
+        components.year = year
+        components.month = 12
+        components.day = day
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+        components.timeZone = TimeZone(secondsFromGMT: -5 * 3600)
+        return Calendar.current.date(from: components)
+    }
+
+    public func lastTimeToCompletion(member: Member) -> TimeInterval? {
+        challengeReleaseDate(day: member.lastDay)
+            .flatMap { release in (member.lastStarTs?.date)
+                .map { $0.timeIntervalSince(release) } }
+    }
+
     public struct Member: Decodable {
         public enum CodingKeys: String, CodingKey {
             case stars
@@ -31,17 +52,16 @@ public struct AdventOfCodeLeaderboard: Decodable {
         public let completionDayLevel: [String: [String: StarCompletion]]?
         public let name: String?
 
+        public var lastDay: Int { starCompletions.keys.max() ?? 1 }
         public var displayName: String { name ?? "<anonymous user \(id ?? "?")>" }
-        public var starCompletions: [StarCompletion] {
-            completionDayLevel?
-                .values
-                .flatMap(\.values)
-                .sorted(by: ascendingComparator { $0.getStarTs?.date ?? Date.distantFuture })
-                ?? []
+        public var starCompletions: [Int: [StarCompletion]] {
+            Dictionary(uniqueKeysWithValues: completionDayLevel?
+                .compactMap { (k, v) in Int(k).map { ($0, v.values.sorted(by: ascendingComparator { $0.getStarTs?.date ?? Date.distantFuture })) } }
+                ?? [])
         }
         public var starScores: [StarScore] {
             var res = [StarScore]()
-            for completion in starCompletions {
+            for completion in starCompletions.flatMap(\.value) {
                 if let date = completion.getStarTs?.date ?? res.last?.date {
                     res.append(StarScore(score: (res.last?.score ?? 0) + 1, date: date))
                 }
