@@ -96,7 +96,7 @@ public class AdventOfCodeCommand: StringCommand {
             var scores = member.starScores.flatMap { [$0.shortlyBefore, $0] }
 
             if let last = scores.last {
-                scores.insert(.init(score: 0, date: adventOfCodeStart), at: 0)
+                scores.insert(.init(score: 0, date: board.startDate ?? adventOfCodeStart), at: 0)
                 scores.append(.init(score: last.score, date: now))
 
                 graph.addSeries(scores.map(\.date.timeIntervalSince1970), scores.map(\.score).map(Double.init), label: member.displayName, color: .random())
