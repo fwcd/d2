@@ -117,7 +117,7 @@ public class AdventOfCodeCommand: StringCommand {
     private func presentAsEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
         let topMembers = board.members.values.sorted(by: descendingComparator { $0.localScore ?? 0 }).prefix(15)
         return Embed(
-            title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
+            title: ":christmas_tree: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
             description: topMembers
                 .enumerated()
                 .map { (i, member) in [
