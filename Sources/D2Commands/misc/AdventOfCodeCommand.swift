@@ -61,11 +61,10 @@ public class AdventOfCodeCommand: StringCommand {
             AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
                 do {
                     let board = try $0.get()
-                    let members = board.members.values.sorted(by: descendingComparator(comparing: \.stars))
 
                     output.append(RichValue.compound([
-                        (try? self.presentAsGraph(members: Array(members.prefix(25)))).map { RichValue.image($0) },
-                        try RichValue.embed(self.presentAsEmbed(members: Array(members.prefix(15))))
+                        (try? self.presentAsGraph(board: board)).map { RichValue.image($0) },
+                        try RichValue.embed(self.presentAsEmbed(board: board))
                     ].compactMap { $0 }))
                 } catch {
                     output.append(error, errorText: "Could not query leaderboard")
@@ -87,12 +86,13 @@ public class AdventOfCodeCommand: StringCommand {
         }
     }
 
-    private func presentAsGraph(members: [AdventOfCodeLeaderboard.Member]) throws -> Image {
+    private func presentAsGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+        let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
         let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let now = Date()
 
-        for member in members {
+        for member in topMembers {
             var scores = member.starScores.flatMap { [$0.shortlyBefore, $0] }
 
             if let last = scores.last {
@@ -114,11 +114,13 @@ public class AdventOfCodeCommand: StringCommand {
         return image
     }
 
-    private func presentAsEmbed(members: [AdventOfCodeLeaderboard.Member]) throws -> Embed {
-        Embed(
-            title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(members.count)",
-            description: members
-                .map { "**\($0.displayName)**: \($0.stars) :star:" }
+    private func presentAsEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
+        let topMembers = board.members.values.sorted(by: descendingComparator { $0.localScore ?? 0 }).prefix(15)
+        return Embed(
+            title: "Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
+            description: topMembers
+                .enumerated()
+                .map { (i, member) in "\(i + 1). \(member.localScore ?? 0), \(member.stars) :star: **\(member.displayName)**" }
                 .joined(separator: "\n")
                 .nilIfEmpty
                 ?? "_no one here yet :(_"
