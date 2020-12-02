@@ -121,10 +121,9 @@ public class AdventOfCodeCommand: StringCommand {
             description: topMembers
                 .enumerated()
                 .map { (i, member) in [
-                    "\(i + 1). \(member.localScore ?? 0)",
-                    board.lastTimeToCompletion(member: member).map(self.format(timeInterval:)),
-                    "\(member.stars) :star: **\(member.displayName)**"
-                 ].compactMap { $0 }.joined(separator: ", ") }
+                    "`\(String(format: "%02d", i + 1)). \(member.localScore ?? 0) | \(format(timeInterval: board.lastTimeToCompletion(member: member) ?? 0)) | \(member.stars)`",
+                    ":star: **\(member.displayName)**"
+                 ].compactMap { $0 }.joined(separator: " ") }
                 .joined(separator: "\n")
                 .nilIfEmpty
                 ?? "_no one here yet :(_"
