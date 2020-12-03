@@ -56,40 +56,52 @@ public struct AdventOfCodeLeaderboard: Decodable {
         public var displayName: String { name ?? "<anonymous user \(id ?? "?")>" }
         public var starCompletions: [Int: [StarCompletion]] {
             Dictionary(uniqueKeysWithValues: completionDayLevel?
-                .compactMap { (k, v) in Int(k).map { ($0, v.values.sorted(by: ascendingComparator { $0.getStarTs?.date ?? Date.distantFuture })) } }
+                .compactMap { (k, v) in Int(k).map { ($0, v.values.sorted()) } }
                 ?? [])
         }
         public var starScores: [StarScore] {
             var res = [StarScore]()
-            for completion in starCompletions.flatMap(\.value) {
+            for completion in starCompletions.flatMap(\.value).sorted() {
                 if let date = completion.getStarTs?.date ?? res.last?.date {
                     res.append(StarScore(score: (res.last?.score ?? 0) + 1, date: date))
                 }
             }
-            return res
+            return res.sorted()
         }
 
-        public struct StarScore {
+        public struct StarScore: Equatable, Comparable {
             public let score: Int
             public let date: Date
-
-            public var shortlyBefore: StarScore { StarScore(score: score - 1, date: date - 0.0001) }
 
             public init(score: Int, date: Date) {
                 self.score = score
                 self.date = date
             }
+
+            public func at(date newDate: Date) -> StarScore {
+                StarScore(score: score, date: newDate)
+            }
+
+            public static func <(lhs: Self, rhs: Self) -> Bool {
+                lhs.date < rhs.date
+            }
         }
 
-        public struct StarCompletion: Decodable {
+        public struct StarCompletion: Decodable, Equatable, Comparable {
             public enum CodingKeys: String, CodingKey {
                 case getStarTs = "get_star_ts"
             }
 
             public let getStarTs: Timestamp?
+
+            private var date: Date { getStarTs?.date ?? Date.distantFuture }
+
+            public static func <(lhs: Self, rhs: Self) -> Bool {
+                lhs.date < rhs.date
+            }
         }
 
-        public struct Timestamp: Decodable {
+        public struct Timestamp: Decodable, Equatable {
             public let date: Date?
 
             public init(from decoder: Decoder) throws {

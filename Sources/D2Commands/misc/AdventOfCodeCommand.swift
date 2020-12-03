@@ -90,13 +90,16 @@ public class AdventOfCodeCommand: StringCommand {
         let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
         let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
+        let start = board.startDate ?? adventOfCodeStart
 
         for member in topMembers {
-            var scores = member.starScores.flatMap { [$0.shortlyBefore, $0] }
+            let base = AdventOfCodeLeaderboard.Member.StarScore(score: 0, date: start)
+            let scores = [base] + zip([base] + member.starScores, member.starScores)
+                .flatMap { (score, next) in [score.at(date: next.date - 0.0000001), next] }
+                .sorted()
 
-            if !scores.isEmpty {
-                scores.insert(.init(score: 0, date: board.startDate ?? adventOfCodeStart), at: 0)
-                graph.addSeries(scores.map(\.date.timeIntervalSince1970), scores.map(\.score).map(Double.init), label: member.displayName, color: .random())
+            if scores.count > 1 {
+                graph.addSeries(scores.map { $0.date.timeIntervalSince(start) }, scores.map(\.score).map(Double.init), label: member.displayName, color: .random())
             }
         }
 
