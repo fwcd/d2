@@ -100,7 +100,7 @@ public class AdventOfCodeCommand: StringCommand {
 
             if scores.count > 1 {
                 graph.addSeries(
-                    scores.map { $0.date.timeIntervalSince(start).asDays },
+                    scores.map { $0.date.timeIntervalSince(start).asDays + 1 },
                     scores.map(\.score).map(Double.init),
                     label: member.displayName,
                     color: .init(Float.random(in: 0..<1), Float.random(in: 0..<1), Float.random(in: 0..<1), 1)
