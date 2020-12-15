@@ -35,16 +35,28 @@ public class SearchChannelCommand: StringCommand {
 
             output.append(Embed(
                 title: ":mag: Found Channels",
-                description: results.map {
-                    [
-                        "\($0)",
-                        $0.topic?.nilIfEmpty,
-                        $0.parentId.flatMap { guild.channels[$0] }.map { "_in \($0.name)_" }
-                    ].compactMap { $0 }.joined(separator: "\n")
-                }.joined(separator: "\n\n").nilIfEmpty
+                fields: Dictionary(grouping: results, by: \.type).map {
+                    Embed.Field(
+                        name: format(type: $0.key),
+                        value: $0.value
+                            .map { [
+                                "\($0)\($0.parentId.flatMap { guild.channels[$0] }.map { " _in \($0.name)_" } ?? "")",
+                                $0.topic?.nilIfEmpty
+                            ].compactMap { $0 }.joined(separator: "\n") }
+                            .joined(separator: "\n")
+                    )
+                }
             ))
         } catch {
             output.append(errorText: "Invalid input: `\(input)`")
+        }
+    }
+
+    private func format(type: Guild.Channel.ChannelType) -> String {
+        switch type {
+            case .text: return "Text channels"
+            case .voice: return "Voice channels"
+            case .category: return "Categories"
         }
     }
 }
