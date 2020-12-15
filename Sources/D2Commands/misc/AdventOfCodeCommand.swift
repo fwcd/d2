@@ -46,7 +46,7 @@ public class AdventOfCodeCommand: StringCommand {
 
                 withLeaderboard(output: output) { board in
                     output.append(.compound([
-                        // TODO
+                        try .embed(self.presentTimesEmbed(board: board))
                     ]))
                 }
             }
@@ -133,7 +133,10 @@ public class AdventOfCodeCommand: StringCommand {
     }
 
     private func presentScoreEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
-        let topMembers = board.members.values.sorted(by: descendingComparator { $0.localScore ?? 0 }).prefix(15)
+        let topMembers = board.members.values
+            .sorted(by: descendingComparator { $0.localScore ?? 0 })
+            .prefix(15)
+
         return Embed(
             title: ":christmas_tree: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
             description: topMembers
@@ -142,6 +145,25 @@ public class AdventOfCodeCommand: StringCommand {
                     "`\(String(format: "%02d", i + 1)). \(member.localScore ?? 0) | \(format(timeInterval: board.lastTimeToCompletion(member: member) ?? 0)) | \(member.stars)`",
                     ":star: **\(member.displayName)**"
                  ].compactMap { $0 }.joined(separator: " ") }
+                .joined(separator: "\n")
+                .nilIfEmpty
+                ?? "_no one here yet :(_"
+        )
+    }
+
+    private func presentTimesEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
+        let day = Calendar.current.component(.day, from: min(Date(), board.endDate ?? Date.distantFuture))
+        let topMembers = board.members.values
+            .compactMap { member in board.timeToCompletion(member: member, day: day).map { ($0, member) } }
+            .sorted(by: ascendingComparator { $0.0 })
+            .prefix(15)
+
+        return Embed(
+            title: ":stopwatch: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count) times to completion today",
+            description: topMembers
+                .map { (ttc, member) in "\(format(timeInterval: ttc)) | **\(member.displayName)**" }
+                .enumerated()
+                .map { (i, s) in "`\(String(format: "%02d", i + 1)). \(s)`" }
                 .joined(separator: "\n")
                 .nilIfEmpty
                 ?? "_no one here yet :(_"

@@ -14,6 +14,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
 
     public var year: Int? { Int(event) }
     public var startDate: Date? { challengeReleaseDate(day: 1) }
+    public var endDate: Date? { challengeReleaseDate(day: 26) }
 
     public func challengeReleaseDate(day: Int) -> Date? {
         var components = DateComponents()
@@ -27,10 +28,14 @@ public struct AdventOfCodeLeaderboard: Decodable {
         return Calendar.current.date(from: components)
     }
 
-    public func lastTimeToCompletion(member: Member) -> TimeInterval? {
-        challengeReleaseDate(day: member.lastDay)
+    public func timeToCompletion(member: Member, day: Int) -> TimeInterval? {
+        challengeReleaseDate(day: day)
             .flatMap { release in (member.lastStarTs?.date)
                 .map { $0.timeIntervalSince(release) } }
+    }
+
+    public func lastTimeToCompletion(member: Member) -> TimeInterval? {
+        timeToCompletion(member: member, day: member.lastDay)
     }
 
     public struct Member: Decodable {
