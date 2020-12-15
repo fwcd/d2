@@ -154,16 +154,17 @@ public class AdventOfCodeCommand: StringCommand {
     private func presentTimesEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
         let day = Calendar.current.component(.day, from: min(Date(), board.endDate ?? Date.distantFuture))
         let topMembers = board.members.values
-            .compactMap { member in board.timeToCompletion(member: member, day: day).map { ($0, member) } }
-            .sorted(by: ascendingComparator { $0.0 })
+            .compactMap { member in board.timeToCompletion(member: member, day: day)
+                .filter { $0 >= 0 }
+                .map { (time: $0, member: member) } }
+            .sorted(by: ascendingComparator(comparing: \.time))
             .prefix(15)
 
         return Embed(
-            title: ":stopwatch: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count) times to completion today",
+            title: ":stopwatch: Advent of Code \(adventOfCodeEvent) Best Times Today - Top \(topMembers.count)",
             description: topMembers
-                .map { (ttc, member) in "\(format(timeInterval: ttc)) | **\(member.displayName)**" }
                 .enumerated()
-                .map { (i, s) in "`\(String(format: "%02d", i + 1)). \(s)`" }
+                .map { (i, tm) in "`\(String(format: "%02d", i + 1)). \(format(timeInterval: tm.time))` | **\(tm.member.displayName)**" }
                 .joined(separator: "\n")
                 .nilIfEmpty
                 ?? "_no one here yet :(_"
