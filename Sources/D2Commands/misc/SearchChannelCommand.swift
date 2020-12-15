@@ -38,7 +38,8 @@ public class SearchChannelCommand: StringCommand {
                 description: results.map {
                     [
                         "\($0)",
-                        $0.topic?.nilIfEmpty
+                        $0.topic?.nilIfEmpty,
+                        $0.parentId.flatMap { guild.channels[$0] }.map { "_in \($0.name)_" }
                     ].compactMap { $0 }.joined(separator: "\n")
                 }.joined(separator: "\n\n").nilIfEmpty
             ))
