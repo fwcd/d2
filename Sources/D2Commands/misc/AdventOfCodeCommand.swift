@@ -40,6 +40,15 @@ public class AdventOfCodeCommand: StringCommand {
             "unset-leaderboard": { [unowned self] _, output in
                 configuration.leaderboardOwnerId = nil
                 output.append("Successfully unset leaderboard!")
+            },
+            "times": { [unowned self] _, output in
+                // Present best times
+
+                withLeaderboard(output: output) { board in
+                    output.append(.compound([
+                        // TODO
+                    ]))
+                }
             }
         ]
         info.helpText = """
@@ -53,22 +62,12 @@ public class AdventOfCodeCommand: StringCommand {
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         if input.isEmpty {
             // Present leaderboard
-            guard let ownerId = configuration.leaderboardOwnerId else {
-                output.append(errorText: "Please set a leaderboard before querying it!")
-                return
-            }
 
-            AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
-                do {
-                    let board = try $0.get()
-
-                    output.append(RichValue.compound([
-                        (try? self.presentAsGraph(board: board)).map { RichValue.image($0) },
-                        try RichValue.embed(self.presentAsEmbed(board: board))
-                    ].compactMap { $0 }))
-                } catch {
-                    output.append(error, errorText: "Could not query leaderboard")
-                }
+            withLeaderboard(output: output) { board in
+                output.append(.compound([
+                    (try? self.presentStarGraph(board: board)).map { .image($0) },
+                    try .embed(self.presentScoreEmbed(board: board))
+                ].compactMap { $0 }))
             }
         } else {
             // Invoke subcommand
@@ -86,7 +85,21 @@ public class AdventOfCodeCommand: StringCommand {
         }
     }
 
-    private func presentAsGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+    private func withLeaderboard(output: CommandOutput, _ action: @escaping (AdventOfCodeLeaderboard) throws -> Void) {
+        guard let ownerId = configuration.leaderboardOwnerId else {
+            output.append(errorText: "Please set a leaderboard before querying it!")
+            return
+        }
+        AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
+            do {
+                try action($0.get())
+            } catch {
+                output.append(error, errorText: "Could not query/process leaderboard.")
+            }
+        }
+    }
+
+    private func presentStarGraph(board: AdventOfCodeLeaderboard) throws -> Image {
         let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
         let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
@@ -119,7 +132,7 @@ public class AdventOfCodeCommand: StringCommand {
         return image
     }
 
-    private func presentAsEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
+    private func presentScoreEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
         let topMembers = board.members.values.sorted(by: descendingComparator { $0.localScore ?? 0 }).prefix(15)
         return Embed(
             title: ":christmas_tree: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
