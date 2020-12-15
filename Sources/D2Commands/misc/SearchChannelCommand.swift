@@ -36,7 +36,10 @@ public class SearchChannelCommand: StringCommand {
             output.append(Embed(
                 title: ":mag: Found Channels",
                 description: results.map {
-                    ["<#\($0.id)>", $0.topic].compactMap { $0 }.joined(separator: "\n")
+                    [
+                        "\($0)",
+                        $0.topic?.nilIfEmpty
+                    ].compactMap { $0 }.joined(separator: "\n")
                 }.joined(separator: "\n\n").nilIfEmpty
             ))
         } catch {

@@ -96,7 +96,7 @@ public struct Guild {
         return member.roleIds.compactMap { roles[$0] }
     }
 
-    public struct Channel {
+    public struct Channel: CustomStringConvertible {
         public let id: ChannelID
         public let guildId: GuildID
         public let name: String
@@ -107,6 +107,13 @@ public struct Guild {
         public let permissionOverwrites: [OverwriteID: PermissionOverwrite]
 
         public var isVoiceChannel: Bool { type == .voice }
+        public var description: String {
+            switch type {
+                case .text: return "<#\(id)>"
+                case .voice: return ":speaker: \(name)"
+                case .category: return ":paperclip: \(name)"
+            }
+        }
 
         public init(id: ChannelID, guildId: GuildID, name: String, topic: String? = nil, parentId: ChannelID? = nil, position: Int, type: ChannelType, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
             self.id = id
