@@ -16,6 +16,13 @@ fileprivate let adventOfCodeStart: Date = {
     components.day = 1
     return Calendar.current.date(from: components)!
 }()
+fileprivate let adventOfCodeEnd: Date = {
+    var components = DateComponents()
+    components.year = adventOfCodeYear
+    components.month = 12
+    components.day = 26
+    return Calendar.current.date(from: components)!
+}()
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -46,8 +53,9 @@ public class AdventOfCodeCommand: StringCommand {
 
                 withLeaderboard(output: output) { board in
                     output.append(.compound([
+                        (try? self.presentTimesGraph(board: board)).map { .image($0) },
                         try .embed(self.presentTimesEmbed(board: board))
-                    ]))
+                    ].compactMap { $0 }))
                 }
             }
         ]
@@ -101,7 +109,6 @@ public class AdventOfCodeCommand: StringCommand {
 
     private func presentStarGraph(board: AdventOfCodeLeaderboard) throws -> Image {
         let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
-        let renderer = AGGRenderer()
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let start = board.startDate ?? adventOfCodeStart
 
@@ -122,14 +129,42 @@ public class AdventOfCodeCommand: StringCommand {
         }
 
         graph.plotLineThickness = 3
+        return try render(graph: graph)
+    }
+
+    private func presentTimesGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+        let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
+        var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
+        let calendar = Calendar.current
+        let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
+        let endDay = calendar.component(.day, from: board.endDate ?? adventOfCodeEnd)
+
+        for member in topMembers {
+            let times = (startDay...endDay).compactMap { day in board.timeToCompletion(member: member, day: day).map { (day, $0) } }
+
+            if times.count > 1 {
+                graph.addSeries(
+                    times.map(\.0).map(Double.init),
+                    times.map(\.1),
+                    label: member.displayName,
+                    color: .init(Float.random(in: 0..<1), Float.random(in: 0..<1), Float.random(in: 0..<1), 1)
+                )
+            }
+        }
+
+        graph.plotLineThickness = 3
+        return try render(graph: graph)
+    }
+
+    private func render(graph: LineGraph<Double, Double>) throws -> Image {
+        let renderer = AGGRenderer()
         graph.drawGraph(renderer: renderer)
 
         guard let pngData = Data(base64Encoded: renderer.base64Png()) else {
             throw AdventOfCodeError.noPlotImageData
         }
-        let image = try Image(fromPng: pngData)
 
-        return image
+        return try Image(fromPng: pngData)
     }
 
     private func presentScoreEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
