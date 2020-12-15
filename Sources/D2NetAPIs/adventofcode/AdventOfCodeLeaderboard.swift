@@ -37,7 +37,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
     }
 
     public func timeToCompletion(member: Member, day: Int) -> TimeInterval? {
-        timesToCompletion(member: member, day: day).reduce(0, +)
+        timesToCompletion(member: member, day: day).reduce1(+)
     }
 
     public func lastTimeToCompletion(member: Member) -> TimeInterval? {
