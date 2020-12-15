@@ -26,7 +26,7 @@ public class SearchChannelCommand: StringCommand {
             let pattern = try parsedPattern ?? Regex(from: Regex.escape(term))
             let results = guild.channels.values
                 .filter {
-                    [$0.name, $0.topic]
+                    [$0.name, $0.topic, $0.parentId.flatMap { guild.channels[$0] }.map(\.name)]
                         .compactMap { $0?.lowercased() }
                         .contains { pattern.matchCount(in: $0) > 0 }
                 }
@@ -35,17 +35,20 @@ public class SearchChannelCommand: StringCommand {
 
             output.append(Embed(
                 title: ":mag: Found Channels",
-                fields: Dictionary(grouping: results, by: \.type).map {
-                    Embed.Field(
-                        name: format(type: $0.key),
-                        value: $0.value
-                            .map { [
-                                "\($0)\($0.parentId.flatMap { guild.channels[$0] }.map { " _in \($0.name)_" } ?? "")",
-                                $0.topic?.nilIfEmpty
-                            ].compactMap { $0 }.joined(separator: "\n") }
-                            .joined(separator: "\n")
-                    )
-                }
+                fields: Dictionary(grouping: results, by: \.type)
+                    .sorted(by: ascendingComparator { [.text, .voice, .category].firstIndex(of: $0.key) ?? Int.max })
+                    .map {
+                        Embed.Field(
+                            name: format(type: $0.key),
+                            value: $0.value
+                                .map { [
+                                    "\($0)",
+                                    $0.topic.filter { !$0.isEmpty }.map { ": \($0)" },
+                                    $0.parentId.flatMap { guild.channels[$0] }.map { " _in \($0.name)_" }
+                                ].compactMap { $0 }.joined() }
+                                .joined(separator: "\n")
+                        )
+                    }
             ))
         } catch {
             output.append(errorText: "Invalid input: `\(input)`")
