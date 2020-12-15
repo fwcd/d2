@@ -100,6 +100,7 @@ public struct Guild {
         public let id: ChannelID
         public let guildId: GuildID
         public let name: String
+        public let topic: String?
         public let parentId: ChannelID?
         public let position: Int
         public let type: ChannelType
@@ -107,10 +108,11 @@ public struct Guild {
 
         public var isVoiceChannel: Bool { type == .voice }
 
-        public init(id: ChannelID, guildId: GuildID, name: String, parentId: ChannelID? = nil, position: Int, type: ChannelType, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
+        public init(id: ChannelID, guildId: GuildID, name: String, topic: String? = nil, parentId: ChannelID? = nil, position: Int, type: ChannelType, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
             self.id = id
             self.guildId = guildId
             self.name = name
+            self.topic = topic
             self.parentId = parentId
             self.position = position
             self.type = type

@@ -36,6 +36,7 @@ extension DiscordGuildChannel /* TODO: No protocol inheritance clauses: MessageI
             id: id.usingMessageIO,
             guildId: guildId.usingMessageIO,
             name: name,
+            topic: (self as? DiscordGuildTextChannel)?.topic,
             parentId: parentId?.usingMessageIO,
             position: position,
             type: self is DiscordGuildVoiceChannel ? .voice : self is DiscordGuildChannelCategory ? .category : .text,

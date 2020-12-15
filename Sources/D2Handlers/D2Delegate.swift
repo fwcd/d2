@@ -357,6 +357,7 @@ public class D2Delegate: MessageDelegate {
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
         registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
         registry["guilds"] = GuildsCommand()
+        registry["searchchannel", aka: ["findchannel", "sc"]] = SearchChannelCommand()
         registry["whatsup"] = WhatsUpCommand()
         registry["songcharts"] = SongChartsCommand()
         registry["adventofcode", aka: ["aoc"]] = AdventOfCodeCommand()
