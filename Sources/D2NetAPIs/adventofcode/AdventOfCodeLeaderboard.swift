@@ -28,10 +28,16 @@ public struct AdventOfCodeLeaderboard: Decodable {
         return Calendar.current.date(from: components)
     }
 
+    public func timesToCompletion(member: Member, day: Int) -> [TimeInterval] {
+        (challengeReleaseDate(day: day).map { [$0] } ?? [])
+            .flatMap { release in (member.starCompletions[day] ?? [])
+                .compactMap { $0.getStarTs?.date?.timeIntervalSince(release) }
+                .filter { $0 >= 0 }
+                .scan1 { $1 - $0 } }
+    }
+
     public func timeToCompletion(member: Member, day: Int) -> TimeInterval? {
-        challengeReleaseDate(day: day)
-            .flatMap { release in member.starCompletions[day]?.last?.getStarTs?.date?.timeIntervalSince(release) }
-            .filter { $0 >= 0 }
+        timesToCompletion(member: member, day: day).reduce(0, +)
     }
 
     public func lastTimeToCompletion(member: Member) -> TimeInterval? {

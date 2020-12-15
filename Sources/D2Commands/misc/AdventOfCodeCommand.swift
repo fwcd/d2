@@ -213,8 +213,10 @@ public class AdventOfCodeCommand: StringCommand {
     private func presentTimesEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
         let day = Calendar.current.component(.day, from: min(Date(), board.endDate ?? Date.distantFuture))
         let topMembers = board.members.values
-            .compactMap { member in board.timeToCompletion(member: member, day: day)
-                .map { (time: $0, member: member) } }
+            .compactMap { member in
+                board.timeToCompletion(member: member, day: day)
+                    .map { (time: $0, member: member) }
+            }
             .sorted(by: ascendingComparator(comparing: \.time))
             .prefix(15)
 
