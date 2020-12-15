@@ -30,8 +30,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
 
     public func timeToCompletion(member: Member, day: Int) -> TimeInterval? {
         challengeReleaseDate(day: day)
-            .flatMap { release in (member.lastStarTs?.date)
-                .map { $0.timeIntervalSince(release) } }
+            .flatMap { release in member.starCompletions[day]?.last?.getStarTs?.date?.timeIntervalSince(release) }
             .filter { $0 >= 0 }
     }
 

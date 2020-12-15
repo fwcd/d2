@@ -137,7 +137,7 @@ public class AdventOfCodeCommand: StringCommand {
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let calendar = Calendar.current
         let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
-        let endDay = calendar.component(.day, from: board.endDate ?? adventOfCodeEnd)
+        let endDay = calendar.component(.day, from: min(Date(), board.endDate ?? adventOfCodeEnd))
 
         for member in topMembers {
             let times = (startDay...endDay).compactMap { day in board.timeToCompletion(member: member, day: day).map { (day, $0) } }
