@@ -155,7 +155,6 @@ public class AdventOfCodeCommand: StringCommand {
         let day = Calendar.current.component(.day, from: min(Date(), board.endDate ?? Date.distantFuture))
         let topMembers = board.members.values
             .compactMap { member in board.timeToCompletion(member: member, day: day)
-                .filter { $0 >= 0 }
                 .map { (time: $0, member: member) } }
             .sorted(by: ascendingComparator(comparing: \.time))
             .prefix(15)
