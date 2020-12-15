@@ -267,8 +267,8 @@
         "repositoryURL": "https://github.com/fwcd/swift-utils.git",
         "state": {
           "branch": null,
-          "revision": "06a2186afa1eddd1b8cb178e73d8f2e39c4d12fc",
-          "version": "1.3.1"
+          "revision": "dded36c5374f93ef7432780de8eac1c1f3f3bd3d",
+          "version": "1.3.2"
         }
       },
       {
