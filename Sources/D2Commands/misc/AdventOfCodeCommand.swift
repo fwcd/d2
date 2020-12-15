@@ -49,13 +49,20 @@ public class AdventOfCodeCommand: StringCommand {
                 output.append("Successfully unset leaderboard!")
             },
             "times": { [unowned self] _, output in
-                // Present best times
+                // Present best times per day
 
                 withLeaderboard(output: output) { board in
                     output.append(.compound([
                         (try? self.presentTimesGraph(board: board)).map { .image($0) },
                         try .embed(self.presentTimesEmbed(board: board))
                     ].compactMap { $0 }))
+                }
+            },
+            "participation": { [unowned self] _, output in
+                // Present participation numbers per day
+
+                withLeaderboard(output: output) { board in
+                    try output.append(self.presentParticipationGraph(board: board))
                 }
             }
         ]
@@ -129,7 +136,24 @@ public class AdventOfCodeCommand: StringCommand {
         }
 
         graph.plotLineThickness = 3
-        return try render(graph: graph)
+        return try render(plot: graph)
+    }
+
+    private func presentParticipationGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+        var graph = BarGraph<Int, Double>()
+        let calendar = Calendar.current
+        let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
+        let endDay = calendar.component(.day, from: min(Date(), board.endDate ?? adventOfCodeEnd))
+        let days = startDay...endDay
+        let participations = days.map { day in board.members.values.count(forWhich: { $0.starCompletions.keys.contains(day) }) }
+
+        graph.addSeries(
+            Array(days),
+            participations.map(Double.init),
+            label: "Participants"
+        )
+
+        return try render(plot: graph)
     }
 
     private func presentTimesGraph(board: AdventOfCodeLeaderboard) throws -> Image {
@@ -153,12 +177,12 @@ public class AdventOfCodeCommand: StringCommand {
         }
 
         graph.plotLineThickness = 3
-        return try render(graph: graph)
+        return try render(plot: graph)
     }
 
-    private func render(graph: LineGraph<Double, Double>) throws -> Image {
+    private func render<P>(plot: P) throws -> Image where P: Plot {
         let renderer = AGGRenderer()
-        graph.drawGraph(renderer: renderer)
+        plot.drawGraph(renderer: renderer)
 
         guard let pngData = Data(base64Encoded: renderer.base64Png()) else {
             throw AdventOfCodeError.noPlotImageData
