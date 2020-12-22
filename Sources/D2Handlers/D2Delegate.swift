@@ -18,6 +18,7 @@ public class D2Delegate: MessageDelegate {
     private let registry: CommandRegistry
     private let eventListenerBus: EventListenerBus
     private let subscriptionManager: SubscriptionManager
+    private let permissionManager: PermissionManager
 
     private var messageRewriters: [MessageRewriter]
     private var messageHandlers: [MessageHandler]
@@ -34,13 +35,13 @@ public class D2Delegate: MessageDelegate {
         partyGameDB = try PartyGameDatabase()
         eventListenerBus = EventListenerBus()
         subscriptionManager = SubscriptionManager(registry: registry)
+        permissionManager = PermissionManager()
         let mostRecentPipeRunner = Synchronized(wrappedValue: Box<(Runnable, PermissionLevel)?>(wrappedValue: nil))
         let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
         let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
         let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
         let haikuConfiguration = AutoSerializing<HaikuConfiguration>(wrappedValue: .init(), filePath: "local/haikuConfig.json")
         let roleReactionsConfiguration = AutoSerializing<RoleReactionsConfiguration>(wrappedValue: .init(), filePath: "local/roleReactionsConfig.json")
-        let permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
 
         messageRewriters = [
@@ -482,6 +483,8 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(createInteraction interaction: Interaction, client: MessageClient) {
+        // TODO: Factor out this logic into 'InteractionHandler's
+
         // TODO: Only invoke if 'useMIOCommands' is true
         guard interaction.type == .mioCommand, let data = interaction.data else { return }
 
@@ -496,11 +499,20 @@ public class D2Delegate: MessageDelegate {
         )
         let output = MessageIOInteractionOutput(interaction: interaction, context: context)
 
-        if let command = registry[data.name] {
-            command.invoke(with: input, output: output, context: context)
-        } else {
-            output.append(errorText: "Unknown command name `\(data.name)`")
+        guard let author = interaction.member?.user else {
+            output.append(errorText: "The interaction must have an author!")
+            return
         }
+        guard let command = registry[data.name] else {
+            output.append(errorText: "Unknown command name `\(data.name)`")
+            return
+        }
+        guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
+            output.append(errorText: "Insufficient permissions, sorry. :(")
+            return
+        }
+
+        command.invoke(with: input, output: output, context: context)
     }
 
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
