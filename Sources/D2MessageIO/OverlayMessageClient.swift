@@ -99,4 +99,36 @@ public struct OverlayMessageClient: MessageClient {
     public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, Error> {
         inner.deleteEmoji(from: guildId, emojiId: emojiId)
     }
+
+    public func getMIOCommands() -> Promise<[MIOCommand], Error> {
+        inner.getMIOCommands()
+    }
+
+    public func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        inner.createMIOCommand(name: name, description: description, options: options)
+    }
+
+    public func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        inner.editMIOCommand(commandId, name: name, description: description, options: options)
+    }
+
+    public func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error> {
+        inner.deleteMIOCommand(commandId)
+    }
+
+    public func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], Error> {
+        inner.getMIOCommands(on: guildId)
+    }
+
+    public func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        inner.createMIOCommand(on: guildId, name: name, description: description, options: options)
+    }
+
+    public func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        inner.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options)
+    }
+
+    public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error> {
+        inner.deleteMIOCommand(commandId)
+    }
 }

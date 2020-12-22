@@ -152,4 +152,44 @@ struct IRCMessageClient: MessageClient {
         // TODO
         Promise(.success(false))
     }
+
+    func getMIOCommands() -> Promise<[MIOCommand], Error> {
+        // TODO
+        Utils.Promise(.success([]))
+    }
+
+    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error> {
+        // TODO
+        Utils.Promise(.success(false))
+    }
+
+    func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], Error> {
+        // TODO
+        Utils.Promise(.success([]))
+    }
+
+    func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error> {
+        // TODO
+        Utils.Promise(.success(false))
+    }
 }

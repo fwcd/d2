@@ -11,12 +11,18 @@ fileprivate let log = Logger(label: "D2MessageIO.CombinedMessageClient")
 public class CombinedMessageClient: MessageClient {
     private var clients: [String: MessageClient] = [:]
 
+    private let mioCommandClientName: String?
+    private var mioCommandClient: MessageClient? { mioCommandClientName.flatMap { clients[$0] } }
+
     public var me: User? { nil }
     public var name: String { "Combined" }
     public var guilds: [Guild]? { clients.values.flatMap { $0.guilds ?? [] } }
     public var messageFetchLimit: Int? { clients.values.compactMap { $0.messageFetchLimit }.min() }
 
-    public init() {}
+    // TODO: Support more than one client for global MIO commands
+    public init(mioCommandClientName: String? = nil) {
+        self.mioCommandClientName = mioCommandClientName
+    }
 
     @discardableResult
     public func register(client: MessageClient) -> MessageClient {
@@ -120,5 +126,41 @@ public class CombinedMessageClient: MessageClient {
 
     public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, Error> {
         withClient(of: guildId) { $0.deleteEmoji(from: guildId, emojiId: emojiId) } ?? Promise(.success(false))
+    }
+
+    public func getMIOCommands() -> Promise<[MIOCommand], Error> {
+        guard let client = mioCommandClient else { return Promise(.failure(MessageClientError.noMIOCommandClient)) }
+        return client.getMIOCommands()
+    }
+
+    public func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        guard let client = mioCommandClient else { return Promise(.failure(MessageClientError.noMIOCommandClient)) }
+        return client.createMIOCommand(name: name, description: description, options: options)
+    }
+
+    public func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        guard let client = mioCommandClient else { return Promise(.failure(MessageClientError.noMIOCommandClient)) }
+        return client.editMIOCommand(commandId, name: name, description: description, options: options)
+    }
+
+    public func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error> {
+        guard let client = mioCommandClient else { return Promise(.failure(MessageClientError.noMIOCommandClient)) }
+        return client.deleteMIOCommand(commandId)
+    }
+
+    public func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], Error> {
+        withClient(of: guildId) { $0.getMIOCommands(on: guildId) } ?? Promise(.failure(MessageClientError.noMIOCommandClient))
+    }
+
+    public func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        withClient(of: guildId) { $0.createMIOCommand(on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(MessageClientError.noMIOCommandClient))
+    }
+
+    public func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        withClient(of: guildId) { $0.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(MessageClientError.noMIOCommandClient))
+    }
+
+    public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error> {
+        withClient(of: guildId) { $0.deleteMIOCommand(commandId) } ?? Promise(.failure(MessageClientError.noMIOCommandClient))
     }
 }
