@@ -24,6 +24,8 @@ public struct CommandInfo {
     public var userOnly: Bool
     /// Whether the command can receive subscription messages only by users (not bots). Overrides userOnly.
     public var subscriptionsUserOnly: Bool
+    /// Whether the command should be presented e.g. via Discord's slash-commands (which might only support a limited number of commands)
+    public var presented: Bool
     /// The source file in which the command is located.
     public var sourceFile: String
     /// If present, the only platforms on which this command is allowed to run.
@@ -41,6 +43,7 @@ public struct CommandInfo {
         subscribesToNextMessages: Bool = false,
         userOnly: Bool = true,
         subscriptionsUserOnly: Bool? = nil,
+        presented: Bool = false,
         sourceFile: String = #file,
         platformAvailability: Set<String>? = nil
     ) {
@@ -55,6 +58,7 @@ public struct CommandInfo {
         self.subscribesToNextMessages = subscribesToNextMessages
         self.userOnly = userOnly
         self.subscriptionsUserOnly = subscriptionsUserOnly ?? userOnly
+        self.presented = presented
         self.sourceFile = sourceFile
         self.platformAvailability = platformAvailability
     }
