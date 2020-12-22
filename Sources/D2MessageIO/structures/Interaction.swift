@@ -11,7 +11,7 @@ public struct Interaction {
     public init(
         id: InteractionID,
         type: InteractionType? = nil,
-        data: InteractionData? = nil,
+        data: MIOCommand.InteractionData? = nil,
         guildId: GuildID? = nil,
         channelId: ChannelID? = nil,
         member: Guild.Member? = nil,
@@ -22,6 +22,7 @@ public struct Interaction {
         self.type = type
         self.data = data
         self.guildId = guildId
+        self.channelId = channelId
         self.member = member
         self.token = token
         self.version = version
