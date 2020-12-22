@@ -64,6 +64,30 @@ public protocol MessageClient {
 
     @discardableResult
     func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, Error>
+
+    @discardableResult
+    func getMIOCommands() -> Promise<[MIOCommand], Error>
+
+    @discardableResult
+    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error>
+
+    @discardableResult
+    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error>
+
+    @discardableResult
+    func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error>
+
+    @discardableResult
+    func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], Error>
+
+    @discardableResult
+    func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error>
+
+    @discardableResult
+    func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error>
+
+    @discardableResult
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error>
 }
 
 public extension MessageClient {
@@ -85,5 +109,21 @@ public extension MessageClient {
 
     func avatarUrlForUser(_ userId: UserID, with avatarId: String, preferredExtension: String? = nil) -> URL? {
         avatarUrlForUser(userId, with: avatarId, size: 512, preferredExtension: preferredExtension)
+    }
+
+    func createMIOCommand(name: String, description: String) -> Promise<MIOCommand?, Error> {
+        createMIOCommand(name: name, description: description, options: nil)
+    }
+
+    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String) -> Promise<MIOCommand?, Error> {
+        editMIOCommand(commandId, name: name, description: description, options: nil)
+    }
+
+    func createMIOCommand(on guildId: GuildID, name: String, description: String) -> Promise<MIOCommand?, Error> {
+        createMIOCommand(on: guildId, name: name, description: description, options: nil)
+    }
+
+    func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String) -> Promise<MIOCommand?, Error> {
+        editMIOCommand(commandId, on: guildId, name: name, description: description, options: nil)
     }
 }
