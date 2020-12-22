@@ -205,4 +205,56 @@ struct DiscordMessageClient: MessageClient {
             }
         }
     }
+
+    func getMIOCommands() -> Promise<[MIOCommand], Error> {
+        Promise { then in
+            client.getApplicationCommands { cs, _ in
+                then(.success(cs.usingMessageIO))
+            }
+        }
+    }
+
+    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.deleteApplicationCommand(commandId.usingDiscordAPI) {
+                then(Result.from($0 != nil, errorIfNil: DiscordMessageClientError.invalidResponse($0)))
+            }
+        }
+    }
+
+    func getMIOCommands(on guildId: D2MessageIO.GuildID) -> Promise<[MIOCommand], Error> {
+        Promise { then in
+            client.getApplicationCommands(on: guildId.usingDiscordAPI) { cs, _ in
+                then(.success(cs.usingMessageIO))
+            }
+        }
+    }
+
+    func createMIOCommand(on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func editMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+        // TODO
+        Utils.Promise(.success(nil))
+    }
+
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID) -> Promise<Bool, Error> {
+        Promise { then in
+            client.deleteApplicationCommand(commandId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
+                then(Result.from($0 != nil, errorIfNil: DiscordMessageClientError.invalidResponse($0)))
+            }
+        }
+    }
 }
