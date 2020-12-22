@@ -106,7 +106,6 @@ public class D2Delegate: MessageDelegate {
         registry["rolereactions"] = RoleReactionsCommand(configuration: roleReactionsConfiguration)
         registry["logs"] = LogsCommand()
         registry["for"] = ForCommand()
-        registry["void"] = VoidCommand()
         registry["do"] = DoCommand()
         registry["quit"] = QuitCommand()
         registry["blockforever", aka: ["block"]] = BlockForeverCommand()
