@@ -20,7 +20,7 @@ public struct MIOCommand {
     }
 
     public struct Option {
-        public let type: OptionType
+        public let type: OptionType?
         public let name: String
         public let description: String
         public let isDefault: Bool?
@@ -29,7 +29,7 @@ public struct MIOCommand {
         public let options: [Option]?
 
         public init(
-            type: OptionType,
+            type: OptionType? = nil,
             name: String,
             description: String,
             isDefault: Bool? = nil,
@@ -49,6 +49,11 @@ public struct MIOCommand {
         public struct Choice {
             public let name: String
             public let value: Value?
+
+            public init(name: String, value: Value? = nil) {
+                self.name = name
+                self.value = value
+            }
 
             public enum Value {
                 case string(String)
