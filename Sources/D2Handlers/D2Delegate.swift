@@ -12,6 +12,7 @@ public class D2Delegate: MessageDelegate {
     private let commandPrefix: String
     private let initialPresence: String?
     private let useMIOCommands: Bool
+    private let mioCommandGuildId: GuildID?
 
     private let messageDB: MessageDatabase
     private let partyGameDB: PartyGameDatabase
@@ -25,10 +26,16 @@ public class D2Delegate: MessageDelegate {
     private var reactionHandlers: [ReactionHandler]
     private var presenceHandlers: [PresenceHandler]
 
-    public init(withPrefix commandPrefix: String, initialPresence: String? = nil, useMIOCommands: Bool = false) throws {
+    public init(
+        withPrefix commandPrefix: String,
+        initialPresence: String? = nil,
+        useMIOCommands: Bool = false,
+        mioCommandGuildId: GuildID? = nil
+    ) throws {
         self.commandPrefix = commandPrefix
         self.initialPresence = initialPresence
         self.useMIOCommands = useMIOCommands
+        self.mioCommandGuildId = mioCommandGuildId
 
         registry = CommandRegistry()
         messageDB = try MessageDatabase()
@@ -407,12 +414,40 @@ public class D2Delegate: MessageDelegate {
             // providing basic auto-completion for registered commands.
             var registeredCount = 0
 
-            for cmd in registry.commandsWithAliases() {
-                // TODO: Options?
-                if cmd.command.info.presented {
-                    client.createMIOCommand(name: cmd.name, description: cmd.command.info.shortDescription)
-                    registeredCount += 1
+            for cmd in registry.commandsWithAliases() where cmd.command.info.presented {
+                let options: [MIOCommand.Option]
+
+                switch cmd.command.inputValueType {
+                    case .text:
+                        options = [.init(
+                            type: .string,
+                            name: "input",
+                            description: cmd.command.info.helpText?.split(separator: "\n").map(String.init).first
+                                ?? "Arguments to pass to the command",
+                            isRequired: false
+                        )]
+                    default:
+                        options = []
                 }
+
+                if let guildId = mioCommandGuildId {
+                    // Only register MIO commands on guild, if specified
+                    // (useful for development)
+                    client.createMIOCommand(
+                        on: guildId,
+                        name: cmd.name,
+                        description: cmd.command.info.shortDescription,
+                        options: options
+                    )
+                } else {
+                    // Register MIO commands globally
+                    client.createMIOCommand(
+                        name: cmd.name,
+                        description: cmd.command.info.shortDescription,
+                        options: options
+                    )
+                }
+                registeredCount += 1
             }
 
             log.info("Registered \(registeredCount) \("command".pluralized(with: registeredCount)) as MIO commands")
@@ -482,17 +517,25 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(createInteraction interaction: Interaction, client: MessageClient) {
-        // TODO: Factor out this logic into 'InteractionHandler's
+        // TODO: Factor out this logic into InteractionHandlers
 
-        // TODO: Only invoke if 'useMIOCommands' is true
-        guard interaction.type == .mioCommand, let data = interaction.data else { return }
+        guard
+            useMIOCommands,
+            interaction.type == .mioCommand,
+            let data = interaction.data else { return }
 
-        // TODO: Convert options to rich values
-        let input = RichValue.none
+        let content = data.options.compactMap { $0.value as? String }.joined(separator: " ")
+        let input = RichValue.text(content)
         let context = CommandContext(
             client: client,
             registry: registry,
-            message: Message(), // TODO: Use a proper conversion here
+            message: Message(
+                content: content,
+                author: interaction.member?.user,
+                channelId: interaction.channelId,
+                guild: interaction.guildId.flatMap(client.guild(for:)),
+                guildMember: interaction.member
+            ),
             commandPrefix: commandPrefix,
             subscriptions: .init() // TODO: Support subscriptions here
         )
