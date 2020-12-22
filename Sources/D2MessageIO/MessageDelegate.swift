@@ -41,6 +41,8 @@ public protocol MessageDelegate {
 
     func on(receivePresenceUpdate presence: Presence, client: MessageClient)
 
+    func on(createInteraction interaction: Interaction, client: MessageClient)
+
     func on(receiveReady data: [String: Any], client: MessageClient)
 
     func on(receiveVoiceStateUpdate state: VoiceState, client: MessageClient)
@@ -90,6 +92,8 @@ public extension MessageDelegate {
     func on(updateRole role: Role, on guild: Guild, client: MessageClient) {}
 
     func on(receivePresenceUpdate presence: Presence, client: MessageClient) {}
+
+    func on(createInteraction interaction: Interaction, client: MessageClient) {}
 
     func on(receiveReady data: [String: Any], client: MessageClient) {}
 
