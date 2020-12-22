@@ -7,6 +7,7 @@ public class HelpCommand: StringCommand {
         category: .meta,
         shortDescription: "Helps the user",
         longDescription: "Displays a help embed showing all registered commands",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

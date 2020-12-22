@@ -6,6 +6,7 @@ public class PingCommand: Command {
         category: .misc,
         shortDescription: "Replies with 'Pong!'",
         longDescription: "Outputs 'Pong!'",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .none
