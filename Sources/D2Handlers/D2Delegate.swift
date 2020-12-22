@@ -109,6 +109,7 @@ public class D2Delegate: MessageDelegate {
         registry["do"] = DoCommand()
         registry["quit"] = QuitCommand()
         registry["blockforever", aka: ["block"]] = BlockForeverCommand()
+        registry["removeallmiocommands"] = RemoveAllMIOCommandsCommand()
         registry["grep"] = GrepCommand()
         registry["author"] = AuthorCommand()
         registry["addeventlistener", aka: ["on"]] = AddEventListenerCommand(eventListenerBus: eventListenerBus)
