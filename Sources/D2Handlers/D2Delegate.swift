@@ -485,8 +485,22 @@ public class D2Delegate: MessageDelegate {
         // TODO: Only invoke if 'useMIOCommands' is true
         guard interaction.type == .mioCommand, let data = interaction.data else { return }
 
-        // TODO: Convert parameters to rich values
+        // TODO: Convert options to rich values
+        let input = RichValue.none
+        let context = CommandContext(
+            client: client,
+            registry: registry,
+            message: Message(), // TODO: Use a proper conversion here
+            commandPrefix: commandPrefix,
+            subscriptions: .init() // TODO: Support subscriptions here
+        )
+        let output = MessageIOInteractionOutput(interaction: interaction, context: context)
 
+        if let command = registry[data.name] {
+            command.invoke(with: input, output: output, context: context)
+        } else {
+            output.append(errorText: "Unknown command name `\(data.name)`")
+        }
     }
 
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
