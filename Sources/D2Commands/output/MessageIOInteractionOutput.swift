@@ -9,13 +9,13 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.MessageIOInteractionOutput")
 
 public class MessageIOInteractionOutput: CommandOutput {
+    private let interaction: Interaction
     private var context: CommandContext
     private let messageWriter = MessageWriter()
-    private let onSent: ((Message?) -> Void)?
 
-    public init(context: CommandContext, onSent: ((Message?) -> Void)? = nil) {
+    public init(interaction: Interaction, context: CommandContext) {
+        self.interaction = interaction
         self.context = context
-        self.onSent = onSent
     }
 
     public func append(_ value: RichValue, to channel: OutputChannel) {
@@ -31,14 +31,17 @@ public class MessageIOInteractionOutput: CommandOutput {
         // TODO: Split/limit?
         messageWriter.write(value: value)
             .then { self.send(message: $0, with: client, to: channel) }
-            .listenOrLogError { self.onSent?($0) }
+            .listenOrLogError { _ in }
     }
 
-    private func send(message: Message, with client: MessageClient, to channel: OutputChannel) -> Promise<Message?, Error> {
+    private func send(message: Message, with client: MessageClient, to channel: OutputChannel) -> Promise<Bool, Error> {
         switch channel {
             case .defaultChannel:
-                // TODO
-                fatalError("TODO")
+                guard let token = interaction.token else {
+                    return Promise(.failure(MessageIOInteractionOutputError.noInteractionToken))
+                }
+                let response = InteractionResponse(type: .channelMessageWithSource, data: message)
+                return client.createInteractionResponse(for: interaction.id, token: token, response: response)
             default:
                 return Promise(.failure(MessageIOInteractionOutputError.onlyDefaultChannelSupported))
         }

@@ -486,7 +486,7 @@ public class D2Delegate: MessageDelegate {
         guard interaction.type == .mioCommand, let data = interaction.data else { return }
 
         // TODO: Convert parameters to rich values
-        if
+
     }
 
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
