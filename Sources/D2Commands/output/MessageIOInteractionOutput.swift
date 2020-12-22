@@ -11,9 +11,9 @@ fileprivate let log = Logger(label: "D2Commands.MessageIOInteractionOutput")
 public class MessageIOInteractionOutput: CommandOutput {
     private var context: CommandContext
     private let messageWriter = MessageWriter()
-    private let onSent: (([Message]) -> Void)?
+    private let onSent: ((Message?) -> Void)?
 
-    public init(context: CommandContext, onSent: (([Message]) -> Void)? = nil) {
+    public init(context: CommandContext, onSent: ((Message?) -> Void)? = nil) {
         self.context = context
         self.onSent = onSent
     }

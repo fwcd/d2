@@ -269,4 +269,12 @@ struct DiscordMessageClient: MessageClient {
             }
         }
     }
+
+    func createInteractionResponse(for interactionId: D2MessageIO.InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, Error> {
+        Promise { then in
+            client.createInteractionResponse(for: interactionId.usingDiscordAPI, token: token, response: response.usingDiscordAPI) {
+                then(Result.from($0 != nil, errorIfNil: DiscordMessageClientError.invalidResponse($0)))
+            }
+        }
+    }
 }

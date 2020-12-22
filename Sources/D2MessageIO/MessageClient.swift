@@ -88,6 +88,9 @@ public protocol MessageClient {
 
     @discardableResult
     func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error>
+
+    @discardableResult
+    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, Error>
 }
 
 public extension MessageClient {

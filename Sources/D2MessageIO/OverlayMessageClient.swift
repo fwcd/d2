@@ -131,4 +131,8 @@ public struct OverlayMessageClient: MessageClient {
     public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error> {
         inner.deleteMIOCommand(commandId)
     }
+
+    public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, Error> {
+        inner.createInteractionResponse(for: interactionId, token: token, response: response)
+    }
 }

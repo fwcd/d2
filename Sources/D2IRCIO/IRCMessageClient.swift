@@ -192,4 +192,9 @@ struct IRCMessageClient: MessageClient {
         // TODO
         Utils.Promise(.success(false))
     }
+
+    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Utils.Promise<Bool, Error> {
+        // TODO
+        Utils.Promise(.success(false))
+    }
 }
