@@ -402,10 +402,19 @@ public class D2Delegate: MessageDelegate {
         }
 
         if useMIOCommands {
+            // Register the commands e.g. using Discord's slash-command API
+            // providing basic auto-completion for registered commands.
+            var registeredCount = 0
+
             for cmd in registry.commandsWithAliases() {
                 // TODO: Options?
-                client.createMIOCommand(name: cmd.name, description: cmd.command.info.shortDescription)
+                if cmd.command.info.presented {
+                    client.createMIOCommand(name: cmd.name, description: cmd.command.info.shortDescription)
+                    registeredCount += 1
+                }
             }
+
+            log.info("Registered \(registeredCount) \("command".pluralized(with: registeredCount)) as MIO commands")
         }
     }
 
