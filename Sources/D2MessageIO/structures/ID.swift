@@ -8,6 +8,9 @@ public typealias RoleID = ID
 public typealias EmojiID = ID
 public typealias GuildID = ID
 public typealias OverwriteID = ID
+public typealias ApplicationID = ID
+public typealias InteractionID = ID
+public typealias MIOCommandID = ID
 
 public let dummyId: ID = ID("")
 
