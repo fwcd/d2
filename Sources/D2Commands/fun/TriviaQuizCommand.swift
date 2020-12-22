@@ -6,6 +6,7 @@ public class TriviaQuizCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Poses a Trivia question",
+        presented: true,
         requiredPermissionLevel: .basic,
         subscribesToNextMessages: true
     )

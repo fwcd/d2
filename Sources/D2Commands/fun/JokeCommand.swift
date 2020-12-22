@@ -5,6 +5,7 @@ public class JokeCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Tells a joke!",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

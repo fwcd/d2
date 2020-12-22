@@ -9,6 +9,7 @@ public class XkcdCommand: StringCommand {
         shortDescription: "Fetches xkcd comics",
         longDescription: "Fetches an xkcd comic",
         helpText: "Syntax: [comic id | 'random']?",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

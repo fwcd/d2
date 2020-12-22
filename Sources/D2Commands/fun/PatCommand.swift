@@ -9,6 +9,7 @@ public class PatCommand: Command {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Creates a pat animation",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .image

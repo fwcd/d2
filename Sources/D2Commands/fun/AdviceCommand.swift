@@ -5,6 +5,7 @@ public class AdviceCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Gives advice",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

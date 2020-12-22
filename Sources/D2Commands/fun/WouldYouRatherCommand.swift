@@ -7,6 +7,7 @@ public class WouldYouRatherCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Asks an either/or question",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let partyGameDB: PartyGameDatabase

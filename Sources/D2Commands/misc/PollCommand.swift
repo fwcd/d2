@@ -12,6 +12,7 @@ public class PollCommand: StringCommand {
         category: .misc,
         shortDescription: "Creates a simple poll",
         longDescription: "Creates a message with the given options and 'reaction buttons' that allow users to vote",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let interpolatables: [[String]]

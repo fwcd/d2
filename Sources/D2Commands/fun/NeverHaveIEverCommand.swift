@@ -5,6 +5,7 @@ public class NeverHaveIEverCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "The party game 'Never Have I Ever'",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let partyGameDB: PartyGameDatabase

@@ -5,6 +5,7 @@ public class FortuneCookieCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Opens a fortune cookie",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

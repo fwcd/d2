@@ -10,6 +10,7 @@ public class RedditCommand<P>: StringCommand where P: RedditPresenter {
         category: .forum,
         shortDescription: "Fetches a post from Reddit",
         longDescription: "Fetches a random top post from a given subreddit",
+        presented: true,
         requiredPermissionLevel: .vip
     )
     private let presenter: P

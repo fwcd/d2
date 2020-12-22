@@ -4,6 +4,7 @@ public class FactCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Outputs a random fact",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

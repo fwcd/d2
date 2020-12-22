@@ -10,6 +10,7 @@ public class UnitConverterCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Converts between two units",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text

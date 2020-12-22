@@ -14,6 +14,7 @@ public class DiceRollCommand: StringCommand {
         category: .misc,
         shortDescription: "Rolls a dice",
         longDescription: "Emits a random number between 1 and 6 (inclusive)",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let range: Range<Int>

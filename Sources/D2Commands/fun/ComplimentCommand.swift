@@ -5,6 +5,7 @@ public class ComplimentCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Sends a compliment",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text

@@ -11,6 +11,7 @@ public class UrbanDictionaryCommand: StringCommand {
         shortDescription: "Queries UrbanDictionary",
         longDescription: "Queries UrbanDictionary for a term definition",
         helpText: "Syntax: [term]",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

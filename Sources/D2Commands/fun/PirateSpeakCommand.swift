@@ -6,6 +6,7 @@ public class PirateSpeakCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Converts some text into Pirate speak",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text

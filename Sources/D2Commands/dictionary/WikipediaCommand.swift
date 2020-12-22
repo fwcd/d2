@@ -8,6 +8,7 @@ public class WikipediaCommand: StringCommand {
         category: .dictionary,
         shortDescription: "Queries Wikipedia",
         longDescription: "Fetches a page summary from Wikipedia",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

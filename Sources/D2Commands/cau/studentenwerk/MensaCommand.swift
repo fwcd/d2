@@ -11,6 +11,7 @@ public class MensaCommand: StringCommand {
         category: .cau,
         shortDescription: "Fetches the CAU canteen's daily menu",
         longDescription: "Looks up the current menu for a CAU canteen",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

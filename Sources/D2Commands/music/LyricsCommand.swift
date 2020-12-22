@@ -7,6 +7,7 @@ public class LyricsCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .music,
         shortDescription: "Fetches the lyrics of a song",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let showChords: Bool

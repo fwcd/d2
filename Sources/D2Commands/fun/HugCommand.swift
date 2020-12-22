@@ -5,6 +5,7 @@ public class HugCommand: Command {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Hugs someone",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .mentions
