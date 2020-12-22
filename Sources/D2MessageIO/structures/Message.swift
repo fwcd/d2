@@ -181,5 +181,13 @@ public struct Message: ExpressibleByStringLiteral {
         case channelIconChange
         case channelPinnedMessage
         case guildMemberJoin
+        case userPremiumGuildSubscription
+        case userPremiumGuildSubscriptionTier1
+        case userPremiumGuildSubscriptionTier2
+        case userPremiumGuildSubscriptionTier3
+        case channelFollowAdd
+        case guildDiscoveryDisqualified
+        case guildDiscoveryRequalified
+        case reply
     }
 }

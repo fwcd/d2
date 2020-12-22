@@ -9,7 +9,6 @@ extension DiscordPresence: MessageIOConvertible {
         return Presence(
             guildId: guildId.usingMessageIO,
             user: user.usingMessageIO,
-            game: game?.usingMessageIO,
             activities: activities.usingMessageIO,
             nick: nick,
             roles: roles,

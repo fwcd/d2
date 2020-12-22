@@ -116,6 +116,14 @@ extension DiscordMessage.MessageType: MessageIOConvertible {
             case .channelIconChange: return .channelIconChange
             case .channelPinnedMessage: return .channelPinnedMessage
             case .guildMemberJoin: return .guildMemberJoin
+            case .userPremiumGuildSubscription: return .userPremiumGuildSubscription
+            case .userPremiumGuildSubscriptionTier1: return .userPremiumGuildSubscriptionTier1
+            case .userPremiumGuildSubscriptionTier2: return .userPremiumGuildSubscriptionTier2
+            case .userPremiumGuildSubscriptionTier3: return .userPremiumGuildSubscriptionTier3
+            case .channelFollowAdd: return .channelFollowAdd
+            case .guildDiscoveryDisqualified: return .guildDiscoveryDisqualified
+            case .guildDiscoveryRequalified: return .guildDiscoveryRequalified
+            case .reply: return .reply
         }
     }
 }

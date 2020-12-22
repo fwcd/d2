@@ -14,8 +14,8 @@ public struct Guild {
     public let description: String
     public let mfaLevel: Int
     public let verificationLevel: Int
-    public let embedEnabled: Bool
-    public let embedChannelId: ChannelID
+    public let widgetEnabled: Bool
+    public let widgetChannelId: ChannelID
     public let icon: String
     public let members: LazyDictionary<UserID, Member>
     public let roles: [RoleID: Role]
@@ -60,8 +60,8 @@ public struct Guild {
         description: String,
         mfaLevel: Int,
         verificationLevel: Int,
-        embedEnabled: Bool,
-        embedChannelId: ChannelID,
+        widgetEnabled: Bool,
+        widgetChannelId: ChannelID,
         icon: String,
         members: LazyDictionary<UserID, Member> = [:],
         roles: [RoleID: Role] = [:],
@@ -81,8 +81,8 @@ public struct Guild {
         self.description = description
         self.mfaLevel = mfaLevel
         self.verificationLevel = verificationLevel
-        self.embedEnabled = embedEnabled
-        self.embedChannelId = embedChannelId
+        self.widgetEnabled = widgetEnabled
+        self.widgetChannelId = widgetChannelId
         self.icon = icon
         self.members = members
         self.roles = roles
