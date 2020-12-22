@@ -111,18 +111,22 @@ public extension MessageClient {
         avatarUrlForUser(userId, with: avatarId, size: 512, preferredExtension: preferredExtension)
     }
 
+    @discardableResult
     func createMIOCommand(name: String, description: String) -> Promise<MIOCommand?, Error> {
         createMIOCommand(name: name, description: description, options: nil)
     }
 
+    @discardableResult
     func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String) -> Promise<MIOCommand?, Error> {
         editMIOCommand(commandId, name: name, description: description, options: nil)
     }
 
+    @discardableResult
     func createMIOCommand(on guildId: GuildID, name: String, description: String) -> Promise<MIOCommand?, Error> {
         createMIOCommand(on: guildId, name: name, description: description, options: nil)
     }
 
+    @discardableResult
     func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String) -> Promise<MIOCommand?, Error> {
         editMIOCommand(commandId, on: guildId, name: name, description: description, options: nil)
     }

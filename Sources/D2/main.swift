@@ -30,11 +30,11 @@ func main(rawLogLevel: String, initialPresence initialPresenceFromArg: String?) 
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let commandPrefix = config?.commandPrefix ?? "%"
         let initialPresence = (config?.setPresenceInitially ?? true) ? initialPresenceFromArg ?? "\(commandPrefix)help" : nil
-        let handler = try D2Delegate(withPrefix: commandPrefix, initialPresence: initialPresence)
+        let handler = try D2Delegate(withPrefix: commandPrefix, initialPresence: initialPresence, useMIOCommands: config?.useMIOCommands ?? false)
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
         // Create platforms
-        var combinedClient: CombinedMessageClient! = CombinedMessageClient()
+        var combinedClient: CombinedMessageClient! = CombinedMessageClient(mioCommandClientName: "Discord")
         var platforms: [Startable] = []
         var createdAnyPlatform = false
 

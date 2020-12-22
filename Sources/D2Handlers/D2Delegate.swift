@@ -11,6 +11,8 @@ fileprivate let log = Logger(label: "D2Handlers.D2Delegate")
 public class D2Delegate: MessageDelegate {
     private let commandPrefix: String
     private let initialPresence: String?
+    private let useMIOCommands: Bool
+
     private let messageDB: MessageDatabase
     private let partyGameDB: PartyGameDatabase
     private let registry: CommandRegistry
@@ -22,9 +24,10 @@ public class D2Delegate: MessageDelegate {
     private var reactionHandlers: [ReactionHandler]
     private var presenceHandlers: [PresenceHandler]
 
-    public init(withPrefix commandPrefix: String, initialPresence: String? = nil) throws {
+    public init(withPrefix commandPrefix: String, initialPresence: String? = nil, useMIOCommands: Bool = false) throws {
         self.commandPrefix = commandPrefix
         self.initialPresence = initialPresence
+        self.useMIOCommands = useMIOCommands
 
         registry = CommandRegistry()
         messageDB = try MessageDatabase()
@@ -396,6 +399,13 @@ public class D2Delegate: MessageDelegate {
             try partyGameDB.setupTables()
         } catch {
             log.warning("Could not setup party game database: \(error)")
+        }
+
+        if useMIOCommands {
+            for cmd in registry.commandsWithAliases() {
+                // TODO: Options?
+                client.createMIOCommand(name: cmd.name, description: cmd.command.info.shortDescription)
+            }
         }
     }
 
