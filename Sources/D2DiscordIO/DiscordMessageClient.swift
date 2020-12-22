@@ -215,13 +215,19 @@ struct DiscordMessageClient: MessageClient {
     }
 
     func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
-        // TODO
-        Utils.Promise(.success(nil))
+        Promise { then in
+            client.createApplicationCommand(name: name, description: description, options: options?.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
     }
 
     func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
-        // TODO
-        Utils.Promise(.success(nil))
+        Promise { then in
+            client.editApplicationCommand(commandId.usingDiscordAPI, name: name, description: description, options: options?.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
     }
 
     func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error> {
@@ -241,13 +247,19 @@ struct DiscordMessageClient: MessageClient {
     }
 
     func createMIOCommand(on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
-        // TODO
-        Utils.Promise(.success(nil))
+        Promise { then in
+            client.createApplicationCommand(on: guildId.usingDiscordAPI, name: name, description: description, options: options?.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
     }
 
     func editMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
-        // TODO
-        Utils.Promise(.success(nil))
+        Promise { then in
+            client.editApplicationCommand(commandId.usingDiscordAPI, on: guildId.usingDiscordAPI, name: name, description: description, options: options?.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
     }
 
     func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID) -> Promise<Bool, Error> {

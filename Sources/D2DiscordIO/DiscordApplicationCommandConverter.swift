@@ -1,6 +1,56 @@
 import SwiftDiscord
 import D2MessageIO
 
+// TO Discord conversions
+
+extension MIOCommand.Option: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordApplicationCommandOption {
+        DiscordApplicationCommandOption(
+            type: type.usingDiscordAPI,
+            name: name,
+            description: description,
+            isDefault: isDefault,
+            isRequired: isRequired,
+            choices: choices?.usingDiscordAPI,
+            options: options?.usingDiscordAPI
+        )
+    }
+}
+
+extension MIOCommand.Option.OptionType: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordApplicationCommandOptionType {
+        switch self {
+            case .subCommand: return .subCommand
+            case .subCommandGroup: return .subCommandGroup
+            case .string: return .string
+            case .integer: return .integer
+            case .boolean: return .boolean
+            case .user: return .user
+            case .channel: return .channel
+            case .role: return .role
+            case .unknown: fatalError("Cannot convert unknown command option type to Discord")
+        }
+    }
+}
+
+extension MIOCommand.Option.Choice: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordApplicationCommandOptionChoice {
+        DiscordApplicationCommandOptionChoice(
+            name: name,
+            value: value?.usingDiscordAPI
+        )
+    }
+}
+
+extension MIOCommand.Option.Choice.Value: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordApplicationCommandOptionChoiceValue {
+        switch self {
+            case .string(let s): return .string(s)
+            case .int(let i): return .int(i)
+        }
+    }
+}
+
 // FROM Discord conversions
 
 extension DiscordApplicationCommand: MessageIOConvertible {
@@ -18,7 +68,7 @@ extension DiscordApplicationCommand: MessageIOConvertible {
 extension DiscordApplicationCommandOption: MessageIOConvertible {
     public var usingMessageIO: MIOCommand.Option {
         MIOCommand.Option(
-            type: type?.usingMessageIO,
+            type: type?.usingMessageIO ?? .unknown,
             name: name,
             description: description,
             isDefault: isDefault,

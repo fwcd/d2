@@ -20,7 +20,7 @@ public struct MIOCommand {
     }
 
     public struct Option {
-        public let type: OptionType?
+        public let type: OptionType
         public let name: String
         public let description: String
         public let isDefault: Bool?
@@ -29,7 +29,7 @@ public struct MIOCommand {
         public let options: [Option]?
 
         public init(
-            type: OptionType? = nil,
+            type: OptionType,
             name: String,
             description: String,
             isDefault: Bool? = nil,
@@ -70,6 +70,7 @@ public struct MIOCommand {
             case user
             case channel
             case role
+            case unknown
         }
     }
 
