@@ -481,6 +481,14 @@ public class D2Delegate: MessageDelegate {
         }
     }
 
+    public func on(createInteraction interaction: Interaction, client: MessageClient) {
+        // TODO: Only invoke if 'useMIOCommands' is true
+        guard interaction.type == .mioCommand, let data = interaction.data else { return }
+
+        // TODO: Convert parameters to rich values
+        if
+    }
+
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
         for (i, _) in reactionHandlers.enumerated() {
             reactionHandlers[i].handle(createdReaction: reaction, to: messageId, on: channelId, by: userId, client: client)
