@@ -3,7 +3,7 @@ import FeedKit
 import Dispatch
 import Utils
 
-public class FeedCommand<P>: StringCommand where P: FeedPresenter {
+public class FeedCommand<P>: VoidCommand where P: FeedPresenter {
     public let info: CommandInfo
     private let presenter: P
     private let url: URL
@@ -18,7 +18,7 @@ public class FeedCommand<P>: StringCommand where P: FeedPresenter {
         self.presenter = presenter
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         let parser = FeedParser(URL: url)
 
         Promise { then in parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: then) }

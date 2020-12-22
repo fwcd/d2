@@ -6,7 +6,7 @@ import Graphics
 
 fileprivate let log = Logger(label: "D2Commands.DemoImageCommand")
 
-public class DemoImageCommand: StringCommand {
+public class DemoImageCommand: VoidCommand {
     public let info = CommandInfo(
         category: .imaging,
         shortDescription: "Creates a demo image",
@@ -18,7 +18,7 @@ public class DemoImageCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         do {
             let image = try Image(width: 200, height: 200)
             let graphics = CairoGraphics(fromImage: image)

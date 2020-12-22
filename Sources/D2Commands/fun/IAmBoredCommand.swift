@@ -1,6 +1,6 @@
 import Utils
 
-public class IAmBoredCommand: StringCommand {
+public class IAmBoredCommand: VoidCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Suggests something to do if you are bored!",
@@ -23,7 +23,7 @@ public class IAmBoredCommand: StringCommand {
         self.templates = templates
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         guard let verb = verbs.randomElement(),
             let thing = things.randomElement(),
             let method = methods.randomElement(),

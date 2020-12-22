@@ -1,6 +1,6 @@
 import D2NetAPIs
 
-public class FactCommand: StringCommand {
+public class FactCommand: VoidCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Outputs a random fact",
@@ -10,7 +10,7 @@ public class FactCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         RandomFactQuery(language: "en").perform().listen {
             do {
                 let fact = try $0.get()

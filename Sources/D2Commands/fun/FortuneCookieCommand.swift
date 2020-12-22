@@ -1,7 +1,7 @@
 import D2NetAPIs
 import D2MessageIO
 
-public class FortuneCookieCommand: StringCommand {
+public class FortuneCookieCommand: VoidCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Opens a fortune cookie",
@@ -11,7 +11,7 @@ public class FortuneCookieCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         FortuneCookieQuery().perform().listen {
             do {
                 guard let cookie = try $0.get().first else {

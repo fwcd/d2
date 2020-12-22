@@ -1,9 +1,10 @@
 import D2MessageIO
 
-public class AboutCommand: StringCommand {
+public class AboutCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Describes D2 itself",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
@@ -13,7 +14,7 @@ public class AboutCommand: StringCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         output.append(Embed(
             title: "D2",
             description: """

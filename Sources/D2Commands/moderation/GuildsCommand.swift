@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-public class GuildsCommand: StringCommand {
+public class GuildsCommand: VoidCommand {
     public let info = CommandInfo(
         category: .moderation,
         shortDescription: "Fetches a list of guilds this bot is on",
@@ -11,7 +11,7 @@ public class GuildsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         guard let guilds = context.client?.guilds else {
             output.append(errorText: "Could not fetch guilds")
             return

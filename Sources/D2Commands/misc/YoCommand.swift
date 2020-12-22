@@ -1,4 +1,4 @@
-public class YoCommand: StringCommand {
+public class YoCommand: VoidCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Yo!",
@@ -7,7 +7,7 @@ public class YoCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         output.append("Yo!")
     }
 }

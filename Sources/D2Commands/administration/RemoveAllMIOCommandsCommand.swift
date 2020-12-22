@@ -1,4 +1,4 @@
-public class RemoveAllMIOCommandsCommand: StringCommand {
+public class RemoveAllMIOCommandsCommand: VoidCommand {
     public let info = CommandInfo(
         category: .administration,
         shortDescription: "Removes all global MIO commands",
@@ -7,7 +7,7 @@ public class RemoveAllMIOCommandsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         guard let client = context.client else {
             output.append(errorText: "No client present")
             return

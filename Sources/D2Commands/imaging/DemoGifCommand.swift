@@ -7,7 +7,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2Commands.DemoGifCommand")
 
-public class DemoGifCommand: StringCommand {
+public class DemoGifCommand: VoidCommand {
     public let info = CommandInfo(
         category: .imaging,
         shortDescription: "Creates a demo GIF",
@@ -18,7 +18,7 @@ public class DemoGifCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         do {
             let width = 200
             let height = 200

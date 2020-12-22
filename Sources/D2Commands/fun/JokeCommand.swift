@@ -1,7 +1,7 @@
 import D2MessageIO
 import D2NetAPIs
 
-public class JokeCommand: StringCommand {
+public class JokeCommand: VoidCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Tells a joke!",
@@ -11,7 +11,7 @@ public class JokeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         RandomJokeQuery().perform().listen {
             do {
                 let joke = try $0.get()

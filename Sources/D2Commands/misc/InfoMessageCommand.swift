@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Permissions
 
 /** Displays a static information message. */
-public class InfoMessageCommand: StringCommand {
+public class InfoMessageCommand: VoidCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Displays a static information message",
@@ -15,7 +15,7 @@ public class InfoMessageCommand: StringCommand {
         self.text = text
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         output.append(":information_source: \(text)")
     }
 }

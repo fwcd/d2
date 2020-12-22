@@ -1,7 +1,7 @@
 import Utils
 import D2Permissions
 
-public class ReRunCommand: StringCommand {
+public class ReRunCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Re-runs the last command",
@@ -16,7 +16,7 @@ public class ReRunCommand: StringCommand {
         self._mostRecentPipeRunner = mostRecentPipeRunner
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         guard let (pipeRunner, minPermissionLevel) = mostRecentPipeRunner else {
             output.append(errorText: "No commands have been executed yet!")
             return

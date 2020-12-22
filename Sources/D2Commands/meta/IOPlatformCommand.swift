@@ -1,4 +1,4 @@
-public class IOPlatformCommand: StringCommand {
+public class IOPlatformCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Outputs the IO platform",
@@ -7,7 +7,7 @@ public class IOPlatformCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         output.append("You are talking with me via `\(context.client?.name ?? "?")`.")
     }
 }

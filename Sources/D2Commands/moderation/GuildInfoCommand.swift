@@ -3,11 +3,12 @@ import D2Permissions
 import Utils
 import Foundation
 
-public class GuildInfoCommand: StringCommand {
+public class GuildInfoCommand: VoidCommand {
     public let info = CommandInfo(
         category: .moderation,
         shortDescription: "Fetches statistics about the current server/guild",
         longDescription: "Outputs a range of interesting statistics about the current guild",
+        presented: true,
         requiredPermissionLevel: .basic,
         platformAvailability: ["Discord"]
     )
@@ -17,7 +18,7 @@ public class GuildInfoCommand: StringCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
             return

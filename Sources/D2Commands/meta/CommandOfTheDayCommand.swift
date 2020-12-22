@@ -1,7 +1,7 @@
 import Foundation
 import D2MessageIO
 
-public class CommandOfTheDayCommand: StringCommand {
+public class CommandOfTheDayCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Showcases a new command, every day",
@@ -13,7 +13,7 @@ public class CommandOfTheDayCommand: StringCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         let calendar = Calendar(identifier: .gregorian)
         var hasher = Hasher()
         hasher.combine(calendar.dateComponents([.year, .month, .day], from: Date()))

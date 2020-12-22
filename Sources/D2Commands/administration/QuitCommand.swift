@@ -2,7 +2,7 @@ import Foundation
 import D2MessageIO
 import D2Permissions
 
-public class QuitCommand: StringCommand {
+public class QuitCommand: VoidCommand {
     public let info = CommandInfo(
         category: .administration,
         shortDescription: "Quits D2's process",
@@ -12,7 +12,7 @@ public class QuitCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(output: CommandOutput, context: CommandContext) {
         output.append(":small_red_triangle_down: Quitting D2")
         exit(0)
     }
