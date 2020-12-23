@@ -451,6 +451,8 @@ public class D2Delegate: MessageDelegate {
             }
 
             log.info("Registered \(registeredCount) \("command".pluralized(with: registeredCount)) as MIO commands")
+        } else {
+            log.info("Skipping initializion of MIO commands")
         }
     }
 
