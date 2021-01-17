@@ -9,6 +9,7 @@ public class DesignQuoteCommand: StringCommand {
     public let info = CommandInfo(
         category: .quote,
         shortDescription: "Fetches a random quote about design",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

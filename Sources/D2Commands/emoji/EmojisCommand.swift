@@ -5,6 +5,7 @@ public class EmojisCommand: StringCommand {
     public let info = CommandInfo(
         category: .emoji,
         shortDescription: "Fetches/searches the current guild's custom emojis",
+        presented: true,
         requiredPermissionLevel: .basic,
         platformAvailability: ["Discord"]
     )

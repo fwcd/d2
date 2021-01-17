@@ -5,6 +5,7 @@ public class IMDBCommand: StringCommand {
     public let info = CommandInfo(
         category: .dictionary,
         shortDescription: "Searches the IMDB for movies and shows",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

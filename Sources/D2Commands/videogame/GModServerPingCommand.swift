@@ -7,6 +7,7 @@ public class GModServerPingCommand: StringCommand {
         category: .videogame,
         shortDescription: "Pings a Garry's mod (Source) server",
         helpText: "Syntax: [address]:[port]?",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

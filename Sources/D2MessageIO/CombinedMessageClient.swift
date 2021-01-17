@@ -161,7 +161,7 @@ public class CombinedMessageClient: MessageClient {
     }
 
     public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, Error> {
-        withClient(of: guildId) { $0.deleteMIOCommand(commandId) } ?? Promise(.failure(MessageClientError.noMIOCommandClient))
+        withClient(of: guildId) { $0.deleteMIOCommand(commandId, on: guildId) } ?? Promise(.failure(MessageClientError.noMIOCommandClient))
     }
 
     public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, Error> {

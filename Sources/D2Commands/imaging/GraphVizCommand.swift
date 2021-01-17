@@ -5,6 +5,7 @@ import Graphics
 public class GraphVizCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .imaging,
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let layout: LayoutAlgorithm

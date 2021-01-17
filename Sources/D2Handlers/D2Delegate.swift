@@ -78,7 +78,7 @@ public class D2Delegate: MessageDelegate {
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
         registry["vertical"] = VerticalCommand()
-        registry["bf"] = BFCommand()
+        registry["bfinterpret", aka: ["bf"]] = BFInterpretCommand()
         registry["bfencode"] = BFEncodeCommand()
         registry["bftoc"] = BFToCCommand()
         registry["base64encode", aka: ["base64"]] = Base64EncoderCommand()
@@ -228,7 +228,7 @@ public class D2Delegate: MessageDelegate {
         registry["avatargif"] = AvatarCommand(preferredExtension: "gif")
         registry["avatarurl"] = AvatarUrlCommand()
         registry["ocr"] = OCRCommand()
-        registry["qr"] = QRCommand()
+        registry["qrcode", aka: ["qr"]] = QRCodeCommand()
         registry["latex"] = LatexCommand()
         registry["autolatex"] = AutoLatexCommand()
         registry["enterprisify"] = EnterprisifyCommand()
@@ -414,37 +414,46 @@ public class D2Delegate: MessageDelegate {
             // Register the commands e.g. using Discord's slash-command API
             // providing basic auto-completion for registered commands.
             var registeredCount = 0
+            let groupedCommands = Dictionary(grouping: registry.commandsWithAliases(), by: \.command.info.category)
 
-            for cmd in registry.commandsWithAliases() where cmd.command.info.presented {
-                let options: [MIOCommand.Option]
+            for (category, cmds) in groupedCommands where category.rawValue.count >= 3 {
+                let shownCmds = cmds
+                    .sorted(by: ascendingComparator { $0.command.info.requiredPermissionLevel.rawValue })
+                    .filter { $0.command.info.presented }
+                    .prefix(10)
 
-                switch cmd.command.inputValueType {
-                    case .text:
-                        options = [.init(
-                            type: .string,
-                            name: "input",
-                            description: cmd.command.info.helpText?.split(separator: "\n").map(String.init).first
-                                ?? "Arguments to pass to the command",
-                            isRequired: false
-                        )]
-                    default:
-                        options = []
-                }
+                let options = shownCmds
+                    .map {
+                        MIOCommand.Option(
+                            type: .subCommand,
+                            name: ([$0.name] + $0.aliases).first { (3..<32).contains($0.count) } ?? $0.name.truncated(to: 28, appending: "..."),
+                            description: $0.command.info.shortDescription,
+                            options: $0.command.inputValueType == .text
+                                ? [.init(
+                                    type: .string,
+                                    name: "input",
+                                    description: $0.command.info.helpText?.split(separator: "\n").map(String.init).first
+                                        ?? "Arguments to pass to the command",
+                                    isRequired: false
+                                )]
+                                : []
+                        )
+                    }
 
                 if let guildId = mioCommandGuildId {
                     // Only register MIO commands on guild, if specified
                     // (useful for development)
                     client.createMIOCommand(
                         on: guildId,
-                        name: cmd.name,
-                        description: cmd.command.info.shortDescription,
+                        name: category.rawValue,
+                        description: category.plainDescription,
                         options: options
                     )
                 } else {
                     // Register MIO commands globally
                     client.createMIOCommand(
-                        name: cmd.name,
-                        description: cmd.command.info.shortDescription,
+                        name: category.rawValue,
+                        description: category.plainDescription,
                         options: options
                     )
                 }
@@ -525,9 +534,10 @@ public class D2Delegate: MessageDelegate {
         guard
             useMIOCommands,
             interaction.type == .mioCommand,
-            let data = interaction.data else { return }
+            let data = interaction.data,
+            let invocation = data.options.first else { return }
 
-        let content = data.options.compactMap { $0.value as? String }.joined(separator: " ")
+        let content = invocation.options.compactMap { $0.value as? String }.joined(separator: " ")
         let input = RichValue.text(content)
         let context = CommandContext(
             client: client,
@@ -548,8 +558,8 @@ public class D2Delegate: MessageDelegate {
             output.append(errorText: "The interaction must have an author!")
             return
         }
-        guard let command = registry[data.name] else {
-            output.append(errorText: "Unknown command name `\(data.name)`")
+        guard let command = registry[invocation.name] else {
+            output.append(errorText: "Unknown command name `\(invocation.name)`")
             return
         }
         guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {

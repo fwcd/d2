@@ -6,6 +6,7 @@ public class ThesaurusCommand: StringCommand {
     public let info = CommandInfo(
         category: .dictionary,
         shortDescription: "Looks up a word on OpenThesaurus",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

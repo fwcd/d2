@@ -5,6 +5,7 @@ public class IssueReportCommand: StringCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Provides a link to the bug report form",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

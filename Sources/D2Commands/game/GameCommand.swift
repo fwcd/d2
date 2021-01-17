@@ -13,6 +13,7 @@ fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 public class GameCommand<G: Game>: Command {
     public private(set) var info = CommandInfo(
         category: .game,
+        presented: true,
         requiredPermissionLevel: .basic,
         subscribesToNextMessages: true,
         userOnly: false

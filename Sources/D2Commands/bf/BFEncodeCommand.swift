@@ -7,6 +7,7 @@ public class BFEncodeCommand: StringCommand {
         category: .bf,
         shortDescription: "Encodes strings to BF code",
         longDescription: "Encodes a string in BF code such that the string is located beginning at the zeroth cell",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let maxStringLength: Int

@@ -4,6 +4,7 @@ public class Magic8BallCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Answers a yes/no question",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text

@@ -6,6 +6,7 @@ public class CookieCommand: Command {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Gives someone a cookie",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .mentions

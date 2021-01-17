@@ -17,6 +17,7 @@ public class HoogleCommand: StringCommand {
         category: .functiological,
         shortDescription: "Hoogles a type signature",
         longDescription: "Searches for a function matching a type signature using the Hoogle search engine",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

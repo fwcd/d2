@@ -9,6 +9,7 @@ public class HaskellCommand: StringCommand {
         category: .functiological,
         shortDescription: "Evaluates a Haskell expression",
         longDescription: "Computes the result of a (pure) Haskell expression using Mueval",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .code

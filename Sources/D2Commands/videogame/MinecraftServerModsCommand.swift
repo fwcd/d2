@@ -7,6 +7,7 @@ public class MinecraftServerModsCommand: StringCommand {
         category: .videogame,
         shortDescription: "Fetches a Minecraft server's modlist",
         longDescription: "Fetches a list of mods used by a given server",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

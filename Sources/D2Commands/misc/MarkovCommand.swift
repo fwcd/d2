@@ -13,6 +13,7 @@ public class MarkovCommand: StringCommand {
         shortDescription: "Generates a natural language response using a Markov chain",
         longDescription: "Uses a Markov chain with data from the current channel to generate a human-like response",
         helpText: "Syntax: markov [--all]? [--withping]?",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let messageDB: MessageDatabase

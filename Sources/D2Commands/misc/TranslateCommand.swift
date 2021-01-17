@@ -9,6 +9,7 @@ public class TranslateCommand: StringCommand {
         category: .misc,
         shortDescription: "Translates text into another language",
         helpText: "Syntax: [target language, e.g. en] [text]",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

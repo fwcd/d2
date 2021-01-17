@@ -8,6 +8,7 @@ public class DBLPCommand: StringCommand {
         category: .dictionary,
         shortDescription: "Queries the DBLP database",
         longDescription: "Queries the Digital Bibliography & Library Project, a computer science bibliography database",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

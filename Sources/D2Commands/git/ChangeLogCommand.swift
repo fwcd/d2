@@ -6,6 +6,7 @@ public class ChangeLogCommand: StringCommand {
     public let info = CommandInfo(
         category: .git,
         shortDescription: "Fetches the latest commits to D2's repo",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

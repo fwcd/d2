@@ -33,6 +33,7 @@ public class TimerCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Pings a group of users after the timer elapses",
+        presented: true,
         requiredPermissionLevel: .vip
     )
     private var subcommands: [String: (String, CommandOutput, CommandContext) -> Void] = [:]

@@ -5,6 +5,7 @@ public class CommandOfTheDayCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Showcases a new command, every day",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let commandPrefix: String

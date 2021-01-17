@@ -8,6 +8,7 @@ public class CocktailCommand: StringCommand {
         category: .food,
         shortDescription: "Searches for a cocktail recipe",
         helpText: "Syntax: [search term]",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

@@ -12,6 +12,7 @@ public class FeedCommand<P>: VoidCommand where P: FeedPresenter {
         info = CommandInfo(
             category: .feed,
             shortDescription: description,
+            presented: true,
             requiredPermissionLevel: .basic
         )
         self.url = URL(string: url)!

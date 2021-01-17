@@ -12,6 +12,7 @@ public class GitLabCommand: StringCommand {
         category: .git,
         shortDescription: "Queries a GitLab server",
         longDescription: "Fetches CI/CD pipeline information and more from a GitLab server",
+        presented: true,
         requiredPermissionLevel: .vip
     )
     @AutoSerializing(filePath: "local/gitLabConfig.json") private var gitLabConfig: GitLabConfiguration = .init()
