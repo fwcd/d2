@@ -1,6 +1,8 @@
 import Utils
 
 public struct EpicFreeGamesQuery {
+    public init() {}
+
     public func perform() -> Promise<[EpicFreeGame], Error> {
         Promise.catching { try HTTPRequest(host: "www.epicgames.com", path: "/store/en-US/free-games") }
             .then { $0.fetchHTMLAsync() }
