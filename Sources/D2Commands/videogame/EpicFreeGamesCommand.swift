@@ -34,7 +34,8 @@ public class EpicFreeGamesCommand: StringCommand {
                     ($0?.originalPrice).map { "~~\($0)~~" },
                     $0?.discountPrice
                 ].compactMap { $0 }.joined(separator: " ").nilIfEmpty
-            }
+            },
+            game.promotions?.allOffers.first.map { "\($0)" }
         ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
     }
 }

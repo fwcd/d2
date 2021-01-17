@@ -67,16 +67,29 @@ public struct EpicFreeGames: Codable {
                     }
 
                     public struct Promotions: Codable {
-                        public let promotionalOffers: [Promotion]
-                        public let upcomingPromotionalOffers: [Promotion]
+                        public let promotionalOffers: [Promotion]?
+                        public let upcomingPromotionalOffers: [Promotion]?
+
+                        public var allPromotions: [Promotion] { (promotionalOffers ?? []) + (upcomingPromotionalOffers ?? []) }
+                        public var allOffers: [Promotion.Offer] { allPromotions.flatMap { $0.promotionalOffers ?? [] } }
 
                         public struct Promotion: Codable {
-                            public let promotionalOffers: [Offer]
+                            public let promotionalOffers: [Offer]?
 
-                            public struct Offer: Codable {
-                                public let startDate: Date
-                                public let endDate: Date
-                                public let discountSetting: DiscountSetting
+                            public struct Offer: Codable, CustomStringConvertible {
+                                public let startDate: Date?
+                                public let endDate: Date?
+                                public let discountSetting: DiscountSetting?
+
+                                public var description: String {
+                                    let formatter = DateFormatter()
+                                    formatter.dateFormat = "dd.MM. HH:mm"
+                                    return [
+                                        discountSetting.map { "\($0)" },
+                                        startDate.map { "from \(formatter.string(from: $0))" },
+                                        endDate.map { "to \(formatter.string(from: $0))" }
+                                    ].compactMap { $0 }.joined(separator: " ")
+                                }
 
                                 public struct DiscountSetting: Codable, CustomStringConvertible {
                                     public let discountType: String
