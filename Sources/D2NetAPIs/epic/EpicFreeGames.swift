@@ -27,6 +27,7 @@ public struct EpicFreeGames: Codable {
                     public let urlSlug: String?
                     public let customAttributes: [CustomAttribute]?
                     public let price: Price?
+                    public let promotions: Promotions?
 
                     public struct KeyImage: Codable {
                         public let type: String
@@ -61,6 +62,34 @@ public struct EpicFreeGames: Codable {
                                 public let originalPrice: String?
                                 public let discountPrice: String?
                                 public let intermediatePrice: String?
+                            }
+                        }
+                    }
+
+                    public struct Promotions: Codable {
+                        public let promotionalOffers: [Promotion]
+                        public let upcomingPromotionalOffers: [Promotion]
+
+                        public struct Promotion: Codable {
+                            public let promotionalOffers: [Offer]
+
+                            public struct Offer: Codable {
+                                public let startDate: Date
+                                public let endDate: Date
+                                public let discountSetting: DiscountSetting
+
+                                public struct DiscountSetting: Codable, CustomStringConvertible {
+                                    public let discountType: String
+                                    public let discountPercentage: Int?
+
+                                    public var description: String {
+                                        if discountType == "PERCENTAGE" {
+                                            return discountPercentage == 0 ? "Free" : "\(discountPercentage.map(String.init) ?? "?") %"
+                                        } else {
+                                            return "?"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
