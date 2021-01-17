@@ -414,37 +414,42 @@ public class D2Delegate: MessageDelegate {
             // Register the commands e.g. using Discord's slash-command API
             // providing basic auto-completion for registered commands.
             var registeredCount = 0
+            let groupedCommands = Dictionary(grouping: registry.commandsWithAliases(), by: \.command.info.category)
 
-            for cmd in registry.commandsWithAliases() where cmd.command.info.presented {
-                let options: [MIOCommand.Option]
-
-                switch cmd.command.inputValueType {
-                    case .text:
-                        options = [.init(
-                            type: .string,
-                            name: "input",
-                            description: cmd.command.info.helpText?.split(separator: "\n").map(String.init).first
-                                ?? "Arguments to pass to the command",
-                            isRequired: false
-                        )]
-                    default:
-                        options = []
-                }
+            for (category, cmds) in groupedCommands {
+                let shownCmds = cmds.prefix(50) // TODO: Use presented
+                let options = shownCmds
+                    .map {
+                        MIOCommand.Option(
+                            type: .subCommand,
+                            name: $0.name,
+                            description: $0.command.info.shortDescription,
+                            options: $0.command.inputValueType == .text
+                                ? [.init(
+                                    type: .string,
+                                    name: "input",
+                                    description: $0.command.info.helpText?.split(separator: "\n").map(String.init).first
+                                        ?? "Arguments to pass to the command",
+                                    isRequired: false
+                                )]
+                                : []
+                        )
+                    }
 
                 if let guildId = mioCommandGuildId {
                     // Only register MIO commands on guild, if specified
                     // (useful for development)
                     client.createMIOCommand(
                         on: guildId,
-                        name: cmd.name,
-                        description: cmd.command.info.shortDescription,
+                        name: category.rawValue,
+                        description: category.description,
                         options: options
                     )
                 } else {
                     // Register MIO commands globally
                     client.createMIOCommand(
-                        name: cmd.name,
-                        description: cmd.command.info.shortDescription,
+                        name: category.rawValue,
+                        description: category.description,
                         options: options
                     )
                 }
