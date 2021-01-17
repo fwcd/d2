@@ -417,12 +417,16 @@ public class D2Delegate: MessageDelegate {
             let groupedCommands = Dictionary(grouping: registry.commandsWithAliases(), by: \.command.info.category)
 
             for (category, cmds) in groupedCommands {
-                let shownCmds = cmds.prefix(50) // TODO: Use presented
+                let shownCmds = cmds
+                    .sorted(by: ascendingComparator { $0.command.info.requiredPermissionLevel.rawValue })
+                    .filter { $0.command.info.presented }
+                    .prefix(10)
+
                 let options = shownCmds
                     .map {
                         MIOCommand.Option(
                             type: .subCommand,
-                            name: $0.name,
+                            name: ([$0.name] + $0.aliases).first { (3..<32).contains($0.count) } ?? $0.name.truncated(to: 28, appending: "..."),
                             description: $0.command.info.shortDescription,
                             options: $0.command.inputValueType == .text
                                 ? [.init(
