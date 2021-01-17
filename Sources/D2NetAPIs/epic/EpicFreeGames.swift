@@ -77,17 +77,20 @@ public struct EpicFreeGames: Codable {
                             public let promotionalOffers: [Offer]?
 
                             public struct Offer: Codable, CustomStringConvertible {
-                                public let startDate: Date?
-                                public let endDate: Date?
+                                public let startDate: String?
+                                public let endDate: String?
                                 public let discountSetting: DiscountSetting?
 
                                 public var description: String {
+                                    let parser = ISO8601DateFormatter()
                                     let formatter = DateFormatter()
+                                    parser.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                                    parser.timeZone = TimeZone(secondsFromGMT: 0)!
                                     formatter.dateFormat = "dd.MM. HH:mm"
                                     return [
                                         discountSetting.map { "\($0)" },
-                                        startDate.map { "from \(formatter.string(from: $0))" },
-                                        endDate.map { "to \(formatter.string(from: $0))" }
+                                        startDate.flatMap(parser.date(from:)).map { "from \(formatter.string(from: $0))" },
+                                        endDate.flatMap(parser.date(from:)).map { "to \(formatter.string(from: $0))" }
                                     ].compactMap { $0 }.joined(separator: " ")
                                 }
 
