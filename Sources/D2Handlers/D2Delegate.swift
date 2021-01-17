@@ -228,7 +228,7 @@ public class D2Delegate: MessageDelegate {
         registry["avatargif"] = AvatarCommand(preferredExtension: "gif")
         registry["avatarurl"] = AvatarUrlCommand()
         registry["ocr"] = OCRCommand()
-        registry["qr"] = QRCommand()
+        registry["qrcode", aka: ["qr"]] = QRCodeCommand()
         registry["latex"] = LatexCommand()
         registry["autolatex"] = AutoLatexCommand()
         registry["enterprisify"] = EnterprisifyCommand()
@@ -416,7 +416,7 @@ public class D2Delegate: MessageDelegate {
             var registeredCount = 0
             let groupedCommands = Dictionary(grouping: registry.commandsWithAliases(), by: \.command.info.category)
 
-            for (category, cmds) in groupedCommands {
+            for (category, cmds) in groupedCommands where category.rawValue.count >= 3 {
                 let shownCmds = cmds
                     .sorted(by: ascendingComparator { $0.command.info.requiredPermissionLevel.rawValue })
                     .filter { $0.command.info.presented }

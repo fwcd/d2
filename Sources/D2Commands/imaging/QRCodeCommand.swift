@@ -3,7 +3,7 @@ import Graphics
 import Utils
 import QRCodeGenerator
 
-public class QRCommand: StringCommand {
+public class QRCodeCommand: StringCommand {
     public let info = CommandInfo(
         category: .imaging,
         shortDescription: "Generates a QR code",
