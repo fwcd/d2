@@ -1,3 +1,7 @@
+import Utils
+
+fileprivate let emojiPattern = try! Regex(from: ":[^:]:")
+
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case administration
     case bf
@@ -53,5 +57,8 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .videogame: return ":evergreen_tree: Video games"
             case .web: return ":globe_with_meridians: Web browsing"
         }
+    }
+    public var plainDescription: String {
+        emojiPattern.replace(in: description, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
