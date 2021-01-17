@@ -18,7 +18,7 @@ public class EpicFreeGamesCommand: StringCommand {
                     title: "Free Games in the Epic Store",
                     fields: games
                         .prefix(5)
-                        .map { Embed.Field(name: $0.title, value: $0.price.flatMap(self.format(price:)) ?? "_no info_") }
+                        .map { Embed.Field(name: $0.title, value: self.format(game: $0) ?? "_no info_") }
                 ))
             } catch {
                 output.append(error, errorText: "Could not query games")
@@ -26,11 +26,12 @@ public class EpicFreeGamesCommand: StringCommand {
         }
     }
 
-    private func format(price: EpicFreeGames.ResponseData.Catalog.SearchStore.Element.Price) -> String? {
-        let fmtPrice = price.totalPrice?.fmtPrice
+    private func format(game: EpicFreeGames.ResponseData.Catalog.SearchStore.Element) -> String? {
+        let fmtPrice = game.price?.totalPrice?.fmtPrice
         return [
             (fmtPrice?.originalPrice).map { "~~\($0)~~" },
-            fmtPrice?.discountPrice
+            fmtPrice?.discountPrice,
+            (game.seller?.name).map { "- by \($0)" }
         ].compactMap { $0 }.joined(separator: " ").nilIfEmpty
     }
 }
