@@ -534,9 +534,10 @@ public class D2Delegate: MessageDelegate {
         guard
             useMIOCommands,
             interaction.type == .mioCommand,
-            let data = interaction.data else { return }
+            let data = interaction.data,
+            let invocation = data.options.first else { return }
 
-        let content = data.options.compactMap { $0.value as? String }.joined(separator: " ")
+        let content = invocation.options.compactMap { $0.value as? String }.joined(separator: " ")
         let input = RichValue.text(content)
         let context = CommandContext(
             client: client,
@@ -557,8 +558,8 @@ public class D2Delegate: MessageDelegate {
             output.append(errorText: "The interaction must have an author!")
             return
         }
-        guard let name = data.options.first?.name, let command = registry[name] else {
-            output.append(errorText: "Unknown command in category `\(data.name)`")
+        guard let command = registry[invocation.name] else {
+            output.append(errorText: "Unknown command name `\(invocation.name)`")
             return
         }
         guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
