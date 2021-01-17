@@ -6,7 +6,7 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.BFCommand")
 
-public class BFCommand: StringCommand {
+public class BFInterpretCommand: StringCommand {
     public let info = CommandInfo(
         category: .bf,
         shortDescription: "Interprets BF code",

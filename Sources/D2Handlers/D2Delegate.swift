@@ -78,7 +78,7 @@ public class D2Delegate: MessageDelegate {
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
         registry["vertical"] = VerticalCommand()
-        registry["bf"] = BFCommand()
+        registry["bfinterpret", aka: ["bf"]] = BFInterpretCommand()
         registry["bfencode"] = BFEncodeCommand()
         registry["bftoc"] = BFToCCommand()
         registry["base64encode", aka: ["base64"]] = Base64EncoderCommand()
