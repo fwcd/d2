@@ -27,11 +27,14 @@ public class EpicFreeGamesCommand: StringCommand {
     }
 
     private func format(game: EpicFreeGames.ResponseData.Catalog.SearchStore.Element) -> String? {
-        let fmtPrice = game.price?.totalPrice?.fmtPrice
-        return [
-            (fmtPrice?.originalPrice).map { "~~\($0)~~" },
-            fmtPrice?.discountPrice,
-            (game.seller?.name).map { "- by \($0)" }
-        ].compactMap { $0 }.joined(separator: " ").nilIfEmpty
+        [
+            (game.seller?.name).map { "_by \($0)_" },
+            (game.price?.totalPrice?.fmtPrice).flatMap {
+                [
+                    ($0?.originalPrice).map { "~~\($0)~~" },
+                    $0?.discountPrice
+                ].compactMap { $0 }.joined(separator: " ").nilIfEmpty
+            }
+        ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
     }
 }
