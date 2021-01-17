@@ -442,14 +442,14 @@ public class D2Delegate: MessageDelegate {
                     client.createMIOCommand(
                         on: guildId,
                         name: category.rawValue,
-                        description: category.description,
+                        description: category.plainDescription,
                         options: options
                     )
                 } else {
                     // Register MIO commands globally
                     client.createMIOCommand(
                         name: category.rawValue,
-                        description: category.description,
+                        description: category.plainDescription,
                         options: options
                     )
                 }

@@ -96,7 +96,7 @@ public class HelpCommand: StringCommand {
 
                 \(command.info.helpText ?? "")
                 """.trimmingCharacters(in: .whitespaces),
-            footer: Embed.Footer(text: "\(command.info.category)")
+            footer: Embed.Footer(text: command.info.category.plainDescription)
         )
     }
 }
