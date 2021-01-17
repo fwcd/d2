@@ -26,6 +26,7 @@ public class UnivISCommand: StringCommand {
         category: .cau,
         shortDescription: "Queries the UnivIS",
         longDescription: "Queries the lecture database 'UnivIS' from the CAU",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     let maxResponseEntries: Int

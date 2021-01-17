@@ -9,6 +9,7 @@ public class MinecraftModSearchCommand: StringCommand {
         shortDescription: "Finds a Minecraft mod online",
         longDescription: "Finds a Minecraft mod on CurseForge",
         helpText: "Syntax: [mod name]",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

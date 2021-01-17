@@ -4,6 +4,7 @@ public class PickupLineCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Outputs a random pickup line",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

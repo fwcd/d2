@@ -12,6 +12,7 @@ public class StackOverflowCommand: StringCommand {
         category: .forum,
         shortDescription: "Queries Stack Overflow",
         longDescription: "Searches Stack Overflow using the given input",
+        presented: true,
         requiredPermissionLevel: .vip
     )
 

@@ -5,6 +5,7 @@ public class FindKeyCommand: StringCommand {
         category: .music,
         shortDescription: "Determines a list of possible major/minor keys given a list of notes",
         helpText: "Syntax: [note]...",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

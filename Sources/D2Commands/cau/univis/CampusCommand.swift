@@ -17,6 +17,7 @@ public class CampusCommand: StringCommand {
         category: .cau,
         shortDescription: "Locates rooms on the CAU campus",
         longDescription: "Looks up room abbreviations (such as 'LMS4') in this UnivIS and outputs the address together with a static street map",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     let geocoder = MapQuestGeocoder()

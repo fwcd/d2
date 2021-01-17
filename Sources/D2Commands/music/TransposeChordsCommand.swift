@@ -7,6 +7,7 @@ public class TransposeChordsCommand: StringCommand {
         category: .music,
         shortDescription: "Transposes a sequence of notes/chords",
         helpText: "Syntax: [number of half steps] [note]...",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

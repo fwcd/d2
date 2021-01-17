@@ -11,6 +11,7 @@ public class MinecraftDynmapCommand: StringCommand {
         shortDescription: "Queries the dynmap of a Minecraft server",
         longDescription: "Fetches world information from a Minecraft server running the 'dynmap' plugin",
         helpText: "Syntax: [server host] [player name]?",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

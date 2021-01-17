@@ -5,6 +5,7 @@ public class ChuckNorrisJokeCommand: StringCommand {
         category: .fun,
         shortDescription: "Outputs a random chuck norris joke",
         helpText: "Syntax: [first name]? [last name]?",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text

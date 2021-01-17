@@ -9,6 +9,7 @@ public class PointfreeCommand: StringCommand {
         category: .functiological,
         shortDescription: "Pointfree notation converter",
         longDescription: "Converts a Haskell expression into pointfree notation",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .code

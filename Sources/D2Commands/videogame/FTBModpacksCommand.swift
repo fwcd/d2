@@ -8,6 +8,7 @@ public class FTBModpacksCommand: StringCommand {
         category: .videogame,
         shortDescription: "Fetches a list of FTB modpacks",
         longDescription: "Fetches a list of recent Feed The Beast modpacks with descriptions and download links",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

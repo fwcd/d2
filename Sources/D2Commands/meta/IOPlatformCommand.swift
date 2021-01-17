@@ -2,6 +2,7 @@ public class IOPlatformCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Outputs the IO platform",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

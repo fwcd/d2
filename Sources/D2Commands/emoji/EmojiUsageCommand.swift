@@ -6,6 +6,7 @@ public class EmojiUsageCommand: StringCommand {
     public let info = CommandInfo(
         category: .emoji,
         shortDescription: "Lists the most used emojis on the guild",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

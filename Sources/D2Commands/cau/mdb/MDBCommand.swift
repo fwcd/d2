@@ -11,6 +11,7 @@ public class MDBCommand: StringCommand {
         category: .cau,
         shortDescription: "Queries the MDB",
         longDescription: "Queries the Computer Science module database from the CAU",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

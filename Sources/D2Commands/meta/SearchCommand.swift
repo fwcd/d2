@@ -6,6 +6,7 @@ public class SearchCommand: StringCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Searches for available commands",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

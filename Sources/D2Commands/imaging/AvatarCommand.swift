@@ -14,6 +14,7 @@ public class AvatarCommand: Command {
         shortDescription: "Fetches the avatar of a user",
         longDescription: "Fetches the user's profile picture and outputs it in PNG form",
         helpText: "Syntax: [@user]",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .mentions

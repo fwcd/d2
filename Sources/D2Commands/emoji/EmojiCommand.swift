@@ -4,6 +4,7 @@ public class EmojiCommand: StringCommand {
     public let info = CommandInfo(
         category: .emoji,
         shortDescription: "Outputs a custom emoji by name",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

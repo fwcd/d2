@@ -7,6 +7,7 @@ public class LogsCommand: StringCommand {
         category: .administration,
         shortDescription: "Fetches the logs",
         longDescription: "Outputs the most recently logged lines",
+        presented: true,
         requiredPermissionLevel: .admin
     )
     private let defaultLineCount: Int

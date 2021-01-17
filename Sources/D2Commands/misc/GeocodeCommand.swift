@@ -5,6 +5,7 @@ public class GeocodeCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Finds the geographical coordinates of an address",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .geoCoordinates

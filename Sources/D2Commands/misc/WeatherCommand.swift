@@ -6,6 +6,7 @@ public class WeatherCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Fetches the weather for a city",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

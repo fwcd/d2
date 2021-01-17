@@ -8,6 +8,7 @@ public class MinecraftWikiCommand: StringCommand {
         category: .videogame,
         shortDescription: "Queries Minecraft Wiki",
         longDescription: "Queries Minecraft Wiki for an article",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

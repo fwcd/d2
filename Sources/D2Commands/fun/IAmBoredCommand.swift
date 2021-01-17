@@ -4,6 +4,7 @@ public class IAmBoredCommand: VoidCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Suggests something to do if you are bored!",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let verbs: [String]

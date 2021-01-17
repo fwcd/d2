@@ -9,6 +9,7 @@ public class PointfulCommand: StringCommand {
         category: .functiological,
         shortDescription: "Pointful notation converter",
         longDescription: "Converts a Haskell expression into pointful notation",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .code

@@ -11,6 +11,7 @@ public class MinecraftServerPingCommand: StringCommand {
         category: .videogame,
         shortDescription: "Pings a Minecraft server",
         longDescription: "Fetches the Message of the Day (MOTD) and the current player list of a Minecraft server",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed

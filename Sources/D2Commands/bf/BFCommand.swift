@@ -11,6 +11,7 @@ public class BFCommand: StringCommand {
         category: .bf,
         shortDescription: "Interprets BF code",
         longDescription: "Asynchronously invokes a Brainf&*k interpreter",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let maxExecutionSeconds: Int

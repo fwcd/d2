@@ -5,6 +5,7 @@ public class UniversitiesCommand: StringCommand {
     public let info = CommandInfo(
         category: .dictionary,
         shortDescription: "Searches for universities with a name worldwidely",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

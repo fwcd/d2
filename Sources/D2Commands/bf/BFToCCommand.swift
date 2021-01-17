@@ -7,6 +7,7 @@ public class BFToCCommand: StringCommand {
         category: .bf,
         shortDescription: "Transpiles a BF program into C code",
         longDescription: "Outputs a C program whose functionality is equivalent to the given BF program",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .code

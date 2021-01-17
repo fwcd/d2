@@ -12,6 +12,7 @@ public class CaesarCipherCommand: StringCommand {
         shortDescription: "Applies a caesar cipher",
         longDescription: "Substitutes each letter in the input by the same letter shifted by n places in the alphabet",
         helpText: "Syntax: [offset] [message]",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .text

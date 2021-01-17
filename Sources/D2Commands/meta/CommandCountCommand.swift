@@ -4,6 +4,7 @@ public class CommandCountCommand: VoidCommand {
     public let info = CommandInfo(
         category: .meta,
         shortDescription: "Counts the number of available commands",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

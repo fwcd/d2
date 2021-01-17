@@ -2,6 +2,7 @@ public class CoinFlipCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Flips a coin",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 

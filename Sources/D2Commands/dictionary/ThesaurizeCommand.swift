@@ -7,6 +7,7 @@ public class ThesaurizeCommand: StringCommand {
     public let info = CommandInfo(
         category: .dictionary,
         shortDescription: "Replaces text with synonyms",
+        presented: true,
         requiredPermissionLevel: .basic
     )
 
