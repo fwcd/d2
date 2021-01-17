@@ -1,5 +1,8 @@
 import Foundation
+import Logging
 import Utils
+
+fileprivate let log = Logger(label: "D2MessageIO.MessageClient")
 
 public protocol MessageClient {
     var name: String { get }
@@ -139,6 +142,7 @@ public extension MessageClient {
         // Note how this only deletes *global* MIO commands
         getMIOCommands().map {
             for cmd in $0 {
+                log.info("Deleting MIO command with ID \(cmd.id)")
                 deleteMIOCommand(cmd.id)
             }
         }
@@ -148,6 +152,7 @@ public extension MessageClient {
     func deleteMIOCommands(on guildId: GuildID) -> Promise<Void, Error> {
         getMIOCommands(on: guildId).map {
             for cmd in $0 {
+                log.info("Deleting MIO command with ID \(cmd.id) from guild \(guildId)")
                 deleteMIOCommand(cmd.id, on: guildId)
             }
         }
