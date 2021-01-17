@@ -557,8 +557,8 @@ public class D2Delegate: MessageDelegate {
             output.append(errorText: "The interaction must have an author!")
             return
         }
-        guard let command = registry[data.name] else {
-            output.append(errorText: "Unknown command name `\(data.name)`")
+        guard let name = data.options.first?.name, let command = registry[name] else {
+            output.append(errorText: "Unknown command in category `\(data.name)`")
             return
         }
         guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
