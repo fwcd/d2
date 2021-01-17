@@ -133,4 +133,23 @@ public extension MessageClient {
     func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String) -> Promise<MIOCommand?, Error> {
         editMIOCommand(commandId, on: guildId, name: name, description: description, options: nil)
     }
+
+    @discardableResult
+    func deleteMIOCommands() -> Promise<Void, Error> {
+        // Note how this only deletes *global* MIO commands
+        getMIOCommands().map {
+            for cmd in $0 {
+                deleteMIOCommand(cmd.id)
+            }
+        }
+    }
+
+    @discardableResult
+    func deleteMIOCommands(on guildId: GuildID) -> Promise<Void, Error> {
+        getMIOCommands(on: guildId).map {
+            for cmd in $0 {
+                deleteMIOCommand(cmd.id, on: guildId)
+            }
+        }
+    }
 }
