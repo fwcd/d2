@@ -32,6 +32,27 @@ public class InventoryCommand: Command {
                 inventoryManager[author.id] = inventory
 
                 output.append("Successfully cleared the category `\(input)`!")
+            },
+            "show": { input, output, context in
+                guard let author = context.author else {
+                    output.append(errorText: "No author available")
+                    return
+                }
+                guard !input.isEmpty else {
+                    output.append(errorText: "Please name a category!")
+                    return
+                }
+
+                let inventory = inventoryManager[author.id]
+                let category = input.withFirstUppercased // Category names are capitalized by convention
+                let items = inventory.items[category] ?? []
+
+                output.append(Embed(
+                    title: "Inventory for `\(author.username)` - \(category)",
+                    fields: items
+                        .suffix(25) // Take the most recent items
+                        .map { Embed.Field(name: $0.name, value: $0.attributes.values.joined(separator: "\n").nilIfEmpty ?? "_no attributes_", inline: true) }
+                ))
             }
         ]
         info.helpText = "Available Subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))"
