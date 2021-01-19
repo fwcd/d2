@@ -50,6 +50,7 @@ public class InventoryCommand: Command {
                 output.append(Embed(
                     title: "Inventory for `\(author.username)` - \(category)",
                     fields: items
+                        .filter { !$0.hidden }
                         .suffix(25) // Take the most recent items
                         .map { Embed.Field(name: $0.name, value: $0.attributes.values.joined(separator: "\n").nilIfEmpty ?? "_no attributes_", inline: true) }
                 ))
