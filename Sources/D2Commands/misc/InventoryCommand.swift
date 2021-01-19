@@ -8,6 +8,7 @@ public class InventoryCommand: Command {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Fetches the user's inventory",
+        presented: true,
         requiredPermissionLevel: .basic
     )
     private let inventoryManager: InventoryManager
