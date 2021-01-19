@@ -2,7 +2,8 @@ import D2MessageIO
 import Utils
 
 fileprivate let allFlag = "--all"
-fileprivate let subcommandPattern = try! Regex(from: "^(\\w+)(?:\\s+(.+))?")
+fileprivate let rawMentionPattern = "<[^>]+>"
+fileprivate let subcommandPattern = try! Regex(from: "^(?:\(rawMentionPattern))?\\s*(\\w+)(?:\\s+(.+))?")
 
 public class InventoryCommand: Command {
     public private(set) var info = CommandInfo(
@@ -12,14 +13,18 @@ public class InventoryCommand: Command {
         requiredPermissionLevel: .basic
     )
     private let inventoryManager: InventoryManager
-    private var subcommands: [String: (String, CommandOutput, CommandContext) -> Void] = [:]
+    private var subcommands: [String: (User, String, CommandOutput, CommandContext) -> Void] = [:]
 
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
         subcommands = [
-            "clear": { input, output, context in
+            "clear": { user, input, output, context in
                 guard let author = context.author else {
                     output.append(errorText: "No author available")
+                    return
+                }
+                guard author.id == user.id else {
+                    output.append(errorText: "You can only clear your own inventory categories!")
                     return
                 }
                 guard !input.isEmpty else {
@@ -27,28 +32,24 @@ public class InventoryCommand: Command {
                     return
                 }
 
-                var inventory = inventoryManager[author.id]
+                var inventory = inventoryManager[user.id]
                 inventory.clear(category: input)
-                inventoryManager[author.id] = inventory
+                inventoryManager[user.id] = inventory
 
                 output.append("Successfully cleared the category `\(input)`!")
             },
-            "show": { input, output, context in
-                guard let author = context.author else {
-                    output.append(errorText: "No author available")
-                    return
-                }
+            "show": { user, input, output, context in
                 guard !input.isEmpty else {
                     output.append(errorText: "Please name a category!")
                     return
                 }
 
-                let inventory = inventoryManager[author.id]
+                let inventory = inventoryManager[user.id]
                 let category = input.withFirstUppercased // Category names are capitalized by convention
                 let items = inventory.items[category] ?? []
 
                 output.append(Embed(
-                    title: "Inventory for `\(author.username)` - \(category)",
+                    title: "Inventory for `\(user.username)` - \(category)",
                     fields: items
                         .filter { !$0.hidden }
                         .suffix(25) // Take the most recent items
@@ -60,15 +61,16 @@ public class InventoryCommand: Command {
     }
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
-        let text = input.asText ?? ""
-        if let parsedSubcommand = subcommandPattern.firstGroups(in: text), let subcommand = subcommands[parsedSubcommand[1]] {
-            subcommand(parsedSubcommand[2], output, context)
-        } else {
-            guard let user = input.asMentions?.first ?? context.author else {
-                output.append(errorText: "Mention someone or enter a subcommand to get started!")
-                return
-            }
+        guard let user = input.asMentions?.first ?? context.author else {
+            output.append(errorText: "Mention someone or enter a subcommand to get started!")
+            return
+        }
 
+        let text = input.asText ?? ""
+
+        if let parsedSubcommand = subcommandPattern.firstGroups(in: text), let subcommand = subcommands[parsedSubcommand[1]] {
+            subcommand(user, parsedSubcommand[2], output, context)
+        } else {
             let showAll = text.contains(allFlag)
             let inventory = inventoryManager[user]
 
