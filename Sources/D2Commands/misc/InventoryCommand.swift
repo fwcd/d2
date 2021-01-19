@@ -57,7 +57,10 @@ public class InventoryCommand: Command {
                 ))
             }
         ]
-        info.helpText = "Available Subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))"
+        info.helpText = """
+            Syntax: `[@user]? [subcommand]? [category]?`
+            Available Subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))
+            """
     }
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
