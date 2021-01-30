@@ -17,7 +17,7 @@ public class DogeSpeakCommand: StringCommand {
     private func dogeSpeak(of str: String) -> String {
         str
             .split(separator: " ")
-            .map { dogeify(word: withoutPunctuation($0)) }
+            .map { dogeify(word: withoutPunctuation(String($0))) }
             .joined(separator: " ")
     }
 
