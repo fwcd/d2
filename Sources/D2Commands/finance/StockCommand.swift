@@ -32,10 +32,13 @@ public class StockCommand: StringCommand {
             do {
                 let values = try $0.get()
                 let image = try self.presentStock(name: name, values: values)
-                try output.append(.compound([
+                let rising = values.first.flatMap { f in values.last.map { l in f.close <= l.close } } ?? true
+                let emoji = rising ? ":chart_with_upwards_trend:" : ":chart_with_downwards_trend:"
+
+                output.append(.compound([
                     .image(image),
                     .embed(Embed(
-                        title: "\(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))"
+                        title: "\(emoji) \(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))"
                     ))
                 ]))
             } catch {
