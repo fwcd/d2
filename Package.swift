@@ -7,7 +7,7 @@ let package = Package(
     name: "D2",
     platforms: [.macOS(.v10_15)],
     products: [
-        .executable(name: "D2", targets: ["D2"])
+        .executable(name: "D2", targets: ["D2"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -49,7 +49,7 @@ let package = Package(
                 .target(name: "D2Handlers"),
                 .target(name: "D2DiscordIO"),
                 .target(name: "D2TelegramIO"),
-                .target(name: "D2IRCIO")
+                .target(name: "D2IRCIO"),
             ]
         ),
         .target(
@@ -58,7 +58,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "SwiftDiscord", package: "SwiftDiscord"),
-                .target(name: "D2MessageIO")
+                .target(name: "D2MessageIO"),
             ]
         ),
         .target(
@@ -68,7 +68,7 @@ let package = Package(
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "Emoji", package: "Emoji"),
                 .product(name: "Telegrammer", package: "Telegrammer"),
-                .target(name: "D2MessageIO")
+                .target(name: "D2MessageIO"),
             ]
         ),
         .target(
@@ -78,7 +78,7 @@ let package = Package(
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "IRC", package: "swift-nio-irc-client"),
                 .product(name: "Emoji", package: "Emoji"),
-                .target(name: "D2MessageIO")
+                .target(name: "D2MessageIO"),
             ]
         ),
         .target(
@@ -89,7 +89,7 @@ let package = Package(
                 .product(name: "SyllableCounter", package: "syllable-counter-swift"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
-                .target(name: "D2Commands")
+                .target(name: "D2Commands"),
             ]
         ),
         .target(
@@ -112,7 +112,7 @@ let package = Package(
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),
-                .target(name: "D2NetAPIs")
+                .target(name: "D2NetAPIs"),
             ]
         ),
         .target(
@@ -120,14 +120,14 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
-                .target(name: "D2MessageIO")
+                .target(name: "D2MessageIO"),
             ]
         ),
         .target(
             name: "D2Script",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
-                .product(name: "Utils", package: "swift-utils")
+                .product(name: "Utils", package: "swift-utils"),
             ]
         ),
         .target(
@@ -137,7 +137,7 @@ let package = Package(
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "XMLCoder", package: "XMLCoder"),
-                .product(name: "CodableCSV", package: "CodableCSV")
+                .product(name: "CodableCSV", package: "CodableCSV"),
             ]
         ),
         .target(
@@ -146,7 +146,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "Graphics", package: "swift-graphics"),
-                .product(name: "GIF", package: "swift-gif")
+                .product(name: "GIF", package: "swift-gif"),
             ]
         ),
         .testTarget(
@@ -155,14 +155,14 @@ let package = Package(
                 .product(name: "Utils", package: "swift-utils"),
                 .target(name: "D2TestUtils"),
                 .target(name: "D2MessageIO"),
-                .target(name: "D2Commands")
+                .target(name: "D2Commands"),
             ]
         ),
         .testTarget(
             name: "D2ScriptTests",
             dependencies: [
                 .product(name: "Utils", package: "swift-utils"),
-                .target(name: "D2Script")
+                .target(name: "D2Script"),
             ]
         ),
         .testTarget(
@@ -170,15 +170,15 @@ let package = Package(
             dependencies: [
                 .target(name: "D2MessageIO"),
                 .target(name: "D2TestUtils"),
-                .target(name: "D2NetAPIs")
+                .target(name: "D2NetAPIs"),
             ]
         ),
         .testTarget(
             name: "D2TestUtils",
             dependencies: [
                 .target(name: "D2MessageIO"),
-                .target(name: "D2Commands")
+                .target(name: "D2Commands"),
             ]
-        )
+        ),
     ]
 )
