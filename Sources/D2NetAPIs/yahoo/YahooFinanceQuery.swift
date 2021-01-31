@@ -1,3 +1,4 @@
+import CodableCSV
 import Foundation
 import Utils
 
@@ -12,9 +13,9 @@ public struct YahooFinanceQuery {
         self.end = end
     }
 
-    // TODO
-    // public func perform() -> Promise<YahooFinanceStockDataPoint, Error> {
-    //     Promise.catching { try HTTPRequest(host: "query1.finance.yahoo.com", path: "/v7/finance/download/\(stock)") }
-    //         .map { $0.fetchCSVAsync() }
-    // }
+    public func perform() -> Promise<[YahooFinanceStockDataPoint], Error> {
+        Promise.catching { try HTTPRequest(host: "query1.finance.yahoo.com", path: "/v7/finance/download/\(stock)") }
+            .then { $0.runAsync() }
+            .mapCatching { try CSVDecoder().decode([YahooFinanceStockDataPoint].self, from: $0) }
+    }
 }
