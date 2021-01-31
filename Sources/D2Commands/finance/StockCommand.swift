@@ -38,13 +38,34 @@ public class StockCommand: StringCommand {
                 output.append(.compound([
                     .image(image),
                     .embed(Embed(
-                        title: "\(emoji) \(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))"
+                        title: "\(emoji) \(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))",
+                        fields: [
+                            values.first.map { self.presentDay(label: "\(days) \("day".pluralized(with: days)) ago", value: $0) },
+                            values[safely: values.count - 2].map { self.presentDay(label: "Yesterday", value: $0) },
+                            values.last.map { self.presentDay(label: "Today", value: $0) },
+                        ].compactMap { $0 }
                     ))
                 ]))
             } catch {
                 output.append(error, errorText: "Could not query/present stock")
             }
         }
+    }
+
+    private func presentDay(label: String, value: YahooFinanceStockDataPoint) -> Embed.Field {
+        Embed.Field(
+            name: "\(label)",
+            value: """
+                High: \(format(price: value.high))
+                Low: \(format(price: value.low))
+                Volume: \(value.volume)
+                """,
+            inline: true
+        )
+    }
+
+    private func format(price: Double) -> String {
+        String(format: "USD %.2f", price)
     }
 
     private func presentStock(name: String, values: [YahooFinanceStockDataPoint]) throws -> Image {
