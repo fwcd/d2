@@ -22,13 +22,22 @@ public class StockCommand: StringCommand {
         }
 
         let name = input.uppercased()
+        let days = 30
         let end = Date()
-        let start = Calendar.current.date(byAdding: .day, value: -30, to: end)!
+        let start = Calendar.current.date(byAdding: .day, value: -days, to: end)!
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+
         YahooFinanceQuery(stock: name, from: start, to: end).perform().listen {
             do {
                 let values = try $0.get()
                 let image = try self.presentStock(name: name, values: values)
-                try output.append(image)
+                try output.append(.compound([
+                    .image(image),
+                    .embed(Embed(
+                        title: "\(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))"
+                    ))
+                ]))
             } catch {
                 output.append(error, errorText: "Could not query/present stock")
             }
