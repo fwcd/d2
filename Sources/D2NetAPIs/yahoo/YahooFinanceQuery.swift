@@ -22,6 +22,9 @@ public struct YahooFinanceQuery {
             "includeAdjustedClose": "true"
         ]) }
             .then { $0.runAsync() }
-            .mapCatching { try CSVDecoder().decode([YahooFinanceStockDataPoint].self, from: $0) }
+            .mapCatching { try CSVDecoder {
+                $0.encoding = .utf8
+                $0.headerStrategy = .firstLine
+            }.decode([YahooFinanceStockDataPoint].self, from: $0) }
     }
 }
