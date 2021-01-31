@@ -33,7 +33,8 @@ let package = Package(
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
         .package(url: "https://github.com/wfreitag/syllable-counter-swift.git", .revision("029c8568b4d060174284fdedd7473863768a903b")),
         .package(url: "https://github.com/nmdias/FeedKit.git", from: "9.1.2"),
-        .package(url: "https://github.com/SwiftyTesseract/SwiftyTesseract.git", from: "4.0.0")
+        .package(url: "https://github.com/SwiftyTesseract/SwiftyTesseract.git", from: "4.0.0"),
+        .package(url: "https://github.com/dehesa/CodableCSV.git", from: "0.6.5"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -135,7 +136,8 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
-                .product(name: "XMLCoder", package: "XMLCoder")
+                .product(name: "XMLCoder", package: "XMLCoder"),
+                .product(name: "CodableCSV", package: "CodableCSV")
             ]
         ),
         .target(

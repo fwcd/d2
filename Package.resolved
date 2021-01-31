@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "CodableCSV",
+        "repositoryURL": "https://github.com/dehesa/CodableCSV.git",
+        "state": {
+          "branch": null,
+          "revision": "7223016cee159d3a1f323c23ba19d9703cf3ce13",
+          "version": "0.6.5"
+        }
+      },
+      {
         "package": "Commander",
         "repositoryURL": "https://github.com/kylef/Commander.git",
         "state": {
