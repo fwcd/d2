@@ -31,6 +31,11 @@ public class StockCommand: StringCommand {
         YahooFinanceQuery(stock: name, from: start, to: end).perform().listen {
             do {
                 let values = try $0.get()
+                guard !values.isEmpty else {
+                    output.append(errorText: "No values found!")
+                    return
+                }
+
                 let image = try self.presentStock(name: name, values: values)
                 let rising = values.first.flatMap { f in values.last.map { l in f.close <= l.close } } ?? true
                 let emoji = rising ? ":chart_with_upwards_trend:" : ":chart_with_downwards_trend:"
@@ -39,6 +44,7 @@ public class StockCommand: StringCommand {
                     .image(image),
                     .embed(Embed(
                         title: "\(emoji) \(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))",
+                        url: URL(string: "https://de.finance.yahoo.com/quote/\(name)/history"),
                         fields: [
                             values.first.map { self.presentDay(label: "\(days) \("day".pluralized(with: days)) ago", value: $0) },
                             values[safely: values.count - 2].map { self.presentDay(label: "Yesterday", value: $0) },
