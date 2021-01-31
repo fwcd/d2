@@ -279,6 +279,7 @@ public class D2Delegate: MessageDelegate {
         registry["inventory"] = InventoryCommand(inventoryManager: inventoryManager)
         registry["trade"] = TradeCommand(inventoryManager: inventoryManager)
         registry["cookie"] = CookieCommand(inventoryManager: inventoryManager)
+        registry["stock", aka: ["stocks", "shares"]] = StockCommand()
         registry["designquote", aka: ["quoteondesign"]] = DesignQuoteCommand()
         registry["kanyewestquote", aka: ["kanyequote"]] = KanyeWestQuoteCommand()
         registry["taylorswiftquote", aka: ["taylorquote"]] = TaylorSwiftQuoteCommand()
