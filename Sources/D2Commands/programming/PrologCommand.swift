@@ -4,7 +4,7 @@ import PrologSyntax
 
 public class PrologCommand: Command {
     public var info = CommandInfo(
-        category: .functiological,
+        category: .programming,
         shortDescription: "Interprets Prolog",
         longDescription: "Parses Prolog rules and performs queries on them",
         requiredPermissionLevel: .admin // TODO: Place a timeout on the interpreter that breaks a

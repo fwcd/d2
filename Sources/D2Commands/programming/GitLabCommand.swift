@@ -9,7 +9,7 @@ fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
 
 public class GitLabCommand: StringCommand {
     public var info = CommandInfo(
-        category: .git,
+        category: .programming,
         shortDescription: "Queries a GitLab server",
         longDescription: "Fetches CI/CD pipeline information and more from a GitLab server",
         presented: true,

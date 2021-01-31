@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2Commands.HaskellCommand")
 
 public class HaskellCommand: StringCommand {
     public let info = CommandInfo(
-        category: .functiological,
+        category: .programming,
         shortDescription: "Evaluates a Haskell expression",
         longDescription: "Computes the result of a (pure) Haskell expression using Mueval",
         presented: true,

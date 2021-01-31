@@ -4,7 +4,7 @@ import Utils
 
 public class ChangeLogCommand: StringCommand {
     public let info = CommandInfo(
-        category: .git,
+        category: .meta,
         shortDescription: "Fetches the latest commits to D2's repo",
         presented: true,
         requiredPermissionLevel: .basic

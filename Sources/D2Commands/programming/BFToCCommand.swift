@@ -4,7 +4,7 @@ import Utils
 
 public class BFToCCommand: StringCommand {
     public let info = CommandInfo(
-        category: .bf,
+        category: .programming,
         shortDescription: "Transpiles a BF program into C code",
         longDescription: "Outputs a C program whose functionality is equivalent to the given BF program",
         presented: true,

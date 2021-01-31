@@ -4,7 +4,7 @@ import Utils
 
 public class BFEncodeCommand: StringCommand {
     public let info = CommandInfo(
-        category: .bf,
+        category: .programming,
         shortDescription: "Encodes strings to BF code",
         longDescription: "Encodes a string in BF code such that the string is located beginning at the zeroth cell",
         presented: true,

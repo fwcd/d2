@@ -8,7 +8,7 @@ fileprivate let log = Logger(label: "D2Commands.BFCommand")
 
 public class BFInterpretCommand: StringCommand {
     public let info = CommandInfo(
-        category: .bf,
+        category: .programming,
         shortDescription: "Interprets BF code",
         longDescription: "Asynchronously invokes a Brainf&*k interpreter",
         presented: true,

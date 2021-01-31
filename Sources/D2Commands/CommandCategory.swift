@@ -4,7 +4,6 @@ fileprivate let emojiPattern = try! Regex(from: ":[^:]:")
 
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case administration
-    case bf
     case cau
     case coding
     case d2script
@@ -15,15 +14,14 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case food
     case forum
     case fun
-    case functiological
     case game
-    case git
     case imaging
     case math
     case meta
     case misc
     case moderation
     case music
+    case programming
     case quote
     case scripting
     case videogame
@@ -32,7 +30,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     public var description: String {
         switch self {
             case .administration: return ":desktop: Administration"
-            case .bf: return ":brain: BF interpreter"
             case .cau: return ":school: CAU-specific utilities"
             case .coding: return ":currency_exchange: Encoders and decoders"
             case .d2script: return ":scroll: D2 scripting"
@@ -43,15 +40,14 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .food: return ":tropical_drink: Food and drinks"
             case .forum: return ":ledger: Forums"
             case .fun: return ":candy: Fun"
-            case .functiological: return ":umbrella2: Functional and logical programming"
             case .game: return ":game_die: Multiplayer games"
-            case .git: return ":fox: Git"
             case .imaging: return ":frame_photo: Image and GIF generation/editing"
             case .math: return ":bar_chart: Mathematics"
             case .meta: return ":sparkles: Meta, i.e. commands related to D2 itself"
             case .misc: return ":art: Miscellaneous commands"
             case .moderation: return ":loudspeaker: Moderation"
             case .music: return ":guitar: Music, theory and chords"
+            case .programming: return ":tophat: Programming"
             case .quote: return ":speech_left: Quotes"
             case .scripting: return ":tools: Command scripting"
             case .videogame: return ":evergreen_tree: Video games"

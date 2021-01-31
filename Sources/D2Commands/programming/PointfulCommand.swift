@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2Commands.PointfulCommand")
 
 public class PointfulCommand: StringCommand {
     public let info = CommandInfo(
-        category: .functiological,
+        category: .programming,
         shortDescription: "Pointful notation converter",
         longDescription: "Converts a Haskell expression into pointful notation",
         presented: true,
