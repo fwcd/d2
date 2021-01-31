@@ -11,6 +11,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case emoji
     case feed
     case file
+    case finance
     case food
     case forum
     case fun
@@ -37,6 +38,7 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .emoji: return ":sunglasses: Emoji"
             case .feed: return ":newspaper2: Feeds"
             case .file: return ":file_folder: File IO"
+            case .finance: return ":chart_with_upwards_trend: Finance"
             case .food: return ":tropical_drink: Food and drinks"
             case .forum: return ":ledger: Forums"
             case .fun: return ":candy: Fun"
