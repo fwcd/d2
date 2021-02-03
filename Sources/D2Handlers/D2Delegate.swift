@@ -288,6 +288,7 @@ public class D2Delegate: MessageDelegate {
         registry["messagedbvisualize"] = MessageDatabaseVisualizeCommand(messageDB: messageDB)
         registry["messagedbchannelactivity", aka: ["channelactivity"]] = MessageDatabaseChannelActivityCommand(messageDB: messageDB)
         registry["lineplot", aka: ["linegraph", "linechart", "chart", "plot"]] = LinePlotCommand()
+        registry["barplot", aka: ["bargraph", "barchart", "bars", "histogram"]] = BarPlotCommand()
         registry["shell"] = ShellCommand()
         registry["upload"] = UploadCommand()
         registry["download"] = DownloadCommand()

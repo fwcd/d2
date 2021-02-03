@@ -17,3 +17,15 @@ extension LineGraph: SeriesPlot where T == Double, U == Double {
         addSeries(xs, ys, label: label, color: color, axisType: .primaryAxis)
     }
 }
+
+extension BarGraph: SeriesPlot where T == Double, U == Double {
+    public static func createDefault() -> Self {
+        Self(enableGrid: true)
+    }
+
+    public mutating func addSeries(_ xs: [Double], _ ys: [Double], label: String, color: Color) {
+        addSeries(xs, ys, label: label, color: color, hatchPattern: .none, graphOrientation: .vertical)
+    }
+}
+
+
