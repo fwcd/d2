@@ -277,6 +277,12 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
 
+    public func insert(member: Guild.Member, on guild: Guild) throws {
+        try db.transaction {
+            try insertDirectly(member: member, on: guild)
+        }
+    }
+
     private func insertDirectly(member: Guild.Member, on guild: Guild) throws {
         let user = member.user
         let id = user.id
@@ -301,6 +307,12 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
 
+    public func insert(role: Role, on guild: Guild) throws {
+        try db.transaction {
+            try insertDirectly(role: role, on: guild)
+        }
+    }
+
     private func insertDirectly(role: Role, on guild: Guild) throws {
         let id = role.id
         try db.run(roles.insert(or: .replace,
@@ -312,6 +324,12 @@ public class MessageDatabase: MarkovPredictor {
         ))
     }
 
+    public func insert(channel: Guild.Channel, on guild: Guild) throws {
+        try db.transaction {
+            try insertDirectly(channel: channel, on: guild)
+        }
+    }
+
     private func insertDirectly(channel: Guild.Channel, on guild: Guild) throws {
         let id = channel.id
         try db.run(channels.insert(or: .replace,
@@ -319,6 +337,12 @@ public class MessageDatabase: MarkovPredictor {
             guildId <- try convert(id: guild.id),
             channelName <- channel.name
         ))
+    }
+
+    public func insert(emoji: Emoji) throws {
+        try db.transaction {
+            try insertDirectly(emoji: emoji)
+        }
     }
 
     private func insertDirectly(emoji: Emoji) throws {
