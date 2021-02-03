@@ -487,6 +487,7 @@ public class D2Delegate: MessageDelegate {
 
     public func on(createGuild guild: Guild, client: MessageClient) {
         do {
+            log.info("Inserting guild '\(guild.name)' into message database...")
             try messageDB.insert(guild: guild)
         } catch {
             log.warning("Could not insert guild into message database: \(error)")
@@ -610,6 +611,15 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(createChannel channelId: ChannelID, client: MessageClient) {
+        do {
+            if let guild = client.guildForChannel(channelId), let channel = guild.channels[channelId] {
+                log.info("Inserting channel '\(channel.name)' into message database...")
+                try messageDB.insert(channel: channel, on: guild)
+            }
+        } catch {
+            log.warning("Could not insert channel into message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
     }
 
@@ -618,6 +628,15 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateChannel channelId: ChannelID, client: MessageClient) {
+        do {
+            if let guild = client.guildForChannel(channelId), let channel = guild.channels[channelId] {
+                log.info("Updating channel '\(channel.name)' in message database...")
+                try messageDB.insert(channel: channel, on: guild)
+            }
+        } catch {
+            log.warning("Could not update channel in message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
     }
 
@@ -626,10 +645,26 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateGuild guild: Guild, client: MessageClient) {
+        do {
+            log.info("Updating guild '\(guild.name)' in message database...")
+            try messageDB.insert(guild: guild)
+        } catch {
+            log.warning("Could not update guild in message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .updateGuild, with: .none) // TODO: Pass guild ID?
     }
 
     public func on(addGuildMember member: Guild.Member, client: MessageClient) {
+        do {
+            if let guild = client.guild(for: member.guildId) {
+                log.info("Inserting member '\(member.displayName)' into message database...")
+                try messageDB.insert(member: member, on: guild)
+            }
+        } catch {
+            log.warning("Could not insert member into message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .addGuildMember, with: .mentions([member.user]))
     }
 
@@ -638,10 +673,26 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateGuildMember member: Guild.Member, client: MessageClient) {
+        do {
+            if let guild = client.guild(for: member.guildId) {
+                log.info("Updating member '\(member.displayName)' in message database...")
+                try messageDB.insert(member: member, on: guild)
+            }
+        } catch {
+            log.warning("Could not update member in message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .updateGuildMember, with: .mentions([member.user]))
     }
 
     public func on(createRole role: Role, on guild: Guild, client: MessageClient) {
+        do {
+            log.info("Inserting role '\(role.name)' on '\(guild.name)' into message database...")
+            try messageDB.insert(role: role, on: guild)
+        } catch {
+            log.warning("Could not insert role into message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .createRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
@@ -650,6 +701,13 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateRole role: Role, on guild: Guild, client: MessageClient) {
+        do {
+            log.info("Updating role '\(role.name)' on '\(guild.name)' in message database...")
+            try messageDB.insert(role: role, on: guild)
+        } catch {
+            log.warning("Could not update role in message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .updateRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
@@ -666,6 +724,15 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: MessageClient) {
+        do {
+            log.info("Updating emojis on '\(guild.name)' in message database...")
+            for emoji in emojis.values {
+                try messageDB.insert(emoji: emoji)
+            }
+        } catch {
+            log.warning("Could not update emojis in message database: \(error)")
+        }
+
         eventListenerBus.fire(event: .updateEmojis, with: .none) // TODO: Pass emojis, possibly by creating a RichValue.emoji variant
     }
 }
