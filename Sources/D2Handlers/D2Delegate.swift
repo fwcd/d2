@@ -135,6 +135,7 @@ public class D2Delegate: MessageDelegate {
         registry["matmul"] = MatrixMultiplicationCommand()
         registry["identitymat", aka: ["idmat", "onemat"]] = IdentityMatrixCommand()
         registry["zeromat"] = ZeroMatrixCommand()
+        registry["tondarray"] = ToNDArrayCommand()
         registry["dot"] = DotProductCommand()
         registry["determinant", aka: ["det"]] = DeterminantCommand()
         registry["inverse", aka: ["inversemat", "invmat", "invert"]] = InverseMatrixCommand()
