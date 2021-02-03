@@ -253,64 +253,88 @@ public class MessageDatabase: MarkovPredictor {
 
     public func insert(guild: Guild) throws {
         try db.transaction {
-            try db.run(guilds.insert(or: .ignore,
+            try insertDirectly(guild: guild)
+        }
+    }
+
+    private func insertDirectly(guild: Guild) throws {
+        try db.run(guilds.insert(or: .ignore,
+            guildId <- try convert(id: guild.id),
+            guildName <- guild.name,
+            guildTracked <- false
+        ))
+        for member in guild.members.map(\.1) {
+            try insertDirectly(member: member, on: guild)
+        }
+        for role in guild.roles.values {
+            try insertDirectly(role: role, on: guild)
+        }
+        for channel in guild.channels.values {
+            try insertDirectly(channel: channel, on: guild)
+        }
+        for emoji in guild.emojis.values {
+            try insertDirectly(emoji: emoji)
+        }
+    }
+
+    private func insertDirectly(member: Guild.Member, on guild: Guild) throws {
+        let user = member.user
+        let id = user.id
+        try db.run(members.insert(or: .ignore,
+            userId <- try convert(id: id),
+            guildId <- try convert(id: guild.id),
+            nick <- member.nick
+        ))
+        try db.run(users.insert(or: .ignore,
+            userId <- try convert(id: id),
+            userName <- user.username,
+            discriminator <- user.discriminator,
+            bot <- user.bot,
+            verified <- user.verified
+        ))
+        for rid in member.roleIds {
+            try db.run(memberRoles.insert(or: .ignore,
+                userId <- try convert(id: id),
                 guildId <- try convert(id: guild.id),
-                guildName <- guild.name,
-                guildTracked <- false
+                roleId <- try convert(id: rid)
             ))
-            for (id, member) in guild.members {
-                let user = member.user
-                try db.run(members.insert(or: .ignore,
-                    userId <- try convert(id: id),
-                    guildId <- try convert(id: guild.id),
-                    nick <- member.nick
-                ))
-                try db.run(users.insert(or: .ignore,
-                    userId <- try convert(id: id),
-                    userName <- user.username,
-                    discriminator <- user.discriminator,
-                    bot <- user.bot,
-                    verified <- user.verified
-                ))
-                for rid in member.roleIds {
-                    try db.run(memberRoles.insert(or: .ignore,
-                        userId <- try convert(id: id),
-                        guildId <- try convert(id: guild.id),
-                        roleId <- try convert(id: rid)
-                    ))
-                }
-            }
-            for (id, role) in guild.roles {
-                try db.run(roles.insert(or: .ignore,
-                    roleId <- try convert(id: id),
-                    guildId <- try convert(id: guild.id),
-                    roleName <- role.name,
-                    roleColor <- Int64(role.color),
-                    rolePosition <- Int64(role.position)
-                ))
-            }
-            for (id, channel) in guild.channels {
-                try db.run(channels.insert(or: .ignore,
-                    channelId <- try convert(id: id),
-                    guildId <- try convert(id: guild.id),
-                    channelName <- channel.name
-                ))
-            }
-            for (id, emoji) in guild.emojis {
-                try db.run(emojis.insert(or: .ignore,
-                    emojiId <- try convert(id: id),
-                    emojiName <- emoji.name,
-                    isAnimated <- emoji.animated,
-                    isManaged <- emoji.managed,
-                    requiresColons <- emoji.requireColons
-                ))
-                for rid in emoji.roles {
-                    try db.run(emojiRoles.insert(or: .ignore,
-                        emojiId <- try convert(id: id),
-                        roleId <- try convert(id: rid)
-                    ))
-                }
-            }
+        }
+    }
+
+    private func insertDirectly(role: Role, on guild: Guild) throws {
+        let id = role.id
+        try db.run(roles.insert(or: .ignore,
+            roleId <- try convert(id: id),
+            guildId <- try convert(id: guild.id),
+            roleName <- role.name,
+            roleColor <- Int64(role.color),
+            rolePosition <- Int64(role.position)
+        ))
+    }
+
+    private func insertDirectly(channel: Guild.Channel, on guild: Guild) throws {
+        let id = channel.id
+        try db.run(channels.insert(or: .ignore,
+            channelId <- try convert(id: id),
+            guildId <- try convert(id: guild.id),
+            channelName <- channel.name
+        ))
+    }
+
+    private func insertDirectly(emoji: Emoji) throws {
+        guard let id = emoji.id else { throw MessageDatabaseError.missingID("Emoji has no ID") }
+        try db.run(emojis.insert(or: .ignore,
+            emojiId <- try convert(id: id),
+            emojiName <- emoji.name,
+            isAnimated <- emoji.animated,
+            isManaged <- emoji.managed,
+            requiresColons <- emoji.requireColons
+        ))
+        for rid in emoji.roles {
+            try db.run(emojiRoles.insert(or: .ignore,
+                emojiId <- try convert(id: id),
+                roleId <- try convert(id: rid)
+            ))
         }
     }
 
