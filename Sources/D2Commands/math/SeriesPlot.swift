@@ -18,6 +18,16 @@ extension LineGraph: SeriesPlot where T == Double, U == Double {
     }
 }
 
+extension ScatterPlot: SeriesPlot where T == Double, U == Double {
+    public static func createDefault() -> Self {
+        Self(enableGrid: true)
+    }
+
+    public mutating func addSeries(_ xs: [Double], _ ys: [Double], label: String, color: Color) {
+        addSeries(xs, ys, label: label, color: color, scatterPattern: .circle)
+    }
+}
+
 extension BarGraph: SeriesPlot where T == Int, U == Double {
     public static func createDefault() -> Self {
         Self(enableGrid: true)
