@@ -5,7 +5,7 @@ import SwiftPlot
 import AGGRenderer
 
 public typealias LinePlotCommand = PlotCommand<LineGraph<Double, Double>>
-public typealias BarPlotCommand = PlotCommand<BarGraph<Double, Double>>
+public typealias BarPlotCommand = PlotCommand<BarGraph<Int, Double>>
 
 public class PlotCommand<P>: Command where P: SeriesPlot {
     public let info = CommandInfo(
