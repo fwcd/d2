@@ -11,7 +11,7 @@ public class PlotCommand<P>: Command where P: SeriesPlot {
     public let info = CommandInfo(
         category: .math,
         shortDescription: "Plots an NDArray",
-        longDescription: "Plots a 1- or 2-column NDArray as a line graph where the first column represents the x-axis and the second column the y-axis",
+        longDescription: "Plots a 1- or 2-column NDArray where the first column represents the x-axis and the second column the y-axis",
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .ndArrays
