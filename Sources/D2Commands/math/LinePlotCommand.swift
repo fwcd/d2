@@ -6,7 +6,7 @@ import AGGRenderer
 
 public class LinePlotCommand: Command {
     public let info = CommandInfo(
-        category: .imaging,
+        category: .math,
         shortDescription: "Plots an NDArray as a line graph",
         longDescription: "Plots a 1- or 2-column NDArray as a line graph where the first column represents the x-axis and the second column the y-axis",
         requiredPermissionLevel: .basic
