@@ -4,10 +4,12 @@ import Graphics
 import SwiftPlot
 import AGGRenderer
 
-public class LinePlotCommand: Command {
+public typealias LinePlotCommand = PlotCommand<LineGraph<Double, Double>>
+
+public class PlotCommand<P>: Command where P: SeriesPlot {
     public let info = CommandInfo(
         category: .math,
-        shortDescription: "Plots an NDArray as a line graph",
+        shortDescription: "Plots an NDArray",
         longDescription: "Plots a 1- or 2-column NDArray as a line graph where the first column represents the x-axis and the second column the y-axis",
         requiredPermissionLevel: .basic
     )
@@ -18,7 +20,7 @@ public class LinePlotCommand: Command {
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
         guard var columns = input.asNDArrays?.first?.asMatrix?.columns.map({ $0.map(\.asDouble) }), [1, 2].contains(columns.count) else {
-            output.append(errorText: "Can only plot 1- or 2-column tables as line graph!")
+            output.append(errorText: "Can only plot 1- or 2-column tables!")
             return
         }
 
@@ -33,10 +35,9 @@ public class LinePlotCommand: Command {
         }
 
         let renderer = AGGRenderer()
-        var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
-        graph.addSeries(columns[0], columns[1], label: "Plot", color: .blue)
-        graph.plotLineThickness = 3
-        graph.drawGraph(renderer: renderer)
+        var plot = P.createDefault()
+        plot.addSeries(columns[0], columns[1], label: "Plot", color: .blue)
+        plot.drawGraph(renderer: renderer)
 
         guard let data = Data(base64Encoded: renderer.base64Png()), let image = try? Image(fromPng: data) else {
             output.append(errorText: "Could not render to valid PNG!")
