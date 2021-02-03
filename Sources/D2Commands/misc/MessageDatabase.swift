@@ -258,7 +258,7 @@ public class MessageDatabase: MarkovPredictor {
     }
 
     private func insertDirectly(guild: Guild) throws {
-        try db.run(guilds.insert(or: .ignore,
+        try db.run(guilds.insert(or: .replace,
             guildId <- try convert(id: guild.id),
             guildName <- guild.name,
             guildTracked <- false
@@ -280,12 +280,12 @@ public class MessageDatabase: MarkovPredictor {
     private func insertDirectly(member: Guild.Member, on guild: Guild) throws {
         let user = member.user
         let id = user.id
-        try db.run(members.insert(or: .ignore,
+        try db.run(members.insert(or: .replace,
             userId <- try convert(id: id),
             guildId <- try convert(id: guild.id),
             nick <- member.nick
         ))
-        try db.run(users.insert(or: .ignore,
+        try db.run(users.insert(or: .replace,
             userId <- try convert(id: id),
             userName <- user.username,
             discriminator <- user.discriminator,
@@ -293,7 +293,7 @@ public class MessageDatabase: MarkovPredictor {
             verified <- user.verified
         ))
         for rid in member.roleIds {
-            try db.run(memberRoles.insert(or: .ignore,
+            try db.run(memberRoles.insert(or: .replace,
                 userId <- try convert(id: id),
                 guildId <- try convert(id: guild.id),
                 roleId <- try convert(id: rid)
@@ -303,7 +303,7 @@ public class MessageDatabase: MarkovPredictor {
 
     private func insertDirectly(role: Role, on guild: Guild) throws {
         let id = role.id
-        try db.run(roles.insert(or: .ignore,
+        try db.run(roles.insert(or: .replace,
             roleId <- try convert(id: id),
             guildId <- try convert(id: guild.id),
             roleName <- role.name,
@@ -314,7 +314,7 @@ public class MessageDatabase: MarkovPredictor {
 
     private func insertDirectly(channel: Guild.Channel, on guild: Guild) throws {
         let id = channel.id
-        try db.run(channels.insert(or: .ignore,
+        try db.run(channels.insert(or: .replace,
             channelId <- try convert(id: id),
             guildId <- try convert(id: guild.id),
             channelName <- channel.name
@@ -323,7 +323,7 @@ public class MessageDatabase: MarkovPredictor {
 
     private func insertDirectly(emoji: Emoji) throws {
         guard let id = emoji.id else { throw MessageDatabaseError.missingID("Emoji has no ID") }
-        try db.run(emojis.insert(or: .ignore,
+        try db.run(emojis.insert(or: .replace,
             emojiId <- try convert(id: id),
             emojiName <- emoji.name,
             isAnimated <- emoji.animated,
@@ -331,7 +331,7 @@ public class MessageDatabase: MarkovPredictor {
             requiresColons <- emoji.requireColons
         ))
         for rid in emoji.roles {
-            try db.run(emojiRoles.insert(or: .ignore,
+            try db.run(emojiRoles.insert(or: .replace,
                 emojiId <- try convert(id: id),
                 roleId <- try convert(id: rid)
             ))
