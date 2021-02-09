@@ -31,7 +31,7 @@ public struct OpenFoodFactsResult: Codable {
 
         public let imageNutritionUrl: URL?
         public let labelsTags: [String]?
-        public let productQuantity: Int?
+        public let productQuantity: Double?
         public let comparedToCategory: String?
         public let ingredientsHierarchy: [String]?
         public let ingredientsTextWithAllergensEn: String?
