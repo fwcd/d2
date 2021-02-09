@@ -13,7 +13,10 @@ public class BeerCommand: StringCommand {
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         PunkAPIQuery().perform().listen {
             do {
-                let beer = try $0.get()
+                guard let beer = try $0.get().first else {
+                    output.append(errorText: "No results found")
+                    return
+                }
                 output.append(Embed(
                     title: ":beer: \(beer.name)",
                     description: beer.description,
