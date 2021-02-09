@@ -13,7 +13,7 @@ public class BeerCommand: StringCommand {
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         PunkAPIQuery().perform().listen {
             do {
-                guard let beer = try $0.get().first else {
+                guard let beer = try $0.get().randomElement() else {
                     output.append(errorText: "No results found")
                     return
                 }

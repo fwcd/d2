@@ -18,8 +18,6 @@ public struct PunkAPIBeer: Codable {
         case attenuationLevel = "attenuation_level"
         case volume
         case boilVolume = "boil_volume"
-        case method
-        case ingredients
         case foodPairing = "food_pairing"
         case brewersTips = "brewers_tips"
         case contributedBy = "contributed_by"
@@ -41,8 +39,6 @@ public struct PunkAPIBeer: Codable {
     public let attenuationLevel: Double?
     public let volume: UnitValue?
     public let boilVolume: UnitValue?
-    public let method: Methods?
-    public let ingredients: Ingredients?
     public let foodPairing: [String]?
     public let brewersTips: String?
     public let contributedBy: String?
@@ -50,47 +46,5 @@ public struct PunkAPIBeer: Codable {
     public struct UnitValue: Codable {
         public let value: Double
         public let unit: String
-    }
-
-    public struct Methods: Codable {
-        public enum CodingKeys: String, CodingKey {
-            case mashTemp = "mash_temp"
-            case fermentation
-        }
-
-        public let mashTemp: [MashTemp]
-        public let fermentation: Fermentation
-
-        public struct MashTemp: Codable {
-            public let temp: UnitValue
-            public let duration: Double
-        }
-
-        public struct Fermentation: Codable {
-            public let temp: UnitValue
-        }
-    }
-
-    public struct Method: Codable {
-        public let temp: UnitValue
-        public let duration: Double?
-    }
-
-    public struct Ingredients: Codable {
-        public let malt: [Malt]
-        public let hops: [Hop]
-        public let yeast: String
-
-        public struct Malt: Codable {
-            public let name: String
-            public let amount: UnitValue
-        }
-
-        public struct Hop: Codable {
-            public let name: String
-            public let amount: UnitValue
-            public let add: String
-            public let attribute: String
-        }
     }
 }
