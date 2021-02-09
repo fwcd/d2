@@ -20,7 +20,7 @@ public class OpenFoodFactsCommand: StringCommand {
             do {
                 let product = try $0.get().product
                 output.append(Embed(
-                    title: [product.genericNameEn, product.productNameEnImported].compactMap { $0 }.joined(separator: ": ").nilIfEmpty ?? "Untitled product",
+                    title: [product.genericName ?? product.genericNameEn ?? product.genericNameDe, product.productNameEnImported].compactMap { $0 }.joined(separator: ": ").nilIfEmpty ?? "Untitled product",
                     thumbnail: product.imageThumbUrl.map(Embed.Thumbnail.init(url:)),
                     footer: product.creator?.nilIfEmpty.map { Embed.Footer(text: "creator: \($0)") },
                     fields: [
