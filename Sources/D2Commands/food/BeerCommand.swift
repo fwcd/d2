@@ -20,7 +20,7 @@ public class BeerCommand: StringCommand {
                 output.append(Embed(
                     title: ":beer: \(beer.name)",
                     description: beer.description,
-                    image: beer.imageUrl.map(Embed.Image.init(url:)),
+                    thumbnail: beer.imageUrl.map(Embed.Thumbnail.init(url:)),
                     footer: beer.tagline.map(Embed.Footer.init(text:))
                 ))
             } catch {
