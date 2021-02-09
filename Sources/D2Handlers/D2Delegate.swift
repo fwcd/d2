@@ -179,6 +179,7 @@ public class D2Delegate: MessageDelegate {
         registry["imdb"] = IMDBCommand()
         registry["cocktail"] = CocktailCommand()
         registry["beer", aka: ["brewdog", "diydog"]] = BeerCommand()
+        registry["openfoodfacts", aka: ["ean", "foodfacts"]] = OpenFoodFactsCommand()
         registry["recipe"] = RecipeCommand()
         registry["chess"] = GameCommand<ChessGame>()
         registry["cyclethrough"] = CycleThroughCommand()

@@ -2,7 +2,7 @@ import Foundation
 
 public struct OpenFoodFactsResult: Codable {
     public let status: Int
-    public let code: Int
+    public let code: String?
     public let product: Product
 
     // TODO: Add more product fields, see
