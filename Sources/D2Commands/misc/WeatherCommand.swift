@@ -27,26 +27,26 @@ public class WeatherCommand: StringCommand {
                     footer: weather.coord.map { Embed.Footer(text: "Latitude: \($0.lat) - longitude: \($0.lon)") },
                     fields: [
                         weather.main.map { Embed.Field(name: ":thermometer: Main", value: """
-                            **Temperature:** \($0.temp)°C\($0.feelsLike.map { " (feels like \($0)°C)" } ?? "")
-                            **Temperature min:** \($0.tempMin)°C
-                            **Temperature max:** \($0.tempMax)°C
-                            **Pressure:** \($0.pressure) hPa
-                            **Humidity:** \($0.humidity)%
+                            **Temperature:** \($0.temp.map { "\($0)" } ?? "?")°C\($0.feelsLike.map { " (feels like \($0)°C)" } ?? "")
+                            **Temperature min:** \($0.tempMin.map { "\($0)" } ?? "?")°C
+                            **Temperature max:** \($0.tempMax.map { "\($0)" } ?? "?")°C
+                            **Pressure:** \($0.pressure.map { "\($0)" } ?? "?") hPa
+                            **Humidity:** \($0.humidity.map { "\($0)" } ?? "?")%
                             """) },
                         weather.wind.map { Embed.Field(name: ":wind_blowing_face: Wind", value: """
-                            **Speed:** \($0.speed) m/s
-                            **Direction:** \($0.deg)°
+                            **Speed:** \($0.speed.map { "\($0)" } ?? "?") m/s
+                            **Direction:** \($0.deg.map { "\($0)" } ?? "?")°
                             """) },
                         weather.clouds.map { Embed.Field(name: ":cloud: Clouds", value: """
-                            **Cloudiness:** \($0.all)%
+                            **Cloudiness:** \($0.all.map { "\($0)" } ?? "?")%
                             """) },
                         weather.rain.map { Embed.Field(name: ":droplet: Rain", value: """
-                            **Last hour:** \($0.lastHour) mm
-                            **Last 3 hours:** \($0.last3Hours) mm
+                            **Last hour:** \($0.lastHour.map { "\($0)" } ?? "?") mm
+                            **Last 3 hours:** \($0.last3Hours.map { "\($0)" } ?? "?") mm
                             """) },
                         weather.snow.map { Embed.Field(name: ":snowflake: Snow", value: """
-                            **Last hour:** \($0.lastHour) mm
-                            **Last 3 hours:** \($0.last3Hours) mm
+                            **Last hour:** \($0.lastHour.map { "\($0)" } ?? "?") mm
+                            **Last 3 hours:** \($0.last3Hours.map { "\($0)" } ?? "?") mm
                             """) },
                         weather.timezone.map { Embed.Field(name: ":earth_africa: Timezone", value: "UTC+\($0)") }
                     ].compactMap { $0 }

@@ -37,22 +37,22 @@ public struct OpenWeatherMapWeather: Codable {
             case tempMax = "temp_max"
         }
 
-        public let temp: Double
+        public let temp: Double?
         public let feelsLike: Double?
-        public let pressure: Double
-        public let humidity: Double
-        public let tempMin: Double
-        public let tempMax: Double
+        public let pressure: Double?
+        public let humidity: Double?
+        public let tempMin: Double?
+        public let tempMax: Double?
     }
 
     public struct Wind: Codable {
-        public let speed: Double
-        public let deg: Double
+        public let speed: Double?
+        public let deg: Double?
         public let gust: Double?
     }
 
     public struct Clouds: Codable {
-        public let all: Int
+        public let all: Int?
     }
 
     public struct Sys: Codable {
@@ -70,7 +70,7 @@ public struct OpenWeatherMapWeather: Codable {
             case last3Hours = "3h"
         }
 
-        public let lastHour: Double
-        public let last3Hours: Double
+        public let lastHour: Double?
+        public let last3Hours: Double?
     }
 }
