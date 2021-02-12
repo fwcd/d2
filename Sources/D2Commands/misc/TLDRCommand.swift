@@ -2,7 +2,7 @@ import Foundation
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! Regex(from: "(<#(\\d+)>)?\\s*(\\d+)?")
+fileprivate let argsPattern = try! Regex(from: "(?:<#(\\d+)>)?\\s*(\\d+)?")
 
 public class TLDRCommand: StringCommand {
     public let info = CommandInfo(
@@ -38,8 +38,8 @@ public class TLDRCommand: StringCommand {
             return
         }
 
-        let messageCount = parsedArgs[1].nilIfEmpty.flatMap(Int.init) ?? 80
-        let tldrChannelName = parsedArgs[2].nilIfEmpty.map { ID($0, clientName: client.name) } ?? channelId
+        let tldrChannelName = parsedArgs[1].nilIfEmpty.map { ID($0, clientName: client.name) } ?? channelId
+        let messageCount = parsedArgs[2].nilIfEmpty.flatMap(Int.init) ?? 80
 
         guard messageCount <= maxMessageCount else {
             output.append(errorText: "More than \(maxMessageCount) \("message".pluralized(with: maxMessageCount)) messages are currently not supported")
