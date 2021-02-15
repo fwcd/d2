@@ -192,6 +192,7 @@ public class D2Delegate: MessageDelegate {
         registry["patchwork"] = GraphVizCommand(layout: .patchwork)
         registry["demoimage"] = DemoImageCommand()
         registry["demogif"] = DemoGifCommand()
+        registry["giphy"] = GiphyCommand()
         registry["color"] = ColorCommand()
         registry["mandelbrot"] = MandelbrotCommand()
         registry["invertcolors"] = MapImageCommand<InvertImageMapping>(description: "Inverts every color in the image")
