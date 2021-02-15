@@ -8,8 +8,12 @@ public class GiphyCommand: StringCommand {
         shortDescription: "Fetches a GIF from Giphy",
         requiredPermissionLevel: .basic
     )
+    private let downloadGifs: Bool
 
-    public init() {}
+    public init(downloadGifs: Bool = false) {
+        // TODO: Enable once GIF decoding is more stable
+        self.downloadGifs = downloadGifs
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard !input.isEmpty else {
@@ -17,20 +21,34 @@ public class GiphyCommand: StringCommand {
             return
         }
 
-        GiphySearchQuery(term: input)
+        let gifPromise = GiphySearchQuery(term: input)
             .perform()
-            .thenCatching {
-                guard let gif = $0.data.first else { throw GiphyError.noGIFsFound }
-                return gif.download()
+            .mapCatching { (results: GiphyResults) -> GiphyResults.GIF in
+                guard let gif = results.data.first else { throw GiphyError.noGIFsFound }
+                return gif
             }
-            .mapCatching { try GIF(data: $0) }
-            .listen {
-                do {
-                    output.append(.gif(try $0.get()))
-                } catch {
-                    output.append(error, errorText: "Could not query GIF")
+
+        if downloadGifs {
+            gifPromise
+                .then { $0.download() }
+                .mapCatching { try GIF(data: $0) }
+                .listen {
+                    do {
+                        output.append(.gif(try $0.get()))
+                    } catch {
+                        output.append(error, errorText: "Could not query/download GIF")
+                    }
                 }
-            }
+        } else {
+            gifPromise
+                .listen {
+                    do {
+                        output.append(.urls([try $0.get().url]))
+                    } catch {
+                        output.append(error, errorText: "Could not query GIF")
+                    }
+                }
+        }
     }
 
     private enum GiphyError: Error {
