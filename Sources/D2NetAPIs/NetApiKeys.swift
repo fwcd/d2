@@ -10,6 +10,7 @@ struct NetApiKeys: Codable {
     var openweathermap: String? = nil
     var windy: Windy? = nil
     var adventOfCode: [String: String]? = nil
+    var giphy: String? = nil
 
     struct Windy: Codable {
         var webcams: String? = nil
