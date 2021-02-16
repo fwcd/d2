@@ -1,4 +1,4 @@
-import Commander
+import ArgumentParser
 import Dispatch
 import Foundation
 import Logging
@@ -13,24 +13,29 @@ import Utils
 import Backtrace
 #endif
 
-func main(rawLogLevel: String, initialPresence initialPresenceFromArg: String?) {
-    #if DEBUG
-    Backtrace.install()
-    #endif
+struct D2: ParsableCommand {
+    @Option(name: .shortAndLong, help: "The logging level")
+    var logLevel: Logger.Level = .info
 
-    let logLevel = Logger.Level(rawValue: rawLogLevel) ?? .info
-    LoggingSystem.bootstrap {
-        let level = $0.starts(with: "D2") ? logLevel : .notice
-        return StoringLogHandler(label: $0, logLevel: level)
-    }
+    @Option(help: "The initial activity message")
+    var initialPresence: String?
 
-    let log = Logger(label: "D2.main")
+    func run() throws {
+        #if DEBUG
+        Backtrace.install()
+        #endif
 
-    do {
+        LoggingSystem.bootstrap {
+            let level = $0.starts(with: "D2") ? logLevel : .notice
+            return StoringLogHandler(label: $0, logLevel: level)
+        }
+
+        let log = Logger(label: "D2.main")
+
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let commandPrefix = config?.commandPrefix ?? "%"
-        let initialPresence = (config?.setPresenceInitially ?? true) ? initialPresenceFromArg ?? "\(commandPrefix)help" : nil
-        let handler = try D2Delegate(withPrefix: commandPrefix, initialPresence: initialPresence, useMIOCommands: config?.useMIOCommands ?? false, mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild)
+        let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
+        let handler = try D2Delegate(withPrefix: commandPrefix, initialPresence: actualInitialPresence, useMIOCommands: config?.useMIOCommands ?? false, mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild)
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
         if let config = config {
@@ -76,7 +81,7 @@ func main(rawLogLevel: String, initialPresence initialPresenceFromArg: String?) 
             log.info("Shutting down...")
             platforms.removeAll()
             combinedClient = nil
-            exit(0)
+            Self.exit()
         }
         source.resume()
 
@@ -92,13 +97,7 @@ func main(rawLogLevel: String, initialPresence initialPresenceFromArg: String?) 
         // Block the thread
         log.info("Blocking the main thread")
         dispatchMain()
-    } catch {
-        log.error("An error occurred while starting D2: \(error)")
     }
 }
 
-command(
-    Option("level", default: "info", flag: "l", description: "The global logging level"),
-    Option("initialPresence", default: nil, description: "The initial activity message"),
-    main
-).run()
+D2.main()
