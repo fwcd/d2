@@ -164,6 +164,15 @@
         }
       },
       {
+        "package": "SwiftDiscord",
+        "repositoryURL": "https://github.com/fwcd/swift-discord.git",
+        "state": {
+          "branch": null,
+          "revision": "bc4f853f641a8ae67c065c6b6910d5d1b96e9323",
+          "version": null
+        }
+      },
+      {
         "package": "swift-gif",
         "repositoryURL": "https://github.com/fwcd/swift-gif.git",
         "state": {
@@ -281,15 +290,6 @@
         }
       },
       {
-        "package": "SwiftDiscord",
-        "repositoryURL": "https://github.com/fwcd/SwiftDiscord.git",
-        "state": {
-          "branch": null,
-          "revision": "bc4f853f641a8ae67c065c6b6910d5d1b96e9323",
-          "version": null
-        }
-      },
-      {
         "package": "SwiftPlot",
         "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
         "state": {
@@ -339,8 +339,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit",
         "state": {
           "branch": null,
-          "revision": "021edd1ca55451ad15b3e84da6b4064e4b877b34",
-          "version": "2.1.0"
+          "revision": "2b06a70dfcfa76a2e5079f60e3ae911511f09db0",
+          "version": "2.1.2"
         }
       },
       {
