@@ -1,4 +1,4 @@
-public struct User: Hashable {
+public struct User: Hashable, CustomStringConvertible {
     public let avatar: String // Base64-encoded
     public let bot: Bool
     public let discriminator: String
@@ -7,6 +7,9 @@ public struct User: Hashable {
     public let mfaEnabled: Bool
     public let username: String
     public let verified: Bool
+
+    public var displayTag: String { "\(username)#\(discriminator)" }
+    public var description: String { displayTag }
 
     public init(
         avatar: String = "",

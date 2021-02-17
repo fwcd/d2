@@ -175,7 +175,7 @@ public class CommandHandler: MessageHandler {
             let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 
             if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-                log.info("'\(message.authorDisplayName)' invoked '\(groups.dropFirst().joined(separator: " "))'")
+                log.info("\(author.displayTag) invoked '\(groups.dropFirst().joined(separator: " "))'")
                 let name = groups[1]
                 let args = groups[2]
 
@@ -194,7 +194,7 @@ public class CommandHandler: MessageHandler {
 
                         pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
                     } else {
-                        log.notice("Rejected '\(name)' due to insufficient permissions")
+                        log.notice("Rejected '\(name)' by \(author.displayTag) due to insufficient permissions")
                         client.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
                         return nil
                     }
