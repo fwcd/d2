@@ -81,7 +81,7 @@ public class AkinatorCommand: StringCommand {
 
     private func embed(of guess: AkinatorGuess) -> Embed {
         Embed(
-            title: ":genie: I am \(Int(guess.probability))% sure that you are thinking of \(guess.name)",
+            title: ":genie: I am \(Int(guess.probability * 100))% sure that you are thinking of \(guess.name)",
             image: guess.photoPath.map(Embed.Image.init(url:))
         )
     }
