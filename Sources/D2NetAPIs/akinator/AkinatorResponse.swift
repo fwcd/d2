@@ -12,7 +12,7 @@ public enum AkinatorResponse {
         public let signature: String
     }
 
-    public struct StepInformation: Codable {
+    public struct Question: Codable {
         public let question: String
         public let answers: [Answer]
         public let step: Int
@@ -31,6 +31,6 @@ public enum AkinatorResponse {
         }
 
         public let identification: Identification
-        public let stepInformation: StepInformation
+        public let stepInformation: Question
     }
 }

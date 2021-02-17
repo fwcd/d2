@@ -21,7 +21,7 @@ public struct AkinatorSession {
         let frontaddr: String
     }
 
-    public static func create() -> Promise<AkinatorSession, Error> {
+    public static func create() -> Promise<(AkinatorSession, AkinatorResponse.Question), Error> {
         let time = Int64(Date().timeIntervalSince1970 * 1000)
         return AkinatorServersQuery().perform()
             .thenCatching {
@@ -51,7 +51,11 @@ public struct AkinatorSession {
                 guard let data = parsed[1].data(using: .utf8) else { throw AkinatorError.invalidStartGameString(parsed[1]) }
                 let response = try JSONDecoder().decode(AkinatorResponse.NewGame.self, from: data)
                 let identification = response.parameters.identification
-                return AkinatorSession(session: identification.session, signature: identification.signature)
+                let question = response.parameters.stepInformation
+                return (
+                    AkinatorSession(session: identification.session, signature: identification.signature),
+                    question
+                )
             }
     }
 
