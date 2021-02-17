@@ -71,6 +71,8 @@ public class AkinatorCommand: StringCommand {
                         } catch {
                             output.append(error, errorText: "Error while guessing")
                         }
+
+                        self.sessions[channelId] = nil
                         context.unsubscribeFromChannel()
                     }
                 } else {
