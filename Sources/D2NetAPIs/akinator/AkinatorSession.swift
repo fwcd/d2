@@ -74,14 +74,15 @@ public struct AkinatorSession {
                 let response = try JSONDecoder().decode(AkinatorResponse.NewGame.self, from: data)
                 let identification = response.parameters.identification
                 let stepInfo = response.parameters.stepInformation
+                guard let step = Int(stepInfo.step) else { throw AkinatorError.invalidStep(stepInfo.step) }
                 return (
                     AkinatorSession(
                         session: identification.session,
                         signature: identification.signature,
                         serverUrl: url,
-                        step: stepInfo.step
+                        step: step
                     ),
-                    stepInfo.asQuestion
+                    try stepInfo.asQuestion()
                 )
             }
     }
@@ -94,9 +95,10 @@ public struct AkinatorSession {
             "answer": "\(answer.value)"
         ], headers: headers) }
             .then { $0.fetchJSONAsync(as: AkinatorResponse.StepInformation.self) }
-            .map {
-                step = $0.parameters.step
-                return $0.parameters.asQuestion
+            .mapCatching {
+                guard let step = Int($0.parameters.step) else { throw AkinatorError.invalidStep($0.parameters.step) }
+                self.step = step
+                return try $0.parameters.asQuestion()
             }
 
     }

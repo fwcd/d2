@@ -16,12 +16,14 @@ public enum AkinatorResponse {
     public struct StepInformationParameters: Codable {
         public let question: String
         public let answers: [Answer]
-        public let step: Int
-        public let progression: Double
-        public let questionid: Int
+        public let step: String
+        public let progression: String
+        public let questionid: String
 
-        public var asQuestion: AkinatorQuestion {
-            AkinatorQuestion(text: question, progression: progression, step: step)
+        public func asQuestion() throws -> AkinatorQuestion {
+            guard let step = Int(self.step) else { throw AkinatorError.invalidStep(self.step) }
+            guard let progression = Double(self.progression) else { throw AkinatorError.invalidProgression(self.progression) }
+            return AkinatorQuestion(text: question, progression: progression, step: step)
         }
 
         public struct Answer: Codable {
