@@ -52,7 +52,6 @@ public class CommandHandler: MessageHandler {
     private let maxConcurrentlyRunningCommands: Int
     private let unconditionallyAllowedCommands: Set<String>
 
-    @Synchronized private var currentIndex = 0
     @Synchronized private var currentlyRunningCommands = 0
     @Synchronized @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
 
@@ -95,8 +94,6 @@ public class CommandHandler: MessageHandler {
             log.notice("Command invocation not processed, since max concurrent operation count was reached")
             return false
         }
-
-        currentIndex += 1
 
         let slicedMessage = message.content[commandPrefix.index(commandPrefix.startIndex, offsetBy: commandPrefix.count)...]
 
@@ -178,7 +175,7 @@ public class CommandHandler: MessageHandler {
             let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 
             if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-                log.info("Got command #\(currentIndex): \(groups.dropFirst())")
+                log.info("Got command '\(groups.dropFirst().joined(separator: " "))'")
                 let name = groups[1]
                 let args = groups[2]
 
