@@ -4,7 +4,7 @@ import Utils
 // Ported from https://github.com/janniksam/Akinator.Api.Net/blob/master/Akinator.Api.Net/AkinatorClient.cs
 // MIT-licensed, Copyright (c) 2019 Jannik
 
-fileprivate let sessionPattern = try! Regex(from: "var uid_ext_session = '([^']*)'\\;\\s*.*var frontaddr = '(.*)'\\;")
+fileprivate let sessionPattern = try! Regex(from: "var uid_ext_session = '([^']*)'\\;\\s*.*var frontaddr = '([^']*)'\\;")
 fileprivate let startGamePattern = try! Regex(from: "^jQuery3410014644797238627216_\\d+\\((.+)\\)$")
 
 public struct AkinatorSession {
@@ -52,7 +52,7 @@ public struct AkinatorSession {
                 ).fetchUTF8Async().map { ($0, url) }
             }
             .mapCatching { (raw: String, url: URL) in
-                guard let parsed = startGamePattern.firstGroups(in: raw) else { throw AkinatorError.startGamePatternNotFound }
+                guard let parsed = startGamePattern.firstGroups(in: raw) else { throw AkinatorError.startGamePatternNotFound(raw) }
                 guard let data = parsed[1].data(using: .utf8) else { throw AkinatorError.invalidStartGameString(parsed[1]) }
                 let response = try JSONDecoder().decode(AkinatorResponse.NewGame.self, from: data)
                 let identification = response.parameters.identification
