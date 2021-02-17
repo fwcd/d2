@@ -267,8 +267,8 @@
         "repositoryURL": "https://github.com/fwcd/swift-utils.git",
         "state": {
           "branch": null,
-          "revision": "dded36c5374f93ef7432780de8eac1c1f3f3bd3d",
-          "version": "1.3.2"
+          "revision": "05ceb2e16633df4d4dffc1686ec4f30cef86431d",
+          "version": "1.3.3"
         }
       },
       {
@@ -330,8 +330,8 @@
         "repositoryURL": "https://github.com/MaxDesiatov/XMLCoder.git",
         "state": {
           "branch": null,
-          "revision": "ac411bd6ab342780be0dfe6f679410f791d751d9",
-          "version": "0.11.1"
+          "revision": "b8fa7fe4c0849f8a64cc246e71c5d976809222e4",
+          "version": "0.12.0"
         }
       }
     ]
