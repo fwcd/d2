@@ -5,4 +5,5 @@ public enum AkinatorError: Error {
     case invalidProgression(String)
     case startGamePatternNotFound(String)
     case invalidStartGameString(String)
+    case noGuesses
 }

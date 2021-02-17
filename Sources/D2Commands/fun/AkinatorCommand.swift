@@ -57,16 +57,33 @@ public class AkinatorCommand: StringCommand {
             return
         }
 
-        // TODO: Display guess once ready and unsubscribe
-
         session.answer(with: answer).listen {
             do {
                 let question = try $0.get()
-                output.append(self.embed(of: question))
+                if question.progression > 80 {
+                    session.guess().listen {
+                        do {
+                            guard let guess = try $0.get().first else { throw AkinatorError.noGuesses }
+                            output.append(self.embed(of: guess))
+                        } catch {
+                            output.append(error, errorText: "Error while guessing")
+                        }
+                        context.unsubscribeFromChannel()
+                    }
+                } else {
+                    output.append(self.embed(of: question))
+                }
             } catch {
                 output.append(error, errorText: "Error while answering")
             }
         }
+    }
+
+    private func embed(of guess: AkinatorGuess) -> Embed {
+        Embed(
+            title: ":genie: I am \(Int(guess.probability))% sure that you are thinking of \(guess.name)",
+            image: guess.photoPath.map(Embed.Image.init(url:))
+        )
     }
 
     private func embed(of question: AkinatorQuestion) -> Embed {
