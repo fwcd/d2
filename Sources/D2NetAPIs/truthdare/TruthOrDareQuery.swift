@@ -9,12 +9,12 @@ public struct TruthOrDareQuery {
         self.type = type
     }
 
-    public enum Category: String {
+    public enum Category: String, CaseIterable {
         case friendly
         case dirty
     }
 
-    public enum TDType: String {
+    public enum TDType: String, CaseIterable {
         case truth
         case dare
     }
