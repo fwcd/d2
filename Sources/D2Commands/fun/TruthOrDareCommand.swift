@@ -14,7 +14,7 @@ public class TruthOrDareCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        let category = TruthOrDareQuery.Category(rawValue: input) ?? .friendly
+        let category = TruthOrDareQuery.Category(rawValue: input) ?? TruthOrDareQuery.Category.allCases.randomElement()!
         let type = self.type ?? TruthOrDareQuery.TDType.allCases.randomElement()!
 
         TruthOrDareQuery(category: category, type: type).perform().listen {
