@@ -175,7 +175,7 @@ public class CommandHandler: MessageHandler {
             let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 
             if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-                log.info("Got command '\(groups.dropFirst().joined(separator: " "))'")
+                log.info("'\(message.authorDisplayName)' invoked '\(groups.dropFirst().joined(separator: " "))'")
                 let name = groups[1]
                 let args = groups[2]
 

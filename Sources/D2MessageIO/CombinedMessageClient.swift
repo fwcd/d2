@@ -73,7 +73,7 @@ public class CombinedMessageClient: MessageClient {
 
     public func sendMessage(_ message: Message, to channelId: ChannelID) -> Promise<Message?, Error> {
         withClient(of: channelId) {
-            log.info("Sending message to channel \(channelId) with \($0.name)")
+            log.info("Sending '\(message.content.truncated(to: 10, appending: "..."))' to \($0.name) channel \(channelId)")
             return $0.sendMessage(message, to: channelId)
         } ?? Promise(.success(nil))
     }

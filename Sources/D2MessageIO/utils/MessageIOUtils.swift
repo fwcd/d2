@@ -54,6 +54,7 @@ extension Message {
         }
     }
     public var cleanContent: String { content.cleaningMentions(with: guild) }
+    public var authorDisplayName: String { guildMember?.displayName ?? author?.username ?? "<unknown>" }
 
     public func mentions(user: User) -> Bool { allMentionedUsers.contains { user.id == $0.id } }
 }
