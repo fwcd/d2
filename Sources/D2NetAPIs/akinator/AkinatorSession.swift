@@ -88,7 +88,7 @@ public struct AkinatorSession {
     }
 
     public func answer(with answer: AkinatorAnswer) -> Promise<AkinatorQuestion, Error> {
-        Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "/answer", query: [
+        Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/answer", query: [
             "session": session,
             "signature": signature,
             "step": "\(step)",
