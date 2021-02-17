@@ -1,6 +1,9 @@
+import Foundation
+
 public enum AkinatorResponse {
     public typealias NewGame = Basic<NewGameParameters>
     public typealias StepInformation = Basic<StepInformationParameters>
+    public typealias Guess = Basic<GuessParameters>
 
     public struct Basic<T>: Codable where T: Codable {
         public let completion: String
@@ -11,6 +14,26 @@ public enum AkinatorResponse {
         public let channel: Int
         public let session: String
         public let signature: String
+    }
+
+    public struct GuessParameters: Codable {
+        public let elements: [GuessElement]
+
+        public var characters: [GuessElement.GuessCharacter] { elements.map(\.element) }
+
+        public struct GuessElement: Codable {
+            public let element: GuessCharacter
+
+            public struct GuessCharacter: Codable {
+                public let name: String
+                public let proba: Double
+                public let photoPath: URL
+
+                public func asGuess() throws -> AkinatorGuess {
+                    AkinatorGuess(name: name, probability: proba, photoPath: photoPath)
+                }
+            }
+        }
     }
 
     public struct StepInformationParameters: Codable {

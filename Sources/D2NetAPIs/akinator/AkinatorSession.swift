@@ -100,7 +100,16 @@ public struct AkinatorSession {
                 self.step = step
                 return try $0.parameters.asQuestion()
             }
+    }
 
+    public func guess() -> Promise<[AkinatorGuess], Error> {
+        Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/list", query: [
+            "session": session,
+            "signature": signature,
+            "step": "\(step)"
+        ], headers: headers) }
+            .then { $0.fetchJSONAsync(as: AkinatorResponse.Guess.self) }
+            .mapCatching { try $0.parameters.characters.map { try $0.asGuess() } }
     }
 
     private static func getApiKey() -> Promise<ApiKey, Error> {
