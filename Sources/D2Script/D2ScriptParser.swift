@@ -12,20 +12,18 @@ fileprivate let rawOperatorPattern = operators
     .map { "(?:\(Regex.escape($0)))" }
     .joined(separator: "|")
 
-/**
- * Matches a single token.
- * 1.  capture group: a number literal
- * 2.  capture group: an opening parenthesis
- * 3.  capture group: a closing parenthesis
- * 4.  capture group: an opening curly bracket
- * 5.  capture group: a closing curly bracket
- * 6.  capture group: a comma
- * 7.  capture group: a line break
- * 8.  capture group: an operator
- * 9.  capture group: a keyword
- * 10. & 11.   group: a string literal (first part matches the string in quotes, second part matches the content)
- * 12. capture group: an identifier
- */
+/// Matches a single token.
+/// 1.  capture group: a number literal
+/// 2.  capture group: an opening parenthesis
+/// 3.  capture group: a closing parenthesis
+/// 4.  capture group: an opening curly bracket
+/// 5.  capture group: a closing curly bracket
+/// 6.  capture group: a comma
+/// 7.  capture group: a line break
+/// 8.  capture group: an operator
+/// 9.  capture group: a keyword
+/// 10. & 11.   group: a string literal (first part matches the string in quotes, second part matches the content)
+/// 12. capture group: an identifier
 fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|(,)|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\"([^\"]*)\")|([a-zA-Z]+)")
 
 public struct D2ScriptParser {

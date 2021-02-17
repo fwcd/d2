@@ -33,7 +33,7 @@ public struct WolframAlphaQuery {
         self.url = url
     }
 
-    /** Starts a query and returns the data. */
+    /// Starts a query and returns the data.
     public func start() -> Promise<Data, Error> {
         HTTPRequest(url: url).runAsync()
     }

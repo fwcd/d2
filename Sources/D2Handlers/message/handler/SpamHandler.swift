@@ -11,10 +11,8 @@ fileprivate struct SpammerProfile {
     var cautioned: Bool = false
 }
 
-/**
- * Automatically detects "mention-spammers" and assigns
- * them a spammer role (which can be configured using a command).
- */
+/// Automatically detects "mention-spammers" and assigns
+/// them a spammer role (which can be configured using a command).
 public struct SpamHandler: MessageHandler {
     @AutoSerializing private var config: SpamConfiguration
     private let lastSpamMessages = ExpiringList<Message>()

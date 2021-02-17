@@ -2,16 +2,14 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-/**
- * Matches a subcommand.
- *
- * 1. group: subcommand name
- * 2. group: subcommand args
- */
+/// Matches a subcommand.
+///
+/// 1. group: subcommand name
+/// 2. group: subcommand args
 fileprivate let subcommandPattern = try! Regex(from: "(\\S+)(?:\\s+(.+))?")
 fileprivate let learnPattern = try! Regex(from: "(\\S+)?")
 
-/** Matches a data sample of the form ($0, $1). */
+/// Matches a data sample of the form ($0, $1).
 fileprivate let dataSamplePattern = try! Regex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\S+)\\s*\\)")
 
 // TODO: Use the Arg API

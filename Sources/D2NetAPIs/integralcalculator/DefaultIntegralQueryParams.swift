@@ -1,7 +1,5 @@
-/**
- * This struct reflects the JSON format required
- * by  https://integral-calculator.com/int.php
- */
+/// This struct reflects the JSON format required
+/// by  https://integral-calculator.com/int.php
 public struct DefaultIntegralQueryParams: IntegralQueryParams {
     public static let endpoint: String = "/int.php"
     public var secondsSinceFirstQuery: Int = 0

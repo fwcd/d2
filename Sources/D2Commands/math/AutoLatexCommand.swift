@@ -6,9 +6,9 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.AutoLatexCommand")
 
-/** A simple heuristic for detecting "formulas" in messages. Matches a single character. */
+/// A simple heuristic for detecting "formulas" in messages. Matches a single character.
 fileprivate let formulaPattern = try! Regex(from: "[0-9{}\\+\\-*\\/\\[\\]\\\\|]")
-/** Matches text that should be "escaped" when rendering the message as LaTeX. */
+/// Matches text that should be "escaped" when rendering the message as LaTeX.
 fileprivate let textPattern = try! Regex(from: "(?<!\\\\)\\b\\s*\\p{L}[\\p{L}\\s]*")
 
 public class AutoLatexCommand: StringCommand {

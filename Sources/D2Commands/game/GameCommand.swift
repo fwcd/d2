@@ -7,9 +7,7 @@ fileprivate let log = Logger(label: "D2Commands.GameCommand")
 fileprivate let flagRegex = try! Regex(from: "--(\\S+)")
 fileprivate let actionMessageRegex = try! Regex(from: "^(\\S+)(?:\\s+(.+))?")
 
-/**
- * Provides a base layer of functionality for a turn-based games.
- */
+/// Provides a base layer of functionality for a turn-based games.
 public class GameCommand<G: Game>: Command {
     public private(set) var info = CommandInfo(
         category: .game,
@@ -168,7 +166,7 @@ public class GameCommand<G: Game>: Command {
         }
     }
 
-    /** Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription. */
+    /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.
     @discardableResult
     func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }

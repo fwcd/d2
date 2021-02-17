@@ -156,7 +156,7 @@ public class DiscordinderCommand: StringCommand {
         }
     }
 
-    /** Fetches all (including rejected or awaiting) matches for a user. */
+    /// Fetches all (including rejected or awaiting) matches for a user.
     private func matches(for userId: UserID) -> [DiscordinderMatch] {
         return inventoryManager[userId].items[inventoryCategory]?.compactMap { $0.asDiscordinderMatch } ?? []
     }
@@ -206,7 +206,7 @@ public class DiscordinderCommand: StringCommand {
         inventoryManager[secondId] = secondInventory
     }
 
-    /** Initiates or accepts a match between two users. */
+    /// Initiates or accepts a match between two users.
     @discardableResult
     private func accept(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
         let match = takeMatch(between: firstId, and: secondId, on: guild).accepted
@@ -214,7 +214,7 @@ public class DiscordinderCommand: StringCommand {
         return match.state
     }
 
-    /** Rejects a match between two users. */
+    /// Rejects a match between two users.
     @discardableResult
     private func reject(matchBetween firstId: UserID, and secondId: UserID, on guild: Guild) -> DiscordinderMatch.MatchState {
         let match = takeMatch(between: firstId, and: secondId, on: guild).rejected

@@ -1,6 +1,6 @@
 import Utils
 
-/** An immutable tic-tac-toe board. */
+/// An immutable tic-tac-toe board.
 public struct TicTacToeBoard: RichValueConvertible {
     public typealias Role = TicTacToeRole
 
@@ -14,7 +14,7 @@ public struct TicTacToeBoard: RichValueConvertible {
 
     var sideLength: Int { return fields.count }
 
-    /** The winner of this board if there is one. A draw is represented as TicTacToeRole.empty. */
+    /// The winner of this board if there is one. A draw is represented as TicTacToeRole.empty.
     public var winner: Role? { return (horizontalWinner ?? verticalWinner) ?? diagonalWinner }
     public var isDraw: Bool { return boardFilled && (winner == nil) }
     private var boardFilled: Bool { return fields.allSatisfy { row in row.allSatisfy { $0 != .empty } } }
@@ -24,22 +24,22 @@ public struct TicTacToeBoard: RichValueConvertible {
     private var risingDiagonalWinner: Role? { return Role.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[$0][$0] == role } } }
     private var fallingDiagonalWinner: Role? { return Role.allPlayerCases.first { role in (0..<sideLength).allSatisfy { fields[(sideLength - 1) - $0][$0] == role } } }
 
-    /** Creates an empty board of the given (square-shaped) size. */
+    /// Creates an empty board of the given (square-shaped) size.
     init(sideLength: Int = 3) {
         fields = Array(repeating: Array(repeating: .empty, count: sideLength), count: sideLength)
     }
 
-    /** Initializes the board using the given fields. */
+    /// Initializes the board using the given fields.
     init(fields: [[Role]]) {
         self.fields = fields
     }
 
-    /** Fetches a field from the board. */
+    /// Fetches a field from the board.
     subscript(row: Int, col: Int) -> Role {
         get { return fields[row][col] }
     }
 
-    /** Creates a new board applying the given move or returns nil if the move is invalid. */
+    /// Creates a new board applying the given move or returns nil if the move is invalid.
     func with(_ field: Role, atRow row: Int, col: Int) throws -> TicTacToeBoard {
         var newFields = fields
 

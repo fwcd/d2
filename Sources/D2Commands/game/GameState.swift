@@ -1,18 +1,16 @@
 import D2MessageIO
 import Utils
 
-/**
- * Represents a mutable game state. Implementing classes are
- * required to use a value type (struct/enum/immutable class).
- */
+/// Represents a mutable game state. Implementing classes are
+/// required to use a value type (struct/enum/immutable class).
 public protocol GameState {
-    /** A role is a logical player in the game (such as "white" or "black"). */
+    /// A role is a logical player in the game (such as "white" or "black").
     associatedtype Role: RichValueConvertible & Hashable
-    /** A hand encapsulates a role's private cards/pieces/... in games with imperfect information. */
+    /// A hand encapsulates a role's private cards/pieces/... in games with imperfect information.
     associatedtype Hand: RichValueConvertible = EmptyRichValueConvertible
-    /** A board contains the pieces/cards that are visible to all players. */
+    /// A board contains the pieces/cards that are visible to all players.
     associatedtype Board: RichValueConvertible
-    /** A move encapsulates the transition to another game state. */
+    /// A move encapsulates the transition to another game state.
     associatedtype Move: Hashable
 
     var board: Board { get }

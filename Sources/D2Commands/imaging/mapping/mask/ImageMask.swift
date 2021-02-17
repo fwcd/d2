@@ -1,9 +1,7 @@
 import Utils
 
-/**
- * A mask "cutting out" a certain part
- * of the image.
- */
+/// A mask "cutting out" a certain part
+/// of the image.
 public protocol ImageMask {
     init()
 

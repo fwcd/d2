@@ -1,11 +1,9 @@
 public protocol D2ScriptASTVisitor {
     associatedtype VisitResult = Void
 
-    /**
-    * Visits an unspecified node. This is the
-    * only required method if VisitResult != Void
-    * (otherwise no methods are required).
-    */
+    /// Visits an unspecified node. This is the
+    /// only required method if VisitResult != Void
+    /// (otherwise no methods are required).
     func visit(node: D2ScriptASTNode) -> VisitResult
 
     // Expressions

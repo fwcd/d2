@@ -1,6 +1,6 @@
 import Foundation
 
-/** Represents the next christmas eve. */
+/// Represents the next christmas eve.
 public struct ChristmasEveGoal: CountdownGoal {
     public var date: Date { nextChristmasFromNow() }
 

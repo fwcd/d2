@@ -1,4 +1,4 @@
-/** A single-layered perceptron with a single output neuron. */
+/// A single-layered perceptron with a single output neuron.
 struct SingleLayerPerceptron {
     private var bias: Double
     private var weights: [Double]
@@ -11,7 +11,7 @@ struct SingleLayerPerceptron {
         return "Θ(\(weightsStr) + \(biasStr))"
     }
 
-    /** Creates a new single-layered Perceptron with randomly initialized weights. */
+    /// Creates a new single-layered Perceptron with randomly initialized weights.
     init(inputCount: Int) {
         bias = Double.random(in: 0.0..<1.0)
         weights = (0..<inputCount).map { _ in Double.random(in: 0.0..<1.0) }
@@ -45,10 +45,9 @@ struct SingleLayerPerceptron {
         }
     }
 
-    /**
-    * Returns the y coordinate of the separation line boundary in two-dimensions
-    * (if the dimension is != 2, an error is thrown)
-    */
+
+    /// Returns the y coordinate of the separation line boundary in two-dimensions
+    /// (if the dimension is != 2, an error is thrown)
     func boundaryY(atX x: Double) throws -> Double {
         guard dimensions == 2 else { throw MLError.sizeMismatch("Can not fetch the y-coordinate of a Perceptron in \(dimensions) dimensions (requires 2 dimensions)") }
         let y = -weights[0] * x - bias

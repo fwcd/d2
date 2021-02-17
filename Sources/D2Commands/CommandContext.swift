@@ -33,7 +33,7 @@ public struct CommandContext {
         channel = client.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, client: c) } }
     }
 
-    /** Subscribes to the current channel. */
+    /// Subscribes to the current channel.
     public func subscribeToChannel() {
         if let id = channel?.id {
             subscriptions.subscribe(to: id)
@@ -42,7 +42,7 @@ public struct CommandContext {
         }
     }
 
-    /** Unsubscribes from the current channel. */
+    /// Unsubscribes from the current channel.
     public func unsubscribeFromChannel() {
         if let id = channel?.id {
             subscriptions.unsubscribe(from: id)

@@ -31,17 +31,17 @@ public struct Message: ExpressibleByStringLiteral {
 
     public var embed: Embed? { embeds.first }
 
-    /** Pure-string initializer without argument label for convenience. */
+    /// Pure-string initializer without argument label for convenience.
     public init(_ content: String = "") {
         self.init(content: content)
     }
 
-    /** Initializer intended for messages that are to be sent. */
+    /// Initializer intended for messages that are to be sent.
     public init(content: String = "", embed: Embed? = nil, files: [FileUpload] = [], tts: Bool = false) {
         self.init(content: content, embeds: embed.map { [$0] } ?? [], files: files, tts: tts)
     }
 
-    /** Initializer intended for received/arbitrary messages. */
+    /// Initializer intended for received/arbitrary messages.
     public init(
         content: String,
         embeds: [Embed] = [],

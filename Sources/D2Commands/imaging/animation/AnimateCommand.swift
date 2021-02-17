@@ -6,18 +6,14 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
 
-/**
- * Matches a single integer vector.
- *
- * The first capture describes the x-coordinate
- * and the second capture the y-coordinate of the
- * position where the transform is applied.
- */
+/// Matches a single integer vector.
+///
+/// The first capture describes the x-coordinate
+/// and the second capture the y-coordinate of the
+/// position where the transform is applied.
 fileprivate let posPattern = try! Regex(from: "(-?\\d+)\\s+(-?\\d+)")
 
-/**
- * Matches a single key-value argument.
- */
+/// Matches a single key-value argument.
 fileprivate let kvPattern = try! Regex(from: "(\\w+)\\s*=\\s*(\\S+)")
 
 fileprivate let virtualEdgesParameter = "virtualedges"

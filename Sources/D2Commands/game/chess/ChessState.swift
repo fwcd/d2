@@ -69,7 +69,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
             .flatMap { findPossibleMoves(at: $0, by: role, testForChecks: testForChecks) })
     }
 
-    /** Tests whether the given move leads to situation in which the given role is in check. */
+    /// Tests whether the given move leads to situation in which the given role is in check.
     private func causesKingInCheck(_ move: Move, for role: Role) -> Bool {
         var stateAfterMove = self
         do {
@@ -81,7 +81,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
         return stateAfterMove.isInCheck(role)
     }
 
-    /** Tests whether the given move leads to situation in which the given role is checkmate/loses the game. */
+    /// Tests whether the given move leads to situation in which the given role is checkmate/loses the game.
     private func causesCheckmate(_ move: Move, for role: Role) -> Bool {
         var stateAfterMove = self
         do {

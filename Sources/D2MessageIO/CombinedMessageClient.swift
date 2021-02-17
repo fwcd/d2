@@ -4,10 +4,8 @@ import Logging
 
 fileprivate let log = Logger(label: "D2MessageIO.CombinedMessageClient")
 
-/**
- * A MessageClient that combines multiple clients and
- * dispatches requests dynamically based on the ID's client name.
- */
+/// A MessageClient that combines multiple clients and
+/// dispatches requests dynamically based on the ID's client name.
 public class CombinedMessageClient: MessageClient {
     private var clients: [String: MessageClient] = [:]
 

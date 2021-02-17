@@ -11,7 +11,7 @@ import D2NetAPIs
 fileprivate let log = Logger(label: "D2Commands.CampusCommand")
 fileprivate let addressWithCityPattern = try! Regex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
 
-/** Locates locations on the University of Kiel's campus. */
+/// Locates locations on the University of Kiel's campus.
 public class CampusCommand: StringCommand {
     public let info = CommandInfo(
         category: .cau,

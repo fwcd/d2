@@ -1,7 +1,5 @@
-/**
- * This struct reflects the JSON format required
- * by https://integral-calculator.com/manualint.php
- */
+/// This struct reflects the JSON format required
+/// by https://integral-calculator.com/manualint.php
 public struct ManualIntegralQueryParams: IntegralQueryParams {
     public static let endpoint: String = "/manualint.php"
     public var secondsSinceFirstQuery: Int = 0

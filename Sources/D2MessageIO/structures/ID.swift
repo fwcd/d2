@@ -14,9 +14,7 @@ public typealias MIOCommandID = ID
 
 public let dummyId: ID = ID("")
 
-/**
- * A container for a type-erased ID.
- */
+/// A container for a type-erased ID.
 public struct ID: Hashable, Codable, LosslessStringConvertible {
     public let value: String
     public let clientName: String

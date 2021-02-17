@@ -41,7 +41,7 @@ public struct ChessBoardModel {
         set(newValue) { pieces[position.y][position.x] = newValue }
     }
 
-    /** Performs a disambiguated move. */
+    /// Performs a disambiguated move.
     mutating func perform(move: ChessMove) throws {
         guard let originX = move.originX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin file: `\(move)`") }
         guard let originY = move.originY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin rank: `\(move)`") }

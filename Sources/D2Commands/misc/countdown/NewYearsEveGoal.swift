@@ -1,6 +1,6 @@
 import Foundation
 
-/** Represents the next new year's eve. */
+/// Represents the next new year's eve.
 public struct NewYearsEveGoal: CountdownGoal {
     public var date: Date { nextNewYearsEveFromNow() }
 

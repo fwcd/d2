@@ -4,7 +4,7 @@ import D2Commands
 
 fileprivate let log = Logger(label: "D2Handlers.SubscriptionHandler")
 
-/** Handles messages from command subscriptions. */
+/// Handles messages from command subscriptions.
 public struct SubscriptionHandler: MessageHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry

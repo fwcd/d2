@@ -24,13 +24,11 @@ fileprivate let twelveToneOctaveBlueprints: [[NoteBlueprint]] = [
 
 let twelveToneOctave: [Note] = twelveToneOctaveBlueprints.enumerated().flatMap { (i, bs) in bs.map { Note(blueprint: $0, semitone: i) } }
 
-/**
- * Matches a single musical note.
- *
- * 1. group: letter
- * 2. group: accidental (optional)
- * 3. group: octave (optional)
- */
+/// Matches a single musical note.
+///
+/// 1. group: letter
+/// 2. group: accidental (optional)
+/// 3. group: octave (optional)
 fileprivate let notePattern = try! Regex(from: "([a-zA-Z])([b#]?)(\\d+)?")
 
 struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {

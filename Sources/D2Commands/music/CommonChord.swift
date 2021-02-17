@@ -5,14 +5,12 @@ fileprivate let minorSymbols: Set<String> = ["min", "m"]
 
 fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0)" }.joined(separator: "|")
 
-/**
- * Matches a chord.
- *
- * 1. group: root note
- * 2. group: quality (lowercased m for 'minor')
- * 3. group: 'add'
- * 4. group: number of the interval: (7 for 'dominant seventh')
- */
+/// Matches a chord.
+///
+/// 1. group: root note
+/// 2. group: quality (lowercased m for 'minor')
+/// 3. group: 'add'
+/// 4. group: number of the interval: (7 for 'dominant seventh')
 fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
 
 /// A (possibly stacked) triad or power chord.

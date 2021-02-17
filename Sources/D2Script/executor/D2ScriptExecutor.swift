@@ -11,11 +11,9 @@ public struct D2ScriptExecutor {
         node.accept(D2ScriptStatementRunner(storage: storage))
     }
 
-    /**
-    * Calls a command that has been previously
-    * declared in this environment, i.e. one whose
-    * declaration has been processed by 'run' before.
-    */
+    /// Calls a command that has been previously
+    /// declared in this environment, i.e. one whose
+    /// declaration has been processed by 'run' before.
     public func call(command: String, args: [D2ScriptValue] = []) {
         if let commandFunction = topLevelStorage[function: command] {
             let _ = commandFunction(args)

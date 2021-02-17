@@ -2,7 +2,7 @@ import Foundation
 import D2MessageIO
 import D2Permissions
 
-/** Displays a static information message. */
+/// Displays a static information message.
 public class InfoMessageCommand: VoidCommand {
     public let info = CommandInfo(
         category: .misc,

@@ -5,7 +5,7 @@ import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.MensaCommand")
 
-/** Fetches the CAU canteen's daily menu. */
+/// Fetches the CAU canteen's daily menu.
 public class MensaCommand: StringCommand {
     public let info = CommandInfo(
         category: .cau,

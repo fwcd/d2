@@ -8,7 +8,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
 
-/** A segment of an invocation pipe that transfers outputs from one command to another. */
+/// A segment of an invocation pipe that transfers outputs from one command to another.
 fileprivate class PipeComponent {
     let name: String
     let command: Command
@@ -37,7 +37,7 @@ fileprivate struct RunnablePipe: Runnable {
 // the second matches the arguments (the rest of the message content)
 fileprivate let commandPattern = try! Regex(from: "(\\S+)(?:\\s+([\\s\\S]*))?")
 
-/** Handles (possibly piped or chained) command invocations. */
+/// Handles (possibly piped or chained) command invocations.
 public class CommandHandler: MessageHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry

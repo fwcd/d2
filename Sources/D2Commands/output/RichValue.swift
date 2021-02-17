@@ -5,10 +5,8 @@ import Utils
 import GIF
 import SwiftSoup
 
-/**
- * A value of a common format that
- * can be sent to an output.
- */
+/// A value of a common format that
+/// can be sent to an output.
 public enum RichValue: Addable {
     case none
     case text(String)

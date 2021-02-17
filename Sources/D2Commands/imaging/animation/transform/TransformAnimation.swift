@@ -1,10 +1,8 @@
 import Graphics
 import Utils
 
-/**
- * An animation that applies a progress-dependent
- * pixel transformation function.
- */
+/// An animation that applies a progress-dependent
+/// pixel transformation function.
 public struct TransformAnimation<T>: Animation where T: ImageTransform {
     public typealias Key = UnionStringEnum<T.Key, TransformKey>
 
