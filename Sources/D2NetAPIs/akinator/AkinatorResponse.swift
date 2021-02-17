@@ -27,16 +27,17 @@ public enum AkinatorResponse {
             public struct GuessCharacter: Codable {
                 public enum CodingKeys: String, CodingKey {
                     case name
-                    case proba
+                    case probability = "proba"
                     case photoPath = "absolute_picture_path"
                 }
 
                 public let name: String
-                public let proba: Double
+                public let probability: String
                 public let photoPath: URL?
 
                 public func asGuess() throws -> AkinatorGuess {
-                    AkinatorGuess(name: name, probability: proba, photoPath: photoPath)
+                    guard let probability = Double(self.probability) else { throw AkinatorError.invalidProbability(self.probability) }
+                    return AkinatorGuess(name: name, probability: probability, photoPath: photoPath)
                 }
             }
         }
