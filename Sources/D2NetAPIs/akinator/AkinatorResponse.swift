@@ -1,5 +1,6 @@
 public enum AkinatorResponse {
     public typealias NewGame = Basic<NewGameParameters>
+    public typealias StepInformation = Basic<StepInformationParameters>
 
     public struct Basic<T>: Codable where T: Codable {
         public let completion: String
@@ -12,12 +13,16 @@ public enum AkinatorResponse {
         public let signature: String
     }
 
-    public struct Question: Codable {
+    public struct StepInformationParameters: Codable {
         public let question: String
         public let answers: [Answer]
         public let step: Int
         public let progression: Double
         public let questionid: Int
+
+        public var asQuestion: AkinatorQuestion {
+            AkinatorQuestion(text: question, progression: progression, step: step)
+        }
 
         public struct Answer: Codable {
             public let answer: String
@@ -31,6 +36,6 @@ public enum AkinatorResponse {
         }
 
         public let identification: Identification
-        public let stepInformation: Question
+        public let stepInformation: StepInformationParameters
     }
 }
