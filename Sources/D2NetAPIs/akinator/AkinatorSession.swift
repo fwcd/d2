@@ -74,7 +74,7 @@ public struct AkinatorSession {
             "session": session,
             "signature": signature,
             "step": "\(step)",
-            "answer": "\(answer.rawValue)"
+            "answer": "\(answer.value)"
         ]) }
             .then { $0.fetchJSONAsync(as: AkinatorResponse.StepInformation.self) }
             .map {

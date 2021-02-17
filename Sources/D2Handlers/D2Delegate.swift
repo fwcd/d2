@@ -272,6 +272,7 @@ public class D2Delegate: MessageDelegate {
         registry["truth"] = TruthOrDareCommand(type: .truth)
         registry["dare"] = TruthOrDareCommand(type: .dare)
         registry["truthordare", aka: ["tod"]] = TruthOrDareCommand()
+        registry["akinator", aka: ["20questions"]] = AkinatorCommand()
         registry["partygamedb"] = PartyGameDatabaseCommand(partyGameDB: partyGameDB)
         registry["advice"] = AdviceCommand()
         registry["agify"] = AgifyCommand()
