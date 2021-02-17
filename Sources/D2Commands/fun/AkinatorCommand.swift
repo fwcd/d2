@@ -29,6 +29,7 @@ public class AkinatorCommand: StringCommand {
             }
 
             context.unsubscribeFromChannel()
+            sessions[channelId] = nil
             output.append("Successfully cancelled game!")
         } else {
             guard !sessions.keys.contains(channelId) else {
