@@ -3,10 +3,10 @@ import Utils
 // Ported from https://github.com/janniksam/Akinator.Api.Net/blob/master/Akinator.Api.Net/AkinatorServerLocator.cs
 // MIT-licensed, Copyright (c) 2019 Jannik
 
-public struct AkinatorServersQuery {
-    public init() {}
+struct AkinatorServersQuery {
+    init() {}
 
-    public func perform() -> Promise<AkinatorServers, Error> {
+    func perform() -> Promise<AkinatorServers, Error> {
         Promise.catching { try HTTPRequest(
             host: "global3.akinator.com",
             path: "/ws/instances_v2.php",
