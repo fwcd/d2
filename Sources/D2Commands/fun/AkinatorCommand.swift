@@ -5,7 +5,11 @@ public class AkinatorCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Plays the akinator game, also known as '20 Questions'",
-        helpText: "Syntax: [cancel]?",
+        helpText: """
+            Syntax: [cancel]?
+
+            Valid answers are \(AkinatorAnswer.allCases.map(\.rawValue).joined(separator: ", "))
+            """,
         requiredPermissionLevel: .basic
     )
     private var sessions: [ChannelID: AkinatorSession] = [:]
@@ -53,7 +57,6 @@ public class AkinatorCommand: StringCommand {
             return
         }
         guard let answer = AkinatorAnswer(rawValue: content.lowercased()) else {
-            output.append(errorText: "Please use one of these answers: \(AkinatorAnswer.allCases.map(\.rawValue))")
             return
         }
 
