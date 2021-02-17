@@ -5,6 +5,7 @@ public class AkinatorCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Plays the akinator game, also known as '20 Questions'",
+        helpText: "Syntax: [cancel]?",
         requiredPermissionLevel: .basic
     )
     private var sessions: [ChannelID: AkinatorSession] = [:]
@@ -16,24 +17,34 @@ public class AkinatorCommand: StringCommand {
             output.append(errorText: "Not in a channel!")
             return
         }
-        guard !sessions.keys.contains(channelId) else {
-            output.append(errorText: "There is already a session running in this channel!")
-            return
-        }
 
-        // TODO: Session cancling
+        if input == "cancel" {
+            guard sessions.keys.contains(channelId) else {
+                output.append(errorText: "There is no session running on this channel!")
+                return
+            }
 
-        AkinatorSession.create().listen {
-            do {
-                let (session, question) = try $0.get()
-                output.append(self.embed(of: question))
+            context.unsubscribeFromChannel()
+            output.append("Successfully cancelled game!")
+        } else {
+            guard !sessions.keys.contains(channelId) else {
+                output.append(errorText: "There is already a session running in this channel!")
+                return
+            }
 
-                self.sessions[channelId] = session
-                context.subscribeToChannel()
-            } catch {
-                output.append(error, errorText: "Could not create Akinator session")
+            AkinatorSession.create().listen {
+                do {
+                    let (session, question) = try $0.get()
+                    output.append(self.embed(of: question))
+
+                    self.sessions[channelId] = session
+                    context.subscribeToChannel()
+                } catch {
+                    output.append(error, errorText: "Could not create Akinator session")
+                }
             }
         }
+
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
