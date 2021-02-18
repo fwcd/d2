@@ -54,8 +54,12 @@ public class RecipeCommand: StringCommand {
                                 "Resting": recipe.restingTime.map(self.format(time:)),
                                 "Total": recipe.totalTime.map(self.format(time:)),
                             ].compactMap { (k, v) in v.map { "\(k): \($0)" } }.joined(separator: "\n").nilIfEmpty ?? "_none_", inline: true),
-                            Embed.Field(name: "Instructions", value: recipe.instructions?.nilIfEmpty ?? "_none_"),
-                        ]
+                        ] + (recipe.instructions?
+                            .chunks(ofLength: 800)
+                            .filter { !$0.isEmpty }
+                            .enumerated()
+                            .map { (i, chunk) in Embed.Field(name: "Instructions (part \(i + 1))", value: String(chunk), inline: false) }
+                            ?? [])
                     ))
                 } catch {
                     output.append(error, errorText: "Could not find/fetch recipe")

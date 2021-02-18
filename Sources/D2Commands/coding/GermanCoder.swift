@@ -32,5 +32,5 @@ func germanEncode(_ data: Data) -> String {
 }
 
 func germanDecode(_ s: String) -> Data {
-    Data(s.split(separator: " ").map(String.init).chunks(ofLength: 8).map(germanDecodeByte))
+    Data(s.split(separator: " ").map(String.init).chunks(ofLength: 8).map(Array.init).map(germanDecodeByte))
 }
