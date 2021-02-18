@@ -7,6 +7,7 @@ public struct ChefkochSearchQuery {
     private let descendCategories: Bool
     private let minimumRating: Double
     private let maximumTime: Double
+    private let order: Bool
 
     public init(
         query: String,
@@ -14,7 +15,8 @@ public struct ChefkochSearchQuery {
         orderBy: OrderBy = .relevance,
         descendCategories: Bool = true,
         minimumRating: Double = 0,
-        maximumTime: Double = 0
+        maximumTime: Double = 0,
+        order: Bool = false
     ) {
         self.query = query
         self.limit = limit
@@ -22,6 +24,7 @@ public struct ChefkochSearchQuery {
         self.descendCategories = descendCategories
         self.minimumRating = minimumRating
         self.maximumTime = maximumTime
+        self.order = order
     }
 
     public enum OrderBy: Int {
@@ -43,6 +46,7 @@ public struct ChefkochSearchQuery {
                 "limit": String(limit),
                 "orderBy": String(orderBy.rawValue),
                 "descendCategories": descendCategories ? "1" : "0",
+                "order": order ? "1" : "0",
                 "minimumRating": String(minimumRating),
                 "maximumTime": String(maximumTime)
             ]
