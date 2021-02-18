@@ -12,6 +12,7 @@ public struct ChefkochRecipe: Codable {
     public let hasVideo: Bool?
     public let isSubmitted: Bool?
     public let isRejected: Bool?
+    public let previewImageId: String?
     public let siteUrl: URL?
 
     // Full recipe snippet (only through ChefkochRecipeQuery)

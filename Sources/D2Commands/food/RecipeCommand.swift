@@ -14,25 +14,36 @@ public class RecipeCommand: StringCommand {
 
     public init() {}
 
+    private enum RecipeError: Error {
+        case noResults
+    }
+
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        RecipePuppyQuery(term: input).perform().listen {
-            do {
-                let response = try $0.get()
-                guard let recipe = response.results.first else {
-                    output.append(errorText: "No recipe found!")
-                    return
-                }
-                output.append(Embed(
-                    title: ":taco: \(recipe.title)",
-                    url: URL(string: recipe.href),
-                    thumbnail: URL(string: recipe.thumbnail).map(Embed.Thumbnail.init),
-                    fields: [
-                        Embed.Field(name: "Ingredients", value: recipe.ingredientList.joined(separator: "\n").nilIfEmpty ?? "_none_")
-                    ]
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch cocktail")
-            }
+        guard !input.isEmpty else {
+            output.append(errorText: "Please enter something to search for!")
+            return
         }
+
+        ChefkochSearchQuery(query: input, limit: 1)
+            .perform()
+            .thenCatching {
+                guard let recipe = $0.first else { throw RecipeError.noResults }
+                return ChefkochRecipeQuery(id: recipe.id).perform()
+            }
+            .listen {
+                do {
+                    let recipe = try $0.get()
+                    output.append(Embed(
+                        title: ":taco: \(recipe.title)",
+                        url: recipe.siteUrl,
+                        thumbnail: URL(string: recipe.thumbnail).map(Embed.Thumbnail.init),
+                        fields: [
+                            Embed.Field(name: "Ingredients", value: recipe.ingredientList.joined(separator: "\n").nilIfEmpty ?? "_none_")
+                        ]
+                    ))
+                } catch {
+                    output.append(error, errorText: "Could not find/fetch recipe")
+                }
+            }
     }
 }
