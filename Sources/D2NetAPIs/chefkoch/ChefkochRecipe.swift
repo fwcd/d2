@@ -1,5 +1,3 @@
-import Foundation
-
 public struct ChefkochRecipe: Codable {
     public let id: String
     public let title: String
@@ -13,7 +11,7 @@ public struct ChefkochRecipe: Codable {
     public let isSubmitted: Bool?
     public let isRejected: Bool?
     public let previewImageId: String?
-    public let siteUrl: URL?
+    public let siteUrl: String?
 
     // Full recipe snippet (only through ChefkochRecipeQuery)
 
@@ -53,7 +51,7 @@ public struct ChefkochRecipe: Codable {
             public let isBasic: Bool?
             public let usageInfo: String?
             public let foodId: String?
-            public let url: URL?
+            public let url: String?
         }
     }
 }

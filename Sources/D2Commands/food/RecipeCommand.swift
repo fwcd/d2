@@ -44,7 +44,7 @@ public class RecipeCommand: StringCommand {
                     let (recipe, thumbnailUrl) = try $0.get()
                     output.append(Embed(
                         title: ":taco: \(recipe.title)",
-                        url: recipe.siteUrl,
+                        url: recipe.siteUrl.flatMap(URL.init(string:)),
                         thumbnail: thumbnailUrl.map(Embed.Thumbnail.init),
                         footer: Embed.Footer(text: String(format: "Rating: %.2f stars, %d votes", recipe.rating?.rating ?? 0, recipe.rating?.numVotes ?? 0)),
                         fields: [
