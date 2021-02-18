@@ -1,6 +1,8 @@
 import D2MessageIO
 import D2NetAPIs
 
+fileprivate let progressionThreshold: Double = 85 // percent
+
 public class AkinatorCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
@@ -64,7 +66,7 @@ public class AkinatorCommand: StringCommand {
         session.answer(with: answer).listen {
             do {
                 let question = try $0.get()
-                if question.progression > 80 {
+                if question.progression > progressionThreshold {
                     session.guess().listen {
                         do {
                             guard let guess = try $0.get().first else { throw AkinatorError.noGuesses }
