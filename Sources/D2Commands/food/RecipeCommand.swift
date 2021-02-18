@@ -48,7 +48,7 @@ public class RecipeCommand: StringCommand {
                         thumbnail: thumbnailUrl.map(Embed.Thumbnail.init),
                         footer: Embed.Footer(text: String(format: "Rating: %.2f stars, %d votes", recipe.rating?.rating ?? 0, recipe.rating?.numVotes ?? 0)),
                         fields: [
-                            Embed.Field(name: "Ingredients", value: recipe.ingredientsText?.nilIfEmpty ?? "_none_", inline: true),
+                            Embed.Field(name: "Ingredients", value: recipe.ingredientGroups.map(self.format(ingredientGroups:))?.nilIfEmpty ?? "_none_", inline: true),
                             Embed.Field(name: "Time", value: [
                                 "Cooking": recipe.cookingTime.map(self.format(time:)),
                                 "Resting": recipe.restingTime.map(self.format(time:)),
@@ -65,5 +65,26 @@ public class RecipeCommand: StringCommand {
 
     private func format(time: Double) -> String {
         String(format: "%.2f min", time)
+    }
+
+    private func format(ingredientGroups: [ChefkochRecipe.IngredientGroup]) -> String {
+        ingredientGroups
+            .flatMap {
+                [
+                    ($0.header?.nilIfEmpty).map { "**\($0)**" },
+                    format(ingredients: $0.ingredients)
+                ].compactMap { $0 }
+            }
+            .joined(separator: "\n")
+    }
+
+    private func format(ingredients: [ChefkochRecipe.IngredientGroup.Ingredient]) -> String {
+        ingredients
+            .map(format(ingredient:))
+            .joined(separator: "\n")
+    }
+
+    private func format(ingredient: ChefkochRecipe.IngredientGroup.Ingredient) -> String {
+        "\(ingredient.amount) \(ingredient.unit) \(ingredient.name)"
     }
 }
