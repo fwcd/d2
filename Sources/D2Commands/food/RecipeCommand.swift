@@ -24,10 +24,10 @@ public class RecipeCommand: StringCommand {
             return
         }
 
-        ChefkochSearchQuery(query: input, limit: 1)
+        ChefkochSearchQuery(query: input, limit: 10)
             .perform()
             .thenCatching {
-                guard let recipe = $0.results.first?.recipe else { throw RecipeError.noResults }
+                guard let recipe = $0.results.randomElement()?.recipe else { throw RecipeError.noResults }
                 return ChefkochRecipeQuery(id: recipe.id).perform()
             }
             .then { (recipe: ChefkochRecipe) -> Promise<(ChefkochRecipe, URL?), Error> in
