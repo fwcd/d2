@@ -27,23 +27,43 @@ public class RecipeCommand: StringCommand {
         ChefkochSearchQuery(query: input, limit: 1)
             .perform()
             .thenCatching {
-                guard let recipe = $0.first else { throw RecipeError.noResults }
+                guard let recipe = $0.results.first?.recipe else { throw RecipeError.noResults }
                 return ChefkochRecipeQuery(id: recipe.id).perform()
+            }
+            .then { (recipe: ChefkochRecipe) -> Promise<(ChefkochRecipe, URL?), Error> in
+                if let imageId = recipe.previewImageId {
+                    return ChefkochImageQuery(recipeId: recipe.id, imageId: imageId)
+                        .perform()
+                        .map { (recipe, $0.thumbnailUrl) }
+                } else {
+                    return Promise(.success((recipe, nil)))
+                }
             }
             .listen {
                 do {
-                    let recipe = try $0.get()
+                    let (recipe, thumbnailUrl) = try $0.get()
                     output.append(Embed(
                         title: ":taco: \(recipe.title)",
                         url: recipe.siteUrl,
-                        thumbnail: URL(string: recipe.thumbnail).map(Embed.Thumbnail.init),
+                        thumbnail: thumbnailUrl.map(Embed.Thumbnail.init),
+                        footer: Embed.Footer(text: String(format: "Rating: %.2f stars, %d votes", recipe.rating?.rating ?? 0, recipe.rating?.numVotes ?? 0)),
                         fields: [
-                            Embed.Field(name: "Ingredients", value: recipe.ingredientList.joined(separator: "\n").nilIfEmpty ?? "_none_")
+                            Embed.Field(name: "Ingredients", value: recipe.ingredientsText?.nilIfEmpty ?? "_none_", inline: true),
+                            Embed.Field(name: "Time", value: [
+                                "Cooking": recipe.cookingTime.map(self.format(time:)),
+                                "Resting": recipe.restingTime.map(self.format(time:)),
+                                "Total": recipe.totalTime.map(self.format(time:)),
+                            ].compactMap { (k, v) in v.map { "\(k): \($0)" } }.joined(separator: "\n").nilIfEmpty ?? "_none_", inline: true),
+                            Embed.Field(name: "Instructions", value: recipe.instructions?.nilIfEmpty ?? "_none_"),
                         ]
                     ))
                 } catch {
                     output.append(error, errorText: "Could not find/fetch recipe")
                 }
             }
+    }
+
+    private func format(time: Double) -> String {
+        String(format: "%.2f min", time)
     }
 }
