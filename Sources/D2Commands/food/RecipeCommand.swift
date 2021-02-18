@@ -71,7 +71,8 @@ public class RecipeCommand: StringCommand {
         ingredientGroups
             .flatMap {
                 [
-                    ($0.header?.nilIfEmpty).map { "**\($0)**" },
+                    ($0.header?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty)
+                        .map { "**\($0)**" },
                     format(ingredients: $0.ingredients)
                 ].compactMap { $0 }
             }
