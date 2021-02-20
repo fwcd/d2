@@ -13,7 +13,7 @@ public class LastMessageCommand: Command {
         category: .scripting,
         shortDescription: "Fetches the last message",
         longDescription: "Retrieves and outputs the last message",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .none
     public let outputValueType: RichValueType = .any
