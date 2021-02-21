@@ -1,3 +1,4 @@
+import D2MessageIO
 import Logging
 import Utils
 
@@ -6,8 +7,8 @@ fileprivate let log = Logger(label: "D2Commands.LoveCommand")
 public class LoveCommand: Command {
     public let info = CommandInfo(
         category: .fun,
-        shortDescription: "Determines the chance of love between you and someone else",
-        helpText: "Syntax: [user]",
+        shortDescription: "Determines the chance of love between two persons",
+        helpText: "Syntax: [user]? [user]",
         requiredPermissionLevel: .basic,
         platformAvailability: ["Discord"]
     )
@@ -17,29 +18,38 @@ public class LoveCommand: Command {
     public init() {}
 
     public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
-        guard let author = context.author, let other = input.asMentions?.first else {
+        guard let (first, second) = extractMentions(input: input, context: context) else {
             output.append(errorText: info.helpText!)
             return
         }
-        guard let authorId = Int(author.id.value), let otherId = Int(other.id.value) else {
+        guard let firstId = Int(first.id.value), let secondId = Int(second.id.value) else {
             output.append(errorText: "Numerical IDs needed!")
             return
         }
-        guard author.id != other.id else {
-            output.append(errorText: "Please mention someone other than yourself!")
+        guard first.id != second.id else {
+            output.append(errorText: "Please specify two different persons!")
             return
         }
 
         let basePrecision = 1000
-        let baseHash = (authorId % basePrecision) ^ (otherId % basePrecision)
+        let baseHash = (firstId % basePrecision) ^ (secondId % basePrecision)
         let components: [(weight: Double, value: Double)] = [
             (weight: 8, value: Double(abs(baseHash % basePrecision)) / Double(basePrecision)),
-            (weight: 1, value: 1 - min(1, Double(author.username.levenshteinDistance(to: other.username)) / 40)),
-            (weight: 2, value: author.bot == other.bot ? 0.8 : 0.1)
+            (weight: 1, value: 1 - min(1, Double(first.username.levenshteinDistance(to: second.username)) / 40)),
+            (weight: 2, value: first.bot == second.bot ? 0.8 : 0.1)
         ]
         let chance = components.map { $0.weight * $0.value }.reduce(0, +) / components.map(\.weight).reduce(0, +)
 
         log.debug("Components: \(components)")
-        output.append(":heart: There is a \(Int(chance * 100))% chance of love between <@\(author.id)> and <@\(other.id)>")
+        output.append(":heart: There is a \(Int(chance * 100))% chance of love between <@\(first.id)> and <@\(second.id)>")
+    }
+
+    private func extractMentions(input: RichValue, context: CommandContext) -> (User, User)? {
+        guard let mentions = input.asMentions else { return nil }
+        switch mentions.count {
+            case 1: return context.author.map { ($0, mentions[0]) }
+            case 2: return (mentions[0], mentions[1])
+            default: return nil
+        }
     }
 }
