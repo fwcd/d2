@@ -115,6 +115,8 @@ public class D2Delegate: MessageDelegate {
         registry["embeddescription", aka: ["description"]] = EmbedDescriptionCommand()
         registry["embedfooter", aka: ["footer"]] = EmbedFooterCommand()
         registry["embedfields", aka: ["fields"]] = EmbedFieldsCommand()
+        registry["row"] = RowCommand()
+        registry["column", aka: ["col"]] = ColumnCommand()
         registry["for"] = ForCommand()
         registry["do"] = DoCommand()
         registry["quit"] = QuitCommand()
