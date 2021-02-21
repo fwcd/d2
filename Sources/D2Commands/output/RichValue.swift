@@ -33,6 +33,9 @@ public enum RichValue: Addable {
     public var asCode: String? {
         extract { if case let .code(code, language: _) = $0 { return code } else { return nil } }.first
     }
+    public var asEmbed: Embed? {
+        extract { if case let .embed(embed) = $0 { return embed } else { return nil } }.first
+    }
     public var asTable: [[String]]? {
         extract { if case let .table(table) = $0 { return table } else { return nil } }.first
     }
