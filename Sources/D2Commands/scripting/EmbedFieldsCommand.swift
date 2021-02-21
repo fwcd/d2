@@ -1,7 +1,7 @@
 public class EmbedFieldsCommand: Command {
     public let info = CommandInfo(
         category: .scripting,
-        shortDescription: "Extracts the footer text from an embed",
+        shortDescription: "Extracts the fields from an embed as a table",
         requiredPermissionLevel: .basic
     )
     public let inputValueType: RichValueType = .embed
