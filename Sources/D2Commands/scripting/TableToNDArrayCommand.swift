@@ -1,8 +1,8 @@
 import Utils
 
-public class ToNDArrayCommand: Command {
+public class TableToNDArrayCommand: Command {
     public let info = CommandInfo(
-        category: .math,
+        category: .scripting,
         shortDescription: "Converts a table to an ND array",
         requiredPermissionLevel: .basic
     )
