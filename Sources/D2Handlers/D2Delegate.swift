@@ -112,6 +112,7 @@ public class D2Delegate: MessageDelegate {
         registry["clear"] = ClearCommand()
         registry["rolereactions"] = RoleReactionsCommand(configuration: roleReactionsConfiguration)
         registry["logs"] = LogsCommand()
+        registry["embeddescription"] = EmbedDescriptionCommand()
         registry["for"] = ForCommand()
         registry["do"] = DoCommand()
         registry["quit"] = QuitCommand()
