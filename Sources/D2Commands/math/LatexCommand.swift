@@ -34,6 +34,10 @@ public class LatexCommand: StringCommand {
             output.append(errorText: "Wait for the first LaTeX command to finish")
             return
         }
+        guard !input.isEmpty else {
+            output.append(errorText: "Please enter a formula to render!")
+            return
+        }
         running = true
 
         guard let renderer = latexRenderer else {
