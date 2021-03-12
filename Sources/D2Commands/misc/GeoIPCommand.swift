@@ -28,7 +28,7 @@ public class GeoIPCommand: StringCommand {
                         ("City", data.city),
                         ("Zip Code", data.zipCode),
                         ("Time Zone", data.timeZone)
-                    ].compactMap { (k, v) in v.map { Embed.Field(name: k, value: $0, inline: true) } }
+                    ].compactMap { (k, v) in (v?.nilIfEmpty).map { Embed.Field(name: k, value: $0, inline: true) } }
                 ))
             } catch {
                 output.append(error, errorText: "Could not query FreeGeoIP")
