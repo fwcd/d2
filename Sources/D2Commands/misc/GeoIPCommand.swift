@@ -22,7 +22,7 @@ public class GeoIPCommand: StringCommand {
             do {
                 let data = try $0.get()
                 let mapPromise = data.coords.flatMap {
-                    (try? MapQuestStaticMap(center: $0, zoom: 2))?
+                    (try? MapQuestStaticMap(center: $0, pins: [.init(coords: $0)], zoom: 2))?
                         .download()
                         .map { Message.FileUpload(data: $0, filename: "map.jpg", mimeType: "image/jpeg") }
                 } ?? Promise(.success(nil))
