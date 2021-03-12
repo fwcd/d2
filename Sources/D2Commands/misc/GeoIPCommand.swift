@@ -20,8 +20,13 @@ public class GeoIPCommand: StringCommand {
         FreeGeoIPQuery(host: input).perform().listen {
             do {
                 let data = try $0.get()
+                let map = data.coords.flatMap {
+                    try? MapQuestStaticMap(center: $0, zoom: 2)
+                }?.url
+
                 output.append(Embed(
                     title: "GeoIP info for `\(data.ip)`",
+                    image: map.map(Embed.Image.init(url:)),
                     fields: [
                         ("Country", data.countryName),
                         ("Region", data.regionName),
