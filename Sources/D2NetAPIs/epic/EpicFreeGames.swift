@@ -31,7 +31,7 @@ public struct EpicFreeGames: Codable {
 
                     public struct KeyImage: Codable {
                         public let type: String
-                        public let url: URL
+                        public let url: String?
                     }
 
                     public struct Seller: Codable {
