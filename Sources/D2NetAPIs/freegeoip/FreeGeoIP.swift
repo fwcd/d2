@@ -1,3 +1,5 @@
+import Utils
+
 public struct FreeGeoIP: Codable {
     public enum CodingKeys: String, CodingKey {
         case ip
@@ -24,4 +26,8 @@ public struct FreeGeoIP: Codable {
     public let latitude: Double?
     public let longitude: Double?
     public let metroCode: Int?
+
+    public var coords: GeoCoordinates? {
+        latitude.flatMap { lat in longitude.map { lon in GeoCoordinates(latitude: lat, longitude: lon) } }
+    }
 }
