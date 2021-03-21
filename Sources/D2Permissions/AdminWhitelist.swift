@@ -1,3 +1,5 @@
+import D2MessageIO
+
 struct AdminWhitelist: Codable {
-    var users: [String]
+    var users: [UserID]
 }

@@ -12,11 +12,11 @@ fileprivate let nameWithTagPattern = try! Regex(from: "([^#]+)#(\\d+)")
 public class PermissionManager: CustomStringConvertible {
     private let storage = DiskJsonSerializer()
     private var adminWhitelist: AdminWhitelist
-    private var userPermissions: [String: PermissionLevel]
-    private var simulatedPermissions: [String: PermissionLevel] = [:]
+    private var userPermissions: [UserID: PermissionLevel]
+    private var simulatedPermissions: [UserID: PermissionLevel] = [:]
     public var description: String { userPermissions.description }
 
-    private var adminNamesWithTags: [String] { adminWhitelist.users + userPermissions.filter { $0.value == .admin }.map(\.key) }
+    private var adminUserIDs: [UserID] { adminWhitelist.users + userPermissions.filter { $0.value == .admin }.map(\.key) }
 
     public init() {
         do {
@@ -27,7 +27,7 @@ public class PermissionManager: CustomStringConvertible {
         }
 
         do {
-            userPermissions = try storage.readJson(as: [String: PermissionLevel].self, fromFile: userPermissionsFilePath)
+            userPermissions = try storage.readJson(as: [UserID: PermissionLevel].self, fromFile: userPermissionsFilePath)
         } catch {
             userPermissions = [:]
             log.debug("Could not read user permissions: \(error)")
@@ -43,63 +43,57 @@ public class PermissionManager: CustomStringConvertible {
     }
 
     public func admins(in guild: Guild) -> Set<User> {
-        Set(adminNamesWithTags.compactMap { decode(nameWithTag: $0, in: guild) })
+        Set(adminUserIDs.compactMap { decode(id: $0, in: guild) })
     }
 
-    private func encode(user: User) -> String {
-        "\(user.username)#\(user.discriminator)"
-    }
-
-    private func decode(nameWithTag: String, in guild: Guild) -> User? {
-        guard let parsed = nameWithTagPattern.firstGroups(in: nameWithTag) else { return nil }
-        let users: [User] = guild.members.map(\.1.user)
-        return users.first(where: { (user: User) -> Bool in user.username == parsed[1] && String(user.discriminator) == parsed[2] })
+    private func decode(id: UserID, in guild: Guild) -> User? {
+        guild.members.map(\.1.user).first(where: { $0.id == id })
     }
 
     public func user(_ theUser: User, hasPermission requiredLevel: PermissionLevel, usingSimulated: Bool = true) -> Bool {
-        return nameWithTag(encode(user: theUser), hasPermission: requiredLevel, usingSimulated: usingSimulated)
+        userID(theUser.id, hasPermission: requiredLevel, usingSimulated: usingSimulated)
     }
 
-    public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: PermissionLevel, usingSimulated: Bool = true) -> Bool {
-        return nameWithTag(theNameWithTag, hasPermission: requiredLevel.rawValue, usingSimulated: usingSimulated)
+    public func userID(_ id: UserID, hasPermission requiredLevel: PermissionLevel, usingSimulated: Bool = true) -> Bool {
+        userID(id, hasPermission: requiredLevel.rawValue, usingSimulated: usingSimulated)
     }
 
-    public func nameWithTag(_ theNameWithTag: String, hasPermission requiredLevel: Int, usingSimulated: Bool = true) -> Bool {
-        let userLevel = self[simulated: theNameWithTag].filter { _ in usingSimulated } ?? self[theNameWithTag]
+    public func userID(_ id: UserID, hasPermission requiredLevel: Int, usingSimulated: Bool = true) -> Bool {
+        let userLevel = self[simulated: id].filter { _ in usingSimulated } ?? self[id]
         return userLevel.rawValue >= requiredLevel
     }
 
     public func remove(permissionsFrom user: User) {
-        remove(permissionsFrom: encode(user: user))
+        remove(permissionsFrom: user.id)
     }
 
-    public func remove(permissionsFrom nameWithTag: String) {
-        userPermissions.removeValue(forKey: nameWithTag)
+    public func remove(permissionsFrom userID: UserID) {
+        userPermissions.removeValue(forKey: userID)
     }
 
     public subscript(_ user: User) -> PermissionLevel {
-        get { return self[encode(user: user)] }
-        set { self[encode(user: user)] = newValue }
+        get { return self[user.id] }
+        set { self[user.id] = newValue }
     }
 
     public subscript(simulated user: User) -> PermissionLevel? {
-        get { return self[simulated: encode(user: user)] }
-        set { self[simulated: encode(user: user)] = newValue }
+        get { return self[simulated: user.id] }
+        set { self[simulated: user.id] = newValue }
     }
 
-    public subscript(_ nameWithTag: String) -> PermissionLevel {
+    public subscript(_ userID: UserID) -> PermissionLevel {
         get {
-            if adminWhitelist.users.contains(nameWithTag) {
+            if adminWhitelist.users.contains(userID) {
                 return .admin
             } else {
-                return userPermissions[nameWithTag] ?? .basic
+                return userPermissions[userID] ?? .basic
             }
         }
-        set { userPermissions[nameWithTag] = newValue }
+        set { userPermissions[userID] = newValue }
     }
 
-    public subscript(simulated nameWithTag: String) -> PermissionLevel? {
-        get { simulatedPermissions[nameWithTag] }
-        set { simulatedPermissions[nameWithTag] = newValue }
+    public subscript(simulated userID: UserID) -> PermissionLevel? {
+        get { simulatedPermissions[userID] }
+        set { simulatedPermissions[userID] = newValue }
     }
 }
