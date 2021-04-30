@@ -184,6 +184,7 @@ public class GameCommand<G: Game>: Command {
     private func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer, client: MessageClient) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         let output = BufferedOutput(output)
+        let channelName = client.guildForChannel(channelID)?.channels[channelID]?.name
         var continueSubscription: Bool = true
 
         do {
@@ -192,7 +193,7 @@ public class GameCommand<G: Game>: Command {
                 state: state,
                 apiEnabled: apiEnabled,
                 player: author,
-                channelName: client.guildForChannel(channelID)?.channels[channelID]?.name
+                channelName: channelName
             )
             guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return true }
 
@@ -228,17 +229,19 @@ public class GameCommand<G: Game>: Command {
 
                 if !silent || !continueSubscription {
                     // Output next board
-                    var rendered = render(state: next, additionalText: actionResult.text, additionalFiles: actionResult.files)
-
-                    if gameOver, let finalAction = try game.finalAction.flatMap({ try game.actions[$0]?(params) }) {
-                        rendered += .files(finalAction.files)
-                    }
-
-                    output.append(rendered)
+                    output.append(render(state: next, additionalText: actionResult.text, additionalFiles: actionResult.files))
                 }
-            } else if let text = actionResult.text { // TODO: Handle compounds of text and files
+
+                if gameOver, let finalAction = try game.finalAction.flatMap({ try game.actions[$0]?(ActionParameters(state: next, player: author, channelName: channelName)) }) {
+                    output.append(.files(finalAction.files))
+                }
+            }
+
+            if let text = actionResult.text {
                 output.append(text)
-            } else if !actionResult.files.isEmpty {
+            }
+
+            if !actionResult.files.isEmpty {
                 output.append(.files(actionResult.files))
             }
         } catch GameError.invalidMove(let msg) {
