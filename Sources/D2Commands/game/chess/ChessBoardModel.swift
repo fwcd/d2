@@ -36,7 +36,7 @@ public struct ChessBoardModel {
     }
 
     public func totalValue(for role: ChessRole) -> Int {
-        pieces.map { $0.compactMap(\.?.piece.value).reduce(0, +) }.reduce(0, +)
+        pieces.map { $0.filter { $0?.color == role }.compactMap(\.?.piece.value).reduce(0, +) }.reduce(0, +)
     }
 
     public subscript(position: Vec2<Int>) -> Piece? {
