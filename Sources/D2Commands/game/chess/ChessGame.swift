@@ -1,6 +1,9 @@
 import D2MessageIO
 import Foundation
+import Logging
 import Graphics
+
+fileprivate let log = Logger(label: "D2Commands.ChessGame")
 
 public struct ChessGame: Game {
     public typealias State = ChessState
@@ -25,6 +28,7 @@ public struct ChessGame: Game {
             return ActionResult(text: json.map { "```json\n\($0)\n```" })
         },
         "pgn": {
+            log.info("Creating PGN...")
             let pgn = ChessPGN(
                 event: "Discord Chess Match",
                 site: $0.channelName.map { "#\($0)" } ?? "Discord",
@@ -34,6 +38,7 @@ public struct ChessGame: Game {
                 state: $0.state
             )
             guard let data = try pgn.formatted().data(using: .utf8) else { throw ChessPGNError.couldNotEncode }
+            log.info("Created PGN")
             let filename = "\($0.channelName ?? "game").pgn"
             return ActionResult(files: [Message.FileUpload(data: data, filename: filename, mimeType: "application/vnd.chess-pgn")])
         }

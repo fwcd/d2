@@ -236,8 +236,10 @@ public class GameCommand<G: Game>: Command {
 
                     output.append(rendered)
                 }
-            } else if let text = actionResult.text {
+            } else if let text = actionResult.text { // TODO: Handle compounds of text and files
                 output.append(text)
+            } else if !actionResult.files.isEmpty {
+                output.append(.files(actionResult.files))
             }
         } catch GameError.invalidMove(let msg) {
             output.append(errorText: "Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
