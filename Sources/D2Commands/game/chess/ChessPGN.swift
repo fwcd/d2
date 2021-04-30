@@ -29,16 +29,16 @@ public struct ChessPGN: CustomStringConvertible {
         [Black "\(black)"]
         [Result "\(formattedResult())"]
 
-        \(try formattedMoves()) \(state.isGameOver ? formattedResult() : "")
+        \(formattedMoves()) \(state.isGameOver ? formattedResult() : "")
         """.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private func formattedMoves() throws -> String {
-        try state.moveHistory
+    private func formattedMoves() -> String {
+        state.moveHistory
             .enumerated()
-            .map { (i, m) throws -> String in
+            .map { (i, m) -> String in
                 let pre: String = (i % 2 == 0) ? "\(i + 1). " : " "
-                return try pre + state.simplify(move: m).algebraicNotation
+                return pre + m.algebraicNotation
             }
             .joined(separator: " ")
     }

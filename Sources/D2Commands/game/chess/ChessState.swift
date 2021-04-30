@@ -171,7 +171,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private mutating func performDirectly(move: Move) throws {
         try board.model.perform(move: move)
         currentRole = currentRole.opponent
-        moveHistory.append(move)
+        moveHistory.append(try simplify(move: move))
     }
 
     func resolve(move: Move) -> [Move] {
