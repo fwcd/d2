@@ -65,9 +65,7 @@ public struct CodenamesState: GameState, Multiplayer {
                 throw GameError.invalid("role", "Role \(role) cannot perform \(move)!")
         }
 
-        if !isGameOver {
-            currentRole = currentRole.next
-        }
+        currentRole = currentRole.next
     }
 
     public func playersOf(role: Role) -> [GamePlayer] {

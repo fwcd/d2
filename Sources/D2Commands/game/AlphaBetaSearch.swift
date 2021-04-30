@@ -34,14 +34,17 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
     private func negamax(state: State, alpha: Double, beta: Double, remainingDepth: Int) throws -> (Double, State.Move?) {
         let possibleMoves = state.possibleMoves
 
-        guard remainingDepth > 0 || possibleMoves.isEmpty else { return (evaluator(state), nil) }
+        guard remainingDepth > 0 && !state.isGameOver && !possibleMoves.isEmpty else {
+            return (evaluator(state), nil)
+        }
 
         var alpha: Double = alpha
         var bestMove: State.Move? = nil
 
         for move in possibleMoves {
             let child = try state.childState(after: move)
-            let (value, _) = try negamax(state: child, alpha: -beta, beta: -alpha, remainingDepth: remainingDepth - 1)
+            var (value, _) = try negamax(state: child, alpha: -beta, beta: -alpha, remainingDepth: remainingDepth - 1)
+            value.negate()
 
             if value > alpha || bestMove == nil {
                 alpha = value

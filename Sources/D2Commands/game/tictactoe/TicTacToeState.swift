@@ -37,9 +37,7 @@ public struct TicTacToeState: GameState, FinitePossibleMoves {
     private mutating func performMoveAt(row: Int, col: Int) throws {
         let next = try board.with(currentRole, atRow: row, col: col)
         board = next
-        if !isGameOver {
-            currentRole = currentRole.opponent
-        }
+        currentRole = currentRole.opponent
     }
 
     public func playersOf(role: Role) -> [GamePlayer] {
