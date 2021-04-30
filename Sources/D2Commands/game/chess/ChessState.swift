@@ -171,6 +171,10 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private mutating func performDirectly(move: Move) throws {
         try board.model.perform(move: move)
         currentRole = currentRole.opponent
+    }
+
+    public mutating func onCommit(move unresolvedMove: ChessMove, by role: ChessRole) throws {
+        let move = try unambiguouslyResolve(move: unresolvedMove)
         moveHistory.append(move)
     }
 

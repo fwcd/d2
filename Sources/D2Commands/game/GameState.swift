@@ -31,12 +31,23 @@ public protocol GameState {
     func isPossible(move: Move, by role: Role) -> Bool
 
     mutating func perform(move: Move, by role: Role) throws
+
+    /// Performs special handling of the move once it's 'committed'
+    /// (i.e. played in the actual game, not just simulated as part
+    /// of e.g. an alpha-beta-search). Use cases include tracking
+    /// a move history or anything that's not essential for computing
+    /// possible moves and evaluations.
+    mutating func onCommit(move: Move, by role: Role) throws
 }
 
 public extension GameState {
     var hands: [Role: Hand] { [:] }
     var handsDescription: String? { nil }
     var isGameOver: Bool { winner != nil || isDraw }
+
+    mutating func perform(move: Move) throws {
+        try perform(move: move, by: currentRole)
+    }
 
     func childState(after move: Move) throws -> Self {
         try childState(after: move, by: currentRole)
@@ -51,4 +62,16 @@ public extension GameState {
             throw GameError.invalidMove("Move `\(move)` is not allowed!")
         }
     }
+
+    func committedChildState(after move: Move) throws -> Self {
+        try committedChildState(after: move, by: currentRole)
+    }
+
+    func committedChildState(after move: Move, by role: Role) throws -> Self {
+        var child = try childState(after: move, by: role)
+        try child.onCommit(move: move, by: role)
+        return child
+    }
+
+    mutating func onCommit(move: Move, by role: Role) throws {}
 }

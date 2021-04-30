@@ -7,7 +7,9 @@ public struct CodenamesGame: Game {
 
     public let name: String = "Codenames"
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
-        "move": { ActionResult(nextState: try $0.state.childState(after: try CodenamesGame.parse(move: $0.args, from: $0.state.currentRole))) },
+        "move": {
+            ActionResult(nextState: try $0.state.committedChildState(after: try CodenamesGame.parse(move: $0.args, from: $0.state.currentRole)))
+        },
     ]
     public let hasPrettyRoles: Bool = true
     public let helpText: String = """
