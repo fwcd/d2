@@ -43,8 +43,8 @@ public extension GameState {
     var handsDescription: String? { nil }
     var isGameOver: Bool { winner != nil || isDraw }
 
-    mutating func perform(move: Move) throws {
-        try perform(move: move, by: currentRole)
+    mutating func perform(move: Move, options: GameMoveOptions = []) throws {
+        try perform(move: move, by: currentRole, options: options)
     }
 
     mutating func perform(move: Move, by role: Role) throws {

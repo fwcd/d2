@@ -46,7 +46,7 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
 
         for move in possibleMoves {
             var child = state
-            try child.perform(move: move)
+            try child.perform(move: move, options: [.skipPreprocessing, .skipCheck])
             var (value, _) = try negamax(state: child, alpha: -beta, beta: -alpha, remainingDepth: remainingDepth - 1, stateCount: &stateCount)
             value.negate()
 
