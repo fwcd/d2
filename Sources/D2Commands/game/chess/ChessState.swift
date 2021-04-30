@@ -14,13 +14,14 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private let blackPlayer: GamePlayer
     public private(set) var board: Board
     public private(set) var currentRole: Role = .white
-    public private(set) var moveCount = 0
-    public var playersDescription: String { return "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
+    public private(set) var moveHistory: [ChessMove] = []
 
-    public var possibleMoves: Set<Move> { return findPossibleMoves(by: currentRole) }
-    public var winner: Role? { return ChessRole.allCases.first { isCheckmate($0.opponent) } }
-    public var roleInCheck: Role? { return ChessRole.allCases.first { isInCheck($0) } }
-    public var isDraw: Bool { return !isInCheck(currentRole) && !canMove(currentRole) }
+    public var playersDescription: String { "`\(whitePlayer.username)` as :white_circle: vs. `\(blackPlayer.username)` as :black_circle:" }
+
+    public var possibleMoves: Set<Move> { findPossibleMoves(by: currentRole) }
+    public var winner: Role? { ChessRole.allCases.first { isCheckmate($0.opponent) } }
+    public var roleInCheck: Role? { ChessRole.allCases.first { isInCheck($0) } }
+    public var isDraw: Bool { !isInCheck(currentRole) && !canMove(currentRole) }
 
     /// A very simple evaluation from the perspective of the current role
     /// that only takes the players' pieces' values into account.
@@ -170,7 +171,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private mutating func performDirectly(move: Move) throws {
         try board.model.perform(move: move)
         currentRole = currentRole.opponent
-        moveCount += 1
+        moveHistory.append(move)
     }
 
     func resolve(move: Move) -> [Move] {
