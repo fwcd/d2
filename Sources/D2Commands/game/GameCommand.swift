@@ -181,7 +181,7 @@ public class GameCommand<G: Game>: Command {
     /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.
     /// Automatically performs subsequent computer moves as needed.
     @discardableResult
-    private func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer, client: MessageClient) -> Bool {
+    func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer, client: MessageClient) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         let output = BufferedOutput(output)
         let channelName = client.guildForChannel(channelID)?.channels[channelID]?.name
