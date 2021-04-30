@@ -7,6 +7,8 @@ public protocol Game {
     var actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] { get }
     /// API actions can be invoked by other applications and not just users.
     var apiActions: Set<String> { get }
+    /// An action that should automatically be invoked at the end of the game. Only supports files currently.
+    var finalAction: String? { get }
 
     /// The game's name. By convention in lower case.
     var name: String { get }
@@ -36,5 +38,6 @@ public extension Game {
     var isRealTime: Bool { false }
     var helpText: String { "No help text found for \(name)" }
     var apiActions: Set<String> { [] }
+    var finalAction: String? { nil }
     var engine: AnyGameIntelligence<State>? { nil }
 }

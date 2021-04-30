@@ -37,6 +37,7 @@ public struct ChessGame: Game {
         }
     ]
     public let apiActions: Set<String> = ["move", "json"]
+    public let finalAction: String? = "pgn"
     public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
     public let hasPrettyRoles = true
     public let helpText: String = """
