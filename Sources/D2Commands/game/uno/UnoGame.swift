@@ -8,7 +8,7 @@ public struct UnoGame: Game {
     public let themeColor: Color? = Colors.red
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
         "move": {
-            let next = try $0.state.committedChildState(after: try UnoGame.parse(move: $0.args))
+            let next = try $0.state.childState(after: try UnoGame.parse(move: $0.args), committing: true)
             let text = next.board.topColorMatchesCard ? nil : "The top color is now \(next.board.topColor?.asRichValue.asText ?? "?")"
             return ActionResult(nextState: next, text: text)
         }

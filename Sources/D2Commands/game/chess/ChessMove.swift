@@ -60,7 +60,7 @@ public struct ChessMove: Hashable, CustomStringConvertible {
             isEnPassant ? "e. p." : ""
         ]
 
-        return components.compactMap { $0 }.joined(separator: " ")
+        return components.compactMap { $0 }.joined()
     }
 
     public init(

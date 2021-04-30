@@ -8,9 +8,9 @@ public struct ChessGame: Game {
     public let name: String = "chess"
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
         "move": {
-            let move = try $0.state.unambiguouslyResolve(move: try ChessGame.parse(move: $0.args))
+            let move = try ChessGame.parse(move: $0.args)
             let role = $0.state.currentRole
-            let nextState = try $0.state.committedChildState(after: move)
+            let nextState = try $0.state.childState(after: move, committing: true)
             var text: String? = nil
 
             if let roleInCheck = nextState.roleInCheck {

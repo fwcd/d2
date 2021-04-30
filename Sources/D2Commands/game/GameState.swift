@@ -30,14 +30,12 @@ public protocol GameState {
 
     func isPossible(move: Move, by role: Role) -> Bool
 
-    mutating func perform(move: Move, by role: Role) throws
-
-    /// Performs special handling of the move once it's 'committed'
+    /// May perform special handling of the move once it's 'committed'
     /// (i.e. played in the actual game, not just simulated as part
     /// of e.g. an alpha-beta-search). Use cases include tracking
     /// a move history or anything that's not essential for computing
     /// possible moves and evaluations.
-    mutating func onCommit(move: Move, by role: Role) throws
+    mutating func perform(move: Move, by role: Role, committing: Bool) throws
 }
 
 public extension GameState {
@@ -49,29 +47,25 @@ public extension GameState {
         try perform(move: move, by: currentRole)
     }
 
-    func childState(after move: Move) throws -> Self {
-        try childState(after: move, by: currentRole)
+    mutating func perform(move: Move, committing: Bool) throws {
+        try perform(move: move, by: currentRole, committing: committing)
     }
 
-    func childState(after move: Move, by role: Role) throws -> Self {
+    mutating func perform(move: Move, by role: Role) throws {
+        try perform(move: move, by: currentRole, committing: false)
+    }
+
+    func childState(after move: Move, committing: Bool = false) throws -> Self {
+        try childState(after: move, by: currentRole, committing: committing)
+    }
+
+    func childState(after move: Move, by role: Role, committing: Bool = false) throws -> Self {
         if isPossible(move: move, by: role) {
             var next = self
-            try next.perform(move: move, by: role)
+            try next.perform(move: move, by: role, committing: committing)
             return next
         } else {
             throw GameError.invalidMove("Move `\(move)` is not allowed!")
         }
     }
-
-    func committedChildState(after move: Move) throws -> Self {
-        try committedChildState(after: move, by: currentRole)
-    }
-
-    func committedChildState(after move: Move, by role: Role) throws -> Self {
-        var child = try childState(after: move, by: role)
-        try child.onCommit(move: move, by: role)
-        return child
-    }
-
-    mutating func onCommit(move: Move, by role: Role) throws {}
 }

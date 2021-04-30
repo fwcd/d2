@@ -88,7 +88,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private func causesKingInCheck(_ move: Move, for role: Role) -> Bool {
         var stateAfterMove = self
         do {
-            try stateAfterMove.performDirectly(move: move)
+            try stateAfterMove.performDirectly(move: move, committing: false)
         } catch {
             log.error("Could not spawn child state while testing whether a move causes a check: \(error)")
             return false
@@ -100,7 +100,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private func causesCheckmate(_ move: Move, for role: Role) -> Bool {
         var stateAfterMove = self
         do {
-            try stateAfterMove.performDirectly(move: move)
+            try stateAfterMove.performDirectly(move: move, committing: false)
         } catch {
             log.error("Could not spawn child state while testing whether a move causes a checkmate: \(error)")
             return false
@@ -164,18 +164,16 @@ public struct ChessState: GameState, FinitePossibleMoves {
         return Set(moves)
     }
 
-    public mutating func perform(move unresolvedMove: Move, by role: Role) throws {
-        try performDirectly(move: try unambiguouslyResolve(move: unresolvedMove))
+    public mutating func perform(move: Move, by role: Role, committing: Bool) throws {
+        try performDirectly(move: try disambiguate(move: move), committing: committing)
     }
 
-    private mutating func performDirectly(move: Move) throws {
+    private mutating func performDirectly(move: Move, committing: Bool) throws {
         try board.model.perform(move: move)
         currentRole = currentRole.opponent
-    }
-
-    public mutating func onCommit(move unresolvedMove: ChessMove, by role: ChessRole) throws {
-        let move = try unambiguouslyResolve(move: unresolvedMove)
-        moveHistory.append(move)
+        if committing {
+            moveHistory.append(move)
+        }
     }
 
     func resolve(move: Move) -> [Move] {
@@ -209,7 +207,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
         return move
     }
 
-    func unambiguouslyResolve(move unresolvedMove: Move) throws -> Move {
+    public func disambiguate(move unresolvedMove: Move) throws -> Move {
         let resolvedMoves = resolve(move: unresolvedMove)
         guard resolvedMoves.count != 0 else { throw GameError.invalidMove("Move is not allowed: `\(unresolvedMove)`") }
         guard resolvedMoves.count == 1 else { throw GameError.ambiguousMove("Move is ambiguous: `\(unresolvedMove)` could be one of `\(resolvedMoves)`") }

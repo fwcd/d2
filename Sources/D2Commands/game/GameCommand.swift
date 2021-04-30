@@ -260,9 +260,7 @@ public class GameCommand<G: Game>: Command {
                 // TODO: This would be an issue if all players are automatic, which is currently forbidden
                 while !state.isGameOver && state.playersOf(role: state.currentRole).contains(where: \.isAutomatic) {
                     let move = try engine.pickMove(from: state)
-                    let role = state.currentRole
-                    try state.perform(move: move, by: role)
-                    try state.onCommit(move: move, by: role)
+                    try state.perform(move: move)
                 }
             }
         }
