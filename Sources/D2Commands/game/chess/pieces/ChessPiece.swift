@@ -26,5 +26,5 @@ public protocol ChessPiece {
     /// the given move would result in a check. He is not
     /// required to check for captures either, though the
     /// 'isCapture' option can be overridden if specified.
-    func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove]
+    func possibleMoves(from position: Vec2<Int>, board: ChessBoardModel, role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove]
 }

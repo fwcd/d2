@@ -13,7 +13,7 @@ struct ChessBoardView {
             let fieldSize = 30.0
             let halfFieldSize = fieldSize / 2
             let padding = 20.0
-            let intBoardSize = Vec2<Int>(x: Int(fieldSize) * model.files, y: Int(fieldSize) * model.ranks)
+            let intBoardSize = Vec2<Int>(x: Int(fieldSize) * ChessBoardModel.files, y: Int(fieldSize) * ChessBoardModel.ranks)
             let intSize = Vec2<Int>(x: intBoardSize.x + (Int(padding) * 2), y: intBoardSize.y + (Int(padding) * 2))
 
             let fontSize = 12.0
@@ -26,7 +26,7 @@ struct ChessBoardView {
             let img = try Image(fromSize: intSize)
             let graphics = CairoGraphics(fromImage: img)
 
-            for row in 0..<model.ranks {
+            for row in 0..<ChessBoardModel.ranks {
                 let y = (Double(row) * fieldSize) + padding
                 let textY = y + halfFieldSize + halfFontSize
                 let letter = String(rankOf(y: row))
@@ -34,7 +34,7 @@ struct ChessBoardView {
                 graphics.draw(Text(letter, withSize: fontSize, at: Vec2(x: leftTextX, y: textY)))
                 graphics.draw(Text(letter, withSize: fontSize, at: Vec2(x: rightTextX, y: textY)))
 
-                for col in 0..<model.files {
+                for col in 0..<ChessBoardModel.files {
                     let whiteField = (col % 2 == ((row % 2 == 0) ? 0 : 1))
                     let color = whiteField ? theme.lightColor : theme.darkColor
                     let x = (Double(col) * fieldSize) + padding
@@ -47,7 +47,7 @@ struct ChessBoardView {
                 }
             }
 
-            for col in 0..<model.files {
+            for col in 0..<ChessBoardModel.files {
                 let x = (Double(col) * fieldSize) + padding
                 let textX = (x + halfFieldSize) - halfFontSize
                 let letter = String(fileOf(x: col) ?? "?").uppercased()

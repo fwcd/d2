@@ -9,7 +9,7 @@ public struct ChessBoard: RichValueConvertible {
         self.model = model
     }
 
-    public init(pieces: [[ChessBoardModel.Piece?]]) {
+    public init(pieces: [ChessBoardModel.Piece?]) {
         self.init(model: ChessBoardModel(pieces: pieces))
     }
 
@@ -24,10 +24,10 @@ public struct ChessBoard: RichValueConvertible {
         guard let destinationX = move.destinationX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination file: `\(move)`") }
         guard let destinationY = move.destinationY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination rank: `\(move)`") }
 
-        guard destinationX >= 0 && destinationX < model.files else { throw GameError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds: `\(move)`") }
-        guard destinationY >= 0 && destinationY < model.ranks else { throw GameError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds: `\(move)`") }
-        guard originX >= 0 && originX < model.files else { throw GameError.moveOutOfBounds("Origin x (\(originX)) is out of bounds: `\(move)`") }
-        guard originY >= 0 && originY < model.ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
+        guard destinationX >= 0 && destinationX < ChessBoardModel.files else { throw GameError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds: `\(move)`") }
+        guard destinationY >= 0 && destinationY < ChessBoardModel.ranks else { throw GameError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds: `\(move)`") }
+        guard originX >= 0 && originX < ChessBoardModel.files else { throw GameError.moveOutOfBounds("Origin x (\(originX)) is out of bounds: `\(move)`") }
+        guard originY >= 0 && originY < ChessBoardModel.ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
 
         var piece = model[originY, originX]
         piece?.moveCount += 1

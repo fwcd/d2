@@ -7,7 +7,7 @@ public struct Knight: ChessPiece {
     public let whiteResourcePng: String = "Resources/chess/whiteKnight.png"
     public let value: Int = 3
 
-    public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {
+    public func possibleMoves(from position: Vec2<Int>, board: ChessBoardModel, role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {
         return [
             Vec2(x: -2, y: -1), Vec2(x: -1, y: -2),
             Vec2(x: 1, y: -2), Vec2(x: 2, y: -1),
@@ -18,7 +18,7 @@ public struct Knight: ChessPiece {
             color: role,
             originX: position.x,
             originY: position.y,
-            isCapture: board.piece(at: $0) != nil,
+            isCapture: board[$0] != nil,
             destinationX: $0.x,
             destinationY: $0.y,
             isEnPassant: false

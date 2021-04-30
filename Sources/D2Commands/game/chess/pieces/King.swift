@@ -7,7 +7,7 @@ public struct King: ChessPiece {
     public let whiteResourcePng: String = "Resources/chess/whiteKing.png"
     public let value: Int = 1000
 
-    public func possibleMoves(from position: Vec2<Int>, board: [[BoardPieceType?]], role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {
+    public func possibleMoves(from position: Vec2<Int>, board: ChessBoardModel, role: ChessRole, moved: Bool, isInCheck: Bool) -> [ChessMove] {
         var moves = neighborFields()
             .map { $0 + position }
             .map { ChessMove(
@@ -15,7 +15,7 @@ public struct King: ChessPiece {
                 color: role,
                 originX: position.x,
                 originY: position.y,
-                isCapture: board.piece(at: $0) != nil,
+                isCapture: board[$0] != nil,
                 destinationX: $0.x,
                 destinationY: $0.y,
                 isEnPassant: false
@@ -59,12 +59,12 @@ public struct King: ChessPiece {
         return moves
     }
 
-    private func locateRook(of role: ChessRole, on side: RookSide, board: [[BoardPieceType?]]) -> (Vec2<Int>, BoardPieceType)? {
-        let x = (side == .kingside) ? (board[0].count - 1) : 0
-        let y = (role == .white) ? (board.count - 1) : 0
+    private func locateRook(of role: ChessRole, on side: RookSide, board: ChessBoardModel) -> (Vec2<Int>, BoardPiece)? {
+        let x = (side == .kingside) ? (ChessBoardModel.files - 1) : 0
+        let y = (role == .white) ? (ChessBoardModel.ranks - 1) : 0
 
-        if let piece = board[y][x] {
-            if piece.pieceType == .rook {
+        if let piece = board[y, x] {
+            if piece.piece.pieceType == .rook {
                 return (Vec2(x: x, y: y), piece)
             }
         }
@@ -72,12 +72,12 @@ public struct King: ChessPiece {
         return nil
     }
 
-    private func fieldUnoccupied(between start: Vec2<Int>, and end: Vec2<Int>, board: [[BoardPieceType?]]) -> Bool {
+    private func fieldUnoccupied(between start: Vec2<Int>, and end: Vec2<Int>, board: ChessBoardModel) -> Bool {
         let step = Vec2(x: (end.x - start.x).signum(), y: (end.y - start.y).signum())
         var current = start + step
 
         while current != end {
-            if board[current.y][current.x] != nil {
+            if board[current.y, current.x] != nil {
                 return false
             }
             current = current + step

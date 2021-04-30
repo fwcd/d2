@@ -26,11 +26,11 @@ func neighborFields() -> [Vec2<Int>] {
         .filter { $0.x != 0 || $0.y != 0 }
 }
 
-func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: ChessPieceType, color: ChessRole, board: [[BoardPieceType?]]) -> [ChessMove] {
+func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: ChessPieceType, color: ChessRole, board: ChessBoardModel) -> [ChessMove] {
     var moves = [ChessMove]()
     var current = position + direction
 
-    while board.isInBounds(current) && board.piece(at: current) == nil {
+    while board.isInBounds(current) && board[current] == nil {
         moves.append(ChessMove(
             pieceType: pieceType,
             color: color,
@@ -44,7 +44,7 @@ func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: Ch
         current = current + direction
     }
 
-    if board.piece(at: current) != nil {
+    if board[current] != nil {
         moves.append(ChessMove(
             pieceType: pieceType,
             color: color,
@@ -57,16 +57,4 @@ func moves(into direction: Vec2<Int>, from position: Vec2<Int>, by pieceType: Ch
     }
 
     return moves
-}
-
-extension Array where Element == [BoardPieceType?] {
-    func piece(at position: Vec2<Int>) -> BoardPieceType? {
-        guard isInBounds(position) else { return nil }
-        return self[position.y][position.x]
-    }
-
-    func isInBounds(_ position: Vec2<Int>) -> Bool {
-        guard !isEmpty else { return false }
-        return position.x >= 0 && position.y >= 0 && position.x < self[0].count && position.y < count
-    }
 }

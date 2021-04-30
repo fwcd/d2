@@ -48,7 +48,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     }
 
     private func locateKing(of role: Role) -> Vec2<Int>? {
-        return board.model.positions.first {
+        return ChessBoardModel.positions.first {
             let boardPiece = board.model[$0]
             return boardPiece?.piece.pieceType == .king && boardPiece?.color == role
         }
@@ -68,7 +68,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
             return false
         }
         let opponent: Role = role.opponent
-        let opponentPositions: [Vec2<Int>] = board.model.positions
+        let opponentPositions: [Vec2<Int>] = ChessBoardModel.positions
             .compactMap {
                 let piece = board.model[$0]
                 return (piece?.color == opponent) ? $0 : nil
@@ -79,7 +79,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     }
 
     private func findPossibleMoves(by role: Role, testForChecks: Bool = true) -> Set<Move> {
-        return Set(board.model.positions
+        return Set(ChessBoardModel.positions
             .filter { board.model[$0]?.color == role }
             .flatMap { findPossibleMoves(at: $0, by: role, testForChecks: testForChecks) })
     }
@@ -110,7 +110,6 @@ public struct ChessState: GameState, FinitePossibleMoves {
 
     private func findPossibleMoves(at position: Vec2<Int>, by role: Role, testForChecks: Bool = true) -> Set<Move> {
         guard let piece = board.model[position] else { return [] }
-        let pieceTypeBoard = board.model.pieceTypes
         let isInCheck: Bool
 
         if testForChecks {
@@ -119,7 +118,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
             isInCheck = false
         }
 
-        let unfilteredMoves: [Move] = piece.piece.possibleMoves(from: position, board: pieceTypeBoard, role: role, moved: piece.moved, isInCheck: isInCheck)
+        let unfilteredMoves: [Move] = piece.piece.possibleMoves(from: position, board: board.model, role: role, moved: piece.moved, isInCheck: isInCheck)
 
         for move in unfilteredMoves {
             guard move.pieceType != nil else { fatalError("ChessPiece returned move without 'pieceType' (invalid according to the contract)") }
@@ -129,7 +128,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
         }
 
         let moves: [Move] = unfilteredMoves
-            .filter { pieceTypeBoard.isInBounds($0.destination!) }
+            .filter { board.model.isInBounds($0.destination!) }
             .compactMap { // Captures
                 let destinationPiece = board.model[$0.destination!]
                 let hasAssociatedCaptures = !$0.associatedCaptures.isEmpty
