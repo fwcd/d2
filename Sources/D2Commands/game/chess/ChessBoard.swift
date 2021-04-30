@@ -14,6 +14,37 @@ public struct ChessBoard: RichValueConvertible {
     }
 
     public static func empty() -> ChessBoard {
-        return ChessBoard(model: ChessBoardModel.empty())
+        ChessBoard(model: ChessBoardModel.empty())
+    }
+
+    /// Performs a disambiguated move.
+    mutating func perform(move: ChessMove) throws {
+        guard let originX = move.originX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin file: `\(move)`") }
+        guard let originY = move.originY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin rank: `\(move)`") }
+        guard let destinationX = move.destinationX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination file: `\(move)`") }
+        guard let destinationY = move.destinationY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination rank: `\(move)`") }
+
+        guard destinationX >= 0 && destinationX < model.files else { throw GameError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds: `\(move)`") }
+        guard destinationY >= 0 && destinationY < model.ranks else { throw GameError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds: `\(move)`") }
+        guard originX >= 0 && originX < model.files else { throw GameError.moveOutOfBounds("Origin x (\(originX)) is out of bounds: `\(move)`") }
+        guard originY >= 0 && originY < model.ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
+
+        var piece = model[originY, originX]
+        piece?.moveCount += 1
+
+        if let promotionPieceType = move.promotionPieceType {
+            piece?.piece = createPiece(promotionPieceType)
+        }
+
+        model[destinationY, destinationX] = piece
+        model[originY, originX] = nil
+
+        for associatedCapture in move.associatedCaptures {
+            model[associatedCapture] = nil
+        }
+
+        for associatedMove in move.associatedMoves {
+            try perform(move: associatedMove)
+        }
     }
 }

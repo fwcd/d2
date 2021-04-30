@@ -39,39 +39,13 @@ public struct ChessBoardModel {
         pieces.map { $0.filter { $0?.color == role }.compactMap(\.?.piece.value).reduce(0, +) }.reduce(0, +)
     }
 
-    public subscript(position: Vec2<Int>) -> Piece? {
+    public subscript(_ position: Vec2<Int>) -> Piece? {
         get { pieces[position.y][position.x] }
-        set(newValue) { pieces[position.y][position.x] = newValue }
+        set { pieces[position.y][position.x] = newValue }
     }
 
-    /// Performs a disambiguated move.
-    mutating func perform(move: ChessMove) throws {
-        guard let originX = move.originX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin file: `\(move)`") }
-        guard let originY = move.originY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have an origin rank: `\(move)`") }
-        guard let destinationX = move.destinationX else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination file: `\(move)`") }
-        guard let destinationY = move.destinationY else { throw GameError.incompleteMove("ChessBoard.perform(move:) requires the move to have a destination rank: `\(move)`") }
-
-        guard destinationX >= 0 && destinationX < files else { throw GameError.moveOutOfBounds("Destination x (\(destinationX)) is out of bounds: `\(move)`") }
-        guard destinationY >= 0 && destinationY < ranks else { throw GameError.moveOutOfBounds("Destination y (\(destinationY)) is out of bounds: `\(move)`") }
-        guard originX >= 0 && originX < files else { throw GameError.moveOutOfBounds("Origin x (\(originX)) is out of bounds: `\(move)`") }
-        guard originY >= 0 && originY < ranks else { throw GameError.moveOutOfBounds("Origin y (\(originY)) is out of bounds: `\(move)`") }
-
-        var piece = pieces[originY][originX]
-        piece?.moveCount += 1
-
-        if let promotionPieceType = move.promotionPieceType {
-            piece?.piece = createPiece(promotionPieceType)
-        }
-
-        pieces[destinationY][destinationX] = piece
-        pieces[originY][originX] = nil
-
-        for associatedCapture in move.associatedCaptures {
-            self[associatedCapture] = nil
-        }
-
-        for associatedMove in move.associatedMoves {
-            try perform(move: associatedMove)
-        }
+    public subscript(_ y: Int, _ x: Int) -> Piece? {
+        get { pieces[y][x] }
+        set { pieces[y][x] = newValue }
     }
 }

@@ -171,10 +171,10 @@ public struct ChessState: GameState, FinitePossibleMoves {
         }
         if options.contains(.commit) {
             let simple = try simplify(move: move)
-            try board.model.perform(move: move)
+            try board.perform(move: move)
             moveHistory.append(simple)
         } else {
-            try board.model.perform(move: move)
+            try board.perform(move: move)
         }
         currentRole = currentRole.opponent
     }
