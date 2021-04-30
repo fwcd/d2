@@ -27,11 +27,14 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
     }
 
     public func pickMove(from state: State) throws -> State.Move {
-        guard let move = try negamax(state: state, alpha: -Double.infinity, beta: Double.infinity, remainingDepth: maxDepth).1 else { throw GameIntelligenceError.noMoves }
+        var stateCount: Int = 0
+        guard let move = try negamax(state: state, alpha: -Double.infinity, beta: Double.infinity, remainingDepth: maxDepth, stateCount: &stateCount).1 else { throw GameIntelligenceError.noMoves }
+        log.info("Analyzed \(stateCount) states")
         return move
     }
 
-    private func negamax(state: State, alpha: Double, beta: Double, remainingDepth: Int) throws -> (Double, State.Move?) {
+    private func negamax(state: State, alpha: Double, beta: Double, remainingDepth: Int, stateCount: inout Int) throws -> (Double, State.Move?) {
+        stateCount += 1
         let possibleMoves = state.possibleMoves
 
         guard remainingDepth > 0 && !state.isGameOver && !possibleMoves.isEmpty else {
@@ -43,7 +46,7 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
 
         for move in possibleMoves {
             let child = try state.childState(after: move)
-            var (value, _) = try negamax(state: child, alpha: -beta, beta: -alpha, remainingDepth: remainingDepth - 1)
+            var (value, _) = try negamax(state: child, alpha: -beta, beta: -alpha, remainingDepth: remainingDepth - 1, stateCount: &stateCount)
             value.negate()
 
             if value > alpha || bestMove == nil {
