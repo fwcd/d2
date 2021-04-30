@@ -22,6 +22,18 @@ public struct ChessState: GameState, FinitePossibleMoves {
     public var roleInCheck: Role? { return ChessRole.allCases.first { isInCheck($0) } }
     public var isDraw: Bool { return !isInCheck(currentRole) && !canMove(currentRole) }
 
+    /// A very simple evaluation from the perspective of the current role
+    /// that only takes the players' pieces' values into account.
+    public var evaluation: Double {
+        if let winner = winner {
+            return winner == currentRole ? Double.infinity : -Double.infinity
+        } else {
+            let ourValue = Double(board.model.totalValue(for: currentRole))
+            let theirValue = Double(board.model.totalValue(for: currentRole.opponent))
+            return ourValue - theirValue
+        }
+    }
+
     init(whitePlayer: GamePlayer, blackPlayer: GamePlayer, board: Board = Board()) {
         self.whitePlayer = whitePlayer
         self.blackPlayer = blackPlayer

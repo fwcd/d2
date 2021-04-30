@@ -6,13 +6,12 @@ public struct ChessBoardModel {
     public typealias Piece = BoardPiece
 
     public private(set) var pieces: [[Piece?]]
-    public var ranks: Int { return pieces.count }
-    public var files: Int { return pieces[0].count }
-
-    public var positions: [Vec2<Int>] { return (0..<ranks).flatMap { y in (0..<files).map { Vec2(x: $0, y: y) } } }
+    public var ranks: Int { pieces.count }
+    public var files: Int { pieces[0].count }
+    public var positions: [Vec2<Int>] { (0..<ranks).flatMap { y in (0..<files).map { Vec2(x: $0, y: y) } } }
 
     public var pieceTypes: [[BoardPieceType?]] {
-        return pieces.map { row in row.map { $0?.asPieceType } }
+        pieces.map { row in row.map { $0?.asPieceType } }
     }
 
     public init() {
@@ -33,11 +32,15 @@ public struct ChessBoardModel {
     }
 
     public static func empty() -> ChessBoardModel {
-        return ChessBoardModel(pieces: Array(repeating: Array<Piece?>(repeating: nil, count: defaultSideLength), count: defaultSideLength))
+        ChessBoardModel(pieces: Array(repeating: Array<Piece?>(repeating: nil, count: defaultSideLength), count: defaultSideLength))
+    }
+
+    public func totalValue(for role: ChessRole) -> Int {
+        pieces.map { $0.compactMap(\.?.piece.value).reduce(0, +) }.reduce(0, +)
     }
 
     public subscript(position: Vec2<Int>) -> Piece? {
-        get { return pieces[position.y][position.x] }
+        get { pieces[position.y][position.x] }
         set(newValue) { pieces[position.y][position.x] = newValue }
     }
 

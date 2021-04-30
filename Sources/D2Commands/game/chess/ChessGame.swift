@@ -43,6 +43,9 @@ public struct ChessGame: Game {
         King = `K`, Queen = `Q`, Rook = `R`, Bishop = `B`, Knight = `N`, Pawn = no letter
         """
 
+    // TODO: Support UCI engines (e.g. Stockfish)
+    public let engine: AnyGameIntelligence<State> = AnyGameIntelligence(AlphaBetaSearch(maxDepth: 3, evaluator: \.evaluation))
+
     public init() {}
 
     private static func parse(move rawMove: String) throws -> State.Move {
