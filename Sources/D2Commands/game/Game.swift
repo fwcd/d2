@@ -38,9 +38,3 @@ public extension Game {
     var apiActions: Set<String> { [] }
     var engine: AnyGameIntelligence<State>? { nil }
 }
-
-public extension Game where State: FinitePossibleMoves {
-    var engine: AnyGameIntelligence<State>? {
-        AnyGameIntelligence(AlphaBetaSearch(maxDepth: 3))
-    }
-}
