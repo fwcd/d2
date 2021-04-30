@@ -3,7 +3,7 @@ public struct TicTacToeGame: Game {
 
     public let name: String = "tic-tac-toe"
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
-        "move": { ActionResult(nextState: try $0.state.childState(after: try TicTacToeGame.parse(move: $0.args), committing: true)) }
+        "move": { ActionResult(nextState: try $0.state.childState(after: try TicTacToeGame.parse(move: $0.args), options: .commit)) }
     ]
     public let hasPrettyRoles = true
     public let helpText: String = """

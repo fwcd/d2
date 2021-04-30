@@ -10,7 +10,7 @@ public struct HangmanGame: Game {
             //       roles of the player if he plays against himself.
             guard let role = $0.state.rolesOf(player: $0.player).first else { throw HangmanError.playerHasNoRole }
             do {
-                let next = try $0.state.childState(after: HangmanMove(fromString: $0.args), by: role, committing: true)
+                let next = try $0.state.childState(after: HangmanMove(fromString: $0.args), by: role, options: .commit)
                 return ActionResult(nextState: next)
             } catch GameError.invalidMove(let e) {
                 guard $0.state.hasTriesLeft(role: role) else { throw HangmanError.noTriesLeft }

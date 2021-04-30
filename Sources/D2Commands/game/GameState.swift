@@ -35,7 +35,7 @@ public protocol GameState {
     /// of e.g. an alpha-beta-search). Use cases include tracking
     /// a move history or anything that's not essential for computing
     /// possible moves and evaluations.
-    mutating func perform(move: Move, by role: Role, committing: Bool) throws
+    mutating func perform(move: Move, by role: Role, options: GameMoveOptions) throws
 }
 
 public extension GameState {
@@ -47,22 +47,18 @@ public extension GameState {
         try perform(move: move, by: currentRole)
     }
 
-    mutating func perform(move: Move, committing: Bool) throws {
-        try perform(move: move, by: currentRole, committing: committing)
-    }
-
     mutating func perform(move: Move, by role: Role) throws {
-        try perform(move: move, by: currentRole, committing: false)
+        try perform(move: move, by: currentRole, options: [])
     }
 
-    func childState(after move: Move, committing: Bool = false) throws -> Self {
-        try childState(after: move, by: currentRole, committing: committing)
+    func childState(after move: Move, options: GameMoveOptions = []) throws -> Self {
+        try childState(after: move, by: currentRole, options: options)
     }
 
-    func childState(after move: Move, by role: Role, committing: Bool = false) throws -> Self {
-        if isPossible(move: move, by: role) {
+    func childState(after move: Move, by role: Role, options: GameMoveOptions = []) throws -> Self {
+        if options.contains(.skipCheck) || isPossible(move: move, by: role) {
             var next = self
-            try next.perform(move: move, by: role, committing: committing)
+            try next.perform(move: move, by: role, options: options)
             return next
         } else {
             throw GameError.invalidMove("Move `\(move)` is not allowed!")

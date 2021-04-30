@@ -42,7 +42,7 @@ public struct CodenamesState: GameState, Multiplayer {
         ]
     }
 
-    public mutating func perform(move: Move, by role: Role, committing: Bool) throws {
+    public mutating func perform(move: Move, by role: Role, options: GameMoveOptions) throws {
         switch (move, role) {
             case (.codeword(let count, _), .spymaster(_)):
                 expectedCount = count

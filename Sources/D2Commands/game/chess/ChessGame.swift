@@ -13,7 +13,7 @@ public struct ChessGame: Game {
         "move": {
             let move = try $0.state.disambiguate(move: ChessGame.parse(move: $0.args))
             let role = $0.state.currentRole
-            let nextState = try $0.state.childState(after: move, committing: true)
+            let nextState = try $0.state.childState(after: move, options: .commit)
             var text: String? = nil
 
             if let roleInCheck = nextState.roleInCheck {

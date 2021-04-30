@@ -28,7 +28,7 @@ public struct HangmanState: GameState, Multiplayer, FinitePossibleMoves {
         remainingTries = Dictionary(uniqueKeysWithValues: (0..<players.count).map { ($0, initialPlayerTries) })
     }
 
-    public mutating func perform(move: Move, by role: Role, committing: Bool) throws {
+    public mutating func perform(move: Move, by role: Role, options: GameMoveOptions) throws {
         try board.guess(word: move.word)
         if board.isUncovered && winner == nil {
             winner = role

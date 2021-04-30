@@ -88,7 +88,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private func causesKingInCheck(_ move: Move, for role: Role) -> Bool {
         var stateAfterMove = self
         do {
-            try stateAfterMove.performDirectly(move: move, committing: false)
+            try stateAfterMove.perform(move: move, by: currentRole, options: .skipPreprocessing)
         } catch {
             log.error("Could not spawn child state while testing whether a move causes a check: \(error)")
             return false
@@ -100,7 +100,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private func causesCheckmate(_ move: Move, for role: Role) -> Bool {
         var stateAfterMove = self
         do {
-            try stateAfterMove.performDirectly(move: move, committing: false)
+            try stateAfterMove.perform(move: move, by: currentRole, options: .skipPreprocessing)
         } catch {
             log.error("Could not spawn child state while testing whether a move causes a checkmate: \(error)")
             return false
@@ -164,12 +164,12 @@ public struct ChessState: GameState, FinitePossibleMoves {
         return Set(moves)
     }
 
-    public mutating func perform(move: Move, by role: Role, committing: Bool) throws {
-        try performDirectly(move: try disambiguate(move: move), committing: committing)
-    }
-
-    private mutating func performDirectly(move: Move, committing: Bool) throws {
-        if committing {
+    public mutating func perform(move: Move, by role: Role, options: GameMoveOptions) throws {
+        var move = move
+        if !options.contains(.skipPreprocessing) {
+            move = try disambiguate(move: move)
+        }
+        if options.contains(.commit) {
             let simple = try simplify(move: move)
             try board.model.perform(move: move)
             moveHistory.append(simple)
