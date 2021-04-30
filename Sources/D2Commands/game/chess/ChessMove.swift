@@ -44,13 +44,13 @@ public struct ChessMove: Hashable, CustomStringConvertible {
         }
 
         let components: [String?] = [
-            pieceType.flatMap(createPiece).map { String($0.notationLetters[0]) },
+            pieceType.flatMap(createPiece).flatMap(\.notationLetters.first).map(String.init),
             originX.flatMap(fileOf(x:)).map(String.init),
             originY.flatMap(rankOf(y:)).map(String.init),
             isCapture.map { $0 ? "x" : "" },
             destinationX.flatMap(fileOf(x:)).map(String.init),
             destinationY.flatMap(rankOf(y:)).map(String.init),
-            promotionPieceType.flatMap(createPiece).map { "=\($0.notationLetters[0])" },
+            promotionPieceType.flatMap(createPiece).flatMap(\.notationLetters.first).map { "=\($0)" },
             checkType.map {
                 switch $0 {
                     case .check: return "+"
