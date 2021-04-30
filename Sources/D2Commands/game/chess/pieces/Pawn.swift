@@ -12,7 +12,7 @@ public struct Pawn: ChessPiece {
         let captureMoves: [Vec2<Int>] = [position + Vec2(x: -1, y: direction), position + Vec2(x: 1, y: direction)]
         var forwardMoves: [Vec2<Int>] = [position + Vec2(y: direction)]
 
-        if !moved {
+        if !moved && board[position.y + direction][position.x] == nil {
             forwardMoves.append(position + Vec2(y: 2 * direction))
         }
 
