@@ -190,13 +190,12 @@ public struct ChessState: GameState, FinitePossibleMoves {
     }
 
     func simplify(move: Move) throws -> Move {
-        var lastMove = move
+        var lastMove: Move
         var move = move
-        while !(try isAmbiguous(move: move)) {
+        repeat {
             lastMove = move
-            move = performSimplificationStep(move: move)
-            guard move != lastMove else { throw GameError.ambiguousMove("Cannot simplify ambiguous move: `\(move)`") }
-        }
+            move = performSimplificationStep(move: lastMove)
+        } while try lastMove != move && !isAmbiguous(move: move)
         return lastMove
     }
 
