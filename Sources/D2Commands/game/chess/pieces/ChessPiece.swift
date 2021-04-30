@@ -11,6 +11,11 @@ public protocol ChessPiece {
     /// if present.
     var notationLetters: [Character] { get }
 
+    /// The standard valuation of the piece. The king has an arbitrary
+    /// value, that is however guaranteed to be greater than any the
+    /// value of any other piece.
+    var value: Int { get }
+
     /// Fetches the possible moves of this piece.
     ///
     /// Each move is *required* to contain at least pieceType, color,
