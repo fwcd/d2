@@ -36,7 +36,7 @@ public struct ChessPGN: CustomStringConvertible {
         state.moveHistory
             .enumerated()
             .map { (i, m) -> String in
-                let pre: String = (i % 2 == 0) ? "\(i + 1). " : " "
+                let pre: String = (i % 2 == 0) ? "\(i + 1). " : ""
                 return pre + m.algebraicNotation
             }
             .joined(separator: " ")
