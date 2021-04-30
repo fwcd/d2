@@ -1,3 +1,9 @@
+import Foundation
+import Graphics
+import Utils
+
+fileprivate let pngDataUrlPattern = try! Regex(from: "data:image\\/png;base64,(.*)")
+
 public struct MinecraftServerInfo: Codable {
     public let version: Version
     public let players: Players
@@ -5,6 +11,13 @@ public struct MinecraftServerInfo: Codable {
     public let forgeData: ForgeData?
     public let modinfo: LegacyModInfo? // deprecated (pre-1.13)
     public let favicon: String?
+
+    public var faviconImage: Image? {
+        favicon
+            .flatMap { pngDataUrlPattern.firstGroups(in: $0) }
+            .flatMap { Data(base64Encoded: $0[1]) }
+            .flatMap { try? Image(fromPng: $0) }
+    }
 
     public struct Version: Codable {
         public enum CodingKeys: String, CodingKey {
