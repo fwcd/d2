@@ -171,7 +171,7 @@ public struct ChessState: GameState, FinitePossibleMoves {
     private mutating func performDirectly(move: Move) throws {
         try board.model.perform(move: move)
         currentRole = currentRole.opponent
-        moveHistory.append(try simplify(move: move))
+        moveHistory.append(move)
     }
 
     func resolve(move: Move) -> [Move] {
@@ -185,13 +185,14 @@ public struct ChessState: GameState, FinitePossibleMoves {
     }
 
     func simplify(move: Move) throws -> Move {
+        var lastMove = move
         var move = move
-        while try isAmbiguous(move: move) {
-            let newMove = performSimplificationStep(move: move)
-            guard move != newMove else { throw GameError.ambiguousMove("Cannot simplify ambiguous move: `\(move)`") }
-            move = newMove
+        while !(try isAmbiguous(move: move)) {
+            lastMove = move
+            move = performSimplificationStep(move: move)
+            guard move != lastMove else { throw GameError.ambiguousMove("Cannot simplify ambiguous move: `\(move)`") }
         }
-        return move
+        return lastMove
     }
 
     private func performSimplificationStep(move: Move) -> Move {
