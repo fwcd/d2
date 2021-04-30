@@ -22,6 +22,8 @@ public protocol Game {
     var themeColor: Color? { get }
     /// Whether the roles should be printed in user-facing output.
     var hasPrettyRoles: Bool { get }
+    /// The intelligence to be used for automatic players.
+    var engine: AnyGameIntelligence<State>? { get }
 
     init()
 }
@@ -34,4 +36,11 @@ public extension Game {
     var isRealTime: Bool { false }
     var helpText: String { "No help text found for \(name)" }
     var apiActions: Set<String> { [] }
+    var engine: AnyGameIntelligence<State>? { nil }
+}
+
+public extension Game where State: FinitePossibleMoves {
+    var engine: AnyGameIntelligence<State>? {
+        AnyGameIntelligence(AlphaBetaSearch(maxDepth: 3))
+    }
 }

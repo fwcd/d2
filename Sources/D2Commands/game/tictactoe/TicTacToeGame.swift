@@ -14,6 +14,9 @@ public struct TicTacToeGame: Game {
         `move 1 2` (equivalent to `center right`)
         """
 
+    // We can safely use an alpha-beta-search without depth limit here
+    public let engine: AnyGameIntelligence<State>? = AnyGameIntelligence(AlphaBetaSearch())
+
     public init() {}
 
     private static func parse(move rawMove: String) throws -> State.Move {

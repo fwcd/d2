@@ -280,15 +280,17 @@ public class GameCommand<G: Game>: Command {
     /// Automatically performs the next move. Returns whether to continue the subscription.
     private func performAutomatically(on channelID: ChannelID, output: CommandOutput) -> Bool {
         guard let state = matches[channelID] else { return true }
+        guard let engine = game.engine else {
+            output.append(errorText: "No engine available for this game to perform moves automatically!")
+            return false
+        }
 
-        // TODO: Make this configurable
-        let ai = AlphaBetaSearch<G.State>()
         var continueSubscription = true
         var continueAutomatically: Bool = false
 
         do {
-            let move = try ai.pickMove(from: state)
-            let next = state.childState(after: move)
+            let move = try engine.pickMove(from: state)
+            let next = try state.childState(after: move)
             matches[channelID] = next
             continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
         } catch {
@@ -296,7 +298,11 @@ public class GameCommand<G: Game>: Command {
             continueSubscription = false
         }
 
-        return continueSubscription
+        if continueAutomatically {
+            return performAutomatically(on: channelID, output: output)
+        } else {
+            return continueSubscription
+        }
     }
 
     private func describe(role: G.State.Role, in state: G.State) -> String {
