@@ -121,7 +121,19 @@ public class GameCommand<G: Game>: Command {
                 additionalMsg = .text("The old match \(previousMatch.playersDescription) has been cancelled in favor of this one")
             }
 
-            let state = try G.State.init(players: players)
+            var state = try G.State.init(players: players)
+
+            // TODO: This would be an issue if all players are automatic, which is currently forbidden
+            if let engine = game.engine {
+                do {
+                    while state.playersOf(role: state.currentRole).contains(where: \.isAutomatic) {
+                        try state.perform(move: engine.pickMove(from: state), by: state.currentRole)
+                    }
+                } catch {
+                    output.append(errorText: "Could not perform initial automatic moves!")
+                }
+            }
+
             matches[channelID] = state
             apiEnabled = flags.contains("api")
             silent = flags.contains("silent")
@@ -181,6 +193,7 @@ public class GameCommand<G: Game>: Command {
     @discardableResult
     private func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
+        let output = BufferedOutput(output)
         var continueSubscription: Bool = true
         var continueAutomatically: Bool = false
 
@@ -293,6 +306,17 @@ public class GameCommand<G: Game>: Command {
             let next = try state.childState(after: move)
             matches[channelID] = next
             continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
+
+            let encodedBoard: RichValue = next.board.asRichValue
+            output.append(.compound([
+                encodedBoard,
+                .embed(Embed(
+                    description: [
+                        next.handsDescription.map { "Hands: \($0)" },
+                        describeTurn(in: next)
+                    ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
+                ))
+            ]))
         } catch {
             output.append(error, errorText: "Error while performing move automatically")
             continueSubscription = false
