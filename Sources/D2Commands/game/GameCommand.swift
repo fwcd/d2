@@ -215,7 +215,9 @@ public class GameCommand<G: Game>: Command {
                 // Output user's hands
                 sendHandsAsDMs(fromState: next, to: output)
 
-                if next.isGameOver {
+                let gameOver = next.isGameOver
+
+                if gameOver {
                     // Game is over
                     matches[channelID] = nil
                     continueSubscription = false
@@ -227,9 +229,11 @@ public class GameCommand<G: Game>: Command {
                 if !silent || !continueSubscription {
                     // Output next board
                     var rendered = render(state: next, additionalText: actionResult.text, additionalFiles: actionResult.files)
-                    if let finalAction = try game.finalAction.flatMap({ try game.actions[$0]?(params) }) {
+
+                    if gameOver, let finalAction = try game.finalAction.flatMap({ try game.actions[$0]?(params) }) {
                         rendered += .files(finalAction.files)
                     }
+
                     output.append(rendered)
                 }
             } else if let text = actionResult.text {
