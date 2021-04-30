@@ -39,7 +39,7 @@ public struct ChessGame: Game {
             )
             guard let data = try pgn.formatted().data(using: .utf8) else { throw ChessPGNError.couldNotEncode }
             log.info("Created PGN")
-            let filename = "\($0.channelName ?? "game").pgn"
+            let filename = "\($0.channelName ?? "game")-\(pgn.dateFormatter.string(from: Date())).pgn"
             return ActionResult(files: [Message.FileUpload(data: data, filename: filename, mimeType: "application/vnd.chess-pgn")])
         }
     ]

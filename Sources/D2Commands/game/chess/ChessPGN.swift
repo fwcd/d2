@@ -1,12 +1,6 @@
 import Foundation
 import Utils
 
-fileprivate func makeDateFormatter(_ format: String) -> DateFormatter {
-    let formatter = DateFormatter()
-    formatter.dateFormat = format
-    return formatter
-}
-
 /// Represents a PGN-style game
 public struct ChessPGN: CustomStringConvertible {
     public var event: String = "?"
@@ -17,13 +11,18 @@ public struct ChessPGN: CustomStringConvertible {
     public var black: String = "?"
     public var state: ChessState
 
+    public var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd"
+        return formatter
+    }
     public var description: String { (try? formatted()) ?? "<invalid>" }
 
     public func formatted() throws -> String {
         """
         [Event "\(event)"]
         [Site "\(site)"]
-        [Date "\(date.map { makeDateFormatter("yyyy.MM.dd").string(from: $0) } ?? "??")"]
+        [Date "\(date.map { dateFormatter.string(from: $0) } ?? "??")"]
         [Round "\(round)"]
         [White "\(white)"]
         [Black "\(black)"]
