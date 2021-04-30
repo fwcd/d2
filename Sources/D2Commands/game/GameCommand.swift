@@ -72,6 +72,12 @@ public class GameCommand<G: Game>: Command {
         let flags = parseFlags(from: text)
         let players = ([author] + mentions).map { gamePlayer(from: $0, context: context) }
 
+        // TODO: Support computer vs. computer matches without spamming the channel
+        guard players.count(forWhich: \.isAutomatic) <= 1 else {
+            output.append(errorText: "Matches with multiple automatic players are currently not supported!")
+            return
+        }
+
         startMatch(between: players, on: channel.id, output: output, flags: flags)
         context.subscribeToChannel()
     }
@@ -171,10 +177,12 @@ public class GameCommand<G: Game>: Command {
     }
 
     /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.
+    /// Automatically performs subsequent computer moves as needed.
     @discardableResult
-    func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> Bool {
+    private func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         var continueSubscription: Bool = true
+        var continueAutomatically: Bool = false
 
         do {
             let params = ActionParameters(
@@ -236,6 +244,7 @@ public class GameCommand<G: Game>: Command {
                     )
 
                     matches[channelID] = next
+                    continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
                 }
 
                 if !silent || !continueSubscription {
@@ -259,6 +268,32 @@ public class GameCommand<G: Game>: Command {
             output.append(errorText: "Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
         } catch {
             output.append(error, errorText: "Error while attempting move")
+        }
+
+        if continueAutomatically {
+            return performAutomatically(on: channelID, output: output)
+        } else {
+            return continueSubscription
+        }
+    }
+
+    /// Automatically performs the next move. Returns whether to continue the subscription.
+    private func performAutomatically(on channelID: ChannelID, output: CommandOutput) -> Bool {
+        guard let state = matches[channelID] else { return true }
+
+        // TODO: Make this configurable
+        let ai = AlphaBetaSearch<G.State>()
+        var continueSubscription = true
+        var continueAutomatically: Bool = false
+
+        do {
+            let move = try ai.pickMove(from: state)
+            let next = state.childState(after: move)
+            matches[channelID] = next
+            continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
+        } catch {
+            output.append(error, errorText: "Error while performing move automatically")
+            continueSubscription = false
         }
 
         return continueSubscription
