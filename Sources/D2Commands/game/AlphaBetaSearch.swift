@@ -45,7 +45,8 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
         var bestMove: State.Move? = nil
 
         for move in possibleMoves {
-            let child = try state.childState(after: move)
+            var child = state
+            try child.perform(move: move)
             var (value, _) = try negamax(state: child, alpha: -beta, beta: -alpha, remainingDepth: remainingDepth - 1, stateCount: &stateCount)
             value.negate()
 
