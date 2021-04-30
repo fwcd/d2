@@ -4,7 +4,6 @@ public struct BoardPiece {
     public var moveCount: Int
     public var moved: Bool { moveCount > 0 }
 
-    public var asPieceType: BoardPieceType { BoardPieceType(color, piece.pieceType, moveCount: moveCount) }
     public var resourcePng: String { (color == .white) ? piece.whiteResourcePng : piece.blackResourcePng }
 
     public init(_ color: ChessRole, _ piece: ChessPiece, moveCount: Int = 0) {

@@ -16,10 +16,7 @@ public struct ChessBoardModel {
     ].flatMap { $0 }
 
     public typealias Piece = BoardPiece
-    public typealias PieceType = BoardPieceType
-
     public private(set) var pieces: [Piece?]
-    public var pieceTypes: [PieceType?] { pieces.map { $0?.asPieceType } }
 
     public init() {
         self.init(pieces: Self.defaultPieces)

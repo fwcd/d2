@@ -23,10 +23,6 @@ public struct ChessGame: Game {
             return ActionResult(nextState: nextState, text: text)
         },
         "possibleMoves": { ActionResult(text: "`\($0.state.possibleMoves)`") },
-        "json": {
-            let json = String(data: try JSONEncoder().encode($0.state.board.model.pieceTypes), encoding: .utf8)
-            return ActionResult(text: json.map { "```json\n\($0)\n```" })
-        },
         "pgn": {
             log.info("Creating PGN of chess match on \($0.channelName ?? "?")...")
 
@@ -47,7 +43,7 @@ public struct ChessGame: Game {
             return ActionResult(files: [Message.FileUpload(data: data, filename: filename, mimeType: "application/vnd.chess-pgn")])
         }
     ]
-    public let apiActions: Set<String> = ["move", "json"]
+    public let apiActions: Set<String> = ["move", "pgn"]
     public let finalAction: String? = "pgn"
     public let themeColor: Color? = ChessTheme.defaultTheme.darkColor
     public let hasPrettyRoles = true
