@@ -220,53 +220,22 @@ public class GameCommand<G: Game>: Command {
             }
 
             if let next = actionResult.nextState {
-                // Output next board and user's hands
-                var embed: Embed? = nil
-
+                // Output user's hands
                 sendHandsAsDMs(fromState: next, to: output)
 
-                if let winner = next.winner {
-                    // Game won
-
-                    embed = Embed(
-                        title: ":crown: Winner",
-                        description: "\(describe(role: winner, in: next)) won the game!"
-                    )
-
-                    matches[channelID] = nil
-                    continueSubscription = false
-                } else if next.isDraw {
-                    // Game over due to a draw
-
-                    embed = Embed(
-                        title: ":crown: Game Over",
-                        description: "The game resulted in a draw!"
-                    )
-
+                if next.winner != nil || next.isDraw {
+                    // Game is over
                     matches[channelID] = nil
                     continueSubscription = false
                 } else {
                     // Advance the game
-
-                    embed = Embed(
-                        description: [
-                            actionResult.text,
-                            next.handsDescription.map { "Hands: \($0)" },
-                            describeTurn(in: next)
-                        ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
-                    )
-
                     matches[channelID] = next
                     continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
                 }
 
                 if !silent || !continueSubscription {
-                    let encodedBoard: RichValue = next.board.asRichValue
-                    output.append(.compound([
-                        encodedBoard,
-                        .embed(embed),
-                        .files(actionResult.files)
-                    ]))
+                    // Output next board
+                    output.append(render(state: next, additionalText: actionResult.text, additionalFiles: actionResult.files))
                 }
             } else if let text = actionResult.text {
                 output.append(text)
@@ -327,6 +296,38 @@ public class GameCommand<G: Game>: Command {
         } else {
             return continueSubscription
         }
+    }
+
+    private func render(state: G.State, additionalText: String? = nil, additionalFiles: [Message.FileUpload] = []) -> RichValue {
+        var embed: Embed? = nil
+
+        if let winner = state.winner {
+            embed = Embed(
+                title: ":crown: Winner",
+                description: "\(describe(role: winner, in: state)) won the game!"
+            )
+        } else if state.isDraw {
+            embed = Embed(
+                title: ":crown: Game Over",
+                description: "The game resulted in a draw!"
+            )
+        } else {
+            embed = Embed(
+                description: [
+                    additionalText,
+                    state.handsDescription.map { "Hands: \($0)" },
+                    describeTurn(in: state)
+                ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
+            )
+        }
+
+        let encodedBoard = state.board.asRichValue
+
+        return .compound([
+            encodedBoard,
+            .embed(embed),
+            .files(additionalFiles)
+        ])
     }
 
     private func describe(role: G.State.Role, in state: G.State) -> String {
