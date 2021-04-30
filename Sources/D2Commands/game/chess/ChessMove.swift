@@ -34,17 +34,33 @@ public struct ChessMove: Hashable, CustomStringConvertible {
     }
 
     public var description: String {
-        return StringBuilder()
-            .append(color?.rawValue, withSeparator: " ")
-            .append(pieceType?.rawValue, withSeparator: " ")
-            .append(describePosition(x: originX, y: originY), withSeparator: " ")
-            .append(isCapture.map { $0 ? "x" : "-" }, or: " ", withSeparator: " ")
-            .append(describePosition(x: destinationX, y: destinationY), withSeparator: " ")
-            .append(promotionPieceType.map { "promotion to \($0.rawValue) " }, withSeparator: " ")
-            .append(checkType?.rawValue, withSeparator: " ")
-            .append(isEnPassant ? "e.p." : "", withSeparator: " ")
-            .append(castlingType.map { "castling \($0.rawValue) " }, withSeparator: " ")
-            .trimmedValue
+        [color?.rawValue, algebraicNotation].compactMap { $0 }.joined(separator: " ")
+    }
+    public var algebraicNotation: String {
+        switch castlingType {
+            case .short?: return "O-O"
+            case .long?: return "O-O-O"
+            default: break
+        }
+
+        let components: [String?] = [
+            pieceType.flatMap(createPiece).map { String($0.notationLetters[0]) },
+            originX.flatMap(fileOf(x:)).map(String.init),
+            originY.flatMap(rankOf(y:)).map(String.init),
+            isCapture.map { $0 ? "x" : "" },
+            destinationX.flatMap(fileOf(x:)).map(String.init),
+            destinationY.flatMap(rankOf(y:)).map(String.init),
+            promotionPieceType.flatMap(createPiece).map { "=\($0.notationLetters[0])" },
+            checkType.map {
+                switch $0 {
+                    case .check: return "+"
+                    case .checkmate: return "#"
+                }
+            },
+            isEnPassant ? "e. p." : ""
+        ]
+
+        return components.compactMap { $0 }.joined(separator: " ")
     }
 
     public init(
