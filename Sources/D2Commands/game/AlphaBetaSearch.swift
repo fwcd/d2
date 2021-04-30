@@ -1,3 +1,7 @@
+import Logging
+
+fileprivate let log = Logger(label: "D2Commands.AlphaBetaSearch")
+
 /// A generic strategy for picking moves that uses
 /// alpha-beta-search (a variant of min-max-search)
 /// and a heuristic to determine the next move.
@@ -46,6 +50,10 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
                 if value >= beta {
                     break
                 }
+            }
+
+            if remainingDepth == maxDepth {
+                log.info("Move \(move) has value \(value).")
             }
         }
 
