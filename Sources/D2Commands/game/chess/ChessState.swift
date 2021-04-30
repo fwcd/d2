@@ -174,8 +174,33 @@ public struct ChessState: GameState, FinitePossibleMoves {
     }
 
     func resolve(move: Move) -> [Move] {
-        return possibleMoves
-            .filter { $0.matches(move) }
+        possibleMoves.filter { $0.matches(move) }
+    }
+
+    func isAmbiguous(move: Move) throws -> Bool {
+        let resolvedCount = resolve(move: move).count
+        guard resolvedCount != 0 else { throw GameError.invalidMove("Cannot check invalid move for ambiguity: `\(move)`") }
+        return resolvedCount != 1
+    }
+
+    func simplify(move: Move) throws -> Move {
+        var move = move
+        while try isAmbiguous(move: move) {
+            let newMove = performSimplificationStep(move: move)
+            guard move != newMove else { throw GameError.ambiguousMove("Cannot simplify ambiguous move: `\(move)`") }
+            move = newMove
+        }
+        return move
+    }
+
+    private func performSimplificationStep(move: Move) -> Move {
+        var move = move
+        if move.originY != nil {
+            move.originY = nil
+        } else if move.originX != nil {
+            move.originX = nil
+        }
+        return move
     }
 
     func unambiguouslyResolve(move unresolvedMove: Move) throws -> Move {
