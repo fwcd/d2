@@ -3,4 +3,5 @@ public struct ActionParameters<State: GameState> {
     public let state: State
     public let apiEnabled: Bool
     public let player: GamePlayer
+    public let channelName: String?
 }

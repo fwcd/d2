@@ -15,7 +15,6 @@ public struct ChessPGN: CustomStringConvertible {
     public var round: String = "?"
     public var white: String = "?"
     public var black: String = "?"
-    public var result: ChessRole? = nil
     public var state: ChessState
 
     public var description: String { (try? formatted()) ?? "<invalid>" }
@@ -28,10 +27,12 @@ public struct ChessPGN: CustomStringConvertible {
         [Round "\(round)"]
         [White "\(white)"]
         [Black "\(black)"]
+        [Result "\(formattedResult())"]
 
-        \(try formattedMoves())
-        """
+        \(try formattedMoves()) \(state.isGameOver ? formattedResult() : "")
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+
     private func formattedMoves() throws -> String {
         try state.moveHistory
             .enumerated()
@@ -40,5 +41,14 @@ public struct ChessPGN: CustomStringConvertible {
                 return try pre + state.simplify(move: m).algebraicNotation
             }
             .joined(separator: " ")
+    }
+
+    private func formattedResult() -> String {
+        if state.isGameOver {
+            let winner = state.winner
+            return "\(winner == .white ? 1 : 0)-\(winner == .black ? 1 : 0)"
+        } else {
+            return "*"
+        }
     }
 }

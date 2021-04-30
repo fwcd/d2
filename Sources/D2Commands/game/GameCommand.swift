@@ -166,8 +166,8 @@ public class GameCommand<G: Game>: Command {
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
         guard let author = context.author.map({ gamePlayer(from: $0, context: context) }) else { return }
 
-        if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel {
-            let continueSubscription = perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, output: output, author: author)
+        if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel, let client = context.client {
+            let continueSubscription = perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, output: output, author: author, client: client)
             if !continueSubscription {
                 context.unsubscribeFromChannel()
             }
@@ -181,7 +181,7 @@ public class GameCommand<G: Game>: Command {
     /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.
     /// Automatically performs subsequent computer moves as needed.
     @discardableResult
-    private func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer) -> Bool {
+    private func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, output: CommandOutput, author: GamePlayer, client: MessageClient) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true
@@ -191,7 +191,8 @@ public class GameCommand<G: Game>: Command {
                 args: args,
                 state: state,
                 apiEnabled: apiEnabled,
-                player: author
+                player: author,
+                channelName: client.guildForChannel(channelID)?.channels[channelID]?.name
             )
             guard let actionResult = try game.actions[actionKey]?(params) ?? defaultActions[actionKey]?(game, params) else { return true }
 

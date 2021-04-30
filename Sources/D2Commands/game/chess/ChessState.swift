@@ -10,8 +10,8 @@ public struct ChessState: GameState, FinitePossibleMoves {
     public typealias Board = ChessBoard
     public typealias Move = ChessMove
 
-    private let whitePlayer: GamePlayer
-    private let blackPlayer: GamePlayer
+    public let whitePlayer: GamePlayer
+    public let blackPlayer: GamePlayer
     public private(set) var board: Board
     public private(set) var currentRole: Role = .white
     public private(set) var moveHistory: [ChessMove] = []

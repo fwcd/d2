@@ -1,3 +1,4 @@
+import D2MessageIO
 import Foundation
 import Graphics
 
@@ -20,6 +21,19 @@ public struct ChessGame: Game {
         "json": {
             let json = String(data: try JSONEncoder().encode($0.state.board.model.pieceTypes), encoding: .utf8)
             return ActionResult(text: json.map { "```json\n\($0)\n```" })
+        },
+        "pgn": {
+            let pgn = ChessPGN(
+                event: "Discord Chess Match",
+                site: $0.channelName.map { "#\($0)" } ?? "Discord",
+                date: Date(),
+                white: $0.state.whitePlayer.username,
+                black: $0.state.blackPlayer.username,
+                state: $0.state
+            )
+            guard let data = try pgn.formatted().data(using: .utf8) else { throw ChessPGNError.couldNotEncode }
+            let filename = "\($0.channelName ?? "game").pgn"
+            return ActionResult(files: [Message.FileUpload(data: data, filename: filename, mimeType: "application/vnd.chess-pgn")])
         }
     ]
     public let apiActions: Set<String> = ["move", "json"]
