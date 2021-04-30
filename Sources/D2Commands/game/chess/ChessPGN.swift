@@ -11,7 +11,7 @@ public struct ChessPGN: CustomStringConvertible {
     public var black: String = "?"
     public var state: ChessState
 
-    public var dateFormatter: DateFormatter {
+    private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd"
         return formatter

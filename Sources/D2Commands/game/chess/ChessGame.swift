@@ -28,7 +28,8 @@ public struct ChessGame: Game {
             return ActionResult(text: json.map { "```json\n\($0)\n```" })
         },
         "pgn": {
-            log.info("Creating PGN...")
+            log.info("Creating PGN of chess match on \($0.channelName ?? "?")...")
+
             let pgn = ChessPGN(
                 event: "Discord Chess Match",
                 site: $0.channelName.map { "#\($0)" } ?? "Discord",
@@ -38,8 +39,11 @@ public struct ChessGame: Game {
                 state: $0.state
             )
             guard let data = try pgn.formatted().data(using: .utf8) else { throw ChessPGNError.couldNotEncode }
-            log.info("Created PGN")
-            let filename = "\($0.channelName ?? "game")-\(pgn.dateFormatter.string(from: Date())).pgn"
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let filename = "\($0.channelName ?? "game")-\(dateFormatter.string(from: Date())).pgn"
+
             return ActionResult(files: [Message.FileUpload(data: data, filename: filename, mimeType: "application/vnd.chess-pgn")])
         }
     ]
