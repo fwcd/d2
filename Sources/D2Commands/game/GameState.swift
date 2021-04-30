@@ -36,6 +36,7 @@ public protocol GameState {
 public extension GameState {
     var hands: [Role: Hand] { [:] }
     var handsDescription: String? { nil }
+    var isGameOver: Bool { winner != nil || isDraw }
 
     func childState(after move: Move) throws -> Self {
         try childState(after: move, by: currentRole)

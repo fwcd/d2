@@ -122,17 +122,7 @@ public class GameCommand<G: Game>: Command {
             }
 
             var state = try G.State.init(players: players)
-
-            // TODO: This would be an issue if all players are automatic, which is currently forbidden
-            if let engine = game.engine {
-                do {
-                    while state.playersOf(role: state.currentRole).contains(where: \.isAutomatic) {
-                        try state.perform(move: engine.pickMove(from: state), by: state.currentRole)
-                    }
-                } catch {
-                    output.append(errorText: "Could not perform initial automatic moves!")
-                }
-            }
+            try performAutomaticMoves(on: &state)
 
             matches[channelID] = state
             apiEnabled = flags.contains("api")
@@ -195,7 +185,6 @@ public class GameCommand<G: Game>: Command {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true
-        var continueAutomatically: Bool = false
 
         do {
             let params = ActionParameters(
@@ -219,18 +208,19 @@ public class GameCommand<G: Game>: Command {
                 return false
             }
 
-            if let next = actionResult.nextState {
+            if var next = actionResult.nextState {
+                try performAutomaticMoves(on: &next)
+
                 // Output user's hands
                 sendHandsAsDMs(fromState: next, to: output)
 
-                if next.winner != nil || next.isDraw {
+                if next.isGameOver {
                     // Game is over
                     matches[channelID] = nil
                     continueSubscription = false
                 } else {
                     // Advance the game
                     matches[channelID] = next
-                    continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
                 }
 
                 if !silent || !continueSubscription {
@@ -249,52 +239,20 @@ public class GameCommand<G: Game>: Command {
         } catch GameError.moveOutOfBounds(let msg) {
             output.append(errorText: "Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
         } catch {
-            output.append(error, errorText: "Error while attempting move")
+            output.append(error, errorText: "Error while performing move")
         }
 
-        if continueAutomatically {
-            return performAutomatically(on: channelID, output: output)
-        } else {
-            return continueSubscription
-        }
+        return continueSubscription
     }
 
-    /// Automatically performs the next move. Returns whether to continue the subscription.
-    private func performAutomatically(on channelID: ChannelID, output: CommandOutput) -> Bool {
-        guard let state = matches[channelID] else { return true }
-        guard let engine = game.engine else {
-            output.append(errorText: "No engine available for this game to perform moves automatically!")
-            return false
-        }
-
-        var continueSubscription = true
-        var continueAutomatically: Bool = false
-
-        do {
-            let move = try engine.pickMove(from: state)
-            let next = try state.childState(after: move)
-            matches[channelID] = next
-            continueAutomatically = next.playersOf(role: next.currentRole).contains(where: \.isAutomatic)
-
-            let encodedBoard: RichValue = next.board.asRichValue
-            output.append(.compound([
-                encodedBoard,
-                .embed(Embed(
-                    description: [
-                        next.handsDescription.map { "Hands: \($0)" },
-                        describeTurn(in: next)
-                    ].compactMap { $0 }.joined(separator: "\n").nilIfEmpty
-                ))
-            ]))
-        } catch {
-            output.append(error, errorText: "Error while performing move automatically")
-            continueSubscription = false
-        }
-
-        if continueAutomatically {
-            return performAutomatically(on: channelID, output: output)
-        } else {
-            return continueSubscription
+    private func performAutomaticMoves(on state: inout G.State) throws {
+        if let engine = game.engine {
+            do {
+                // TODO: This would be an issue if all players are automatic, which is currently forbidden
+                while !state.isGameOver && state.playersOf(role: state.currentRole).contains(where: \.isAutomatic) {
+                    try state.perform(move: engine.pickMove(from: state), by: state.currentRole)
+                }
+            }
         }
     }
 
