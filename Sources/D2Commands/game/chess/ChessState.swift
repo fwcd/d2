@@ -26,7 +26,9 @@ public struct ChessState: GameState, FinitePossibleMoves {
     /// that only takes the players' pieces' values into account.
     public var evaluation: Double {
         if let winner = winner {
-            return winner == currentRole ? Double.infinity : -Double.infinity
+            return (winner == currentRole ? 1 : -1) * Double.infinity
+        } else if let roleInCheck = roleInCheck {
+            return (roleInCheck == currentRole ? -1 : 1) * 200
         } else {
             let ourValue = Double(board.model.totalValue(for: currentRole))
             let theirValue = Double(board.model.totalValue(for: currentRole.opponent))
