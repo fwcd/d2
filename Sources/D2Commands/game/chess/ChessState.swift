@@ -155,8 +155,10 @@ public struct ChessState: GameState, FinitePossibleMoves {
 
     private mutating func performDirectly(move: Move) throws {
         try board.model.perform(move: move)
-        currentRole = currentRole.opponent
         moveCount += 1
+        if !isGameOver {
+            currentRole = currentRole.opponent
+        }
     }
 
     func resolve(move: Move) -> [Move] {
