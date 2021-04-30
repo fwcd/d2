@@ -42,18 +42,37 @@ public struct MinecraftServerInfo: Codable {
 
     public struct Chat: Codable, CustomStringConvertible {
         public let text: String
-        public let bold: Bool?
-        public let italic: Bool?
-        public let underlined: Bool?
-        public let strikethrough: Bool?
-        public let obfuscated: Bool?
-        public let color: String?
-        public let insertion: String?
-        public let clickEvent: ClickEvent?
-        public let hoverEvent: HoverEvent?
-        public let extra: [Chat]?
+        public var bold: Bool? = nil
+        public var italic: Bool? = nil
+        public var underlined: Bool? = nil
+        public var strikethrough: Bool? = nil
+        public var obfuscated: Bool? = nil
+        public var color: String? = nil
+        public var insertion: String? = nil
+        public var clickEvent: ClickEvent? = nil
+        public var hoverEvent: HoverEvent? = nil
+        public var extra: [Chat]? = nil
 
         public var description: String { return text + (extra?.map { "\($0)" }.joined() ?? "") }
+
+        public init(from decoder: Decoder) throws {
+            if let container = try? decoder.container(keyedBy: CodingKeys.self) {
+                text = try container.decode(String.self, forKey: .text)
+                bold = try container.decode(Bool?.self, forKey: .bold)
+                italic = try container.decode(Bool?.self, forKey: .italic)
+                underlined = try container.decode(Bool?.self, forKey: .underlined)
+                strikethrough = try container.decode(Bool?.self, forKey: .strikethrough)
+                obfuscated = try container.decode(Bool?.self, forKey: .obfuscated)
+                color = try container.decode(String?.self, forKey: .color)
+                insertion = try container.decode(String?.self, forKey: .insertion)
+                clickEvent = try container.decode(ClickEvent?.self, forKey: .clickEvent)
+                hoverEvent = try container.decode(HoverEvent?.self, forKey: .hoverEvent)
+                extra = try container.decode([Chat]?.self, forKey: .extra)
+            } else {
+                let container = try decoder.singleValueContainer()
+                text = try container.decode(String.self)
+            }
+        }
 
         public struct ClickEvent: Codable {
             public enum CodingKeys: String, CodingKey {
