@@ -66,7 +66,7 @@ public struct ChessGame: Game {
         """
 
     // TODO: Support UCI engines (e.g. Stockfish)
-    public let engine: AnyGameIntelligence<State>? = AnyGameIntelligence(AlphaBetaSearch(maxDepth: 2, evaluator: \.evaluation))
+    public let engine: AnyGameIntelligence<State>? = AnyGameIntelligence(AlphaBetaSearch(maxDepth: 3, evaluator: \.evaluation))
 
     public init() {}
 
