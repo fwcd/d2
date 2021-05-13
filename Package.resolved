@@ -249,8 +249,8 @@
         "repositoryURL": "https://github.com/fwcd/swift-prolog.git",
         "state": {
           "branch": null,
-          "revision": "edc7aa228ed342c28f58e4036639562ac6c801f0",
-          "version": null
+          "revision": "92f3f37b748f5de75f97636c74c4f48af44674a2",
+          "version": "0.1.0"
         }
       },
       {
@@ -258,8 +258,8 @@
         "repositoryURL": "https://github.com/fwcd/swift-qrcode-generator.git",
         "state": {
           "branch": null,
-          "revision": "835a0005597380a0459fab9a8135616de355a992",
-          "version": null
+          "revision": "31f69068ae1529656eac9ad13fc163973449f649",
+          "version": "1.0.0"
         }
       },
       {
@@ -273,11 +273,11 @@
       },
       {
         "package": "SwiftPlot",
-        "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
+        "repositoryURL": "https://github.com/fwcd/swiftplot.git",
         "state": {
           "branch": null,
-          "revision": "c5424eb8688217029d44e941d3a1d2ccc18c3a82",
-          "version": "2.0.0"
+          "revision": "fc6c0784ad407220ad11d12f9c350841ebf56ce8",
+          "version": null
         }
       },
       {

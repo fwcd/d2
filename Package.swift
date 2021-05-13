@@ -25,7 +25,8 @@ let package = Package(
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
         .package(name: "Emoji", url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
         .package(name: "PerfectSysInfo", url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
-        .package(name: "SwiftPlot", url: "https://github.com/KarthikRIyer/swiftplot.git", from: "2.0.0"),
+        // TODO: Update to an actual version number once the PR #128 is merged
+        .package(name: "SwiftPlot", url: "https://github.com/fwcd/swiftplot.git", .revision("fc6c0784ad407220ad11d12f9c350841ebf56ce8")),
         // TODO: Update to an actual version number once the PR #5 is merged
         .package(name: "GraphViz", url: "https://github.com/fwcd/swift-graphviz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef")),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
