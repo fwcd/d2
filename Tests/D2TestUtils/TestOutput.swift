@@ -11,6 +11,7 @@ public class TestOutput {
             changed = true
         }
     }
+    public var guilds: [Guild]? = []
 
     /// Whether the output changed since the last read.
     public private(set) var changed = false
@@ -55,12 +56,10 @@ extension TestOutput: CommandOutput {
 extension TestOutput: MessageClient {
     public var name: String { "Test" }
     public var me: D2MessageIO.User? { nil }
-    public var guilds: [Guild]? { nil }
     public var messageFetchLimit: Int? { nil }
 
     public func guild(for guildId: GuildID) -> Guild? {
-        // TODO
-        nil
+        guilds?.first { $0.id == guildId }
     }
 
     public func setPresence(_ presence: PresenceUpdate) {
@@ -68,8 +67,7 @@ extension TestOutput: MessageClient {
     }
 
     public func guildForChannel(_ channelId: ChannelID) -> Guild? {
-        // TODO
-        nil
+        guilds?.first { $0.channels.keys.contains(channelId) }
     }
 
     public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
