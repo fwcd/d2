@@ -26,10 +26,26 @@ final class SpamHandlerTests: XCTestCase {
     }
 
     func testNewUserSpamming() {
-        join(daysAgo: 10)
+        join(daysAgo: 0.2)
+
+        XCTAssert(!isPenalized())
+        XCTAssert(!isWarned())
+
         spam()
         spam(after: 1)
+
+        XCTAssert(!isPenalized())
+        XCTAssert(!isWarned())
+
         spam(after: 0.5)
+
+        XCTAssert(!isPenalized())
+        XCTAssert(isWarned())
+
+        spam(after: 0.5)
+
+        XCTAssert(isPenalized())
+        XCTAssert(isWarned())
     }
 
     private func join(daysAgo: Double) {
@@ -43,5 +59,13 @@ final class SpamHandlerTests: XCTestCase {
     private func spam(after interval: TimeInterval = 0) {
         timestamp += interval
         let _ = handler.handle(message: Message(content: "@everyone", author: user, channelId: channelId, mentionEveryone: true, timestamp: timestamp), from: output)
+    }
+
+    private func isWarned() -> Bool {
+        output.contents.contains { $0.contains("Please stop spamming") }
+    }
+
+    private func isPenalized() -> Bool {
+        output.contents.contains { $0.contains("Penalizing") }
     }
 }
