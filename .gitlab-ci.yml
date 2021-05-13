@@ -1,4 +1,4 @@
-image: "swift:5.3-xenial"
+image: "swift:5.4-xenial"
 
 stages:
   - test
