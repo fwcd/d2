@@ -5,7 +5,7 @@ import D2TestUtils
 final class EchoCommandTests: XCTestCase {
 	func testInvocation() throws {
 		let command = EchoCommand()
-		let output = CommandTestOutput()
+		let output = TestOutput()
 
 		command.testInvoke(with: .text("demo"), output: output)
 		XCTAssertEqual(output.lastContent, "demo")

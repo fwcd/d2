@@ -180,7 +180,7 @@
 			"final class $1CommandTests: XCTestCase {",
 			"\tfunc testInvocation() throws {",
 			"\t\tlet command = $1Command($2)",
-			"\t\tlet output = CommandTestOutput()",
+			"\t\tlet output = TestOutput()",
 			"\t\t",
 			"\t\tcommand.testInvoke(withArgs: $3, output: output)$0",
 			"\t}",

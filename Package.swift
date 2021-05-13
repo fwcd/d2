@@ -152,6 +152,15 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "D2HandlersTests",
+            dependencies: [
+                .product(name: "Utils", package: "swift-utils"),
+                .target(name: "D2TestUtils"),
+                .target(name: "D2MessageIO"),
+                .target(name: "D2Handlers")
+            ]
+        ),
+        .testTarget(
             name: "D2CommandTests",
             dependencies: [
                 .product(name: "Utils", package: "swift-utils"),
