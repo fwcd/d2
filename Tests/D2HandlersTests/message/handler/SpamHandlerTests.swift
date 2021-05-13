@@ -28,24 +28,42 @@ final class SpamHandlerTests: XCTestCase {
     func testNewUserSpamming() {
         join(daysAgo: 0.2)
 
-        XCTAssert(!isPenalized())
         XCTAssert(!isWarned())
+        XCTAssert(!isPenalized())
 
         spam()
         spam(after: 1)
 
-        XCTAssert(!isPenalized())
         XCTAssert(!isWarned())
-
-        spam(after: 0.5)
-
         XCTAssert(!isPenalized())
-        XCTAssert(isWarned())
 
         spam(after: 0.5)
 
-        XCTAssert(isPenalized())
         XCTAssert(isWarned())
+        XCTAssert(!isPenalized())
+
+        spam(after: 0.5)
+
+        XCTAssert(isWarned())
+        XCTAssert(isPenalized())
+    }
+
+    func testOlderUserSpamming() {
+        join(daysAgo: 32)
+
+        spam() // This one should be expired by the time the second one is sent
+        spam(after: 200)
+        spam()
+        spam()
+        spam()
+
+        XCTAssert(!isWarned())
+        XCTAssert(!isPenalized())
+
+        spam()
+
+        XCTAssert(isWarned())
+        XCTAssert(!isPenalized())
     }
 
     private func join(daysAgo: Double) {
