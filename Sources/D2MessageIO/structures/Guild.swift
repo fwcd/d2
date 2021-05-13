@@ -49,20 +49,20 @@ public struct Guild {
     public var channelsInOrder: [Channel] { channelTree.flatMap(\.traversed) }
 
     public init(
-        id: GuildID,
-        ownerId: UserID,
-        region: String,
-        large: Bool,
-        name: String,
-        joinedAt: Date,
-        splash: String,
-        unavailable: Bool,
-        description: String,
-        mfaLevel: Int,
-        verificationLevel: Int,
-        widgetEnabled: Bool,
-        widgetChannelId: ChannelID,
-        icon: String,
+        id: GuildID = GuildID(""),
+        ownerId: UserID = UserID(""),
+        region: String = "",
+        large: Bool = false,
+        name: String = "",
+        joinedAt: Date = Date(),
+        splash: String = "",
+        unavailable: Bool = false,
+        description: String = "",
+        mfaLevel: Int = 0,
+        verificationLevel: Int = 0,
+        widgetEnabled: Bool = false,
+        widgetChannelId: ChannelID = ChannelID(""),
+        icon: String = "",
         members: LazyDictionary<UserID, Member> = [:],
         roles: [RoleID: Role] = [:],
         presences: LazyDictionary<UserID, Presence> = [:],
@@ -115,7 +115,16 @@ public struct Guild {
             }
         }
 
-        public init(id: ChannelID, guildId: GuildID, name: String, topic: String? = nil, parentId: ChannelID? = nil, position: Int, type: ChannelType, permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]) {
+        public init(
+            id: ChannelID = ChannelID(""),
+            guildId: GuildID,
+            name: String = "",
+            topic: String? = nil,
+            parentId: ChannelID? = nil,
+            position: Int = 0,
+            type: ChannelType = .text,
+            permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]
+        ) {
             self.id = id
             self.guildId = guildId
             self.name = name
@@ -168,7 +177,15 @@ public struct Guild {
         public let nick: String?
         public let roleIds: [RoleID]
 
-        public init(guildId: GuildID, joinedAt: Date, user: User, deaf: Bool, mute: Bool, nick: String? = nil, roleIds: [RoleID] = []) {
+        public init(
+            guildId: GuildID,
+            joinedAt: Date = Date(),
+            user: User,
+            deaf: Bool = false,
+            mute: Bool = false,
+            nick: String? = nil,
+            roleIds: [RoleID] = []
+        ) {
             self.guildId = guildId
             self.joinedAt = joinedAt
             self.user = user

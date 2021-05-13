@@ -9,12 +9,16 @@ final class SpamHandlerTests: XCTestCase {
     private var handler: SpamHandler!
     private var output: TestOutput!
     private var timestamp: Date!
+    private var channelId: ChannelID!
+    private var user: User!
 
     override func setUp() {
         tempDir = TemporaryDirectory()
         handler = SpamHandler(config: AutoSerializing(wrappedValue: .init(), filePath: "\(tempDir.url.path)/spamConfig.json"))
         output = TestOutput()
         timestamp = Date()
+        user = User(id: UserID("0", clientName: output.name), username: "Jochen Zimmermann")
+        channelId = ChannelID("0")
     }
 
     override func tearDown() {
@@ -22,13 +26,22 @@ final class SpamHandlerTests: XCTestCase {
     }
 
     func testNewUserSpamming() {
+        join(daysAgo: 10)
         spam()
         spam(after: 1)
         spam(after: 0.5)
     }
 
+    private func join(daysAgo: Double) {
+        let guildId = GuildID("")
+        let channel = Guild.Channel(id: channelId, guildId: guildId, name: "Test channel")
+        let member = Guild.Member(guildId: guildId, joinedAt: Date() - TimeInterval(daysAgo * 86400), user: user)
+        let guild = Guild(id: guildId, name: "Test guild", members: [user.id: member], channels: [channelId: channel])
+        output.guilds!.append(guild)
+    }
+
     private func spam(after interval: TimeInterval = 0) {
         timestamp += interval
-        let _ = handler.handle(message: Message(content: "@everyone", mentionEveryone: true, timestamp: timestamp), from: output)
+        let _ = handler.handle(message: Message(content: "@everyone", author: user, channelId: channelId, mentionEveryone: true, timestamp: timestamp), from: output)
     }
 }
