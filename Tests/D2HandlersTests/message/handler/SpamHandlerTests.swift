@@ -68,6 +68,27 @@ final class SpamHandlerTests: XCTestCase {
         XCTAssert(!isPenalized())
     }
 
+    func testEvenOlderUserSpamming() {
+        join(daysAgo: 365)
+
+        for _ in 0..<6 {
+            spam()
+        }
+
+        XCTAssert(!isWarned())
+        XCTAssert(!isPenalized())
+
+        spam()
+
+        XCTAssert(isWarned())
+        XCTAssert(!isPenalized())
+
+        spam()
+
+        XCTAssert(isWarned())
+        XCTAssert(isPenalized())
+    }
+
     private func join(daysAgo: Double) {
         let guildId = GuildID("")
         let channel = Guild.Channel(id: channelId, guildId: guildId, name: "Test channel")
