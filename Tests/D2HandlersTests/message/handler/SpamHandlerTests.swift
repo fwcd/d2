@@ -14,9 +14,11 @@ final class SpamHandlerTests: XCTestCase {
 
     override func setUp() {
         tempDir = TemporaryDirectory()
-        handler = SpamHandler(config: AutoSerializing(wrappedValue: .init(), filePath: "\(tempDir.url.path)/spamConfig.json"))
-        output = TestOutput()
         timestamp = Date()
+        handler = SpamHandler(config: AutoSerializing(wrappedValue: .init(), filePath: "\(tempDir.url.path)/spamConfig.json")) { [unowned self] in
+            timestamp
+        }
+        output = TestOutput()
         user = User(id: UserID("0", clientName: output.name), username: "Jochen Zimmermann")
         channelId = ChannelID("0")
     }

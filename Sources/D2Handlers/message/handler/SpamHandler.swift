@@ -15,11 +15,14 @@ fileprivate struct SpammerProfile {
 /// them a spammer role (which can be configured using a command).
 public struct SpamHandler: MessageHandler {
     @AutoSerializing private var config: SpamConfiguration
-    private let lastSpamMessages = ExpiringList<Message>()
+    private let dateProvider: () -> Date
+    private let lastSpamMessages: ExpiringList<Message>
     private var cautionedSpammers = Set<UserID>()
 
-    public init(config: AutoSerializing<SpamConfiguration>) {
+    public init(config: AutoSerializing<SpamConfiguration>, dateProvider: @escaping () -> Date = Date.init) {
         self._config = config
+        self.dateProvider = dateProvider
+        lastSpamMessages = ExpiringList(dateProvider: dateProvider)
     }
 
     public mutating func handle(message: Message, from client: MessageClient) -> Bool {
@@ -31,7 +34,7 @@ public struct SpamHandler: MessageHandler {
             let daysOnGuild = guild.members[author.id].map({ Int(-$0.joinedAt.timeIntervalSinceNow / 86400) }),
             let limits = config.limitsByDaysOnGuild.filter({ daysOnGuild >= $0.key }).max(by: ascendingComparator(comparing: \.key))?.value else { return false }
 
-        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(limits.interval))
+        lastSpamMessages.append(message, expiry: (message.timestamp ?? dateProvider()).addingTimeInterval(limits.interval))
 
         if isSpamming(userId: author.id, limits: limits) {
             if cautionedSpammers.contains(author.id) {
