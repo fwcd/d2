@@ -23,20 +23,23 @@ public struct SpamHandler: MessageHandler {
     }
 
     public mutating func handle(message: Message, from client: MessageClient) -> Bool {
-        guard isPossiblySpam(message: message) else { return false }
-        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(config.interval))
-
-        guard let channelId = message.channelId,
+        guard
+            isPossiblySpam(message: message),
+            let author = message.author,
+            let channelId = message.channelId,
             let guild = client.guildForChannel(channelId),
-            let author = message.author?.id else { return false }
+            let daysOnGuild = guild.members[author.id].map({ Int(-$0.joinedAt.timeIntervalSinceNow / 86400) }),
+            let limits = config.limitsByDaysOnGuild.filter({ daysOnGuild >= $0.key }).max(by: ascendingComparator(comparing: \.key))?.value else { return false }
 
-        if isSpamming(user: author) {
-            if cautionedSpammers.contains(author) {
-                client.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author)> for spamming!"), to: channelId)
-                penalize(spammer: author, on: guild, client: client)
+        lastSpamMessages.append(message, expiry: Date().addingTimeInterval(limits.interval))
+
+        if isSpamming(userId: author.id, limits: limits) {
+            if cautionedSpammers.contains(author.id) {
+                client.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author.id)> for spamming!"), to: channelId)
+                penalize(spammer: author.id, on: guild, client: client)
             } else {
-                client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author)>!"), to: channelId)
-                cautionedSpammers.insert(author)
+                client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author.id)>!"), to: channelId)
+                cautionedSpammers.insert(author.id)
             }
             return true
         }
@@ -48,8 +51,8 @@ public struct SpamHandler: MessageHandler {
         return message.mentions.count > 4 || message.mentionRoles.count > 1 || message.mentionEveryone
     }
 
-    private func isSpamming(user: UserID) -> Bool {
-        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == user } ?? false }) > config.maxSpamMessagesPerInterval
+    private func isSpamming(userId: UserID, limits: SpamConfiguration.Limits) -> Bool {
+        return lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == userId } ?? false }) > limits.maxSpamMessagesPerInterval
     }
 
     private func penalize(spammer user: UserID, on guild: Guild, client: MessageClient) {
