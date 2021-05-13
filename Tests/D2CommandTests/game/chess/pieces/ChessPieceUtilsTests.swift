@@ -3,11 +3,6 @@ import Utils
 @testable import D2Commands
 
 final class ChessPieceUtilsTests: XCTestCase {
-	static var allTests = [
-		("testNeighborFields", testNeighborFields),
-		("testPieceLetters", testPieceLetters)
-	]
-
 	func testNeighborFields() throws {
 		XCTAssertEqual(Set(neighborFields()), Set([
 			Vec2(x: -1, y: -1),

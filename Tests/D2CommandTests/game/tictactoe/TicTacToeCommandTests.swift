@@ -10,10 +10,6 @@ fileprivate let nameX = "Mr. X"
 fileprivate let nameO = "Mr. O"
 
 final class TicTacToeCommandTests: XCTestCase {
-	static var allTests = [
-		("testXWin", testXWin),
-		("testDraw", testDraw)
-	]
 	private let playerX = GamePlayer(username: nameX)
 	private let playerO = GamePlayer(username: nameO)
 

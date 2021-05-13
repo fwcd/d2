@@ -4,18 +4,14 @@ import XCTest
 fileprivate let eps = 0.00001
 
 final class ExpressionParserTests: XCTestCase {
-	static var allTests = [
-		("testRPNExpressionParser", testRPNExpressionParser)
-	]
-	
 	private func testRPNExpressionParser() throws {
 		let parser = RPNExpressionParser()
-		
+
 		let rawProduct = "3 4 *"
 		guard let product = try parser.parse(rawProduct) as? ProductNode else { XCTFail("\(rawProduct) should be a product node"); return }
 		XCTAssertEqual(try product.lhs.evaluate(), 3.0, accuracy: eps)
 		XCTAssertEqual(try product.rhs.evaluate(), 4.0, accuracy: eps)
-		
+
 		let rawQuotient = "2.1 -51.09 pi + 1   -  /"
 		guard let quotient = try parser.parse(rawQuotient) as? QuotientNode else { XCTFail("\(rawQuotient) should be a quotient node"); return }
 		guard let quotientLeft = quotient.lhs as? ConstantNode else { XCTFail("Left-hand side of quotient should be a constant"); return }

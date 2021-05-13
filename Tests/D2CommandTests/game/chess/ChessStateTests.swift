@@ -2,10 +2,6 @@ import XCTest
 @testable import D2Commands
 
 final class ChessStateTests: XCTestCase {
-	static var allTests = [
-		("testPossibleMoves", testPossibleMoves)
-	]
-
 	func testPossibleMoves() throws {
 		let state = ChessState(players: [GamePlayer(username: "Mr. White"), GamePlayer(username: "Mr. Black")])
 		let initialMoves = state.possibleMoves

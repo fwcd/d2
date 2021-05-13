@@ -2,9 +2,6 @@ import XCTest
 @testable import Graphics
 
 final class LzwEncoderTests: XCTestCase {
-	static var allTests = [
-		("testLzwEncoder", testLzwEncoder)
-	]
 	// Using the sample image from
 	// http://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
 	private let indices = [

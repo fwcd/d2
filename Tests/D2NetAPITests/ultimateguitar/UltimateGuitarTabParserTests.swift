@@ -2,10 +2,6 @@ import XCTest
 @testable import D2NetAPIs
 
 final class UltimateGuitarTabParserTests: XCTestCase {
-    static var allTests = [
-        ("testTabParser", testTabParser)
-    ]
-    
     func testTabParser() throws {
         let parser = UltimateGuitarTabParser()
         XCTAssertEqual(

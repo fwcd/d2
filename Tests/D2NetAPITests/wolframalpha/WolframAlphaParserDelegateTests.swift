@@ -9,10 +9,6 @@ import Logging
 fileprivate let log = Logger(label: "WolframAlphaParserDelegateTests")
 
 final class WolframAlphaParserDelegateTests: XCTestCase {
-	static var allTests = [
-		("testWolframAlphaParserDelegate", testWolframAlphaParserDelegate)
-	]
-	
 	func testWolframAlphaParserDelegate() throws {
 		let xml = """
 			<?xml version='1.0' encoding='UTF-8'?>
@@ -67,7 +63,7 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
 					title=''
 					width='313'
 					height='142'
-			
+
 			type='2DMathPlot_1'
 					themes='1,2,3,4,5,6,7,8,9,10,11,12' />
 				<plaintext></plaintext>
@@ -80,7 +76,7 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
 					count='2'>
 				<value name='IntegralsWord'
 					desc='an integral'
-			
+
 			input='*C.integral-_*IntegralsWord-' />
 			<value name='NumberSetTypeWord'
 				desc=' referring to a type of number'
@@ -99,22 +95,22 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
 				}
 				return
 			}
-			
+
 			XCTAssertEqual(result.success, true)
 			XCTAssertEqual(result.error, false)
 			XCTAssertEqual(result.numpods, 2)
 			XCTAssertEqual(result.timing ?? 0.0, 0.76, accuracy: 0.0001)
 			XCTAssertEqual(result.pods.count, 2)
-			
+
 			// TODO: More detailed testing
 		}
-		
+
 		parser.delegate = delegate
-		
+
 		log.debug("Starting to parse")
 		let result = parser.parse()
 		log.debug("Done")
-		
+
 		XCTAssert(result, "XML parser should succeed")
 	}
 }
