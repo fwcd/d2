@@ -5,8 +5,8 @@ import Utils
 public struct SpamConfiguration: Codable, DefaultInitializable {
     /// The limits depending on how many days a user is already on the guild.
     public var limitsByDaysOnGuild: [Int: Limits] = [
-        0: Limits(interval: 60.0, maxSpamMessagesPerInterval: 1),
-        14: Limits(interval: 30.0, maxSpamMessagesPerInterval: 2),
+        0: Limits(interval: 60.0, maxSpamMessagesPerInterval: 0),
+        14: Limits(interval: 30.0, maxSpamMessagesPerInterval: 1),
         30: Limits(interval: 20.0, maxSpamMessagesPerInterval: 4),
         60: Limits(interval: 20.0, maxSpamMessagesPerInterval: 6)
     ]
