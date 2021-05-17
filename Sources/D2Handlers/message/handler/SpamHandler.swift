@@ -51,7 +51,7 @@ public struct SpamHandler: MessageHandler {
     }
 
     private func isPossiblySpam(message: Message) -> Bool {
-        message.mentions.count >= 4 || message.mentionRoles.count >= 1 || message.mentionEveryone
+        message.mentions.count >= 4 || message.mentionRoles.count >= 2 || message.mentionEveryone
     }
 
     private func isSpamming(userId: UserID, limits: SpamConfiguration.Limits) -> Bool {
