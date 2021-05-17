@@ -34,7 +34,6 @@ final class SpamHandlerTests: XCTestCase {
         XCTAssert(!isPenalized())
 
         spam()
-        spam(after: 1)
 
         XCTAssert(!isWarned())
         XCTAssert(!isPenalized())
