@@ -51,7 +51,7 @@ public class MaximaCommand: StringCommand {
                     // Parse and render TeX output
                     let tex = maximaOutput[1]
                     // output.append("`\(tex)`")
-                    renderLatexImage(with: self.latexRenderer, from: tex, to: output).listenOrLogError {
+                    self.latexRenderer.renderImage(from: tex, to: output).listenOrLogError {
                         self.running = false
                         semaphore.signal()
                     }

@@ -21,7 +21,7 @@ public class UwUCommand: StringCommand {
             return
         }
         running = true
-        renderLatexImage(with: latexRenderer, from: "\\mathcal{O}\\omega\\mathcal{O}", to: output).listenOrLogError {
+        latexRenderer.renderImage(from: "\\mathcal{O}\\omega\\mathcal{O}", to: output).listenOrLogError {
             self.running = false
         }
     }

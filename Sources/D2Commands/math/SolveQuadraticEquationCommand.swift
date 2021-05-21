@@ -67,7 +67,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
         let formula = "x \\in \\left\\{\(solutions.sorted().map { latexOf(rational: $0) }.joined(separator: ", "))\\right\\}"
 
         running = true
-        renderLatexImage(with: latexRenderer, from: formula, to: output).listenOrLogError {
+        latexRenderer.renderImage(from: formula, to: output).listenOrLogError {
             self.running = false
         }
     }

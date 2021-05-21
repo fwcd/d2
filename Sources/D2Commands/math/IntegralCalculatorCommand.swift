@@ -36,7 +36,7 @@ public class IntegralCalculatorCommand: StringCommand {
                     let stepsLatex = result.steps
                         .map { $0.replacingOccurrences(of: "$", with: "") }
                         .joined(separator: "\\\\")
-                    renderLatexImage(with: self.latexRenderer, from: stepsLatex, to: output)
+                    self.latexRenderer.renderImage(from: stepsLatex, to: output)
                 } catch {
                     output.append(error, errorText: "An asynchronous error occurred while querying the integral calculator: \(error)")
                 }
