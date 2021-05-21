@@ -1,6 +1,8 @@
 import D2MessageIO
 import Foundation
 
+private let soundMetersPerSec: Double = 343.0
+
 public class LightningCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
@@ -9,11 +11,25 @@ public class LightningCommand: StringCommand {
     )
     private let thunderKeywords: [String]
     private let stopKeyword: String
-    private var lightnings: [ChannelID: [Thunder]]
+    private var lightnings: [ChannelID: Lightning] = [:]
 
     private struct Thunder {
-        let userId: UserID
+        let user: User
         let timestamp: Date
+    }
+
+    private struct Observation {
+        let user: User
+        let distanceMeters: Double
+    }
+
+    private struct Lightning {
+        let timestamp: Date
+        var thunders: [Thunder] = []
+
+        var observations: [Observation] {
+            thunders.map { Observation(user: $0.user, distanceMeters: $0.timestamp.timeIntervalSince(timestamp) / soundMetersPerSec) }
+        }
     }
 
     public init(thunderKeywords: [String] = ["l", "lightning", "strike"], stopKeyword: String = "stop") {
@@ -42,15 +58,28 @@ public class LightningCommand: StringCommand {
             addThunder(from: context)
         } else if stopKeyword == content {
             context.unsubscribeFromChannel()
+
+            if let channelId = context.channel?.id, let lightning = lightnings.removeValue(forKey: channelId) {
+                let observations = lightning.observations
+                output.append(Embed(
+                    title: ":zap: Lightning Summary",
+                    description: observations.map {
+                        String(format: "`%s` was **%.2fm** away from the strike", $0.user.username, $0.distanceMeters)
+                    }.joined(separator: "\n").nilIfEmpty ?? "_none_"
+                ))
+            }
         }
     }
 
     private func addThunder(from context: CommandContext) {
         guard
             let channelId = context.channel?.id,
-            let userId = context.author?.id,
+            let user = context.author,
             let timestamp = context.timestamp else { return }
 
-        lightnings[channelId] = (lightnings[channelId] ?? []) + [Thunder(userId: userId, timestamp: timestamp)]
+        var lightning = lightnings[channelId] ?? Lightning(timestamp: timestamp)
+        let thunder = Thunder(user: user, timestamp: timestamp)
+        lightning.thunders.append(thunder)
+        lightnings[channelId] = lightning
     }
 }
