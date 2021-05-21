@@ -19,7 +19,7 @@ public class HaskellCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let value = try Shell().outputSync(for: "mueval", args: ["-e", input, "-t", String(timeout)])
+            let value = try Shell().utf8Sync(for: "mueval", args: ["-e", input, "-t", String(timeout)])
             output.append(.code(value ?? "No output", language: "haskell"))
         } catch {
             output.append(error, errorText: "Could not evaluate expression.")

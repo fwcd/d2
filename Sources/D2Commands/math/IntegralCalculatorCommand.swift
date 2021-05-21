@@ -14,16 +14,9 @@ public class IntegralCalculatorCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     private let parser = InfixExpressionParser()
-    private let latexRenderer: LatexRenderer?
+    private let latexRenderer = LatexRenderer()
 
-    public init() {
-        do {
-            latexRenderer = try LatexRenderer()
-        } catch {
-            latexRenderer = nil
-            log.error("Could not initialize latex renderer for IntegralCalculatorCommand: \(error)")
-        }
-    }
+    public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
@@ -40,15 +33,10 @@ public class IntegralCalculatorCommand: StringCommand {
             )).perform().listen {
                 do {
                     let result = try $0.get()
-                    if let renderer = self.latexRenderer {
-                        let stepsLatex = result.steps
-                            .map { $0.replacingOccurrences(of: "$", with: "") }
-                            .joined(separator: "\\\\")
-                        renderLatexImage(with: renderer, from: stepsLatex, to: output)
-                    } else {
-                        log.warning("Warning: No LaTeX renderer present in WebIntegralCalculatorCommand")
-                        output.append(result.steps.joined(separator: "\n"))
-                    }
+                    let stepsLatex = result.steps
+                        .map { $0.replacingOccurrences(of: "$", with: "") }
+                        .joined(separator: "\\\\")
+                    renderLatexImage(with: self.latexRenderer, from: stepsLatex, to: output)
                 } catch {
                     output.append(error, errorText: "An asynchronous error occurred while querying the integral calculator: \(error)")
                 }

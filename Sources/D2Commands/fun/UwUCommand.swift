@@ -10,29 +10,18 @@ public class UwUCommand: StringCommand {
         hidden: true
     )
     public let outputValueType: RichValueType = .image
-    private let latexRenderer: LatexRenderer?
+    private let latexRenderer = LatexRenderer()
     private var running: Bool = false
 
-    public init() {
-        do {
-            latexRenderer = try LatexRenderer()
-        } catch {
-            latexRenderer = nil
-            log.error("Could not initialize latex renderer: \(error)")
-        }
-    }
+    public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard !running else {
             output.append(errorText: "Please wait for the first render to finish!")
             return
         }
-        guard let renderer = latexRenderer else {
-            output.append(errorText: "LaTeX renderer could not be initialized!")
-            return
-        }
         running = true
-        renderLatexImage(with: renderer, from: "\\mathcal{O}\\omega\\mathcal{O}", to: output).listenOrLogError {
+        renderLatexImage(with: latexRenderer, from: "\\mathcal{O}\\omega\\mathcal{O}", to: output).listenOrLogError {
             self.running = false
         }
     }

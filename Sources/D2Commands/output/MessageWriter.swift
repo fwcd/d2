@@ -6,16 +6,9 @@ fileprivate let log = Logger(label: "D2Commands.MessageWriter")
 
 /// Writes rich values into MessageIO messages (e.g. for use with Discord).
 public struct MessageWriter {
-    private let latexRenderer: LatexRenderer?
+    private let latexRenderer = LatexRenderer()
 
-    public init() {
-        do {
-            latexRenderer = try LatexRenderer()
-        } catch {
-            latexRenderer = nil
-            log.warning("Could not create LatexRenderer: \(error)")
-        }
-    }
+    public init() {}
 
     public func write(value: RichValue) -> Promise<Message, Error> {
         switch value {
@@ -55,8 +48,8 @@ public struct MessageWriter {
             case let .geoCoordinates(geo):
                 return Promise(Message(content: "Latitude: \(geo.latitude), Longitude: \(geo.longitude)"))
             case let .ndArrays(ndArrays):
-                if let renderer = latexRenderer, ndArrays.contains(where: { !$0.isScalar }) {
-                    return renderer.renderImage(from: latexOf(ndArrays: ndArrays))
+                if ndArrays.contains(where: { !$0.isScalar }) {
+                    return latexRenderer.renderImage(from: latexOf(ndArrays: ndArrays))
                         .mapCatching { try Message(fromImage: $0) }
                 } else {
                     return Promise(Message(content: ndArrays.map { "\($0)" }.joined(separator: ", ")))

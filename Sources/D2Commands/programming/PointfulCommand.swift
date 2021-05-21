@@ -18,7 +18,7 @@ public class PointfulCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let pointful = try Shell().outputSync(for: "pointful", args: [input])
+            let pointful = try Shell().utf8Sync(for: "pointful", args: [input])
             output.append(.code(pointful ?? "No results", language: "haskell"))
         } catch {
             output.append(error, errorText: "An error occurred while converting to pointful notation")

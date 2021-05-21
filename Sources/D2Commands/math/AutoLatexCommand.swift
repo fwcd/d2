@@ -19,7 +19,7 @@ public class AutoLatexCommand: StringCommand {
         requiredPermissionLevel: .basic,
         subscribesToNextMessages: true
     )
-    private let latexRenderer = try? LatexRenderer()
+    private let latexRenderer = LatexRenderer()
 
     public init() {}
 
@@ -39,9 +39,9 @@ public class AutoLatexCommand: StringCommand {
             return
         }
 
-        if formulaPattern.matchCount(in: content) > 0, let renderer = latexRenderer {
+        if formulaPattern.matchCount(in: content) > 0 {
             let formula = escapeText(in: content)
-            renderer.renderImage(from: formula, scale: 1.5).listenOrLogError {
+            latexRenderer.renderImage(from: formula, scale: 1.5).listenOrLogError {
                 do {
                     try output.append($0)
                 } catch {
@@ -53,9 +53,5 @@ public class AutoLatexCommand: StringCommand {
 
     private func escapeText(in content: String) -> String {
         return textPattern.replace(in: content, with: "\\\\text{$0}")
-    }
-
-    public func onSuccessfullySent(context: CommandContext) {
-        latexRenderer?.cleanUp()
     }
 }

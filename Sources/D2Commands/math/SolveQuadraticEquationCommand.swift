@@ -13,17 +13,10 @@ public class SolveQuadraticEquationCommand: StringCommand {
         longDescription: "Solves a quadratic equation of the form ax^2 + bx + c = d",
         requiredPermissionLevel: .basic
     )
-    private let latexRenderer: LatexRenderer?
+    private let latexRenderer = LatexRenderer()
     private var running: Bool = false
 
-    public init() {
-        do {
-            latexRenderer = try LatexRenderer()
-        } catch {
-            latexRenderer = nil
-            log.error("Could not initialize latex renderer: \(error)")
-        }
-    }
+    public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         let equation = input.split(separator: "=")
@@ -50,10 +43,6 @@ public class SolveQuadraticEquationCommand: StringCommand {
             output.append(errorText: "Your polynomial should not have a degree greater than 2!")
             return
         }
-        guard let renderer = latexRenderer else {
-            output.append(errorText: "LaTeX renderer could not be initialized!")
-            return
-        }
 
         let (a, b, c) = (lhs[2] ?? 0, lhs[1] ?? 0, (lhs[0] ?? 0) - rhs)
 
@@ -78,7 +67,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
         let formula = "x \\in \\left\\{\(solutions.sorted().map { latexOf(rational: $0) }.joined(separator: ", "))\\right\\}"
 
         running = true
-        renderLatexImage(with: renderer, from: formula, to: output).listenOrLogError {
+        renderLatexImage(with: latexRenderer, from: formula, to: output).listenOrLogError {
             self.running = false
         }
     }

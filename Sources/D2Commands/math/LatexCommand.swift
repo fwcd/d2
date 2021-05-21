@@ -17,17 +17,10 @@ public class LatexCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .image
-    private let latexRenderer: LatexRenderer?
+    private let latexRenderer = LatexRenderer()
     private var running = false
 
-    public init() {
-        do {
-            latexRenderer = try LatexRenderer()
-        } catch {
-            latexRenderer = nil
-            log.error("Could not initialize latex renderer: \(error)")
-        }
-    }
+    public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard !running else {
@@ -40,21 +33,12 @@ public class LatexCommand: StringCommand {
         }
         running = true
 
-        guard let renderer = latexRenderer else {
-            output.append(errorText: "No LaTeX renderer present")
-            return
-        }
-
         let flags = flagPattern.allGroups(in: input).reduce(into: [String: String]()) { $0[$1[1]] = $1[2] }
         let color = flags["color"] ?? "white"
         let processedInput = flagPattern.replace(in: input, with: "")
 
-        renderLatexImage(with: renderer, from: processedInput, to: output, color: color).listenOrLogError {
+        renderLatexImage(with: latexRenderer, from: processedInput, to: output, color: color).listenOrLogError {
             self.running = false
         }
-    }
-
-    public func onSuccessfullySent(context: CommandContext) {
-        latexRenderer?.cleanUp()
     }
 }

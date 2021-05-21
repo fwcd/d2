@@ -17,17 +17,10 @@ public class MaximaCommand: StringCommand {
         requiredPermissionLevel: .admin
     )
     public let outputValueType: RichValueType = .image
-    private let latexRenderer: LatexRenderer?
+    private let latexRenderer = LatexRenderer()
     private var running = false
 
-    public init() {
-        do {
-            latexRenderer = try LatexRenderer()
-        } catch {
-            latexRenderer = nil
-            log.error("Could not initialize latex renderer for MaximaCommand: \(error)")
-        }
-    }
+    public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard !running else {
@@ -36,7 +29,7 @@ public class MaximaCommand: StringCommand {
         }
 
         let processedInput: String = clearedInputChars.replace(in: input, with: "")
-        let maximaInput: String = (latexRenderer == nil) ? "\(processedInput);" : "tex(\(processedInput))$"
+        let maximaInput: String = "tex(\(processedInput))$"
 
         running = true
         let semaphore = DispatchSemaphore(value: 0)
@@ -54,11 +47,11 @@ public class MaximaCommand: StringCommand {
                     return
                 }
 
-                if let renderer = self.latexRenderer, let maximaOutput = maximaOutputPattern.firstGroups(in: result) {
+                if let maximaOutput = maximaOutputPattern.firstGroups(in: result) {
                     // Parse and render TeX output
                     let tex = maximaOutput[1]
                     // output.append("`\(tex)`")
-                    renderLatexImage(with: renderer, from: tex, to: output).listenOrLogError {
+                    renderLatexImage(with: self.latexRenderer, from: tex, to: output).listenOrLogError {
                         self.running = false
                         semaphore.signal()
                     }
@@ -92,7 +85,7 @@ public class MaximaCommand: StringCommand {
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .seconds(1), execute: {
                 if process.isRunning {
                     do {
-                        try shell.outputSync(for: "kill", args: ["-9", String(process.processIdentifier)])
+                        try shell.utf8Sync(for: "kill", args: ["-9", String(process.processIdentifier)])
                         log.debug("Killed maxima process")
                     } catch {
                         log.error("Killing maxima process failed, try to manually kill the process: kill -9 \(process.processIdentifier)")

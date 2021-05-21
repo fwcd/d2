@@ -18,7 +18,7 @@ public class PointfreeCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let pointfree = try Shell().outputSync(for: "pointfree", args: [input])
+            let pointfree = try Shell().utf8Sync(for: "pointfree", args: [input])
             output.append(.code(pointfree ?? "No results", language: "haskell"))
         } catch {
             output.append(error, errorText: "An error occurred while converting to pointfree notation")
