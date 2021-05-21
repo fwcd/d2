@@ -49,8 +49,11 @@ public class LightningCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+        guard let channelId = context.channel?.id, let timestamp = context.timestamp else { return }
+
         output.append(":zap: Type `\(thunderKeywords[0])` immediately after hearing thunder! Type `\(stopKeyword)` to stop.")
         context.subscribeToChannel()
+        lightnings[channelId] = Lightning(timestamp: timestamp)
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
@@ -64,7 +67,7 @@ public class LightningCommand: StringCommand {
                 output.append(Embed(
                     title: ":zap: Lightning Summary",
                     description: observations.map {
-                        String(format: "`%s` was **%.2fm** away from the strike", $0.user.username, $0.distanceMeters)
+                        String(format: "`%@` was **%.2fm** away from the strike", $0.user.username, $0.distanceMeters)
                     }.joined(separator: "\n").nilIfEmpty ?? "_none_"
                 ))
             }
@@ -77,9 +80,7 @@ public class LightningCommand: StringCommand {
             let user = context.author,
             let timestamp = context.timestamp else { return }
 
-        var lightning = lightnings[channelId] ?? Lightning(timestamp: timestamp)
         let thunder = Thunder(user: user, timestamp: timestamp)
-        lightning.thunders.append(thunder)
-        lightnings[channelId] = lightning
+        lightnings[channelId]?.thunders.append(thunder)
     }
 }
