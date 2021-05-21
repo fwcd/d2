@@ -90,6 +90,7 @@ public class D2Delegate: MessageDelegate {
         registry["campus"] = CampusCommand()
         registry["type"] = TriggerTypingCommand()
         registry["weather"] = WeatherCommand()
+        registry["lightning"] = LightningCommand()
         registry["sunrisesunset", aka: ["sunrise", "sunset", "twilight", "dawn", "dusk"]] = SunriseSunsetCommand()
         registry["webcam"] = WebcamCommand()
         registry["mdb"] = MDBCommand()

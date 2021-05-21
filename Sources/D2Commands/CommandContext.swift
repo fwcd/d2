@@ -1,4 +1,5 @@
 import D2MessageIO
+import Foundation
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.CommandContext")
@@ -12,6 +13,7 @@ public struct CommandContext {
     public let subscriptions: SubscriptionSet
 
     public var author: User? { return message.author }
+    public var timestamp: Date? { return message.timestamp }
     public var guildMember: Guild.Member? { return message.guildMember }
     public var guild: Guild? { return message.channelId.flatMap { client?.guildForChannel($0) } }
 
