@@ -9,7 +9,7 @@ fileprivate let latexPrefix = "latex"
 class LatexRenderer {
     private let node = NodePackage(name: "latex-renderer")
 
-    func renderImage(from formula: String, color: String = "white", scale: Double = 6) -> Promise<Image, Error> {
+    func renderImage(from formula: String, color: String = "white", scale: Double = 2) -> Promise<Image, Error> {
         renderPNG(from: formula, color: color, scale: scale)
             .mapCatching { try Image(fromPng: $0) }
     }

@@ -12,7 +12,7 @@ func handleLatex(error: Error, output: CommandOutput) {
 }
 
 @discardableResult
-func renderLatexImage(with renderer: LatexRenderer, from input: String, to output: CommandOutput, color: String = "white", scale: Double = 6) -> Promise<Void, Error> {
+func renderLatexImage(with renderer: LatexRenderer, from input: String, to output: CommandOutput, color: String = "white", scale: Double = 2) -> Promise<Void, Error> {
     renderer.renderImage(from: input, color: color, scale: scale).peekListen {
         // Render output
         do {
