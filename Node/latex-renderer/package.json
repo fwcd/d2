@@ -4,13 +4,13 @@
     "description": "Renders LaTeX input as PNG",
     "main": "src/index.js",
     "scripts": {
-        "start": "node src/index.js",
+        "start": "node -r esm src/index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "fwcd",
     "license": "MIT",
     "dependencies": {
-        "mathjax": "3.1.2",
+        "mathjax-full": "3.1.4",
         "svg2img": "^0.9.2"
     }
 }

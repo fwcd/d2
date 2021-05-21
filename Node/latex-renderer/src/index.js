@@ -1,28 +1,29 @@
-const fs = require("fs");
 const util = require("util");
 const svg2img = util.promisify(require("svg2img"));
 
 (async () => {
-    const mathjax = await require("mathjax").init({
-        loader: {
-            load: ["input/tex", "output/svg"]
-        }
-    });
-
     try {
         const args = process.argv;
-        if (args.length < 5) {
-            console.log(`Usage: node ${args[1]} [tex math] [color] [scale]`);
+        const help = `Usage: node ${args[1]} [tex math] [color] [scale]`;
+        let [math, color, scale] = args.slice(2);
+
+        color ||= "white";
+        scale ||= 1;
+
+        if (!math) {
+            console.log(help);
             return;
         }
-        const math = args[2];
-        const color = args[3];
-        const scale = args[4];
+
+        const mathjax = await require("mathjax-full").init({
+            loader: {
+                load: ["input/tex", "output/svg"]
+            }
+        });
 
         const adaptor = mathjax.startup.adaptor;
         const svgNode = await mathjax.tex2svgPromise(`\\color{${color}}{${math}}`, {
-            display: true,
-            containerWidth: 80
+            display: true
         });
 
         const svgString = adaptor.innerHTML(svgNode);
