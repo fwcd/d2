@@ -11,6 +11,6 @@
     "license": "MIT",
     "dependencies": {
         "mathjax-full": "3.1.4",
-        "svg2img": "^0.9.2"
+        "sharp": "^0.28.2"
     }
 }
