@@ -28,11 +28,11 @@ public class LightningCommand: StringCommand {
         var thunders: [Thunder] = []
 
         var observations: [Observation] {
-            thunders.map { Observation(user: $0.user, distanceMeters: $0.timestamp.timeIntervalSince(timestamp) / soundMetersPerSec) }
+            thunders.map { Observation(user: $0.user, distanceMeters: $0.timestamp.timeIntervalSince(timestamp) * soundMetersPerSec) }
         }
     }
 
-    public init(thunderKeywords: [String] = ["l", "lightning", "strike"], stopKeyword: String = "stop") {
+    public init(thunderKeywords: [String] = ["t", "thunder"], stopKeyword: String = "stop") {
         self.thunderKeywords = thunderKeywords
         self.stopKeyword = stopKeyword
 
@@ -49,7 +49,7 @@ public class LightningCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        addThunder(from: context)
+        output.append(":zap: Type `\(thunderKeywords[0])` immediately after hearing thunder! Type `\(stopKeyword)` to stop.")
         context.subscribeToChannel()
     }
 
