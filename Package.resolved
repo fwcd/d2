@@ -273,10 +273,10 @@
       },
       {
         "package": "SwiftPlot",
-        "repositoryURL": "https://github.com/fwcd/swiftplot.git",
+        "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
         "state": {
           "branch": null,
-          "revision": "fc6c0784ad407220ad11d12f9c350841ebf56ce8",
+          "revision": "7cface0237635b9d48142969e9884c0058036624",
           "version": null
         }
       },
