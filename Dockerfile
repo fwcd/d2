@@ -19,6 +19,7 @@ RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get 
     cabal-install \
     libsqlite3-dev \
     graphviz \
+    libgraphviz-dev \
     libtesseract-dev \
     libleptonica-dev
 
