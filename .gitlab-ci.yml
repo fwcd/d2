@@ -1,4 +1,4 @@
-image: "swift:5.4-xenial"
+image: "swift:5.4"
 
 stages:
   - build
