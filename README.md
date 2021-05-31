@@ -47,7 +47,7 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 #### macOS
 * Install `maxima`
 * `brew tap vapor/tap`
-* `brew install opus libsodium ctls cairo poppler gd`
+* `brew install opus libsodium ctls cairo poppler gd graphviz`
 
 #### General
 * `stack install happy show mueval pointfree pointful` (or `cabal-install ...`)
