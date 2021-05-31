@@ -1,6 +1,7 @@
 image: "swift:5.4-xenial"
 
 stages:
+  - build
   - test
   - deploy
 
@@ -10,10 +11,19 @@ before_script:
   - apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:alex-p/tesseract-ocr
   - apt-get update && apt-get install -y libopus-dev libsodium-dev libcairo2-dev libsqlite3-dev libtesseract-dev libleptonica-dev
 
+build:
+  stage: build
+  script:
+    - swift build -c release
+  artifacts:
+    paths:
+      - ./.build/release/D2
+    expire_in: 1 week
+
 test:
   stage: test
   script:
-    - swift test
+    - swift test -c release
 
 deploy:
   image:
