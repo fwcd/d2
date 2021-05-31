@@ -12,7 +12,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
-        .package(name: "SwiftDiscord", url: "https://github.com/fwcd/swift-discord.git", .revision("8be6ac8cfb7e1865d005b473d7fd943da3a5ac19")),
+        .package(name: "SwiftDiscord", url: "https://github.com/fwcd/swift-discord.git", .revision("9c7b5eaf4a48921801a903ad892fce0b917f7068")),
         .package(url: "https://github.com/givip/Telegrammer.git", .revision("32657287befddf3d303287bf319901f5c7a6f24e")),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),

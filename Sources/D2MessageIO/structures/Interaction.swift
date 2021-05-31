@@ -31,5 +31,6 @@ public struct Interaction {
     public enum InteractionType {
         case ping
         case mioCommand
+        case messageComponent
     }
 }

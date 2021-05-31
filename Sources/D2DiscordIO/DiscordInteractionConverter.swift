@@ -19,10 +19,12 @@ extension DiscordInteraction: MessageIOConvertible {
 }
 
 extension DiscordInteractionType: MessageIOConvertible {
-    public var usingMessageIO: Interaction.InteractionType {
+    public var usingMessageIO: Interaction.InteractionType? {
         switch self {
             case .ping: return .ping
             case .applicationCommand: return .mioCommand
+            case .messageComponent: return .messageComponent
+            default: return nil
         }
     }
 }
