@@ -2,7 +2,7 @@ import Foundation
 import Utils
 import D2MessageIO
 import Logging
-import SwiftDiscord
+import Discord
 
 fileprivate let log = Logger(label: "D2DiscordIO.DiscordMessageClient")
 
@@ -31,7 +31,7 @@ struct DiscordMessageClient: MessageClient {
     }
 
     func permissionsForUser(_ userId: D2MessageIO.UserID, in channelId: D2MessageIO.ChannelID, on guildId: D2MessageIO.GuildID) -> Permission {
-        // Partly based on MIT-licensed code from https://github.com/nuclearace/SwiftDiscord/blob/9e2be352a580b1c9cf92149be335f61192b85bdb/Sources/SwiftDiscord/Guild/DiscordGuildChannel.swift#L91-L136
+        // Partly based on MIT-licensed code from https://github.com/nuclearace/Discord.blob/9e2be352a580b1c9cf92149be335f61192b85bdb/Sources/Discord.Guild/DiscordGuildChannel.swift#L91-L136
         // Copyright (c) 2016 Erik Little
 
         guard let guild = client.guildForChannel(channelId.usingDiscordAPI),

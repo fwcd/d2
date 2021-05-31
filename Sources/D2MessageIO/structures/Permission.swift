@@ -1,4 +1,4 @@
-// Uses MIT-licensed code from https://github.com/nuclearace/SwiftDiscord/blob/master/Sources/SwiftDiscord/User/DiscordPermission.swift
+// Uses MIT-licensed code from https://github.com/nuclearace/Discord.blob/master/Sources/Discord.User/DiscordPermission.swift
 // Copyright (c) 2016 Erik Little
 
 public struct Permission: OptionSet {

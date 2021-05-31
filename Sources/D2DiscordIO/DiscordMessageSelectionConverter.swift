@@ -1,5 +1,5 @@
 import D2MessageIO
-import SwiftDiscord
+import Discord
 
 // TO Discord conversions
 

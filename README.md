@@ -114,7 +114,7 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 * On Linux: `swift build`
 * On macOS: `swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
 
-For Xcode support, see [the README of SwiftDiscord](https://github.com/nuclearace/SwiftDiscord/blob/master/README.md).
+For Xcode support, see [the README of Discord.(https://github.com/nuclearace/Discord.blob/master/README.md).
 
 ## Testing
 * `swift test`

@@ -2,7 +2,7 @@ import Foundation
 import Dispatch
 import Logging
 import D2MessageIO
-import SwiftDiscord
+import Discord
 
 fileprivate let log = Logger(label: "D2DiscordIO.DiscordPlatform")
 

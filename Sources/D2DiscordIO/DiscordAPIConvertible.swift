@@ -1,4 +1,4 @@
-import SwiftDiscord
+import Discord
 import D2MessageIO
 import Utils
 

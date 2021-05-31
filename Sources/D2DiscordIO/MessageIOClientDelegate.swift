@@ -1,4 +1,4 @@
-import SwiftDiscord
+import Discord
 import Logging
 import D2MessageIO
 
@@ -79,17 +79,17 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: SwiftDiscord.MessageID, onChannel channel: DiscordTextChannel, user userID: SwiftDiscord.UserID) {
+    public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: Discord.MessageID, onChannel channel: DiscordTextChannel, user userID: Discord.UserID) {
         log.debug("Did add reaction")
         inner.on(addReaction: reaction.usingMessageIO, to: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didRemoveReaction reaction: DiscordEmoji, fromMessage messageID: SwiftDiscord.MessageID, onChannel channel: DiscordTextChannel, user userID: SwiftDiscord.UserID) {
+    public func client(_ discordClient: DiscordClient, didRemoveReaction reaction: DiscordEmoji, fromMessage messageID: Discord.MessageID, onChannel channel: DiscordTextChannel, user userID: Discord.UserID) {
         log.debug("Did remove reaction")
         inner.on(removeReaction: reaction.usingMessageIO, from: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didRemoveAllReactionsFrom messageID: SwiftDiscord.MessageID, onChannel channel: DiscordTextChannel) {
+    public func client(_ discordClient: DiscordClient, didRemoveAllReactionsFrom messageID: Discord.MessageID, onChannel channel: DiscordTextChannel) {
         log.debug("Did remove all reactions")
         inner.on(removeAllReactionsFrom: messageID.usingMessageIO, on: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
     }
@@ -129,12 +129,12 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(receiveVoiceStateUpdate: voiceState.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: DiscordLazyDictionary<SwiftDiscord.UserID, DiscordGuildMember>, forGuild guild: DiscordGuild) {
+    public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: DiscordLazyDictionary<Discord.UserID, DiscordGuildMember>, forGuild guild: DiscordGuild) {
         log.debug("Handling guild member chunk")
         inner.on(handleGuildMemberChunk: chunk.usingMessageIO, for: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [SwiftDiscord.EmojiID: DiscordEmoji], onGuild guild: DiscordGuild) {
+    public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [Discord.EmojiID: DiscordEmoji], onGuild guild: DiscordGuild) {
         log.debug("Got updated emojis")
         inner.on(updateEmojis: emojis.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }

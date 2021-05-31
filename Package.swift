@@ -11,8 +11,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // TODO: Use the upstream SwiftDiscord once vapor3 branch is merged
-        .package(name: "SwiftDiscord", url: "https://github.com/fwcd/swift-discord.git", .revision("9c7b5eaf4a48921801a903ad892fce0b917f7068")),
+        .package(url: "https://github.com/fwcd/swift-discord.git", .revision("5537eba4bcf7bfef8287932b74788bbb6032a706")),
         .package(url: "https://github.com/givip/Telegrammer.git", .revision("32657287befddf3d303287bf319901f5c7a6f24e")),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
@@ -26,8 +25,7 @@ let package = Package(
         .package(name: "Emoji", url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
         .package(name: "PerfectSysInfo", url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
         .package(name: "SwiftPlot", url: "https://github.com/KarthikRIyer/swiftplot.git", .revision("7cface0237635b9d48142969e9884c0058036624")),
-        // TODO: Update to an actual version number once the PR #5 is merged
-        .package(name: "GraphViz", url: "https://github.com/fwcd/swift-graphviz.git", .revision("1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef")),
+        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", from: "0.4.1"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
         .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.11.1"),
@@ -57,7 +55,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
-                .product(name: "SwiftDiscord", package: "SwiftDiscord"),
+                .product(name: "Discord", package: "swift-discord"),
                 .target(name: "D2MessageIO"),
             ]
         ),

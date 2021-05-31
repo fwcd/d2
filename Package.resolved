@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "COPUS",
-        "repositoryURL": "https://github.com/nuclearace/copus",
-        "state": {
-          "branch": null,
-          "revision": "a2af57fa582c0191789f446cc430615ee7e41d4f",
-          "version": "2.1.1"
-        }
-      },
-      {
         "package": "CSQLite",
         "repositoryURL": "https://github.com/stephencelis/CSQLite.git",
         "state": {
@@ -62,6 +53,15 @@
           "branch": null,
           "revision": "68493a33d862c33c9a9f67ec729b3b7df1b20ade",
           "version": "9.1.2"
+        }
+      },
+      {
+        "package": "GraphViz",
+        "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
+        "state": {
+          "branch": null,
+          "revision": "74b6cbd8c5ecea9f64d84c4e1c88d65604dd033f",
+          "version": "0.4.1"
         }
       },
       {
@@ -101,15 +101,6 @@
         }
       },
       {
-        "package": "Sodium",
-        "repositoryURL": "https://github.com/nuclearace/Sodium",
-        "state": {
-          "branch": null,
-          "revision": "5812a3d879b77aae0fdfbd62d0e8354e914d15ae",
-          "version": "2.0.0"
-        }
-      },
-      {
         "package": "SQLite.swift",
         "repositoryURL": "https://github.com/stephencelis/SQLite.swift",
         "state": {
@@ -146,11 +137,11 @@
         }
       },
       {
-        "package": "SwiftDiscord",
+        "package": "swift-discord",
         "repositoryURL": "https://github.com/fwcd/swift-discord.git",
         "state": {
           "branch": null,
-          "revision": "9c7b5eaf4a48921801a903ad892fce0b917f7068",
+          "revision": "5537eba4bcf7bfef8287932b74788bbb6032a706",
           "version": null
         }
       },
@@ -170,15 +161,6 @@
           "branch": null,
           "revision": "06760653516ce19753d1a2f61879a2915987e51a",
           "version": "1.1.0"
-        }
-      },
-      {
-        "package": "GraphViz",
-        "repositoryURL": "https://github.com/fwcd/swift-graphviz.git",
-        "state": {
-          "branch": null,
-          "revision": "1dd2479ce6d97effd8b7ed5bc6f47b79d5340fef",
-          "version": null
         }
       },
       {
@@ -318,11 +300,11 @@
       },
       {
         "package": "websocket-kit",
-        "repositoryURL": "https://github.com/vapor/websocket-kit",
+        "repositoryURL": "https://github.com/vapor/websocket-kit.git",
         "state": {
           "branch": null,
-          "revision": "2b06a70dfcfa76a2e5079f60e3ae911511f09db0",
-          "version": "2.1.2"
+          "revision": "a2d26b3de8b3be292f3208d1c74024f76ac503da",
+          "version": "2.1.3"
         }
       },
       {
