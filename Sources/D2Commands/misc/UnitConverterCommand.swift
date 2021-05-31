@@ -1,6 +1,5 @@
 import Foundation
 import GraphViz
-import DOT
 import Graphics
 import Utils
 

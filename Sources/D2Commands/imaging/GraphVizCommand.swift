@@ -1,5 +1,4 @@
 import GraphViz
-import DOT
 import Graphics
 
 public class GraphVizCommand: StringCommand {
