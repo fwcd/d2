@@ -17,11 +17,13 @@ public class GraphVizCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        do {
-            let data = try DOTRenderer(using: layout, to: .png).render(dotEncoded: input)
-            try output.append(try Image(fromPng: data))
-        } catch {
-            output.append(error, errorText: "Could not render graph")
+        Renderer(layout: layout).render(dot: input, to: .png) {
+            do {
+                let data = try $0.get()
+                try output.append(try Image(fromPng: data))
+            } catch {
+                output.append(error, errorText: "Could not render graph")
+            }
         }
     }
 }

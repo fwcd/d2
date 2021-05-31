@@ -54,10 +54,16 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                         graph.append(edge)
                     }
 
-                    let data = try DOTRenderer(using: .fdp, to: .png).render(graph: graph)
-                    try output.append(try Image(fromPng: data))
+                    graph.render(using: .fdp, to: .png) {
+                        do {
+                            let data = try $0.get()
+                            try output.append(Image(fromPng: data))
+                        } catch {
+                            output.append(error, errorText: "Could not render people-in-channels graph.")
+                        }
+                    }
                 } catch {
-                    output.append(error, errorText: "Could not query/render people-in-channels statistic.")
+                    output.append(error, errorText: "Could not query people-in-channels statistic.")
                 }
             }
         ]

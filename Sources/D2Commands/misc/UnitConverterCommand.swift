@@ -250,11 +250,13 @@ public class UnitConverterCommand: StringCommand {
                     }
                 }
 
-                do {
-                    let data = try DOTRenderer(using: .fdp, to: .png).render(graph: graph)
-                    try output.append(try Image(fromPng: data))
-                } catch {
-                    output.append(error, errorText: "Could not render unit conversion graph")
+                graph.render(using: .fdp, to: .png) {
+                    do {
+                        let data = try $0.get()
+                        try output.append(Image(fromPng: data))
+                    } catch {
+                        output.append(error, errorText: "Could not render unit conversion graph")
+                    }
                 }
             }
         ]
