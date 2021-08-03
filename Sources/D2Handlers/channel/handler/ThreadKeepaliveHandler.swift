@@ -9,5 +9,17 @@ public struct ThreadKeepaliveHandler: ChannelHandler {
 
         // TODO: Unarchive the thread automatically, ideally add a configuration
         // so users can add permanently to-be-archived threads through a command
+
+        let archived = thread.threadMetadata?.archived ?? false
+        let locked = thread.threadMetadata?.locked ?? true
+
+        if archived {
+            if !locked {
+                log.info("Unarchiving '\(thread.name)'")
+                client.modifyChannel(thread.id, with: .init(archived: false))
+            } else {
+                log.debug("Ignoring '\(thread.name)''s archival since it is locked")
+            }
+        }
     }
 }
