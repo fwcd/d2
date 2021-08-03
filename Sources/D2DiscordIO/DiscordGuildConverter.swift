@@ -30,51 +30,6 @@ extension DiscordGuild: MessageIOConvertible {
     }
 }
 
-extension DiscordChannel: MessageIOConvertible {
-    public var usingMessageIO: Guild.Channel {
-        Guild.Channel(
-            id: id.usingMessageIO,
-            guildId: guildId?.usingMessageIO,
-            name: name ?? "",
-            topic: topic,
-            parentId: parentId?.usingMessageIO,
-            position: position ?? 0,
-            type: type.usingMessageIO,
-            permissionOverwrites: permissionOverwrites?.usingMessageIO ?? [:]
-        )
-    }
-}
-
-extension DiscordChannelType: MessageIOConvertible {
-    public var usingMessageIO: Guild.Channel.ChannelType {
-        switch self {
-            case .text: return .text
-            case .voice: return .voice
-            case .category: return .category
-            default: return .init(rawValue: rawValue)
-        }
-    }
-}
-
-extension DiscordPermissionOverwrite: MessageIOConvertible {
-    public var usingMessageIO: Guild.Channel.PermissionOverwrite {
-        Guild.Channel.PermissionOverwrite(
-            id: id.usingMessageIO,
-            type: type.usingMessageIO
-        )
-    }
-}
-
-extension DiscordPermissionOverwriteType: MessageIOConvertible {
-    public var usingMessageIO: Guild.Channel.PermissionOverwrite.PermissionOverwriteType {
-        switch self {
-            case .role: return .role
-            case .member: return .member
-            default: return .init(rawValue: rawValue)
-        }
-    }
-}
-
 extension DiscordGuildMember {
     public func usingMessageIO(in guildId: D2MessageIO.GuildID) -> Guild.Member {
         return Guild.Member(

@@ -55,7 +55,7 @@ public class SearchChannelCommand: StringCommand {
         }
     }
 
-    private func format(type: Guild.Channel.ChannelType) -> String {
+    private func format(type: Channel.ChannelType) -> String {
         switch type {
             case .text: return "Text channels"
             case .voice: return "Voice channels"

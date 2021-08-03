@@ -85,7 +85,7 @@ final class SpamHandlerTests: XCTestCase {
 
     private func join(daysAgo: Double) {
         let guildId = GuildID("")
-        let channel = Guild.Channel(id: channelId, guildId: guildId, name: "Test channel")
+        let channel = Channel(id: channelId, guildId: guildId, name: "Test channel")
         let member = Guild.Member(guildId: guildId, joinedAt: Date() - TimeInterval(daysAgo * 86400), user: user)
         let guild = Guild(id: guildId, name: "Test guild", members: [user.id: member], channels: [channelId: channel])
         output.guilds!.append(guild)

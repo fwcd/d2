@@ -1,0 +1,81 @@
+public struct Channel: CustomStringConvertible {
+    public let id: ChannelID
+    public let guildId: GuildID?
+    public let name: String
+    public let topic: String?
+    public let parentId: ChannelID?
+    public let position: Int
+    public let type: ChannelType
+    public let permissionOverwrites: [OverwriteID: PermissionOverwrite]
+
+    public var isVoiceChannel: Bool { [.voice, .stageVoice].contains(type) }
+    public var description: String {
+        switch type {
+            case .text: return "<#\(id)>"
+            case .voice: return ":speaker: \(name)"
+            case .category: return ":paperclip: \(name)"
+            default: return name
+        }
+    }
+
+    public init(
+        id: ChannelID = ChannelID(""),
+        guildId: GuildID? = nil,
+        name: String = "",
+        topic: String? = nil,
+        parentId: ChannelID? = nil,
+        position: Int = 0,
+        type: ChannelType = .text,
+        permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]
+    ) {
+        self.id = id
+        self.guildId = guildId
+        self.name = name
+        self.topic = topic
+        self.parentId = parentId
+        self.position = position
+        self.type = type
+        self.permissionOverwrites = permissionOverwrites
+    }
+
+    public struct ChannelType: RawRepresentable, Hashable, Codable {
+        public var rawValue: Int
+
+        public static let text = ChannelType(rawValue: 0)
+        public static let dm = ChannelType(rawValue: 1)
+        public static let voice = ChannelType(rawValue: 2)
+        public static let groupDM = ChannelType(rawValue: 3)
+        public static let category = ChannelType(rawValue: 4)
+        public static let news = ChannelType(rawValue: 5)
+        public static let store = ChannelType(rawValue: 6)
+        public static let newsThread = ChannelType(rawValue: 7)
+        public static let publicThread = ChannelType(rawValue: 8)
+        public static let privateThread = ChannelType(rawValue: 9)
+        public static let stageVoice = ChannelType(rawValue: 10)
+
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+    }
+
+    public struct PermissionOverwrite {
+        public let id: OverwriteID
+        public let type: PermissionOverwriteType
+
+        public init(id: OverwriteID, type: PermissionOverwriteType) {
+            self.id = id
+            self.type = type
+        }
+
+        public struct PermissionOverwriteType: RawRepresentable, Hashable, Codable {
+            public var rawValue: Int
+
+            public static let role = PermissionOverwriteType(rawValue: 0)
+            public static let member = PermissionOverwriteType(rawValue: 1)
+
+            public init(rawValue: Int) {
+                self.rawValue = rawValue
+            }
+        }
+    }
+}

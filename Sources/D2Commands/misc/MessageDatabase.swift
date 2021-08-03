@@ -324,13 +324,13 @@ public class MessageDatabase: MarkovPredictor {
         ))
     }
 
-    public func insert(channel: Guild.Channel, on guild: Guild) throws {
+    public func insert(channel: Channel, on guild: Guild) throws {
         try db.transaction {
             try insertDirectly(channel: channel, on: guild)
         }
     }
 
-    private func insertDirectly(channel: Guild.Channel, on guild: Guild) throws {
+    private func insertDirectly(channel: Channel, on guild: Guild) throws {
         let id = channel.id
         try db.run(channels.insert(or: .replace,
             channelId <- try convert(id: id),

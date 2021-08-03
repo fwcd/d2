@@ -37,7 +37,7 @@ public class GuildChannelsCommand: StringCommand {
         }
 
         let uncategorized = "Uncategorized"
-        var categories: [String: (Int, [Guild.Channel])] = [uncategorized: (-1, [])]
+        var categories: [String: (Int, [Channel])] = [uncategorized: (-1, [])]
 
         for treeNode in guild.channelTree {
             let channel = treeNode.channel
