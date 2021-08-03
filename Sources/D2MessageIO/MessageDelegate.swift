@@ -5,17 +5,17 @@ public protocol MessageDelegate {
 
     func on(disconnectWithReason reason: String, client: MessageClient)
 
-    func on(createChannel channelId: ChannelID, client: MessageClient)
+    func on(createChannel channel: Channel, client: MessageClient)
 
-    func on(deleteChannel channelId: ChannelID, client: MessageClient)
+    func on(deleteChannel channel: Channel, client: MessageClient)
 
-    func on(updateChannel channelId: ChannelID, client: MessageClient)
+    func on(updateChannel channel: Channel, client: MessageClient)
 
-    func on(createThread threadId: ChannelID, client: MessageClient)
+    func on(createThread thread: Channel, client: MessageClient)
 
-    func on(deleteThread threadId: ChannelID, client: MessageClient)
+    func on(deleteThread thread: Channel, client: MessageClient)
 
-    func on(updateThread threadId: ChannelID, client: MessageClient)
+    func on(updateThread thread: Channel, client: MessageClient)
 
     func on(createGuild guild: Guild, client: MessageClient)
 
@@ -63,17 +63,17 @@ public extension MessageDelegate {
 
     func on(disconnectWithReason reason: String, client: MessageClient) {}
 
-    func on(createChannel channelId: ChannelID, client: MessageClient) {}
+    func on(createChannel channel: Channel, client: MessageClient) {}
 
-    func on(deleteChannel channelId: ChannelID, client: MessageClient) {}
+    func on(deleteChannel channel: Channel, client: MessageClient) {}
 
-    func on(updateChannel channelId: ChannelID, client: MessageClient) {}
+    func on(updateChannel channel: Channel, client: MessageClient) {}
 
-    func on(createThread threadId: ChannelID, client: MessageClient) {}
+    func on(createThread thread: Channel, client: MessageClient) {}
 
-    func on(deleteThread threadId: ChannelID, client: MessageClient) {}
+    func on(deleteThread thread: Channel, client: MessageClient) {}
 
-    func on(updateThread threadId: ChannelID, client: MessageClient) {}
+    func on(updateThread thread: Channel, client: MessageClient) {}
 
     func on(createGuild guild: Guild, client: MessageClient) {}
 

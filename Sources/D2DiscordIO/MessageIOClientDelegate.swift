@@ -26,32 +26,32 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
 
     public func client(_ discordClient: DiscordClient, didCreateChannel channel: DiscordChannel) {
         log.debug("Got channel create: \(channel.id)")
-        inner.on(createChannel: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
+        inner.on(createChannel: channel.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteChannel channel: DiscordChannel) {
         log.debug("Got channel delete: \(channel.id)")
-        inner.on(deleteChannel: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
+        inner.on(deleteChannel: channel.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateChannel channel: DiscordChannel) {
         log.debug("Got channel update: \(channel.id)")
-        inner.on(updateChannel: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
+        inner.on(updateChannel: channel.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateThread thread: DiscordChannel) {
         log.debug("Got thread create: \(thread.id)")
-        inner.on(createThread: thread.id.usingMessageIO, client: overlayClient(with: discordClient))
+        inner.on(createThread: thread.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteThread thread: DiscordChannel) {
         log.debug("Got thread delete: \(thread.id)")
-        inner.on(deleteThread: thread.id.usingMessageIO, client: overlayClient(with: discordClient))
+        inner.on(deleteThread: thread.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateThread thread: DiscordChannel) {
         log.debug("Got thread update: \(thread.id)")
-        inner.on(updateThread: thread.id.usingMessageIO, client: overlayClient(with: discordClient))
+        inner.on(updateThread: thread.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateGuild guild: DiscordGuild) {

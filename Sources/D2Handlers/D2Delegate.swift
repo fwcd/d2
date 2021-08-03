@@ -25,6 +25,7 @@ public class D2Delegate: MessageDelegate {
     private var messageHandlers: [MessageHandler]
     private var reactionHandlers: [ReactionHandler]
     private var presenceHandlers: [PresenceHandler]
+    private var channelHandlers: [ChannelHandler]
 
     public init(
         withPrefix commandPrefix: String,
@@ -74,6 +75,7 @@ public class D2Delegate: MessageDelegate {
         presenceHandlers = [
             StreamerRoleHandler(streamerRoleConfiguration: streamerRoleConfiguration)
         ]
+        channelHandlers = []
 
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
@@ -594,19 +596,19 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
-        for (i, _) in reactionHandlers.enumerated() {
+        for i in reactionHandlers.indices {
             reactionHandlers[i].handle(createdReaction: reaction, to: messageId, on: channelId, by: userId, client: client)
         }
     }
 
     public func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
-        for (i, _) in reactionHandlers.enumerated() {
+        for i in reactionHandlers.indices {
             reactionHandlers[i].handle(deletedReaction: reaction, from: messageId, on: channelId, by: userId, client: client)
         }
     }
 
     public func on(removeAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: MessageClient) {
-        for (i, _) in reactionHandlers.enumerated() {
+        for i in reactionHandlers.indices {
             reactionHandlers[i].handle(deletedAllReactionsFrom: messageId, on: channelId, client: client)
         }
     }
@@ -627,9 +629,9 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .disconnectWithReason, with: .text(reason))
     }
 
-    public func on(createChannel channelId: ChannelID, client: MessageClient) {
+    public func on(createChannel channel: Channel, client: MessageClient) {
         do {
-            if let guild = client.guildForChannel(channelId), let channel = guild.channels[channelId] {
+            if let guild = client.guildForChannel(channel.id) {
                 log.info("Inserting channel '\(channel.name)' into message database...")
                 try messageDB.insert(channel: channel, on: guild)
             }
@@ -637,16 +639,24 @@ public class D2Delegate: MessageDelegate {
             log.warning("Could not insert channel into message database: \(error)")
         }
 
+        for i in channelHandlers.indices {
+            channelHandlers[i].handle(channelCreate: channel, client: client)
+        }
+
         eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
     }
 
-    public func on(deleteChannel channelId: ChannelID, client: MessageClient) {
+    public func on(deleteChannel channel: Channel, client: MessageClient) {
+        for i in channelHandlers.indices {
+            channelHandlers[i].handle(channelDelete: channel, client: client)
+        }
+
         eventListenerBus.fire(event: .deleteChannel, with: .none) // TODO: Pass channel ID?
     }
 
-    public func on(updateChannel channelId: ChannelID, client: MessageClient) {
+    public func on(updateChannel channel: Channel, client: MessageClient) {
         do {
-            if let guild = client.guildForChannel(channelId), let channel = guild.channels[channelId] {
+            if let guild = client.guildForChannel(channel.id) {
                 log.info("Updating channel '\(channel.name)' in message database...")
                 try messageDB.insert(channel: channel, on: guild)
             }
@@ -654,7 +664,29 @@ public class D2Delegate: MessageDelegate {
             log.warning("Could not update channel in message database: \(error)")
         }
 
+        for i in channelHandlers.indices {
+            channelHandlers[i].handle(channelUpdate: channel, client: client)
+        }
+
         eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
+    }
+
+    public func on(createThread thread: Channel, client: MessageClient) {
+        for i in channelHandlers.indices {
+            channelHandlers[i].handle(threadCreate: thread, client: client)
+        }
+    }
+
+    public func on(deleteThread thread: Channel, client: MessageClient) {
+        for i in channelHandlers.indices {
+            channelHandlers[i].handle(threadDelete: thread, client: client)
+        }
+    }
+
+    public func on(updateThread thread: Channel, client: MessageClient) {
+        for i in channelHandlers.indices {
+            channelHandlers[i].handle(threadUpdate: thread, client: client)
+        }
     }
 
     public func on(deleteGuild guild: Guild, client: MessageClient) {
