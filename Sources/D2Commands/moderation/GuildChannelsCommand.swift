@@ -60,9 +60,9 @@ public class GuildChannelsCommand: StringCommand {
                         value: channels
                             .compactMap {
                                 switch $0.type {
-                                    case .text: return "\(useChannelLinks ? "<#\($0.id)>" : "#\($0.name)") (\($0.id))"
                                     case .voice: return ":speaker: \($0.name) (\($0.id))"
-                                    default: return nil
+                                    case .publicThread, .privateThread, .newsThread: return ":thread: \($0.name)"
+                                    default: return "\(useChannelLinks ? "<#\($0.id)>" : "#\($0.name)") (\($0.id))"
                                 }
                             }
                             .joined(separator: "\n")

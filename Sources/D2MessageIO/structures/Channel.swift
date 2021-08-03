@@ -11,10 +11,9 @@ public struct Channel: CustomStringConvertible {
     public var isVoiceChannel: Bool { [.voice, .stageVoice].contains(type) }
     public var description: String {
         switch type {
-            case .text: return "<#\(id)>"
             case .voice: return ":speaker: \(name)"
             case .category: return ":paperclip: \(name)"
-            default: return name
+            default: return "<#\(id)>"
         }
     }
 
