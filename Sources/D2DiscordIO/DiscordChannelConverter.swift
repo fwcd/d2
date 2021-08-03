@@ -13,6 +13,7 @@ extension DiscordChannel: MessageIOConvertible {
             parentId: parentId?.usingMessageIO,
             position: position ?? 0,
             type: type.usingMessageIO,
+            threadMetadata: threadMetadata.usingMessageIO,
             permissionOverwrites: permissionOverwrites?.usingMessageIO ?? [:]
         )
     }
@@ -45,5 +46,16 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
             case .member: return .member
             default: return .init(rawValue: rawValue)
         }
+    }
+}
+
+extension DiscordThreadMetadata: MessageIOConvertible {
+    public var usingMessageIO: Channel.ThreadMetadata {
+        Channel.ThreadMetadata(
+            archived: archived,
+            autoArchiveDuration: autoArchiveDuration,
+            archiveTimestamp: archiveTimestamp,
+            locked: locked
+        )
     }
 }

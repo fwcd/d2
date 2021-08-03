@@ -1,3 +1,5 @@
+import Foundation
+
 public struct Channel: CustomStringConvertible {
     public let id: ChannelID
     public let guildId: GuildID?
@@ -6,6 +8,7 @@ public struct Channel: CustomStringConvertible {
     public let parentId: ChannelID?
     public let position: Int
     public let type: ChannelType
+    public let threadMetadata: ThreadMetadata?
     public let permissionOverwrites: [OverwriteID: PermissionOverwrite]
 
     public var isVoiceChannel: Bool { [.voice, .stageVoice].contains(type) }
@@ -25,6 +28,7 @@ public struct Channel: CustomStringConvertible {
         parentId: ChannelID? = nil,
         position: Int = 0,
         type: ChannelType = .text,
+        threadMetadata: ThreadMetadata? = nil,
         permissionOverwrites: [OverwriteID: PermissionOverwrite] = [:]
     ) {
         self.id = id
@@ -34,6 +38,7 @@ public struct Channel: CustomStringConvertible {
         self.parentId = parentId
         self.position = position
         self.type = type
+        self.threadMetadata = threadMetadata
         self.permissionOverwrites = permissionOverwrites
     }
 
@@ -75,6 +80,25 @@ public struct Channel: CustomStringConvertible {
             public init(rawValue: Int) {
                 self.rawValue = rawValue
             }
+        }
+    }
+
+    public struct ThreadMetadata {
+        public let archived: Bool
+        public let autoArchiveDuration: Int?
+        public let archiveTimestamp: Date?
+        public let locked: Bool?
+
+        public init(
+            archived: Bool = false,
+            autoArchiveDuration: Int? = nil,
+            archiveTimestamp: Date? = nil,
+            locked: Bool? = nil
+        ) {
+            self.archived = archived
+            self.autoArchiveDuration = autoArchiveDuration
+            self.archiveTimestamp = archiveTimestamp
+            self.locked = locked
         }
     }
 }
