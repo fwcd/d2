@@ -42,9 +42,10 @@ public struct Channel: CustomStringConvertible {
         self.permissionOverwrites = permissionOverwrites
     }
 
-    public struct ChannelType: RawRepresentable, Hashable, Codable {
+    public struct ChannelType: RawRepresentable, Hashable, Codable, Comparable {
         public var rawValue: Int
 
+        public static let unknown = ChannelType(rawValue: -1)
         public static let text = ChannelType(rawValue: 0)
         public static let dm = ChannelType(rawValue: 1)
         public static let voice = ChannelType(rawValue: 2)
@@ -59,6 +60,10 @@ public struct Channel: CustomStringConvertible {
 
         public init(rawValue: Int) {
             self.rawValue = rawValue
+        }
+
+        public static func <(lhs: Self, rhs: Self) -> Bool {
+            lhs.rawValue < rhs.rawValue
         }
     }
 

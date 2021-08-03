@@ -38,11 +38,11 @@ public struct Guild {
         }
 
         for treeNode in treeNodes.values {
-            treeNode.childs.sort(by: ascendingComparator(comparing: \.channel.position))
+            treeNode.childs.sort(by: ascendingComparator(comparing: \.channel.type, then: \.channel.position))
         }
 
         return treeNodes.values
-            .sorted(by: ascendingComparator(comparing: \.channel.position))
+            .sorted(by: ascendingComparator(comparing: \.channel.type, then: \.channel.position))
             .filter { $0.channel.parentId == nil }
     }
 
