@@ -45,12 +45,12 @@ public class UserInfoCommand: Command {
                 Embed.Field(name: "Voice Status", value: ((member.deaf ? ["deaf"] : []) + (member.mute ? ["mute"] : [])).joined(separator: ", ").nilIfEmpty ?? "_none_"),
                 Embed.Field(name: "Joined at", value: dateFormatter.string(from: member.joinedAt))
             ] + (presence.map { [
-                Embed.Field(name: "Status", value: stringOf(status: $0.status))
+                Embed.Field(name: "Status", value: $0.status.map(stringOf(status:)) ?? "?")
             ] + $0.activities.map {
                 let details: [(String, String?)] = [
                     ("Assets", $0.assets.flatMap { [$0.largeText, $0.smallText].compactMap { $0 }.joined(separator: ", ").nilIfEmpty }),
                     ("Details", $0.details),
-                    ("Party", $0.party.map { "\($0.id) - sizes: \($0.sizes ?? [])" }),
+                    ("Party", $0.party.map { "\($0.id ?? "?") - sizes: \($0.sizes ?? [])" }),
                     ("State", $0.state),
                     ("Type", stringOf(activityType: $0.type)),
                     ("Timestamps", "playing for \($0.timestamps?.interval?.displayString ?? "unknown amount of time")"),
@@ -67,6 +67,7 @@ public class UserInfoCommand: Command {
             case .online: return ":green_circle: Online"
             case .offline: return ":white_circle: Offline"
             case .doNotDisturb: return ":red_circle: Do not disturb"
+            default: return ":question: Status \(status.rawValue)"
         }
     }
 
@@ -75,6 +76,7 @@ public class UserInfoCommand: Command {
             case .game: return ":video_game: Playing"
             case .listening: return ":musical_note: Listening"
             case .stream: return ":movie_camera: Streaming"
+            default: return ":question: Activity type \(activityType.rawValue)"
         }
     }
 }

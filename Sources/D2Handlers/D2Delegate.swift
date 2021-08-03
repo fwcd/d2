@@ -414,7 +414,7 @@ public class D2Delegate: MessageDelegate {
         log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
         if let presence = initialPresence {
-            client.setPresence(PresenceUpdate(game: Presence.Activity(name: presence, type: .listening)))
+            client.setPresence(PresenceUpdate(activities: [Presence.Activity(name: presence, type: .listening)]))
         }
 
         eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
@@ -498,7 +498,8 @@ public class D2Delegate: MessageDelegate {
             presenceHandlers[i].handle(presenceUpdate: presence, client: client)
         }
 
-        eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.game.map { RichValue.text($0.name) } ?? .none) // TODO: Pass full presence?
+        // TODO: Pass full presence?
+        eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.activities.first.map { RichValue.text($0.name) } ?? .none)
     }
 
     public func on(createGuild guild: Guild, client: MessageClient) {

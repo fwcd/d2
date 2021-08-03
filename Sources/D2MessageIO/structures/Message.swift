@@ -109,12 +109,12 @@ public struct Message: ExpressibleByStringLiteral {
     public struct Attachment {
         public let id: AttachmentID
         public let filename: String
-        public let size: Int?
+        public let size: Int
         public let url: URL?
         public let width: Int?
         public let height: Int?
 
-        public init(id: AttachmentID, filename: String, size: Int? = nil, url: URL? = nil, width: Int? = nil, height: Int? = nil) {
+        public init(id: AttachmentID, filename: String, size: Int = 0, url: URL? = nil, width: Int? = nil, height: Int? = nil) {
             self.id = id
             self.filename = filename
             self.size = size

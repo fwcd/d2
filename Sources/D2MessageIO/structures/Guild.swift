@@ -182,7 +182,7 @@ public struct Guild {
     }
 
     public struct Member {
-        public let guildId: GuildID?
+        public let guildId: GuildID
         public let joinedAt: Date
         public let user: User
         public let deaf: Bool
@@ -191,7 +191,7 @@ public struct Guild {
         public let roleIds: [RoleID]
 
         public init(
-            guildId: GuildID? = nil,
+            guildId: GuildID,
             joinedAt: Date = Date(),
             user: User,
             deaf: Bool = false,

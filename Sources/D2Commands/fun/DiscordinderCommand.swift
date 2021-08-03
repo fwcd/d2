@@ -135,7 +135,7 @@ public class DiscordinderCommand: StringCommand {
     private func embedOf(member: Guild.Member, presence: Presence?, client: MessageClient) -> Embed {
         Embed(
             title: member.displayName,
-            description: (presence?.game).map { descriptionOf(activity: $0) },
+            description: (presence?.activities.first).map { descriptionOf(activity: $0) },
             image: client.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
         )
     }
@@ -153,6 +153,7 @@ public class DiscordinderCommand: StringCommand {
             case .game: return "play"
             case .stream: return "stream"
             case .listening: return "listen to"
+            default: return "do"
         }
     }
 

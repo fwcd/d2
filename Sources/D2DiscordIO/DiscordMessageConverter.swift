@@ -56,7 +56,7 @@ extension DiscordAttachment: MessageIOConvertible {
         return Message.Attachment(
             id: id.usingMessageIO,
             filename: filename,
-            size: size,
+            size: size ?? 0,
             url: url,
             width: width,
             height: height

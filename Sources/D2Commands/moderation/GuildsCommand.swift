@@ -19,14 +19,14 @@ public class GuildsCommand: VoidCommand {
 
         output.append(Embed(
             title: ":accordion: Guilds",
-            fields: guilds.sorted(by: descendingComparator { $0.members.count }).map {
+            fields: guilds.sorted(by: descendingComparator { $0.members.count }).map { guild in
                 Embed.Field(
-                    name: $0.name,
+                    name: guild.name,
                     value: [
-                        $0.members[$0.ownerId].map { "owned by `\($0.user.username)#\($0.user.discriminator)` (<@\($0.user.id)>)" },
-                        "\($0.members.count) \("member".pluralized(with: $0.members.count))",
-                        "\($0.channels.count) \("channel".pluralized(with: $0.channels.count))",
-                        "\($0.id)"
+                        guild.ownerId.flatMap { guild.members[$0].map { "owned by `\($0.user.username)#\($0.user.discriminator)` (<@\($0.user.id)>)" } },
+                        "\(guild.members.count) \("member".pluralized(with: guild.members.count))",
+                        "\(guild.channels.count) \("channel".pluralized(with: guild.channels.count))",
+                        "\(guild.id)"
                     ].compactMap { $0 }.joined(separator: "\n"),
                     inline: true
                 )

@@ -77,8 +77,11 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
 
 extension DiscordGuildMember: MessageIOConvertible {
     public var usingMessageIO: Guild.Member {
-        Guild.Member(
-            guildId: guildId?.usingMessageIO,
+        guard let guildId = guildId?.usingMessageIO else {
+            fatalError("DiscordGuildMember \(self) has no guild id")
+        }
+        return Guild.Member(
+            guildId: guildId,
             joinedAt: joinedAt,
             user: user.usingMessageIO,
             deaf: deaf,

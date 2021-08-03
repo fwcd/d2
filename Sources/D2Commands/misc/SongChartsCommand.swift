@@ -108,19 +108,20 @@ public class SongChartsCommand: StringCommand {
     }
 
     public func onReceivedUpdated(presence: Presence) {
-        let guildId = presence.guildId
-        if trackedGuilds.contains(guildId), let activity = presence.game {
-            log.debug("Received presence of type \(activity.name)")
+        if let guildId = presence.guildId, trackedGuilds.contains(guildId) {
+            for activity in presence.activities {
+                log.debug("Received activity of type \(activity.name)")
 
-            if let songExtractor = songExtractors[activity.name] {
-                var charts = songCharts[guildId] ?? GuildSongCharts()
-                let song = songExtractor(activity)
+                if let songExtractor = songExtractors[activity.name] {
+                    var charts = songCharts[guildId] ?? GuildSongCharts()
+                    let song = songExtractor(activity)
 
-                charts.incrementPlayCount(for: song)
-                charts.keepTop(n: maxSongs / 2, ifSongCountGreaterThan: maxSongs)
-                log.info("Incremented play count for \(song)")
+                    charts.incrementPlayCount(for: song)
+                    charts.keepTop(n: maxSongs / 2, ifSongCountGreaterThan: maxSongs)
+                    log.info("Incremented play count for \(song)")
 
-                songCharts[guildId] = charts
+                    songCharts[guildId] = charts
+                }
             }
         }
     }

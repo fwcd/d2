@@ -88,18 +88,20 @@ public class GuildInfoCommand: VoidCommand {
 
         for (id, presence) in guild.presences {
             presences.append(presence)
-            if let game = presence.game, let playTime = game.timestamps?.interval, playTime > longestPlayTime {
-                longestPlayTime = playTime
-                longestPlayTimeGame = game.name
-                longestPlayTimeUsername = guild.members[id]?.displayName ?? "?"
+            for activity in presence.activities {
+                if let playTime = activity.timestamps?.interval, playTime > longestPlayTime {
+                    longestPlayTime = playTime
+                    longestPlayTimeGame = activity.name
+                    longestPlayTimeUsername = guild.members[id]?.displayName ?? "?"
+                }
             }
         }
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
 
-        let mostPlayed = Dictionary(grouping: presences.filter { $0.game != nil }, by: { $0.game?.name ?? "" })
-            .max { $0.1.count < $1.1.count }
+        let mostPlayed = Dictionary(grouping: presences.flatMap(\.activities), by: \.name)
+            .max { $0.value.count < $1.value.count }
 
         let mostUsedRole: String?
 
@@ -162,11 +164,11 @@ public class GuildInfoCommand: VoidCommand {
 
         return [
             (":island: General", [
-                ("Owner", "`\(guild.members[guild.ownerId]?.displayName ?? "?")`"),
-                ("Region", "`\(guild.region)`"),
-                ("Created at", "`\((guild.members[guild.ownerId]?.joinedAt).map(dateFormatter.string(from:)) ?? "?")`"),
-                ("MFA Level", "`\(guild.mfaLevel)`"),
-                ("Verification Level", "`\(guild.verificationLevel)`"),
+                ("Owner", guild.ownerId.flatMap { guild.members[$0]?.displayName }.map { "`\($0)`" }),
+                ("Region", guild.region.map { "`\($0)`" }),
+                ("Created at", guild.ownerId.flatMap { guild.members[$0]?.joinedAt }.map { "`\(dateFormatter.string(from: $0))`" }),
+                ("MFA Level", guild.mfaLevel.map { "`\($0)`" }),
+                ("Verification Level", guild.verificationLevel.map { "`\($0)`" }),
                 ("ID", "`\(guild.id)`")
             ]),
             (":tophat: Counts", [

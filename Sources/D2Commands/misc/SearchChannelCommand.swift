@@ -60,6 +60,7 @@ public class SearchChannelCommand: StringCommand {
             case .text: return "Text channels"
             case .voice: return "Voice channels"
             case .category: return "Categories"
+            default: return "Other channels"
         }
     }
 }

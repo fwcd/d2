@@ -31,7 +31,7 @@ public class PresenceCommand: StringCommand {
                 return
             }
 
-            client.setPresence(PresenceUpdate(game: Presence.Activity(name: customText, type: activityType), status: status))
+            client.setPresence(PresenceUpdate(activities: [Presence.Activity(name: customText, type: activityType)], status: status))
         } else {
             output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
         }
