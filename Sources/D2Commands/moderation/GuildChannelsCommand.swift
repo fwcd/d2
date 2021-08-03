@@ -37,14 +37,14 @@ public class GuildChannelsCommand: StringCommand {
         }
 
         let uncategorized = "Uncategorized"
-        var categories: [String: (Int, [Channel])] = [uncategorized: (-1, [])]
+        var categories: [String: (Int, [(channel: Channel, depth: Int)])] = [uncategorized: (-1, [])]
 
         for treeNode in guild.channelTree {
             let channel = treeNode.channel
             if channel.type == .category {
-                categories[channel.name] = (channel.position, treeNode.traversed)
+                categories[channel.name] = (channel.position, treeNode.traversedWithDepth())
             } else {
-                categories[uncategorized]!.1.append(channel)
+                categories[uncategorized]!.1.append((channel: channel, depth: 0))
             }
         }
 
@@ -59,11 +59,15 @@ public class GuildChannelsCommand: StringCommand {
                         name: "▾ \(category)",
                         value: channels
                             .compactMap {
-                                switch $0.type {
-                                    case .voice: return ":speaker: \($0.name) (\($0.id))"
-                                    case .publicThread, .privateThread, .newsThread: return ":thread: \($0.name)"
-                                    default: return "\(useChannelLinks ? "<#\($0.id)>" : "#\($0.name)") (\($0.id))"
+                                let label: String
+                                switch $0.channel.type {
+                                    case .voice: label = ":speaker: \($0.channel.name) (\($0.channel.id))"
+                                    case .publicThread, .privateThread, .newsThread: label = ":thread: \($0.channel.name)"
+                                    default: label = "\(useChannelLinks ? "<#\($0.channel.id)>" : "#\($0.channel.name)") (\($0.channel.id))"
                                 }
+                                // We deliberately use another blank Unicode character instead of a space here
+                                // since Discord trims the embed's lines.
+                                return String(repeating: "⠀", count: $0.depth) + label
                             }
                             .joined(separator: "\n")
                             .nilIfEmpty ?? "_none_"

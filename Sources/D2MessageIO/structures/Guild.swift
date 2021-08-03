@@ -110,6 +110,10 @@ public struct Guild {
         fileprivate init(channel: Channel) {
             self.channel = channel
         }
+
+        public func traversedWithDepth(_ depth: Int = 0) -> [(channel: Channel, depth: Int)] {
+            [(channel: channel, depth: depth)] + childs.flatMap { $0.traversedWithDepth(depth + 1) }
+        }
     }
 
     public struct Member {
