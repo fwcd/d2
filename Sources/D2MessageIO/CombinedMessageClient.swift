@@ -94,6 +94,10 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: channelId) { $0.getMessages(for: channelId, limit: limit, selection: selection) } ?? Promise(.success([]))
     }
 
+    public func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<Channel?, Error> {
+        withClient(of: channelId) { $0.modifyChannel(channelId, with: modification) } ?? Promise(.success(nil))
+    }
+
     public func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
         withClient(of: channelId) { $0.isGuildTextChannel(channelId) } ?? Promise(.success(false))
     }

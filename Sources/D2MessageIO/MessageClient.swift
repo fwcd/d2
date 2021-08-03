@@ -45,6 +45,9 @@ public protocol MessageClient {
     func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error>
 
     @discardableResult
+    func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<Channel?, Error>
+
+    @discardableResult
     func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error>
 
     @discardableResult

@@ -117,6 +117,14 @@ struct DiscordMessageClient: MessageClient {
         }
     }
 
+    func modifyChannel(_ channelId: D2MessageIO.ChannelID, with modification: ChannelModification) -> Promise<Channel?, Error> {
+        Promise { then in
+            client.modifyChannel(channelId.usingDiscordAPI, options: modification.usingDiscordAPI) {
+                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+            }
+        }
+    }
+
     func isGuildTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
         Promise { then in
             client.getChannel(channelId.usingDiscordAPI) {

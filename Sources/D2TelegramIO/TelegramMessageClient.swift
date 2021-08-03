@@ -114,6 +114,11 @@ struct TelegramMessageClient: MessageClient {
         Utils.Promise(.success([]))
     }
 
+    func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Utils.Promise<D2MessageIO.Channel?, Error> {
+        // TODO
+        Promise(.success(nil))
+    }
+
     func isGuildTextChannel(_ channelId: ChannelID) -> Utils.Promise<Bool, Error> {
         // TODO
         Utils.Promise(.success(false))

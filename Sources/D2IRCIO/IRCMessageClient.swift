@@ -113,6 +113,11 @@ struct IRCMessageClient: MessageClient {
         Promise(.success([]))
     }
 
+    func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<D2MessageIO.Channel?, Error> {
+        // TODO
+        Promise(.success(nil))
+    }
+
     func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
         Promise(.success(false))

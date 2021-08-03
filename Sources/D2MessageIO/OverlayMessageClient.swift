@@ -68,6 +68,10 @@ public struct OverlayMessageClient: MessageClient {
         inner.getMessages(for: channelId, limit: limit, selection: selection)
     }
 
+    public func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<Channel?, Error> {
+        inner.modifyChannel(channelId, with: modification)
+    }
+
     public func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
         inner.isGuildTextChannel(channelId)
     }
