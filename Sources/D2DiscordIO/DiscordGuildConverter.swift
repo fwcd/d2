@@ -20,7 +20,7 @@ extension DiscordGuild: MessageIOConvertible {
             widgetEnabled: widgetEnabled ?? false,
             widgetChannelId: widgetChannelId?.usingMessageIO,
             icon: icon,
-            members: members?.usingMessageIO ?? [:],
+            members: Dictionary(uniqueKeysWithValues: members?.map { (k, v) in (k.usingMessageIO, v.usingMessageIO(in: id.usingMessageIO)) } ?? []),
             roles: roles?.usingMessageIO ?? [:],
             presences: presences?.usingMessageIO ?? [:],
             voiceStates: voiceStates?.usingMessageIO ?? [:],
@@ -75,11 +75,8 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
     }
 }
 
-extension DiscordGuildMember: MessageIOConvertible {
-    public var usingMessageIO: Guild.Member {
-        guard let guildId = guildId?.usingMessageIO else {
-            fatalError("DiscordGuildMember \(self) has no guild id")
-        }
+extension DiscordGuildMember {
+    public func usingMessageIO(in guildId: D2MessageIO.GuildID) -> Guild.Member {
         return Guild.Member(
             guildId: guildId,
             joinedAt: joinedAt,

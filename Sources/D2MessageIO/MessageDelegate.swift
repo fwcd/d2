@@ -47,7 +47,7 @@ public protocol MessageDelegate {
 
     func on(receiveVoiceStateUpdate state: VoiceState, client: MessageClient)
 
-    func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, for guild: Guild, client: MessageClient)
+    func on(handleGuildMemberChunk chunk: [UserID: Guild.Member], for guild: Guild, client: MessageClient)
 
     func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: MessageClient)
 }
@@ -99,7 +99,7 @@ public extension MessageDelegate {
 
     func on(receiveVoiceStateUpdate state: VoiceState, client: MessageClient) {}
 
-    func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, for guild: Guild, client: MessageClient) {}
+    func on(handleGuildMemberChunk chunk: [UserID: Guild.Member], for guild: Guild, client: MessageClient) {}
 
     func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: MessageClient) {}
 }

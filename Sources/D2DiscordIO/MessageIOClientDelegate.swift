@@ -56,17 +56,29 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
 
     public func client(_ discordClient: DiscordClient, didAddGuildMember member: DiscordGuildMember) {
         log.debug("Added guild member: \(member.user.username ?? "?")")
-        inner.on(addGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
+        guard let guildId = member.guildId?.usingMessageIO else {
+            log.error("Guild member \(member.user.username ?? "?") has no guild id")
+            return
+        }
+        inner.on(addGuildMember: member.usingMessageIO(in: guildId), client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didRemoveGuildMember member: DiscordGuildMember) {
         log.debug("Removed guild member: \(member.user.username ?? "?")")
-        inner.on(removeGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
+        guard let guildId = member.guildId?.usingMessageIO else {
+            log.error("Guild member \(member.user.username ?? "?") has no guild id")
+            return
+        }
+        inner.on(removeGuildMember: member.usingMessageIO(in: guildId), client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateGuildMember member: DiscordGuildMember) {
         log.debug("Updated guild member: \(member.user.username ?? "?")")
-        inner.on(updateGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
+        guard let guildId = member.guildId?.usingMessageIO else {
+            log.error("Guild member \(member.user.username ?? "?") has no guild id")
+            return
+        }
+        inner.on(updateGuildMember: member.usingMessageIO(in: guildId), client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateMessage message: DiscordMessage) {
@@ -131,14 +143,16 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(receiveVoiceStateUpdate: voiceState.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: DiscordLazyDictionary<Discord.UserID, DiscordGuildMember>, forGuild guild: DiscordGuild) {
+    public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: [DiscordGuildMember], forGuild guild: DiscordGuild) {
         log.debug("Handling guild member chunk")
-        inner.on(handleGuildMemberChunk: chunk.usingMessageIO, for: guild.usingMessageIO, client: overlayClient(with: discordClient))
+        let newChunk = Dictionary(uniqueKeysWithValues: chunk.map { ($0.id.usingMessageIO, $0.usingMessageIO(in: guild.id.usingMessageIO)) })
+        inner.on(handleGuildMemberChunk: newChunk, for: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [Discord.EmojiID: DiscordEmoji], onGuild guild: DiscordGuild) {
+    public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [DiscordEmoji], onGuild guild: DiscordGuild) {
         log.debug("Got updated emojis")
-        inner.on(updateEmojis: emojis.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
+        let newEmojis = Dictionary(uniqueKeysWithValues: emojis.compactMap { e in e.id.map { ($0.usingMessageIO, e.usingMessageIO) } })
+        inner.on(updateEmojis: newEmojis, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     private func overlayClient(with discordClient: DiscordClient) -> MessageClient {

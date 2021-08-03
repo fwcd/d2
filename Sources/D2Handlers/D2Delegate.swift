@@ -736,7 +736,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .receiveVoiceStateUpdate, with: .none) // TODO: Pass state?
     }
 
-    public func on(handleGuildMemberChunk chunk: LazyDictionary<UserID, Guild.Member>, for guild: Guild, client: MessageClient) {
+    public func on(handleGuildMemberChunk chunk: [UserID: Guild.Member], for guild: Guild, client: MessageClient) {
         eventListenerBus.fire(event: .handleGuildMemberChunk, with: .none) // TODO: Pass state?
     }
 

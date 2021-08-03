@@ -11,7 +11,7 @@ extension DiscordInteraction: MessageIOConvertible {
             data: data?.usingMessageIO,
             guildId: guildId.usingMessageIO,
             channelId: channelId.usingMessageIO,
-            member: member?.usingMessageIO,
+            member: member?.usingMessageIO(in: guildId.usingMessageIO),
             token: token,
             version: version
         )
