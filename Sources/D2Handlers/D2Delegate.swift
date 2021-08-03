@@ -49,6 +49,7 @@ public class D2Delegate: MessageDelegate {
         let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
         let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
         let haikuConfiguration = AutoSerializing<HaikuConfiguration>(wrappedValue: .init(), filePath: "local/haikuConfig.json")
+        let threadConfiguration = AutoSerializing<ThreadConfiguration>(wrappedValue: .init(), filePath: "local/threadConfig.json")
         let roleReactionsConfiguration = AutoSerializing<RoleReactionsConfiguration>(wrappedValue: .init(), filePath: "local/roleReactionsConfig.json")
         let inventoryManager = InventoryManager()
 
@@ -76,7 +77,7 @@ public class D2Delegate: MessageDelegate {
             StreamerRoleHandler(streamerRoleConfiguration: streamerRoleConfiguration)
         ]
         channelHandlers = [
-            ThreadKeepaliveHandler()
+            ThreadKeepaliveHandler(config: threadConfiguration)
         ]
 
         registry["ping"] = PingCommand()
@@ -112,6 +113,7 @@ public class D2Delegate: MessageDelegate {
         registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: streamerRoleConfiguration)
         registry["messagepreviews"] = MessagePreviewsCommand(configuration: messagePreviewsConfiguration)
         registry["haikus"] = HaikusCommand(configuration: haikuConfiguration)
+        registry["thread"] = ThreadCommand(config: threadConfiguration)
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()

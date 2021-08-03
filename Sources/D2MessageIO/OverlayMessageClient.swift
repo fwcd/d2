@@ -20,6 +20,10 @@ public struct OverlayMessageClient: MessageClient {
         inner.guild(for: guildId)
     }
 
+    public func channel(for channelId: ChannelID) -> Channel? {
+        inner.channel(for: channelId)
+    }
+
     public func setPresence(_ presence: PresenceUpdate) {
         inner.setPresence(presence)
     }

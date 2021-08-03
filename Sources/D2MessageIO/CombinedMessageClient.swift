@@ -41,6 +41,10 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: guildId) { $0.guild(for: guildId) }
     }
 
+    public func channel(for channelId: ChannelID) -> Channel? {
+        withClient(of: channelId) { $0.channel(for: channelId) }
+    }
+
     public func setPresence(_ presence: PresenceUpdate) {
         for client in clients.values {
             client.setPresence(presence)

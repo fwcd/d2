@@ -22,6 +22,10 @@ struct DiscordMessageClient: MessageClient {
         client.guilds[guildId.usingDiscordAPI]?.usingMessageIO
     }
 
+    func channel(for channelId: D2MessageIO.ChannelID) -> Channel? {
+        client.findChannel(fromId: channelId.usingDiscordAPI)?.usingMessageIO
+    }
+
     func setPresence(_ presence: PresenceUpdate) {
         client.setPresence(presence.usingDiscordAPI)
     }

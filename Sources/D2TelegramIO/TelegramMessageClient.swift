@@ -24,6 +24,11 @@ struct TelegramMessageClient: MessageClient {
         nil
     }
 
+    func channel(for channelId: ChannelID) -> Channel? {
+        // TODO
+        nil
+    }
+
     func setPresence(_ presence: PresenceUpdate) {
         // TODO
     }

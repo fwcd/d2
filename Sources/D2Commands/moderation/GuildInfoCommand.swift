@@ -79,7 +79,7 @@ public class GuildInfoCommand: VoidCommand {
         }
 
         for (_, channel) in guild.channels {
-            if channel.isVoiceChannel {
+            if channel.isVoice {
                 voiceChannelCount += 1
             } else {
                 textChannelCount += 1

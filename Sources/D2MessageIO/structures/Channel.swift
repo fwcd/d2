@@ -11,7 +11,9 @@ public struct Channel: CustomStringConvertible {
     public let threadMetadata: ThreadMetadata?
     public let permissionOverwrites: [OverwriteID: PermissionOverwrite]
 
-    public var isVoiceChannel: Bool { [.voice, .stageVoice].contains(type) }
+    public var isVoice: Bool { type.isVoice }
+    public var isThread: Bool { type.isThread }
+
     public var description: String {
         switch type {
             case .voice: return ":speaker: \(name)"
@@ -44,6 +46,9 @@ public struct Channel: CustomStringConvertible {
 
     public struct ChannelType: RawRepresentable, Hashable, Codable, Comparable {
         public var rawValue: Int
+
+        public var isVoice: Bool { [.voice, .stageVoice].contains(self) }
+        public var isThread: Bool { [.publicThread, .privateThread, .newsThread].contains(self) }
 
         public static let unknown = ChannelType(rawValue: -1)
         public static let text = ChannelType(rawValue: 0)

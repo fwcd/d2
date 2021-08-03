@@ -26,6 +26,11 @@ struct IRCMessageClient: MessageClient {
         nil
     }
 
+    func channel(for channelId: D2MessageIO.ChannelID) -> Channel? {
+        // TODO
+        nil
+    }
+
     func setPresence(_ presence: PresenceUpdate) {
         // TODO
     }

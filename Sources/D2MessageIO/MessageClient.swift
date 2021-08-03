@@ -12,6 +12,8 @@ public protocol MessageClient {
 
     func guild(for guildId: GuildID) -> Guild?
 
+    func channel(for channelId: ChannelID) -> Channel?
+
     func setPresence(_ presence: PresenceUpdate)
 
     func guildForChannel(_ channelId: ChannelID) -> Guild?
