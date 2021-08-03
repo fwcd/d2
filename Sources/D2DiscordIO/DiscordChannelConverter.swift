@@ -23,8 +23,16 @@ extension DiscordChannelType: MessageIOConvertible {
     public var usingMessageIO: Channel.ChannelType {
         switch self {
             case .text: return .text
+            case .dm: return .dm
             case .voice: return .voice
+            case .groupDM: return .groupDM
             case .category: return .category
+            case .news: return .news
+            case .store: return .store
+            case .newsThread: return .newsThread
+            case .publicThread: return .publicThread
+            case .privateThread: return .privateThread
+            case .stageVoice: return .stageVoice
             default: return .init(rawValue: rawValue)
         }
     }
