@@ -120,6 +120,11 @@ extension TestOutput: MessageClient {
         Promise(.success([]))
     }
 
+    public func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<Channel?, Error> {
+        // TODO
+        Promise(.success(nil))
+    }
+
     public func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, Error> {
         // TODO
         Promise(.success(false))
