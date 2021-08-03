@@ -15,7 +15,7 @@ public protocol ChannelHandler {
     mutating func handle(threadDelete thread: Channel, client: MessageClient)
 }
 
-extension ChannelHandler {
+public extension ChannelHandler {
     func handle(channelCreate channel: Channel, client: MessageClient) {}
 
     func handle(channelUpdate channel: Channel, client: MessageClient) {}

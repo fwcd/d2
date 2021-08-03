@@ -75,7 +75,9 @@ public class D2Delegate: MessageDelegate {
         presenceHandlers = [
             StreamerRoleHandler(streamerRoleConfiguration: streamerRoleConfiguration)
         ]
-        channelHandlers = []
+        channelHandlers = [
+            ThreadKeepaliveHandler()
+        ]
 
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
