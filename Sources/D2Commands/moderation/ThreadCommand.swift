@@ -52,8 +52,12 @@ public class ThreadCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+        guard !input.isEmpty else {
+            output.append(errorText: "Please use one of these subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            return
+        }
         guard let subcommand = subcommands[input] else {
-            output.append(errorText: "Subcommand `\(input)` not ")
+            output.append(errorText: "Subcommand `\(input)` not in the subcommands \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
         guard let channelId = context.channel?.id, let channel = context.client?.channel(for: channelId) else {
