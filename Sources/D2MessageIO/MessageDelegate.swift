@@ -11,6 +11,12 @@ public protocol MessageDelegate {
 
     func on(updateChannel channelId: ChannelID, client: MessageClient)
 
+    func on(createThread threadId: ChannelID, client: MessageClient)
+
+    func on(deleteThread threadId: ChannelID, client: MessageClient)
+
+    func on(updateThread threadId: ChannelID, client: MessageClient)
+
     func on(createGuild guild: Guild, client: MessageClient)
 
     func on(deleteGuild guild: Guild, client: MessageClient)
@@ -62,6 +68,12 @@ public extension MessageDelegate {
     func on(deleteChannel channelId: ChannelID, client: MessageClient) {}
 
     func on(updateChannel channelId: ChannelID, client: MessageClient) {}
+
+    func on(createThread threadId: ChannelID, client: MessageClient) {}
+
+    func on(deleteThread threadId: ChannelID, client: MessageClient) {}
+
+    func on(updateThread threadId: ChannelID, client: MessageClient) {}
 
     func on(createGuild guild: Guild, client: MessageClient) {}
 

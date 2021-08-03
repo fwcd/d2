@@ -39,6 +39,21 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(updateChannel: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
+    public func client(_ discordClient: DiscordClient, didCreateThread thread: DiscordChannel) {
+        log.debug("Got thread create: \(thread.id)")
+        inner.on(createThread: thread.id.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didDeleteThread thread: DiscordChannel) {
+        log.debug("Got thread delete: \(thread.id)")
+        inner.on(deleteThread: thread.id.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
+    public func client(_ discordClient: DiscordClient, didUpdateThread thread: DiscordChannel) {
+        log.debug("Got thread update: \(thread.id)")
+        inner.on(updateThread: thread.id.usingMessageIO, client: overlayClient(with: discordClient))
+    }
+
     public func client(_ discordClient: DiscordClient, didCreateGuild guild: DiscordGuild) {
         log.debug("Created guild")
         inner.on(createGuild: guild.usingMessageIO, client: overlayClient(with: discordClient))
