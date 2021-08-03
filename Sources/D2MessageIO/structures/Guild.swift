@@ -23,10 +23,13 @@ public struct Guild {
     public let voiceStates: [UserID: VoiceState]
     public let emojis: [EmojiID: Emoji]
     public let channels: [ChannelID: Channel]
+    public let threads: [ChannelID: Channel]
 
-    /// Fetches the guild's channels as a tree.
+    /// Fetches the guild's channels and threads as a tree.
     public var channelTree: [ChannelTreeNode] {
-        let treeNodes = channels.mapValues { ChannelTreeNode(channel: $0) }
+        let treeNodes = channels
+            .merging(threads, uniquingKeysWith: { k, _ in k })
+            .mapValues { ChannelTreeNode(channel: $0) }
 
         for treeNode in treeNodes.values {
             if let parentId = treeNode.channel.parentId, let parent = treeNodes[parentId] {
@@ -68,7 +71,8 @@ public struct Guild {
         presences: [UserID: Presence] = [:],
         voiceStates: [UserID: VoiceState] = [:],
         emojis: [EmojiID: Emoji] = [:],
-        channels: [ChannelID: Channel] = [:]
+        channels: [ChannelID: Channel] = [:],
+        threads: [ChannelID: Channel] = [:]
     ) {
         self.id = id
         self.ownerId = ownerId
@@ -90,10 +94,11 @@ public struct Guild {
         self.voiceStates = voiceStates
         self.emojis = emojis
         self.channels = channels
+        self.threads = threads
     }
 
     public func roles(for member: Member) -> [Role] {
-        return member.roleIds.compactMap { roles[$0] }
+        member.roleIds.compactMap { roles[$0] }
     }
 
     public class ChannelTreeNode {

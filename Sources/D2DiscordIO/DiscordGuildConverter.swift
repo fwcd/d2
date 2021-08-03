@@ -25,7 +25,8 @@ extension DiscordGuild: MessageIOConvertible {
             presences: presences?.usingMessageIO ?? [:],
             voiceStates: voiceStates?.usingMessageIO ?? [:],
             emojis: Dictionary(uniqueKeysWithValues: emojis?.compactMap { (k, v) in k.map { ($0.usingMessageIO, v.usingMessageIO) } } ?? []),
-            channels: channels?.usingMessageIO ?? [:]
+            channels: channels?.usingMessageIO ?? [:],
+            threads: threads?.usingMessageIO ?? [:]
         )
     }
 }
