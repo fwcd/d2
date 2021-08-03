@@ -70,7 +70,7 @@ extension TestOutput: MessageClient {
         guilds?.first { $0.channels.keys.contains(channelId) }
     }
 
-    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
+    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions {
         // TODO
         []
     }

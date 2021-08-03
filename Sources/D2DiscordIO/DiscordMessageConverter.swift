@@ -23,17 +23,18 @@ extension Message.FileUpload: DiscordAPIConvertible {
 
 // FROM Discord conversions
 
-extension DiscordMessage: MessageIOConvertible {
-    public var usingMessageIO: Message {
+extension DiscordMessage: MessageIOClientConvertible {
+    public func usingMessageIO(with client: MessageClient) -> Message {
+        let guild = guildId.flatMap { client.guild(for: $0.usingMessageIO) }
+        let member = (author?.id).flatMap { guild?.members[$0.usingMessageIO] }
         return Message(
-            content: content,
-            embeds: embeds.usingMessageIO,
-            attachments: attachments.usingMessageIO,
+            content: content ?? "",
+            embeds: embeds?.usingMessageIO ?? [],
+            attachments: attachments?.usingMessageIO ?? [],
             activity: activity?.usingMessageIO,
             application: application?.usingMessageIO,
             author: author.usingMessageIO,
             channelId: channelId.usingMessageIO,
-            dm: channel is DiscordDMChannel || channel is DiscordGroupDMChannel,
             editedTimestamp: editedTimestamp,
             id: id.usingMessageIO,
             mentionEveryone: mentionEveryone,
@@ -44,8 +45,8 @@ extension DiscordMessage: MessageIOConvertible {
             reactions: reactions.usingMessageIO,
             timestamp: timestamp,
             type: type.usingMessageIO,
-            guild: channel?.guild?.usingMessageIO,
-            guildMember: guildMember?.usingMessageIO
+            guild: guild?.usingMessageIO,
+            guildMember: member?.usingMessageIO
         )
     }
 }
@@ -63,27 +64,28 @@ extension DiscordAttachment: MessageIOConvertible {
     }
 }
 
-extension DiscordMessage.MessageActivity: MessageIOConvertible {
-    public var usingMessageIO: Message.MessageActivity {
-        return Message.MessageActivity(
+extension DiscordMessage.Activity: MessageIOConvertible {
+    public var usingMessageIO: Message.Activity {
+        return Message.Activity(
             type: type.usingMessageIO,
             partyId: partyId
         )
     }
 }
 
-extension DiscordMessage.MessageActivity.ActivityType: MessageIOConvertible {
-    public var usingMessageIO: Message.MessageActivity.ActivityType {
+extension DiscordMessage.Activity.ActivityType: MessageIOConvertible {
+    public var usingMessageIO: Message.Activity.ActivityType {
         switch self {
             case .join: return .join
             case .spectate: return .spectate
             case .listen: return .listen
             case .joinRequest: return .joinRequest
+            default: return .init(rawValue: rawValue)
         }
     }
 }
 
-extension DiscordMessage.MessageApplication: MessageIOConvertible {
+extension DiscordApplication: MessageIOConvertible {
     public var usingMessageIO: Message.MessageApplication {
         return Message.MessageApplication(
             id: id.usingMessageIO,
@@ -105,7 +107,7 @@ extension DiscordReaction: MessageIOConvertible {
     }
 }
 
-extension DiscordMessage.MessageType: MessageIOConvertible {
+extension DiscordMessageType: MessageIOConvertible {
     public var usingMessageIO: Message.MessageType {
         switch self {
             case .`default`: return .`default`
@@ -124,6 +126,7 @@ extension DiscordMessage.MessageType: MessageIOConvertible {
             case .guildDiscoveryDisqualified: return .guildDiscoveryDisqualified
             case .guildDiscoveryRequalified: return .guildDiscoveryRequalified
             case .reply: return .reply
+            default: return .init(rawValue: rawValue)
         }
     }
 }

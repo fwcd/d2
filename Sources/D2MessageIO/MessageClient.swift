@@ -16,7 +16,7 @@ public protocol MessageClient {
 
     func guildForChannel(_ channelId: ChannelID) -> Guild?
 
-    func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission
+    func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions
 
     func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL?
 

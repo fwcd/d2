@@ -6,8 +6,8 @@ import D2MessageIO
 extension DiscordVoiceState: MessageIOConvertible {
     public var usingMessageIO: VoiceState {
         return VoiceState(
-            channelId: channelId.usingMessageIO,
-            guildId: guildId.usingMessageIO,
+            channelId: channelId?.usingMessageIO,
+            guildId: guildId?.usingMessageIO,
             userId: userId.usingMessageIO,
             deaf: deaf,
             mute: mute,

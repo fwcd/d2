@@ -4,22 +4,22 @@ import Utils
 // TODO: Make this a protocol and add roles/members properties
 public struct Guild {
     public let id: GuildID
-    public let ownerId: UserID
-    public let region: String
+    public let ownerId: UserID?
+    public let region: String?
     public let large: Bool
     public let name: String
-    public let joinedAt: Date
+    public let joinedAt: Date?
     public let splash: String
     public let unavailable: Bool
     public let description: String
-    public let mfaLevel: Int
-    public let verificationLevel: Int
+    public let mfaLevel: Int?
+    public let verificationLevel: Int?
     public let widgetEnabled: Bool
-    public let widgetChannelId: ChannelID
-    public let icon: String
-    public let members: LazyDictionary<UserID, Member>
+    public let widgetChannelId: ChannelID?
+    public let icon: String?
+    public let members: [UserID: Member]
     public let roles: [RoleID: Role]
-    public let presences: LazyDictionary<UserID, Presence>
+    public let presences: [UserID: Presence]
     public let voiceStates: [UserID: VoiceState]
     public let emojis: [EmojiID: Emoji]
     public let channels: [ChannelID: Channel]
@@ -50,22 +50,22 @@ public struct Guild {
 
     public init(
         id: GuildID = GuildID(""),
-        ownerId: UserID = UserID(""),
-        region: String = "",
+        ownerId: UserID? = nil,
+        region: String? = nil,
         large: Bool = false,
         name: String = "",
-        joinedAt: Date = Date(),
+        joinedAt: Date? = nil,
         splash: String = "",
         unavailable: Bool = false,
         description: String = "",
-        mfaLevel: Int = 0,
-        verificationLevel: Int = 0,
+        mfaLevel: Int? = nil,
+        verificationLevel: Int? = nil,
         widgetEnabled: Bool = false,
-        widgetChannelId: ChannelID = ChannelID(""),
-        icon: String = "",
-        members: LazyDictionary<UserID, Member> = [:],
+        widgetChannelId: ChannelID? = nil,
+        icon: String? = nil,
+        members: [UserID: Member] = [:],
         roles: [RoleID: Role] = [:],
-        presences: LazyDictionary<UserID, Presence> = [:],
+        presences: [UserID: Presence] = [:],
         voiceStates: [UserID: VoiceState] = [:],
         emojis: [EmojiID: Emoji] = [:],
         channels: [ChannelID: Channel] = [:]
@@ -98,7 +98,7 @@ public struct Guild {
 
     public struct Channel: CustomStringConvertible {
         public let id: ChannelID
-        public let guildId: GuildID
+        public let guildId: GuildID?
         public let name: String
         public let topic: String?
         public let parentId: ChannelID?
@@ -112,12 +112,13 @@ public struct Guild {
                 case .text: return "<#\(id)>"
                 case .voice: return ":speaker: \(name)"
                 case .category: return ":paperclip: \(name)"
+                default: return name
             }
         }
 
         public init(
             id: ChannelID = ChannelID(""),
-            guildId: GuildID,
+            guildId: GuildID? = nil,
             name: String = "",
             topic: String? = nil,
             parentId: ChannelID? = nil,
@@ -135,10 +136,16 @@ public struct Guild {
             self.permissionOverwrites = permissionOverwrites
         }
 
-        public enum ChannelType {
-            case text
-            case voice
-            case category
+        public struct ChannelType: RawRepresentable, Hashable, Codable {
+            public var rawValue: Int
+
+            public static let text = ChannelType(rawValue: 0)
+            public static let voice = ChannelType(rawValue: 2)
+            public static let category = ChannelType(rawValue: 4)
+
+            public init(rawValue: Int) {
+                self.rawValue = rawValue
+            }
         }
 
         public struct PermissionOverwrite {
@@ -150,9 +157,15 @@ public struct Guild {
                 self.type = type
             }
 
-            public enum PermissionOverwriteType: Int, Codable {
-                case role
-                case member
+            public struct PermissionOverwriteType: RawRepresentable, Hashable, Codable {
+                public var rawValue: Int
+
+                public static let role = PermissionOverwriteType(rawValue: 0)
+                public static let member = PermissionOverwriteType(rawValue: 1)
+
+                public init(rawValue: Int) {
+                    self.rawValue = rawValue
+                }
             }
         }
     }

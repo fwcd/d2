@@ -28,7 +28,7 @@ public struct OverlayMessageClient: MessageClient {
         inner.guildForChannel(channelId)
     }
 
-    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
+    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions {
         inner.permissionsForUser(userId, in: channelId, on: guildId)
     }
 

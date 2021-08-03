@@ -5,49 +5,60 @@ import D2MessageIO
 
 extension DiscordGuild: MessageIOConvertible {
     public var usingMessageIO: Guild {
-        return Guild(
+        Guild(
             id: id.usingMessageIO,
-            ownerId: ownerId.usingMessageIO,
+            ownerId: ownerId?.usingMessageIO,
             region: region,
-            large: large,
-            name: name,
+            large: large ?? false,
+            name: name ?? "",
             joinedAt: joinedAt,
-            splash: splash,
-            unavailable: unavailable,
-            description: description,
+            splash: splash ?? "",
+            unavailable: unavailable ?? false,
+            description: description ?? "",
             mfaLevel: mfaLevel,
             verificationLevel: verificationLevel,
-            widgetEnabled: widgetEnabled,
-            widgetChannelId: widgetChannelId.usingMessageIO,
+            widgetEnabled: widgetEnabled ?? false,
+            widgetChannelId: widgetChannelId?.usingMessageIO,
             icon: icon,
-            members: members.usingMessageIO,
-            roles: roles.usingMessageIO,
-            presences: presences.usingMessageIO,
-            voiceStates: voiceStates.usingMessageIO,
-            emojis: emojis.usingMessageIO,
-            channels: Dictionary(uniqueKeysWithValues: channels.map { (k, v) in (k.usingMessageIO, v.usingMessageIO) })
+            members: members?.usingMessageIO ?? [:],
+            roles: roles?.usingMessageIO ?? [:],
+            presences: presences?.usingMessageIO ?? [:],
+            voiceStates: voiceStates?.usingMessageIO ?? [:],
+            emojis: emojis?.usingMessageIO ?? [:],
+            channels: channels?.usingMessageIO ?? [:]
         )
     }
 }
 
-extension DiscordGuildChannel /* TODO: No protocol inheritance clauses: MessageIOConvertible */ {
+extension DiscordChannel: MessageIOConvertible {
     public var usingMessageIO: Guild.Channel {
-        return Guild.Channel(
+        Guild.Channel(
             id: id.usingMessageIO,
-            guildId: guildId.usingMessageIO,
-            name: name,
-            topic: (self as? DiscordGuildTextChannel)?.topic,
+            guildId: guildId?.usingMessageIO,
+            name: name ?? "",
+            topic: topic,
             parentId: parentId?.usingMessageIO,
-            position: position,
-            type: self is DiscordGuildVoiceChannel ? .voice : self is DiscordGuildChannelCategory ? .category : .text,
-            permissionOverwrites: permissionOverwrites.usingMessageIO
+            position: position ?? 0,
+            type: type.usingMessageIO,
+            permissionOverwrites: permissionOverwrites?.usingMessageIO ?? []
         )
+    }
+}
+
+extension DiscordChannelType: MessageIOConvertible {
+    public var usingMessageIO: Guild.Channel.ChannelType {
+        switch self {
+            case .text: return .text
+            case .voice: return .voice
+            case .category: return .category
+            default: return .init(rawValue: rawValue)
+        }
     }
 }
 
 extension DiscordPermissionOverwrite: MessageIOConvertible {
     public var usingMessageIO: Guild.Channel.PermissionOverwrite {
-        return Guild.Channel.PermissionOverwrite(
+        Guild.Channel.PermissionOverwrite(
             id: id.usingMessageIO,
             type: type.usingMessageIO
         )
@@ -59,13 +70,14 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
         switch self {
             case .role: return .role
             case .member: return .member
+            default: return .init(rawValue: rawValue)
         }
     }
 }
 
 extension DiscordGuildMember: MessageIOConvertible {
     public var usingMessageIO: Guild.Member {
-        return Guild.Member(
+        Guild.Member(
             guildId: guildId.usingMessageIO,
             joinedAt: joinedAt,
             user: user.usingMessageIO,

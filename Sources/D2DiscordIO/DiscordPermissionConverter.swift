@@ -3,7 +3,7 @@ import Discord
 
 // TO Discord conversions
 
-extension Permission: DiscordAPIConvertible {
+extension Permissions: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordPermissions {
         .init(rawValue: rawValue)
     }
@@ -12,7 +12,7 @@ extension Permission: DiscordAPIConvertible {
 // FROM Discord conversions
 
 extension DiscordPermissions: MessageIOConvertible {
-    public var usingMessageIO: Permission {
+    public var usingMessageIO: Permissions {
         .init(rawValue: rawValue)
     }
 }

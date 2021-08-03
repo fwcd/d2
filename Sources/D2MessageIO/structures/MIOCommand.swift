@@ -75,13 +75,13 @@ public struct MIOCommand {
     }
 
     public struct InteractionData {
-        public let id: MIOCommandID
+        public let id: MIOCommandID?
         public let name: String
         public let options: [Option]
 
         public init(
-            id: MIOCommandID,
-            name: String,
+            id: MIOCommandID? = nil,
+            name: String = "",
             options: [Option] = []
         ) {
             self.id = id

@@ -7,9 +7,9 @@ public struct Presence {
     public let activities: [Activity]
     public let nick: String?
     public let roles: [String]
-    public let status: Presence.Status
+    public let status: Status?
 
-    public init(guildId: GuildID, user: User, game: Activity? = nil, activities: [Activity] = [], nick: String? = nil, roles: [String] = [], status: Presence.Status) {
+    public init(guildId: GuildID, user: User, game: Activity? = nil, activities: [Activity] = [], nick: String? = nil, roles: [String] = [], status: Presence.Status? = nil) {
         self.guildId = guildId
         self.user = user
         self.game = game
@@ -76,10 +76,19 @@ public struct Presence {
             }
         }
 
-        public enum ActivityType: Int, Codable {
-            case game
-            case stream
-            case listening
+        public struct ActivityType: RawRepresentable, Hashable, Codable {
+            public var rawValue: Int
+
+            public static let game = ActivityType(rawValue: 0)
+            public static let stream = ActivityType(rawValue: 1)
+            public static let listening = ActivityType(rawValue: 2)
+            public static let watching = ActivityType(rawValue: 3)
+            public static let custom = ActivityType(rawValue: 4)
+            public static let competing = ActivityType(rawValue: 5)
+
+            public init(rawValue: Int) {
+                self.rawValue = rawValue
+            }
         }
     }
 
@@ -92,12 +101,12 @@ public struct Presence {
 }
 
 public struct PresenceUpdate: Codable {
-    public let game: Presence.Activity?
+    public let activities: [Presence.Activity]
     public let status: Presence.Status
     public let afkSince: Date?
 
-    public init(game: Presence.Activity? = nil, status: Presence.Status = .online, afkSince: Date? = nil) {
-        self.game = game
+    public init(activities: [Presence.Activity] = [], status: Presence.Status = .online, afkSince: Date? = nil) {
+        self.activities = activities
         self.status = status
         self.afkSince = afkSince
     }

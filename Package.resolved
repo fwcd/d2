@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/fwcd/swift-discord.git",
         "state": {
           "branch": null,
-          "revision": "80acd8ad74caec10a1211ef07cb66778051181a9",
-          "version": "10.0.0"
+          "revision": "f6981f770492bdc20abbe13d0b9f76c802cb5181",
+          "version": "10.0.2"
         }
       },
       {

@@ -7,12 +7,12 @@ import Discord
 extension DiscordPresence: MessageIOConvertible {
     public var usingMessageIO: Presence {
         return Presence(
-            guildId: guildId.usingMessageIO,
+            guildId: guildId?.usingMessageIO,
             user: user.usingMessageIO,
-            activities: activities.usingMessageIO,
+            activities: activities?.usingMessageIO ?? [],
             nick: nick,
-            roles: roles,
-            status: status.usingMessageIO
+            roles: roles ?? [],
+            status: status?.usingMessageIO
         )
     }
 }
@@ -78,6 +78,8 @@ extension DiscordActivityType: MessageIOConvertible {
             case .game: return .game
             case .stream: return .stream
             case .listening: return .listening
+            case .watching: return .watching
+            default: return .init(rawValue: rawValue)
         }
     }
 }
@@ -87,7 +89,7 @@ extension DiscordActivityType: MessageIOConvertible {
 extension PresenceUpdate: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordPresenceUpdate {
         return DiscordPresenceUpdate(
-            game: game?.usingDiscordAPI,
+            activities: activities.usingDiscordAPI,
             status: status.usingDiscordAPI,
             afkSince: afkSince
         )

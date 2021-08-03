@@ -1,6 +1,6 @@
 public struct VoiceState {
-    public let channelId: ChannelID
-    public let guildId: GuildID
+    public let channelId: ChannelID?
+    public let guildId: GuildID?
     public let userId: UserID
     public let deaf: Bool
     public let mute: Bool
@@ -9,8 +9,8 @@ public struct VoiceState {
     public let suppress: Bool
 
     public init(
-        channelId: ChannelID,
-        guildId: GuildID,
+        channelId: ChannelID? = nil,
+        guildId: GuildID? = nil,
         userId: UserID,
         deaf: Bool,
         mute: Bool,

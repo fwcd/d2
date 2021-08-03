@@ -24,6 +24,12 @@ extension DiscordLazyDictionary: MessageIOConvertible where K: MessageIOConverti
     }
 }
 
+extension DiscordIDDictionary: MessageIOConvertible where Key: MessageIOConvertible, Value: MessageIOConvertible, Key.MessageIOType: Hashable {
+    public var usingMessageIO: [Key.MessageIOType: Value.MessageIOType] {
+        backingDictionary.usingMessageIO
+    }
+}
+
 extension LazyDictionary: DiscordAPIConvertible where K: DiscordAPIConvertible, V: DiscordAPIConvertible, K.DiscordAPIType: Hashable {
     var usingDiscordAPI: DiscordLazyDictionary<K.DiscordAPIType, V.DiscordAPIType> {
         var dict: DiscordLazyDictionary<K.DiscordAPIType, V.DiscordAPIType> = [:]

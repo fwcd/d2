@@ -30,7 +30,7 @@ struct DiscordMessageClient: MessageClient {
         client.guildForChannel(channelId.usingDiscordAPI)?.usingMessageIO
     }
 
-    func permissionsForUser(_ userId: D2MessageIO.UserID, in channelId: D2MessageIO.ChannelID, on guildId: D2MessageIO.GuildID) -> Permission {
+    func permissionsForUser(_ userId: D2MessageIO.UserID, in channelId: D2MessageIO.ChannelID, on guildId: D2MessageIO.GuildID) -> Permissions {
         guard let guild = client.guildForChannel(channelId.usingDiscordAPI),
               let member = guild.members?[userId.usingDiscordAPI] else {
             log.warning("Could not check Discord permission of user \(userId) in channel \(channelId)!")

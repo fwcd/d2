@@ -6,12 +6,18 @@ public protocol MessageIOConvertible {
 
 extension Dictionary: MessageIOConvertible where Key: MessageIOConvertible, Value: MessageIOConvertible, Key.MessageIOType: Hashable {
     public var usingMessageIO: [Key.MessageIOType: Value.MessageIOType] {
-        return [Key.MessageIOType: Value.MessageIOType](uniqueKeysWithValues: map { ($0.usingMessageIO, $1.usingMessageIO) })
+        [Key.MessageIOType: Value.MessageIOType](uniqueKeysWithValues: map { ($0.usingMessageIO, $1.usingMessageIO) })
     }
 }
 
 extension Array: MessageIOConvertible where Element: MessageIOConvertible {
     public var usingMessageIO: [Element.MessageIOType] {
-        return map { $0.usingMessageIO }
+        map { $0.usingMessageIO }
+    }
+}
+
+extension Optional: MessageIOConvertible where Wrapped: MessageIOConvertible {
+    public var usingMessageIO: Wrapped.MessageIOType? {
+        map(\.usingMessageIO)
     }
 }

@@ -35,7 +35,7 @@ struct IRCMessageClient: MessageClient {
         nil
     }
 
-    func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
+    func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions {
         // TODO
         []
     }

@@ -55,17 +55,17 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
     }
 
     public func client(_ discordClient: DiscordClient, didAddGuildMember member: DiscordGuildMember) {
-        log.debug("Added guild member: \(member.user.username)")
+        log.debug("Added guild member: \(member.user.username ?? "?")")
         inner.on(addGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didRemoveGuildMember member: DiscordGuildMember) {
-        log.debug("Removed guild member: \(member.user.username)")
+        log.debug("Removed guild member: \(member.user.username ?? "?")")
         inner.on(removeGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateGuildMember member: DiscordGuildMember) {
-        log.debug("Updated guild member: \(member.user.username)")
+        log.debug("Updated guild member: \(member.user.username ?? "?")")
         inner.on(updateGuildMember: member.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
@@ -79,33 +79,33 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: Discord.MessageID, onChannel channel: DiscordTextChannel, user userID: Discord.UserID) {
+    public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: Discord.MessageID, onChannel channel: DiscordChannel, user userID: Discord.UserID) {
         log.debug("Did add reaction")
         inner.on(addReaction: reaction.usingMessageIO, to: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didRemoveReaction reaction: DiscordEmoji, fromMessage messageID: Discord.MessageID, onChannel channel: DiscordTextChannel, user userID: Discord.UserID) {
+    public func client(_ discordClient: DiscordClient, didRemoveReaction reaction: DiscordEmoji, fromMessage messageID: Discord.MessageID, onChannel channel: DiscordChannel, user userID: Discord.UserID) {
         log.debug("Did remove reaction")
         inner.on(removeReaction: reaction.usingMessageIO, from: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didRemoveAllReactionsFrom messageID: Discord.MessageID, onChannel channel: DiscordTextChannel) {
+    public func client(_ discordClient: DiscordClient, didRemoveAllReactionsFrom messageID: Discord.MessageID, onChannel channel: DiscordChannel) {
         log.debug("Did remove all reactions")
         inner.on(removeAllReactionsFrom: messageID.usingMessageIO, on: channel.id.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateRole role: DiscordRole, onGuild guild: DiscordGuild) {
-        log.debug("Got role create: \(role.name) on guild \(guild.name)")
+        log.debug("Got role create: \(role.name) on guild \(guild.name ?? "?")")
         inner.on(createRole: role.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteRole role: DiscordRole, onGuild guild: DiscordGuild) {
-        log.debug("Got role delete: \(role.name) on guild \(guild.name)")
+        log.debug("Got role delete: \(role.name) on guild \(guild.name ?? "?")")
         inner.on(deleteRole: role.usingMessageIO, from: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateRole role: DiscordRole, onGuild guild: DiscordGuild) {
-        log.debug("Got role update: \(role.name) on guild \(guild.name)")
+        log.debug("Got role update: \(role.name) on guild \(guild.name ?? "?")")
         inner.on(updateRole: role.usingMessageIO, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 

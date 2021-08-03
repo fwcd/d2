@@ -51,7 +51,7 @@ public class CombinedMessageClient: MessageClient {
         withClient(of: channelId) { $0.guildForChannel(channelId) }
     }
 
-    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permission {
+    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions {
         withClient(of: channelId) { $0.permissionsForUser(userId, in: channelId, on: guildId) } ?? []
     }
 

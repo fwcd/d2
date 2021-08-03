@@ -10,7 +10,7 @@ public struct Message: ExpressibleByStringLiteral {
     public var tts: Bool
 
     public var attachments: [Attachment]
-    public var activity: MessageActivity?
+    public var activity: Activity?
     public var application: MessageApplication?
     public var author: User?
     public var dm: Bool
@@ -48,7 +48,7 @@ public struct Message: ExpressibleByStringLiteral {
         files: [FileUpload] = [],
         tts: Bool = false,
         attachments: [Attachment] = [],
-        activity: MessageActivity? = nil,
+        activity: Activity? = nil,
         application: MessageApplication? = nil,
         author: User? = nil,
         channelId: ChannelID? = nil,
@@ -109,12 +109,12 @@ public struct Message: ExpressibleByStringLiteral {
     public struct Attachment {
         public let id: AttachmentID
         public let filename: String
-        public let size: Int
+        public let size: Int?
         public let url: URL?
         public let width: Int?
         public let height: Int?
 
-        public init(id: AttachmentID, filename: String, size: Int, url: URL? = nil, width: Int? = nil, height: Int? = nil) {
+        public init(id: AttachmentID, filename: String, size: Int? = nil, url: URL? = nil, width: Int? = nil, height: Int? = nil) {
             self.id = id
             self.filename = filename
             self.size = size
@@ -124,7 +124,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct MessageActivity {
+    public struct Activity {
         public let type: ActivityType
         public let partyId: String?
 
@@ -133,22 +133,28 @@ public struct Message: ExpressibleByStringLiteral {
             self.partyId = partyId
         }
 
-        public enum ActivityType: Int, Codable {
-            case join
-            case spectate
-            case listen
-            case joinRequest
+        public struct ActivityType: Hashable, Codable, RawRepresentable {
+            public var rawValue: Int
+
+            public static let join = ActivityType(rawValue: 1)
+            public static let spectate = ActivityType(rawValue: 2)
+            public static let listen = ActivityType(rawValue: 3)
+            public static let joinRequest = ActivityType(rawValue: 4)
+
+            public init(rawValue: Int) {
+                self.rawValue = rawValue
+            }
         }
     }
 
     public struct MessageApplication {
         public let id: ID
-        public let coverImage: String
-        public let description: String
-        public let icon: String
-        public let name: String
+        public let coverImage: String?
+        public let description: String?
+        public let icon: String?
+        public let name: String?
 
-        public init(id: ID, coverImage: String, description: String, icon: String, name: String) {
+        public init(id: ID, coverImage: String? = nil, description: String? = nil, icon: String? = nil, name: String? = nil) {
             self.id = id
             self.coverImage = coverImage
             self.description = description
@@ -172,22 +178,28 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public enum MessageType: Int, Codable {
-        case `default`
-        case recipientAdd
-        case recipientRemove
-        case call
-        case channelNameChange
-        case channelIconChange
-        case channelPinnedMessage
-        case guildMemberJoin
-        case userPremiumGuildSubscription
-        case userPremiumGuildSubscriptionTier1
-        case userPremiumGuildSubscriptionTier2
-        case userPremiumGuildSubscriptionTier3
-        case channelFollowAdd
-        case guildDiscoveryDisqualified
-        case guildDiscoveryRequalified
-        case reply
+    public struct MessageType: Hashable, RawRepresentable, Codable {
+        public var rawValue: Int
+
+        public static let `default` = MessageType(rawValue: 0)
+        public static let recipientAdd = MessageType(rawValue: 1)
+        public static let recipientRemove = MessageType(rawValue: 2)
+        public static let call = MessageType(rawValue: 3)
+        public static let channelNameChange = MessageType(rawValue: 4)
+        public static let channelIconChange = MessageType(rawValue: 5)
+        public static let channelPinnedMessage = MessageType(rawValue: 6)
+        public static let guildMemberJoin = MessageType(rawValue: 7)
+        public static let userPremiumGuildSubscription = MessageType(rawValue: 8)
+        public static let userPremiumGuildSubscriptionTier1 = MessageType(rawValue: 9)
+        public static let userPremiumGuildSubscriptionTier2 = MessageType(rawValue: 10)
+        public static let userPremiumGuildSubscriptionTier3 = MessageType(rawValue: 11)
+        public static let channelFollowAdd = MessageType(rawValue: 12)
+        public static let guildDiscoveryDisqualified = MessageType(rawValue: 13)
+        public static let guildDiscoveryRequalified = MessageType(rawValue: 14)
+        public static let reply = MessageType(rawValue: 15)
+
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
     }
 }
