@@ -20,7 +20,7 @@
         }
       },
       {
-        "package": "BlueSocket",
+        "package": "Socket",
         "repositoryURL": "https://github.com/Kitura/BlueSocket.git",
         "state": {
           "branch": null,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "package": "Emoji-Swift",
+        "package": "Emoji",
         "repositoryURL": "https://github.com/safx/Emoji-Swift.git",
         "state": {
           "branch": null,
@@ -74,7 +74,7 @@
         }
       },
       {
-        "package": "linenoise-swift",
+        "package": "LineNoise",
         "repositoryURL": "https://github.com/andybest/linenoise-swift.git",
         "state": {
           "branch": null,
@@ -101,7 +101,7 @@
         }
       },
       {
-        "package": "Perfect-SysInfo",
+        "package": "PerfectSysInfo",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SysInfo.git",
         "state": {
           "branch": null,
@@ -263,7 +263,7 @@
         }
       },
       {
-        "package": "swiftplot",
+        "package": "SwiftPlot",
         "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
         "state": {
           "branch": null,
