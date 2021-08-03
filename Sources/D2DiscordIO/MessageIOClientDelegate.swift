@@ -71,12 +71,14 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
 
     public func client(_ discordClient: DiscordClient, didUpdateMessage message: DiscordMessage) {
         log.debug("Got message update")
-        inner.on(updateMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
+        let client = overlayClient(with: discordClient)
+        inner.on(updateMessage: message.usingMessageIO(with: client), client: client)
     }
 
     public func client(_ discordClient: DiscordClient, didCreateMessage message: DiscordMessage) {
         log.debug("Got message")
-        inner.on(createMessage: message.usingMessageIO, client: overlayClient(with: discordClient))
+        let client = overlayClient(with: discordClient)
+        inner.on(createMessage: message.usingMessageIO(with: client), client: client)
     }
 
     public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: Discord.MessageID, onChannel channel: DiscordChannel, user userID: Discord.UserID) {

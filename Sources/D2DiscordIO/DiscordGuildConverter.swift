@@ -14,7 +14,7 @@ extension DiscordGuild: MessageIOConvertible {
             joinedAt: joinedAt,
             splash: splash ?? "",
             unavailable: unavailable ?? false,
-            description: description ?? "",
+            description: description,
             mfaLevel: mfaLevel,
             verificationLevel: verificationLevel,
             widgetEnabled: widgetEnabled ?? false,
@@ -24,7 +24,7 @@ extension DiscordGuild: MessageIOConvertible {
             roles: roles?.usingMessageIO ?? [:],
             presences: presences?.usingMessageIO ?? [:],
             voiceStates: voiceStates?.usingMessageIO ?? [:],
-            emojis: emojis?.usingMessageIO ?? [:],
+            emojis: Dictionary(uniqueKeysWithValues: emojis?.compactMap { (k, v) in k.map { ($0.usingMessageIO, v.usingMessageIO) } } ?? []),
             channels: channels?.usingMessageIO ?? [:]
         )
     }
@@ -40,7 +40,7 @@ extension DiscordChannel: MessageIOConvertible {
             parentId: parentId?.usingMessageIO,
             position: position ?? 0,
             type: type.usingMessageIO,
-            permissionOverwrites: permissionOverwrites?.usingMessageIO ?? []
+            permissionOverwrites: permissionOverwrites?.usingMessageIO ?? [:]
         )
     }
 }
@@ -78,7 +78,7 @@ extension DiscordPermissionOverwriteType: MessageIOConvertible {
 extension DiscordGuildMember: MessageIOConvertible {
     public var usingMessageIO: Guild.Member {
         Guild.Member(
-            guildId: guildId.usingMessageIO,
+            guildId: guildId?.usingMessageIO,
             joinedAt: joinedAt,
             user: user.usingMessageIO,
             deaf: deaf,

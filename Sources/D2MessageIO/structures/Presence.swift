@@ -1,7 +1,7 @@
 import Foundation
 
 public struct Presence {
-    public let guildId: GuildID
+    public let guildId: GuildID?
     public let user: User
     public let game: Activity?
     public let activities: [Activity]
@@ -9,7 +9,7 @@ public struct Presence {
     public let roles: [String]
     public let status: Status?
 
-    public init(guildId: GuildID, user: User, game: Activity? = nil, activities: [Activity] = [], nick: String? = nil, roles: [String] = [], status: Presence.Status? = nil) {
+    public init(guildId: GuildID? = nil, user: User, game: Activity? = nil, activities: [Activity] = [], nick: String? = nil, roles: [String] = [], status: Presence.Status? = nil) {
         self.guildId = guildId
         self.user = user
         self.game = game
@@ -55,10 +55,10 @@ public struct Presence {
         }
 
         public struct Party: Codable {
-            public let id: String
+            public let id: String?
             public let sizes: [Int]?
 
-            public init(id: String, sizes: [Int]? = nil) {
+            public init(id: String? = nil, sizes: [Int]? = nil) {
                 self.id = id
                 self.sizes = sizes
             }
@@ -92,11 +92,17 @@ public struct Presence {
         }
     }
 
-    public enum Status: String, Codable {
-        case idle = "idle"
-        case offline = "offline"
-        case online = "online"
-        case doNotDisturb = "doNotDisturb"
+    public struct Status: RawRepresentable, Hashable, Codable {
+        public var rawValue: String
+
+        public static let idle = Status(rawValue: "idle")
+        public static let offline = Status(rawValue: "offline")
+        public static let online = Status(rawValue: "online")
+        public static let doNotDisturb = Status(rawValue: "doNotDisturb")
+
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
     }
 }
 

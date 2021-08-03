@@ -61,16 +61,25 @@ public struct MIOCommand {
             }
         }
 
-        public enum OptionType {
-            case subCommand
-            case subCommandGroup
-            case string
-            case integer
-            case boolean
-            case user
-            case channel
-            case role
-            case unknown
+        public struct OptionType: RawRepresentable, Hashable, Codable {
+            public var rawValue: Int
+
+            public static let unknown = OptionType(rawValue: -1)
+
+            public static let subCommand = OptionType(rawValue: 1)
+            public static let subCommandGroup = OptionType(rawValue: 2)
+            public static let string = OptionType(rawValue: 3)
+            public static let integer = OptionType(rawValue: 4)
+            public static let boolean = OptionType(rawValue: 5)
+            public static let user = OptionType(rawValue: 6)
+            public static let channel = OptionType(rawValue: 7)
+            public static let role = OptionType(rawValue: 8)
+            public static let mentionable = OptionType(rawValue: 9)
+            public static let number = OptionType(rawValue: 10)
+
+            public init(rawValue: Int) {
+                self.rawValue = rawValue
+            }
         }
     }
 

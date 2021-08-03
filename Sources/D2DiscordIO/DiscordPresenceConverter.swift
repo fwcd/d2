@@ -50,6 +50,7 @@ extension DiscordPresenceStatus: MessageIOConvertible {
             case .offline: return .offline
             case .online: return .online
             case .doNotDisturb: return .doNotDisturb
+            default: return .init(rawValue: rawValue)
         }
     }
 }
@@ -103,6 +104,7 @@ extension Presence.Status: DiscordAPIConvertible {
             case .offline: return .offline
             case .online: return .online
             case .doNotDisturb: return .doNotDisturb
+            default: return .init(rawValue: rawValue)
         }
     }
 }
@@ -119,6 +121,7 @@ extension Presence.Activity.ActivityType: DiscordAPIConvertible {
             case .game: return .game
             case .stream: return .stream
             case .listening: return .listening
+            default: return .init(rawValue: rawValue)
         }
     }
 }

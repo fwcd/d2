@@ -28,7 +28,7 @@ extension MIOCommand.Option.OptionType: DiscordAPIConvertible {
             case .user: return .user
             case .channel: return .channel
             case .role: return .role
-            case .unknown: fatalError("Cannot convert unknown command option type to Discord")
+            default: return .init(rawValue: rawValue)
         }
     }
 }
@@ -90,6 +90,7 @@ extension DiscordApplicationCommandOptionType: MessageIOConvertible {
             case .user: return .user
             case .channel: return .channel
             case .role: return .role
+            default: return .init(rawValue: rawValue)
         }
     }
 }

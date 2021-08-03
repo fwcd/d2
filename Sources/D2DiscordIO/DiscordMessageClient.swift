@@ -80,7 +80,7 @@ struct DiscordMessageClient: MessageClient {
     func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID) -> Promise<Message?, Error> {
         Promise { then in
             client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) {
-                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+                then(Result.from($0?.usingMessageIO(with: self), errorIfNil: DiscordMessageClientError.invalidResponse($1)))
             }
         }
     }
@@ -88,7 +88,7 @@ struct DiscordMessageClient: MessageClient {
     func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, content: String) -> Promise<Message?, Error> {
         Promise { then in
             client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, content: content) {
-                then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+                then(Result.from($0?.usingMessageIO(with: self), errorIfNil: DiscordMessageClientError.invalidResponse($1)))
             }
         }
     }
@@ -112,7 +112,7 @@ struct DiscordMessageClient: MessageClient {
     func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error> {
         Promise { then in
             client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) {
-                then(Result.from($0.map(\.usingMessageIO), errorIfNil: DiscordMessageClientError.invalidResponse($1)))
+                then(Result.from($0.map { $0.usingMessageIO(with: self) }, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
             }
         }
     }
@@ -144,7 +144,7 @@ struct DiscordMessageClient: MessageClient {
     func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Message?, Error> {
         Promise { then in
             client.createReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) { m, _ in
-                then(.success(m?.usingMessageIO))
+                then(.success(m?.usingMessageIO(with: self)))
             }
         }
     }

@@ -5,15 +5,15 @@ import Discord
 
 extension DiscordUser: MessageIOConvertible {
     public var usingMessageIO: User {
-        return User(
-            avatar: avatar,
-            bot: bot,
-            discriminator: discriminator,
-            email: email,
+        User(
+            avatar: avatar ?? "",
+            bot: bot ?? false,
+            discriminator: discriminator ?? "",
+            email: email ?? "",
             id: id.usingMessageIO,
-            mfaEnabled: mfaEnabled,
-            username: username,
-            verified: verified
+            mfaEnabled: mfaEnabled ?? false,
+            username: username ?? "",
+            verified: verified ?? false
         )
     }
 }

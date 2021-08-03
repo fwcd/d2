@@ -5,13 +5,13 @@ import Discord
 
 extension DiscordEmoji: MessageIOConvertible {
     public var usingMessageIO: Emoji {
-        return Emoji(
+        Emoji(
             id: id?.usingMessageIO,
-            managed: managed,
-            animated: animated,
+            managed: managed ?? false,
+            animated: animated ?? false,
             name: name,
-            requireColons: requireColons,
-            roles: roles.map { $0.usingMessageIO }
+            requireColons: requireColons ?? false,
+            roles: roles?.usingMessageIO ?? []
         )
     }
 }

@@ -37,16 +37,16 @@ extension DiscordMessage: MessageIOClientConvertible {
             channelId: channelId.usingMessageIO,
             editedTimestamp: editedTimestamp,
             id: id.usingMessageIO,
-            mentionEveryone: mentionEveryone,
-            mentionRoles: mentionRoles.usingMessageIO,
-            mentions: mentions.usingMessageIO,
+            mentionEveryone: mentionEveryone ?? false,
+            mentionRoles: mentionRoles?.usingMessageIO ?? [],
+            mentions: mentions?.usingMessageIO ?? [],
             nonce: nonce.usingMessageIO,
-            pinned: pinned,
-            reactions: reactions.usingMessageIO,
+            pinned: pinned ?? false,
+            reactions: reactions?.usingMessageIO ?? [],
             timestamp: timestamp,
             type: type.usingMessageIO,
-            guild: guild?.usingMessageIO,
-            guildMember: member?.usingMessageIO
+            guild: guild,
+            guildMember: member
         )
     }
 }
