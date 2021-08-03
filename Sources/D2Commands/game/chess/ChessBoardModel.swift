@@ -4,14 +4,14 @@ public struct ChessBoardModel {
     public static var ranks: Int = 8
     public static var files: Int = 8
     public static var positions: [Vec2<Int>] { (0..<Self.ranks).flatMap { y in (0..<Self.files).map { Vec2(x: $0, y: y) } } }
-    private static var defaultPieces = [
+    private static var defaultPieces: [Piece?] = [
         [Piece(.black, Rook()), Piece(.black, Knight()), Piece(.black, Bishop()), Piece(.black, Queen()), Piece(.black, King()), Piece(.black, Bishop()), Piece(.black, Knight()), Piece(.black, Rook())],
-        Array(repeating: Piece(.black, Pawn()), count: Self.files),
-        Array(repeating: nil, count: Self.files),
-        Array(repeating: nil, count: Self.files),
-        Array(repeating: nil, count: Self.files),
-        Array(repeating: nil, count: Self.files),
-        Array(repeating: Piece(.white, Pawn()), count: Self.files),
+        [Piece?](repeating: Piece(.black, Pawn()), count: Self.files),
+        [Piece?](repeating: nil, count: Self.files),
+        [Piece?](repeating: nil, count: Self.files),
+        [Piece?](repeating: nil, count: Self.files),
+        [Piece?](repeating: nil, count: Self.files),
+        [Piece?](repeating: Piece(.white, Pawn()), count: Self.files),
         [Piece(.white, Rook()), Piece(.white, Knight()), Piece(.white, Bishop()), Piece(.white, Queen()), Piece(.white, King()), Piece(.white, Bishop()), Piece(.white, Knight()), Piece(.white, Rook())]
     ].flatMap { $0 }
 

@@ -11,7 +11,16 @@
         }
       },
       {
-        "package": "Socket",
+        "package": "BigInt",
+        "repositoryURL": "https://github.com/attaswift/BigInt.git",
+        "state": {
+          "branch": null,
+          "revision": "889a1ecacd73ccc189c5cb29288048f186c44ed9",
+          "version": "5.2.1"
+        }
+      },
+      {
+        "package": "BlueSocket",
         "repositoryURL": "https://github.com/Kitura/BlueSocket.git",
         "state": {
           "branch": null,
@@ -38,7 +47,7 @@
         }
       },
       {
-        "package": "Emoji",
+        "package": "Emoji-Swift",
         "repositoryURL": "https://github.com/safx/Emoji-Swift.git",
         "state": {
           "branch": null,
@@ -65,7 +74,7 @@
         }
       },
       {
-        "package": "LineNoise",
+        "package": "linenoise-swift",
         "repositoryURL": "https://github.com/andybest/linenoise-swift.git",
         "state": {
           "branch": null,
@@ -92,7 +101,7 @@
         }
       },
       {
-        "package": "PerfectSysInfo",
+        "package": "Perfect-SysInfo",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SysInfo.git",
         "state": {
           "branch": null,
@@ -141,8 +150,8 @@
         "repositoryURL": "https://github.com/fwcd/swift-discord.git",
         "state": {
           "branch": null,
-          "revision": "5537eba4bcf7bfef8287932b74788bbb6032a706",
-          "version": null
+          "revision": "80acd8ad74caec10a1211ef07cb66778051181a9",
+          "version": "10.0.0"
         }
       },
       {
@@ -254,7 +263,7 @@
         }
       },
       {
-        "package": "SwiftPlot",
+        "package": "swiftplot",
         "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
         "state": {
           "branch": null,
