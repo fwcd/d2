@@ -1,8 +1,0 @@
-#!/bin/sh
-
-echo "Current contents of D2's local volume:"
-ls /d2/local
-
-echo "Now copying config data from environment variables to files..."
-echo $D2_ADMIN_WHITELIST | base64 -d > /d2/local/adminWhitelist.json
-echo $D2_PLATFORM_TOKENS | base64 -d > /d2/local/platformTokens.json

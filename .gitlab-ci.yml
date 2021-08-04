@@ -31,8 +31,5 @@ deploy:
     entrypoint: ["/bin/sh", "-c"]
   stage: deploy
   script:
-    - cd Scripts/setup-d2local && docker build -t setup-d2local . && cd ../..
-    - env | sed -n '/^D2_/p' > .env
-    - docker run --env-file .env --rm -v d2local:/d2/local setup-d2local
     - docker-compose build
     - docker-compose up -d
