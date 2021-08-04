@@ -27,7 +27,7 @@ public struct ThreadKeepaliveHandler: ChannelHandler {
                 log.info("Ignoring '\(thread.name)''s archival since its parent is not in the keepalives")
                 return
             }
-            guard config.permanentlyArchivedThreadIds.contains(thread.id) else {
+            guard !config.permanentlyArchivedThreadIds.contains(thread.id) else {
                 log.info("Ignoring '\(thread.name)''s archival since its permanently archived")
                 return
             }
