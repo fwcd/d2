@@ -1,5 +1,6 @@
 import Utils
 
+/// A handler for events from the message backend.
 public protocol MessageDelegate {
     func on(connect connected: Bool, client: MessageClient)
 

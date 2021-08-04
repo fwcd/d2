@@ -4,6 +4,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2MessageIO.MessageClient")
 
+/// An entry-point for commands sent to the message backend.
 public protocol MessageClient {
     var name: String { get }
     var me: User? { get }
