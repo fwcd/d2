@@ -143,9 +143,13 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
         inner.on(receivePresenceUpdate: presence.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didReceiveReady ready: [String: Any]) {
+    public func client(_ discordClient: DiscordClient, didReceiveReady ready: DiscordReadyEvent) {
         log.debug("Received ready")
-        inner.on(receiveReady: ready, client: overlayClient(with: discordClient))
+        // TODO: Add a strongly-typed ReadyEvent in D2MessageIO
+        inner.on(receiveReady: [
+            "gatewayVersion": ready.gatewayVersion as Any,
+            "shard": ready.shard as Any
+        ], client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateInteraction interaction: DiscordInteraction) {

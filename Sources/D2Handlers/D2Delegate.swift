@@ -420,7 +420,7 @@ public class D2Delegate: MessageDelegate {
         log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
         if let presence = initialPresence {
-            client.setPresence(PresenceUpdate(activities: [Presence.Activity(name: presence, type: .listening)]))
+            client.setPresence(PresenceUpdate(activities: [Presence.Activity(name: presence, type: .listening)], status: .online))
         }
 
         eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
