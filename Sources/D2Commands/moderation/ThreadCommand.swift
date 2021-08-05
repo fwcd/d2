@@ -7,7 +7,7 @@ fileprivate let log = Logger(label: "D2Commands.ThreadKeepaliveCommand")
 public class ThreadCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .moderation,
-        shortDescription: "Configures automatic thread unarchiving",
+        shortDescription: "Configures threads in this channel or the current thread",
         requiredPermissionLevel: .vip
     )
     @AutoSerializing private var config: ThreadConfiguration

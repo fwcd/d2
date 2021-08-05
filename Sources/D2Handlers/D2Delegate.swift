@@ -114,6 +114,7 @@ public class D2Delegate: MessageDelegate {
         registry["messagepreviews"] = MessagePreviewsCommand(configuration: messagePreviewsConfiguration)
         registry["haikus"] = HaikusCommand(configuration: haikuConfiguration)
         registry["thread"] = ThreadCommand(config: threadConfiguration)
+        registry["threads"] = ThreadsCommand()
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()

@@ -60,10 +60,11 @@ public class GuildChannelsCommand: StringCommand {
                         value: channels
                             .compactMap {
                                 let label: String
+                                let link = "\(useChannelLinks ? "<#\($0.channel.id)>" : "#\($0.channel.name)") (\($0.channel.id))"
                                 switch $0.channel.type {
                                     case .voice: label = ":speaker: \($0.channel.name) (\($0.channel.id))"
-                                    case .publicThread, .privateThread, .newsThread: label = ":thread: \($0.channel.name)"
-                                    default: label = "\(useChannelLinks ? "<#\($0.channel.id)>" : "#\($0.channel.name)") (\($0.channel.id))"
+                                    case .publicThread, .privateThread, .newsThread: label = ":thread: \(link)"
+                                    default: label = link
                                 }
                                 // We deliberately use another blank Unicode character instead of a space here
                                 // since Discord trims the embed's lines.
