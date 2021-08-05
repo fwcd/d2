@@ -3,20 +3,20 @@ public struct MIOCommand {
     public let applicationId: ApplicationID
     public let name: String
     public let description: String
-    public let parameters: [Option]
+    public let options: [Option]
 
     public init(
         id: MIOCommandID,
         applicationId: ApplicationID,
         name: String,
         description: String,
-        parameters: [Option] = []
+        options: [Option] = []
     ) {
         self.id = id
         self.applicationId = applicationId
         self.name = name
         self.description = description
-        self.parameters = parameters
+        self.options = options
     }
 
     public struct Option {

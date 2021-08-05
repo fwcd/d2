@@ -60,7 +60,7 @@ extension DiscordApplicationCommand: MessageIOConvertible {
             applicationId: applicationId.usingMessageIO,
             name: name,
             description: description,
-            parameters: parameters.usingMessageIO
+            options: options?.usingMessageIO ?? []
         )
     }
 }
