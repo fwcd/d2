@@ -21,7 +21,7 @@ public class JokeCommand: VoidCommand {
                         return
                     }
                     output.append(Embed(
-                        title: line
+                        description: "**\(line)**"
                     ))
                 } else if joke.type == .twopart {
                     guard let setup = joke.setup, let delivery = joke.delivery else {
