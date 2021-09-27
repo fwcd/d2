@@ -6,7 +6,7 @@ public struct Joke: Codable {
 
     // If type == .twopart
     public let setup: String?
-    public let punchline: String?
+    public let delivery: String?
 
     // If type == .single
     public let joke: String?

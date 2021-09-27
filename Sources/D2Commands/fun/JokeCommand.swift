@@ -24,13 +24,13 @@ public class JokeCommand: VoidCommand {
                         title: line
                     ))
                 } else if joke.type == .twopart {
-                    guard let setup = joke.setup, let punchline = joke.punchline else {
-                        output.append(errorText: "The joke either did not contain a setup or a punchline.")
+                    guard let setup = joke.setup, let delivery = joke.delivery else {
+                        output.append(errorText: "The joke either did not contain a setup or a delivery.")
                         return
                     }
                     output.append(Embed(
                         title: setup,
-                        description: punchline
+                        description: delivery
                     ))
                 }
             } catch {
