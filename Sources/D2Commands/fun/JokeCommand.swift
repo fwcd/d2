@@ -12,13 +12,27 @@ public class JokeCommand: VoidCommand {
     public init() {}
 
     public func invoke(output: CommandOutput, context: CommandContext) {
-        RandomJokeQuery().perform().listen {
+        JokeAPIQuery().perform().listen {
             do {
                 let joke = try $0.get()
-                output.append(Embed(
-                    title: joke.setup,
-                    description: joke.punchline
-                ))
+                if joke.type == .single {
+                    guard let line = joke.joke else {
+                        output.append(errorText: "The joke did not contain a joke.")
+                        return
+                    }
+                    output.append(Embed(
+                        title: line
+                    ))
+                } else if joke.type == .twopart {
+                    guard let setup = joke.setup, let punchline = joke.punchline else {
+                        output.append(errorText: "The joke either did not contain a setup or a punchline.")
+                        return
+                    }
+                    output.append(Embed(
+                        title: setup,
+                        description: punchline
+                    ))
+                }
             } catch {
                 output.append(error, errorText: "Could not fetch joke")
             }
