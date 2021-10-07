@@ -19,7 +19,7 @@ public class PronounsCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         output.append(.compound([.text("Please pick your pronouns:")] + Pronoun.allCases.map {
-            .button(Button(customId: $0.rawValue, label: $0.rawValue))
+            .component(.button(.init(customId: $0.rawValue, label: $0.rawValue)))
         }))
         context.subscribeToChannel()
     }

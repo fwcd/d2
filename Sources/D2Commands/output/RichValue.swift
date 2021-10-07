@@ -13,7 +13,7 @@ public enum RichValue: Addable {
     case image(Image)
     case table([[String]])
     case gif(GIF)
-    case button(Button)
+    case component(Message.Component)
     case urls([URL])
     case domNode(Element)
     case code(String, language: String?)

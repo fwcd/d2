@@ -35,13 +35,8 @@ public struct MessageWriter {
                 return Promise(Message(content: urls.map(\.absoluteString).joined(separator: " ")))
             case let .gif(gif):
                 return Promise.catching { try Message(fromGif: gif) }
-            case let .button(button):
-                let msgButton = Message.Component.Button(
-                    customId: button.customId,
-                    style: .primary,
-                    label: button.label
-                )
-                return Promise(Message(components: [.actionRow(.init(components: [.button(msgButton)]))]))
+            case let .component(component):
+                return Promise(Message(components: [.actionRow(.init(components: [component]))]))
             case let .domNode(node):
                 return Promise.catching { .code(try node.outerHtml(), language: "html") }.then(write(value:))
             case let .code(code, language: lang):
