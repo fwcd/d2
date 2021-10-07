@@ -84,6 +84,10 @@ public class D2Delegate: MessageDelegate {
             // TODO
         ]
 
+        if useMIOCommands {
+            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, permissionManager: permissionManager))
+        }
+
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
         registry["vertical"] = VerticalCommand()
@@ -564,51 +568,11 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(createInteraction interaction: Interaction, client: MessageClient) {
-        // TODO: Factor out this logic into InteractionHandlers
-
         for i in interactionHandlers.indices {
             if interactionHandlers[i].handle(interaction: interaction, client: client) {
                 return
             }
         }
-
-        guard
-            useMIOCommands,
-            interaction.type == .mioCommand,
-            let data = interaction.data,
-            let invocation = data.options.first else { return }
-
-        let content = invocation.options.compactMap { $0.value as? String }.joined(separator: " ")
-        let input = RichValue.text(content)
-        let context = CommandContext(
-            client: client,
-            registry: registry,
-            message: Message(
-                content: content,
-                author: interaction.member?.user,
-                channelId: interaction.channelId,
-                guild: interaction.guildId.flatMap(client.guild(for:)),
-                guildMember: interaction.member
-            ),
-            commandPrefix: commandPrefix,
-            subscriptions: .init() // TODO: Support subscriptions here
-        )
-        let output = MessageIOInteractionOutput(interaction: interaction, context: context)
-
-        guard let author = interaction.member?.user else {
-            output.append(errorText: "The interaction must have an author!")
-            return
-        }
-        guard let command = registry[invocation.name] else {
-            output.append(errorText: "Unknown command name `\(invocation.name)`")
-            return
-        }
-        guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
-            output.append(errorText: "Insufficient permissions, sorry. :(")
-            return
-        }
-
-        command.invoke(with: input, output: output, context: context)
     }
 
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
