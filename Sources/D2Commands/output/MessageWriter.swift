@@ -35,6 +35,13 @@ public struct MessageWriter {
                 return Promise(Message(content: urls.map(\.absoluteString).joined(separator: " ")))
             case let .gif(gif):
                 return Promise.catching { try Message(fromGif: gif) }
+            case let .button(button):
+                let msgButton = Message.Component.Button(
+                    customId: button.customId,
+                    style: .primary,
+                    label: button.label
+                )
+                return Promise(Message(components: [.actionRow(.init(components: [.button(msgButton)]))]))
             case let .domNode(node):
                 return Promise.catching { .code(try node.outerHtml(), language: "html") }.then(write(value:))
             case let .code(code, language: lang):
@@ -69,10 +76,13 @@ public struct MessageWriter {
             case let .compound(components):
                 return all(promises: components.map { write(value: $0) }).map { encoded in
                     Message(
-                        content: encoded.compactMap { $0.content.nilIfEmpty }.joined(separator: "\n"),
-                        embeds: encoded.flatMap { $0.embeds },
-                        files: encoded.flatMap { $0.files },
-                        tts: false
+                        content: encoded.compactMap(\.content.nilIfEmpty).joined(separator: "\n"),
+                        embeds: encoded.flatMap(\.embeds),
+                        files: encoded.flatMap(\.files),
+                        tts: false,
+                        components: [.actionRow(.init(
+                            components: encoded.flatMap { $0.components.flatMap(\.primitiveChildren) }
+                        ))]
                     )
                 }
         }

@@ -167,6 +167,14 @@ public struct Message: ExpressibleByStringLiteral {
         case selectMenu(SelectMenu)
         case actionRow(ActionRow)
 
+        public var primitiveChildren: [Component] {
+            if case let .actionRow(row) = self {
+                return row.components.flatMap(\.primitiveChildren)
+            } else {
+                return [self]
+            }
+        }
+
         public struct Button {
             public let customId: String
             public let style: Style?
