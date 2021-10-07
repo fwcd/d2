@@ -62,19 +62,20 @@ public class PronounsCommand: StringCommand {
             return
         }
 
-        let pronounRoles: Set<RoleID> = config.pronounRoles[guild.id].map { Set($0.values) } ?? []
-        for otherRoleId in member.roleIds where pronounRoles.contains(otherRoleId) && otherRoleId != roleId {
+        let pronounRoles = [RoleID: String](uniqueKeysWithValues: config.pronounRoles[guild.id]?.map { ($0.value, $0.key) } ?? [])
+        for otherRoleId in member.roleIds where pronounRoles.keys.contains(otherRoleId) && otherRoleId != roleId {
             client.removeGuildMemberRole(otherRoleId, from: user.id, on: guild.id, reason: "Pronoun role switched").listen {
                 if case .success(false) = $0 {
-                    log.warning("Could not remove pronoun role \(roleId) from \(user)")
+                    log.warning("Could not remove pronoun role \(otherRoleId) from \(user.username) (\(user.id))")
                 }
             }
         }
 
+        let roleName = pronounRoles[roleId] ?? "?"
         client.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role added").listen {
-            output.append("Added pronoun role!")
+            output.append("Switched your pronoun role to \(roleName)!")
             if case .success(false) = $0 {
-                log.warning("Switched your pronoun role!")
+                log.warning("Could not add pronoun role \(roleName) (\(roleId)) to \(user.username) (\(user.id))")
             }
         }
     }
