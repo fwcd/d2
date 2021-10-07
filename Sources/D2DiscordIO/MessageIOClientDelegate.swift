@@ -154,7 +154,8 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
 
     public func client(_ discordClient: DiscordClient, didCreateInteraction interaction: DiscordInteraction) {
         log.debug("Created interaction")
-        inner.on(createInteraction: interaction.usingMessageIO, client: overlayClient(with: discordClient))
+        let client = overlayClient(with: discordClient)
+        inner.on(createInteraction: interaction.usingMessageIO(with: client), client: client)
     }
 
     public func client(_ discordClient: DiscordClient, didReceiveVoiceStateUpdate voiceState: DiscordVoiceState) {

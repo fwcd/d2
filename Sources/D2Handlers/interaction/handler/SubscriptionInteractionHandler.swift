@@ -15,11 +15,10 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
     public func handle(interaction: Interaction, client: MessageClient) -> Bool {
         guard
             interaction.type == .messageComponent,
-            let customId = interaction.customId,
+            let customId = interaction.data?.customId,
             let channelId = interaction.channelId,
             let member = interaction.member else { return false }
-        // TODO: Query the actual message here
-        let message = Message(content: "Dummy", channelId: channelId, id: MessageID("", clientName: client.name))
+        let message = interaction.message ?? Message(content: "Dummy", channelId: channelId, id: MessageID("", clientName: client.name))
         let user = member.user
         manager.notifySubscriptions(on: channelId, isBot: user.bot) {
             let context = CommandContext(

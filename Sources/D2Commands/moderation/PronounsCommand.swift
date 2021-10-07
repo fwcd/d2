@@ -1,3 +1,6 @@
+import Foundation
+import D2MessageIO
+
 public class PronounsCommand: StringCommand {
     public let info = CommandInfo(
         category: .moderation,
@@ -18,5 +21,11 @@ public class PronounsCommand: StringCommand {
         output.append(.compound([.text("Please pick your pronouns:")] + Pronoun.allCases.map {
             .button(Button(customId: $0.rawValue, label: $0.rawValue))
         }))
+        context.subscribeToChannel()
+    }
+
+    public func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext) {
+        // TODO
+        print("Interacted with \(customId)")
     }
 }

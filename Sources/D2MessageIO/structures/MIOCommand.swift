@@ -82,36 +82,4 @@ public struct MIOCommand {
             }
         }
     }
-
-    public struct InteractionData {
-        public let id: MIOCommandID?
-        public let name: String
-        public let options: [Option]
-
-        public init(
-            id: MIOCommandID? = nil,
-            name: String = "",
-            options: [Option] = []
-        ) {
-            self.id = id
-            self.name = name
-            self.options = options
-        }
-
-        public struct Option {
-            public let name: String
-            public let value: Any?
-            public let options: [Option]
-
-            public init(
-                name: String,
-                value: Any? = nil,
-                options: [Option] = []
-            ) {
-                self.name = name
-                self.value = value
-                self.options = options
-            }
-        }
-    }
 }

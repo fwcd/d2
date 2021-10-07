@@ -3,16 +3,16 @@ import D2MessageIO
 
 // FROM Discord conversions
 
-extension DiscordInteraction: MessageIOConvertible {
-    public var usingMessageIO: Interaction {
+extension DiscordInteraction {
+    public func usingMessageIO(with client: MessageClient) -> Interaction {
         Interaction(
             id: id.usingMessageIO,
             type: type?.usingMessageIO,
-            customId: customId,
             data: data?.usingMessageIO,
             guildId: guildId.usingMessageIO,
             channelId: channelId.usingMessageIO,
             member: member?.usingMessageIO(in: guildId.usingMessageIO),
+            message: message?.usingMessageIO(with: client),
             token: token,
             version: version
         )
@@ -27,5 +27,25 @@ extension DiscordInteractionType: MessageIOConvertible {
             case .messageComponent: return .messageComponent
             default: return nil
         }
+    }
+}
+
+extension DiscordInteractionData: MessageIOConvertible {
+    public var usingMessageIO: Interaction.InteractionData {
+        .init(
+            id: id?.usingMessageIO,
+            name: name ?? "",
+            customId: customId,
+            options: options?.usingMessageIO ?? []
+        )
+    }
+}
+
+extension DiscordInteractionDataOption: MessageIOConvertible {
+    public var usingMessageIO: Interaction.InteractionData.Option {
+        .init(
+            name: name,
+            options: options?.usingMessageIO ?? []
+        )
     }
 }
