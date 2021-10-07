@@ -185,7 +185,7 @@ public struct Message: ExpressibleByStringLiteral {
 
             public init(
                 customId: String,
-                style: Style? = nil,
+                style: Style = .primary,
                 label: String? = nil,
                 disabled: Bool? = nil
             ) {
