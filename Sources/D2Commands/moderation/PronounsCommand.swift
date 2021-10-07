@@ -8,7 +8,7 @@ public class PronounsCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
-    public enum Pronoun: String, CaseIterable {
+    public enum Pronoun: String, CaseIterable, Hashable {
         case theyThem = "They/Them"
         case sheHer = "She/Her"
         case heHim = "He/Him"
@@ -19,7 +19,11 @@ public class PronounsCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         output.append(.compound([.text("Please pick your pronouns:")] + Pronoun.allCases.map {
-            .component(.button(.init(customId: $0.rawValue, label: $0.rawValue)))
+            .component(.button(.init(
+                customId: $0.rawValue,
+                style: $0 == .other ? .secondary : .primary,
+                label: $0.rawValue
+            )))
         }))
         context.subscribeToChannel()
     }
