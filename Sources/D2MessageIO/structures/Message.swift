@@ -6,8 +6,9 @@ fileprivate let mentionPattern = try! Regex(from: "<@(\\d+)>")
 public struct Message: ExpressibleByStringLiteral {
     public var content: String
     public var embeds: [Embed]
-    public var files: [Message.FileUpload]
+    public var files: [FileUpload]
     public var tts: Bool
+    public var components: [Component]
 
     public var attachments: [Attachment]
     public var activity: Activity?
@@ -37,8 +38,20 @@ public struct Message: ExpressibleByStringLiteral {
     }
 
     /// Initializer intended for messages that are to be sent.
-    public init(content: String = "", embed: Embed? = nil, files: [FileUpload] = [], tts: Bool = false) {
-        self.init(content: content, embeds: embed.map { [$0] } ?? [], files: files, tts: tts)
+    public init(
+        content: String = "",
+        embed: Embed? = nil,
+        files: [FileUpload] = [],
+        tts: Bool = false,
+        components: [Component] = []
+    ) {
+        self.init(
+            content: content,
+            embeds: embed.map { [$0] } ?? [],
+            files: files,
+            tts: tts,
+            components: components
+        )
     }
 
     /// Initializer intended for received/arbitrary messages.
@@ -47,6 +60,7 @@ public struct Message: ExpressibleByStringLiteral {
         embeds: [Embed] = [],
         files: [FileUpload] = [],
         tts: Bool = false,
+        components: [Component] = [],
         attachments: [Attachment] = [],
         activity: Activity? = nil,
         application: MessageApplication? = nil,
@@ -70,6 +84,7 @@ public struct Message: ExpressibleByStringLiteral {
         self.embeds = embeds
         self.files = files
         self.tts = tts
+        self.components = components
         self.attachments = attachments
         self.activity = activity
         self.application = application
@@ -143,6 +158,96 @@ public struct Message: ExpressibleByStringLiteral {
 
             public init(rawValue: Int) {
                 self.rawValue = rawValue
+            }
+        }
+    }
+
+    public enum Component {
+        case button(Button)
+        case selectMenu(SelectMenu)
+        case actionRow(ActionRow)
+
+        public struct Button {
+            public let customId: String
+            public let style: Style?
+            public let label: String?
+            public let disabled: Bool?
+
+            // TODO: Emojis & co
+
+            public init(
+                customId: String,
+                style: Style? = nil,
+                label: String? = nil,
+                disabled: Bool? = nil
+            ) {
+                self.customId = customId
+                self.style = style
+                self.label = label
+                self.disabled = disabled
+            }
+
+            public enum Style {
+                case primary
+                case secondary
+                case success
+                case danger
+                case link
+            }
+        }
+
+        public struct SelectMenu {
+            public let customId: String
+            public let options: [Option]
+            public let placeholder: String?
+            public let minValues: Int?
+            public let maxValues: Int?
+            public let disabled: Bool?
+
+            public init(
+                customId: String,
+                options: [Option],
+                placeholder: String? = nil,
+                minValues: Int? = nil,
+                maxValues: Int? = nil,
+                disabled: Bool? = nil
+            ) {
+                self.customId = customId
+                self.options = options
+                self.placeholder = placeholder
+                self.minValues = minValues
+                self.maxValues = maxValues
+                self.disabled = disabled
+            }
+
+            public struct Option {
+                public let label: String
+                public let value: String
+                public let description: String?
+                public let emoji: Emoji?
+                public let `default`: Bool?
+
+                public init(
+                    label: String,
+                    value: String,
+                    description: String? = nil,
+                    emoji: Emoji? = nil,
+                    default: Bool? = nil
+                ) {
+                    self.label = label
+                    self.value = value
+                    self.description = description
+                    self.emoji = emoji
+                    self.default = `default`
+                }
+            }
+        }
+
+        public struct ActionRow {
+            public let components: [Component]
+
+            public init(components: [Component]) {
+                self.components = components
             }
         }
     }

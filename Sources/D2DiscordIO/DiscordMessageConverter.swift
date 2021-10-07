@@ -10,7 +10,8 @@ extension Message: DiscordAPIConvertible {
             content: content,
             embed: embed?.usingDiscordAPI,
             files: files.usingDiscordAPI,
-            tts: tts
+            tts: tts,
+            components: components.usingDiscordAPI
         )
     }
 }
@@ -18,6 +19,72 @@ extension Message: DiscordAPIConvertible {
 extension Message.FileUpload: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordFileUpload {
         return DiscordFileUpload(data: data, filename: filename, mimeType: mimeType)
+    }
+}
+
+extension Message.Component: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessageComponent {
+        switch self {
+            case .button(let button): return button.usingDiscordAPI
+            case .selectMenu(let menu): return menu.usingDiscordAPI
+            case .actionRow(let row): return row.usingDiscordAPI
+        }
+    }
+}
+
+extension Message.Component.Button: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessageComponent {
+        .button(
+            style: style?.usingDiscordAPI,
+            label: label,
+            customId: customId,
+            disabled: disabled
+        )
+    }
+}
+
+extension Message.Component.SelectMenu: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessageComponent {
+        .selectMenu(
+            options: options.usingDiscordAPI,
+            placeholder: placeholder,
+            minValues: minValues,
+            maxValues: maxValues,
+            customId: customId,
+            disabled: disabled
+        )
+    }
+}
+
+extension Message.Component.ActionRow: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessageComponent {
+        .actionRow(
+            components: components.usingDiscordAPI
+        )
+    }
+}
+
+extension Message.Component.Button.Style: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessageComponentButtonStyle {
+        switch self {
+            case .primary: return .primary
+            case .secondary: return .secondary
+            case .success: return .success
+            case .danger: return .danger
+            case .link: return .link
+        }
+    }
+}
+
+extension Message.Component.SelectMenu.Option: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessageComponentSelectOption {
+        .init(
+            label: label,
+            value: value,
+            description: description,
+            emoji: emoji?.usingDiscordAPI,
+            default: `default`
+        )
     }
 }
 
