@@ -1,4 +1,5 @@
 import Foundation
+import Utils
 import D2MessageIO
 
 public class PronounsCommand: StringCommand {
@@ -7,6 +8,7 @@ public class PronounsCommand: StringCommand {
         shortDescription: "Lets the user pick pronouns to be displayed as a role",
         requiredPermissionLevel: .basic
     )
+    @AutoSerializing private var config: PronounRoleConfiguration
 
     public enum Pronoun: String, CaseIterable, Hashable {
         case theyThem = "They/Them"
@@ -15,7 +17,9 @@ public class PronounsCommand: StringCommand {
         case other = "Other"
     }
 
-    public init() {}
+    public init(config _config: AutoSerializing<PronounRoleConfiguration>) {
+        self._config = _config
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         output.append(.compound([.text("Please pick your pronouns:")] + Pronoun.allCases.map {

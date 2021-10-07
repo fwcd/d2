@@ -52,6 +52,7 @@ public class D2Delegate: MessageDelegate {
         let haikuConfiguration = AutoSerializing<HaikuConfiguration>(wrappedValue: .init(), filePath: "local/haikuConfig.json")
         let threadConfiguration = AutoSerializing<ThreadConfiguration>(wrappedValue: .init(), filePath: "local/threadConfig.json")
         let roleReactionsConfiguration = AutoSerializing<RoleReactionsConfiguration>(wrappedValue: .init(), filePath: "local/roleReactionsConfig.json")
+        let pronounRoleConfiguration = AutoSerializing<PronounRoleConfiguration>(wrappedValue: .init(), filePath: "local/pronounRoleConfig.json")
         let inventoryManager = InventoryManager()
 
         messageRewriters = [
@@ -404,7 +405,7 @@ public class D2Delegate: MessageDelegate {
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
         registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
-        registry["pronouns"] = PronounsCommand()
+        registry["pronouns"] = PronounsCommand(config: pronounRoleConfiguration)
         registry["guilds"] = GuildsCommand()
         registry["searchchannel", aka: ["findchannel", "sc"]] = SearchChannelCommand()
         registry["whatsup"] = WhatsUpCommand()
