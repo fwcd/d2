@@ -28,7 +28,7 @@ public class PronounsCommand: StringCommand {
         }
 
         do {
-            try output.append(.compound([.text("Please pick your pronouns:")] + pronounRoles.map { (name, roleId) in
+            try output.append(.compound([.text("Please pick your pronouns:")] + pronounRoles.sorted(by: descendingComparator(comparing: \.key)).map { (name, roleId) in
                 let encodedIdData = try JSONEncoder().encode(roleId)
                 guard let encodedId = String(data: encodedIdData, encoding: .utf8) else {
                     throw EncodeError.couldNotEncode("Could not encoded pronoun role id (\(roleId))")
@@ -57,12 +57,13 @@ public class PronounsCommand: StringCommand {
             output.append(errorText: "Could not add pronouns role due to missing client")
             return
         }
-        guard let guildId = context.guild?.id else {
-            output.append(errorText: "Could not add pronouns role due to missing guild id")
+        guard let guild = context.guild else {
+            output.append(errorText: "Could not add pronouns role due to missing guild")
             return
         }
         context.unsubscribeFromChannel()
-        client.addGuildMemberRole(roleId, to: user.id, on: guildId, reason: "Pronoun role").listen {
+        client.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role").listen {
+            output.append("Added pronoun role!")
             if case .success(false) = $0 {
                 log.warning("Could not add pronoun role \(roleId) to \(user)")
             }
