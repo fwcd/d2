@@ -406,6 +406,7 @@ public class D2Delegate: MessageDelegate {
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
         registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
         registry["pronouns"] = PronounsCommand(config: pronounRoleConfiguration)
+        registry["pronounrole"] = PronounRoleCommand(config: pronounRoleConfiguration)
         registry["guilds"] = GuildsCommand()
         registry["searchchannel", aka: ["findchannel", "sc"]] = SearchChannelCommand()
         registry["whatsup"] = WhatsUpCommand()
