@@ -57,15 +57,24 @@ public class PronounsCommand: StringCommand {
             output.append(errorText: "Could not add pronouns role due to missing client")
             return
         }
-        guard let guild = context.guild else {
-            output.append(errorText: "Could not add pronouns role due to missing guild")
+        guard let guild = context.guild, let member = guild.members[user.id] else {
+            output.append(errorText: "Could not add pronouns role due to missing guild/member")
             return
         }
-        context.unsubscribeFromChannel()
-        client.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role").listen {
+
+        let pronounRoles: Set<RoleID> = config.pronounRoles[guild.id].map { Set($0.values) } ?? []
+        for otherRoleId in member.roleIds where pronounRoles.contains(otherRoleId) && otherRoleId != roleId {
+            client.removeGuildMemberRole(otherRoleId, from: user.id, on: guild.id, reason: "Pronoun role switched").listen {
+                if case .success(false) = $0 {
+                    log.warning("Could not remove pronoun role \(roleId) from \(user)")
+                }
+            }
+        }
+
+        client.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role added").listen {
             output.append("Added pronoun role!")
             if case .success(false) = $0 {
-                log.warning("Could not add pronoun role \(roleId) to \(user)")
+                log.warning("Switched your pronoun role!")
             }
         }
     }
