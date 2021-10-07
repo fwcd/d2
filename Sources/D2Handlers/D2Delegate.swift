@@ -26,6 +26,7 @@ public class D2Delegate: MessageDelegate {
     private var reactionHandlers: [ReactionHandler]
     private var presenceHandlers: [PresenceHandler]
     private var channelHandlers: [ChannelHandler]
+    private var interactionHandlers: [InteractionHandler]
 
     public init(
         withPrefix commandPrefix: String,
@@ -78,6 +79,9 @@ public class D2Delegate: MessageDelegate {
         ]
         channelHandlers = [
             ThreadKeepaliveHandler(config: threadConfiguration)
+        ]
+        interactionHandlers = [
+            // TODO
         ]
 
         registry["ping"] = PingCommand()
@@ -502,7 +506,7 @@ public class D2Delegate: MessageDelegate {
             }
         }
 
-        for (i, _) in presenceHandlers.enumerated() {
+        for i in presenceHandlers.indices {
             presenceHandlers[i].handle(presenceUpdate: presence, client: client)
         }
 
@@ -519,7 +523,7 @@ public class D2Delegate: MessageDelegate {
         }
 
         for (_, presence) in guild.presences {
-            for (i, _) in presenceHandlers.enumerated() {
+            for i in presenceHandlers.indices {
                 presenceHandlers[i].handle(presenceUpdate: presence, client: client)
             }
         }
@@ -536,7 +540,7 @@ public class D2Delegate: MessageDelegate {
             }
         }
 
-        for (i, _) in messageHandlers.enumerated() {
+        for i in messageHandlers.indices {
             if messageHandlers[i].handleRaw(message: message, from: client) {
                 return
             }
@@ -561,6 +565,12 @@ public class D2Delegate: MessageDelegate {
 
     public func on(createInteraction interaction: Interaction, client: MessageClient) {
         // TODO: Factor out this logic into InteractionHandlers
+
+        for i in interactionHandlers.indices {
+            if interactionHandlers[i].handle(interaction: interaction, client: client) {
+                return
+            }
+        }
 
         guard
             useMIOCommands,
