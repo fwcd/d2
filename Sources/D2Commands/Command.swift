@@ -25,6 +25,9 @@ public protocol Command: AnyObject {
     /// Notifies the command that a message on a subscribed channel has arrived.
     func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext)
 
+    /// Notifies the command that a component interaction on a subscribed channel has arrived.
+    func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext)
+
     /// Notifies the command that a reaction on a subscribed channel has arrived.
     func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
 
@@ -39,6 +42,8 @@ extension Command {
     public func onSuccessfullySent(context: CommandContext) {}
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {}
+
+    public func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext) {}
 
     public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {}
 

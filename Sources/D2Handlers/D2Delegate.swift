@@ -81,7 +81,7 @@ public class D2Delegate: MessageDelegate {
             ThreadKeepaliveHandler(config: threadConfiguration)
         ]
         interactionHandlers = [
-            // TODO
+            SubscriptionInteractionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
         ]
 
         if useMIOCommands {

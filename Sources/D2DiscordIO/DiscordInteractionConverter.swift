@@ -8,6 +8,7 @@ extension DiscordInteraction: MessageIOConvertible {
         Interaction(
             id: id.usingMessageIO,
             type: type?.usingMessageIO,
+            customId: customId,
             data: data?.usingMessageIO,
             guildId: guildId.usingMessageIO,
             channelId: channelId.usingMessageIO,

@@ -1,6 +1,7 @@
 public struct Interaction {
     public let id: InteractionID
     public let type: InteractionType?
+    public let customId: String?
     public let data: MIOCommand.InteractionData?
     public let guildId: GuildID?
     public let channelId: ChannelID?
@@ -11,6 +12,7 @@ public struct Interaction {
     public init(
         id: InteractionID,
         type: InteractionType? = nil,
+        customId: String? = nil,
         data: MIOCommand.InteractionData? = nil,
         guildId: GuildID? = nil,
         channelId: ChannelID? = nil,
@@ -20,6 +22,7 @@ public struct Interaction {
     ) {
         self.id = id
         self.type = type
+        self.customId = customId
         self.data = data
         self.guildId = guildId
         self.channelId = channelId
