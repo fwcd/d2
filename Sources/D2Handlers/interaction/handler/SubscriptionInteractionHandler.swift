@@ -28,7 +28,8 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
                 commandPrefix: commandPrefix,
                 subscriptions: $1
             )
-            registry[$0]?.onSubscriptionInteraction(with: customId, by: user, output: MessageIOOutput(context: context), context: context)
+            let output = MessageIOInteractionOutput(interaction: interaction, context: context)
+            registry[$0]?.onSubscriptionInteraction(with: customId, by: user, output: output, context: context)
         }
         return true
     }

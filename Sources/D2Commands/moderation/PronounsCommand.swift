@@ -26,6 +26,6 @@ public class PronounsCommand: StringCommand {
 
     public func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext) {
         // TODO
-        print("Interacted with \(customId)")
+        output.append("Interacted with \(customId)")
     }
 }
