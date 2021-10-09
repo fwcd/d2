@@ -30,15 +30,15 @@ RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
 ENV PATH /.cabal/bin:/root/.cabal/bin:$PATH
 
 # Copy application
-WORKDIR /d2
+WORKDIR /opt/d2
 COPY . .
 
 # Install Node dependencies
-WORKDIR /d2/Node
+WORKDIR /opt/d2/Node
 RUN ./install-all
 
 # Build
-WORKDIR /d2
+WORKDIR /opt/d2
 RUN swift build -c release
 
 CMD ["./.build/release/D2"]
