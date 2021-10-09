@@ -7,8 +7,8 @@ fileprivate let log = Logger(label: "D2Commands.HaskellTypeCommand")
 public class HaskellTypeCommand: StringCommand {
     public let info = CommandInfo(
         category: .programming,
-        shortDescription: "Evaluates a Haskell expression",
-        longDescription: "Computes the result of a (pure) Haskell expression using Mueval",
+        shortDescription: "Fetches the type of a Haskell expression",
+        longDescription: "Computes the inferred type of a (pure) Haskell expression using Mueval",
         presented: true,
         requiredPermissionLevel: .basic
     )
