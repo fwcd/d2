@@ -14,6 +14,7 @@ final class SpamHandlerTests: XCTestCase {
 
     override func setUp() {
         tempDir = TemporaryDirectory(prefix: "d2-spam-handler-tests")
+        try! tempDir.create()
         timestamp = Date()
         handler = SpamHandler(config: AutoSerializing(wrappedValue: .init(), filePath: "\(tempDir.url.path)/spamConfig.json")) { [unowned self] in
             timestamp
