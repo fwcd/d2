@@ -1,3 +1,4 @@
+import Foundation
 import Logging
 import D2MessageIO
 import D2Permissions
@@ -6,8 +7,8 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MaximaCommand")
 fileprivate let maxExecutionSeconds = 5
-fileprivate let clearedInputChars = try! Regex(from: "\\|&,;$")
-fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i2\\)\\s*([\\s\\S]+)\\(%i2\\)")
+fileprivate let clearedInputChars = try! Regex(from: "\\|&,;\\$")
+fileprivate let maximaOutputPattern = try! Regex(from: "\\$\\$([^\\$]+)\\$\\$")
 
 public class MaximaCommand: StringCommand {
     public let info = CommandInfo(
@@ -21,7 +22,13 @@ public class MaximaCommand: StringCommand {
     private let tempDir = TemporaryDirectory(prefix: "d2-maxima")
     private var running = false
 
-    public init() {}
+    public init() {
+        do {
+            try tempDir.create()
+        } catch {
+            log.error("Could not create temporary directory: \(error)")
+        }
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard !running else {
@@ -31,12 +38,20 @@ public class MaximaCommand: StringCommand {
 
         let processedInput: String = clearedInputChars.replace(in: input, with: "")
         let maximaInput: String = "tex(\(processedInput))$"
+        let tempFile = tempDir.childFile(named: "\(UUID()).mac")
+
+        do {
+            try tempFile.write(utf8: maximaInput)
+        } catch {
+            output.append(error, errorText: "Writing maxima expression to temporary file failed!")
+            return
+        }
 
         running = true
         let semaphore = DispatchSemaphore(value: 0)
         let queue = DispatchQueue(label: "Maxima runner")
         let shell = Shell()
-        let (pipe, process) = shell.newProcess("maxima", args: ["-qb", maximaInput], withPipedOutput: true)
+        let (pipe, process) = shell.newProcess("maxima", args: ["-qb", tempFile.url.path], withPipedOutput: true)
 
         let task = DispatchWorkItem {
             do {
@@ -74,6 +89,12 @@ public class MaximaCommand: StringCommand {
 
         DispatchQueue.global(qos: .userInitiated).async {
             let result = semaphore.wait(timeout: timeout)
+
+            do {
+                try tempFile.delete()
+            } catch {
+                log.warning("Deleting temporary file failed: \(error)")
+            }
 
             if result == .timedOut && process.isRunning {
                 output.append(errorText: "Maxima took longer than \(maxExecutionSeconds) seconds")
