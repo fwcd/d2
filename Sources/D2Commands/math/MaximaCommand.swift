@@ -6,8 +6,8 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MaximaCommand")
 fileprivate let maxExecutionSeconds = 5
-fileprivate let clearedInputChars = try! Regex(from: "\\|&,;")
-fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i1\\)\\s*([\\s\\S]+)\\(%i2\\)")
+fileprivate let clearedInputChars = try! Regex(from: "\\|&,;$")
+fileprivate let maximaOutputPattern = try! Regex(from: "\\(%i2\\)\\s*([\\s\\S]+)\\(%i2\\)")
 
 public class MaximaCommand: StringCommand {
     public let info = CommandInfo(
@@ -18,6 +18,7 @@ public class MaximaCommand: StringCommand {
     )
     public let outputValueType: RichValueType = .image
     private let latexRenderer = LatexRenderer()
+    private let tempDir = TemporaryDirectory(prefix: "d2-maxima")
     private var running = false
 
     public init() {}
@@ -35,7 +36,7 @@ public class MaximaCommand: StringCommand {
         let semaphore = DispatchSemaphore(value: 0)
         let queue = DispatchQueue(label: "Maxima runner")
         let shell = Shell()
-        let (pipe, process) = shell.newProcess("maxima", args: ["-q", "-r", maximaInput], withPipedOutput: true)
+        let (pipe, process) = shell.newProcess("maxima", args: ["-qb", maximaInput], withPipedOutput: true)
 
         let task = DispatchWorkItem {
             do {
