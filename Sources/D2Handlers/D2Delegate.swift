@@ -79,7 +79,8 @@ public class D2Delegate: MessageDelegate {
             StreamerRoleHandler(streamerRoleConfiguration: streamerRoleConfiguration)
         ]
         channelHandlers = [
-            ThreadKeepaliveHandler(config: threadConfiguration)
+            ThreadKeepaliveHandler(config: threadConfiguration),
+            MessageDatabaseChannelHandler(messageDB: messageDB)
         ]
         interactionHandlers = [
             SubscriptionInteractionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager)
@@ -613,15 +614,6 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(createChannel channel: Channel, client: MessageClient) {
-        do {
-            if let guild = client.guildForChannel(channel.id) {
-                log.info("Inserting channel '\(channel.name)' into message database...")
-                try messageDB.insert(channel: channel, on: guild)
-            }
-        } catch {
-            log.warning("Could not insert channel into message database: \(error)")
-        }
-
         for i in channelHandlers.indices {
             channelHandlers[i].handle(channelCreate: channel, client: client)
         }
@@ -638,15 +630,6 @@ public class D2Delegate: MessageDelegate {
     }
 
     public func on(updateChannel channel: Channel, client: MessageClient) {
-        do {
-            if let guild = client.guildForChannel(channel.id) {
-                log.info("Updating channel '\(channel.name)' in message database...")
-                try messageDB.insert(channel: channel, on: guild)
-            }
-        } catch {
-            log.warning("Could not update channel in message database: \(error)")
-        }
-
         for i in channelHandlers.indices {
             channelHandlers[i].handle(channelUpdate: channel, client: client)
         }
