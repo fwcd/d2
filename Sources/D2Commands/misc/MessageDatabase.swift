@@ -252,16 +252,17 @@ public class MessageDatabase: MarkovPredictor {
     }
 
     public func insert(guild: Guild) throws {
+        let wasTracked = (try? isTracked(guildId: guild.id)) ?? false
         try db.transaction {
-            try insertDirectly(guild: guild)
+            try insertDirectly(guild: guild, tracked: wasTracked)
         }
     }
 
-    private func insertDirectly(guild: Guild) throws {
+    private func insertDirectly(guild: Guild, tracked: Bool) throws {
         try db.run(guilds.insert(or: .replace,
             guildId <- try convert(id: guild.id),
             guildName <- guild.name,
-            guildTracked <- false
+            guildTracked <- tracked
         ))
         for member in guild.members.map(\.1) {
             try insertDirectly(member: member, on: guild)
