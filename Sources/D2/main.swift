@@ -35,7 +35,7 @@ struct D2: ParsableCommand {
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let commandPrefix = config?.commandPrefix ?? "%"
         let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
-        let handler = try D2Delegate(withPrefix: commandPrefix, initialPresence: actualInitialPresence, useMIOCommands: config?.useMIOCommands ?? false, mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild)
+        var handler: D2Delegate! = try D2Delegate(withPrefix: commandPrefix, initialPresence: actualInitialPresence, useMIOCommands: config?.useMIOCommands ?? false, mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild)
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
         if let config = config {
@@ -80,6 +80,7 @@ struct D2: ParsableCommand {
         source.setEventHandler {
             log.info("Shutting down...")
             platforms.removeAll()
+            handler = nil
             combinedClient = nil
             Self.exit()
         }
