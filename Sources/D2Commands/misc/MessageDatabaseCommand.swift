@@ -1,5 +1,8 @@
 import Utils
+import Logging
 import D2MessageIO
+
+fileprivate let log = Logger(label: "D2Commands.MessageDatabaseCommand")
 
 public class MessageDatabaseCommand: StringCommand {
     public let info = CommandInfo(
@@ -44,7 +47,7 @@ public class MessageDatabaseCommand: StringCommand {
                 }
                 output.append("Rebuilding database...")
                 self.messageDB.rebuildMessages(with: client, from: guildId) {
-                    output.append("Querying channel `\($0)`...")
+                    log.info("Querying channel `\($0)`...")
                 }.listen {
                     do {
                         try $0.get()
