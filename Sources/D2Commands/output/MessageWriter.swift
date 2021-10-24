@@ -70,13 +70,14 @@ public struct MessageWriter {
                 return write(value: wrapper.wrappedValue)
             case let .compound(components):
                 return all(promises: components.map { write(value: $0) }).map { encoded in
-                    Message(
+                    let childComponents = encoded.flatMap { $0.components.flatMap(\.primitiveChildren) }
+                    return Message(
                         content: encoded.compactMap(\.content.nilIfEmpty).joined(separator: "\n"),
                         embeds: encoded.flatMap(\.embeds),
                         files: encoded.flatMap(\.files),
                         tts: false,
-                        components: [.actionRow(.init(
-                            components: encoded.flatMap { $0.components.flatMap(\.primitiveChildren) }
+                        components: childComponents.isEmpty ? [] : [.actionRow(.init(
+                            components: childComponents
                         ))]
                     )
                 }
