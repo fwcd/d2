@@ -2,7 +2,6 @@ image: "swift:5.4"
 
 stages:
   - build
-  - test
   - deploy
 
 before_script:
@@ -14,16 +13,11 @@ before_script:
 build:
   stage: build
   script:
-    - swift build -c release
+    - swift test -c release
   artifacts:
     paths:
       - ./.build/release/D2
     expire_in: 1 week
-
-test:
-  stage: test
-  script:
-    - swift test -c release
 
 deploy:
   image:
