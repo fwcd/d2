@@ -17,7 +17,10 @@ struct D2: ParsableCommand {
     @Option(name: .shortAndLong, help: "The logging level")
     var logLevel: Logger.Level = .info
 
-    @Option(help: "The initial activity message")
+    @Option(name: .shortAndLong, help: "The logging level for dependencies (e.g. swift-discord)")
+    var dependencyLogLevel: Logger.Level = .notice
+
+    @Option(name: .shortAndLong, help: "The initial activity message")
     var initialPresence: String?
 
     func run() throws {
@@ -26,7 +29,7 @@ struct D2: ParsableCommand {
         #endif
 
         LoggingSystem.bootstrap {
-            let level = $0.starts(with: "D2") ? logLevel : .notice
+            let level = $0.starts(with: "D2") ? logLevel : dependencyLogLevel
             return StoringLogHandler(label: $0, logLevel: level)
         }
 
