@@ -35,6 +35,12 @@ struct D2: ParsableCommand {
 
         let log = Logger(label: "D2.main")
 
+        var localDirExists: ObjCBool = false
+        if !FileManager.default.fileExists(atPath: "local", isDirectory: &localDirExists) || !localDirExists.boolValue {
+            log.error("Please make sure to create a 'local' directory with e.g. the 'platformTokens.json' etc. as described in the README!")
+            return
+        }
+
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let commandPrefix = config?.commandPrefix ?? "%"
         let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
