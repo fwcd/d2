@@ -148,6 +148,8 @@ public class D2Delegate: MessageDelegate {
         registry["author"] = AuthorCommand()
         registry["addeventlistener", aka: ["on"]] = AddEventListenerCommand(eventListenerBus: eventListenerBus)
         registry["removeeventlistener", aka: ["off"]] = RemoveEventListenerCommand(eventListenerBus: eventListenerBus)
+        registry["addcronschedule", aka: ["cron"]] = AddCronScheduleCommand(cronSchedulerBus: cronSchedulerBus)
+        registry["removecronschedule", aka: ["uncron", "removecron"]] = RemoveCronScheduleCommand(cronSchedulerBus: cronSchedulerBus)
         registry["last"] = LastMessageCommand()
         registry["convert"] = UnitConverterCommand()
         registry["+"] = BinaryOperationCommand<Double>(name: "addition", operation: +)
