@@ -109,6 +109,7 @@ let package = Package(
                 .product(name: "SwiftPlot", package: "SwiftPlot"),
                 .product(name: "AGGRenderer", package: "SwiftPlot"),
                 .product(name: "SwiftyTesseract", package: "SwiftyTesseract"),
+                .product(name: "NIOCronScheduler", package: "NIOCronScheduler"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),

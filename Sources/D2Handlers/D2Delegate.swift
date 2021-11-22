@@ -18,6 +18,7 @@ public class D2Delegate: MessageDelegate {
     private let partyGameDB: PartyGameDatabase
     private let registry: CommandRegistry
     private let eventListenerBus: EventListenerBus
+    private let cronSchedulerBus: CronSchedulerBus
     private let subscriptionManager: SubscriptionManager
     private let permissionManager: PermissionManager
 
@@ -43,6 +44,7 @@ public class D2Delegate: MessageDelegate {
         messageDB = try MessageDatabase()
         partyGameDB = try PartyGameDatabase()
         eventListenerBus = EventListenerBus()
+        cronSchedulerBus = CronSchedulerBus()
         subscriptionManager = SubscriptionManager(registry: registry)
         permissionManager = PermissionManager()
         let mostRecentPipeRunner = Synchronized(wrappedValue: Box<(Runnable, PermissionLevel)?>(wrappedValue: nil))
