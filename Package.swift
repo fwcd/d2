@@ -34,6 +34,7 @@ let package = Package(
         .package(url: "https://github.com/nmdias/FeedKit.git", from: "9.1.2"),
         .package(url: "https://github.com/SwiftyTesseract/SwiftyTesseract.git", from: "4.0.0"),
         .package(url: "https://github.com/dehesa/CodableCSV.git", from: "0.6.5"),
+        .package(url: "https://github.com/MihaelIsaev/NIOCronScheduler.git", from: "2.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

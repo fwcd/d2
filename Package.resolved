@@ -101,6 +101,15 @@
         }
       },
       {
+        "package": "NIOCronScheduler",
+        "repositoryURL": "https://github.com/MihaelIsaev/NIOCronScheduler.git",
+        "state": {
+          "branch": null,
+          "revision": "c33c8af4a5836dc37ca675927f2fd030dbf8374e",
+          "version": "2.0.2"
+        }
+      },
+      {
         "package": "PerfectSysInfo",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SysInfo.git",
         "state": {
@@ -116,6 +125,15 @@
           "branch": null,
           "revision": "0a9893ec030501a3956bee572d6b4fdd3ae158a1",
           "version": "0.12.2"
+        }
+      },
+      {
+        "package": "SwifCron",
+        "repositoryURL": "https://github.com/MihaelIsaev/SwifCron.git",
+        "state": {
+          "branch": null,
+          "revision": "effe20321342705e66894d86720c5882e2f4095e",
+          "version": "1.3.1"
         }
       },
       {
