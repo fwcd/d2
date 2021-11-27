@@ -7,7 +7,7 @@ import Graphics
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
-fileprivate let adventOfCodeYear: Int = 2020
+fileprivate let adventOfCodeYear: Int = Calendar.current.component(.year, from: Date())
 fileprivate let adventOfCodeEvent: String = String(adventOfCodeYear)
 fileprivate let adventOfCodeStart: Date = {
     var components = DateComponents()
