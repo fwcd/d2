@@ -31,7 +31,7 @@ public class AdventOfCodeCommand: StringCommand {
         presented: true,
         requiredPermissionLevel: .basic
     )
-    @AutoSerializing(filePath: "local/adventOfCode\(adventOfCodeEvent)Config.json") private var configuration: AdventOfCodeConfiguration = .init()
+    @AutoSerializing(filePath: "local/adventOfCodeConfig.json") private var configuration: AdventOfCodeConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
 
     public init() {
