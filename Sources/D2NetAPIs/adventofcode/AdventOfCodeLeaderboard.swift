@@ -117,8 +117,8 @@ public struct AdventOfCodeLeaderboard: Decodable {
 
             public init(from decoder: Decoder) throws {
                 let container = try decoder.singleValueContainer()
-                let raw = try? container.decode(String.self)
-                date = raw.flatMap(Double.init).map(Date.init(timeIntervalSince1970:))
+                let raw = try? container.decode(Double.self)
+                date = raw.map(Date.init(timeIntervalSince1970:))
             }
         }
     }
