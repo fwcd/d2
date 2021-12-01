@@ -46,14 +46,16 @@ RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
 # Add Cabal to PATH
 ENV PATH /.cabal/bin:/root/.cabal/bin:$PATH
 
-WORKDIR /opt/d2
-
 # Install Node dependencies
-COPY Node Node
+COPY Node /opt/d2/Node
 WORKDIR /opt/d2/Node
 RUN ./install-all
 
 WORKDIR /opt/d2/
+
+# Add resources
+COPY Resources Resources
+
 COPY --from=builder "/opt/d2/.build/release/D2" .
 
 CMD ["./D2"]
