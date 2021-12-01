@@ -1,4 +1,24 @@
-FROM swift:5.4
+FROM swift:5.4 as builder
+
+# Install add-apt-repository
+RUN apt-get update && apt-get install -y software-properties-common
+
+RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
+    libopus-dev \
+    libsodium-dev \
+    libssl-dev \
+    libcairo2-dev \
+    libsqlite3-dev \
+    libgraphviz-dev \
+    libtesseract-dev \
+    libleptonica-dev
+
+# Build
+WORKDIR /opt/d2
+COPY . .
+RUN swift build -c release
+
+FROM swift:5.4-slim as runner
 
 # Install Curl and node package repository
 RUN apt-get update && apt-get install -y curl
@@ -9,19 +29,17 @@ RUN apt-get update && apt-get install -y software-properties-common
 
 # Install native dependencies
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
-    nodejs \
-    libopus-dev \
-    libsodium-dev \
-    libssl-dev \
-    libcairo2-dev \
+    libopus0 \
+    libsodium23 \
+    libssl1.1 \
+    libcairo2 \
+    libsqlite3-0 \
+    tesseract-ocr \
     poppler-utils \
     maxima \
     cabal-install \
-    libsqlite3-dev \
     graphviz \
-    libgraphviz-dev \
-    libtesseract-dev \
-    libleptonica-dev
+    nodejs
 
 RUN cabal update && cabal install happy
 RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
@@ -36,9 +54,7 @@ COPY Node Node
 WORKDIR /opt/d2/Node
 RUN ./install-all
 
-# Build
-WORKDIR /opt/d2
-COPY . .
-RUN swift build -c release
+WORKDIR /opt/d2/
+COPY --from=builder "/opt/d2/.build/release/D2" .
 
-CMD ["./.build/release/D2"]
+CMD ["./D2"]
