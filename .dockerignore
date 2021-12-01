@@ -1,4 +1,9 @@
 .git
+.github
+.vscode
 .dockerignore
+.editorconfig
+.gitignore
+.gitlab-ci.yml
 docker-compose.yml
 Dockerfile
