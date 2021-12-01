@@ -11,7 +11,8 @@ RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get 
     libsqlite3-dev \
     libgraphviz-dev \
     libtesseract-dev \
-    libleptonica-dev
+    libleptonica-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Build
 WORKDIR /opt/d2
@@ -20,12 +21,9 @@ RUN swift build -c release
 
 FROM swift:5.4-slim as runner
 
-# Install Curl and node package repository
-RUN apt-get update && apt-get install -y curl
+# Install Curl, add-apt-repository and node package repository
+RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-
-# Install add-apt-repository
-RUN apt-get update && apt-get install -y software-properties-common
 
 # Install native dependencies
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
@@ -39,7 +37,8 @@ RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get 
     maxima \
     cabal-install \
     graphviz \
-    nodejs
+    nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN cabal update && cabal install happy
 RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
