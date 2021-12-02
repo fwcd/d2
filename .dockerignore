@@ -1,6 +1,7 @@
 .git
 .github
 .vscode
+.build
 .dockerignore
 .editorconfig
 .gitignore
