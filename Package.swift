@@ -25,7 +25,8 @@ let package = Package(
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
         .package(name: "Emoji", url: "https://github.com/safx/Emoji-Swift.git", .revision("b3a49f4a9fbee3c7320591dbc7263c192244063e")),
         .package(name: "PerfectSysInfo", url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
-        .package(name: "SwiftPlot", url: "https://github.com/KarthikRIyer/swiftplot.git", .revision("7cface0237635b9d48142969e9884c0058036624")),
+        // TODO: Waiting for https://github.com/KarthikRIyer/swiftplot/pull/131 to be merged
+        .package(name: "SwiftPlot", url: "https://github.com/KarthikRIyer/swiftplot.git", .revision("a2f79f456a1e265599272ba58f3d1731974f3e3c")),
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", from: "0.4.1"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
