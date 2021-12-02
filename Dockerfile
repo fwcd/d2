@@ -4,8 +4,6 @@ FROM swift:5.4 as builder
 RUN apt-get update && apt-get install -y software-properties-common
 
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
-    libopus-dev \
-    libsodium-dev \
     libssl-dev \
     libcairo2-dev \
     libsqlite3-dev \
@@ -27,8 +25,6 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Install native dependencies
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
-    libopus0 \
-    libsodium23 \
     libssl1.1 \
     libcairo2 \
     libsqlite3-0 \

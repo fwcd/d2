@@ -11,7 +11,7 @@ jobs:
     - name: Install dependencies with Homebrew
       run: |
         brew tap vapor/tap
-        brew install opus libsodium ctls pkg-config cairo graphviz
+        brew install ctls pkg-config cairo graphviz
     - name: Pick the right Xcode version
       run: sudo xcode-select -s /Applications/Xcode_12.app
     - name: Build
