@@ -5,6 +5,7 @@ node_modules
 bin
 Packages
 *.xcodeproj
+*.xcworkspace
 xcuserdata
 .idea
 perf.*
