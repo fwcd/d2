@@ -29,7 +29,6 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
     * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
         * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
-* Haskell + Cabal Install or Stack (for Hoogle, Pointfree, ...)
 * Node.js and npm (for LaTeX rendering)
 * `timeout` and `kill` (for `MaximaCommand`)
 
@@ -50,7 +49,6 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 * `brew install ctls cairo poppler gd graphviz`
 
 #### General
-* `stack install happy show mueval pointfree pointful` (or `cabal-install ...`)
 * `cd Node && ./install-all`
 
 ## Configuration

@@ -31,16 +31,9 @@ RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get 
     tesseract-ocr \
     poppler-utils \
     maxima \
-    cabal-install \
     graphviz \
     nodejs \
     && rm -rf /var/lib/apt/lists/*
-
-RUN cabal update && cabal install happy
-RUN cabal update && cabal install mueval pointfree-1.1.1.6 pointful
-
-# Add Cabal to PATH
-ENV PATH /.cabal/bin:/root/.cabal/bin:$PATH
 
 # Install Node dependencies
 COPY Node /opt/d2/Node
