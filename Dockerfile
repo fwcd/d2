@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y software-properties-common
 
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
     libssl-dev \
+    libfreetype6-dev \
     libcairo2-dev \
     libsqlite3-dev \
     libgraphviz-dev \
@@ -26,6 +27,7 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 # Install native dependencies
 RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
     libssl1.1 \
+    libfreetype6 \
     libcairo2 \
     libsqlite3-0 \
     tesseract-ocr \
