@@ -47,6 +47,11 @@ WORKDIR /opt/d2/
 # Add resources
 COPY Resources Resources
 
+# Ensure that the font used by swiftplot exists at the correct path
+COPY --from=builder \
+    "/opt/d2/.build/checkouts/swiftplot/Sources/AGGRenderer/CPPAGGRenderer/Roboto-Regular.ttf" \
+    ".build/checkouts/swiftplot/Sources/AGGRenderer/CPPAGGRenderer/Roboto-Regular.ttf"
+
 COPY --from=builder "/opt/d2/.build/release/D2" .
 
 CMD ["./D2"]
