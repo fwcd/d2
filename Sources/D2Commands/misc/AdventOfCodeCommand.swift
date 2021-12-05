@@ -218,8 +218,8 @@ public class AdventOfCodeCommand: StringCommand {
                 var components = [
                     ttcs.enumerated().map { (i, ttc) in ("Part \(i + 1)", ttc) }
                 ]
-                if ttcs.count == 2 {
-                    // Only show 2-star-totals
+                if ttcs.count == AdventOfCodeLeaderboard.starsPerDay {
+                    // Only show totals for those who completed the day
                     components.append(ttcs.reduce1(+).map { [("Total", $0)] } ?? [])
                 }
                 return components

@@ -8,6 +8,8 @@ public struct AdventOfCodeLeaderboard: Decodable {
         case members
     }
 
+    public static let starsPerDay = 2
+
     public let ownerId: String
     public let event: String
     public let members: [String: Member]
@@ -37,7 +39,9 @@ public struct AdventOfCodeLeaderboard: Decodable {
     }
 
     public func timeToCompletion(member: Member, day: Int) -> TimeInterval? {
-        timesToCompletion(member: member, day: day).reduce1(+)
+        let ttcs = timesToCompletion(member: member, day: day)
+        guard ttcs.count >= Self.starsPerDay else { return nil }
+        return ttcs.reduce1(+)
     }
 
     public func lastTimeToCompletion(member: Member) -> TimeInterval? {
