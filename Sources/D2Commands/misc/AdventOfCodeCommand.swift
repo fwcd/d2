@@ -210,7 +210,7 @@ public class AdventOfCodeCommand: StringCommand {
     }
 
     private func presentTimesEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
-        let day = Calendar.current.component(.day, from: min(Date(), board.endDate ?? Date.distantFuture))
+        let day = board.currentChallengeDay()
         let maxTopMembers = 15
         let topMembers = Dictionary(grouping: board.members.values
             .map { ($0, board.timesToCompletion(member: $0, day: day)) }
@@ -230,7 +230,7 @@ public class AdventOfCodeCommand: StringCommand {
             .sorted(by: ascendingComparator(comparing: \.key))
 
         return Embed(
-            title: ":stopwatch: Advent of Code \(adventOfCodeEvent) Best Times Today - Top \(min(topMembers.map(\.value.count).max() ?? 0, maxTopMembers))",
+            title: ":stopwatch: Advent of Code \(adventOfCodeEvent) Best Times for Day \(day) - Top \(min(topMembers.map(\.value.count).max() ?? 0, maxTopMembers))",
             fields: topMembers.map { (name, tms) in
                 Embed.Field(
                     name: name,

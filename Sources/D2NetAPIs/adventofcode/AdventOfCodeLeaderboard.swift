@@ -30,6 +30,17 @@ public struct AdventOfCodeLeaderboard: Decodable {
         return Calendar.current.date(from: components)
     }
 
+    public func currentChallengeDay() -> Int {
+        let calendar = Calendar.current
+        let now = min(Date(), endDate ?? Date.distantFuture)
+        let today = calendar.component(.day, from: now)
+        if let release = challengeReleaseDate(day: today), now < release {
+            return today - 1
+        } else {
+            return today
+        }
+    }
+
     public func timesToCompletion(member: Member, day: Int) -> [TimeInterval] {
         (challengeReleaseDate(day: day).map { [$0] } ?? [])
             .flatMap { release in (member.starCompletions[day] ?? [])
