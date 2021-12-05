@@ -116,7 +116,7 @@ public class AdventOfCodeCommand: StringCommand {
     }
 
     private func presentStarGraph(board: AdventOfCodeLeaderboard) throws -> Image {
-        let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
+        let topMembers = extractTopMembers(count: 28, from: board)
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let start = board.startDate ?? adventOfCodeStart
 
@@ -158,7 +158,7 @@ public class AdventOfCodeCommand: StringCommand {
     }
 
     private func presentTimesGraph(board: AdventOfCodeLeaderboard) throws -> Image {
-        let topMembers = board.members.values.sorted(by: descendingComparator(comparing: \.stars)).prefix(28)
+        let topMembers = extractTopMembers(count: 28, from: board)
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let calendar = Calendar.current
         let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
@@ -193,9 +193,7 @@ public class AdventOfCodeCommand: StringCommand {
     }
 
     private func presentScoreEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {
-        let topMembers = board.members.values
-            .sorted(by: descendingComparator { $0.localScore ?? 0 })
-            .prefix(15)
+        let topMembers = extractTopMembers(count: 15, from: board)
 
         return Embed(
             title: ":christmas_tree: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
@@ -247,6 +245,12 @@ public class AdventOfCodeCommand: StringCommand {
                 )
             }
         )
+    }
+
+    private func extractTopMembers(count: Int, from board: AdventOfCodeLeaderboard) -> [AdventOfCodeLeaderboard.Member] {
+        Array(board.members.values
+            .sorted(by: descendingComparator { $0.localScore ?? 0 })
+            .prefix(count))
     }
 
     private func format(timeInterval: TimeInterval) -> String {
