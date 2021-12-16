@@ -15,7 +15,9 @@ RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get 
 
 # Build
 WORKDIR /opt/d2
-COPY . .
+COPY Sources Sources
+COPY Tests Tests
+COPY Package.swift Package.resolved ./
 RUN swift build -c release
 
 FROM swift:5.4-slim as runner
@@ -37,21 +39,32 @@ RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get 
     nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node dependencies
-COPY Node /opt/d2/Node
-WORKDIR /opt/d2/Node
-RUN ./install-all
+WORKDIR /opt/d2
 
-WORKDIR /opt/d2/
+# Install Node dependencies
+COPY Node Node
+RUN cd Node && ./install-all
 
 # Add resources
 COPY Resources Resources
+COPY LICENSE README.md ./
 
-# Ensure that the font used by swiftplot exists at the correct path
+# Set up .build folder in runner
+WORKDIR /opt/d2/.build
+RUN mkdir -p x86_64-unknown-linux-gnu/release && ln -s x86_64-unknown-linux-gnu/release release
+
+# Copy font used by swiftplot to the correct path
 COPY --from=builder \
     "/opt/d2/.build/checkouts/swiftplot/Sources/AGGRenderer/CPPAGGRenderer/Roboto-Regular.ttf" \
-    ".build/checkouts/swiftplot/Sources/AGGRenderer/CPPAGGRenderer/Roboto-Regular.ttf"
+                   "checkouts/swiftplot/Sources/AGGRenderer/CPPAGGRenderer/Roboto-Regular.ttf"
 
-COPY --from=builder "/opt/d2/.build/release/D2" .
+# Copy syllable counter resource bundle to the correct path
+COPY --from=builder \
+    "/opt/d2/.build/release/syllable-counter-swift_SyllableCounter.resources" \
+                   "release/syllable-counter-swift_SyllableCounter.resources"
 
-CMD ["./D2"]
+# Copy D2 executable
+COPY --from=builder "/opt/d2/.build/release/D2" "release/D2"
+
+WORKDIR /opt/d2
+CMD [".build/release/D2"]
