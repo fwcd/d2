@@ -109,18 +109,14 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 
 ## Building
 * Using Docker: `docker-compose build`
-* On Linux: `swift build`
-* On macOS: `swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include`
-
-For Xcode support, see [the README of Discord.(https://github.com/nuclearace/Discord.blob/master/README.md).
+* Natively: `swift build`
 
 ## Testing
-* `swift test`
+* Natively: `swift test`
 
 ## Running
 * Using Docker: `docker-compose up -d`
-* On Linux: `swift run D2`
-* On macOS: `swift run -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include D2`
+* Natively: `swift run`
 
 ## Additional Build Flags
 To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.

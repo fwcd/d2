@@ -15,7 +15,7 @@ jobs:
     - name: Pick the right Xcode version
       run: sudo xcode-select -s /Applications/Xcode_12.app
     - name: Build
-      run: swift build -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include/cairo -Xcc -I/usr/local/include
+      run: swift build
     - name: Test
-      run: swift test -Xlinker -L/usr/local/lib -Xlinker -lopus -Xcc -I/usr/local/include/cairo -Xcc -I/usr/local/include
+      run: swift test
 
