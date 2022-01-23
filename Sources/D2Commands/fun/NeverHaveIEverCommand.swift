@@ -1,4 +1,5 @@
 import Utils
+import D2MessageIO
 import D2NetAPIs
 
 public class NeverHaveIEverCommand: StringCommand {
@@ -15,16 +16,14 @@ public class NeverHaveIEverCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        let nhie: Promise<NeverHaveIEverStatement, Error> = Double.random(in: 0..<1) < 0.1
-            ? Promise.catching { try partyGameDB.randomNhieStatement() }
-            : NhieIoQuery().perform()
-        nhie.listen {
-            do {
-                let nhie = try $0.get()
-                output.append(nhie.statement)
-            } catch {
-                output.append(error, errorText: "Could not fetch statement")
-            }
+        do {
+            let nhie = try partyGameDB.randomNhieStatement()
+            output.append(Embed(
+                description: "**\(nhie.statement)**",
+                footer: nhie.category.map { Embed.Footer(text: "Category: \($0)") }
+            ))
+        } catch {
+            output.append(error, errorText: "Could not fetch statement")
         }
     }
 
