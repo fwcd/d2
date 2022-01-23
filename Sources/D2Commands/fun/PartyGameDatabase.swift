@@ -58,7 +58,8 @@ public class PartyGameDatabase {
         }
 
         return NeverHaveIEverStatement(
-            statement: row[statement]
+            statement: row[statement],
+            category: row[category]
         )
     }
 
