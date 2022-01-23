@@ -10,6 +10,7 @@ fileprivate let explanation = Expression<String?>("explanation")
 
 fileprivate let nhieStatements = Table("nhie_statements")
 fileprivate let statement = Expression<String>("statement")
+fileprivate let category = Expression<String?>("category")
 
 public class PartyGameDatabase {
     private let db: Connection
@@ -29,6 +30,7 @@ public class PartyGameDatabase {
             })
             try db.run(nhieStatements.create(ifNotExists: true) {
                 $0.column(statement, primaryKey: true)
+                $0.column(category)
             })
         }
     }
@@ -89,7 +91,8 @@ public class PartyGameDatabase {
                     try self.db.transaction {
                         for s in statements {
                             try self.db.run(nhieStatements.insert(or: .ignore,
-                                statement <- s.statement
+                                statement <- s.statement,
+                                category <- s.category
                             ))
                         }
                     }
