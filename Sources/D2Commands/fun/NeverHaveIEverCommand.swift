@@ -6,6 +6,7 @@ public class NeverHaveIEverCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "The party game 'Never Have I Ever'",
+        helpText: "Syntax: [category]?",
         presented: true,
         requiredPermissionLevel: .basic
     )
@@ -17,7 +18,7 @@ public class NeverHaveIEverCommand: StringCommand {
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         do {
-            let nhie = try partyGameDB.randomNhieStatement()
+            let nhie = try partyGameDB.randomNhieStatement(category: input.nilIfEmpty)
             output.append(Embed(
                 description: "**\(nhie.statement)**",
                 footer: nhie.category.map { Embed.Footer(text: "Category: \($0)") }
