@@ -52,8 +52,12 @@ public class PartyGameDatabase {
         )
     }
 
-    public func randomNhieStatement() throws -> NeverHaveIEverStatement {
-        guard let row = try db.prepare(nhieStatements.order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
+    public func randomNhieStatement(category categoryToFilter: String? = nil) throws -> NeverHaveIEverStatement {
+        var query = nhieStatements
+        if let categoryToFilter = categoryToFilter {
+            query = query.where(category == categoryToFilter)
+        }
+        guard let row = try db.prepare(query.order(Expression<Int>.random()).limit(1)).makeIterator().next() else {
             throw PartyGameDatabaseError.noSuchRow("No nhie statements in the database!")
         }
 
