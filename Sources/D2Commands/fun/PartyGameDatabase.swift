@@ -115,7 +115,8 @@ public class PartyGameDatabase {
 
     private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
         sequence(promises: [
-            { NNNEverQuery(maxPages: 40).perform() }
+            { NNNEverQuery(maxPages: 40).perform() },
+            { RandomWordGeneratorNhieQuery().perform() },
         ]).map { $0.flatMap { $0 } }
     }
 }
