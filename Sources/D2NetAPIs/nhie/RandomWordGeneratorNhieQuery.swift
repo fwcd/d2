@@ -2,7 +2,15 @@ import Utils
 
 public struct RandomWordGeneratorNhieQuery {
     private struct Response: Codable {
-        let data: [String: [String]]
+        let data: [String: [Question]]
+
+        struct Question: Codable {
+            enum CodingKeys: String, CodingKey {
+                case question = "question_never_have_i_ever"
+            }
+
+            let question: String
+        }
     }
 
     public init() {}
@@ -13,7 +21,7 @@ public struct RandomWordGeneratorNhieQuery {
             .map {
                 $0.data.flatMap { (category, statements) in statements.map {
                     NeverHaveIEverStatement(
-                        statement: $0,
+                        statement: $0.question,
                         category: category
                     )
                 } }
