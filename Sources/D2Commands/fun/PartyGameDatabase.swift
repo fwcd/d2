@@ -102,30 +102,20 @@ public class PartyGameDatabase {
     }
 
     private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
-        sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in {
-            Promise { then in
-                EitherIOQuery(term: String(c), maxOffset: 1500).perform().listen {
-                    then($0)
-                }
-            }
-        } }).map { $0.flatMap { $0 } }
+        sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in
+            { EitherIOQuery(term: String(c), maxOffset: 1500).perform() }
+        }).map { $0.flatMap { $0 } }
     }
 
     private func fetchRRRatherQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
-        sequence(promises: ["conversation-starters", "school", "dating"].map { category in {
-            Promise { then in
-                RRRatherQuery(category: category).perform().listen {
-                    then($0)
-                }
-            }
-        } }).map { $0.flatMap { $0 } }
+        sequence(promises: ["conversation-starters", "school", "dating"].map { category in
+            { RRRatherQuery(category: category).perform() }
+        }).map { $0.flatMap { $0 } }
     }
 
     private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
-        Promise { then in
-            NNNEverQuery(maxPages: 40).perform().listen {
-                then($0)
-            }
-        }
+        sequence(promises: [
+            { NNNEverQuery(maxPages: 40).perform() }
+        ]).map { $0.flatMap { $0 } }
     }
 }
