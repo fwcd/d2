@@ -16,7 +16,7 @@ public struct WordleBoard: RichValueConvertible {
         public var isWon: Bool { clues.count == word.count && clues.allSatisfy { $0 == .here } }
 
         var asRichLine: String {
-            "`\(word)` \(clues)"
+            "`\(word)` \(clues.map(\.asEmoji).joined())"
         }
     }
 
@@ -27,7 +27,7 @@ public struct WordleBoard: RichValueConvertible {
 
         var asEmoji: String {
             switch self {
-            case .nowhere: return ":black_large_square:"
+            case .nowhere: return ":white_large_square:"
             case .somewhere: return ":yellow_square:"
             case .here: return ":green_square:"
             }
