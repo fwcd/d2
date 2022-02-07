@@ -12,15 +12,32 @@ public struct WordleBoard: RichValueConvertible {
         let remaining = "abcdefghijklmnopqrstuvwxyz".filter { c in !clues.values.contains { $0.contains(c) } }
         return clues.merging([.unknown: Set(remaining)], uniquingKeysWith: { v, _ in v })
     }
+    public var possibleSolutions: [String] {
+        Words.wordlePossible
+            .filter { solution in guesses.allSatisfy { $0.isCompatible(with: solution) } }
+    }
 
     public struct Guess {
         public var word: String
         public var clues: [Clue] = []
 
         public var isWon: Bool { clues.count == word.count && clues.allSatisfy { $0 == .here } }
-
-        var asRichLine: String {
+        public var asRichLine: String {
             "`\(word)` \(clues.map(\.asEmoji).joined())"
+        }
+
+        public func isCompatible(with solution: String) -> Bool {
+            let solutionSet = Set(solution)
+            return zip(zip(word, clues), solution).allSatisfy {
+                let (guessedLetter, clue) = $0.0
+                let actualLetter = $0.1
+                switch clue {
+                case .unknown: return true
+                case .nowhere: return !solutionSet.contains(guessedLetter)
+                case .somewhere: return guessedLetter != actualLetter && solutionSet.contains(guessedLetter)
+                case .here: return guessedLetter == actualLetter
+                }
+            }
         }
     }
 
@@ -30,7 +47,7 @@ public struct WordleBoard: RichValueConvertible {
         case somewhere
         case here
 
-        var asEmoji: String {
+        public var asEmoji: String {
             switch self {
             case .unknown: return ":black_large_square:"
             case .nowhere: return ":white_large_square:"
@@ -39,7 +56,7 @@ public struct WordleBoard: RichValueConvertible {
             }
         }
 
-        var abbreviated: String {
+        public var abbreviated: String {
             switch self {
             case .unknown: return "u"
             case .nowhere: return "n"
@@ -48,7 +65,7 @@ public struct WordleBoard: RichValueConvertible {
             }
         }
 
-        init?(fromString s: String) {
+        public init?(fromString s: String) {
             guard let value = Self.allCases.first(where: { $0.asEmoji == s || $0.abbreviated == s }) else { return nil }
             self = value
         }
