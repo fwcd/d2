@@ -8,7 +8,7 @@ public struct WordleBoard: RichValueConvertible {
         .text(guesses.map(\.asRichLine).joined(separator: "\n").nilIfEmpty ?? "_empty_")
     }
     public var cluesForAlphabet: [Clue: Set<Character>] {
-        let clues = Dictionary(grouping: guesses.flatMap { zip($0.clueArray, $0.word) }, by: \.0).mapValues { Set($0.map(\.1)) }
+        let clues = Dictionary(grouping: guesses.flatMap { zip($0.clues, $0.word) }, by: \.0).mapValues { Set($0.map(\.1)) }
         let remaining = "abcdefghijklmnopqrstuvwxyz".filter { c in !clues.values.contains { $0.contains(c) } }
         return clues.merging([.unknown: Set(remaining)], uniquingKeysWith: { v, _ in v })
     }
@@ -21,7 +21,6 @@ public struct WordleBoard: RichValueConvertible {
         public var word: String
         public var clues: Clues = Clues()
 
-        public var clueArray: [Clue] { clues.asArray(count: word.count) }
         public var isWon: Bool { (0..<word.count).allSatisfy { clues[$0] == .here } }
         public var asRichLine: String {
             "`\(word)` \((0..<word.count).map { clues[$0]?.asEmoji ?? "?" }.joined())"
@@ -29,7 +28,7 @@ public struct WordleBoard: RichValueConvertible {
 
         public func isCompatible(with solution: String) -> Bool {
             let solutionSet = Set(solution)
-            return zip(zip(word, clueArray), solution).allSatisfy {
+            return zip(zip(word, clues), solution).allSatisfy {
                 let (guessedLetter, clue) = $0.0
                 let actualLetter = $0.1
                 switch clue {
@@ -42,15 +41,21 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
-    public struct Clues: RawRepresentable, Hashable {
+    public struct Clues: RawRepresentable, Hashable, Sequence {
         public var rawValue: UInt32
+
+        private var withoutCount: UInt32 { rawValue & ((1 << 16) - 1) }
+        public var count: Int {
+            get { Int(rawValue >> 16) }
+            set { rawValue = withoutCount | (UInt32(newValue) << 16) }
+        }
 
         public init(rawValue: UInt32 = 0) {
             self.rawValue = rawValue
         }
 
         public init(fromArray clues: [Clue]) {
-            rawValue = clues.reversed().reduce(0) { ($0 << Clue.bitWidth) | $1.rawValue }
+            rawValue = clues.reversed().reduce(0) { ($0 << Clue.bitWidth) | $1.rawValue } | (UInt32(clues.count) << 16)
         }
 
         public subscript(i: Int) -> Clue? {
@@ -60,11 +65,26 @@ public struct WordleBoard: RichValueConvertible {
 
         public subscript(i: UInt32) -> Clue? {
             get { Clue(rawValue: (rawValue >> (Clue.bitWidth * i)) & 0b11) }
-            set { rawValue |= newValue!.rawValue << (Clue.bitWidth * i) }
+            set {
+                rawValue |= newValue!.rawValue << (Clue.bitWidth * i)
+                count = Swift.max(count, Int(i + 1))
+            }
         }
 
-        public func asArray(count: Int) -> [Clue] {
-            (0..<count).map { self[$0] ?? .unknown }
+        public func makeIterator() -> Iterator {
+            Iterator(clues: self)
+        }
+
+        public struct Iterator: IteratorProtocol {
+            let clues: Clues
+            var i = 0
+
+            public mutating func next() -> Clue? {
+                guard i < clues.count else { return nil }
+                let clue = clues[i]
+                i += 1
+                return clue
+            }
         }
     }
 
