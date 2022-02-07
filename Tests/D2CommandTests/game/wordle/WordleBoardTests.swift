@@ -3,8 +3,8 @@ import XCTest
 
 final class WordleBoardTests: XCTestCase {
     func testClues() throws {
-        XCTAssertEqual(WordleBoard.Clues(fromArray: [.unknown, .unknown]).rawValue, 0)
-        XCTAssertEqual(WordleBoard.Clues(fromArray: [.nowhere, .somewhere]).rawValue, 0b1001)
+        XCTAssertEqual(WordleBoard.Clues(fromArray: [.here]).count, 1)
+        XCTAssertEqual(WordleBoard.Clues(fromArray: [.nowhere, .somewhere]).count, 2)
 
         testCodingRoundtrip(for: [])
         testCodingRoundtrip(for: [.somewhere, .unknown])
@@ -12,6 +12,6 @@ final class WordleBoardTests: XCTestCase {
     }
 
     private func testCodingRoundtrip(for clues: [WordleBoard.Clue]) {
-        XCTAssertEqual(WordleBoard.Clues(fromArray: clues).asArray(count: clues.count), clues)
+        XCTAssertEqual(Array(WordleBoard.Clues(fromArray: clues)), clues)
     }
 }

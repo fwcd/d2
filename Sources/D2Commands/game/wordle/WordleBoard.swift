@@ -44,10 +44,12 @@ public struct WordleBoard: RichValueConvertible {
     public struct Clues: RawRepresentable, Hashable, Sequence {
         public var rawValue: UInt32
 
-        private var withoutCount: UInt32 { rawValue & ((1 << 16) - 1) }
+        private static var countWidth: UInt32 = 16
+        private var withoutCount: UInt32 { rawValue & ((1 << Self.countWidth) - 1) }
+
         public var count: Int {
-            get { Int(rawValue >> 16) }
-            set { rawValue = withoutCount | (UInt32(newValue) << 16) }
+            get { Int((rawValue >> Self.countWidth) & ((1 << Self.countWidth) - 1)) }
+            set { rawValue = withoutCount | (UInt32(newValue) << Self.countWidth) }
         }
 
         public init(rawValue: UInt32 = 0) {
@@ -55,7 +57,8 @@ public struct WordleBoard: RichValueConvertible {
         }
 
         public init(fromArray clues: [Clue]) {
-            rawValue = clues.reversed().reduce(0) { ($0 << Clue.bitWidth) | $1.rawValue } | (UInt32(clues.count) << 16)
+            rawValue = clues.reversed().reduce(0) { ($0 << Clue.bitWidth) | $1.rawValue }
+            count = clues.count
         }
 
         public subscript(i: Int) -> Clue? {
