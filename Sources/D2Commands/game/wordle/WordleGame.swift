@@ -24,6 +24,7 @@ public struct WordleGame: Game {
         `try crane`
         `try words`
         """
+    public let engine: AnyGameIntelligence<State>? = AnyGameIntelligence(WordleIntelligence())
 
     public init() {}
 }

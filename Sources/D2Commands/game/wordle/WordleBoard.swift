@@ -41,23 +41,25 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
+    public func clues(for word: String) -> [Clue] {
+        let solutionSet = Set(solution)
+
+        return zip(word, solution).map { (guessedLetter, actualLetter) in
+            if guessedLetter == actualLetter {
+                return .here
+            } else if solutionSet.contains(guessedLetter) {
+                return .somewhere
+            } else {
+                return .nowhere
+            }
+        }
+    }
+
     public mutating func guess(word: String) throws {
         guard word.count == solution.count else {
             throw WordleError.invalidLength("Word '\(word)' should have length \(solution.count)")
         }
 
-        let solutionSet = Set(solution)
-        var guess = Guess(word: word)
-        for (guessedLetter, actualLetter) in zip(word, solution) {
-            if guessedLetter == actualLetter {
-                guess.clues.append(.here)
-            } else if solutionSet.contains(guessedLetter) {
-                guess.clues.append(.somewhere)
-            } else {
-                guess.clues.append(.nowhere)
-            }
-        }
-
-        guesses.append(guess)
+        guesses.append(Guess(word: word, clues: clues(for: word)))
     }
 }
