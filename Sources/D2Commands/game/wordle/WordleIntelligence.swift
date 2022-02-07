@@ -16,8 +16,17 @@ public struct WordleIntelligence: GameIntelligence {
 
     public func entropies(on board: WordleBoard) -> [(word: String, entropy: Double)] {
         log.info("Computing entropies on board...")
+        var lastProgress = 0
         return Words.wordleAllowed
-            .map { (word: $0, entropy: entropy(for: $0, on: board)) }
+            .enumerated()
+            .map { (i, word) in
+                let progress = (i * 100) / Words.wordleAllowed.count
+                if progress % 10 == 0 && progress != lastProgress {
+                    log.info("Progress: \(progress)%")
+                    lastProgress = progress
+                }
+                return (word: word, entropy: entropy(for: word, on: board))
+            }
             .sorted { $0.entropy < $1.entropy }
     }
 
