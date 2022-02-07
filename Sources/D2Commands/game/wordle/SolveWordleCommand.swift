@@ -1,4 +1,7 @@
 import D2MessageIO
+import Utils
+
+fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+([nsh]+)")
 
 public class SolveWordleCommand: StringCommand {
     public let info = CommandInfo(
@@ -23,9 +26,7 @@ public class SolveWordleCommand: StringCommand {
             n = nowhere (gray)
             s = somewhere (yellow)
             h = here (green)
-            ```
-
-            e.g. 'crane nnnsn' or 'where nnhns'
+            ``` e.g. 'crane nnnsn' or 'where nnhns'
             """)
 
         boards[channelId] = WordleBoard()
@@ -33,11 +34,20 @@ public class SolveWordleCommand: StringCommand {
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
-        guard let channelId = context.channel?.id, let board = boards[channelId] else {
+        guard let channelId = context.channel?.id, var board = boards[channelId] else {
             context.unsubscribeFromChannel()
             return
         }
+        guard let parsedArgs = argsPattern.firstGroups(in: content), parsedArgs[1].count == parsedArgs[2].count else {
+            return
+        }
 
-        // TODO
+        let word = parsedArgs[1]
+        let clues = parsedArgs[2].map { WordleBoard.Clue(fromString: String($0))! }
+
+        board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
+        boards[channelId] = board
+
+        output.append(board.asRichValue) // TODO
     }
 }

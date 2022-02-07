@@ -199,6 +199,7 @@ public class D2Delegate: MessageDelegate {
         registry["uno"] = GameCommand<UnoGame>()
         registry["hangman"] = GameCommand<HangmanGame>()
         registry["wordle"] = GameCommand<WordleGame>()
+        registry["solvewordle"] = SolveWordleCommand()
         registry["codenames"] = GameCommand<CodenamesGame>()
         registry["changelog", aka: ["patchnotes", "releasenotes", "commits"]] = ChangeLogCommand()
         registry["sourcefile"] = SourceFileCommand()
