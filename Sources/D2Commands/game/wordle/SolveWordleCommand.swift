@@ -44,7 +44,7 @@ public class SolveWordleCommand: StringCommand {
         }
 
         let word = parsedArgs[1]
-        let clues = parsedArgs[2].map { WordleBoard.Clue(fromString: String($0))! }
+        let clues = WordleBoard.Clues(fromArray: parsedArgs[2].map { WordleBoard.Clue(fromString: String($0))! })
 
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
