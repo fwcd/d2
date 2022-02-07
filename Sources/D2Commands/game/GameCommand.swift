@@ -60,7 +60,7 @@ public class GameCommand<G: Game>: Command {
             return
         }
 
-        guard let mentions = input.asMentions, mentions.count >= 1 else {
+        guard let mentions = input.asMentions, mentions.count >= 1 || game.permitsSinglePlayer else {
             output.append(errorText: "Mention one or more users to play against.")
             return
         }
