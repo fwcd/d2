@@ -11,7 +11,10 @@ public struct WordleGame: Game {
             //       roles of the player if he plays against himself.
             guard let role = $0.state.rolesOf(player: $0.player).first else { throw WordleError.playerHasNoRole }
             let next = try $0.state.childState(after: WordleMove(fromString: $0.args), by: role, options: .commit)
-            return ActionResult(nextState: next)
+            let alphabet = "abcdefghijklmnopqrstuvwxyz"
+            return ActionResult(nextState: next, text: """
+                \(next.board.clues.map { "\($0.key.asEmoji): \(String($0.value.sorted(by: <)))" }.joined(separator: "\n"))
+                """)
         }
     ]
     public let helpText: String = """
