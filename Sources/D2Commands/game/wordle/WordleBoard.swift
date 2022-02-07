@@ -41,23 +41,17 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
-    public struct Clues: RawRepresentable, Hashable, Sequence {
-        public var rawValue: UInt32
+    public struct Clues: Hashable, Sequence {
+        public var bitPattern: UInt32
+        public var count: Int
 
-        private static var countWidth: UInt32 = 16
-        private var withoutCount: UInt32 { rawValue & ((1 << Self.countWidth) - 1) }
-
-        public var count: Int {
-            get { Int((rawValue >> Self.countWidth) & ((1 << Self.countWidth) - 1)) }
-            set { rawValue = withoutCount | (UInt32(newValue) << Self.countWidth) }
-        }
-
-        public init(rawValue: UInt32 = 0) {
-            self.rawValue = rawValue
+        public init(bitPattern: UInt32 = 0, count: Int = 0) {
+            self.bitPattern = bitPattern
+            self.count = count
         }
 
         public init(fromArray clues: [Clue]) {
-            rawValue = clues.reversed().reduce(0) { ($0 << Clue.bitWidth) | $1.rawValue }
+            bitPattern = clues.reversed().reduce(0) { ($0 << Clue.bitWidth) | $1.rawValue }
             count = clues.count
         }
 
@@ -67,9 +61,9 @@ public struct WordleBoard: RichValueConvertible {
         }
 
         public subscript(i: UInt32) -> Clue? {
-            get { Clue(rawValue: (rawValue >> (Clue.bitWidth * i)) & 0b11) }
+            get { Clue(rawValue: (bitPattern >> (Clue.bitWidth * i)) & ((1 << Clue.bitWidth) - 1)) }
             set {
-                rawValue |= newValue!.rawValue << (Clue.bitWidth * i)
+                bitPattern |= newValue!.rawValue << (Clue.bitWidth * i)
                 count = Swift.max(count, Int(i + 1))
             }
         }
