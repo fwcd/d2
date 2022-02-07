@@ -8,7 +8,7 @@ public struct WordleBoard: RichValueConvertible {
     public var asRichValue: RichValue {
         .text(guesses.map(\.asRichLine).joined(separator: "\n").nilIfEmpty ?? "_empty_")
     }
-    public var clues: [Clue: Set<Character>] {
+    public var cluesForAlphabet: [Clue: Set<Character>] {
         let clues = Dictionary(grouping: guesses.flatMap { zip($0.clues, $0.word) }, by: \.0).mapValues { Set($0.map(\.1)) }
         let remaining = "abcdefghijklmnopqrstuvwxyz".filter { c in !clues.values.contains { $0.contains(c) } }
         return clues.merging([.unknown: Set(remaining)], uniquingKeysWith: { v, _ in v })
