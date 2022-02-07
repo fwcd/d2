@@ -4,6 +4,7 @@ public struct WordleGame: Game {
     public let name: String = "wordle"
     public let renderFirstBoard: Bool = false
     public let isRealTime: Bool = true
+    public let permitsSinglePlayer: Bool = true
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
         "try": {
             // TODO: Figure out how to disambiguate between multiple
