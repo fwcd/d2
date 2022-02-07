@@ -235,14 +235,14 @@ public class GameCommand<G: Game>: Command {
                 if gameOver, let finalAction = try game.finalAction.flatMap({ try game.actions[$0]?(ActionParameters(state: next, player: author, channelName: channelName)) }) {
                     output.append(.files(finalAction.files))
                 }
-            }
+            } else {
+                if let text = actionResult.text {
+                    output.append(text)
+                }
 
-            if let text = actionResult.text {
-                output.append(text)
-            }
-
-            if !actionResult.files.isEmpty {
-                output.append(.files(actionResult.files))
+                if !actionResult.files.isEmpty {
+                    output.append(.files(actionResult.files))
+                }
             }
         } catch GameError.invalidMove(let msg) {
             output.append(errorText: "Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
