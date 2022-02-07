@@ -1,8 +1,8 @@
 import Utils
 
 /// A protocol that is intended for games with
-/// more than two players where storing each
-/// player in an individual field does not make
+/// a flexible number of players where storing two
+/// players in individual fields does not make
 /// sense.
 public protocol Multiplayer {
     var players: [GamePlayer] { get }

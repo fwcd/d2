@@ -24,6 +24,8 @@ public protocol Game {
     var themeColor: Color? { get }
     /// Whether the roles should be printed in user-facing output.
     var hasPrettyRoles: Bool { get }
+    /// Whther the game can be played by a single player.
+    var permitsSinglePlayer: Bool { get }
     /// The intelligence to be used for automatic players.
     var engine: AnyGameIntelligence<State>? { get }
 
@@ -35,6 +37,7 @@ public extension Game {
     var onlySendHandToCurrentRole: Bool { true }
     var themeColor: Color? { nil }
     var hasPrettyRoles: Bool { false }
+    var permitsSinglePlayer: Bool { false }
     var isRealTime: Bool { false }
     var helpText: String { "No help text found for \(name)" }
     var apiActions: Set<String> { [] }
