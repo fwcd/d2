@@ -10,6 +10,7 @@ public class SolveWordleCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     private var boards: [ChannelID: WordleBoard] = [:]
+    private let ai = WordleIntelligence()
 
     public init() {}
 
@@ -48,6 +49,18 @@ public class SolveWordleCommand: StringCommand {
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
 
-        output.append(board.asRichValue) // TODO
+        output.append(.compound([
+            board.asRichValue,
+            .embed(Embed(
+                title: "Top Picks",
+                description: ai.entropies(on: board)
+                    .reversed()
+                    .prefix(5)
+                    .map { "`\($0.word)`: \($0.entropy) bit(s)" }
+                    .joined(separator: "\n")
+                    .nilIfEmpty
+                    ?? "_none_"
+            ))
+        ]))
     }
 }

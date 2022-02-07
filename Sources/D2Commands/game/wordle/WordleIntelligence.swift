@@ -1,5 +1,8 @@
 import Foundation
+import Logging
 import Utils
+
+fileprivate let log = Logger(label: "D2Commands.WordleIntelligence")
 
 public struct WordleIntelligence: GameIntelligence {
     public init() {}
@@ -11,7 +14,8 @@ public struct WordleIntelligence: GameIntelligence {
         return WordleMove(fromString: word)
     }
 
-    private func entropies(on board: WordleBoard) -> [(word: String, entropy: Double)] {
+    public func entropies(on board: WordleBoard) -> [(word: String, entropy: Double)] {
+        log.info("Computing entropies on board...")
         return Words.wordleAllowed
             .map { (word: $0, entropy: entropy(for: $0, on: board)) }
             .sorted { $0.entropy < $1.entropy }
