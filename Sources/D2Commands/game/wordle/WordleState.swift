@@ -4,7 +4,8 @@ public struct WordleState: GameState, Multiplayer, FinitePossibleMoves {
     public typealias Move = WordleMove
 
     public let players: [GamePlayer]
-    public private(set) var board = Board(solution: Words.wordlePossible.randomElement() ?? "error")
+    private let solution: String = Words.wordlePossible.randomElement() ?? "error"
+    public private(set) var board = Board()
     public private(set) var currentRole: Role = 0
     public private(set) var winner: Role? = nil
 
@@ -19,7 +20,7 @@ public struct WordleState: GameState, Multiplayer, FinitePossibleMoves {
     }
 
     public mutating func perform(move: Move, by role: Role, options: GameMoveOptions) throws {
-        try board.guess(word: move.word)
+        try board.guess(word: move.word, solution: solution)
         if board.isWon {
             winner = role
         }

@@ -1,7 +1,6 @@
 import Utils
 
 public struct WordleBoard: RichValueConvertible {
-    public var solution: String
     public var guesses: [Guess] = []
 
     public var isWon: Bool { guesses.last?.isWon ?? false }
@@ -25,7 +24,7 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
-    public enum Clue: Int {
+    public enum Clue: Int, CaseIterable {
         case unknown = 0
         case nowhere
         case somewhere
@@ -39,9 +38,23 @@ public struct WordleBoard: RichValueConvertible {
             case .here: return ":green_square:"
             }
         }
+
+        var abbreviated: String {
+            switch self {
+            case .unknown: return "u"
+            case .nowhere: return "n"
+            case .somewhere: return "s"
+            case .here: return "h"
+            }
+        }
+
+        init?(fromString s: String) {
+            guard let value = Self.allCases.first(where: { $0.asEmoji == s || $0.abbreviated == s }) else { return nil }
+            self = value
+        }
     }
 
-    public func clues(for word: String) -> [Clue] {
+    public func clues(for word: String, solution: String) -> [Clue] {
         let solutionSet = Set(solution)
 
         return zip(word, solution).map { (guessedLetter, actualLetter) in
@@ -55,11 +68,11 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
-    public mutating func guess(word: String) throws {
+    public mutating func guess(word: String, solution: String) throws {
         guard word.count == solution.count else {
             throw WordleError.invalidLength("Word '\(word)' should have length \(solution.count)")
         }
 
-        guesses.append(Guess(word: word, clues: clues(for: word)))
+        guesses.append(Guess(word: word, clues: clues(for: word, solution: solution)))
     }
 }
