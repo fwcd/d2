@@ -49,6 +49,7 @@ public class SolveWordleCommand: StringCommand {
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
 
+        context.channel?.triggerTyping()
         output.append(.compound([
             board.asRichValue,
             .embed(Embed(
