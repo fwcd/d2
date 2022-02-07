@@ -12,9 +12,9 @@ public struct WordleGame: Game {
             guard let role = $0.state.rolesOf(player: $0.player).first else { throw WordleError.playerHasNoRole }
             let next = try $0.state.childState(after: WordleMove(fromString: $0.args), by: role, options: .commit)
             let alphabet = "abcdefghijklmnopqrstuvwxyz"
-            return ActionResult(nextState: next, text: """
-                \(next.board.clues.map { "\($0.key.asEmoji): \(String($0.value.sorted(by: <)))" }.joined(separator: "\n"))
-                """)
+            return ActionResult(nextState: next, text: next.board.clues
+                .sorted { $0.key.rawValue < $1.key.rawValue }
+                .map { "\($0.key.asEmoji): \(String($0.value.sorted(by: <)))" }.joined(separator: "\n"))
         }
     ]
     public let helpText: String = """

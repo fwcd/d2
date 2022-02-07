@@ -10,8 +10,8 @@ public struct WordleBoard: RichValueConvertible {
     }
     public var clues: [Clue: Set<Character>] {
         let clues = Dictionary(grouping: guesses.flatMap { zip($0.clues, $0.word) }, by: \.0).mapValues { Set($0.map(\.1)) }
-        let remaining = "abcdefghijklmnopqrstuvwxyz".filter { c in clues.values.contains { $0.contains(c) } }
-        return clues.merging([Clue.nowhere: Set(remaining)], uniquingKeysWith: { v, _ in v })
+        let remaining = "abcdefghijklmnopqrstuvwxyz".filter { c in !clues.values.contains { $0.contains(c) } }
+        return clues.merging([.unknown: Set(remaining)], uniquingKeysWith: { v, _ in v })
     }
 
     public struct Guess {
@@ -25,13 +25,15 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
-    public enum Clue {
+    public enum Clue: Int {
+        case unknown = 0
         case nowhere
         case somewhere
         case here
 
         var asEmoji: String {
             switch self {
+            case .unknown: return ":black_large_square:"
             case .nowhere: return ":white_large_square:"
             case .somewhere: return ":yellow_square:"
             case .here: return ":green_square:"
