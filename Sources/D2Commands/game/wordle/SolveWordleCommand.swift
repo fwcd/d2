@@ -30,18 +30,30 @@ public class SolveWordleCommand: StringCommand {
             ``` e.g. 'crane nnnsn' or 'where nnhns'
             """)
 
+        subscribe(to: channelId, context: context)
+    }
+
+    private func subscribe(to channelId: ChannelID, context: CommandContext) {
         boards[channelId] = WordleBoard()
-        context.subscribeToChannel()
+        context.subscriptions.subscribe(to: channelId)
+    }
+
+    private func unsubscribe(from channelId: ChannelID, context: CommandContext) {
+        boards[channelId] = nil
+        context.subscriptions.unsubscribe(from: channelId)
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
-        if content == "cancel" {
-            output.append("Cancelled wordle solver on this channel")
-            context.unsubscribeFromChannel()
+        guard let channelId = context.channel?.id else {
             return
         }
-        guard let channelId = context.channel?.id, var board = boards[channelId] else {
-            context.unsubscribeFromChannel()
+        if content == "cancel" {
+            output.append("Cancelled wordle solver on this channel")
+            unsubscribe(from: channelId, context: context)
+            return
+        }
+        guard var board = boards[channelId] else {
+            unsubscribe(from: channelId, context: context)
             return
         }
         guard let parsedArgs = argsPattern.firstGroups(in: content), parsedArgs[1].count == parsedArgs[2].count else {
@@ -63,19 +75,19 @@ public class SolveWordleCommand: StringCommand {
             embed = Embed(
                 title: "Congrats, you won!"
             )
-            context.unsubscribeFromChannel()
+            unsubscribe(from: channelId, context: context)
         } else if possibleSolutions.count == 0 {
             embed = Embed(
                 title: "Impossible",
                 description: "There are no solutions!"
             )
-            context.unsubscribeFromChannel()
+            unsubscribe(from: channelId, context: context)
         } else if possibleSolutions.count == 1 {
             embed = Embed(
                 title: "Solution",
                 description: possibleSolutions[0]
             )
-            context.unsubscribeFromChannel()
+            unsubscribe(from: channelId, context: context)
         } else {
             embed = Embed(
                 title: "Top Picks",
