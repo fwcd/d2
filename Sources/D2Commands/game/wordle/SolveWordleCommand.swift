@@ -35,7 +35,7 @@ public class SolveWordleCommand: StringCommand {
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
-        guard let channelId = context.channel?.id, var board = boards[channelId] else {
+        guard content != "cancel", let channelId = context.channel?.id, var board = boards[channelId] else {
             context.unsubscribeFromChannel()
             return
         }
@@ -50,18 +50,37 @@ public class SolveWordleCommand: StringCommand {
         boards[channelId] = board
 
         context.channel?.triggerTyping()
-        output.append(.compound([
-            board.asRichValue,
-            .embed(Embed(
+
+        let possibleSolutions = board.possibleSolutions
+        let embed: Embed
+
+        if board.isWon {
+            embed = Embed(
+                title: "Congrats, you won!"
+            )
+            context.unsubscribeFromChannel()
+        } else if possibleSolutions.count == 1 {
+            embed = Embed(
+                title: "Solution",
+                description: possibleSolutions[0]
+            )
+            context.unsubscribeFromChannel()
+        } else {
+            embed = Embed(
                 title: "Top Picks",
                 description: ai.entropies(on: board)
                     .reversed()
                     .prefix(5)
-                    .map { "`\($0.word)`: \($0.entropy) bit(s)" }
+                    .map { "`\($0.word)`: \($0.entropy) bit(s)\($0.isPossibleSolution && possibleSolutions.count < 10 ? " (possible solution)" : "")" }
                     .joined(separator: "\n")
                     .nilIfEmpty
                     ?? "_none_"
-            ))
+            )
+        }
+
+        output.append(.compound([
+            board.asRichValue,
+            .embed(embed)
         ]))
     }
 }

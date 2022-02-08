@@ -14,9 +14,9 @@ public struct WordleIntelligence: GameIntelligence {
         return WordleMove(fromString: word)
     }
 
-    public func entropies(on board: WordleBoard) -> [(word: String, entropy: Double)] {
+    public func entropies(on board: WordleBoard) -> [(word: String, entropy: Double, isPossibleSolution: Bool)] {
         log.info("Computing entropies on board...")
-        let possibleSolutions = board.possibleSolutions
+        let possibleSolutions = Set(board.possibleSolutions)
         var lastProgress = 0
         return Words.wordleAllowed
             .enumerated()
@@ -26,15 +26,19 @@ public struct WordleIntelligence: GameIntelligence {
                     log.info("Progress: \(progress)%")
                     lastProgress = progress
                 }
-                return (word: word, entropy: entropy(for: word, on: board, possibleSolutions: possibleSolutions))
+                return (
+                    word: word,
+                    entropy: entropy(for: word, on: board, possibleSolutions: possibleSolutions),
+                    isPossibleSolution: possibleSolutions.contains(word)
+                )
             }
-            .sorted { $0.entropy < $1.entropy }
+            .sorted(by: ascendingComparator { $0.entropy + ($0.isPossibleSolution ? 0.5 : 0) })
     }
 
     /// Computes the expected number of bits of information we
     /// would get from the given guess.
     /// Great explanation: https://www.youtube.com/watch?v=v68zYyaEmEA
-    private func entropy(for word: String, on board: WordleBoard, possibleSolutions: [String]) -> Double {
+    private func entropy(for word: String, on board: WordleBoard, possibleSolutions: Set<String>) -> Double {
         let possibilities = [WordleBoard.Clues: [String]](grouping: possibleSolutions, by: { board.clues(for: word, solution: $0) })
         guard let dist = CustomDiscreteDistribution<WordleBoard.Clues>(normalizing: Array(possibilities.mapValues(\.count))) else { return 0 }
         return dist.entropy
