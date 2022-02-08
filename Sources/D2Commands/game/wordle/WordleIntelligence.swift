@@ -40,7 +40,7 @@ public struct WordleIntelligence: GameIntelligence {
     /// Great explanation: https://www.youtube.com/watch?v=v68zYyaEmEA
     private func entropy(for word: String, on board: WordleBoard, possibleSolutions: Set<String>) -> Double {
         let possibilities = [WordleBoard.Clues: [String]](grouping: possibleSolutions, by: { board.clues(for: word, solution: $0) })
-        guard let dist = CustomDiscreteDistribution<WordleBoard.Clues>(normalizing: Array(possibilities.mapValues(\.count))) else { return 0 }
+        guard let dist = CustomDiscreteDistribution<WordleBoard.Clues>(possibilities.map { ($0.key, Double($0.value.count) / Double(possibleSolutions.count)) }) else { return 0 }
         return dist.entropy
     }
 }
