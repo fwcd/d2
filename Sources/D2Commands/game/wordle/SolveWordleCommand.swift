@@ -35,7 +35,12 @@ public class SolveWordleCommand: StringCommand {
     }
 
     public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
-        guard content != "cancel", let channelId = context.channel?.id, var board = boards[channelId] else {
+        if content == "cancel" {
+            output.append("Cancelled wordle solver on this channel")
+            context.unsubscribeFromChannel()
+            return
+        }
+        guard let channelId = context.channel?.id, var board = boards[channelId] else {
             context.unsubscribeFromChannel()
             return
         }
@@ -57,6 +62,12 @@ public class SolveWordleCommand: StringCommand {
         if board.isWon {
             embed = Embed(
                 title: "Congrats, you won!"
+            )
+            context.unsubscribeFromChannel()
+        } else if possibleSolutions.count == 0 {
+            embed = Embed(
+                title: "Impossible",
+                description: "There are no solutions!"
             )
             context.unsubscribeFromChannel()
         } else if possibleSolutions.count == 1 {
