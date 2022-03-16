@@ -34,7 +34,7 @@ public protocol D2ScriptASTVisitor {
 }
 
 public extension D2ScriptASTVisitor where Self.VisitResult == Void {
-    func visit(node: D2ScriptASTNode) -> VisitResult {}
+    func visit(node: D2ScriptASTNode) -> Void {}
 }
 
 public extension D2ScriptASTVisitor {
