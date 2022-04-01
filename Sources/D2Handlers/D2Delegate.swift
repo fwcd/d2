@@ -22,12 +22,12 @@ public class D2Delegate: MessageDelegate {
     private let subscriptionManager: SubscriptionManager
     private let permissionManager: PermissionManager
 
-    private var messageRewriters: [MessageRewriter]
-    private var messageHandlers: [MessageHandler]
-    private var reactionHandlers: [ReactionHandler]
-    private var presenceHandlers: [PresenceHandler]
-    private var channelHandlers: [ChannelHandler]
-    private var interactionHandlers: [InteractionHandler]
+    private var messageRewriters: [any MessageRewriter]
+    private var messageHandlers: [any MessageHandler]
+    private var reactionHandlers: [any ReactionHandler]
+    private var presenceHandlers: [any PresenceHandler]
+    private var channelHandlers: [any ChannelHandler]
+    private var interactionHandlers: [any InteractionHandler]
 
     public init(
         withPrefix commandPrefix: String,
