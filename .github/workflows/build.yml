@@ -1,0 +1,29 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-12']
+        swift: ['5.6']
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install system dependencies
+      run: |
+        case "$RUNNER_OS" in
+          Linux) sudo apt-get update && sudo apt-get install libcairo2-dev libsqlite3-dev libtesseract-dev libleptonica-dev libgraphviz-dev;;
+          macOS) brew tap vapor/tap && brew install ctls pkg-config cairo graphviz;;
+          *)     echo "Don't know how to install dependencies for OS '$RUNNER_OS'" && exit 1;;
+        esac
+    - name: Install Swift
+      uses: fwal/setup-swift@v1
+      with:
+        swift-version: ${{ matrix.swift }}
+    - name: Build
+      run: swift build
+    - name: Test
+      run: swift test

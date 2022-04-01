@@ -1,7 +1,6 @@
 # D2
 
-[![Linux](https://github.com/fwcd/d2/actions/workflows/linux.yml/badge.svg)](https://github.com/fwcd/d2/actions/workflows/linux.yml)
-[![macOS](https://github.com/fwcd/d2/actions/workflows/mac.yml/badge.svg)](https://github.com/fwcd/d2/actions/workflows/mac.yml)
+[![Build](https://github.com/fwcd/d2/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/d2/actions/workflows/build.yml)
 
 General-purpose assistant for Discord, IRC and Telegram featuring more than 300 commands, including:
 
