@@ -29,7 +29,7 @@ public struct MDBQuery {
         self.url = url
     }
 
-    public func start() -> Promise<[MDBModule], Error> {
+    public func start() -> Promise<[MDBModule], any Error> {
         Promise { then in
             log.info("Querying \(url)")
 

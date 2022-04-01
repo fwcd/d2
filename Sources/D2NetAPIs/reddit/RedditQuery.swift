@@ -9,7 +9,7 @@ public struct RedditQuery {
         self.maxResults = maxResults
     }
 
-    public func perform() -> Promise<RedditThing<RedditListing<RedditLink>>, Error> {
+    public func perform() -> Promise<RedditThing<RedditListing<RedditLink>>, any Error> {
         .catchingThen {
             try HTTPRequest(
                 host: "www.reddit.com",

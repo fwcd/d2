@@ -8,7 +8,7 @@ public struct PokedexQuery {
         self.limit = limit
     }
 
-    public func perform() -> Promise<Pokedex, Error> {
+    public func perform() -> Promise<Pokedex, any Error> {
         if let pokedex = PokedexQuery.cached {
             return Promise(.success(pokedex))
         } else {

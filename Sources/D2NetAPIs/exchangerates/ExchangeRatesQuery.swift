@@ -7,7 +7,7 @@ public struct ExchangeRatesQuery {
         self.base = base
     }
 
-    public func perform() -> Promise<ExchangeRates, Error> {
+    public func perform() -> Promise<ExchangeRates, any Error> {
         Promise.catching { try HTTPRequest(host: "api.exchangeratesapi.io", path: "/latest") }
             .then { $0.fetchJSONAsync(as: ExchangeRates.self) }
     }

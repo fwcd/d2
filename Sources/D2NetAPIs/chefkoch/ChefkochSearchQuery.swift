@@ -37,7 +37,7 @@ public struct ChefkochSearchQuery {
         case dailyShuffle = 8
     }
 
-    public func perform() -> Promise<ChefkochSearchResults, Error> {
+    public func perform() -> Promise<ChefkochSearchResults, any Error> {
         Promise.catching { try HTTPRequest(
             host: "api.chefkoch.de",
             path: "/v2/recipes",

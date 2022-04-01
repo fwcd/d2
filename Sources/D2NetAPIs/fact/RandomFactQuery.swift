@@ -7,7 +7,7 @@ public struct RandomFactQuery {
         self.language = language
     }
 
-    public func perform() -> Promise<Fact, Error> {
+    public func perform() -> Promise<Fact, any Error> {
         Promise.catching { try HTTPRequest(host: "uselessfacts.jsph.pl", path: "/random.json", query: language.map { ["language": $0] } ?? [:]) }
             .then { $0.fetchJSONAsync(as: Fact.self) }
     }

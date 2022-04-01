@@ -30,7 +30,7 @@ struct IRCMessageClient: DefaultMessageClient {
             .joined(separator: ", ")
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, Error> {
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, any Error> {
         log.debug("Sending message '\(message.content)'")
 
         var text = [message.content, message.embed.map(flatten(embed:))]

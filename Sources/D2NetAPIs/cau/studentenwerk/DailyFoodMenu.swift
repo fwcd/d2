@@ -21,7 +21,7 @@ public class DailyFoodMenu {
         )
     }
 
-    public func fetchMealsAsync() -> Promise<[Meal], Error> {
+    public func fetchMealsAsync() -> Promise<[Meal], any Error> {
         request.fetchHTMLAsync()
             .mapCatching { document in
                 guard let menu = try document.getElementsByClass("menuPrint").first() else { throw FoodMenuError.noMenuPrintAvailable }

@@ -7,7 +7,7 @@ public struct MinecraftDynmapConfigurationQuery {
         self.host = host
     }
 
-    public func perform() -> Promise<MinecraftDynmapConfiguration, Error> {
+    public func perform() -> Promise<MinecraftDynmapConfiguration, any Error> {
         Promise.catchingThen {
             let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/configuration")
             return request.fetchJSONAsync(as: MinecraftDynmapConfiguration.self)

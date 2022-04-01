@@ -9,7 +9,7 @@ public struct HoogleQuery {
         self.count = count
     }
 
-    public func perform() -> Promise<[HoogleResult], Error> {
+    public func perform() -> Promise<[HoogleResult], any Error> {
         Promise.catching { try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
             "mode": "json",
             "hoogle": term,

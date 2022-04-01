@@ -71,7 +71,7 @@ public struct SpamHandler: MessageHandler {
     }
 
     @discardableResult
-    private func add(role: RoleID, to user: UserID, on guild: Guild, client: any MessageClient) -> Promise<Void, Error> {
+    private func add(role: RoleID, to user: UserID, on guild: Guild, client: any MessageClient) -> Promise<Void, any Error> {
         client.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming").peekListen {
             if case .success(false) = $0 {
                 log.warning("Could not add role \(role) to spammer \(user)")
@@ -80,7 +80,7 @@ public struct SpamHandler: MessageHandler {
     }
 
     @discardableResult
-    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: any MessageClient) -> Promise<Void, Error> {
+    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: any MessageClient) -> Promise<Void, any Error> {
         var remainingRoles = roles
         guard let role = remainingRoles.popLast() else {
             return Promise(.success(()))

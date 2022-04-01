@@ -15,7 +15,7 @@ public struct GiphyResults: Codable {
         // The direct GIF link
         public var downloadUrl: URL? { URL(string: "https://media.giphy.com/media/\(id)/giphy.gif") }
 
-        public func download() -> Promise<Data, Error> {
+        public func download() -> Promise<Data, any Error> {
             Promise.catchingThen {
                 guard let downloadUrl = downloadUrl else { throw NetworkError.missingURL }
                 return HTTPRequest(url: downloadUrl).runAsync()

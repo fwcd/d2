@@ -67,11 +67,11 @@ public class PartyGameDatabase {
         )
     }
 
-    public func rebuild() -> Promise<Void, Error> {
+    public func rebuild() -> Promise<Void, any Error> {
         sequence(promises: [rebuildWyrQuestions, rebuildNhieStatements]).void()
     }
 
-    private func rebuildWyrQuestions() -> Promise<Void, Error> {
+    private func rebuildWyrQuestions() -> Promise<Void, any Error> {
         fetchWyrQuestions()
             .then { questions in
                 Promise.catching {
@@ -89,7 +89,7 @@ public class PartyGameDatabase {
             }
     }
 
-    private func rebuildNhieStatements() -> Promise<Void, Error> {
+    private func rebuildNhieStatements() -> Promise<Void, any Error> {
         fetchNhieStatements()
             .then { statements in
                 Promise.catching {
@@ -105,23 +105,23 @@ public class PartyGameDatabase {
             }
     }
 
-    private func fetchWyrQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+    private func fetchWyrQuestions() -> Promise<[WouldYouRatherQuestion], any Error> {
         sequence(promises: [fetchRRRatherQuestions, fetchEitherIOQuestions]).map { $0.flatMap { $0 } }
     }
 
-    private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+    private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], any Error> {
         sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in
             { EitherIOQuery(term: String(c), maxOffset: 1500).perform() }
         }).map { $0.flatMap { $0 } }
     }
 
-    private func fetchRRRatherQuestions() -> Promise<[WouldYouRatherQuestion], Error> {
+    private func fetchRRRatherQuestions() -> Promise<[WouldYouRatherQuestion], any Error> {
         sequence(promises: ["conversation-starters", "school", "dating"].map { category in
             { RRRatherQuery(category: category).perform() }
         }).map { $0.flatMap { $0 } }
     }
 
-    private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], Error> {
+    private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], any Error> {
         sequence(promises: [
             { NNNEverQuery(maxPages: 40).perform() },
             { RandomWordGeneratorNhieQuery().perform() },

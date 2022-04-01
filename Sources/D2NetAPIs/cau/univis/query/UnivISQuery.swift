@@ -33,7 +33,7 @@ public struct UnivISQuery {
         self.url = url
     }
 
-    public func start() -> Promise<UnivISOutputNode, Error> {
+    public func start() -> Promise<UnivISOutputNode, any Error> {
         Promise { then in
             log.info("Querying \(url)")
 

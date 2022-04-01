@@ -30,7 +30,7 @@ public class RecipeCommand: StringCommand {
                 guard let recipe = $0.results.first?.recipe else { throw RecipeError.noResults }
                 return ChefkochRecipeQuery(id: recipe.id).perform()
             }
-            .then { (recipe: ChefkochRecipe) -> Promise<(ChefkochRecipe, URL?), Error> in
+            .then { (recipe: ChefkochRecipe) -> Promise<(ChefkochRecipe, URL?), any Error> in
                 if let imageId = recipe.previewImageId {
                     return ChefkochImageQuery(recipeId: recipe.id, imageId: imageId)
                         .perform()

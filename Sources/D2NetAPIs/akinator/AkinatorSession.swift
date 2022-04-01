@@ -41,7 +41,7 @@ public struct AkinatorSession {
         let frontaddr: String
     }
 
-    public static func create() -> Promise<(AkinatorSession, AkinatorQuestion), Error> {
+    public static func create() -> Promise<(AkinatorSession, AkinatorQuestion), any Error> {
         let time = Int64(Date().timeIntervalSince1970 * 1000) + 1
         return AkinatorServersQuery().perform()
             .thenCatching {
@@ -87,7 +87,7 @@ public struct AkinatorSession {
             }
     }
 
-    public func answer(with answer: AkinatorAnswer) -> Promise<AkinatorQuestion, Error> {
+    public func answer(with answer: AkinatorAnswer) -> Promise<AkinatorQuestion, any Error> {
         Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/answer", query: [
             "session": session,
             "signature": signature,
@@ -102,7 +102,7 @@ public struct AkinatorSession {
             }
     }
 
-    public func guess() -> Promise<[AkinatorGuess], Error> {
+    public func guess() -> Promise<[AkinatorGuess], any Error> {
         Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/list", query: [
             "session": session,
             "signature": signature,
@@ -112,7 +112,7 @@ public struct AkinatorSession {
             .mapCatching { try $0.parameters.characters.map { try $0.asGuess() } }
     }
 
-    private static func getApiKey() -> Promise<ApiKey, Error> {
+    private static func getApiKey() -> Promise<ApiKey, any Error> {
         Promise.catching { try HTTPRequest(host: "en.akinator.com", path: "/game", headers: headers) }
             .then { $0.fetchUTF8Async() }
             .mapCatching {

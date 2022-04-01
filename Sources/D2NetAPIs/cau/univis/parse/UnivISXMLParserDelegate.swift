@@ -8,7 +8,7 @@ import Utils
 fileprivate let log = Logger(label: "D2NetAPIs.UnivISXMLParserDelegate")
 
 class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
-    let then: (Result<UnivISOutputNode, Error>) -> Void
+    let then: (Result<UnivISOutputNode, any Error>) -> Void
     let registeredBuilderFactories: [String: () -> UnivISObjectNodeXMLBuilder] = [
         "Event": { UnivISEventXMLBuilder() },
         "Room": { UnivISRoomXMLBuilder() },
@@ -22,7 +22,7 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
     var currentCharacters = ""
     var hasErrored = false
 
-    init(then: @escaping (Result<UnivISOutputNode, Error>) -> Void) {
+    init(then: @escaping (Result<UnivISOutputNode, any Error>) -> Void) {
         self.then = then
     }
 
@@ -83,14 +83,14 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+    func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         if !hasErrored {
             then(.failure(parseError))
             hasErrored = true
         }
     }
 
-    func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+    func parser(_ parser: XMLParser, validationErrorOccurred validationError: any Error) {
         if !hasErrored {
             then(.failure(validationError))
             hasErrored = true

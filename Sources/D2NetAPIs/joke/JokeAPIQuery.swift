@@ -9,7 +9,7 @@ public struct JokeAPIQuery {
         self.type = type
     }
 
-    public func perform() -> Promise<Joke, Error> {
+    public func perform() -> Promise<Joke, any Error> {
         let categoryEndpoint = categories.nilIfEmpty?.map(\.rawValue).joined(separator: ",") ?? "Any"
         return Promise
             .catching {

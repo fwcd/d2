@@ -16,7 +16,7 @@ public class XkcdCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        let comicPromise: Promise<XkcdComic, Error>
+        let comicPromise: Promise<XkcdComic, any Error>
 
         if input == "random" {
             comicPromise = XkcdQuery().fetchRandom()

@@ -10,7 +10,7 @@ public struct WikipediaPageQuery {
             .replacingOccurrences(of: " ", with: "_")
     }
 
-    public func perform() -> Promise<WikipediaPage, Error> {
+    public func perform() -> Promise<WikipediaPage, any Error> {
         Promise.catching { try HTTPRequest(
             host: "en.wikipedia.org",
             path: "/api/rest_v1/page/summary/\(page)"

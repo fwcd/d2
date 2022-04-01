@@ -20,7 +20,7 @@ public class ThesaurizeCommand: StringCommand {
         }
 
         let words = wordPattern.allGroups(in: input).map { $0[0] }
-        let mappingsPromise: Promise<[String: Set<String>], Error> = sequence(promises: Set(words)
+        let mappingsPromise: Promise<[String: Set<String>], any Error> = sequence(promises: Set(words)
             .filter { $0.allSatisfy { $0.isLetter } }
             .map { term in { OpenThesaurusQuery(term: term).perform()
                 .map { (term, self.pickSynonyms(for: term, from: $0)) } } })

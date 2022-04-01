@@ -15,7 +15,7 @@ public struct RandomWordGeneratorNhieQuery {
 
     public init() {}
 
-    public func perform() -> Promise<[NeverHaveIEverStatement], Error> {
+    public func perform() -> Promise<[NeverHaveIEverStatement], any Error> {
         Promise.catching { try HTTPRequest(host: "randomwordgenerator.com", path: "/json/question-never-have-i-ever.json") }
             .then { $0.fetchJSONAsync(as: Response.self) }
             .map {

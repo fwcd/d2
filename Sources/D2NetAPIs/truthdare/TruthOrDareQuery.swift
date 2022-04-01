@@ -19,7 +19,7 @@ public struct TruthOrDareQuery {
         case dare
     }
 
-    public func perform() -> Promise<TruthOrDare, Error> {
+    public func perform() -> Promise<TruthOrDare, any Error> {
         Promise.catching { try HTTPRequest(host: "randommer.io", path: "/truth-dare-generator", method: "POST", query: [
             "category": category.rawValue,
             "type": type.rawValue

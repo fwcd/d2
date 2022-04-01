@@ -17,7 +17,7 @@ public struct AdventOfCodeLeaderboardQuery {
         self.ownerId = ownerId
     }
 
-    public func perform() -> Promise<AdventOfCodeLeaderboard, Error> {
+    public func perform() -> Promise<AdventOfCodeLeaderboard, any Error> {
         if let ts = Self.cachedTimestamp, -ts.timeIntervalSinceNow <= Self.cacheRefreshDelay, let board = Self.cachedBoard {
             log.info("Using cached AoC leaderboard")
 

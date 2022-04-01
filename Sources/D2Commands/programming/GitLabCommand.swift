@@ -136,15 +136,15 @@ public class GitLabCommand: StringCommand {
         return projectId
     }
 
-    private func fetchPipelines() -> Promise<[GitLabPipeline], Error> {
+    private func fetchPipelines() -> Promise<[GitLabPipeline], any Error> {
         Promise.catchingThen { try remoteGitLab().fetchPipelines(projectId: try projectId()) }
     }
 
-    private func fetchJobs() -> Promise<[GitLabJob], Error> {
+    private func fetchJobs() -> Promise<[GitLabJob], any Error> {
         Promise.catchingThen { try remoteGitLab().fetchJobs(projectId: try projectId()) }
     }
 
-    private func fetchMostRecentPipelineJobsAndLogs() -> Promise<[(GitLabJob, String)], Error> {
+    private func fetchMostRecentPipelineJobsAndLogs() -> Promise<[(GitLabJob, String)], any Error> {
         fetchJobs()
             .map { (jobs: [GitLabJob]) -> [GitLabJob] in
                 let mostRecentPipelineId = jobs.compactMap { $0.pipeline?.id }.max()

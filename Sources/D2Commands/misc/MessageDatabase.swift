@@ -161,7 +161,7 @@ public class MessageDatabase: MarkovPredictor {
         try db.prepare(sql, values)
     }
 
-    private func insertMessages(with client: any MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, Error> {
+    private func insertMessages(with client: any MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, any Error> {
         client.getMessages(for: id, limit: client.messageFetchLimit ?? 20, selection: selection)
             .mapCatching { messages -> MessageID? in
                 guard !messages.isEmpty else { return nil }
@@ -187,7 +187,7 @@ public class MessageDatabase: MarkovPredictor {
             }
     }
 
-    public func rebuildMessages(with client: any MessageClient, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, Error> {
+    public func rebuildMessages(with client: any MessageClient, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, any Error> {
         guard let guild = client.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
 
         do {
@@ -195,7 +195,7 @@ public class MessageDatabase: MarkovPredictor {
             try db.run(messages.delete())
 
             let guildChannels = debugMode ? guild.channels.prefix(10).compactMap { $0 } : Array(guild.channels)
-            let promises: [Promise<Void, Error>] = guildChannels.map { ch in
+            let promises: [Promise<Void, any Error>] = guildChannels.map { ch in
                 client.isGuildTextChannel(ch.key).then {
                     if $0 {
                         log.info("Fetching messages from channel \(ch.value.name)")

@@ -12,12 +12,12 @@ public struct InteractiveTextChannel {
     }
 
     @discardableResult
-    public func send(_ message: Message) -> Promise<Message?, Error> {
+    public func send(_ message: Message) -> Promise<Message?, any Error> {
         client.sendMessage(message, to: id)
     }
 
     @discardableResult
-    public func triggerTyping() -> Promise<Bool, Error> {
+    public func triggerTyping() -> Promise<Bool, any Error> {
         client.triggerTyping(on: id)
     }
 }

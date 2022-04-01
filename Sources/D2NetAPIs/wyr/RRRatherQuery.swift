@@ -8,7 +8,7 @@ public struct RRRatherQuery {
         self.category = category
     }
 
-    public func perform() -> Promise<[WouldYouRatherQuestion], Error> {
+    public func perform() -> Promise<[WouldYouRatherQuestion], any Error> {
         Promise.catching { try HTTPRequest(host: "www.rrrather.com", path: "/\(category)") }
             .then { $0.fetchHTMLAsync() }
             .mapCatching { document in

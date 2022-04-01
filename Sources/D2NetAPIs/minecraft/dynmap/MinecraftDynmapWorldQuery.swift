@@ -10,7 +10,7 @@ public struct MinecraftDynmapWorldQuery {
         self.world = world
     }
 
-    public func perform() -> Promise<MinecraftDynmapWorld, Error> {
+    public func perform() -> Promise<MinecraftDynmapWorld, any Error> {
         let timestamp = Int(Date().timeIntervalSince1970)
         return Promise.catching { try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/world/\(world)/\(timestamp)") }
             .then { $0.fetchJSONAsync(as: MinecraftDynmapWorld.self) }

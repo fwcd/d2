@@ -9,7 +9,7 @@ public struct GitHubCommitsQuery {
         self.repo = repo
     }
 
-    public func perform() -> Promise<[GitHubCommit], Error> {
+    public func perform() -> Promise<[GitHubCommit], any Error> {
         Promise.catching { try HTTPRequest(host: "api.github.com", path: "/repos/\(user)/\(repo)/commits") }
             .then { $0.fetchJSONAsync(as: [GitHubCommit].self) }
     }

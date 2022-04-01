@@ -3,7 +3,7 @@ import Utils
 public struct PickupLineGenQuery: PickupLineQuery {
     public init() {}
 
-    public func perform() -> Promise<PickupLine, Error> {
+    public func perform() -> Promise<PickupLine, any Error> {
         Promise.catching { try HTTPRequest(scheme: "http", host: "www.pickuplinegen.com", path: "/") }
             .then { $0.fetchHTMLAsync() }
             .mapCatching { doc in

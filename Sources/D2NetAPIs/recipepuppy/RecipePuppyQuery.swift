@@ -15,7 +15,7 @@ public struct RecipePuppyQuery {
         self.page = page
     }
 
-    public func perform() -> Promise<RecipePuppyResponse, Error> {
+    public func perform() -> Promise<RecipePuppyResponse, any Error> {
         Promise.catching {
             try HTTPRequest(
                 scheme: "http",

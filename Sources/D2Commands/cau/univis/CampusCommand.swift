@@ -27,7 +27,7 @@ public class CampusCommand: StringCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         Promise.catching { try UnivISQuery(search: .rooms, params: [.name: input]) }
             .then { $0.start() }
-            .thenCatching { (queryOutput: UnivISOutputNode) throws -> Promise<RichValue, Error> in
+            .thenCatching { (queryOutput: UnivISOutputNode) throws -> Promise<RichValue, any Error> in
                 // Successfully received and parsed UnivIS query output
                 guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
                     throw CampusCommandError.noRoomFound

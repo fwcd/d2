@@ -61,7 +61,7 @@ extension Message {
 
 extension Message.Attachment {
     /// Downloads the attachment asynchronously.
-    public func download() -> Promise<Data, Error> {
+    public func download() -> Promise<Data, any Error> {
         Promise.catchingThen {
             guard let url = url else { throw NetworkError.missingURL }
             return HTTPRequest(url: url).runAsync()

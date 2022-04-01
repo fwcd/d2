@@ -6,7 +6,7 @@ import Utils
 struct AkinatorServersQuery {
     init() {}
 
-    func perform() -> Promise<AkinatorServers, Error> {
+    func perform() -> Promise<AkinatorServers, any Error> {
         Promise.catching { try HTTPRequest(
             host: "global3.akinator.com",
             path: "/ws/instances_v2.php",

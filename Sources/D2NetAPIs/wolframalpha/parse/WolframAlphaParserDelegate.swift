@@ -7,7 +7,7 @@ import Logging
 fileprivate let log = Logger(label: "D2NetAPIs.WolframAlphaParserDelegate")
 
 class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
-    let then: (Result<WolframAlphaOutput, Error>) -> Void
+    let then: (Result<WolframAlphaOutput, any Error>) -> Void
 
     // Current parser state
     private var result = WolframAlphaOutput()
@@ -22,7 +22,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
     private var currentCharacters = ""
     private var hasErrored = false
 
-    init(then: @escaping (Result<WolframAlphaOutput, Error>) -> Void) {
+    init(then: @escaping (Result<WolframAlphaOutput, any Error>) -> Void) {
         self.then = then
     }
 
@@ -105,7 +105,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
         currentCharacters = ""
     }
 
-    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+    func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         log.warning("\(parseError)")
         if !hasErrored {
             then(.failure(parseError))
@@ -113,7 +113,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+    func parser(_ parser: XMLParser, validationErrorOccurred validationError: any Error) {
         log.warning("\(validationError)")
         if !hasErrored {
             then(.failure(validationError))

@@ -9,7 +9,7 @@ public struct GiphySearchQuery {
         self.limit = limit
     }
 
-    public func perform() -> Promise<GiphyResults, Error> {
+    public func perform() -> Promise<GiphyResults, any Error> {
         Promise.catching { () -> HTTPRequest in
             guard let key = storedNetApiKeys?.giphy else { throw NetApiError.missingApiKey("No giphy key provided") }
             return try HTTPRequest(host: "api.giphy.com", path: "/v1/gifs/search", query: [

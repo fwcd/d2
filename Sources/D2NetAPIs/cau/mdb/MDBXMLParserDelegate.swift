@@ -8,7 +8,7 @@ import Utils
 fileprivate let htmlParagraphPattern = try! Regex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")
 
 class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
-    private let then: (Result<[MDBModule], Error>) -> Void
+    private let then: (Result<[MDBModule], any Error>) -> Void
 
     private var modules = [MDBModule]()
 
@@ -22,7 +22,7 @@ class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
     private var currentCharacters = ""
     private var hasErrored = false
 
-    public init(then: @escaping (Result<[MDBModule], Error>) -> Void) {
+    public init(then: @escaping (Result<[MDBModule], any Error>) -> Void) {
         self.then = then
     }
 
@@ -108,14 +108,14 @@ class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    public func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+    public func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         if !hasErrored {
             then(.failure(parseError))
             hasErrored = true
         }
     }
 
-    public func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+    public func parser(_ parser: XMLParser, validationErrorOccurred validationError: any Error) {
         if !hasErrored {
             then(.failure(validationError))
             hasErrored = true

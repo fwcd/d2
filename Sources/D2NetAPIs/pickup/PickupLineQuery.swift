@@ -1,5 +1,5 @@
 import Utils
 
 public protocol PickupLineQuery {
-    func perform() -> Promise<PickupLine, Error>
+    func perform() -> Promise<PickupLine, any Error>
 }

@@ -15,7 +15,7 @@ public struct MediaWikiParseQuery {
         self.section = section
     }
 
-    public func perform() -> Promise<MediaWikiParse, Error> {
+    public func perform() -> Promise<MediaWikiParse, any Error> {
         var query = [
             "action": "parse",
             "page": page,

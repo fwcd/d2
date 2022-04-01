@@ -10,7 +10,7 @@ public struct MessageWriter {
 
     public init() {}
 
-    public func write(value: RichValue) -> Promise<Message, Error> {
+    public func write(value: RichValue) -> Promise<Message, any Error> {
         switch value {
             case .none:
                 return Promise(Message(content: ""))

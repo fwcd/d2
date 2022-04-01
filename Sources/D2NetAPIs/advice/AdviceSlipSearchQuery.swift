@@ -7,7 +7,7 @@ public struct AdviceSlipSearchQuery {
         self.searchTerm = searchTerm
     }
 
-    public func perform() -> Promise<AdviceSlipSearchResults, Error> {
+    public func perform() -> Promise<AdviceSlipSearchResults, any Error> {
         Promise.catchingThen {
             let request = try HTTPRequest(host: "api.adviceslip.com", path: "/advice/search/\(searchTerm)")
             return request.fetchJSONAsync(as: AdviceSlipSearchResults.self)

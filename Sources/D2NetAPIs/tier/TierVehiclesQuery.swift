@@ -9,7 +9,7 @@ public struct TierVehiclesQuery {
         self.radius = radius
     }
 
-    public func perform() -> Promise<TierVehicleResults, Error> {
+    public func perform() -> Promise<TierVehicleResults, any Error> {
         Promise
             .catching { () -> String in
                 guard let key = storedNetApiKeys?.tier else { throw NetApiError.missingApiKey("tier") }

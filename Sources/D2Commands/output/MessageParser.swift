@@ -32,7 +32,7 @@ public struct MessageParser {
         message: Message? = nil,
         clientName: String? = nil,
         guild: Guild? = nil
-    ) -> Promise<RichValue, Error> {
+    ) -> Promise<RichValue, any Error> {
         Promise { then in
             var values: [RichValue] = []
 

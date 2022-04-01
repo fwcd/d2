@@ -53,7 +53,7 @@ public struct MapQuestStaticMap {
         self.url = url
     }
 
-    public func download() -> Promise<Data, Error> {
+    public func download() -> Promise<Data, any Error> {
         HTTPRequest(url: url).runAsync()
     }
 }

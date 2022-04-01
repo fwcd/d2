@@ -41,11 +41,11 @@ public extension CommandOutput {
         append(.error(nil, errorText: errorText), to: channel)
     }
 
-    func append(_ error: Error, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
+    func append(_ error: any Error, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
         append(.error(error, errorText: errorText), to: channel)
     }
 
-    func append(_ result: Result<RichValue, Error>, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
+    func append(_ result: Result<RichValue, any Error>, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
         switch result {
             case .success(let value):
                 append(value, to: channel)

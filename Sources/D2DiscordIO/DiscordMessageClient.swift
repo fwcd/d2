@@ -57,7 +57,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         return components.url
     }
 
-    func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, Error> {
+    func addGuildMemberRole(_ roleId: D2MessageIO.RoleID, to userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, any Error> {
         Promise { then in
             client.addGuildMemberRole(roleId.usingDiscordAPI, to: userId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -65,7 +65,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func removeGuildMemberRole(_ roleId: D2MessageIO.RoleID, from userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, Error> {
+    func removeGuildMemberRole(_ roleId: D2MessageIO.RoleID, from userId: D2MessageIO.UserID, on guildId: D2MessageIO.GuildID, reason: String?) -> Promise<Bool, any Error> {
         Promise { then in
             client.removeGuildMemberRole(roleId.usingDiscordAPI, from: userId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -73,7 +73,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func createDM(with userId: D2MessageIO.UserID) -> Promise<D2MessageIO.ChannelID?, Error> {
+    func createDM(with userId: D2MessageIO.UserID) -> Promise<D2MessageIO.ChannelID?, any Error> {
         Promise { then in
             client.createDM(with: userId.usingDiscordAPI) {
                 then(Result.from($0?.id.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -81,7 +81,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID) -> Promise<Message?, Error> {
+    func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID) -> Promise<Message?, any Error> {
         Promise { then in
             client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO(with: self), errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -89,7 +89,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, content: String) -> Promise<Message?, Error> {
+    func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, content: String) -> Promise<Message?, any Error> {
         Promise { then in
             client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, content: content) {
                 then(Result.from($0?.usingMessageIO(with: self), errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -97,7 +97,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func deleteMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+    func deleteMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID) -> Promise<Bool, any Error> {
         Promise { then in
             client.deleteMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -105,7 +105,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func bulkDeleteMessages(_ ids: [D2MessageIO.MessageID], on channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+    func bulkDeleteMessages(_ ids: [D2MessageIO.MessageID], on channelId: D2MessageIO.ChannelID) -> Promise<Bool, any Error> {
         Promise { then in
             client.bulkDeleteMessages(ids.map { $0.usingDiscordAPI }, on: channelId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -113,7 +113,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], Error> {
+    func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], any Error> {
         Promise { then in
             client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) {
                 then(Result.from($0.map { $0.usingMessageIO(with: self) }, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -121,7 +121,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func modifyChannel(_ channelId: D2MessageIO.ChannelID, with modification: ChannelModification) -> Promise<Channel?, Error> {
+    func modifyChannel(_ channelId: D2MessageIO.ChannelID, with modification: ChannelModification) -> Promise<Channel?, any Error> {
         Promise { then in
             client.modifyChannel(channelId.usingDiscordAPI, options: modification.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -129,7 +129,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func isGuildTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+    func isGuildTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, any Error> {
         Promise { then in
             client.getChannel(channelId.usingDiscordAPI) {
                 then(Result.from($0.map { $0.type == .text } ?? false, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -137,7 +137,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func isDMTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+    func isDMTextChannel(_ channelId: D2MessageIO.ChannelID) -> Promise<Bool, any Error> {
         Promise { then in
             client.getChannel(channelId.usingDiscordAPI) {
                 then(Result.from($0.map(\.isDM) ?? false, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -145,7 +145,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func triggerTyping(on channelId: D2MessageIO.ChannelID) -> Promise<Bool, Error> {
+    func triggerTyping(on channelId: D2MessageIO.ChannelID) -> Promise<Bool, any Error> {
         Promise { then in
             client.triggerTyping(on: channelId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -153,7 +153,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Message?, Error> {
+    func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Message?, any Error> {
         Promise { then in
             client.createReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) { m, _ in
                 then(.success(m?.usingMessageIO(with: self)))
@@ -161,7 +161,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func deleteOwnReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Bool, Error> {
+    func deleteOwnReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) -> Promise<Bool, any Error> {
         Promise { then in
             client.deleteOwnReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -169,7 +169,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func deleteUserReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String, by userId: D2MessageIO.UserID) -> Promise<Bool, Error> {
+    func deleteUserReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String, by userId: D2MessageIO.UserID) -> Promise<Bool, any Error> {
         Promise { then in
             client.deleteUserReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji, by: userId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -177,7 +177,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func createEmoji(on guildId: D2MessageIO.GuildID, name: String, image: String, roles: [D2MessageIO.RoleID]) -> Promise<Emoji?, Error> {
+    func createEmoji(on guildId: D2MessageIO.GuildID, name: String, image: String, roles: [D2MessageIO.RoleID]) -> Promise<Emoji?, any Error> {
         Promise { then in
             client.createGuildEmoji(on: guildId.usingDiscordAPI, name: name, image: image, roles: roles.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -185,7 +185,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func deleteEmoji(from guildId: D2MessageIO.GuildID, emojiId: D2MessageIO.EmojiID) -> Promise<Bool, Error> {
+    func deleteEmoji(from guildId: D2MessageIO.GuildID, emojiId: D2MessageIO.EmojiID) -> Promise<Bool, any Error> {
         Promise { then in
             client.deleteGuildEmoji(on: guildId.usingDiscordAPI, for: emojiId.usingDiscordAPI) {
                 then(Result.from($0, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -193,7 +193,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func getMIOCommands() -> Promise<[MIOCommand], Error> {
+    func getMIOCommands() -> Promise<[MIOCommand], any Error> {
         Promise { then in
             client.getApplicationCommands { cs, _ in
                 then(.success(cs.usingMessageIO))
@@ -201,7 +201,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
         Promise { then in
             client.createApplicationCommand(name: name, description: description, options: options?.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -209,7 +209,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
         Promise { then in
             client.editApplicationCommand(commandId.usingDiscordAPI, name: name, description: description, options: options?.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -217,7 +217,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, Error> {
+    func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, any Error> {
         Promise { then in
             client.deleteApplicationCommand(commandId.usingDiscordAPI) {
                 then(Result.from($0 != nil, errorIfNil: DiscordMessageClientError.invalidResponse($0)))
@@ -225,7 +225,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func getMIOCommands(on guildId: D2MessageIO.GuildID) -> Promise<[MIOCommand], Error> {
+    func getMIOCommands(on guildId: D2MessageIO.GuildID) -> Promise<[MIOCommand], any Error> {
         Promise { then in
             client.getApplicationCommands(on: guildId.usingDiscordAPI) { cs, _ in
                 then(.success(cs.usingMessageIO))
@@ -233,7 +233,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func createMIOCommand(on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+    func createMIOCommand(on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
         Promise { then in
             client.createApplicationCommand(on: guildId.usingDiscordAPI, name: name, description: description, options: options?.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -241,7 +241,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func editMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, Error> {
+    func editMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
         Promise { then in
             client.editApplicationCommand(commandId.usingDiscordAPI, on: guildId.usingDiscordAPI, name: name, description: description, options: options?.usingDiscordAPI) {
                 then(Result.from($0?.usingMessageIO, errorIfNil: DiscordMessageClientError.invalidResponse($1)))
@@ -249,7 +249,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID) -> Promise<Bool, Error> {
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID) -> Promise<Bool, any Error> {
         Promise { then in
             client.deleteApplicationCommand(commandId.usingDiscordAPI, on: guildId.usingDiscordAPI) {
                 then(Result.from($0 != nil, errorIfNil: DiscordMessageClientError.invalidResponse($0)))
@@ -257,7 +257,7 @@ struct DiscordMessageClient: DefaultMessageClient {
         }
     }
 
-    func createInteractionResponse(for interactionId: D2MessageIO.InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, Error> {
+    func createInteractionResponse(for interactionId: D2MessageIO.InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, any Error> {
         Promise { then in
             client.createInteractionResponse(for: interactionId.usingDiscordAPI, token: token, response: response.usingDiscordAPI) {
                 then(Result.from($0 != nil, errorIfNil: DiscordMessageClientError.invalidResponse($0)))

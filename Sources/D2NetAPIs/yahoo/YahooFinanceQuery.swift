@@ -13,7 +13,7 @@ public struct YahooFinanceQuery {
         self.end = end
     }
 
-    public func perform() -> Promise<[YahooFinanceStockDataPoint], Error> {
+    public func perform() -> Promise<[YahooFinanceStockDataPoint], any Error> {
         Promise.catching { try HTTPRequest(host: "query1.finance.yahoo.com", path: "/v7/finance/download/\(stock)", query: [
             "period1": String(Int(start.timeIntervalSince1970)),
             "period2": String(Int(end.timeIntervalSince1970)),

@@ -19,7 +19,7 @@ public struct RemoteGitLab {
         return try HTTPRequest(scheme: scheme, host: host, path: apiPath + endpointPath, headers: headers)
     }
 
-    private func fetchString(from endpointPath: String) -> Promise<String, Error> {
+    private func fetchString(from endpointPath: String) -> Promise<String, any Error> {
         do {
             log.info("Querying \(endpointPath) from GitLab \(host)")
             return try request(for: endpointPath).fetchUTF8Async()
@@ -28,7 +28,7 @@ public struct RemoteGitLab {
         }
     }
 
-    private func fetchJSON<T>(as type: T.Type, from endpointPath: String) -> Promise<T, Error> where T: Decodable {
+    private func fetchJSON<T>(as type: T.Type, from endpointPath: String) -> Promise<T, any Error> where T: Decodable {
         do {
             log.info("Querying \(endpointPath) as JSON from GitLab \(host)")
             return try request(for: endpointPath).fetchJSONAsync(as: type)
@@ -37,23 +37,23 @@ public struct RemoteGitLab {
         }
     }
 
-    public func fetchPipelines(projectId: Int) -> Promise<[GitLabPipeline], Error> {
+    public func fetchPipelines(projectId: Int) -> Promise<[GitLabPipeline], any Error> {
         fetchJSON(as: [GitLabPipeline].self, from: "/projects/\(projectId)/pipelines")
     }
 
-    public func fetchPipeline(projectId: Int, pipelineId: Int) -> Promise<GitLabPipeline, Error> {
+    public func fetchPipeline(projectId: Int, pipelineId: Int) -> Promise<GitLabPipeline, any Error> {
         fetchJSON(as: GitLabPipeline.self, from: "/projects/\(projectId)/pipelines/\(pipelineId)")
     }
 
-    public func fetchPipelineJobs(projectId: Int, pipelineId: Int) -> Promise<[GitLabJob], Error> {
+    public func fetchPipelineJobs(projectId: Int, pipelineId: Int) -> Promise<[GitLabJob], any Error> {
         fetchJSON(as: [GitLabJob].self, from: "/projects/\(projectId)/pipelines/\(pipelineId)/jobs")
     }
 
-    public func fetchJobs(projectId: Int) -> Promise<[GitLabJob], Error> {
+    public func fetchJobs(projectId: Int) -> Promise<[GitLabJob], any Error> {
         fetchJSON(as: [GitLabJob].self, from: "/projects/\(projectId)/jobs")
     }
 
-    public func fetchJobLog(projectId: Int, jobId: Int) -> Promise<String, Error> {
+    public func fetchJobLog(projectId: Int, jobId: Int) -> Promise<String, any Error> {
         fetchString(from: "/projects/\(projectId)/jobs/\(jobId)/trace")
     }
 }

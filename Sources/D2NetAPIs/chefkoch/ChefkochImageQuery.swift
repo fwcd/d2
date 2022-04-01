@@ -9,7 +9,7 @@ public struct ChefkochImageQuery {
         self.imageId = imageId
     }
 
-    public func perform() -> Promise<ChefkochImage, Error> {
+    public func perform() -> Promise<ChefkochImage, any Error> {
         Promise.catching { try HTTPRequest(host: "api.chefkoch.de", path: "/v2/recipes/\(recipeId)/images/\(imageId)") }
             .then { $0.fetchJSONAsync(as: ChefkochImage.self) }
     }

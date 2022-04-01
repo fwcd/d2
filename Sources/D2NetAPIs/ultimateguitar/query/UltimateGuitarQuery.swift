@@ -12,7 +12,7 @@ public struct UltimateGuitarQuery<T> where T: Codable {
         self.query = query
     }
 
-    public func perform() -> Promise<UltimateGuitarResponse<T>, Error> {
+    public func perform() -> Promise<UltimateGuitarResponse<T>, any Error> {
         Promise.catching { try HTTPRequest(host: host, path: path, query: query) }
             .then { $0.fetchHTMLAsync() }
             .mapCatching { doc in

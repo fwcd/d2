@@ -3,7 +3,7 @@ import Utils
 public struct EpicFreeGamesQuery {
     public init() {}
 
-    public func perform() -> Promise<EpicFreeGames, Error> {
+    public func perform() -> Promise<EpicFreeGames, any Error> {
         Promise.catching {
             try HTTPRequest(
                 host: "store-site-backend-static.ak.epicgames.com",

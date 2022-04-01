@@ -8,7 +8,7 @@ public struct PokemonQuery {
         self.url = url
     }
 
-    public func perform() -> Promise<Pokemon, Error> {
+    public func perform() -> Promise<Pokemon, any Error> {
         HTTPRequest(url: url).fetchJSONAsync(as: Pokemon.self)
     }
 }

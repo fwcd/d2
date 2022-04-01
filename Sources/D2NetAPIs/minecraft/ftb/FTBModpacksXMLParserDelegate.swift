@@ -9,10 +9,10 @@ fileprivate let log = Logger(label: "D2NetAPIs.FTBModpacksXMLParserDelegate")
 fileprivate let baseURL = "https://ftb.forgecdn.net/FTB2"
 
 class FTBModpacksXMLParserDelegate: NSObject, XMLParserDelegate {
-    private let then: (Result<[FTBModpack], Error>) -> Void
+    private let then: (Result<[FTBModpack], any Error>) -> Void
     private var packs: [FTBModpack] = []
 
-    init(then: @escaping (Result<[FTBModpack], Error>) -> Void) {
+    init(then: @escaping (Result<[FTBModpack], any Error>) -> Void) {
         self.then = then
     }
 

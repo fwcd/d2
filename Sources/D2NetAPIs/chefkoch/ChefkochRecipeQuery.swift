@@ -7,7 +7,7 @@ public struct ChefkochRecipeQuery {
         self.id = id
     }
 
-    public func perform() -> Promise<ChefkochRecipe, Error> {
+    public func perform() -> Promise<ChefkochRecipe, any Error> {
         Promise.catching { try HTTPRequest(host: "api.chefkoch.de", path: "/v2/recipes/\(id)") }
             .then { $0.fetchJSONAsync(as: ChefkochRecipe.self) }
     }

@@ -13,7 +13,7 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
         self.params = params
     }
 
-    public func perform() -> Promise<IntegralQueryOutput, Error> {
+    public func perform() -> Promise<IntegralQueryOutput, any Error> {
         fetchPageVersion()
             .mapCatching { pageVersion -> HTTPRequest in
                 let params = String(data: try JSONEncoder().encode(self.params), encoding: .utf8) ?? ""
@@ -40,7 +40,7 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
             }
     }
 
-    private func fetchPageVersion() -> Promise<String, Error> {
+    private func fetchPageVersion() -> Promise<String, any Error> {
         Promise.catching { try HTTPRequest(
             scheme: "https",
             host: "www.integral-calculator.com",

@@ -31,7 +31,7 @@ public class MessageIOOutput: CommandOutput {
         }
 
         messageWriter.write(value: value)
-            .mapResult { (r: Result<Message, Error>) -> Result<[Message], Error> in
+            .mapResult { (r: Result<Message, any Error>) -> Result<[Message], any Error> in
                 var messages: [Message]
                 do {
                     messages = self.splitUp(message: try r.get())
@@ -55,7 +55,7 @@ public class MessageIOOutput: CommandOutput {
             .listenOrLogError { self.onSent?($0) }
     }
 
-    private func send(message: Message, with client: any MessageClient, to channel: OutputChannel) -> Promise<Message?, Error> {
+    private func send(message: Message, with client: any MessageClient, to channel: OutputChannel) -> Promise<Message?, any Error> {
         switch channel {
             case .guildChannel(let id):
                 return client.sendMessage(message, to: id)

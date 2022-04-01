@@ -15,7 +15,7 @@ public struct BingTranslateQuery {
         self.text = text
     }
 
-    public func perform() -> Promise<[BingTranslateResult], Error> {
+    public func perform() -> Promise<[BingTranslateResult], any Error> {
         .catchingThen {
             let request = try HTTPRequest(scheme: "https", host: "www.bing.com", path: "/ttranslatev3", method: "POST", query: [
                 "fromLang": sourceLanguage ?? "auto-detect",

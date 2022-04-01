@@ -12,7 +12,7 @@ public struct WindyWebcamDetailQuery {
         self.show = show
     }
 
-    public func perform() -> Promise<WindyResult<WindyWebcams>, Error> {
+    public func perform() -> Promise<WindyResult<WindyWebcams>, any Error> {
         Promise(Result.from(storedNetApiKeys?.windy?.webcams, errorIfNil: NetApiError.missingApiKey("No API key for Windy webcams")))
             .mapCatching { try HTTPRequest(host: "api.windy.com", path: "/api/webcams/v2/list/webcam=\(self.id)", query: ["show": self.show, "key": $0]) }
             .then { $0.fetchJSONAsync(as: WindyResult<WindyWebcams>.self) }

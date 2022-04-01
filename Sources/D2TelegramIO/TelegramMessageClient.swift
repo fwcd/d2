@@ -28,7 +28,7 @@ struct TelegramMessageClient: DefaultMessageClient {
             .joined(separator: "\n")
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Utils.Promise<D2MessageIO.Message?, Error> {
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Utils.Promise<D2MessageIO.Message?, any Error> {
         Utils.Promise { then in
             let text = [message.content, message.embed.map(flatten(embed:))]
                 .compactMap { $0?.nilIfEmpty }

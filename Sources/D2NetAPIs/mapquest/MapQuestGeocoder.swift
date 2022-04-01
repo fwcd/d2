@@ -4,7 +4,7 @@ import Utils
 public struct MapQuestGeocoder {
     public init() {}
 
-    public func geocode(location: String) -> Promise<GeoCoordinates, Error> {
+    public func geocode(location: String) -> Promise<GeoCoordinates, any Error> {
         Promise.catching { () throws -> HTTPRequest in
             let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
             guard let mapQuestKey = storedNetApiKeys?.mapQuest else {

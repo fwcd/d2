@@ -64,7 +64,7 @@ extension TestOutput: DefaultMessageClient {
         guilds?.first { $0.channels.keys.contains(channelId) }
     }
 
-    public func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, Error> {
+    public func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, any Error> {
         append(message: message)
         return Promise(.success(message))
     }
