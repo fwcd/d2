@@ -12,7 +12,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
         self.manager = manager
     }
 
-    public func handle(interaction: Interaction, client: MessageClient) -> Bool {
+    public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
         guard
             interaction.type == .messageComponent,
             let customId = interaction.data?.customId,

@@ -12,7 +12,7 @@ public struct ThreadKeepaliveHandler: ChannelHandler {
         self._config = _config
     }
 
-    public func handle(threadUpdate thread: Channel, client: MessageClient) {
+    public func handle(threadUpdate thread: Channel, client: any MessageClient) {
         log.info("Thread \(thread.name) has archival status: \(thread.threadMetadata?.archived ?? false)")
 
         let archived = thread.threadMetadata?.archived ?? false

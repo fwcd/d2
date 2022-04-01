@@ -5,7 +5,7 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.CommandContext")
 
 public struct CommandContext {
-    public let client: MessageClient?
+    public let client: (any MessageClient)?
     public let registry: CommandRegistry
     public let message: Message
     public let channel: InteractiveTextChannel?
@@ -20,7 +20,7 @@ public struct CommandContext {
     public var isSubscribed: Bool { return (channel?.id).map { subscriptions.contains($0) } ?? false }
 
     public init(
-        client: MessageClient?,
+        client: (any MessageClient)?,
         registry: CommandRegistry,
         message: Message,
         commandPrefix: String,

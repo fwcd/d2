@@ -11,7 +11,7 @@ public struct MessageDatabaseChannelHandler: ChannelHandler {
         self.messageDB = messageDB
     }
 
-    private func update(channel: Channel, on eventName: String, client: MessageClient) {
+    private func update(channel: Channel, on eventName: String, client: any MessageClient) {
         do {
             if let guild = client.guildForChannel(channel.id) {
                 log.info("Updating channel '\(channel.name)' on \(eventName) into message database...")
@@ -22,19 +22,19 @@ public struct MessageDatabaseChannelHandler: ChannelHandler {
         }
     }
 
-    public func handle(channelCreate channel: Channel, client: MessageClient) {
+    public func handle(channelCreate channel: Channel, client: any MessageClient) {
         update(channel: channel, on: "creation", client: client)
     }
 
-    public func handle(channelUpdate channel: Channel, client: MessageClient) {
+    public func handle(channelUpdate channel: Channel, client: any MessageClient) {
         update(channel: channel, on: "update", client: client)
     }
 
-    public func handle(threadCreate thread: Channel, client: MessageClient) {
+    public func handle(threadCreate thread: Channel, client: any MessageClient) {
         update(channel: thread, on: "thread creation", client: client)
     }
 
-    public func handle(threadUpdate thread: Channel, client: MessageClient) {
+    public func handle(threadUpdate thread: Channel, client: any MessageClient) {
         update(channel: thread, on: "thread update", client: client)
     }
 }

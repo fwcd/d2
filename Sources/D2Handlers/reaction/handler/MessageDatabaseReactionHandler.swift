@@ -11,7 +11,7 @@ public struct MessageDatabaseReactionHandler: ReactionHandler {
         self.messageDB = messageDB
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
         do {
             if try messageDB.isTracked(channelId: channelId) {
                 try messageDB.add(reaction: emoji, to: messageId, by: userId)
@@ -22,7 +22,7 @@ public struct MessageDatabaseReactionHandler: ReactionHandler {
         }
     }
 
-    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: MessageClient) {
+    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
         do {
             if try messageDB.isTracked(channelId: channelId) {
                 try messageDB.remove(reaction: emoji, from: messageId, by: userId)
@@ -33,7 +33,7 @@ public struct MessageDatabaseReactionHandler: ReactionHandler {
         }
     }
 
-    public func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: MessageClient) {
+    public func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: any MessageClient) {
         do {
             if try messageDB.isTracked(channelId: channelId) {
                 try messageDB.remove(allReactionsFrom: messageId)

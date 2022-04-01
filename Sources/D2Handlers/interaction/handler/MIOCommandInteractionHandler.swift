@@ -11,7 +11,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
         self.permissionManager = permissionManager
     }
 
-    public func handle(interaction: Interaction, client: MessageClient) -> Bool {
+    public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
         guard
             interaction.type == .mioCommand,
             let data = interaction.data,

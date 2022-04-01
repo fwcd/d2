@@ -7,10 +7,10 @@ fileprivate let log = Logger(label: "D2MessageIO.CombinedMessageClient")
 /// A MessageClient that combines multiple clients and
 /// dispatches requests dynamically based on the ID's client name.
 public class CombinedMessageClient: MessageClient {
-    private var clients: [String: MessageClient] = [:]
+    private var clients: [String: any MessageClient] = [:]
 
     private let mioCommandClientName: String?
-    private var mioCommandClient: MessageClient? { mioCommandClientName.flatMap { clients[$0] } }
+    private var mioCommandClient: (any MessageClient)? { mioCommandClientName.flatMap { clients[$0] } }
 
     public var me: User? { nil }
     public var name: String { "Combined" }
@@ -23,12 +23,12 @@ public class CombinedMessageClient: MessageClient {
     }
 
     @discardableResult
-    public func register(client: MessageClient) -> MessageClient {
+    public func register(client: any MessageClient) -> any MessageClient {
         clients[client.name] = client
         return OverlayMessageClient(inner: self, name: client.name, me: client.me)
     }
 
-    private func withClient<T>(of id: ID, _ action: (MessageClient) throws -> T?) rethrows -> T? {
+    private func withClient<T>(of id: ID, _ action: (any MessageClient) throws -> T?) rethrows -> T? {
         if let client = clients[id.clientName] {
             return try action(client)
         } else {

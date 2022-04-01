@@ -16,7 +16,7 @@ public struct SubscriptionHandler: MessageHandler {
         self.manager = manager
     }
 
-    public func handle(message: Message, from client: MessageClient) -> Bool {
+    public func handle(message: Message, from client: any MessageClient) -> Bool {
         guard !manager.isEmpty, let channelId = message.channelId else { return false }
 
         let isBot = message.author?.bot ?? false

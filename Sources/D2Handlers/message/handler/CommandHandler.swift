@@ -81,7 +81,7 @@ public class CommandHandler: MessageHandler {
         self.pipeSeparator = pipeSeparator
     }
 
-    public func handle(message: Message, from client: MessageClient) -> Bool {
+    public func handle(message: Message, from client: any MessageClient) -> Bool {
         guard message.content.starts(with: commandPrefix),
             !message.dm || (message.author.map { permissionManager.user($0, hasPermission: .vip) } ?? false),
             let channelId = message.channelId else { return false }
@@ -164,7 +164,7 @@ public class CommandHandler: MessageHandler {
         return true
     }
 
-    private func constructPipe(rawPipeCommand: String, message: Message, client: MessageClient) -> [PipeComponent]? {
+    private func constructPipe(rawPipeCommand: String, message: Message, client: any MessageClient) -> [PipeComponent]? {
         guard let channelId = message.channelId, let author = message.author else { return nil }
         let isBot = author.bot
         var pipe = [PipeComponent]()

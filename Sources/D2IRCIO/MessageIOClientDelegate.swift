@@ -6,13 +6,13 @@ fileprivate let log = Logger(label: "D2IRCIO.MessageIOClientDelegate")
 
 public class MessageIOClientDelegate: IRCClientDelegate {
     private let inner: MessageDelegate
-    private let sinkClient: MessageClient
+    private let sinkClient: any MessageClient
     private let name: String
 
     private var joined: Bool = false
     private var channelsToJoin: [String]
 
-    public init(inner: MessageDelegate, sinkClient: MessageClient, name: String, channelsToJoin: [String]) {
+    public init(inner: MessageDelegate, sinkClient: any MessageClient, name: String, channelsToJoin: [String]) {
         log.debug("Creating delegate for \(name)")
         self.inner = inner
         self.sinkClient = sinkClient

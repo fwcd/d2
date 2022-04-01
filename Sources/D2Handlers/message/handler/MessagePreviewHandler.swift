@@ -21,7 +21,7 @@ public struct MessagePreviewHandler: MessageHandler {
         self._configuration = configuration
     }
 
-    public func handle(message: Message, from client: MessageClient) -> Bool {
+    public func handle(message: Message, from client: any MessageClient) -> Bool {
         if client.name == "Discord",
             let guild = message.guild,
             configuration.enabledGuildIds.contains(guild.id),

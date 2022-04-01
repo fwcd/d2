@@ -15,7 +15,7 @@ public struct TriggerReactionHandler: MessageHandler {
         self.keywords = keywords
     }
 
-    public func handle(message: Message, from client: MessageClient) -> Bool {
+    public func handle(message: Message, from client: any MessageClient) -> Bool {
         if let emoji = keywords[message.content.lowercased()], let messageId = message.id, let channelId = message.channelId {
             client.createReaction(for: messageId, on: channelId, emoji: emoji)
             return true

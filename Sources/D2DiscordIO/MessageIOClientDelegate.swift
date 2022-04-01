@@ -6,9 +6,9 @@ fileprivate let log = Logger(label: "D2DiscordIO.MessageIOClientDelegate")
 
 public class MessageIOClientDelegate: DiscordClientDelegate {
     private let inner: MessageDelegate
-    private let sinkClient: MessageClient
+    private let sinkClient: any MessageClient
 
-    public init(inner: MessageDelegate, sinkClient: MessageClient) {
+    public init(inner: MessageDelegate, sinkClient: any MessageClient) {
         log.debug("Creating delegate")
         self.inner = inner
         self.sinkClient = sinkClient
