@@ -89,7 +89,7 @@ class UnivISLectureXMLBuilder: UnivISObjectNodeXMLBuilder {
 
     func exit(selfWithName elementName: String) throws {}
 
-    func build() -> UnivISObjectNode {
+    func build() -> any UnivISObjectNode {
         return lecture
     }
 }

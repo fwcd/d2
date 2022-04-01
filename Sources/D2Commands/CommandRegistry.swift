@@ -11,7 +11,7 @@ public class CommandRegistry: Sequence {
     public init() {}
 
     public enum Entry {
-        case command(Command)
+        case command(any Command)
         case alias(String)
 
         var asCommand: (any Command)? {
