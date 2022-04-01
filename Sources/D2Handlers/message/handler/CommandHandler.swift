@@ -11,12 +11,12 @@ fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
 /// A segment of an invocation pipe that transfers outputs from one command to another.
 fileprivate class PipeComponent {
     let name: String
-    let command: Command
+    let command: any Command
     let context: CommandContext
     let args: String
     var output: (any CommandOutput)? = nil
 
-    init(name: String, command: Command, context: CommandContext, args: String) {
+    init(name: String, command: any Command, context: CommandContext, args: String) {
         self.name = name
         self.command = command
         self.context = context

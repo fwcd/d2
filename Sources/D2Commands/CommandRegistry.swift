@@ -14,7 +14,7 @@ public class CommandRegistry: Sequence {
         case command(Command)
         case alias(String)
 
-        var asCommand: Command? {
+        var asCommand: (any Command)? {
             switch self {
                 case .command(let cmd): return cmd
                 default: return nil
@@ -50,7 +50,7 @@ public class CommandRegistry: Sequence {
     public struct CommandWithAlias {
         public let name: String
         public let aliases: [String]
-        public let command: Command
+        public let command: any Command
     }
 
     public func commandsWithAliases() -> [CommandWithAlias] {

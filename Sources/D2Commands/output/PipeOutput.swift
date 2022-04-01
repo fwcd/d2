@@ -3,14 +3,14 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.PipeOutput")
 
 public class PipeOutput: CommandOutput {
-    private let sink: Command
+    private let sink: any Command
     private let args: String
     private let next: (any CommandOutput)?
     private var context: CommandContext
 
     private let msgParser = MessageParser()
 
-    public init(withSink sink: Command, context: CommandContext, args: String, next: (any CommandOutput)? = nil) {
+    public init(withSink sink: any Command, context: CommandContext, args: String, next: (any CommandOutput)? = nil) {
         self.sink = sink
         self.args = args
         self.context = context

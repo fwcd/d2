@@ -88,7 +88,7 @@ public class HelpCommand: StringCommand {
         )
     }
 
-    private func commandHelpEmbed(for name: String, command: Command) -> Embed {
+    private func commandHelpEmbed(for name: String, command: any Command) -> Embed {
         return Embed(
             title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
             description: """

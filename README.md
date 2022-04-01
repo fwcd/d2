@@ -144,7 +144,7 @@ The executable application. Sets up messaging backends (like Discord) and the to
 At a basic level, the `Command` protocol consists of a single method named `invoke` that carries information about the user's request:
 
 ```swift
-protocol Command: class {
+protocol Command: AnyObject {
     ...
 
     func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext)
@@ -165,12 +165,12 @@ Since `output: any CommandOutput` represents a polymorphic object, the output of
 
 ```swift
 class PipeOutput: CommandOutput {
-    private let sink: Command
+    private let sink: any Command
     private let context: CommandContext
     private let args: String
     private let next: (any CommandOutput)?
 
-    init(withSink sink: Command, context: CommandContext, args: String, next: (any CommandOutput)? = nil) {
+    init(withSink sink: any Command, context: CommandContext, args: String, next: (any CommandOutput)? = nil) {
         self.sink = sink
         self.args = args
         self.context = context
