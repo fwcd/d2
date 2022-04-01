@@ -24,7 +24,7 @@ public class PollCommand: StringCommand {
         self.interpolatables = interpolatables
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
 
         guard components.count >= 1 else {

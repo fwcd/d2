@@ -23,7 +23,7 @@ public class AsciiArtCommand: Command {
         self.widthScaleFactor = widthScaleFactor
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let image = input.asImage else {
             output.append(errorText: "Please attach an image!")
             return

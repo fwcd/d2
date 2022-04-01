@@ -16,20 +16,20 @@ public protocol Command: AnyObject {
     ///
     /// Command invocations are inherently effectful and often asynchronous. This means
     /// that the passed output may be invoked on any thread, zero or (arbitrary) more times.
-    func invoke(with input: RichValue, output: CommandOutput, context: CommandContext)
+    func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext)
 
     /// Notifies the command that a message sent via CommandOutput has been
     /// successfully transmitted.
     func onSuccessfullySent(context: CommandContext)
 
     /// Notifies the command that a message on a subscribed channel has arrived.
-    func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext)
+    func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext)
 
     /// Notifies the command that a component interaction on a subscribed channel has arrived.
-    func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext)
+    func onSubscriptionInteraction(with customId: String, by user: User, output: any CommandOutput, context: CommandContext)
 
     /// Notifies the command that a reaction on a subscribed channel has arrived.
-    func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext)
+    func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext)
 
     /// Notifies the command that the bot's presence has updated.
     func onReceivedUpdated(presence: Presence)
@@ -41,11 +41,11 @@ extension Command {
 
     public func onSuccessfullySent(context: CommandContext) {}
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {}
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {}
 
-    public func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext) {}
+    public func onSubscriptionInteraction(with customId: String, by user: User, output: any CommandOutput, context: CommandContext) {}
 
-    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {}
+    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext) {}
 
     // TODO: Support reaction removal
 

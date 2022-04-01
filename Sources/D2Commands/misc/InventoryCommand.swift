@@ -63,7 +63,7 @@ public class InventoryCommand: Command {
             """
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let user = input.asMentions?.first ?? context.author else {
             output.append(errorText: "Mention someone or enter a subcommand to get started!")
             return

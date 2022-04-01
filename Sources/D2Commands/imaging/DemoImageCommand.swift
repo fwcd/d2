@@ -18,7 +18,7 @@ public class DemoImageCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         do {
             let image = try Image(width: 200, height: 200)
             let graphics = CairoGraphics(fromImage: image)

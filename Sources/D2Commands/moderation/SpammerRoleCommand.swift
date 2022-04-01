@@ -18,7 +18,7 @@ public class SpammerRoleCommand: StringCommand {
         self._spamConfiguration = spamConfiguration
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let guild = context.guild else { return }
         let mentions = context.message.mentionRoles
 

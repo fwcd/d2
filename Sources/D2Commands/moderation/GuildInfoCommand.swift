@@ -18,7 +18,7 @@ public class GuildInfoCommand: VoidCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
             return

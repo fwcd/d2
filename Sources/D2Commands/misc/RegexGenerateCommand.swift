@@ -15,7 +15,7 @@ public class RegexGenerateCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             guard let ast = try RegexNode.parse(from: input) else {
                 output.append(errorText: "Please enter a regex!")

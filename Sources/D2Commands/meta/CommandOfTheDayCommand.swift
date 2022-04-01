@@ -14,7 +14,7 @@ public class CommandOfTheDayCommand: VoidCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         let calendar = Calendar(identifier: .gregorian)
         var hasher = Hasher()
         hasher.combine(calendar.dateComponents([.year, .month, .day], from: Date()))

@@ -11,7 +11,7 @@ public class ColorCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             guard let hexCode = UInt32(input, radix: 16) else {
                 output.append(errorText: "Please enter a hex code as argument!")

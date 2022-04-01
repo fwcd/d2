@@ -20,7 +20,7 @@ public class LastMessageCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         context.client?.getMessages(for: context.channel!.id, limit: 2)
             .then { Promise(Result.from($0[safely: 1], errorIfNil: LastMessageError.noLastMessage)) }
             .then { MessageParser().parse(message: $0, clientName: context.client?.name, guild: context.guild) }

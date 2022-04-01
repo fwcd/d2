@@ -16,7 +16,7 @@ public class SlotMachineCommand: StringCommand {
         self.values = values
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let outcome = (0..<slotCount).map { _ in values.randomElement()! }
         let isWin = Set(outcome).count == 1
         output.append(Embed(

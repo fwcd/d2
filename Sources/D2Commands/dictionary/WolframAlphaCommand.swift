@@ -22,7 +22,7 @@ public class WolframAlphaCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !isRunning else {
             output.append(errorText: "Wait for the first input to finish!")
             return
@@ -45,7 +45,7 @@ public class WolframAlphaCommand: StringCommand {
         }
     }
 
-    private func performSimpleQuery(input: String, output: CommandOutput) throws {
+    private func performSimpleQuery(input: String, output: any CommandOutput) throws {
         let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
         query.start().listen {
             do {
@@ -58,7 +58,7 @@ public class WolframAlphaCommand: StringCommand {
         }
     }
 
-    private func performFullQuery(input: String, output: CommandOutput, showSteps: Bool = false) throws {
+    private func performFullQuery(input: String, output: any CommandOutput, showSteps: Bool = false) throws {
         let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
         query.startAndParse().listen {
             do {

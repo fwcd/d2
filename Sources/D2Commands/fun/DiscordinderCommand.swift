@@ -22,7 +22,7 @@ public class DiscordinderCommand: StringCommand {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if input == cancelSubcommand {
             guard context.isSubscribed else {
                 output.append(errorText: "No session is running on this channel!")
@@ -45,7 +45,7 @@ public class DiscordinderCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext) {
         guard
             let guild = context.guild,
             let messageId = context.message.id,
@@ -75,7 +75,7 @@ public class DiscordinderCommand: StringCommand {
     }
 
     @discardableResult
-    private func presentNextCandidate(for authorId: UserID, output: CommandOutput, context: CommandContext) -> Bool {
+    private func presentNextCandidate(for authorId: UserID, output: any CommandOutput, context: CommandContext) -> Bool {
         guard let guild = context.guild else {
             output.append(errorText: "Not on a guild!")
             return false

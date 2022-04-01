@@ -50,7 +50,7 @@ public class AnimateCommand<A>: Command where A: Animation {
         self.delayTime = delayTime
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         let args = input.asText ?? ""
         let typingIndicator = context.channel.map { TypingIndicator(on: $0) }
         typingIndicator?.startAsync()

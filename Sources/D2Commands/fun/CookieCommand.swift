@@ -53,7 +53,7 @@ public class CookieCommand: Command {
         self.templates = templates
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author available!")
             return

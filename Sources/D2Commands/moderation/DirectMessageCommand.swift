@@ -18,7 +18,7 @@ public class DirectMessageCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         let text = input.asText ?? ""
         guard let parsedArgs = inputPattern.firstGroups(in: text) else {
             output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")

@@ -20,7 +20,7 @@ public class PlotCommand<P>: Command where P: SeriesPlot {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard var columns = input.asNDArrays?.first?.asMatrix?.columns.map({ $0.map(\.asDouble) }), [1, 2].contains(columns.count) else {
             output.append(errorText: "Can only plot 1- or 2-column tables!")
             return

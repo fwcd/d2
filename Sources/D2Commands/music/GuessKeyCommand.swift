@@ -11,7 +11,7 @@ public class FindKeyCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !input.isEmpty, let notes = (try? input.split(separator: " ").map({ try Note(of: String($0)) })).map(Set.init) else {
             output.append(errorText: info.helpText!)
             return

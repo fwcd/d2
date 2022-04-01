@@ -15,7 +15,7 @@ public class GraphVizCommand: StringCommand {
         info.longDescription = info.shortDescription
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         Renderer(layout: layout).render(dot: input, to: .png) {
             do {
                 let data = try $0.get()

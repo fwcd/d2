@@ -24,7 +24,7 @@ public class IAmBoredCommand: VoidCommand {
         self.templates = templates
     }
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         guard let verb = verbs.randomElement(),
             let thing = things.randomElement(),
             let method = methods.randomElement(),

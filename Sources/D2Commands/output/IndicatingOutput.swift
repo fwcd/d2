@@ -1,10 +1,10 @@
 import Utils
 
 public class IndicatingOutput: CommandOutput {
-    private let next: CommandOutput?
+    private let next: (any CommandOutput)?
     @Synchronized public private(set) var used: Bool = false
 
-    public init(_ next: CommandOutput? = nil) {
+    public init(_ next: (any CommandOutput)? = nil) {
         self.next = next
     }
 

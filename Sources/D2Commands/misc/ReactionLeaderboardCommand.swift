@@ -28,7 +28,7 @@ public class ReactionLeaderboardCommand: Command {
         info.longDescription = "Fetches the number of \(name) reactions per user"
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         do {
             guard let guild = context.guild else {
                 output.append(errorText: "No guild available")

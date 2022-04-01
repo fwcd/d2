@@ -17,7 +17,7 @@ public class HTTPRequestCommand: Command {
         self.method = method
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let url = (input.asUrls?.first).flatMap({ URLComponents(url: $0, resolvingAgainstBaseURL: false) }) else {
             output.append(errorText: "Please enter a valid URL!")
             return

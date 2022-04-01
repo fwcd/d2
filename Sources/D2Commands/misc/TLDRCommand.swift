@@ -28,7 +28,7 @@ public class TLDRCommand: StringCommand {
         self.maxSentenceCount = maxSentenceCount
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let client = context.client, let channelId = context.channel?.id else {
             output.append(errorText: "No MessageIO client/channel/guild available")
             return

@@ -16,7 +16,7 @@ public class LogsCommand: StringCommand {
         self.defaultLineCount = defaultLineCount
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let lineCount = Int(input) ?? defaultLineCount
         output.append(.code(StoringLogHandler.lastOutputs.suffix(lineCount).joined(separator: "\n"), language: nil))
     }

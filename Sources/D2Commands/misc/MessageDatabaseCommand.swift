@@ -70,7 +70,7 @@ public class MessageDatabaseCommand: StringCommand {
         ]
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             if let subcommand = subcommands[input] {
                 try subcommand(output, context)

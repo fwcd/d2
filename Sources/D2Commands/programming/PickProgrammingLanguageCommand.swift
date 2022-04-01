@@ -7,7 +7,7 @@ public class PickProgrammingLanguageCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let value = Words.programmingLanguages.randomElement() else {
             output.append(errorText: "No programming languages found!")
             return

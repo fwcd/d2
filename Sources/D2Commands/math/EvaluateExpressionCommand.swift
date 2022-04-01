@@ -23,7 +23,7 @@ public class EvaluateExpressionCommand: StringCommand {
         )
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let flags = Set<String>(flagsPattern.allGroups(in: input).map { $0[1] })
 
         do {

@@ -17,7 +17,7 @@ public class LoveCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let (first, second) = extractMentions(input: input, context: context) else {
             output.append(errorText: info.helpText!)
             return

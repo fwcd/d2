@@ -9,7 +9,7 @@ public class PetitionCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !input.isEmpty else {
             output.append(errorText: "Please enter something!")
             return

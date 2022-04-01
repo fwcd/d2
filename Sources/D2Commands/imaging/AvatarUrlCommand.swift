@@ -21,7 +21,7 @@ public class AvatarUrlCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let user = input.asMentions?.first else {
             output.append(errorText: "Mention someone to begin!")
             return

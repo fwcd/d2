@@ -18,7 +18,7 @@ public class AkinatorCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             output.append(errorText: "Not in a channel!")
             return
@@ -54,7 +54,7 @@ public class AkinatorCommand: StringCommand {
 
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id, let session = sessions[channelId] else {
             context.unsubscribeFromChannel()
             return

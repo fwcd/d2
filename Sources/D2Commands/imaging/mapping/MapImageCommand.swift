@@ -16,7 +16,7 @@ public class MapImageCommand<M>: Command where M: ImageMapping {
         info.longDescription = description
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         do {
             let args = input.asText
             let mapping = try M.init(args: args)

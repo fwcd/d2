@@ -9,7 +9,7 @@ public class EmbedFooterCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let embed = input.asEmbed else {
             output.append(errorText: "Please input an embed!")
             return

@@ -6,7 +6,7 @@ public class EventListenerBus {
 
     private struct Listener {
         let name: String
-        let output: CommandOutput
+        let output: any CommandOutput
     }
 
     public enum Event: String, CaseIterable {
@@ -42,7 +42,7 @@ public class EventListenerBus {
         }
     }
 
-    public func addListener(name: String, for event: Event, output: CommandOutput) {
+    public func addListener(name: String, for event: Event, output: any CommandOutput) {
         if !listeners.keys.contains(event) {
             listeners[event] = []
         }

@@ -9,7 +9,7 @@ public class CSSSelectorCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         do {
             guard let node = input.asDomNode else {
                 output.append(errorText: "Please provide a DOM node to perform the selector on!")

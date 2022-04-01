@@ -23,7 +23,7 @@ public class AutoLatexCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if input == "cancel" {
             output.append(":x: Disabled automatic LaTeX-reformatting for this channel!")
             context.unsubscribeFromChannel()
@@ -33,7 +33,7 @@ public class AutoLatexCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         if content == "cancel autolatex" {
             output.append("This syntax has been deprecated, please use `\(context.commandPrefix)autolatex cancel` to cancel.")
             return

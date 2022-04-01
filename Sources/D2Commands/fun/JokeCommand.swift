@@ -11,7 +11,7 @@ public class JokeCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         JokeAPIQuery().perform().listen {
             do {
                 let joke = try $0.get()

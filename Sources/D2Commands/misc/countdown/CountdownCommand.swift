@@ -69,7 +69,7 @@ public class CountdownCommand: StringCommand {
         info.helpText = makeHelpText()
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let date = parseDate(from: input) {
             show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
         } else if let parsedArgs = subcommandPattern.firstGroups(in: input) {
@@ -92,7 +92,7 @@ public class CountdownCommand: StringCommand {
         return inputDateFormatters.compactMap { $0.date(from: input) }.first
     }
 
-    private func show(_ name: String, as goal: CountdownGoal, to output: CommandOutput) {
+    private func show(_ name: String, as goal: CountdownGoal, to output: any CommandOutput) {
         output.append(.embed(Embed(
             title: ":hourglass: \(name) Countdown",
             description: "The next \(name) will take place in **\(describeRemainingTimeUntil(goal: goal))**",
@@ -100,7 +100,7 @@ public class CountdownCommand: StringCommand {
         )))
     }
 
-    private func showRunningGoals(to output: CommandOutput) {
+    private func showRunningGoals(to output: any CommandOutput) {
         output.append(.embed(Embed(
             title: ":hourglass: Running Countdowns",
             fields: goals.map { Embed.Field(name: $0.key, value: "will take place in **\(describeRemainingTimeUntil(goal: $0.value))** (on \(outputDateFormatter.string(from: $0.value.date)))") }

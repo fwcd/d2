@@ -10,7 +10,7 @@ public class EpicFreeGamesCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         EpicFreeGamesQuery().perform().listen {
             do {
                 let games = try $0.get().data.catalog.searchStore.elements

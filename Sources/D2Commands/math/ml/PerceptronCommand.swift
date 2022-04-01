@@ -46,7 +46,7 @@ public class PerceptronCommand: StringCommand {
         ]
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let parsedSubcommand = subcommandPattern.firstGroups(in: input) {
             let cmdName = parsedSubcommand[1]
             let cmdArgs = parsedSubcommand[2]
@@ -71,13 +71,13 @@ public class PerceptronCommand: StringCommand {
         }
     }
 
-    private func reset(args: String, output: CommandOutput) {
+    private func reset(args: String, output: any CommandOutput) {
         let dimensions = Int(args) ?? defaultInputCount
         model = SingleLayerPerceptron(inputCount: dimensions)
         output.append("Created a new \(dimensions)-dimensional perceptron")
     }
 
-    private func learn(args: String, output: CommandOutput) throws {
+    private func learn(args: String, output: any CommandOutput) throws {
         if let parsedArgs = learnPattern.firstGroups(in: args) {
             let learningRate = Double(parsedArgs[1]) ?? 0.1
 
@@ -92,7 +92,7 @@ public class PerceptronCommand: StringCommand {
         return spaceSeparatedStr.split(separator: " ").compactMap { Double($0.trimmingCharacters(in: .whitespacesAndNewlines)) }
     }
 
-    private func compute(args: String, output: CommandOutput) throws {
+    private func compute(args: String, output: any CommandOutput) throws {
         let inputs = parseDoubles(in: args)
         guard !inputs.isEmpty else { throw MLError.invalidFormat("Please specify space-separated input values") }
 
@@ -100,7 +100,7 @@ public class PerceptronCommand: StringCommand {
         try outputModel(to: output, outputValue: outputValue)
     }
 
-    private func outputModel(to output: CommandOutput, outputValue: Double? = nil) throws {
+    private func outputModel(to output: any CommandOutput, outputValue: Double? = nil) throws {
         output.append(.compound([
             .text("\(model.formula)\(outputValue.map { String(format: " = %.3f", $0) } ?? "")"),
             .files(try renderer.render(model: &model).map { [
@@ -109,7 +109,7 @@ public class PerceptronCommand: StringCommand {
         ]))
     }
 
-    private func addData(args: String, output: CommandOutput) throws {
+    private func addData(args: String, output: any CommandOutput) throws {
         let samples = dataSamplePattern.allGroups(in: args).compactMap { match in parseDoubles(in: match[1]).nilIfEmpty.flatMap { a in Double(match[2]).map { b in (a, b) } } }
         guard !samples.isEmpty else { throw MLError.invalidFormat("Please specify space-separated data samples of the form: (number number number..., number), for example: (3.4 2.1, 5.3) (0.1 0, -2) in two dimensions") }
 

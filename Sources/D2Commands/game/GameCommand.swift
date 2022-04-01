@@ -44,7 +44,7 @@ public class GameCommand<G: Game>: Command {
             """
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         let text = input.asText ?? ""
         if let subcommand = subcommands[text] {
             do {
@@ -82,7 +82,7 @@ public class GameCommand<G: Game>: Command {
         context.subscribeToChannel()
     }
 
-    private func matches(output: CommandOutput) {
+    private func matches(output: any CommandOutput) {
         output.append(.embed(Embed(
             title: ":video_game: Running \(game.name) matches",
             description: matches
@@ -96,7 +96,7 @@ public class GameCommand<G: Game>: Command {
         return Set(flagRegex.allGroups(in: input).map { $0[1] })
     }
 
-    private func sendHandsAsDMs(fromState state: G.State, to output: CommandOutput) {
+    private func sendHandsAsDMs(fromState state: G.State, to output: any CommandOutput) {
         let currentPlayers = state.playersOf(role: state.currentRole)
 
         if game.onlySendHandToCurrentRole && !game.isRealTime && !currentPlayers.isEmpty {
@@ -114,7 +114,7 @@ public class GameCommand<G: Game>: Command {
         }
     }
 
-    func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: CommandOutput, flags: Set<String> = []) {
+    func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: any CommandOutput, flags: Set<String> = []) {
         do {
             var additionalMsg: RichValue = .none
             if let previousMatch = matches[channelID] {
@@ -163,7 +163,7 @@ public class GameCommand<G: Game>: Command {
         return sequence.joined(separator: "\n")
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let author = context.author.map({ gamePlayer(from: $0, context: context) }) else { return }
 
         if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel, let client = context.client {
@@ -182,7 +182,7 @@ public class GameCommand<G: Game>: Command {
     /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.
     /// Automatically performs subsequent computer moves as needed.
     @discardableResult
-    func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, channelName: String? = nil, output: CommandOutput, author: GamePlayer) -> Bool {
+    func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, channelName: String? = nil, output: any CommandOutput, author: GamePlayer) -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true

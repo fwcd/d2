@@ -10,7 +10,7 @@ public class FactCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         RandomFactQuery(language: "en").perform().listen {
             do {
                 let fact = try $0.get()

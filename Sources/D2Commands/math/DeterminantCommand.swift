@@ -14,7 +14,7 @@ public class DeterminantCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
             output.append(errorText: "Please input a matrix")
             return

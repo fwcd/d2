@@ -18,7 +18,7 @@ public class DemoGifCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         do {
             let width = 200
             let height = 200

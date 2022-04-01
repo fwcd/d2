@@ -12,7 +12,7 @@ public class ChuckNorrisJokeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let args = input.split(separator: " ")
         IcndbJokeQuery(firstName: args[safely: 0].map { String($0) }, lastName: args[safely: 1].map { String($0) }).perform().listen {
             switch $0 {

@@ -18,7 +18,7 @@ public class PokeQuizCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         PokedexQuery().perform()
             .map { $0.results[Int.random(in: 0..<$0.results.count)] }
             .then { PokemonQuery(url: $0.url).perform() }
@@ -43,7 +43,7 @@ public class PokeQuizCommand: StringCommand {
             }
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id,
             let quiz = quizzes[channelId],
             quiz.player == context.author?.id else { return }

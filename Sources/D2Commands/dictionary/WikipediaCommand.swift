@@ -15,7 +15,7 @@ public class WikipediaCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         WikipediaPageQuery(pageName: input).perform().listen {
             switch $0 {
                 case .success(let page):

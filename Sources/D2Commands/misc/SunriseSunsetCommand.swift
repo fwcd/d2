@@ -10,7 +10,7 @@ public class SunriseSunsetCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let coords = input.asGeoCoordinates else {
             output.append(errorText: "Please input geographical coordinates, e.g. by piping the command `geo` into this one!")
             return

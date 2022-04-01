@@ -51,7 +51,7 @@ public class PrologCommand: Command {
             """
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let subcommandName = input.asText?.split(separator: " ").first else {
             output.append(errorText: info.helpText!)
             return

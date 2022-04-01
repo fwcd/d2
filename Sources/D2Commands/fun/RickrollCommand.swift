@@ -10,7 +10,7 @@ public class RickrollCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else {
             output.append(errorText: "No message/channel id available")
             return
@@ -35,7 +35,7 @@ public class RickrollCommand: Command {
         }
     }
 
-    private func rickroll(output: CommandOutput, mentions: [User]) {
+    private func rickroll(output: any CommandOutput, mentions: [User]) {
         let what = ["cool video", "meme compilation", "awesome remix", "great song", "tutorial", "nice trailer", "movie"].randomElement()!
         output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " and ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
     }

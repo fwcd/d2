@@ -19,7 +19,7 @@ public class FeedCommand<P>: VoidCommand where P: FeedPresenter {
         self.presenter = presenter
     }
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         let parser = FeedParser(URL: url)
 
         Promise { then in parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: then) }

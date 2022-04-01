@@ -23,7 +23,7 @@ public class MarkovCommand: StringCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
         let cleanedInput = flagPattern.replace(in: input, with: "").nilIfEmpty
 

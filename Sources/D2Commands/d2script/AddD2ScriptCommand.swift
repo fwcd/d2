@@ -20,7 +20,7 @@ public class AddD2ScriptCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let code = codePattern.firstGroups(in: input)?[1] {
             do {
                 let command = try D2ScriptCommand(script: try parser.parse(code))

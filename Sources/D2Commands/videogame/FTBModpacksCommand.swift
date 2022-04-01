@@ -15,7 +15,7 @@ public class FTBModpacksCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         FTBModpacksQuery().perform().listen {
             do {
                 let packs = try $0.get().prefix(5)

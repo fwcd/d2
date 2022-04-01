@@ -37,7 +37,7 @@ public class D2ScriptCommand: StringCommand {
         )
     }
 
-    private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: CommandOutput) {
+    private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: any CommandOutput) {
         // Output to Discord
         storage[function: "output"] = {
             guard let value = $0.first else {
@@ -94,7 +94,7 @@ public class D2ScriptCommand: StringCommand {
         }
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !running else {
             output.append(errorText: "This command is already running, wait for it to finish")
             return

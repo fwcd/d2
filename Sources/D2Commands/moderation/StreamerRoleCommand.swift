@@ -12,7 +12,7 @@ public class StreamerRoleCommand: Command {
         self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "Not on a guild")
             return

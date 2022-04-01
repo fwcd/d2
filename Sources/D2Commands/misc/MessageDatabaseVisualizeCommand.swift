@@ -73,7 +73,7 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let guildId = context.guild?.id else {
             output.append(errorText: "Not on a guild!")
             return

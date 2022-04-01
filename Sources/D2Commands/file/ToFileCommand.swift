@@ -17,7 +17,7 @@ public class ToFileCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         if case let .compound(values) = input {
             guard let name = values.first else {
                 output.append(errorText: "Missing file name")

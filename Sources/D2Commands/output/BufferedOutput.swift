@@ -1,11 +1,11 @@
 /// A buffered output that accumulates RichValues and first outputs once
 /// flushed (or deinited, in which case it happens automatically).
 public class BufferedOutput: CommandOutput {
-    private let inner: CommandOutput
+    private let inner: any CommandOutput
     private var buffer: [OutputChannel: [RichValue]] = [:]
     public var messageLengthLimit: Int? { inner.messageLengthLimit }
 
-    public init(_ inner: CommandOutput) {
+    public init(_ inner: any CommandOutput) {
         self.inner = inner
     }
 

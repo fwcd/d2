@@ -15,7 +15,7 @@ public class SimulatePermissionCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author present")
             return

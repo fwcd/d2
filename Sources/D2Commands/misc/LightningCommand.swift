@@ -48,7 +48,7 @@ public class LightningCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id, let timestamp = context.timestamp else { return }
 
         output.append(":zap: Type `\(thunderKeywords[0])` immediately after hearing thunder! Type `\(stopKeyword)` to stop.")
@@ -56,7 +56,7 @@ public class LightningCommand: StringCommand {
         lightnings[channelId] = Lightning(timestamp: timestamp)
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         if thunderKeywords.contains(content) {
             addThunder(from: context)
         } else if stopKeyword == content {

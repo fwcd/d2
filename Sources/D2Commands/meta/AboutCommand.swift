@@ -14,7 +14,7 @@ public class AboutCommand: VoidCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         output.append(Embed(
             title: "D2",
             description: """

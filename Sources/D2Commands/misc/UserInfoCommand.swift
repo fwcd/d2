@@ -15,7 +15,7 @@ public class UserInfoCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append("Not on a guild.")
             return

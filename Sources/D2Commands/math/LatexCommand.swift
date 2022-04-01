@@ -22,7 +22,7 @@ public class LatexCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !running else {
             output.append(errorText: "Wait for the first LaTeX command to finish")
             return

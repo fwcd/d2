@@ -75,7 +75,7 @@ public class AdventOfCodeCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if input.isEmpty {
             // Present leaderboard
 
@@ -101,7 +101,7 @@ public class AdventOfCodeCommand: StringCommand {
         }
     }
 
-    private func withLeaderboard(output: CommandOutput, _ action: @escaping (AdventOfCodeLeaderboard) throws -> Void) {
+    private func withLeaderboard(output: any CommandOutput, _ action: @escaping (AdventOfCodeLeaderboard) throws -> Void) {
         guard let ownerId = configuration.leaderboardOwnerId else {
             output.append(errorText: "Please set a leaderboard before querying it!")
             return

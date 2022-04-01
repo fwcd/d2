@@ -20,7 +20,7 @@ public class PresenceCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let parsedArgs = argsPattern.firstGroups(in: input) {
             let activityType = activityTypes[parsedArgs[1]]!
             let status = parsedArgs[2].nilIfEmpty.flatMap { Presence.Status(rawValue: $0) } ?? .online

@@ -16,7 +16,7 @@ public class DesignQuoteCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         QuotesOnDesignQuery().perform().listen {
             do {
                 let quotes = try $0.get()

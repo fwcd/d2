@@ -9,7 +9,7 @@ public class TableToTextCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let table = input.asTable else {
             output.append(errorText: "Please input a table!")
             return

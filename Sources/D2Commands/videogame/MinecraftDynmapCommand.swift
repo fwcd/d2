@@ -18,7 +18,7 @@ public class MinecraftDynmapCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let parsedArgs = argsPattern.firstGroups(in: input) else {
             output.append(errorText: info.helpText!)
             return

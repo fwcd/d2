@@ -14,7 +14,7 @@ public class QRCodeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             let qr = try QRCode.encode(text: input, ecl: .medium)
             let scale = 4

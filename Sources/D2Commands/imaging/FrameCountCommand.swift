@@ -7,7 +7,7 @@ public class FrameCountCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let gif = input.asGif else {
             output.append(errorText: "Please input a GIF!")
             return

@@ -12,7 +12,7 @@ public class ReverseCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         if let gif = input.asGif {
             var reversed = gif
             reversed.frames = gif.frames.reversed()

@@ -18,7 +18,7 @@ public class PronounsCommand: StringCommand {
         self._config = _config
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard
             let guildId = context.guild?.id,
             let pronounRoles = config.pronounRoles[guildId],
@@ -44,7 +44,7 @@ public class PronounsCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionInteraction(with customId: String, by user: User, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionInteraction(with customId: String, by user: User, output: any CommandOutput, context: CommandContext) {
         guard customId.hasPrefix(customIdPrefix) else { return }
         let encodedId = customId.dropFirst(customIdPrefix.count)
         guard let encodedIdData = encodedId.data(using: .utf8),

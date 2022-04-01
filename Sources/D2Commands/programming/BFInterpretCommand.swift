@@ -21,7 +21,7 @@ public class BFInterpretCommand: StringCommand {
         self.maxExecutionSeconds = maxExecutionSeconds
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !running else {
             output.append(errorText: "Whoa, not so fast. Wait for the program to finish!")
             return

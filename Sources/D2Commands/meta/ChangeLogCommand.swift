@@ -12,7 +12,7 @@ public class ChangeLogCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         GitHubCommitsQuery(user: "fwcd", repo: "d2").perform().listen {
             do {
                 let commits = try $0.get()

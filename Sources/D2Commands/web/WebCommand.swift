@@ -23,7 +23,7 @@ public class WebCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let url = input.asUrls?.first else {
             output.append(errorText: "Not a valid URL: `\(input)`")
             return

@@ -13,7 +13,7 @@ public class IdentityMatrixCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let size = input.asText.flatMap({ Int($0) }) else {
             output.append(errorText: "Please specify a single integer as size!")
             return

@@ -16,7 +16,7 @@ public class HugCommand: Command {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let author = context.author else {
             output.append(errorText: "No author found")
             return

@@ -25,7 +25,7 @@ public class HaikusCommand: StringCommand {
         ]
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let subcommand = subcommands[input] else {
             output.append(errorText: "Unrecognized subcommand, try one of these: `\(subcommands.keys.joined(separator: ", "))`")
             return

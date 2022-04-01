@@ -13,7 +13,7 @@ public class TechSupportCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "No guild available")
             return

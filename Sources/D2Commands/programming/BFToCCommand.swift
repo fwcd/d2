@@ -14,7 +14,7 @@ public class BFToCCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let bfProgram = bfCodePattern.firstGroups(in: input)?[1] {
             var outputCode = ""
             var last: String? = nil

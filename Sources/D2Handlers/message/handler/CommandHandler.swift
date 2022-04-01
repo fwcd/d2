@@ -14,7 +14,7 @@ fileprivate class PipeComponent {
     let command: Command
     let context: CommandContext
     let args: String
-    var output: CommandOutput? = nil
+    var output: (any CommandOutput)? = nil
 
     init(name: String, command: Command, context: CommandContext, args: String) {
         self.name = name

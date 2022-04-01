@@ -17,7 +17,7 @@ public class MDBCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         Promise.catching { try MDBQuery(moduleCode: input.nilIfEmpty) }
             .then { $0.start() }
             .listen {

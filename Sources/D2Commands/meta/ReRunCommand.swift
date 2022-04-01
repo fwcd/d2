@@ -16,7 +16,7 @@ public class ReRunCommand: VoidCommand {
         self._mostRecentPipeRunner = mostRecentPipeRunner
     }
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         guard let (pipeRunner, minPermissionLevel) = mostRecentPipeRunner else {
             output.append(errorText: "No commands have been executed yet!")
             return

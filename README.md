@@ -147,7 +147,7 @@ At a basic level, the `Command` protocol consists of a single method named `invo
 protocol Command: class {
     ...
 
-    func invoke(with input: RichValue, output: CommandOutput, context: CommandContext)
+    func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext)
 
     ...
 }
@@ -161,16 +161,16 @@ The arguments each represent a part of the invocation context. Given a request s
 | `output` | `DiscordOutput` |
 | `context` | `CommandContext` containing the message, the client and the command registry |
 
-Since `output: CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordOutput`. Both the first and the second command call a `PipeOutput` instead that passes any values to the next command:
+Since `output: any CommandOutput` represents a polymorphic object, the output of an invocation does not necessarily get sent to the Discord channel where the request originated from. For example, if the user creates a piped request such as `%first | second | third`, only the third command would operate on a `DiscordOutput`. Both the first and the second command call a `PipeOutput` instead that passes any values to the next command:
 
 ```swift
 class PipeOutput: CommandOutput {
     private let sink: Command
     private let context: CommandContext
     private let args: String
-    private let next: CommandOutput?
+    private let next: (any CommandOutput)?
 
-    init(withSink sink: Command, context: CommandContext, args: String, next: CommandOutput? = nil) {
+    init(withSink sink: Command, context: CommandContext, args: String, next: (any CommandOutput)? = nil) {
         self.sink = sink
         self.args = args
         self.context = context
@@ -188,7 +188,7 @@ Often the `Command` protocol is too low-level to be adopted directly, since the 
 
 ```swift
 protocol StringCommand: Command {
-    func invoke(with input: String, output: CommandOutput, context: CommandContext)
+    func invoke(with input: String, output: any CommandOutput, context: CommandContext)
 }
 ```
 
@@ -200,7 +200,7 @@ protocol ArgCommand: Command {
 
     var argPattern: Args { get }
 
-    func invoke(withInputArgs inputArgs: [String], output: CommandOutput, context: CommandContext)
+    func invoke(withInputArgs inputArgs: [String], output: any CommandOutput, context: CommandContext)
 }
 ```
 

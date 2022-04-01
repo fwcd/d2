@@ -20,7 +20,7 @@ public class PronounRoleCommand: StringCommand {
         self._config = _config
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let guild = context.guild else {
             output.append(errorText: "No guild available")
             return

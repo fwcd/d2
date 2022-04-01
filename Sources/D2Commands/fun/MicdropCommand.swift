@@ -10,7 +10,7 @@ public class MicdropCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         output.append(Embed(
             image: Embed.Image(url: URL(string: "https://media.giphy.com/media/mVJ5xyiYkC3Vm/giphy.gif")!)
         ))

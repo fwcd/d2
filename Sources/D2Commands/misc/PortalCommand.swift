@@ -61,7 +61,7 @@ public class PortalCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let subcommand = subcommands[input] else {
             output.append(errorText: "Unknown subcommand `\(input)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
@@ -69,7 +69,7 @@ public class PortalCommand: StringCommand {
         subcommand(output, context)
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             log.warning("No channel id available, despite being subscribed!")
             return
@@ -93,7 +93,7 @@ public class PortalCommand: StringCommand {
         return portals.first(where: { $0.origin == channelId || $0.target == channelId })
     }
 
-    private func openNewPortal(output: CommandOutput, context: CommandContext) {
+    private func openNewPortal(output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             log.warning("Tried to open new portal without a channel being present.")
             return
@@ -105,7 +105,7 @@ public class PortalCommand: StringCommand {
         output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
     }
 
-    private func connectPortal(output: CommandOutput, context: CommandContext) {
+    private func connectPortal(output: any CommandOutput, context: CommandContext) {
         guard var portal = halfOpenPortal else {
             log.warning("Tried to connect portal without having a half-open portal. This is likely a bug.")
             return
@@ -126,7 +126,7 @@ public class PortalCommand: StringCommand {
         output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .guildChannel(portal.origin))
 }
 
-    private func closePortal(output: CommandOutput, context: CommandContext) {
+    private func closePortal(output: any CommandOutput, context: CommandContext) {
         let channelId = context.channel?.id
         let closeMessage = ":comet: Closed portal."
 

@@ -13,7 +13,7 @@ public class GModServerPingCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let (host, customPort) = parseHostPort(from: input) else {
             output.append(info.helpText!)
             return

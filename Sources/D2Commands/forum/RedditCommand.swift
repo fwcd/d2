@@ -19,7 +19,7 @@ public class RedditCommand<P>: StringCommand where P: RedditPresenter {
         self.presenter = presenter
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !input.isEmpty else {
             output.append(errorText: "Enter a subreddit to get started!")
             return

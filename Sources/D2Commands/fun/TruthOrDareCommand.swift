@@ -13,7 +13,7 @@ public class TruthOrDareCommand: StringCommand {
         self.type = type
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let category = TruthOrDareQuery.Category(rawValue: input) ?? TruthOrDareQuery.Category.allCases.randomElement()!
         let type = self.type ?? TruthOrDareQuery.TDType.allCases.randomElement()!
 

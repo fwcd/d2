@@ -51,7 +51,7 @@ public class ThreadCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !input.isEmpty else {
             output.append(errorText: "Please use one of these subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return

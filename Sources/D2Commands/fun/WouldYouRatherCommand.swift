@@ -18,7 +18,7 @@ public class WouldYouRatherCommand: StringCommand {
         self.partyGameDB = partyGameDB
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             let wyr = try partyGameDB.randomWyrQuestion()
             output.append(Embed(

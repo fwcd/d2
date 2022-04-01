@@ -273,7 +273,7 @@ public class UnitConverterCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let subcommand = subcommands[input] {
             subcommand(output)
         } else {

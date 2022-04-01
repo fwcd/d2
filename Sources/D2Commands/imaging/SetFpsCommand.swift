@@ -15,7 +15,7 @@ public class SetFpsCommand: Command {
 
     // TODO: Figure out why this command is currently broken
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let raw = input.asText, let fps = Double(raw) else {
             output.append(errorText: info.helpText!)
             return

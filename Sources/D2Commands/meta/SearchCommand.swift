@@ -18,7 +18,7 @@ public class SearchCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let term = input.lowercased()
         guard !term.isEmpty else {
             output.append(errorText: "Please enter a search term!")

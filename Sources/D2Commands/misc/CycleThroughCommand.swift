@@ -14,7 +14,7 @@ public class CycleThroughCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard !timer.isRunning else {
             output.append(errorText: "Animation is already running.")
             return

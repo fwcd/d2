@@ -18,7 +18,7 @@ public class RemoveCronScheduleCommand: StringCommand {
         self.cronSchedulerBus = cronSchedulerBus
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         cronSchedulerBus.removeSchedule(name: input)
         output.append("Removed schedule `\(input)` (if it existed)")
     }

@@ -23,7 +23,7 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
         )
     }
 
-    public func invoke(with input: Args, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) {
         let rawLHS = input.left.value
         let rawRHS = input.right.value
 

@@ -14,7 +14,7 @@ public class DownloadCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let filePath = input.asText else {
             output.append(errorText: info.helpText!)
             return

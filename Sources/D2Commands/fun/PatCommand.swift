@@ -39,7 +39,7 @@ public class PatCommand: Command {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let user = input.asMentions?.first else {
             output.append(errorText: "Please mention someone!")
             return

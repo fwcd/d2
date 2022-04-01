@@ -17,7 +17,7 @@ public class GrepCommand: ArgCommand {
 
     public init() {}
 
-    public func invoke(with input: Args, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) {
         do {
             let regex = try Regex(from: input.left.value)
             var result = ""

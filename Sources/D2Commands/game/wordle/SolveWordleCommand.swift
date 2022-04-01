@@ -14,7 +14,7 @@ public class SolveWordleCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             output.append(errorText: "Not on a channel")
             return
@@ -43,7 +43,7 @@ public class SolveWordleCommand: StringCommand {
         context.subscriptions.unsubscribe(from: channelId)
     }
 
-    public func onSubscriptionMessage(with content: String, output: CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let channelId = context.channel?.id else {
             return
         }

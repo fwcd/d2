@@ -12,7 +12,7 @@ public class ReverseConcatCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         output.append(input.values.compactMap { $0.asText }.reversed().joined(separator: " "))
     }
 }

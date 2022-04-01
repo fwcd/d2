@@ -20,7 +20,7 @@ public class AddEventListenerCommand: StringCommand {
         self.eventListenerBus = eventListenerBus
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let parsedArgs = argsPattern.firstGroups(in: input) {
             let rawEventName = parsedArgs[1]
             let listenerName = parsedArgs[2]

@@ -10,7 +10,7 @@ public class ShellCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             let out = try Shell().utf8Sync(for: input, useBash: true)?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty ?? "no output"
             output.append(.code(out, language: nil))

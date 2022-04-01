@@ -8,7 +8,7 @@ public class ShapeCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let ndArrays = input.asNDArrays else {
             output.append(errorText: "Please input nd-arrays to fetch the shape(s)!")
             return

@@ -11,7 +11,7 @@ public class FortuneCookieCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         FortuneCookieQuery().perform().listen {
             do {
                 guard let cookie = try $0.get().first else {

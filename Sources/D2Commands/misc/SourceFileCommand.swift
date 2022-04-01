@@ -21,7 +21,7 @@ public class SourceFileCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard let command = context.registry[input] else {
             output.append(errorText: "Unknown command `\(input)`")
             return

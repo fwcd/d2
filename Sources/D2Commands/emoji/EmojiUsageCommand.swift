@@ -16,7 +16,7 @@ public class EmojiUsageCommand: StringCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             guard let guild = context.guild else {
                 output.append(errorText: "Not on a guild!")

@@ -18,7 +18,7 @@ public class IntegralCalculatorCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
             let parsedInput = try parser.parse(input)
             guard let integrationVariable = parsedInput.occurringVariables.first else {

@@ -5,7 +5,7 @@ fileprivate let log = Logger(label: "D2Commands.LatexUtils")
 
 extension LatexRenderer {
     @discardableResult
-    func renderImage(from input: String, to output: CommandOutput, color: String = "white", scale: Double = 2) -> Promise<Void, Error> {
+    func renderImage(from input: String, to output: any CommandOutput, color: String = "white", scale: Double = 2) -> Promise<Void, Error> {
         renderImage(from: input, color: color, scale: scale).peekListen {
             // Render output
             do {

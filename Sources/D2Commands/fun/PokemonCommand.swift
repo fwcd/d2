@@ -19,7 +19,7 @@ public class PokemonCommand: StringCommand {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         PokedexQuery().perform()
             .map { $0.results[Int.random(in: 0..<$0.results.count)] }
             .then { PokemonQuery(url: $0.url).perform() }

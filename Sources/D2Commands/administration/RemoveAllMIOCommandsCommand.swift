@@ -7,7 +7,7 @@ public class RemoveAllMIOCommandsCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) {
         guard let client = context.client else {
             output.append(errorText: "No client present")
             return

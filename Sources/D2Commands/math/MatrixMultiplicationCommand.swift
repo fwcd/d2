@@ -16,7 +16,7 @@ public class MatrixMultiplicationCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         guard let factors = allNonNil(input.asNDArrays?.map { $0.asMatrix } ?? [nil]) else {
             output.append(errorText: "Please specify the input in the form of matrices, e.g. `((1, 2), (3, 4)) ((1, 1), (1, 1))`")
             return
