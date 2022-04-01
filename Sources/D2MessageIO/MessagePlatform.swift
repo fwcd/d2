@@ -13,5 +13,5 @@ public protocol MessagePlatform: Startable {
 
     /// Performs synchronous setup. This method is expected not
     /// to block and to finish quickly.
-    init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: Token) throws
+    init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token: Token) throws
 }

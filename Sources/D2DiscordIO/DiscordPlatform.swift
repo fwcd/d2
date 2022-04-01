@@ -12,7 +12,7 @@ public struct DiscordPlatform: MessagePlatform {
 
     public var name: String { discordClientName }
 
-    public init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String) {
+    public init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token: String) {
         log.info("Initializing Discord backend...")
 
         let queue = DispatchQueue(label: "Discord handle queue")

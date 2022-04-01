@@ -9,7 +9,7 @@ public struct IRCPlatform: MessagePlatform {
     private let ircClient: IRCClient
     public let name: String
 
-    public init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token config: IRCConfig) throws {
+    public init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token config: IRCConfig) throws {
         self.config = config
         name = "IRC \(config.host):\(config.port)"
 

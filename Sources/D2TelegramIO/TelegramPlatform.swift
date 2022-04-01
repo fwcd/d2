@@ -10,7 +10,7 @@ public struct TelegramPlatform: MessagePlatform {
 
     public var name: String { telegramClientName }
 
-    public init(with delegate: MessageDelegate, combinedClient: CombinedMessageClient, token: String) throws {
+    public init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token: String) throws {
         log.info("Initializing Telegram backend...")
         bot = try Bot(token: token)
         let overlayClient = combinedClient.register(client: TelegramMessageClient(bot: bot))
