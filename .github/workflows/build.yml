@@ -6,7 +6,9 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-12']
+        os: ['ubuntu-latest']
+        # TODO: Reenable once macOS 12 becomes available
+        # os: ['ubuntu-latest', 'macos-12']
         swift: ['5.6']
 
     runs-on: ${{ matrix.os }}
