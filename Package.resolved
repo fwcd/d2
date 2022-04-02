@@ -1,358 +1,352 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "async-http-client",
-        "repositoryURL": "https://github.com/swift-server/async-http-client.git",
-        "state": {
-          "branch": null,
-          "revision": "7a4dfe026f6ee0f8ad741b58df74c60af296365d",
-          "version": "1.9.0"
-        }
-      },
-      {
-        "package": "BigInt",
-        "repositoryURL": "https://github.com/attaswift/BigInt.git",
-        "state": {
-          "branch": null,
-          "revision": "0ed110f7555c34ff468e72e1686e59721f2b0da6",
-          "version": "5.3.0"
-        }
-      },
-      {
-        "package": "Socket",
-        "repositoryURL": "https://github.com/Kitura/BlueSocket.git",
-        "state": {
-          "branch": null,
-          "revision": "c9894fd117457f1d006575fbfb2fdfd6f79eac03",
-          "version": "1.0.200"
-        }
-      },
-      {
-        "package": "CodableCSV",
-        "repositoryURL": "https://github.com/dehesa/CodableCSV.git",
-        "state": {
-          "branch": null,
-          "revision": "99ace2cfdfbc19108b529c021005fb57a460e715",
-          "version": "0.6.7"
-        }
-      },
-      {
-        "package": "Emoji",
-        "repositoryURL": "https://github.com/safx/Emoji-Swift.git",
-        "state": {
-          "branch": null,
-          "revision": "b3a49f4a9fbee3c7320591dbc7263c192244063e",
-          "version": null
-        }
-      },
-      {
-        "package": "FeedKit",
-        "repositoryURL": "https://github.com/nmdias/FeedKit.git",
-        "state": {
-          "branch": null,
-          "revision": "68493a33d862c33c9a9f67ec729b3b7df1b20ade",
-          "version": "9.1.2"
-        }
-      },
-      {
-        "package": "GraphViz",
-        "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
-        "state": {
-          "branch": null,
-          "revision": "74b6cbd8c5ecea9f64d84c4e1c88d65604dd033f",
-          "version": "0.4.1"
-        }
-      },
-      {
-        "package": "libtesseract",
-        "repositoryURL": "https://github.com/SwiftyTesseract/libtesseract.git",
-        "state": {
-          "branch": null,
-          "revision": "214a36e04d740795d7ba2f07c6108944d0136f8a",
-          "version": "0.2.0"
-        }
-      },
-      {
-        "package": "LineNoise",
-        "repositoryURL": "https://github.com/andybest/linenoise-swift.git",
-        "state": {
-          "branch": null,
-          "revision": "afc897c02b030af7333105c4fedcd843a8339238",
-          "version": "0.0.3"
-        }
-      },
-      {
-        "package": "multipart-kit",
-        "repositoryURL": "https://github.com/vapor/multipart-kit.git",
-        "state": {
-          "branch": null,
-          "revision": "2dd9368a3c9580792b77c7ef364f3735909d9996",
-          "version": "4.5.1"
-        }
-      },
-      {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble.git",
-        "state": {
-          "branch": null,
-          "revision": "e9d769113660769a4d9dd3afb855562c0b7ae7b0",
-          "version": "7.3.4"
-        }
-      },
-      {
-        "package": "NIOCronScheduler",
-        "repositoryURL": "https://github.com/MihaelIsaev/NIOCronScheduler.git",
-        "state": {
-          "branch": null,
-          "revision": "c33c8af4a5836dc37ca675927f2fd030dbf8374e",
-          "version": "2.0.2"
-        }
-      },
-      {
-        "package": "PerfectSysInfo",
-        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SysInfo.git",
-        "state": {
-          "branch": null,
-          "revision": "3aeca90d9aad656be9a5402a21f3f7ad99be2723",
-          "version": "3.0.0"
-        }
-      },
-      {
-        "package": "SQLite.swift",
-        "repositoryURL": "https://github.com/stephencelis/SQLite.swift",
-        "state": {
-          "branch": null,
-          "revision": "5f5ad81ac0d0a0f3e56e39e646e8423c617df523",
-          "version": "0.13.2"
-        }
-      },
-      {
-        "package": "SwifCron",
-        "repositoryURL": "https://github.com/MihaelIsaev/SwifCron.git",
-        "state": {
-          "branch": null,
-          "revision": "effe20321342705e66894d86720c5882e2f4095e",
-          "version": "1.3.1"
-        }
-      },
-      {
-        "package": "swift-argument-parser",
-        "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
-        "state": {
-          "branch": null,
-          "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
-          "version": "0.3.2"
-        }
-      },
-      {
-        "package": "swift-backtrace",
-        "repositoryURL": "https://github.com/swift-server/swift-backtrace.git",
-        "state": {
-          "branch": null,
-          "revision": "d3e04a9d4b3833363fb6192065b763310b156d54",
-          "version": "1.3.1"
-        }
-      },
-      {
-        "package": "swift-cairo",
-        "repositoryURL": "https://github.com/fwcd/swift-cairo.git",
-        "state": {
-          "branch": null,
-          "revision": "e3f1e695f1630022ee65241744a81bc1e056d0bb",
-          "version": "1.3.1"
-        }
-      },
-      {
-        "package": "swift-discord",
-        "repositoryURL": "https://github.com/fwcd/swift-discord.git",
-        "state": {
-          "branch": null,
-          "revision": "ea9e9f7686ad51e095726305b6693ae508276afc",
-          "version": "10.0.10"
-        }
-      },
-      {
-        "package": "swift-gif",
-        "repositoryURL": "https://github.com/fwcd/swift-gif.git",
-        "state": {
-          "branch": null,
-          "revision": "651e51aaa2087c17f2111865521a2ff582b0353a",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "swift-graphics",
-        "repositoryURL": "https://github.com/fwcd/swift-graphics.git",
-        "state": {
-          "branch": null,
-          "revision": "06760653516ce19753d1a2f61879a2915987e51a",
-          "version": "1.1.0"
-        }
-      },
-      {
-        "package": "swift-log",
-        "repositoryURL": "https://github.com/apple/swift-log.git",
-        "state": {
-          "branch": null,
-          "revision": "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
-          "version": "1.4.2"
-        }
-      },
-      {
-        "package": "swift-nio",
-        "repositoryURL": "https://github.com/apple/swift-nio.git",
-        "state": {
-          "branch": null,
-          "revision": "154f1d32366449dcccf6375a173adf4ed2a74429",
-          "version": "2.38.0"
-        }
-      },
-      {
-        "package": "swift-nio-extras",
-        "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
-        "state": {
-          "branch": null,
-          "revision": "f73ca5ee9c6806800243f1ac415fcf82de9a4c91",
-          "version": "1.10.2"
-        }
-      },
-      {
-        "package": "swift-nio-http2",
-        "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
-        "state": {
-          "branch": null,
-          "revision": "ac2a5afce3dbb6795b4f78ec3f19726dc28f5617",
-          "version": "1.20.0"
-        }
-      },
-      {
-        "package": "swift-nio-irc",
-        "repositoryURL": "https://github.com/SwiftNIOExtras/swift-nio-irc.git",
-        "state": {
-          "branch": null,
-          "revision": "782e6d3bcd892efaedc9c530b2d5c5fbb42a680e",
-          "version": "0.8.2"
-        }
-      },
-      {
-        "package": "swift-nio-irc-client",
-        "repositoryURL": "https://github.com/NozeIO/swift-nio-irc-client.git",
-        "state": {
-          "branch": null,
-          "revision": "7a0b7d4cde33614b7b0af193cd8ff0f7f305eb77",
-          "version": "0.8.1"
-        }
-      },
-      {
-        "package": "swift-nio-ssl",
-        "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
-        "state": {
-          "branch": null,
-          "revision": "52a486ff6de9bc3e26bf634c5413c41c5fa89ca5",
-          "version": "2.17.2"
-        }
-      },
-      {
-        "package": "swift-nio-transport-services",
-        "repositoryURL": "https://github.com/apple/swift-nio-transport-services",
-        "state": {
-          "branch": null,
-          "revision": "8ab824b140d0ebcd87e9149266ddc353e3705a3e",
-          "version": "1.11.4"
-        }
-      },
-      {
-        "package": "swift-prolog",
-        "repositoryURL": "https://github.com/fwcd/swift-prolog.git",
-        "state": {
-          "branch": null,
-          "revision": "92f3f37b748f5de75f97636c74c4f48af44674a2",
-          "version": "0.1.0"
-        }
-      },
-      {
-        "package": "swift-qrcode-generator",
-        "repositoryURL": "https://github.com/fwcd/swift-qrcode-generator.git",
-        "state": {
-          "branch": null,
-          "revision": "5ca09b6a2ad190f94aa3d6ddef45b187f8c0343b",
-          "version": "1.0.3"
-        }
-      },
-      {
-        "package": "swift-utils",
-        "repositoryURL": "https://github.com/fwcd/swift-utils.git",
-        "state": {
-          "branch": null,
-          "revision": "a85c1e1533b027ce2a591f872c475d51afd19799",
-          "version": "1.3.10"
-        }
-      },
-      {
-        "package": "SwiftPlot",
-        "repositoryURL": "https://github.com/KarthikRIyer/swiftplot.git",
-        "state": {
-          "branch": null,
-          "revision": "a2f79f456a1e265599272ba58f3d1731974f3e3c",
-          "version": null
-        }
-      },
-      {
-        "package": "SwiftSoup",
-        "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
-        "state": {
-          "branch": null,
-          "revision": "13ba661fd1146967270fca92ce8195b223631436",
-          "version": "2.3.8"
-        }
-      },
-      {
-        "package": "SwiftyTesseract",
-        "repositoryURL": "https://github.com/SwiftyTesseract/SwiftyTesseract.git",
-        "state": {
-          "branch": null,
-          "revision": "1393d15d0278673dd89f2ba21d3fb748f99e02ce",
-          "version": "4.0.1"
-        }
-      },
-      {
-        "package": "syllable-counter-swift",
-        "repositoryURL": "https://github.com/wfreitag/syllable-counter-swift.git",
-        "state": {
-          "branch": null,
-          "revision": "029c8568b4d060174284fdedd7473863768a903b",
-          "version": null
-        }
-      },
-      {
-        "package": "Telegrammer",
-        "repositoryURL": "https://github.com/givip/Telegrammer.git",
-        "state": {
-          "branch": null,
-          "revision": "32657287befddf3d303287bf319901f5c7a6f24e",
-          "version": null
-        }
-      },
-      {
-        "package": "websocket-kit",
-        "repositoryURL": "https://github.com/vapor/websocket-kit.git",
-        "state": {
-          "branch": null,
-          "revision": "d7537b787d37f3877e36b5f1e7cb910f7c401836",
-          "version": "2.1.4"
-        }
-      },
-      {
-        "package": "XMLCoder",
-        "repositoryURL": "https://github.com/MaxDesiatov/XMLCoder.git",
-        "state": {
-          "branch": null,
-          "revision": "f30119af03996939cc4f54e0bf0dda9f88a84da5",
-          "version": "0.13.1"
-        }
+  "pins" : [
+    {
+      "identity" : "async-http-client",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-server/async-http-client.git",
+      "state" : {
+        "revision" : "7a4dfe026f6ee0f8ad741b58df74c60af296365d",
+        "version" : "1.9.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "bigint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/attaswift/BigInt.git",
+      "state" : {
+        "revision" : "0ed110f7555c34ff468e72e1686e59721f2b0da6",
+        "version" : "5.3.0"
+      }
+    },
+    {
+      "identity" : "bluesocket",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kitura/BlueSocket.git",
+      "state" : {
+        "revision" : "c9894fd117457f1d006575fbfb2fdfd6f79eac03",
+        "version" : "1.0.200"
+      }
+    },
+    {
+      "identity" : "codablecsv",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dehesa/CodableCSV.git",
+      "state" : {
+        "revision" : "99ace2cfdfbc19108b529c021005fb57a460e715",
+        "version" : "0.6.7"
+      }
+    },
+    {
+      "identity" : "emoji-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/safx/Emoji-Swift.git",
+      "state" : {
+        "revision" : "b3a49f4a9fbee3c7320591dbc7263c192244063e"
+      }
+    },
+    {
+      "identity" : "feedkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nmdias/FeedKit.git",
+      "state" : {
+        "revision" : "68493a33d862c33c9a9f67ec729b3b7df1b20ade",
+        "version" : "9.1.2"
+      }
+    },
+    {
+      "identity" : "graphviz",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftDocOrg/GraphViz.git",
+      "state" : {
+        "revision" : "74b6cbd8c5ecea9f64d84c4e1c88d65604dd033f",
+        "version" : "0.4.1"
+      }
+    },
+    {
+      "identity" : "libtesseract",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyTesseract/libtesseract.git",
+      "state" : {
+        "revision" : "214a36e04d740795d7ba2f07c6108944d0136f8a",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "linenoise-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/andybest/linenoise-swift.git",
+      "state" : {
+        "revision" : "afc897c02b030af7333105c4fedcd843a8339238",
+        "version" : "0.0.3"
+      }
+    },
+    {
+      "identity" : "multipart-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/multipart-kit.git",
+      "state" : {
+        "revision" : "2dd9368a3c9580792b77c7ef364f3735909d9996",
+        "version" : "4.5.1"
+      }
+    },
+    {
+      "identity" : "nimble",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Quick/Nimble.git",
+      "state" : {
+        "revision" : "e9d769113660769a4d9dd3afb855562c0b7ae7b0",
+        "version" : "7.3.4"
+      }
+    },
+    {
+      "identity" : "niocronscheduler",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MihaelIsaev/NIOCronScheduler.git",
+      "state" : {
+        "revision" : "c33c8af4a5836dc37ca675927f2fd030dbf8374e",
+        "version" : "2.0.2"
+      }
+    },
+    {
+      "identity" : "perfect-sysinfo",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PerfectlySoft/Perfect-SysInfo.git",
+      "state" : {
+        "revision" : "3aeca90d9aad656be9a5402a21f3f7ad99be2723",
+        "version" : "3.0.0"
+      }
+    },
+    {
+      "identity" : "sqlite.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stephencelis/SQLite.swift",
+      "state" : {
+        "revision" : "5f5ad81ac0d0a0f3e56e39e646e8423c617df523",
+        "version" : "0.13.2"
+      }
+    },
+    {
+      "identity" : "swifcron",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MihaelIsaev/SwifCron.git",
+      "state" : {
+        "revision" : "effe20321342705e66894d86720c5882e2f4095e",
+        "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "9564d61b08a5335ae0a36f789a7d71493eacadfc",
+        "version" : "0.3.2"
+      }
+    },
+    {
+      "identity" : "swift-backtrace",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-server/swift-backtrace.git",
+      "state" : {
+        "revision" : "d3e04a9d4b3833363fb6192065b763310b156d54",
+        "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "swift-cairo",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-cairo.git",
+      "state" : {
+        "revision" : "e3f1e695f1630022ee65241744a81bc1e056d0bb",
+        "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "swift-discord",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-discord.git",
+      "state" : {
+        "revision" : "ea9e9f7686ad51e095726305b6693ae508276afc",
+        "version" : "10.0.10"
+      }
+    },
+    {
+      "identity" : "swift-gif",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-gif.git",
+      "state" : {
+        "revision" : "651e51aaa2087c17f2111865521a2ff582b0353a",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swift-graphics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-graphics.git",
+      "state" : {
+        "revision" : "06760653516ce19753d1a2f61879a2915987e51a",
+        "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+        "version" : "1.4.2"
+      }
+    },
+    {
+      "identity" : "swift-nio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio.git",
+      "state" : {
+        "revision" : "154f1d32366449dcccf6375a173adf4ed2a74429",
+        "version" : "2.38.0"
+      }
+    },
+    {
+      "identity" : "swift-nio-extras",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio-extras.git",
+      "state" : {
+        "revision" : "f73ca5ee9c6806800243f1ac415fcf82de9a4c91",
+        "version" : "1.10.2"
+      }
+    },
+    {
+      "identity" : "swift-nio-http2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio-http2.git",
+      "state" : {
+        "revision" : "ac2a5afce3dbb6795b4f78ec3f19726dc28f5617",
+        "version" : "1.20.0"
+      }
+    },
+    {
+      "identity" : "swift-nio-irc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftNIOExtras/swift-nio-irc.git",
+      "state" : {
+        "revision" : "782e6d3bcd892efaedc9c530b2d5c5fbb42a680e",
+        "version" : "0.8.2"
+      }
+    },
+    {
+      "identity" : "swift-nio-irc-client",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/NozeIO/swift-nio-irc-client.git",
+      "state" : {
+        "revision" : "7a0b7d4cde33614b7b0af193cd8ff0f7f305eb77",
+        "version" : "0.8.1"
+      }
+    },
+    {
+      "identity" : "swift-nio-ssl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio-ssl.git",
+      "state" : {
+        "revision" : "52a486ff6de9bc3e26bf634c5413c41c5fa89ca5",
+        "version" : "2.17.2"
+      }
+    },
+    {
+      "identity" : "swift-nio-transport-services",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio-transport-services",
+      "state" : {
+        "revision" : "8ab824b140d0ebcd87e9149266ddc353e3705a3e",
+        "version" : "1.11.4"
+      }
+    },
+    {
+      "identity" : "swift-prolog",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-prolog.git",
+      "state" : {
+        "revision" : "92f3f37b748f5de75f97636c74c4f48af44674a2",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "swift-qrcode-generator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-qrcode-generator.git",
+      "state" : {
+        "revision" : "5ca09b6a2ad190f94aa3d6ddef45b187f8c0343b",
+        "version" : "1.0.3"
+      }
+    },
+    {
+      "identity" : "swift-utils",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-utils.git",
+      "state" : {
+        "revision" : "a85c1e1533b027ce2a591f872c475d51afd19799",
+        "version" : "1.3.10"
+      }
+    },
+    {
+      "identity" : "swiftplot",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KarthikRIyer/swiftplot.git",
+      "state" : {
+        "revision" : "9c7b413e6b1efc520f0dfde1a058cb64064bd805"
+      }
+    },
+    {
+      "identity" : "swiftsoup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "state" : {
+        "revision" : "13ba661fd1146967270fca92ce8195b223631436",
+        "version" : "2.3.8"
+      }
+    },
+    {
+      "identity" : "swiftytesseract",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyTesseract/SwiftyTesseract.git",
+      "state" : {
+        "revision" : "1393d15d0278673dd89f2ba21d3fb748f99e02ce",
+        "version" : "4.0.1"
+      }
+    },
+    {
+      "identity" : "syllable-counter-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wfreitag/syllable-counter-swift.git",
+      "state" : {
+        "revision" : "029c8568b4d060174284fdedd7473863768a903b"
+      }
+    },
+    {
+      "identity" : "telegrammer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/givip/Telegrammer.git",
+      "state" : {
+        "revision" : "32657287befddf3d303287bf319901f5c7a6f24e"
+      }
+    },
+    {
+      "identity" : "websocket-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/websocket-kit.git",
+      "state" : {
+        "revision" : "d7537b787d37f3877e36b5f1e7cb910f7c401836",
+        "version" : "2.1.4"
+      }
+    },
+    {
+      "identity" : "xmlcoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MaxDesiatov/XMLCoder.git",
+      "state" : {
+        "revision" : "f30119af03996939cc4f54e0bf0dda9f88a84da5",
+        "version" : "0.13.1"
+      }
+    }
+  ],
+  "version" : 2
 }

@@ -26,7 +26,7 @@ let package = Package(
         .package(url: "https://github.com/safx/Emoji-Swift.git", revision: "b3a49f4a9fbee3c7320591dbc7263c192244063e"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
         // TODO: Waiting for https://github.com/KarthikRIyer/swiftplot/pull/131 to be merged
-        .package(url: "https://github.com/KarthikRIyer/swiftplot.git", revision: "a2f79f456a1e265599272ba58f3d1731974f3e3c"),
+        .package(url: "https://github.com/KarthikRIyer/swiftplot.git", revision: "9c7b413e6b1efc520f0dfde1a058cb64064bd805"),
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", from: "0.4.1"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.12.2"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
