@@ -292,7 +292,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KarthikRIyer/swiftplot.git",
       "state" : {
-        "revision" : "9c7b413e6b1efc520f0dfde1a058cb64064bd805"
+        "revision" : "36f46087d36de0375d6245e767b33b3efcb7dc30"
       }
     },
     {
