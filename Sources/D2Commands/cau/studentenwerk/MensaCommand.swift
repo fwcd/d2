@@ -30,7 +30,14 @@ public class MensaCommand: StringCommand {
                     let meals = try $0.get()
                     output.append(Embed(
                         title: ":fork_knife_plate: Today's menu for \(canteen)",
-                        fields: meals.map { Embed.Field(name: $0.title, value: "\($0.price) \($0.properties.compactMap(self.emojiOf).joined(separator: " "))") }
+                        fields: meals.map {
+                            Embed.Field(
+                                name: $0.title,
+                                value: ("\($0.price) \($0.properties.compactMap(self.emojiOf).joined(separator: " "))")
+                                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                                    .nilIfEmpty
+                                    ?? "_no properties_"
+                            ) }
                     ))
                 } catch {
                     output.append(error, errorText: "An error occurred while constructing the request")
