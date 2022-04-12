@@ -19,12 +19,14 @@ d2:
   netApiKeys: {}
   platformTokens: {}
 
-# How much persistent storage D2 claims
-storageClaim: 500M
+# Persistent storage claim configuration
+storageClaim:
+  storageClassName: ''
+  size: 500M
 
 # Deployment configuration (replica count should be 1 until D2 properly supports sharding)
 replicaCount: 1
-restartPolicy: Never # TODO: Make this Always
+restartPolicy: Always
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

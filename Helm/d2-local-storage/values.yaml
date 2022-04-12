@@ -1,2 +1,4 @@
-storage: 500M
-hostPath: local/k8s
+storage:
+  storageClassName: ''
+  size: 500M
+  hostPath: local/k8s

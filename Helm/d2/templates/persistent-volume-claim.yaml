@@ -5,9 +5,9 @@ metadata:
   labels:
     {{- include "d2.labels" . | nindent 4 }}
 spec:
-  storageClassName: ''
+  storageClassName: {{ .Values.storageClaim.storageClassName }}
   accessModes:
   - ReadWriteMany
   resources:
     requests:
-      storage: {{ .Values.storageClaim }}
+      storage: {{ .Values.storageClaim.size }}
