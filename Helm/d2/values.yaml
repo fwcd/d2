@@ -19,6 +19,9 @@ d2:
   netApiKeys: {}
   platformTokens: {}
 
+# How much persistent storage D2 claims
+storageClaim: 500M
+
 # Deployment configuration (replica count should be 1 until D2 properly supports sharding)
 replicaCount: 1
 resources: {}
