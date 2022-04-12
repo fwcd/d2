@@ -70,11 +70,25 @@ Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes clu
 
 > In a local cluster (where persistent volumes generally aren't provisioned automatically), you may find the `d2-local-storage` chart useful, which registers a persistent volume. To use it, create a folder such as `./local/k8s` and run `helm upgrade --install --set storage.hostPath=$PWD/local/k8s d2-local-storage Helm/d2-local-storage`.
 
-You can now upgrade/install D2 to the cluster using `helm upgrade --install d2 Helm/d2`.
+Create a `values.yaml` in some local location (e.g. in `local` or outside the repository) containing D2 configurations (see [the configuration section](#configuration) for details on the schema):
+
+```yaml
+d2:
+  adminWhitelist:
+    users:
+    - value: 'YOUR_DISCORD_USER_ID'
+      clientName: Discord
+  config:
+    commandPrefix: '%'
+  platformTokens:
+    discord: 'YOUR_DISCORD_API_TOKEN'
+```
+
+<!-- TODO: Document that netApiKeys can be set here too -->
+
+You can now upgrade/install D2 to the cluster using `helm upgrade --install -f path/to/local/values.yaml d2 Helm/d2`.
 
 To uninstall it, just run `helm uninstall d2`.
-
-<!-- TODO: Values for required configs -->
 
 ## Configuration
 
@@ -115,9 +129,12 @@ Create a file named `adminWhitelist.json` in `local` (or the `d2local` volume) c
 
 ```json
 {
-    "users": [
-        "YOUR_USERNAME#1234"
-    ]
+  "users": [
+    {
+      "value": "YOUR_DISCORD_USER_ID",
+      "clientName": "Discord"
+    }
+  ]
 }
 ```
 
