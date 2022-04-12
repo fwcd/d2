@@ -27,7 +27,7 @@ spec:
       initContainers:
       - name: init-local
         image: busybox:1.34
-        command: ['sh', '-c', 'for cfg in adminWhitelist.json config.json netApiKeys.json platformTokens.json; do ln -s {{- .Values.d2.configPath }}/$cfg {{- .Values.d2.installPath }}/local/$cfg; done']
+        command: ['sh', '-c', "for cfg in adminWhitelist.json config.json netApiKeys.json platformTokens.json; do ln -s {{- .Values.d2.configPath }}/$cfg {{- .Values.d2.installPath }}/local/$cfg; done"]
         volumeMounts:
         - name: d2-local
           mountPath: {{ .Values.d2.installPath }}/local
