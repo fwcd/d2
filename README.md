@@ -64,8 +64,9 @@ You can then use `docker-compose build` to build the image and `docker-compose u
 
 ### With Kubernetes (Helm)
 
-<!-- TODO: Helm instructions -->
-TBD
+Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes cluster. You can now upgrade/install D2 to the cluster using `helm upgrade --install d2 Helm/d2`.
+
+<!-- TODO: Persistent volume setup, values for required configs -->
 
 ## Configuration
 
