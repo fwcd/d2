@@ -3,12 +3,13 @@ image:
   repository: ghcr.io/fwcd/d2
   tag: latest
 
-d2:
-  # The paths inside the container to use
-  configPath: /etc/d2
-  installPath: /opt/d2
+# Container paths for D2
+paths:
+  config: /etc/d2
+  install: /opt/d2
 
-  # Local configuration
+# Local configuration
+d2:
   adminWhitelist:
     # Add users of the form {"value": "[discord user id]", "clientName": "Discord"}
     users: []
