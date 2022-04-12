@@ -38,6 +38,7 @@ spec:
       - name: d2-config
         configMap:
           name: {{ include "d2.fullname" . }}-config
+      restartPolicy: {{ .Values.restartPolicy }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
