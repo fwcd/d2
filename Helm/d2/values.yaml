@@ -1,7 +1,6 @@
 replicaCount: 1
 image:
   repository: ghcr.io/fwcd/d2
-  pullPolicy: IfNotPresent
   tag: latest
 
 resources: {}
