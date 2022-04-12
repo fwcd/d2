@@ -1,8 +1,20 @@
-replicaCount: 1
+# The image to use
 image:
   repository: ghcr.io/fwcd/d2
   tag: latest
 
+d2:
+  configPath: /etc/d2
+  installPath: /opt/d2
+  # Which D2 config files should be linked from /etc/d2/* into /opt/d2/local/*
+  linkedConfigFiles:
+  - adminWhitelist.json
+  - config.json
+  - netApiKeys.json
+  - platformTokens.json
+
+# Deployment configuration (replica count should be 1 until D2 properly supports sharding)
+replicaCount: 1
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -14,9 +26,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}

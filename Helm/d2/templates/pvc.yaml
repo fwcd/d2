@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "d2.fullname" . }}-local-claim
+  labels:
+    {{- include "d2.labels" . | nindent 4 }}
+spec:
+  storageClassName: ''
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 500M
