@@ -60,6 +60,8 @@ Make sure to have recent versions of Docker and Docker Compose installed and cre
 
 In this volume, add configuration files as described in [the configuration section](#configuration).
 
+> [See here](https://stackoverflow.com/a/55683656) for instructions on how to copy files into a Docker volume
+
 You can then use `docker-compose build` to build the image and `docker-compose up` to run it (add the `-d` flag to run it in daemonized mode).
 
 ### With Kubernetes (Helm)
@@ -70,12 +72,11 @@ Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes clu
 
 ## Configuration
 
+Navigate to your `local` folder or volume (as described in the sections above).
+
 ### Required
 
-* Create a folder named `local` in the repository
-    * If you use Docker, the `local` folder is represented by the `d2local` volume
-    * [See here](https://stackoverflow.com/a/55683656) for instructions on how to copy files into it
-* Create a file named `platformTokens.json` in `local` containing the API tokens (at least one of them should be specified):
+Create a file named `platformTokens.json` in `local` containing the API tokens (at least one of them should be specified):
 
 ```json
 {
@@ -96,7 +97,7 @@ Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes clu
 
 ### Optional
 
-* Create a file named `config.json` in `local` (or the `d2local` volume):
+Create a file named `config.json` in `local` (or the `d2local` volume):
 
 ```json
 {
@@ -104,7 +105,7 @@ Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes clu
 }
 ```
 
-* Create a file named `adminWhitelist.json` in `local` (or the `d2local` volume) containing a list of Discord usernames that have full permissions:
+Create a file named `adminWhitelist.json` in `local` (or the `d2local` volume) containing a list of Discord usernames that have full permissions:
 
 ```json
 {
@@ -114,7 +115,7 @@ Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes clu
 }
 ```
 
-* Create a file named `netApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
+Create a file named `netApiKeys.json` in `local` (or the `d2local` volume) containing various API keys:
 
 ```json
 {
@@ -124,7 +125,7 @@ Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes clu
 }
 ```
 
-* Create a folder named `memeTemplates` in `local` containing PNG images. Any fully transparent sections will be filled by a user-defined image, once the corresponding command is invoked.
+Create a folder named `memeTemplates` in `local` containing PNG images. Any fully transparent sections will be filled by a user-defined image, once the corresponding command is invoked.
 
 ## Architecture
 
