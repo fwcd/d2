@@ -66,9 +66,15 @@ You can then use `docker-compose build` to build the image and `docker-compose u
 
 ### With Kubernetes (Helm)
 
-Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes cluster. You can now upgrade/install D2 to the cluster using `helm upgrade --install d2 Helm/d2`.
+Make sure to have `kubectl` + `helm` installed and connected to a Kubernetes cluster. The cluster should have a persistent volume available.
 
-<!-- TODO: Persistent volume setup, values for required configs -->
+> In a local cluster (where persistent volumes generally aren't provisioned automatically), you may find the `d2-local-storage` chart useful, which registers a persistent volume. To use it, make sure that `./local/k8s` exists, then run `helm upgrade --install d2-local-storage Helm/d2-local-storage`.
+
+You can now upgrade/install D2 to the cluster using `helm upgrade --install d2 Helm/d2`.
+
+To uninstall it, just run `helm uninstall d2`.
+
+<!-- TODO: Values for required configs -->
 
 ## Configuration
 
