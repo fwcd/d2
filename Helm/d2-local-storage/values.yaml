@@ -1,4 +1,5 @@
 storage:
   storageClassName: ''
   size: 500M
-  hostPath: local/k8s
+
+# Configure 'storage.hostPath' (string) during installation via CLI

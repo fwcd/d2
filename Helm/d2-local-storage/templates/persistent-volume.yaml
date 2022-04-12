@@ -11,4 +11,4 @@ spec:
   accessModes:
   - ReadWriteMany
   hostPath:
-    path: {{ .Values.storage.hostPath | quote }}
+    path: {{ required "An absolute 'storage.hostPath' is required!" .Values.storage.hostPath | quote }}
