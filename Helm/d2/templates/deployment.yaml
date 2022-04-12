@@ -20,12 +20,14 @@ spec:
         volumeMounts:
         - name: d2-local
           mountPath: {{ .Values.d2.installPath }}/local
+        - name: d2-config
+          mountPath: {{ .Values.d2.configPath }}
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
       initContainers:
       - name: init-local
         image: busybox:1.34
-        command: ['sh', '-c', 'for cfg in {{- join " " .Values.d2.linkedConfigFiles }}; do ln -s {{- .Values.d2.configPath }}/$cfg {{- .Values.d2.installPath }}/local/$cfg; done']
+        command: ['sh', '-c', 'for cfg in adminWhitelist.json config.json netApiKeys.json platformTokens.json; do ln -s {{- .Values.d2.configPath }}/$cfg {{- .Values.d2.installPath }}/local/$cfg; done']
         volumeMounts:
         - name: d2-local
           mountPath: {{ .Values.d2.installPath }}/local
@@ -33,6 +35,9 @@ spec:
       - name: d2-local
         persistentVolumeClaim:
           claimName: {{ include "d2.fullname" . }}-local-claim
+      - name: d2-config
+        configMap:
+          name: {{ include "d2.fullname" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

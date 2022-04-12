@@ -4,14 +4,20 @@ image:
   tag: latest
 
 d2:
+  # The paths inside the container to use
   configPath: /etc/d2
   installPath: /opt/d2
-  # Which D2 config files should be linked from /etc/d2/* into /opt/d2/local/*
-  linkedConfigFiles:
-  - adminWhitelist.json
-  - config.json
-  - netApiKeys.json
-  - platformTokens.json
+
+  # Local configuration
+  adminWhitelist:
+    # Add users of the form {"value": "[discord user id]", "clientName": "Discord"}
+    users: []
+  config:
+    commandPrefix: '\\'
+    setPresenceInitially: false
+    useMIOCommands: false
+  netApiKeys: {}
+  platformTokens: {}
 
 # Deployment configuration (replica count should be 1 until D2 properly supports sharding)
 replicaCount: 1
