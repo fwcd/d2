@@ -5,10 +5,10 @@ metadata:
   labels:
     {{- include "d2-local-storage.labels" . | nindent 4 }}
 spec:
-  storageClassName: {{ .Values.storage.storageClassName }}
+  storageClassName: {{ .Values.storage.storageClassName | quote }}
   capacity:
-    storage: {{ .Values.storage.size }}
+    storage: {{ .Values.storage.size | quote }}
   accessModes:
   - ReadWriteMany
   hostPath:
-    path: {{ .Values.storage.hostPath }}
+    path: {{ .Values.storage.hostPath | quote }}
