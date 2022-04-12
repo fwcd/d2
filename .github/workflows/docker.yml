@@ -11,8 +11,8 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
-        username: fwcd-ci
-        password: ${{ secrets.GHCR_TOKEN }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and Push image
       uses: docker/build-push-action@v2
       with:
