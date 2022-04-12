@@ -1,0 +1,2 @@
+storage: 500M
+hostPath: local/k8s
