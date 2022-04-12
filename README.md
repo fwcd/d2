@@ -90,6 +90,8 @@ You can now upgrade/install D2 to the cluster using `helm upgrade --install -f p
 
 To uninstall it, just run `helm uninstall d2`.
 
+> Note that the persistent volume storage claim by `d2` might still persist after uninstalling, in which case you could do [something like this](https://stackoverflow.com/questions/50667437/what-to-do-with-released-persistent-volume) (or reinstall `d2-local-storage`, if you installed it earlier).
+
 ## Configuration
 
 Navigate to your `local` folder or volume (as described in the sections above).
