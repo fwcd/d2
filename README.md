@@ -20,31 +20,31 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 
 To build and run D2 locally, make sure to have the following installed:
 
-* Linux or macOS 10.15+
-* Swift 5.6+
-    * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
-    * Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
-        * Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
-* Node.js and npm (for LaTeX rendering)
-* `timeout` and `kill` (for `MaximaCommand`)
+- Linux or macOS 10.15+
+- Swift 5.6+
+  - Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
+  - Current builds of Swift for Raspberry Pi [can be found here](https://github.com/uraimo/buildSwiftOnARM/releases)
+    - Note that you might need to perform a [custom installation](https://swiftenv.fuller.li/en/latest/commands.html#custom-installation) if you use `swiftenv` on Raspberry Pi
+- Node.js and npm (for LaTeX rendering)
+- `timeout` and `kill` (for `MaximaCommand`)
 
 On Linux the following dependencies are required:
 
-* `sudo apt-get install libssl1.0-dev libfreetype6-dev libcairo2-dev poppler-utils maxima libsqlite3-dev graphviz libgraphviz-dev libtesseract-dev libleptonica-dev`
-    * Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
-    * If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
-        * `mkdir /usr/include/freetype2/freetype`
-        * `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
-        * `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
-    * Note that you might need to `apt-get install clang` separately on a Raspberry Pi
-    * Also make sure that you are installing Tesseract 4. If you are on an older version of Ubuntu, try adding the following repository:
-        * `sudo add-apt-repository ppa:alex-p/tesseract-ocr`
+- `sudo apt-get install libssl1.0-dev libfreetype6-dev libcairo2-dev poppler-utils maxima libsqlite3-dev graphviz libgraphviz-dev libtesseract-dev libleptonica-dev`
+  - Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
+  - If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
+    - `mkdir /usr/include/freetype2/freetype`
+    - `ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h`
+    - `ln -s /usr/include/freetype2/tttables.h /usr/include/freetype2/freetype/tttables.h`
+  - Note that you might need to `apt-get install clang` separately on a Raspberry Pi
+  - Also make sure that you are installing Tesseract 4. If you are on an older version of Ubuntu, try adding the following repository:
+    - `sudo add-apt-repository ppa:alex-p/tesseract-ocr`
 
 On macOS:
 
-* Install `maxima`
-* `brew tap vapor/tap`
-* `brew install ctls freetype2 cairo poppler gd graphviz`
+- Install `maxima`
+- `brew tap vapor/tap`
+- `brew install ctls freetype2 cairo poppler gd graphviz`
 
 Create a folder named `local` under the repository and add configuration files as described in [the configuration section](#configuration).
 
@@ -102,16 +102,16 @@ Create a file named `platformTokens.json` in `local` containing the API tokens (
 
 ```json
 {
-    "discord": "YOUR_DISCORD_API_TOKEN",
-    "telegram": "YOUR_TELEGRAM_API_TOKEN",
-    "irc": [
-        {
-            "host": "YOUR_IRC_HOST",
-            "port": 6667,
-            "nickname": "YOUR_IRC_USERNAME",
-            "password": "YOUR_IRC_PASSWORD"
-        }
-    ]
+  "discord": "YOUR_DISCORD_API_TOKEN",
+  "telegram": "YOUR_TELEGRAM_API_TOKEN",
+  "irc": [
+    {
+      "host": "YOUR_IRC_HOST",
+      "port": 6667,
+      "nickname": "YOUR_IRC_USERNAME",
+      "password": "YOUR_IRC_PASSWORD"
+    }
+  ]
 }
 ```
 
@@ -123,7 +123,7 @@ Create a file named `config.json` in `local` (or the `d2local` volume):
 
 ```json
 {
-    "prefix": "%"
+  "prefix": "%"
 }
 ```
 
@@ -144,9 +144,9 @@ Create a file named `netApiKeys.json` in `local` (or the `d2local` volume) conta
 
 ```json
 {
-    "mapQuest": "YOUR_MAP_QUEST_KEY",
-    "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY",
-    "gitlab": "YOUR_GITLAB_PERSONAL_ACCESS_TOKEN"
+  "mapQuest": "YOUR_MAP_QUEST_KEY",
+  "wolframAlpha": "YOUR_WOLFRAM_ALPHA_KEY",
+  "gitlab": "YOUR_GITLAB_PERSONAL_ACCESS_TOKEN"
 }
 ```
 
@@ -156,18 +156,18 @@ Create a folder named `memeTemplates` in `local` containing PNG images. Any full
 
 The program consists of a single executable:
 
-* `D2`, the main Discord frontend
+- `D2`, the main Discord frontend
 
 This executable depends on several library targets:
-* `D2Handlers`, top-level message/event handling
-* `D2Commands`, the command framework and the implementations
-* `D2MessageIO`, the messaging framework (abstracting over the Discord library)
-    * `D2DiscordIO`, the Discord implementation
-    * `D2TelegramIO`, the Telegram implementation
-    * `D2IRCIO`, the IRC/Twitch implementation
-* `D2Permissions`, permission management
-* `D2Script`, an experimental DSL that can be used to script commands
-* `D2NetAPIs`, client implementations of various web APIs
+- `D2Handlers`, top-level message/event handling
+- `D2Commands`, the command framework and the implementations
+- `D2MessageIO`, the messaging framework (abstracting over the Discord library)
+  - `D2DiscordIO`, the Discord implementation
+  - `D2TelegramIO`, the Telegram implementation
+  - `D2IRCIO`, the IRC/Twitch implementation
+- `D2Permissions`, permission management
+- `D2Script`, an experimental DSL that can be used to script commands
+- `D2NetAPIs`, client implementations of various web APIs
 
 ### D2
 
