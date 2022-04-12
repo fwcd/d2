@@ -19,4 +19,4 @@ jobs:
         context: .
         platforms: linux/amd64
         push: true
-        tags: fwcd/d2:latest
+        tags: ghcr.io/fwcd/d2:latest
