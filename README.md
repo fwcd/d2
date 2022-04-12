@@ -14,15 +14,12 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 * 🖥 Programming tools, including a Haskell API search and a Prolog interpreter
 * 🍬 Humorous commands, e.g. for jokes
 
-## Installation
+## Getting Started
 
-### using Docker (for production environments)
-* Make sure to have recent versions of Docker and Docker Compose installed
-* Create a volume named `d2local` using `docker volume create d2local`
+### Locally
 
-### manually (for local development)
+To build and run D2 locally, make sure to have the following installed:
 
-#### System Dependencies
 * Linux or macOS 10.15+
 * Swift 5.6+
     * Swift can be installed conveniently using a version manager such as [`swiftenv`](https://github.com/kylef/swiftenv)
@@ -31,7 +28,8 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 * Node.js and npm (for LaTeX rendering)
 * `timeout` and `kill` (for `MaximaCommand`)
 
-#### Linux
+On Linux the following dependencies are required:
+
 * `sudo apt-get install libssl1.0-dev libfreetype6-dev libcairo2-dev poppler-utils maxima libsqlite3-dev graphviz libgraphviz-dev libtesseract-dev libleptonica-dev`
     * Note that you might need to use `libssl-dev` instead of `libssl1.0-dev` on Ubuntu
     * If Swift cannot find the Freetype headers despite `libfreetype6-dev` being installed, you may need to add symlinks:
@@ -42,17 +40,37 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
     * Also make sure that you are installing Tesseract 4. If you are on an older version of Ubuntu, try adding the following repository:
         * `sudo add-apt-repository ppa:alex-p/tesseract-ocr`
 
-#### macOS
+On macOS:
+
 * Install `maxima`
 * `brew tap vapor/tap`
 * `brew install ctls freetype2 cairo poppler gd graphviz`
 
-#### General
-* `cd Node && ./install-all`
+Create a folder named `local` under the repository and add configuration files as described in [the configuration section](#configuration).
+
+Run `(cd Node && ./install-all)` to install the dependencies for node packages used by D2.
+
+Finally, use `swift build` to build D2 and `swift run` to run it. With `swift test` you can run the test suite.
+
+> To suppress warnings, you can append `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
+
+### With Docker (Compose)
+
+Make sure to have recent versions of Docker and Docker Compose installed and create a volume named `d2local` using `docker volume create d2local`.
+
+In this volume, add configuration files as described in [the configuration section](#configuration).
+
+You can then use `docker-compose build` to build the image and `docker-compose up` to run it (add the `-d` flag to run it in daemonized mode).
+
+### With Kubernetes (Helm)
+
+<!-- TODO: Helm instructions -->
+TBD
 
 ## Configuration
 
 ### Required
+
 * Create a folder named `local` in the repository
     * If you use Docker, the `local` folder is represented by the `d2local` volume
     * [See here](https://stackoverflow.com/a/55683656) for instructions on how to copy files into it
@@ -76,6 +94,7 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 > For more information e.g. on how to connect to the Twitch IRC API, see [this guide](https://dev.twitch.tv/docs/irc/guide/)
 
 ### Optional
+
 * Create a file named `config.json` in `local` (or the `d2local` volume):
 
 ```json
@@ -106,21 +125,8 @@ General-purpose assistant for Discord, IRC and Telegram featuring more than 300 
 
 * Create a folder named `memeTemplates` in `local` containing PNG images. Any fully transparent sections will be filled by a user-defined image, once the corresponding command is invoked.
 
-## Building
-* Using Docker: `docker-compose build`
-* Natively: `swift build`
-
-## Testing
-* Natively: `swift test`
-
-## Running
-* Using Docker: `docker-compose up -d`
-* Natively: `swift run`
-
-## Additional Build Flags
-To suppress warnings, you can use `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
-
 ## Architecture
+
 The program consists of a single executable:
 
 * `D2`, the main Discord frontend
@@ -137,9 +143,11 @@ This executable depends on several library targets:
 * `D2NetAPIs`, client implementations of various web APIs
 
 ### D2
+
 The executable application. Sets up messaging backends (like Discord) and the top-level event handler (`D2Delegate`). Besides other events, the `D2Delegate` handles incoming messages and forwards them to multiple `MessageHandler`s. One of these is `CommandHandler`, which in turn parses the command and invokes the actual command.
 
 ### D2Commands
+
 At a basic level, the `Command` protocol consists of a single method named `invoke` that carries information about the user's request:
 
 ```swift
