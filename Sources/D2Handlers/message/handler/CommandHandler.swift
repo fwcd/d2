@@ -34,8 +34,9 @@ fileprivate struct RunnablePipe: Runnable {
 }
 
 // The first group matches the command name,
-// the second matches the arguments (the rest of the message content)
-fileprivate let commandPattern = try! Regex(from: "(\\S+)(?:\\s+([\\s\\S]*))?")
+// the second matches the iteration count and
+// the third the arguments (the rest of the message content)
+fileprivate let commandPattern = try! Regex(from: "(\\w+)(?:\\^(\\d+))?(?:\\s+([\\s\\S]*))?")
 
 /// Handles (possibly piped or chained) command invocations.
 public class CommandHandler: MessageHandler {
@@ -177,7 +178,8 @@ public class CommandHandler: MessageHandler {
             if let groups = commandPattern.firstGroups(in: trimmedCommand) {
                 log.info("\(author.displayTag) invoked '\(groups.dropFirst().joined(separator: " "))'")
                 let name = groups[1]
-                let args = groups[2]
+                let iterationCount = groups[2].nilIfEmpty.flatMap { Int($0) } ?? 1
+                let args = groups[3]
 
                 if let command = registry[name] {
                     let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
@@ -192,7 +194,9 @@ public class CommandHandler: MessageHandler {
                             subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name)
                         )
 
-                        pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
+                        for _ in 0..<iterationCount {
+                            pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
+                        }
                     } else {
                         log.notice("Rejected '\(name)' by \(author.displayTag) due to insufficient permissions")
                         client.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
