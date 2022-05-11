@@ -194,8 +194,10 @@ public class CommandHandler: MessageHandler {
                             subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name)
                         )
 
-                        for _ in 0..<iterationCount {
-                            pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
+                        pipe.append(PipeComponent(name: name, command: command, context: context, args: args))
+
+                        for _ in 0..<(iterationCount - 1) {
+                            pipe.append(PipeComponent(name: name, command: command, context: context, args: ""))
                         }
                     } else {
                         log.notice("Rejected '\(name)' by \(author.displayTag) due to insufficient permissions")
