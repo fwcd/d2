@@ -11,7 +11,7 @@
     "license": "MIT",
     "dependencies": {
         "mathjax-full": "^3.2.0",
-        "sharp": "^0.30.0",
+        "sharp": "^0.30.5",
         "yargs": "^17.3.1"
     }
 }
