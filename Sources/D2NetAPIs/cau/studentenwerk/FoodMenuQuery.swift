@@ -2,7 +2,7 @@ import Utils
 import Foundation
 import SwiftSoup
 
-fileprivate let mealPropertyIconPattern = try! Regex(from: "iconProp_(\\w+)\\.")
+fileprivate let mealPropertyIconPattern = try! Regex(from: "iconprop_(\\w+)\\.")
 
 public struct FoodMenuQuery {
     private let request: HTTPRequest
@@ -49,7 +49,7 @@ public struct FoodMenuQuery {
     }
 
     private func parseMealProperty(iconSrc: String) -> MealProperty? {
-        mealPropertyIconPattern.firstGroups(in: iconSrc).flatMap {
+        mealPropertyIconPattern.firstGroups(in: iconSrc.lowercased()).flatMap {
             switch $0[1] {
                 case "g": return .chicken
                 case "r": return .beef
