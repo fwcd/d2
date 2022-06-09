@@ -6,33 +6,35 @@ fileprivate let mealPropertyIconPattern = try! Regex(from: "iconProp_(\\w+)\\.")
 
 public class DailyFoodMenu {
     private let request: HTTPRequest
+    private let day: String
 
     public init(canteen: Canteen, date: Date = Date()) throws {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        day = dateFormatter.string(from: date)
         request = try HTTPRequest(
-            host: "www.studentenwerk.sh",
-            path: "/de/menuAction/print.html",
+            host: "studentenwerk.sh",
+            path: "/de/mensen-in-kiel",
             query: [
-                "m": String(canteen.rawValue),
-                "t": "d",
-                "d": dateFormatter.string(from: date)
+                "ort": "1",
+                "mensa": String(canteen.rawValue),
             ]
         )
     }
 
     public func fetchMealsAsync() -> Promise<[Meal], any Error> {
-        request.fetchHTMLAsync()
+        let day = day
+        return request.fetchHTMLAsync()
             .mapCatching { document in
-                guard let menu = try document.getElementsByClass("menuPrint").first() else { throw FoodMenuError.noMenuPrintAvailable }
-                let rows = try menu.getElementsByTag("tr").array()
+                guard let menu = try document.select(".tag_headline[data-day=\(day)]").first() else { throw FoodMenuError.noMenuPrintAvailable }
+                let rows = try menu.getElementsByClass("mensa_menu_detail").array()
                 let meals: [Meal] = try rows.compactMap {
-                    guard let title = try $0.getElementsByClass("item").first() else { return nil }
-                    guard let properties = try $0.getElementsByClass("properties").first() else { return nil }
-                    guard let price = try $0.getElementsByTag("td").last() else { return nil }
+                    guard let title = try $0.getElementsByClass("menu_name").first() else { return nil }
+                    guard let price = try $0.getElementsByClass("menu_preis").first() else { return nil }
+                    let images = try $0.getElementsByTag("img").array()
                     return Meal(
                         title: try title.text(),
-                        properties: try properties.getElementsByTag("img").array().compactMap { self.parseMealProperty(iconSrc: try $0.attr("src")) },
+                        properties: try images.compactMap { self.parseMealProperty(iconSrc: try $0.attr("src")) },
                         price: try price.text()
                     )
                 }
