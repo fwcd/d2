@@ -23,27 +23,39 @@ public class MensaCommand: StringCommand {
             return
         }
 
-        Promise.catching { try DailyFoodMenu(canteen: canteen) }
-            .then { $0.fetchMealsAsync() }
+        Promise.catching { try FoodMenuQuery(canteen: canteen) }
+            .then { $0.fetchMenusAsync() }
             .listen {
                 do {
-                    let meals = try $0.get()
+                    let menus = try $0.get()
                     output.append(Embed(
                         title: ":fork_knife_plate: Today's menu for \(canteen)",
-                        fields: meals.compactMap { meal in
-                            guard let title = meal.title.nilIfEmpty else { return nil }
-                            return Embed.Field(
-                                name: title.nilIfEmpty ?? "_No title_",
-                                value: ("\(meal.price) \(meal.properties.compactMap(self.emojiOf).joined(separator: " "))")
-                                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                                    .nilIfEmpty
-                                    ?? "_no properties_"
-                            ) }
+                        fields: menus
+                            .sorted(by: ascendingComparator(comparing: \.key))
+                            .compactMap { (subcanteen, menu) in
+                                guard !menu.isEmpty else { return nil }
+                                return Embed.Field(
+                                    name: "**+++ \(subcanteen.nilIfEmpty ?? "_No title_") +++**",
+                                    value: self.format(menu: menu)
+                                )
+                            }
                     ))
                 } catch {
                     output.append(error, errorText: "An error occurred while constructing the request")
                 }
             }
+    }
+
+    private func format(menu: FoodMenu) -> String {
+        menu.flatMap { meal in
+            [
+                "**\(meal.title.nilIfEmpty ?? "_no title_")**",
+                ("\(meal.price) \(meal.properties.compactMap(self.emojiOf).joined(separator: " "))")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .nilIfEmpty
+                    ?? "_no properties_"
+            ]
+        }.joined(separator: "\n")
     }
 
     private func emojiOf(mealProperty: MealProperty) -> String? {
