@@ -10,8 +10,8 @@
     "author": "fwcd",
     "license": "MIT",
     "dependencies": {
-        "mathjax-full": "^3.2.0",
-        "sharp": "^0.30.0",
-        "yargs": "^17.3.1"
+        "mathjax-full": "^3.2.2",
+        "sharp": "^0.30.6",
+        "yargs": "^17.5.1"
     }
 }
