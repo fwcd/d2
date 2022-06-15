@@ -11,7 +11,7 @@ public struct TriggerReactionHandler: MessageHandler {
         .init(keywords: ["hai"], emoji: "🦈"),
         .init(keywords: ["spooky"], emoji: "🎃"),
         .init(keywords: ["ghost"], emoji: "👻"),
-        .init(keywords: ["good morning", "guten morgen"], emoji: "☀️"),
+        .init(keywords: ["good morning", "guten morgen"], probability: 0.001, emoji: "☀️"),
     ]) {
         self.triggers = triggers
     }
