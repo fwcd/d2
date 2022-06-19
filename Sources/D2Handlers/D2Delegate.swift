@@ -55,6 +55,7 @@ public class D2Delegate: MessageDelegate {
         let threadConfiguration = AutoSerializing<ThreadConfiguration>(wrappedValue: .init(), filePath: "local/threadConfig.json")
         let roleReactionsConfiguration = AutoSerializing<RoleReactionsConfiguration>(wrappedValue: .init(), filePath: "local/roleReactionsConfig.json")
         let pronounRoleConfiguration = AutoSerializing<PronounRoleConfiguration>(wrappedValue: .init(), filePath: "local/pronounRoleConfig.json")
+        let weatherConfiguration = AutoSerializing<WeatherConfiguration>(wrappedValue: .init(), filePath: "local/weatherConfig.json")
         let inventoryManager = InventoryManager()
 
         messageRewriters = [
