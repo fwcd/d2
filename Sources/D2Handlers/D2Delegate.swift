@@ -47,42 +47,43 @@ public class D2Delegate: MessageDelegate {
         cronSchedulerBus = CronSchedulerBus()
         subscriptionManager = SubscriptionManager(registry: registry)
         permissionManager = PermissionManager()
-        let mostRecentPipeRunner = Synchronized(wrappedValue: Box<(Runnable, PermissionLevel)?>(wrappedValue: nil))
-        let spamConfiguration = AutoSerializing<SpamConfiguration>(wrappedValue: .init(), filePath: "local/spamConfig.json")
-        let streamerRoleConfiguration = AutoSerializing<StreamerRoleConfiguration>(wrappedValue: .init(), filePath: "local/streamerRoleConfig.json")
-        let messagePreviewsConfiguration = AutoSerializing<MessagePreviewsConfiguration>(wrappedValue: .init(), filePath: "local/messagePreviewsConfig.json")
-        let haikuConfiguration = AutoSerializing<HaikuConfiguration>(wrappedValue: .init(), filePath: "local/haikuConfig.json")
-        let threadConfiguration = AutoSerializing<ThreadConfiguration>(wrappedValue: .init(), filePath: "local/threadConfig.json")
-        let roleReactionsConfiguration = AutoSerializing<RoleReactionsConfiguration>(wrappedValue: .init(), filePath: "local/roleReactionsConfig.json")
-        let pronounRoleConfiguration = AutoSerializing<PronounRoleConfiguration>(wrappedValue: .init(), filePath: "local/pronounRoleConfig.json")
-        let weatherConfiguration = AutoSerializing<WeatherConfiguration>(wrappedValue: .init(), filePath: "local/weatherConfig.json")
         let inventoryManager = InventoryManager()
+
+        @Synchronized @Box var mostRecentPipeRunner: (Runnable, PermissionLevel)? = nil
+        @AutoSerializing(filePath: "local/spamConfig.json") var spamConfiguration = SpamConfiguration()
+        @AutoSerializing(filePath: "local/streamerRoleConfig.json") var streamerRoleConfiguration = StreamerRoleConfiguration()
+        @AutoSerializing(filePath: "local/messagePreviewsConfig.json") var messagePreviewsConfiguration = MessagePreviewsConfiguration()
+        @AutoSerializing(filePath: "local/haikuConfig.json") var haikuConfiguration = HaikuConfiguration()
+        @AutoSerializing(filePath: "local/threadConfig.json") var threadConfiguration = ThreadConfiguration()
+        @AutoSerializing(filePath: "local/roleReactionsConfig.json") var roleReactionsConfiguration = RoleReactionsConfiguration()
+        @AutoSerializing(filePath: "local/pronounRoleConfig.json") var pronounRoleConfiguration = PronounRoleConfiguration()
+        @AutoSerializing(filePath: "local/weatherConfig.json") var weatherConfiguration = WeatherConfiguration()
 
         messageRewriters = [
             MentionSomeoneRewriter()
         ]
         messageHandlers = [
-            SpamHandler(config: spamConfiguration),
-            CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, mostRecentPipeRunner: mostRecentPipeRunner),
+            SpamHandler(config: _spamConfiguration),
+            CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, mostRecentPipeRunner: _mostRecentPipeRunner),
             SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
-            HaikuHandler(configuration: haikuConfiguration, inventoryManager: inventoryManager),
-            MessagePreviewHandler(configuration: messagePreviewsConfiguration),
+            HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
+            MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
             TriggerReactionHandler(),
             CountToNHandler(),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
-            RoleReactionHandler(configuration: roleReactionsConfiguration),
+            RoleReactionHandler(configuration: _roleReactionsConfiguration),
             SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager),
             MessageDatabaseReactionHandler(messageDB: messageDB)
         ]
         presenceHandlers = [
-            StreamerRoleHandler(streamerRoleConfiguration: streamerRoleConfiguration)
+            StreamerRoleHandler(streamerRoleConfiguration: _streamerRoleConfiguration)
         ]
         channelHandlers = [
-            ThreadKeepaliveHandler(config: threadConfiguration),
+            ThreadKeepaliveHandler(config: _threadConfiguration),
             MessageDatabaseChannelHandler(messageDB: messageDB)
         ]
         interactionHandlers = [
@@ -122,16 +123,16 @@ public class D2Delegate: MessageDelegate {
         registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
         registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
         registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
-        registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: spamConfiguration)
-        registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: streamerRoleConfiguration)
-        registry["messagepreviews"] = MessagePreviewsCommand(configuration: messagePreviewsConfiguration)
-        registry["haikus"] = HaikusCommand(configuration: haikuConfiguration)
-        registry["thread"] = ThreadCommand(config: threadConfiguration)
+        registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: _spamConfiguration)
+        registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: _streamerRoleConfiguration)
+        registry["messagepreviews"] = MessagePreviewsCommand(configuration: _messagePreviewsConfiguration)
+        registry["haikus"] = HaikusCommand(configuration: _haikuConfiguration)
+        registry["thread"] = ThreadCommand(config: _threadConfiguration)
         registry["threads"] = ThreadsCommand()
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()
-        registry["rolereactions"] = RoleReactionsCommand(configuration: roleReactionsConfiguration)
+        registry["rolereactions"] = RoleReactionsCommand(configuration: _roleReactionsConfiguration)
         registry["logs"] = LogsCommand()
         registry["embeddescription", aka: ["description"]] = EmbedDescriptionCommand()
         registry["embedfooter", aka: ["footer"]] = EmbedFooterCommand()
@@ -410,8 +411,8 @@ public class D2Delegate: MessageDelegate {
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
         registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
-        registry["pronouns"] = PronounsCommand(config: pronounRoleConfiguration)
-        registry["pronounrole"] = PronounRoleCommand(config: pronounRoleConfiguration)
+        registry["pronouns"] = PronounsCommand(config: _pronounRoleConfiguration)
+        registry["pronounrole"] = PronounRoleCommand(config: _pronounRoleConfiguration)
         registry["guilds"] = GuildsCommand()
         registry["searchchannel", aka: ["findchannel", "sc"]] = SearchChannelCommand()
         registry["whatsup"] = WhatsUpCommand()
@@ -428,7 +429,7 @@ public class D2Delegate: MessageDelegate {
         registry["techsupport", aka: ["helpme", "helpmenowplz"]] = TechSupportCommand(permissionManager: permissionManager)
         registry["about"] = AboutCommand(commandPrefix: commandPrefix)
         registry["search", aka: ["s"]] = SearchCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
-        registry["rerun", aka: ["re"]] = ReRunCommand(permissionManager: permissionManager, mostRecentPipeRunner: mostRecentPipeRunner)
+        registry["rerun", aka: ["re"]] = ReRunCommand(permissionManager: permissionManager, mostRecentPipeRunner: _mostRecentPipeRunner)
         registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
     }
 
