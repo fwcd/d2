@@ -25,6 +25,18 @@ public struct OpenWeatherMapWeather: Codable {
         public let main: String
         public let description: String
         public let icon: String
+
+        public var emoji: String? {
+            switch main.lowercased() {
+            case "clear": return "☀️"
+            case "clouds": return "☁️"
+            case "rain": return "🌧"
+            case "snow": return "❅"
+            case "extreme": return "🌪"
+            case "mist": return "🌫"
+            default: return nil
+            }
+        }
     }
 
     public struct Main: Codable {
