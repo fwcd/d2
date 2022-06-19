@@ -57,7 +57,7 @@ public class D2Delegate: MessageDelegate {
         @AutoSerializing(filePath: "local/threadConfig.json") var threadConfiguration = ThreadConfiguration()
         @AutoSerializing(filePath: "local/roleReactionsConfig.json") var roleReactionsConfiguration = RoleReactionsConfiguration()
         @AutoSerializing(filePath: "local/pronounRoleConfig.json") var pronounRoleConfiguration = PronounRoleConfiguration()
-        @AutoSerializing(filePath: "local/weatherConfig.json") var weatherConfiguration = WeatherConfiguration()
+        @AutoSerializing(filePath: "local/cityConfig.json") var cityConfiguration = CityConfiguration()
 
         messageRewriters = [
             MentionSomeoneRewriter()
@@ -108,7 +108,8 @@ public class D2Delegate: MessageDelegate {
         registry["say"] = SayCommand()
         registry["campus"] = CampusCommand()
         registry["type"] = TriggerTypingCommand()
-        registry["weather"] = WeatherCommand()
+        registry["city"] = CityCommand(config: _cityConfiguration)
+        registry["weather"] = WeatherCommand(config: _cityConfiguration)
         registry["lightning", aka: ["l", "zap"]] = LightningCommand()
         registry["sunrisesunset", aka: ["sunrise", "sunset", "twilight", "dawn", "dusk"]] = SunriseSunsetCommand()
         registry["webcam"] = WebcamCommand()

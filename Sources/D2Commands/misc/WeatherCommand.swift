@@ -10,15 +10,15 @@ public class WeatherCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
-    @AutoSerializing private var config: WeatherConfiguration
+    @AutoSerializing private var config: CityConfiguration
 
-    public init(config _config: AutoSerializing<WeatherConfiguration>) {
+    public init(config _config: AutoSerializing<CityConfiguration>) {
         self._config = _config
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let city = input.nilIfEmpty ?? config.defaultCity else {
-            output.append(errorText: "Please enter a city name (or set a default city)!")
+        guard let city = input.nilIfEmpty ?? config.city else {
+            output.append(errorText: "Please enter a city name (or configure a city)!")
             return
         }
 
