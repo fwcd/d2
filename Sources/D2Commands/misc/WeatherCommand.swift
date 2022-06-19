@@ -10,15 +10,19 @@ public class WeatherCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
-    public init() {}
+    @AutoSerializing private var config: WeatherConfiguration
+
+    public init(config _config: AutoSerializing<WeatherConfiguration>) {
+        self._config = _config
+    }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard !input.isEmpty else {
-            output.append(errorText: "Please enter a city name!")
+        guard let city = input.nilIfEmpty ?? config.defaultCity else {
+            output.append(errorText: "Please enter a city name (or set a default city)!")
             return
         }
 
-        OpenWeatherMapQuery(city: input).perform().listen {
+        OpenWeatherMapQuery(city: city).perform().listen {
             do {
                 let weather = try $0.get()
                 output.append(Embed(
