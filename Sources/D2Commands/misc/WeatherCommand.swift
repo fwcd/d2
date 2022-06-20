@@ -26,7 +26,7 @@ public class WeatherCommand: StringCommand {
             do {
                 let weather = try $0.get()
                 output.append(Embed(
-                    title: "\(weather.weather?.compactMap(\.emoji).first ?? ":question:") The weather for \(weather.name ?? input)",
+                    title: "\(weather.emoji ?? ":question:") The weather for \(weather.name ?? input)",
                     description: weather.weather?.map { "\($0.description) (\($0.main))" }.joined(separator: ", ").nilIfEmpty,
                     footer: weather.coord.map { Embed.Footer(text: "Latitude: \($0.lat) - longitude: \($0.lon)") },
                     fields: [

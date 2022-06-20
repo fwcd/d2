@@ -15,6 +15,10 @@ public struct OpenWeatherMapWeather: Codable {
     public let name: String?
     public let cod: Int?
 
+    public var emoji: String? {
+        weather?.compactMap(\.emoji).first
+    }
+
     public struct Coord: Codable {
         public let lon: Double
         public let lat: Double

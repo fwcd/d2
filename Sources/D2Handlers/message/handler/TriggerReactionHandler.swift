@@ -1,5 +1,6 @@
 import D2Commands
 import D2MessageIO
+import D2NetAPIs
 import Utils
 
 public struct TriggerReactionHandler: MessageHandler {
@@ -14,6 +15,18 @@ public struct TriggerReactionHandler: MessageHandler {
             .init(keywords: ["ghost"], emoji: "👻"),
             .init(authorNames: ["sep", "lord_constantin"], messageTypes: [.guildMemberJoin], emoji: "♾️"),
             .init(messageTypes: [.userPremiumGuildSubscription], emoji: "💎"),
+            .init { message in
+                Promise.catching {
+                    guard ["good morning", "guten morgen"].contains(where: message.content.lowercased().contains) else { throw ReactionTriggerError.mismatchingKeywords }
+                    guard let city = cityConfig.wrappedValue.city else { throw ReactionTriggerError.other("No city specified") }
+                    return city
+                }
+                .then { OpenWeatherMapQuery(city: $0).perform() }
+                .mapCatching {
+                    guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
+                    return emoji
+                }
+            }
         ]
     }
 
