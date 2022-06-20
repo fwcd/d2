@@ -28,13 +28,32 @@ public struct OpenWeatherMapWeather: Codable {
 
         public var emoji: String? {
             switch main.lowercased() {
-            case "clear": return "☀️"
-            case "clouds": return "☁️"
-            case "rain": return "🌧"
-            case "snow": return "❅"
-            case "extreme": return "🌪"
-            case "mist": return "🌫"
-            default: return nil
+            case "clear":
+                return "☀️"
+            case "clouds":
+                return description.contains("few")
+                    ? "🌤"
+                    : description.contains("scattered")
+                    ? "⛅️"
+                    : description.contains("broken")
+                    ? "🌥"
+                    : "☁️"
+            case "thunderstorm":
+                return description.contains("rain") || description.contains("drizzle")
+                    ? "⛈"
+                    : "🌩"
+            case "drizzle":
+                return "🌦"
+            case "rain":
+                return "🌧"
+            case "snow":
+                return "❅"
+            case "extreme", "tornado":
+                return "🌪"
+            case "mist", "smoke", "haze", "dust", "fog", "sand", "ash", "squall":
+                return "🌫"
+            default:
+                return nil
             }
         }
     }
