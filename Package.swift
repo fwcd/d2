@@ -19,7 +19,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.3.2"),
         .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "1.0.0"),
         .package(url: "https://github.com/fwcd/swift-prolog.git", from: "0.1.0"),
-        .package(url: "https://github.com/fwcd/swift-utils.git", from: "1.3.10"),
+        .package(url: "https://github.com/fwcd/swift-utils.git", from: "1.3.11"),
         .package(url: "https://github.com/fwcd/swift-graphics.git", from: "1.1.0"),
         .package(url: "https://github.com/fwcd/swift-gif.git", from: "1.0.0"),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.1.1"),
