@@ -1,11 +1,11 @@
 import D2MessageIO
 
 public struct ReactionTrigger {
-    private let keywords: Set<String>?
-    private let authorNames: Set<String>?
-    private let messageTypes: Set<Message.MessageType>?
-    private let probability: Double
-    let emoji: String
+    let emoji: (Message) -> String?
+
+    public init(emoji: @escaping (Message) -> String?) {
+        self.emoji = emoji
+    }
 
     public init(
         keywords: Set<String>? = nil,
@@ -14,17 +14,12 @@ public struct ReactionTrigger {
         probability: Double = 1,
         emoji: String
     ) {
-        self.keywords = keywords
-        self.authorNames = authorNames
-        self.messageTypes = messageTypes
-        self.probability = probability
-        self.emoji = emoji
-    }
-
-    func matches(message: Message) -> Bool {
-        Double.random(in: 0..<1) < probability
-            && authorNames.map { $0.contains(message.author?.username.lowercased() ?? "") } ?? true
-            && messageTypes.flatMap { message.type.map($0.contains) } ?? true
-            && keywords.map { $0.contains(where: message.content.lowercased().contains) } ?? true
+        self.init { message in
+            guard Double.random(in: 0..<1) < probability
+                && authorNames.map({ $0.contains(message.author?.username.lowercased() ?? "") }) ?? true
+                && messageTypes.flatMap({ message.type.map($0.contains) }) ?? true
+                && keywords.map({ $0.contains(where: message.content.lowercased().contains) }) ?? true else { return nil }
+            return emoji
+        }
     }
 }
