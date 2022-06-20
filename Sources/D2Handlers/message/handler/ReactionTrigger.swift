@@ -1,9 +1,10 @@
 import D2MessageIO
+import Utils
 
 public struct ReactionTrigger {
-    let emoji: (Message) -> String?
+    let emoji: (Message) -> Promise<String, Error>
 
-    public init(emoji: @escaping (Message) -> String?) {
+    public init(emoji: @escaping (Message) -> Promise<String, Error>) {
         self.emoji = emoji
     }
 
@@ -15,11 +16,13 @@ public struct ReactionTrigger {
         emoji: String
     ) {
         self.init { message in
-            guard Double.random(in: 0..<1) < probability
-                && authorNames.map({ $0.contains(message.author?.username.lowercased() ?? "") }) ?? true
-                && messageTypes.flatMap({ message.type.map($0.contains) }) ?? true
-                && keywords.map({ $0.contains(where: message.content.lowercased().contains) }) ?? true else { return nil }
-            return emoji
+            Promise.catching {
+                guard Double.random(in: 0..<1) < probability else { throw ReactionTriggerError.notFeelingLucky }
+                guard authorNames.map({ $0.contains(message.author?.username.lowercased() ?? "") }) ?? true else { throw ReactionTriggerError.mismatchingAuthor }
+                guard messageTypes.flatMap({ message.type.map($0.contains) }) ?? true else { throw ReactionTriggerError.mismatchingMessageType }
+                guard keywords.map({ $0.contains(where: message.content.lowercased().contains) }) ?? true else { throw ReactionTriggerError.mismatchingKeywords }
+                return emoji
+            }
         }
     }
 }

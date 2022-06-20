@@ -70,7 +70,7 @@ public class D2Delegate: MessageDelegate {
             MentionSomeoneHandler(),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
-            TriggerReactionHandler(),
+            TriggerReactionHandler(cityConfig: _cityConfiguration),
             CountToNHandler(),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
