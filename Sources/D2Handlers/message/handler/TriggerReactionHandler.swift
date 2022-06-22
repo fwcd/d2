@@ -57,7 +57,6 @@ public struct TriggerReactionHandler: MessageHandler {
                             return emoji
                         }
                 }
-
             }
         ]
     }
