@@ -70,7 +70,6 @@ public struct TriggerReactionHandler: MessageHandler {
                     }
                 }
             }
-            return true
         }
         return false
     }
