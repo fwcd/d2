@@ -31,6 +31,10 @@ public struct OpenWeatherMapWeather: Codable {
         public let icon: String
 
         public var emoji: String? {
+            Self.emojiFor(main: main, description: description)
+        }
+
+        public static func emojiFor(main: String, description: String) -> String? {
             switch main.lowercased() {
             case "clear":
                 return "☀️"

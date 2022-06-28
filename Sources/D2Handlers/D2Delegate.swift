@@ -426,6 +426,7 @@ public class D2Delegate: MessageDelegate {
         registry["ioplatform"] = IOPlatformCommand()
         registry["sysinfo"] = SysInfoCommand()
         registry["debugmessage", aka: ["debug"]] = DebugMessageCommand()
+        registry["debugweatherreactions", aka: ["debugweather"]] = DebugWeatherReactionsCommand()
         registry["issuereport", aka: ["bugreport"]] = IssueReportCommand()
         registry["techsupport", aka: ["helpme", "helpmenowplz"]] = TechSupportCommand(permissionManager: permissionManager)
         registry["about"] = AboutCommand(commandPrefix: commandPrefix)
