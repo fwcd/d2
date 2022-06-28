@@ -55,7 +55,7 @@ public struct OpenWeatherMapWeather: Codable {
             case "rain":
                 return "🌧"
             case "snow":
-                return "❅"
+                return "❄️"
             case "extreme", "tornado":
                 return "🌪"
             case "mist", "smoke", "haze", "dust", "fog", "sand", "ash", "squall":
