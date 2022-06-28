@@ -38,7 +38,7 @@ public struct OpenWeatherMapWeather: Codable {
                 return description.contains("few")
                     ? "🌤"
                     : description.contains("scattered")
-                    ? "⛅️"
+                    ? "⛅"
                     : description.contains("broken")
                     ? "🌥"
                     : "☁️"
