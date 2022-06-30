@@ -16,7 +16,7 @@ public class SongChartsCommand: StringCommand {
         category: .misc,
         shortDescription: "Fetches the song charts on this server",
         longDescription: "Repeatedly retrieves currently playing songs to provide a chart list of popular songs on the server",
-        requiredPermissionLevel: .basic
+        requiredPermissionLevel: .vip
     )
     private var subcommands: [String: (CommandOutput, CommandContext) -> Void] = [:]
 
