@@ -18,6 +18,10 @@ public struct DallEMiniQuery: Codable {
                 host: "bf.dallemini.ai",
                 path: "/generate",
                 method: "POST",
+                headers: [
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                ],
                 body: json
             )
         }
