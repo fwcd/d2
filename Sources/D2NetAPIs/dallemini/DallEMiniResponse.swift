@@ -5,6 +5,8 @@ public struct DallEMiniResponse: Codable {
     public let version: String?
 
     public var decodedJpegImages: [Data] {
-        images.compactMap { Data(base64Encoded: $0) }
+        images.compactMap {
+            Data(base64Encoded: $0.replacingOccurrences(of: "\n", with: ""))
+        }
     }
 }
