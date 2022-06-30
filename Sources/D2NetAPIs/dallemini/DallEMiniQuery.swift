@@ -19,7 +19,7 @@ public struct DallEMiniQuery: Codable {
             // We need a custom URL session with longer timeouts
             // since long response times are to be expected
             let configuration = URLSessionConfiguration.default
-            let timeout = TimeInterval(90)
+            let timeout = TimeInterval(200)
             configuration.timeoutIntervalForRequest = timeout
             configuration.timeoutIntervalForResource = timeout
             let session = URLSession(configuration: configuration)

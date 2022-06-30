@@ -16,7 +16,8 @@ public class DallEMiniCommand: StringCommand {
             return
         }
 
-        context.channel?.triggerTyping()
+        output.append("Please be patient, generating an image can take a minute or two!")
+
         DallEMiniQuery(prompt: input).perform().listen {
             do {
                 let result = try $0.get()
