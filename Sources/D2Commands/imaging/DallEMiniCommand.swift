@@ -20,8 +20,16 @@ public class DallEMiniCommand: StringCommand {
         DallEMiniQuery(prompt: input).perform().listen {
             do {
                 let result = try $0.get()
+                guard !result.images.isEmpty else {
+                    output.append(errorText: "DALL-E generated no images")
+                    return
+                }
                 let files = result.decodedJpegImages.map {
                     Message.FileUpload(data: $0, filename: "dallemini-result.jpg", mimeType: "image/jpeg")
+                }
+                guard !files.isEmpty else {
+                    output.append(errorText: "DALL-E images could not be decoded")
+                    return
                 }
                 output.append(.files(files))
             } catch {

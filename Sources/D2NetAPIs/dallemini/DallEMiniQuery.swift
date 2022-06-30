@@ -10,10 +10,20 @@ public struct DallEMiniQuery: Codable {
 
     public func perform() -> Promise<DallEMiniResponse, Error> {
         Promise.catching { () throws -> HTTPRequest in
+            // Encode query as JSON
             let jsonData = try JSONEncoder().encode(self)
             guard let json = String(data: jsonData, encoding: .utf8) else {
                 throw EncodeError.couldNotDecode(jsonData)
             }
+
+            // We need a custom URL session with longer timeouts
+            // since long response times are to be expected
+            let configuration = URLSessionConfiguration.default
+            let timeout = TimeInterval(90)
+            configuration.timeoutIntervalForRequest = timeout
+            configuration.timeoutIntervalForResource = timeout
+            let session = URLSession(configuration: configuration)
+
             return try HTTPRequest(
                 host: "bf.dallemini.ai",
                 path: "/generate",
@@ -22,7 +32,8 @@ public struct DallEMiniQuery: Codable {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                 ],
-                body: json
+                body: json,
+                session: session
             )
         }
         .then { $0.fetchJSONAsync(as: DallEMiniResponse.self) }
