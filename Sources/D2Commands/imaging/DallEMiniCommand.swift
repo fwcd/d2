@@ -16,7 +16,7 @@ public class DallEMiniCommand: StringCommand {
             return
         }
 
-        output.append("Please be patient, generating an image can take a minute or two!")
+        output.append("Generating an image... (could take a minute or two)")
 
         DallEMiniQuery(prompt: input).perform().listen {
             do {
