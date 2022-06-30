@@ -264,6 +264,7 @@ public class D2Delegate: MessageDelegate {
         registry["avatarpng", aka: ["avatarstatic"]] = AvatarCommand(preferredExtension: "png")
         registry["avatargif"] = AvatarCommand(preferredExtension: "gif")
         registry["avatarurl"] = AvatarUrlCommand()
+        registry["dallemini", aka: ["dalle"]] = DallEMiniCommand()
         registry["ocr"] = OCRCommand()
         registry["qrcode", aka: ["qr"]] = QRCodeCommand()
         registry["latex"] = LatexCommand()
