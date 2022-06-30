@@ -1,6 +1,10 @@
 import Foundation
 import Utils
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct DallEMiniQuery: Codable {
     private let prompt: String
 
