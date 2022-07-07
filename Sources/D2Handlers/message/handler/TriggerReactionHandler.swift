@@ -19,7 +19,7 @@ public struct TriggerReactionHandler: MessageHandler {
             .init(probability: 0.0002, emoji: "🛸"),
             .init { message in
                 Promise.catchingThen {
-                    guard ["good morning", "guten morgen"].contains(where: message.content.lowercased().contains) else { throw ReactionTriggerError.mismatchingKeywords }
+                    guard ["morning", "morgen", "moin"].contains(where: message.content.lowercased().contains) else { throw ReactionTriggerError.mismatchingKeywords }
 
                     let calendar = Calendar.current
                     let todayComponents = calendar.dateComponents([.month, .day], from: Date())
