@@ -4,7 +4,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let morningPattern = try! Regex(from: "\\bmo(?:rning|(?:rge|i)n)\\b", caseSensitive: false)
+fileprivate let morningPattern = try! Regex(from: "\\bmo+(?:rni+ng|(?:rge+|i+)n)\\b", caseSensitive: false)
 
 public struct TriggerReactionHandler: MessageHandler {
     private let triggers: [ReactionTrigger]
