@@ -37,8 +37,8 @@ extension DiscordGuildMember {
             guildId: guildId,
             joinedAt: joinedAt,
             user: user.usingMessageIO,
-            deaf: deaf,
-            mute: mute,
+            deaf: deaf ?? false,
+            mute: mute ?? false,
             nick: nick,
             roleIds: roleIds.usingMessageIO
         )
