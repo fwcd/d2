@@ -1,6 +1,6 @@
 import Foundation
 
-public struct NasaApod: Codable {
+public struct NasaAstronomyPictureOfTheDay: Codable {
     public enum CodingKeys: String, CodingKey {
         case rawDate = "date"
         case explanation

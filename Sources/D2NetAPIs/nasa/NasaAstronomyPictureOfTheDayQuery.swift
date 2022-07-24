@@ -7,26 +7,24 @@ fileprivate let dateFormatter: DateFormatter = {
     return f
 }()
 
-/// A picture-of-the-day query.
-public struct NasaApodQuery {
+public struct NasaAstronomyPictureOfTheDayQuery {
     private let date: Date?
 
     public init(date: Date? = nil) {
         self.date = date
     }
 
-    public func perform() -> Promise<NasaApod, any Error> {
-        Promise.catching { () -> HTTPRequest in
-            guard let apiKey = storedNetApiKeys?.nasa else { throw NetApiError.missingApiKey("No NASA API key found") }
-            return try HTTPRequest(
+    public func perform() -> Promise<NasaAstronomyPictureOfTheDay, any Error> {
+        Promise.catching {
+            try HTTPRequest(
                 host: "api.nasa.gov",
                 path: "/planetary/apod",
                 query: [
                     "date": date.map(dateFormatter.string(from:)),
-                    "api_key": apiKey,
+                    "api_key": storedNetApiKeys?.nasa ?? "DEMO_KEY",
                 ].compactMapValues { $0 }
             )
         }
-        .then { $0.fetchJSONAsync(as: NasaApod.self) }
+        .then { $0.fetchJSONAsync(as: NasaAstronomyPictureOfTheDay.self) }
     }
 }
