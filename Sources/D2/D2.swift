@@ -13,6 +13,7 @@ import Utils
 import Backtrace
 #endif
 
+@main
 struct D2: ParsableCommand {
     @Option(name: .shortAndLong, help: "The logging level")
     var logLevel: Logger.Level = .info
@@ -109,5 +110,3 @@ struct D2: ParsableCommand {
         dispatchMain()
     }
 }
-
-D2.main()
