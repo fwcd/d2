@@ -11,6 +11,7 @@ struct NetApiKeys: Codable {
     var windy: Windy? = nil
     var adventOfCode: [String: String]? = nil
     var giphy: String? = nil
+    var nasa: String? = nil
 
     struct Windy: Codable {
         var webcams: String? = nil
