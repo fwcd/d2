@@ -12,7 +12,7 @@ final class FindKeyCommandTests: XCTestCase {
         XCTAssertEqual(output.lastContent, "Possible keys: C Cm C# Db Dm D# Eb Em F Fm G Gm G# Ab Am A# A#m Bb Bbm")
 
         command.testInvoke(with: .text("E Eb"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: C#m E G#m B")
+        XCTAssertEqual(output.lastContent, "Possible keys: C#m Dbm E G#m Abm B")
 
         command.testInvoke(with: .text("C Db E"), output: output)
         XCTAssertEqual(output.lastContent, "Possible keys: ")
