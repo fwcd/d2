@@ -1,4 +1,5 @@
 import Utils
+import MusicTheory
 
 fileprivate let majorSymbols: Set<String> = ["maj", "M"]
 fileprivate let minorSymbols: Set<String> = ["min", "m"]
@@ -16,23 +17,23 @@ fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPat
 /// A (possibly stacked) triad or power chord.
 struct CommonChord: Chord, Hashable, CustomStringConvertible {
     let root: Note
-    let intervals: [NoteInterval]
+    let intervals: [DiatonicInterval]
     let isMinor: Bool
 
     /// The associated scale, either diatonic major or minor
-    var scale: Scale { isMinor ? DiatonicMinorScale(key: root) : DiatonicMajorScale(key: root) }
+    var scale: any Scale { isMinor ? MinorScale(key: root) : MajorScale(key: root) }
     var notes: [Note] { intervals.map { root + $0 } }
     var description: String { intervals.isEmpty ? "\(notes)" :  "\(root)\(isMinor ? "m" : "")\(intervals.count == 3 ? "" : String(intervals.last!.degrees + 1))" }
 
     init(of str: String) throws {
         guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }
-        guard let root = try? Note(of: parsed[1]) else { throw ChordError.invalidRootNote(parsed[1]) }
+        guard let root = try? Note(parsing: parsed[1]) else { throw ChordError.invalidRootNote(parsed[1]) }
         let quality = parsed[2]
         let add = !parsed[3].isEmpty
         let number = Int(parsed[4])
         let isMajor = majorSymbols.contains(quality)
         let isMinor = minorSymbols.contains(quality) // otherwise assume major
-        var additionalIntervals: [NoteInterval] = []
+        var additionalIntervals: [DiatonicInterval] = []
 
         switch number {
             case 11:
@@ -55,7 +56,7 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
         }
     }
 
-    init(triad root: Note, isMinor: Bool = false, with additionalIntervals: [NoteInterval] = []) {
+    init(triad root: Note, isMinor: Bool = false, with additionalIntervals: [DiatonicInterval] = []) {
         self.init(over: root, intervals: [.unison, isMinor ? .minorThird : .majorThird, .perfectFifth] + additionalIntervals, isMinor: isMinor)
     }
 
@@ -63,13 +64,13 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
         self.init(over: root, intervals: [.unison, .perfectFifth])
     }
 
-    private init(over root: Note, intervals: [NoteInterval], isMinor: Bool = false) {
+    private init(over root: Note, intervals: [DiatonicInterval], isMinor: Bool = false) {
         self.root = root
         self.intervals = intervals
         self.isMinor = isMinor
     }
 
     func advanced(by n: Int) -> CommonChord {
-        CommonChord(over: root.advanced(by: n).withoutOctave, intervals: intervals, isMinor: isMinor)
+        CommonChord(over: root.advanced(by: n), intervals: intervals, isMinor: isMinor)
     }
 }

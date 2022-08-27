@@ -1,11 +1,12 @@
 import Utils
+import MusicTheory
 
 fileprivate let argsPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\w+[b#]?)")
 fileprivate let scales: [String: (Note) -> Scale] = [
-    "major": DiatonicMajorScale.init,
-    "minor": DiatonicMinorScale.init,
-    "blues": BluesScale.init,
-    "pentatonic": PentatonicScale.init
+    "major": MajorScale.init,
+    "minor": MinorScale.init,
+    "blues": MinorBluesScale.init,
+    "pentatonic": MajorPentatonicScale.init,
 ]
 
 public class PianoScaleCommand: StringCommand {
@@ -40,12 +41,12 @@ public class PianoScaleCommand: StringCommand {
                 output.append(errorText: "Unknown scale `\(rawScale)`. Try one of these: \(scales.keys.map { "`\($0)`" }.joined(separator: ", "))")
                 return
             }
-            guard let key = try? Note(of: rawKey) else {
+            guard let key = try? Note(parsing: rawKey) else {
                 output.append(errorText: "Could not parse key `\(rawKey)` as a note. Try something like e.g. `C3`.")
                 return
             }
 
-            let c = try Note(of: "C3")
+            let c = try Note(parsing: "C3")
             let image = try PianoRenderer(lowerBound: c, upperBound: c + .octave + .octave).render(scale: scale(key))
             try output.append(image)
         } catch {

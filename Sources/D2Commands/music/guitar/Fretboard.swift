@@ -1,6 +1,8 @@
-let standardGuitarTuning = ["E2", "A2", "D3", "G3", "B3", "E4"].map { try! Note(of: $0) }
-let standardUkuleleTuning = ["G4", "C4", "E4", "A4"].map { try! Note(of: $0) }
-let standardBassTuning = ["E1", "A1", "D2", "G2"].map { try! Note(of: $0) }
+import MusicTheory
+
+let standardGuitarTuning = ["E2", "A2", "D3", "G3", "B3", "E4"].map { try! Note(parsing: $0) }
+let standardUkuleleTuning = ["G4", "C4", "E4", "A4"].map { try! Note(parsing: $0) }
+let standardBassTuning = ["E1", "A1", "D2", "G2"].map { try! Note(parsing: $0) }
 
 struct Fretboard {
     private let strings: [[Note]]
@@ -34,7 +36,7 @@ struct Fretboard {
         return strings[safely: guitarString]?
             .enumerated()
             .map { NoteResult(note: $0.1, location: Location(guitarString: guitarString, fret: $0.0)) }
-            .first { note.matches($0.note) }
+            .first { note.noteClass == $0.note.noteClass }
     }
 
     func find(note: Note) -> NoteResult? {
