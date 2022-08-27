@@ -31,7 +31,7 @@ let twelveToneOctave: [Note] = twelveToneOctaveBlueprints.enumerated().flatMap {
 /// 3. group: octave (optional)
 fileprivate let notePattern = try! Regex(from: "([a-zA-Z])([b#]?)(\\d+)?")
 
-struct Note: Hashable, Comparable, Strideable, CustomStringConvertible {
+struct Note: Hashable, CustomStringConvertible {
     let letter: NoteLetter
     let octave: Int? // The octave in scientific pitch notation
     let accidental: Accidental

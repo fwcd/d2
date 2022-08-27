@@ -7,7 +7,18 @@ struct PianoRenderer: ScaleRenderer {
     private let whiteKeyPadding: Int
     private let whiteKeyHeight: Int
     private let blackKeyHeight: Int
-    private let range: Range<Note>
+    private let lowerBound: Note
+    private let upperBound: Note
+
+    private var notes: [Note] {
+        var note: Note = lowerBound
+        var notes: [Note] = []
+        while note.semitone < upperBound.semitone {
+            notes.append(note)
+            note = note.advanced(by: 1)
+        }
+        return notes
+    }
 
     init(
         whiteKeyWidth: Int = 20,
@@ -15,20 +26,23 @@ struct PianoRenderer: ScaleRenderer {
         whiteKeyPadding: Int = 2,
         whiteKeyHeight: Int = 80,
         blackKeyHeight: Int = 60,
-        range: Range<Note>
+        lowerBound: Note,
+        upperBound: Note
     ) {
         self.whiteKeyWidth = whiteKeyWidth
         self.blackKeyWidth = blackKeyWidth
         self.whiteKeyPadding = whiteKeyPadding
         self.whiteKeyHeight = whiteKeyHeight
         self.blackKeyHeight = blackKeyHeight
-        self.range = range
+        self.lowerBound = lowerBound
+        self.upperBound = upperBound
     }
 
     func render(scale: Scale) throws -> Image {
         let scaleSemitones = Set(scale.notes.map(\.semitone))
 
-        let whiteKeyCount = range.count(forWhich: { $0.accidental == .none })
+        let notes = self.notes
+        let whiteKeyCount = notes.count(forWhich: { $0.accidental == .none })
         let width = whiteKeyWidth * whiteKeyCount + whiteKeyPadding * (whiteKeyCount - 1)
         let image = try Image(width: width, height: whiteKeyHeight)
         let graphics = CairoGraphics(fromImage: image)
@@ -36,7 +50,7 @@ struct PianoRenderer: ScaleRenderer {
         var blackKeys = [Rectangle<Double>]()
         var x = 0
 
-        for note in range {
+        for note in notes {
             let isWhite = note.accidental == .none
             var rectangle: Rectangle<Double>
 

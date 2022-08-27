@@ -19,7 +19,10 @@ public class FindKeyCommand: StringCommand {
 
         let scales = twelveToneOctave
             .flatMap { key -> [Scale] in [DiatonicMajorScale(key: key), DiatonicMinorScale(key: key)] }
-            .filter { notes.isSubset(of: $0.notes) }
+            .filter {
+                print("\(notes) vs \($0.notes) -> \(notes.isSubset(of: $0.notes))")
+                return notes.isSubset(of: $0.notes)
+            }
         output.append("Possible keys: \(scales.map(String.init(describing:)).joined(separator: " "))")
     }
 }

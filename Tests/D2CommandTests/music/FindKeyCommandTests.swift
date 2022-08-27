@@ -9,10 +9,10 @@ final class FindKeyCommandTests: XCTestCase {
         let output = TestOutput()
 
         command.testInvoke(with: .text("C"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: C Cm C# Db Dm D# Eb Em F Fm G Gm G# Ab Am A# A#m Bb Bbm")
+        XCTAssertEqual(output.lastContent, "Possible keys: C Cm Db Dm Eb Em F Fm G Gm Ab Am Bb Bbm")
 
         command.testInvoke(with: .text("E Eb"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: C#m Dbm E G#m Abm B")
+        XCTAssertEqual(output.lastContent, "Possible keys: ")
 
         command.testInvoke(with: .text("C Db E"), output: output)
         XCTAssertEqual(output.lastContent, "Possible keys: ")

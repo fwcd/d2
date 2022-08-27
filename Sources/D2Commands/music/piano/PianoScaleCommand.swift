@@ -46,7 +46,7 @@ public class PianoScaleCommand: StringCommand {
             }
 
             let c = try Note(of: "C3")
-            let image = try PianoRenderer(range: Range(c...(c + .octave + .octave))).render(scale: scale(key))
+            let image = try PianoRenderer(lowerBound: c, upperBound: c + .octave + .octave).render(scale: scale(key))
             try output.append(image)
         } catch {
             output.append(error, errorText: "Could not render scale.")
