@@ -16,7 +16,7 @@ struct PianoRenderer: ScaleRenderer {
         var notes: [Note] = []
         while note.semitone < upperBound.semitone {
             notes.append(note)
-            note = note.advanced(by: 1)
+            note += .semitone
         }
         return notes
     }
