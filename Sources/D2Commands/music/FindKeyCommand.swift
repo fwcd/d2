@@ -13,17 +13,19 @@ public class FindKeyCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard !input.isEmpty, let notes = (try? input.split(separator: " ").map({ try Note(parsing: String($0)) })).map(Set.init) else {
+        guard !input.isEmpty,
+              let notes = try? input.split(separator: " ").map({ try Note(parsing: String($0)) }) else {
             output.append(errorText: info.helpText!)
             return
         }
 
+        let noteClasses = Set(notes.map(\.noteClass))
         let scales = NoteClass.twelveToneOctave
-            .flatMap { key -> [Scale] in [
+            .flatMap { key -> [any Scale & AbbreviatedClassName] in [
                 MajorScale(key: Note(noteClass: key)),
                 MinorScale(key: Note(noteClass: key)),
             ] }
-            .filter { notes.isSubset(of: $0.notes) }
-        output.append("Possible keys: \(scales.map(String.init(describing:)).joined(separator: " "))")
+            .filter { noteClasses.isSubset(of: $0.notes.map(\.noteClass)) }
+        output.append("Possible keys: \(scales.map(\.abbreviatedClassName).joined(separator: " "))")
     }
 }
