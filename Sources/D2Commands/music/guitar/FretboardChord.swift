@@ -1,3 +1,5 @@
+import MusicTheory
+
 fileprivate func cost(ofLocation location: Fretboard.Location) -> Int {
     return (location.fret * location.fret) - location.guitarString
 }

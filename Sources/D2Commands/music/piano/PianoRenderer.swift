@@ -1,5 +1,6 @@
 import Graphics
 import Utils
+import MusicTheory
 
 struct PianoRenderer: ScaleRenderer {
     private let whiteKeyWidth: Int
@@ -38,7 +39,7 @@ struct PianoRenderer: ScaleRenderer {
         self.upperBound = upperBound
     }
 
-    func render(scale: Scale) throws -> Image {
+    func render(scale: any Scale) throws -> Image {
         let scaleSemitones = Set(scale.notes.map(\.semitone))
 
         let notes = self.notes

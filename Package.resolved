@@ -189,6 +189,14 @@
       }
     },
     {
+      "identity" : "swift-music-theory",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-music-theory.git",
+      "state" : {
+        "revision" : "2492e0cc501d253848e69d40d1242686b38c9efe"
+      }
+    },
+    {
       "identity" : "swift-nio",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",

@@ -1,5 +1,6 @@
 import Graphics
 import Utils
+import MusicTheory
 
 struct FretboardChordRenderer: ChordRenderer {
     private let width: Int

@@ -1,4 +1,5 @@
 import Utils
+import MusicTheory
 
 fileprivate let majorSymbols: Set<String> = ["maj", "M"]
 fileprivate let minorSymbols: Set<String> = ["min", "m"]
@@ -13,26 +14,29 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0
 /// 4. group: number of the interval: (7 for 'dominant seventh')
 fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
 
+// TODO: Properly conform to Chord once https://github.com/fwcd/swift-music-theory/issues/11 is fixed.
+//       Perhaps even upstream it?
+
 /// A (possibly stacked) triad or power chord.
 struct CommonChord: Chord, Hashable, CustomStringConvertible {
-    let root: Note
-    let intervals: [NoteInterval]
+    let root: NoteClass
+    let intervals: [DiatonicInterval]
     let isMinor: Bool
 
-    /// The associated scale, either diatonic major or minor
-    var scale: Scale { isMinor ? DiatonicMinorScale(key: root) : DiatonicMajorScale(key: root) }
-    var notes: [Note] { intervals.map { root + $0 } }
-    var description: String { intervals.isEmpty ? "\(notes)" :  "\(root)\(isMinor ? "m" : "")\(intervals.count == 3 ? "" : String(intervals.last!.degrees + 1))" }
+    var noteClasses: [NoteClass] { intervals.map { root + $0 } }
+    var description: String { intervals.isEmpty ? "\(noteClasses)" :  "\(root)\(isMinor ? "m" : "")\(intervals.count == 3 ? "" : String(intervals.last!.degrees + 1))" }
+
+    var notes: [Note] { noteClasses.map { Note(noteClass: $0, octave: 0) } }
 
     init(of str: String) throws {
         guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }
-        guard let root = try? Note(of: parsed[1]) else { throw ChordError.invalidRootNote(parsed[1]) }
+        guard let root = try? Note(parsing: parsed[1]).noteClass else { throw ChordError.invalidRootNote(parsed[1]) }
         let quality = parsed[2]
         let add = !parsed[3].isEmpty
         let number = Int(parsed[4])
         let isMajor = majorSymbols.contains(quality)
         let isMinor = minorSymbols.contains(quality) // otherwise assume major
-        var additionalIntervals: [NoteInterval] = []
+        var additionalIntervals: [DiatonicInterval] = []
 
         switch number {
             case 11:
@@ -55,21 +59,21 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
         }
     }
 
-    init(triad root: Note, isMinor: Bool = false, with additionalIntervals: [NoteInterval] = []) {
+    init(triad root: NoteClass, isMinor: Bool = false, with additionalIntervals: [DiatonicInterval] = []) {
         self.init(over: root, intervals: [.unison, isMinor ? .minorThird : .majorThird, .perfectFifth] + additionalIntervals, isMinor: isMinor)
     }
 
-    init(powerChord root: Note) {
+    init(powerChord root: NoteClass) {
         self.init(over: root, intervals: [.unison, .perfectFifth])
     }
 
-    private init(over root: Note, intervals: [NoteInterval], isMinor: Bool = false) {
+    private init(over root: NoteClass, intervals: [DiatonicInterval], isMinor: Bool = false) {
         self.root = root
         self.intervals = intervals
         self.isMinor = isMinor
     }
 
     func advanced(by n: Int) -> CommonChord {
-        CommonChord(over: root.advanced(by: n).withoutOctave, intervals: intervals, isMinor: isMinor)
+        CommonChord(over: root + .semitones(n), intervals: intervals, isMinor: isMinor)
     }
 }
