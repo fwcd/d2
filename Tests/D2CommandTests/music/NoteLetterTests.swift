@@ -6,7 +6,6 @@ final class NoteLetterTests: XCTestCase {
 	func testNoteLetter() throws {
 		XCTAssertEqual(NoteLetter(parsing: "C"), .c)
 		XCTAssertEqual(NoteLetter(parsing: "d"), .d)
-		XCTAssertEqual(NoteLetter(parsing: "H"), .b)
 		XCTAssertEqual(NoteLetter(parsing: "a"), .a)
 	}
 }

@@ -7,7 +7,6 @@ final class NoteTests: XCTestCase {
 		let c4 = try Note(parsing: "C4")
 		let d3 = try Note(parsing: "d3")
 		let aSharp2 = try Note(parsing: "A#2")
-		let fSharp = try Note(parsing: "F#")
 		let fSharp7 = try Note(parsing: "F#7")
 		let gFlat1 = try Note(parsing: "Gb1")
 
@@ -21,7 +20,6 @@ final class NoteTests: XCTestCase {
 		XCTAssertEqual(d3 + .minorThird, try Note(parsing: "F3"))
 		XCTAssertEqual(d3 + .majorThird, try Note(parsing: "F#3"))
 		XCTAssertEqual(aSharp2 + .unison, aSharp2)
-		XCTAssertEqual(fSharp + .octave, fSharp)
 		XCTAssertEqual(gFlat1 + .octave, try Note(parsing: "Gb2"))
 	}
 }
