@@ -22,7 +22,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-utils.git", from: "1.3.12"),
         .package(url: "https://github.com/fwcd/swift-graphics.git", from: "1.1.0"),
         .package(url: "https://github.com/fwcd/swift-gif.git", from: "1.0.0"),
-        .package(url: "https://github.com/fwcd/swift-music-theory.git", revision: "ea240d53717b2f2a8e907ade73f3a98fbac06f4a"),
+        .package(url: "https://github.com/fwcd/swift-music-theory.git", revision: "2492e0cc501d253848e69d40d1242686b38c9efe"),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.3.3"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", revision: "b3a49f4a9fbee3c7320591dbc7263c192244063e"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),

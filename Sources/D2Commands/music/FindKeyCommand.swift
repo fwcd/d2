@@ -22,8 +22,8 @@ public class FindKeyCommand: StringCommand {
         let noteClasses = Set(notes.map(\.noteClass))
         let scales = NoteClass.twelveToneOctave
             .flatMap { key -> [any Scale & AbbreviatedClassName] in [
-                MajorScale(key: Note(noteClass: key)),
-                MinorScale(key: Note(noteClass: key)),
+                MajorScale(key: Note(noteClass: key, octave: 0)),
+                MinorScale(key: Note(noteClass: key, octave: 0)),
             ] }
             .filter { noteClasses.isSubset(of: $0.notes.map(\.noteClass)) }
         output.append("Possible keys: \(scales.map(\.abbreviatedClassName).joined(separator: " "))")
