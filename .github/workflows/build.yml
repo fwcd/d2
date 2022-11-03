@@ -20,7 +20,7 @@ jobs:
       run: |
         case "$RUNNER_OS" in
           Linux) sudo apt-get update && sudo apt-get install libcairo2-dev libsqlite3-dev libtesseract-dev libleptonica-dev libgraphviz-dev;;
-          macOS) brew tap vapor/tap && brew install ctls pkg-config cairo graphviz;;
+          macOS) brew tap vapor/tap && brew install ctls pkg-config cairo graphviz && sudo xcode-select -s /Applications/Xcode_13.4.1.app;;
           *)     echo "Don't know how to install dependencies for OS '$RUNNER_OS'" && exit 1;;
         esac
     - name: Install Swift
