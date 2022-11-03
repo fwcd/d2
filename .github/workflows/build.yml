@@ -18,9 +18,9 @@ jobs:
     - uses: actions/checkout@v3
       # Workaround for FFI modulemap redefinition error
       # https://github.com/tauri-apps/tauri/issues/1150#issuecomment-768310979
-    - name: Remove native command line tools (macOS)
+    - name: Reinstall native command line tools (macOS)
       if: runner.os == 'macOS'
-      run: sudo rm -rf /Library/Developer/CommandLineTools
+      run: sudo rm -rf /Library/Developer/CommandLineTools && sudo xcode-select --install
     - name: Install system dependencies (Linux)
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install libcairo2-dev libsqlite3-dev libtesseract-dev libleptonica-dev libgraphviz-dev
