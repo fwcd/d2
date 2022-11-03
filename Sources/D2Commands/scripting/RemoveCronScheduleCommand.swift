@@ -12,14 +12,18 @@ public class RemoveCronScheduleCommand: StringCommand {
             """,
         requiredPermissionLevel: .admin
     )
-    private let cronSchedulerBus: CronSchedulerBus
+    private let cronManager: CronManager
 
-    public init(cronSchedulerBus: CronSchedulerBus) {
-        self.cronSchedulerBus = cronSchedulerBus
+    public init(cronManager: CronManager) {
+        self.cronManager = cronManager
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        cronSchedulerBus.removeSchedule(name: input)
-        output.append("Removed schedule `\(input)` (if it existed)")
+        guard cronManager[input] != nil else {
+            output.append(errorText: "No schedule with `\(input)` registered!")
+            return
+        }
+        cronManager[input] = nil
+        output.append("Removed schedule `\(input)`")
     }
 }

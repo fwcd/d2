@@ -1,38 +1,45 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! Regex(from: "([\\*\\s\\-/,]*)\\s+(\\w+)")
+fileprivate let argsPattern = try! Regex(from: "([\\*\\s\\-/,]*)\\s+(\\w+)\\s+(.+)")
 
 public class AddCronScheduleCommand: StringCommand {
     public let info = CommandInfo(
         category: .scripting,
         shortDescription: "Adds a cron schedule",
         helpText: """
-            Syntax: [cron schedule] [cron]
+            Syntax: [cron schedule] [schedule name] [command]
 
-            Registers a cron-schedule to execute the piped command repeatedly.
+            Registers a cron-schedule to execute the given (raw) command repeatedly.
+            Note that pipes are not supported currently.
             """,
         requiredPermissionLevel: .admin
     )
-    private let cronSchedulerBus: CronSchedulerBus
+    private let cronManager: CronManager
 
-    public init(cronSchedulerBus: CronSchedulerBus) {
-        self.cronSchedulerBus = cronSchedulerBus
+    public init(cronManager: CronManager) {
+        self.cronManager = cronManager
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let parsedArgs = argsPattern.firstGroups(in: input) {
-            let cron = parsedArgs[1]
-            let name = parsedArgs[2]
-
-            do {
-                try cronSchedulerBus.addSchedule(name: name, with: cron, output: output)
-                context.channel?.send(Message(content: "Added cron schedule listener!"))
-            } catch {
-                output.append(error, errorText: "Could not add cron schedule (invalid syntax?)")
-            }
-        } else {
+        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
             output.append(errorText: info.helpText!)
+            return
         }
+        guard let channelId = context.channel?.id else {
+            output.append(errorText: "No channel id")
+            return
+        }
+
+        let cron = parsedArgs[1]
+        let name = parsedArgs[2]
+        let command = parsedArgs[3]
+
+        cronManager[name] = CronTab.Schedule(
+            cron: cron,
+            command: command,
+            channelId: channelId
+        )
+        output.append("Added cron schedule listener!")
     }
 }

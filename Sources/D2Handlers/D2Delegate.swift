@@ -18,7 +18,7 @@ public class D2Delegate: MessageDelegate {
     private let partyGameDB: PartyGameDatabase
     private let registry: CommandRegistry
     private let eventListenerBus: EventListenerBus
-    private let cronSchedulerBus: CronSchedulerBus
+    private let cronManager: CronManager
     private let subscriptionManager: SubscriptionManager
     private let permissionManager: PermissionManager
 
@@ -33,7 +33,8 @@ public class D2Delegate: MessageDelegate {
         withPrefix commandPrefix: String,
         initialPresence: String? = nil,
         useMIOCommands: Bool = false,
-        mioCommandGuildId: GuildID? = nil
+        mioCommandGuildId: GuildID? = nil,
+        client: any MessageClient
     ) throws {
         self.commandPrefix = commandPrefix
         self.initialPresence = initialPresence
@@ -44,7 +45,7 @@ public class D2Delegate: MessageDelegate {
         messageDB = try MessageDatabase()
         partyGameDB = try PartyGameDatabase()
         eventListenerBus = EventListenerBus()
-        cronSchedulerBus = CronSchedulerBus()
+        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix)
         subscriptionManager = SubscriptionManager(registry: registry)
         permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
@@ -151,8 +152,8 @@ public class D2Delegate: MessageDelegate {
         registry["author"] = AuthorCommand()
         registry["addeventlistener", aka: ["on"]] = AddEventListenerCommand(eventListenerBus: eventListenerBus)
         registry["removeeventlistener", aka: ["off"]] = RemoveEventListenerCommand(eventListenerBus: eventListenerBus)
-        registry["addcronschedule", aka: ["cron"]] = AddCronScheduleCommand(cronSchedulerBus: cronSchedulerBus)
-        registry["removecronschedule", aka: ["uncron", "removecron"]] = RemoveCronScheduleCommand(cronSchedulerBus: cronSchedulerBus)
+        registry["addcronschedule", aka: ["cron"]] = AddCronScheduleCommand(cronManager: cronManager)
+        registry["removecronschedule", aka: ["uncron", "removecron"]] = RemoveCronScheduleCommand(cronManager: cronManager)
         registry["last"] = LastMessageCommand()
         registry["convert"] = UnitConverterCommand()
         registry["+"] = BinaryOperationCommand<Double>(name: "addition", operation: +)

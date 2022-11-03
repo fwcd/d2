@@ -4,8 +4,6 @@ import NIOCronScheduler
 
 fileprivate let log = Logger(label: "D2Commands.CronSchedulerBus")
 
-// TODO: Persist cron schedules?
-
 public class CronSchedulerBus {
     private var schedules: [String: Schedule] = [:]
     private let eventLoopGroup: EventLoopGroup
@@ -14,10 +12,10 @@ public class CronSchedulerBus {
     private class Schedule {
         let job: NIOCronJob
 
-        init(name: String, cron: String, output: any CommandOutput, on eventLoop: EventLoop) throws {
+        init(name: String, cron: String, on eventLoop: EventLoop, action: @escaping () -> Void) throws {
             job = try NIOCronScheduler.schedule(cron, on: eventLoop) {
                 log.info("Invoking cron schedule '\(name)' (scheduled to run at \(cron))")
-                output.append(.none)
+                action()
             }
         }
 
@@ -31,11 +29,13 @@ public class CronSchedulerBus {
         eventLoop = eventLoopGroup.next()
     }
 
-    public func addSchedule(name: String, with cron: String, output: any CommandOutput) throws {
-        schedules[name] = try Schedule(name: name, cron: cron, output: output, on: eventLoop)
+    public func addSchedule(name: String, cron: String, action: @escaping () -> Void) throws {
+        log.info("Adding schedule '\(name)' at \(cron)")
+        schedules[name] = try Schedule(name: name, cron: cron, on: eventLoop, action: action)
     }
 
     public func removeSchedule(name: String) {
+        log.info("Removing schedule '\(name)'")
         schedules[name] = nil
     }
 }
