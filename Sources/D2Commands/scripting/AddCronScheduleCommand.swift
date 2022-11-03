@@ -35,6 +35,11 @@ public class AddCronScheduleCommand: StringCommand {
         let name = parsedArgs[2]
         let command = parsedArgs[3]
 
+        guard cronManager[name] == nil else {
+            output.append(errorText: "Schedule with name `\(name)` already exists, please unregister it first!")
+            return
+        }
+
         cronManager[name] = CronTab.Schedule(
             cron: cron,
             command: command,
