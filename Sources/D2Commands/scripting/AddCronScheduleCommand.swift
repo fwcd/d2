@@ -45,6 +45,6 @@ public class AddCronScheduleCommand: StringCommand {
             command: command,
             channelId: channelId
         )
-        output.append("Added cron schedule listener!")
+        output.append("Added schedule `\(name)`!")
     }
 }
