@@ -4,6 +4,7 @@ import Logging
 import D2MessageIO
 import D2Commands
 import D2Permissions
+import NIO
 import Utils
 
 fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
@@ -44,6 +45,7 @@ public class CommandHandler: MessageHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
     private let subscriptionManager: SubscriptionManager
+    private let utilityEventLoopGroup: EventLoopGroup
 
     private let msgParser = MessageParser()
     private let chainSeparator: Character
@@ -63,6 +65,7 @@ public class CommandHandler: MessageHandler {
         registry: CommandRegistry,
         permissionManager: PermissionManager,
         subscriptionManager: SubscriptionManager,
+        utilityEventLoopGroup: EventLoopGroup,
         mostRecentPipeRunner: Synchronized<Box<(Runnable, PermissionLevel)?>>,
         maxPipeLengthForUsers: Int = 7,
         maxConcurrentlyRunningCommands: Int = 4,
@@ -74,6 +77,7 @@ public class CommandHandler: MessageHandler {
         self.registry = registry
         self.permissionManager = permissionManager
         self.subscriptionManager = subscriptionManager
+        self.utilityEventLoopGroup = utilityEventLoopGroup
         self._mostRecentPipeRunner = mostRecentPipeRunner
         self.maxPipeLengthForUsers = maxPipeLengthForUsers
         self.maxConcurrentlyRunningCommands = maxConcurrentlyRunningCommands
@@ -129,7 +133,8 @@ public class CommandHandler: MessageHandler {
                                 registry: self.registry,
                                 message: sent,
                                 commandPrefix: self.commandPrefix,
-                                subscriptions: pipeSink.context.subscriptions
+                                subscriptions: pipeSink.context.subscriptions,
+                                utilityEventLoopGroup: self.utilityEventLoopGroup
                             ))
                         }
                     }
@@ -191,7 +196,8 @@ public class CommandHandler: MessageHandler {
                             registry: registry,
                             message: message,
                             commandPrefix: commandPrefix,
-                            subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name)
+                            subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name),
+                            utilityEventLoopGroup: utilityEventLoopGroup
                         )
 
                         pipe.append(PipeComponent(name: name, command: command, context: context, args: args))

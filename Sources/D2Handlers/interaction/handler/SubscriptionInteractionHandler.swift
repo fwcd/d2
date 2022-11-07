@@ -1,15 +1,18 @@
 import D2MessageIO
 import D2Commands
+import NIO
 
 public struct SubscriptionInteractionHandler: InteractionHandler {
     public let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
+    private let utilityEventLoopGroup: EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager) {
+    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, utilityEventLoopGroup: EventLoopGroup) {
         self.commandPrefix = commandPrefix
         self.registry = registry
         self.manager = manager
+        self.utilityEventLoopGroup = utilityEventLoopGroup
     }
 
     public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
@@ -26,7 +29,8 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,
-                subscriptions: $1
+                subscriptions: $1,
+                utilityEventLoopGroup: utilityEventLoopGroup
             )
             let output = MessageIOInteractionOutput(interaction: interaction, context: context)
             registry[$0]?.onSubscriptionInteraction(with: customId, by: user, output: output, context: context)

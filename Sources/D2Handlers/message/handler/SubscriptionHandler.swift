@@ -1,4 +1,5 @@
 import Logging
+import NIO
 import D2MessageIO
 import D2Commands
 
@@ -9,11 +10,13 @@ public struct SubscriptionHandler: MessageHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
+    private let utilityEventLoopGroup: EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager) {
+    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, utilityEventLoopGroup: EventLoopGroup) {
         self.commandPrefix = commandPrefix
         self.registry = registry
         self.manager = manager
+        self.utilityEventLoopGroup = utilityEventLoopGroup
     }
 
     public func handle(message: Message, from client: any MessageClient) -> Bool {
@@ -28,7 +31,8 @@ public struct SubscriptionHandler: MessageHandler {
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,
-                subscriptions: subs
+                subscriptions: subs,
+                utilityEventLoopGroup: utilityEventLoopGroup
             )
             let command = registry[name]
             let output = MessageIOOutput(context: context) { sentMessages in
@@ -38,7 +42,8 @@ public struct SubscriptionHandler: MessageHandler {
                         registry: self.registry,
                         message: sent,
                         commandPrefix: self.commandPrefix,
-                        subscriptions: subs
+                        subscriptions: subs,
+                        utilityEventLoopGroup: utilityEventLoopGroup
                     ))
                 }
             }

@@ -1,14 +1,17 @@
+import NIO
 import D2MessageIO
 import D2Permissions
 import D2Commands
 
 public struct MIOCommandInteractionHandler: InteractionHandler {
-    public let registry: CommandRegistry
-    public let permissionManager: PermissionManager
+    private let registry: CommandRegistry
+    private let permissionManager: PermissionManager
+    private let utilityEventLoopGroup: EventLoopGroup
 
-    public init(registry: CommandRegistry, permissionManager: PermissionManager) {
+    public init(registry: CommandRegistry, permissionManager: PermissionManager, utilityEventLoopGroup: EventLoopGroup) {
         self.registry = registry
         self.permissionManager = permissionManager
+        self.utilityEventLoopGroup = utilityEventLoopGroup
     }
 
     public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
@@ -30,7 +33,8 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
                 guildMember: interaction.member
             ),
             commandPrefix: "/", // TODO: Find a more elegant solution than hardcoding the slash
-            subscriptions: .init() // TODO: Support subscriptions here
+            subscriptions: .init(), // TODO: Support subscriptions here
+            utilityEventLoopGroup: utilityEventLoopGroup
         )
         let output = MessageIOInteractionOutput(interaction: interaction, context: context)
 
