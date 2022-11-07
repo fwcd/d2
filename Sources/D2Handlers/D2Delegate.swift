@@ -51,7 +51,7 @@ public class D2Delegate: MessageDelegate {
         messageDB = try MessageDatabase()
         partyGameDB = try PartyGameDatabase()
         eventListenerBus = EventListenerBus()
-        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix, utilityEventLoopGroup: eventLoopGroup)
+        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix, eventLoopGroup: eventLoopGroup)
         subscriptionManager = SubscriptionManager(registry: registry)
         permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
@@ -71,8 +71,8 @@ public class D2Delegate: MessageDelegate {
         ]
         messageHandlers = [
             SpamHandler(config: _spamConfiguration),
-            CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, utilityEventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
-            SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, utilityEventLoopGroup: eventLoopGroup),
+            CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
+            SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
@@ -83,7 +83,7 @@ public class D2Delegate: MessageDelegate {
         ]
         reactionHandlers = [
             RoleReactionHandler(configuration: _roleReactionsConfiguration),
-            SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, utilityEventLoopGroup: eventLoopGroup),
+            SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MessageDatabaseReactionHandler(messageDB: messageDB)
         ]
         presenceHandlers = [
@@ -94,11 +94,11 @@ public class D2Delegate: MessageDelegate {
             MessageDatabaseChannelHandler(messageDB: messageDB)
         ]
         interactionHandlers = [
-            SubscriptionInteractionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, utilityEventLoopGroup: eventLoopGroup)
+            SubscriptionInteractionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup)
         ]
 
         if useMIOCommands {
-            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, permissionManager: permissionManager, utilityEventLoopGroup: eventLoopGroup))
+            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, permissionManager: permissionManager, eventLoopGroup: eventLoopGroup))
         }
 
         registry["ping"] = PingCommand()
@@ -581,7 +581,7 @@ public class D2Delegate: MessageDelegate {
                     message: m,
                     commandPrefix: self.commandPrefix,
                     subscriptions: .init(),
-                    utilityEventLoopGroup: self.eventLoopGroup
+                    eventLoopGroup: self.eventLoopGroup
                 ))
             }
         }
@@ -621,7 +621,7 @@ public class D2Delegate: MessageDelegate {
                 message: message,
                 commandPrefix: self.commandPrefix,
                 subscriptions: .init(),
-                utilityEventLoopGroup: self.eventLoopGroup
+                eventLoopGroup: self.eventLoopGroup
             ))
         }
     }

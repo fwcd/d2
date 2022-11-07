@@ -6,13 +6,13 @@ public struct SubscriptionReactionHandler: ReactionHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
-    private let utilityEventLoopGroup: any EventLoopGroup
+    private let eventLoopGroup: any EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, utilityEventLoopGroup: any EventLoopGroup) {
+    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, eventLoopGroup: any EventLoopGroup) {
         self.commandPrefix = commandPrefix
         self.registry = registry
         self.manager = manager
-        self.utilityEventLoopGroup = utilityEventLoopGroup
+        self.eventLoopGroup = eventLoopGroup
     }
 
     public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
@@ -29,7 +29,7 @@ public struct SubscriptionReactionHandler: ReactionHandler {
                 message: message,
                 commandPrefix: commandPrefix,
                 subscriptions: $1,
-                utilityEventLoopGroup: utilityEventLoopGroup
+                eventLoopGroup: eventLoopGroup
             )
             registry[$0]?.onSubscriptionReaction(emoji: emoji, by: user, output: MessageIOOutput(context: context), context: context)
         }

@@ -35,7 +35,7 @@ public class MensaCommand: StringCommand {
             return
         }
 
-        let client = MensaClient(eventLoopGroup: context.utilityEventLoopGroup)
+        let client = MensaClient(eventLoopGroup: context.eventLoopGroup)
 
         Task {
             do {

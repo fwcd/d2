@@ -10,13 +10,13 @@ public struct SubscriptionHandler: MessageHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
-    private let utilityEventLoopGroup: any EventLoopGroup
+    private let eventLoopGroup: any EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, utilityEventLoopGroup: any EventLoopGroup) {
+    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, eventLoopGroup: any EventLoopGroup) {
         self.commandPrefix = commandPrefix
         self.registry = registry
         self.manager = manager
-        self.utilityEventLoopGroup = utilityEventLoopGroup
+        self.eventLoopGroup = eventLoopGroup
     }
 
     public func handle(message: Message, from client: any MessageClient) -> Bool {
@@ -32,7 +32,7 @@ public struct SubscriptionHandler: MessageHandler {
                 message: message,
                 commandPrefix: commandPrefix,
                 subscriptions: subs,
-                utilityEventLoopGroup: utilityEventLoopGroup
+                eventLoopGroup: eventLoopGroup
             )
             let command = registry[name]
             let output = MessageIOOutput(context: context) { sentMessages in
@@ -43,7 +43,7 @@ public struct SubscriptionHandler: MessageHandler {
                         message: sent,
                         commandPrefix: self.commandPrefix,
                         subscriptions: subs,
-                        utilityEventLoopGroup: utilityEventLoopGroup
+                        eventLoopGroup: eventLoopGroup
                     ))
                 }
             }

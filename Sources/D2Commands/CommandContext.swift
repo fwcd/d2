@@ -14,7 +14,7 @@ public struct CommandContext {
     public let subscriptions: SubscriptionSet
 
     /// An event loop group for commands to schedule tasks on, e.g. API requests.
-    public let utilityEventLoopGroup: (any EventLoopGroup)?
+    public let eventLoopGroup: (any EventLoopGroup)?
 
     public var author: User? { return message.author }
     public var timestamp: Date? { return message.timestamp }
@@ -29,14 +29,14 @@ public struct CommandContext {
         message: Message,
         commandPrefix: String,
         subscriptions: SubscriptionSet,
-        utilityEventLoopGroup: (any EventLoopGroup)? = nil
+        eventLoopGroup: (any EventLoopGroup)? = nil
     ) {
         self.client = client
         self.registry = registry
         self.message = message
         self.commandPrefix = commandPrefix
         self.subscriptions = subscriptions
-        self.utilityEventLoopGroup = utilityEventLoopGroup
+        self.eventLoopGroup = eventLoopGroup
 
         channel = client.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, client: c) } }
     }
