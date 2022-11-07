@@ -13,15 +13,15 @@ public struct CommandContext {
     public let commandPrefix: String
     public let subscriptions: SubscriptionSet
 
-    /// An event loop group for commands to schedule tasks on, e.g. API requests.
+    /// The global event loop group.
     public let eventLoopGroup: (any EventLoopGroup)?
 
-    public var author: User? { return message.author }
-    public var timestamp: Date? { return message.timestamp }
-    public var guildMember: Guild.Member? { return message.guildMember }
-    public var guild: Guild? { return message.channelId.flatMap { client?.guildForChannel($0) } }
+    public var author: User? { message.author }
+    public var timestamp: Date? { message.timestamp }
+    public var guildMember: Guild.Member? { message.guildMember }
+    public var guild: Guild? { message.channelId.flatMap { client?.guildForChannel($0) } }
 
-    public var isSubscribed: Bool { return (channel?.id).map { subscriptions.contains($0) } ?? false }
+    public var isSubscribed: Bool { (channel?.id).map { subscriptions.contains($0) } ?? false }
 
     public init(
         client: (any MessageClient)?,
