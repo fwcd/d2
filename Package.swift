@@ -11,9 +11,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.0.11"),
+        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.0.12"),
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.3.0"),
-        .package(url: "https://github.com/givip/Telegrammer.git", revision: "459176871f1f52e34b1d20b22cdb4ee02cc98a30"),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.4.3"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.3.2"),
@@ -50,7 +49,6 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .target(name: "D2Handlers"),
                 .target(name: "D2DiscordIO"),
-                .target(name: "D2TelegramIO"),
                 .target(name: "D2IRCIO"),
             ]
         ),
@@ -60,16 +58,6 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "Discord", package: "swift-discord"),
-                .target(name: "D2MessageIO"),
-            ]
-        ),
-        .target(
-            name: "D2TelegramIO",
-            dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "Utils", package: "swift-utils"),
-                .product(name: "Emoji", package: "Emoji-Swift"),
-                .product(name: "Telegrammer", package: "Telegrammer"),
                 .target(name: "D2MessageIO"),
             ]
         ),
