@@ -1,6 +1,7 @@
 import Foundation
 import Dispatch
 import Logging
+import NIO
 import D2MessageIO
 import Discord
 
@@ -12,14 +13,20 @@ public struct DiscordPlatform: MessagePlatform {
 
     public var name: String { discordClientName }
 
-    public init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token: String) {
+    public init(
+        with delegate: any MessageDelegate,
+        combinedClient: CombinedMessageClient,
+        eventLoopGroup: any EventLoopGroup,
+        token: String
+    ) {
         log.info("Initializing Discord backend...")
 
         let queue = DispatchQueue(label: "Discord handle queue")
         self.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient)
         discordClient = DiscordClient(token: DiscordToken(stringLiteral: "Bot \(token)"), delegate: self.delegate, configuration: [
             .handleQueue(queue),
-            .intents(.allIntents)
+            .intents(.allIntents),
+            .eventLoopGroup(eventLoopGroup),
         ])
 
         combinedClient.register(client: DiscordMessageClient(client: discordClient))

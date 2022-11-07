@@ -1,6 +1,7 @@
 import D2MessageIO
 import Utils
 import Logging
+import NIO
 
 fileprivate let log = Logger(label: "D2Commands.CronManager")
 
@@ -13,15 +14,18 @@ public class CronManager {
     private let registry: CommandRegistry
     private let client: any MessageClient
     private let commandPrefix: String
+    private let eventLoopGroup: any EventLoopGroup
 
     public init(
         registry: CommandRegistry,
         client: any MessageClient,
-        commandPrefix: String
+        commandPrefix: String,
+        eventLoopGroup: any EventLoopGroup
     ) {
         self.registry = registry
         self.client = client
         self.commandPrefix = commandPrefix
+        self.eventLoopGroup = eventLoopGroup
         sync()
     }
 
@@ -53,7 +57,8 @@ public class CronManager {
                 registry: registry,
                 message: Message(content: "", channelId: schedule.channelId),
                 commandPrefix: commandPrefix,
-                subscriptions: SubscriptionSet() // TODO: Support subscriptions?
+                subscriptions: SubscriptionSet(), // TODO: Support subscriptions?
+                eventLoopGroup: eventLoopGroup
             )
             let output = MessageIOOutput(context: context)
             command.invoke(with: input, output: output, context: context)

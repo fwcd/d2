@@ -1,9 +1,16 @@
 import Logging
+import Mensa
 import D2MessageIO
 import Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.MensaCommand")
+
+fileprivate let cauMensaIds = [
+    "1": 1216,
+    "2": 1218,
+    "schwentine": 1219,
+]
 
 /// Fetches the CAU canteen's daily menu.
 public class MensaCommand: StringCommand {
@@ -11,6 +18,7 @@ public class MensaCommand: StringCommand {
         category: .cau,
         shortDescription: "Fetches the CAU canteen's daily menu",
         longDescription: "Looks up the current menu for a CAU canteen",
+        helpText: "Syntax: [\(cauMensaIds.keys.sorted().joined(separator: " | "))]",
         presented: true,
         requiredPermissionLevel: .basic
     )
@@ -18,39 +26,45 @@ public class MensaCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let canteen = Canteen.parse(from: input) else {
-            output.append(errorText: "Could not parse mensa from \(input), try `i` or `ii`")
+        guard !input.isEmpty else {
+            output.append(errorText: "Please specify a mensa: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
+            return
+        }
+        guard let canteenId = cauMensaIds[input.lowercased()] else {
+            output.append(errorText: "Unknown mensa `\(input)`, try one of these: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
             return
         }
 
-        Promise.catching { try FoodMenuQuery(canteen: canteen) }
-            .then { $0.fetchMenusAsync() }
-            .listen {
-                do {
-                    let menus = try $0.get()
-                    output.append(Embed(
-                        title: ":fork_knife_plate: Today's menu for \(canteen)",
-                        fields: menus
-                            .sorted(by: ascendingComparator(comparing: \.key))
-                            .compactMap { (subcanteen, menu) in
-                                guard !menu.isEmpty else { return nil }
-                                return Embed.Field(
-                                    name: "**+++ \(subcanteen.nilIfEmpty ?? "_No title_") +++**",
-                                    value: self.format(menu: menu)
-                                )
-                            }
-                    ))
-                } catch {
-                    output.append(error, errorText: "An error occurred while constructing the request")
-                }
+        let client = MensaClient(eventLoopGroup: context.eventLoopGroup)
+
+        Task {
+            do {
+                let canteen = try await client.canteen(for: canteenId)
+                let meals = try await client.meals(for: canteenId)
+                let mealsByCategory = [String?: [Meal]](grouping: meals, by: \.category)
+                    .map { (key: $0.key ?? "No title", value: $0.value) }
+                    .sorted(by: ascendingComparator(comparing: \.key))
+                output.append(Embed(
+                    title: ":fork_knife_plate: Today's menu for \(canteen.name)",
+                    fields: mealsByCategory.compactMap { (category, meals) -> Embed.Field? in
+                        guard !meals.isEmpty else { return nil }
+                        return Embed.Field(
+                            name: "**+++ \(category) +++**",
+                            value: self.format(meals: meals.sorted(by: ascendingComparator(comparing: \.name)))
+                        )
+                    }
+                ))
+            } catch {
+                output.append(error, errorText: "An error occurred while requesting the menu")
             }
+        }
     }
 
-    private func format(menu: FoodMenu) -> String {
-        menu.flatMap { meal in
+    private func format(meals: [Meal]) -> String {
+        meals.flatMap { meal in
             [
-                "**\(meal.title.nilIfEmpty ?? "_no title_")**",
-                ("\(meal.price) \(meal.properties.compactMap(self.emojiOf).joined(separator: " "))")
+                "**\(meal.name.nilIfEmpty ?? "_no title_")**",
+                ("\(meal.prices) \(meal.notes.compactMap(emojiOf(mealNote:)).joined(separator: " "))")
                     .trimmingCharacters(in: .whitespacesAndNewlines)
                     .nilIfEmpty
                     ?? "_no properties_"
@@ -58,13 +72,17 @@ public class MensaCommand: StringCommand {
         }.joined(separator: "\n")
     }
 
-    private func emojiOf(mealProperty: MealProperty) -> String? {
-        switch mealProperty {
-            case .beef: return ":cow2:"
-            case .pork: return ":pig:"
-            case .chicken: return ":chicken:"
-            case .vegetarian: return ":corn:"
-            case .vegan: return ":sunflower:"
+    private func emojiOf(mealNote: String) -> String? {
+        switch mealNote.lowercased() {
+            case "erdnüsse": return ":peanuts:"
+            case "vegetarisch": return ":corn:"
+            case "vegan": return ":sunflower:"
+            case "milch und laktose": return ":milk:"
+            case "rind": return ":cow2:"
+            case "schwein aus artgerechter haltung": return ":pig:"
+            case "eier": return ":egg:"
+            case "geflügel": return ":chicken:"
+            default: return nil
         }
     }
 }

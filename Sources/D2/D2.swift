@@ -2,10 +2,10 @@ import ArgumentParser
 import Dispatch
 import Foundation
 import Logging
+import NIO
 import D2Handlers
 import D2MessageIO
 import D2DiscordIO
-import D2TelegramIO
 import D2IRCIO
 import Utils
 
@@ -51,6 +51,9 @@ struct D2: ParsableCommand {
             log.info("\(config)")
         }
 
+        // Bootstrap NIO event loop group
+        let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
+
         // Create platforms
         var combinedClient: CombinedMessageClient! = CombinedMessageClient(mioCommandClientName: "Discord")
         var platforms: [Startable] = []
@@ -61,27 +64,19 @@ struct D2: ParsableCommand {
             initialPresence: actualInitialPresence,
             useMIOCommands: config?.useMIOCommands ?? false,
             mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild,
+            eventLoopGroup: eventLoopGroup,
             client: combinedClient
         )
 
         if let discordToken = tokens.discord {
             createdAnyPlatform = true
-            platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, token: discordToken))
-        }
-
-        if let telegramToken = tokens.telegram {
-            do {
-                createdAnyPlatform = true
-                platforms.append(try TelegramPlatform(with: handler, combinedClient: combinedClient, token: telegramToken))
-            } catch {
-                log.warning("Could not create Telegram platform: \(error)")
-            }
+            platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, eventLoopGroup: eventLoopGroup, token: discordToken))
         }
 
         for irc in tokens.irc ?? [] {
             do {
                 createdAnyPlatform = true
-                platforms.append(try IRCPlatform(with: handler, combinedClient: combinedClient, token: irc))
+                platforms.append(try IRCPlatform(with: handler, combinedClient: combinedClient, eventLoopGroup: eventLoopGroup, token: irc))
             } catch {
                 log.warning("Could not create IRC platform: \(error)")
             }

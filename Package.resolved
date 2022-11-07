@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
       "state" : {
-        "revision" : "7a4dfe026f6ee0f8ad741b58df74c60af296365d",
-        "version" : "1.9.0"
+        "revision" : "10f42e647a15d6e5c0e9de2e081761d23730a249",
+        "version" : "1.13.0"
       }
     },
     {
@@ -135,6 +135,15 @@
       }
     },
     {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "revision" : "919eb1d83e02121cdb434c7bfc1f0c66ef17febe",
+        "version" : "1.0.2"
+      }
+    },
+    {
       "identity" : "swift-backtrace",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/swift-backtrace.git",
@@ -153,12 +162,21 @@
       }
     },
     {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
+      }
+    },
+    {
       "identity" : "swift-discord",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-discord.git",
       "state" : {
-        "revision" : "0f83b38dfb5a58de1c22a76cbc0f33e89d992876",
-        "version" : "10.0.11"
+        "revision" : "110f8338ad64767d7ac77aa9793ca9acdb67a46a",
+        "version" : "10.0.12"
       }
     },
     {
@@ -184,8 +202,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
-        "version" : "1.4.2"
+        "revision" : "6fe203dc33195667ce1759bf0182975e4653ba1c",
+        "version" : "1.4.4"
+      }
+    },
+    {
+      "identity" : "swift-mensa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-mensa.git",
+      "state" : {
+        "revision" : "dee3d258072f90401db30e20148ca7bd9ac079b4",
+        "version" : "0.1.2"
       }
     },
     {
@@ -202,8 +229,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "154f1d32366449dcccf6375a173adf4ed2a74429",
-        "version" : "2.38.0"
+        "revision" : "edfceecba13d68c1c993382806e72f7e96feaa86",
+        "version" : "2.44.0"
       }
     },
     {
@@ -211,8 +238,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-extras.git",
       "state" : {
-        "revision" : "f73ca5ee9c6806800243f1ac415fcf82de9a4c91",
-        "version" : "1.10.2"
+        "revision" : "91dd2d61fb772e1311bb5f13b59266b579d77e42",
+        "version" : "1.15.0"
       }
     },
     {
@@ -247,8 +274,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-ssl.git",
       "state" : {
-        "revision" : "52a486ff6de9bc3e26bf634c5413c41c5fa89ca5",
-        "version" : "2.17.2"
+        "revision" : "4fb7ead803e38949eb1d6fabb849206a72c580f3",
+        "version" : "2.23.0"
       }
     },
     {
@@ -319,14 +346,6 @@
       "location" : "https://github.com/wfreitag/syllable-counter-swift.git",
       "state" : {
         "revision" : "029c8568b4d060174284fdedd7473863768a903b"
-      }
-    },
-    {
-      "identity" : "telegrammer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/givip/Telegrammer.git",
-      "state" : {
-        "revision" : "459176871f1f52e34b1d20b22cdb4ee02cc98a30"
       }
     },
     {

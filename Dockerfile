@@ -1,4 +1,4 @@
-FROM swift:5.6 as builder
+FROM swift:5.7 as builder
 
 # Install add-apt-repository
 RUN apt-get update && apt-get install -y software-properties-common
@@ -20,7 +20,7 @@ COPY Tests Tests
 COPY Package.swift Package.resolved ./
 RUN swift build -c release
 
-FROM swift:5.6-slim as runner
+FROM swift:5.7-slim as runner
 
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*

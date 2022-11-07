@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2Commands.CronSchedulerBus")
 
 public class CronSchedulerBus {
     private var schedules: [String: Schedule] = [:]
-    private let eventLoopGroup: EventLoopGroup
+    private let eventLoopGroup: any EventLoopGroup
     private let eventLoop: EventLoop
 
     private class Schedule {

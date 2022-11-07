@@ -1,4 +1,5 @@
 import Utils
+import NIO
 
 /// Represents an IO platform that is responsible for
 /// sending and receiving messages, e.g. Discord or
@@ -13,5 +14,10 @@ public protocol MessagePlatform: Startable {
 
     /// Performs synchronous setup. This method is expected not
     /// to block and to finish quickly.
-    init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token: Token) throws
+    init(
+        with delegate: any MessageDelegate,
+        combinedClient: CombinedMessageClient,
+        eventLoopGroup: any EventLoopGroup,
+        token: Token
+    ) throws
 }

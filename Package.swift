@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -11,9 +11,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.0.11"),
+        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.0.12"),
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.3.0"),
-        .package(url: "https://github.com/givip/Telegrammer.git", revision: "459176871f1f52e34b1d20b22cdb4ee02cc98a30"),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.4.3"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.3.2"),
@@ -22,7 +21,9 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-utils.git", from: "1.3.12"),
         .package(url: "https://github.com/fwcd/swift-graphics.git", from: "1.1.0"),
         .package(url: "https://github.com/fwcd/swift-gif.git", from: "1.0.0"),
+        .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.1.2"),
         .package(url: "https://github.com/fwcd/swift-music-theory.git", from: "0.1.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.44.0"),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.3.3"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", revision: "b3a49f4a9fbee3c7320591dbc7263c192244063e"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
@@ -49,7 +50,6 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .target(name: "D2Handlers"),
                 .target(name: "D2DiscordIO"),
-                .target(name: "D2TelegramIO"),
                 .target(name: "D2IRCIO"),
             ]
         ),
@@ -59,16 +59,6 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Utils", package: "swift-utils"),
                 .product(name: "Discord", package: "swift-discord"),
-                .target(name: "D2MessageIO"),
-            ]
-        ),
-        .target(
-            name: "D2TelegramIO",
-            dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "Utils", package: "swift-utils"),
-                .product(name: "Emoji", package: "Emoji-Swift"),
-                .product(name: "Telegrammer", package: "Telegrammer"),
                 .target(name: "D2MessageIO"),
             ]
         ),
@@ -103,6 +93,7 @@ let package = Package(
                 .product(name: "Graphics", package: "swift-graphics"),
                 .product(name: "GIF", package: "swift-gif"),
                 .product(name: "MusicTheory", package: "swift-music-theory"),
+                .product(name: "Mensa", package: "swift-mensa"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "FeedKit", package: "FeedKit"),
                 .product(name: "SQLite", package: "SQLite.swift"),
@@ -152,6 +143,7 @@ let package = Package(
                 .product(name: "Graphics", package: "swift-graphics"),
                 .product(name: "GIF", package: "swift-gif"),
                 .product(name: "BigInt", package: "BigInt"),
+                .product(name: "NIO", package: "swift-nio"),
             ]
         ),
         .testTarget(
