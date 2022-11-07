@@ -18,6 +18,7 @@ public class MensaCommand: StringCommand {
         category: .cau,
         shortDescription: "Fetches the CAU canteen's daily menu",
         longDescription: "Looks up the current menu for a CAU canteen",
+        helpText: "Syntax: [\(cauMensaIds.keys.sorted().joined(separator: " | "))]",
         presented: true,
         requiredPermissionLevel: .basic
     )
@@ -25,8 +26,12 @@ public class MensaCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+        guard !input.isEmpty else {
+            output.append(errorText: "Please specify a mensa: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
+            return
+        }
         guard let canteenId = cauMensaIds[input.lowercased()] else {
-            output.append(errorText: "Unknown mensa `\(input)`, try one of these: \(cauMensaIds.keys.joined(separator: ", "))")
+            output.append(errorText: "Unknown mensa `\(input)`, try one of these: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
             return
         }
 
