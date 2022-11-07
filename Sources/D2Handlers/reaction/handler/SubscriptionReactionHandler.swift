@@ -6,9 +6,9 @@ public struct SubscriptionReactionHandler: ReactionHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
-    private let utilityEventLoopGroup: EventLoopGroup
+    private let utilityEventLoopGroup: any EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, utilityEventLoopGroup: EventLoopGroup) {
+    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, utilityEventLoopGroup: any EventLoopGroup) {
         self.commandPrefix = commandPrefix
         self.registry = registry
         self.manager = manager

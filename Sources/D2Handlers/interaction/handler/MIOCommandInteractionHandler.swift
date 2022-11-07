@@ -6,9 +6,9 @@ import D2Commands
 public struct MIOCommandInteractionHandler: InteractionHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
-    private let utilityEventLoopGroup: EventLoopGroup
+    private let utilityEventLoopGroup: any EventLoopGroup
 
-    public init(registry: CommandRegistry, permissionManager: PermissionManager, utilityEventLoopGroup: EventLoopGroup) {
+    public init(registry: CommandRegistry, permissionManager: PermissionManager, utilityEventLoopGroup: any EventLoopGroup) {
         self.registry = registry
         self.permissionManager = permissionManager
         self.utilityEventLoopGroup = utilityEventLoopGroup

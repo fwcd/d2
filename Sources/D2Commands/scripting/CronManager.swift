@@ -14,13 +14,13 @@ public class CronManager {
     private let registry: CommandRegistry
     private let client: any MessageClient
     private let commandPrefix: String
-    private let utilityEventLoopGroup: EventLoopGroup
+    private let utilityEventLoopGroup: any EventLoopGroup
 
     public init(
         registry: CommandRegistry,
         client: any MessageClient,
         commandPrefix: String,
-        utilityEventLoopGroup: EventLoopGroup
+        utilityEventLoopGroup: any EventLoopGroup
     ) {
         self.registry = registry
         self.client = client

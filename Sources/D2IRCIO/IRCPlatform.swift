@@ -1,5 +1,6 @@
 import D2MessageIO
 import Logging
+import NIO
 import IRC
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCPlatform")
@@ -9,7 +10,12 @@ public struct IRCPlatform: MessagePlatform {
     private let ircClient: IRCClient
     public let name: String
 
-    public init(with delegate: any MessageDelegate, combinedClient: CombinedMessageClient, token config: IRCConfig) throws {
+    public init(
+        with delegate: any MessageDelegate,
+        combinedClient: CombinedMessageClient,
+        eventLoopGroup: any EventLoopGroup,
+        token config: IRCConfig
+    ) throws {
         self.config = config
         name = "IRC \(config.host):\(config.port)"
 
@@ -18,7 +24,8 @@ public struct IRCPlatform: MessagePlatform {
             port: config.port,
             host: config.host,
             password: config.password,
-            nickname: IRCNickName(config.nickname)!
+            nickname: IRCNickName(config.nickname)!,
+            eventLoopGroup: eventLoopGroup
         ))
 
         combinedClient.register(client: IRCMessageClient(ircClient: ircClient, name: name))

@@ -45,7 +45,7 @@ public class CommandHandler: MessageHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
     private let subscriptionManager: SubscriptionManager
-    private let utilityEventLoopGroup: EventLoopGroup
+    private let utilityEventLoopGroup: any EventLoopGroup
 
     private let msgParser = MessageParser()
     private let chainSeparator: Character
@@ -65,7 +65,7 @@ public class CommandHandler: MessageHandler {
         registry: CommandRegistry,
         permissionManager: PermissionManager,
         subscriptionManager: SubscriptionManager,
-        utilityEventLoopGroup: EventLoopGroup,
+        utilityEventLoopGroup: any EventLoopGroup,
         mostRecentPipeRunner: Synchronized<Box<(Runnable, PermissionLevel)?>>,
         maxPipeLengthForUsers: Int = 7,
         maxConcurrentlyRunningCommands: Int = 4,
