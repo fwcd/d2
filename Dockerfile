@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y curl software-properties-common && rm -
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Install native dependencies
-RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
+RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libssl1.1 \
     libfreetype6 \
     libcairo2 \
