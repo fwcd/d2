@@ -94,6 +94,7 @@ struct D2: ParsableCommand {
             platforms.removeAll()
             handler = nil
             combinedClient = nil
+            try! eventLoopGroup.syncShutdownGracefully()
             Self.exit()
         }
         source.resume()
