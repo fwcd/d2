@@ -151,7 +151,7 @@ Create a folder named `memeTemplates` in `local` containing PNG images. Any full
 
 The program consists of a single executable:
 
-- `D2`, the main Discord frontend
+- `D2`, the main executable
 
 This executable depends on several library targets:
 - `D2Handlers`, top-level message/event handling
@@ -228,7 +228,7 @@ protocol ArgCommand: Command {
 
     var argPattern: Args { get }
 
-    func invoke(withInputArgs inputArgs: [String], output: any CommandOutput, context: CommandContext)
+    func invoke(with input: [Args], output: any CommandOutput, context: CommandContext)
 }
 ```
 
