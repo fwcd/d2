@@ -4,12 +4,10 @@ stages:
   - build
   - deploy
 
-before_script:
-  - Scripts/install-build-dependencies-apt
-
 build:
   stage: build
   script:
+    - Scripts/install-build-dependencies-apt
     - swift test -c release
   artifacts:
     paths:
