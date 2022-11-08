@@ -2,8 +2,7 @@ import Utils
 import NIO
 
 /// Represents an IO platform that is responsible for
-/// sending and receiving messages, e.g. Discord or
-/// Telegram.
+/// sending and receiving messages, e.g. Discord.
 ///
 /// The implementor object will be kept alive for the
 /// entire application's lifetime.

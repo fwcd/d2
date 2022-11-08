@@ -99,7 +99,6 @@ Create a file named `platformTokens.json` in `local` containing the API tokens (
 ```json
 {
   "discord": "YOUR_DISCORD_API_TOKEN",
-  "telegram": "YOUR_TELEGRAM_API_TOKEN",
   "irc": [
     {
       "host": "YOUR_IRC_HOST",
@@ -159,7 +158,6 @@ This executable depends on several library targets:
 - `D2Commands`, the command framework and the implementations
 - `D2MessageIO`, the messaging framework (abstracting over the Discord library)
   - `D2DiscordIO`, the Discord implementation
-  - `D2TelegramIO`, the Telegram implementation
   - `D2IRCIO`, the IRC/Twitch implementation
 - `D2Permissions`, permission management
 - `D2Script`, an experimental DSL that can be used to script commands
