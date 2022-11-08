@@ -24,10 +24,10 @@ jobs:
     - name: Remove duplicate FFI includes (macOS)
       if: runner.os == 'macOS'
       run: sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/usr/include/ffi
-    - name: Install system dependencies (Linux)
+    - name: Install native dependencies (Linux)
       if: runner.os == 'Linux'
       run: sudo Scripts/install-build-dependencies-apt
-    - name: Install system dependencies (macOS)
+    - name: Install native dependencies (macOS)
       if: runner.os == 'macOS'
       run: sudo Scripts/install-dependencies-brew
     - name: Install Swift

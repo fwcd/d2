@@ -1,6 +1,6 @@
 FROM swift:5.7-focal as builder
 
-# Install system dependencies
+# Install native dependencies
 COPY Scripts/install-build-dependencies-apt Scripts/
 RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
