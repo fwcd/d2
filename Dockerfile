@@ -1,17 +1,8 @@
 FROM swift:5.7-focal as builder
 
-# Install add-apt-repository
-RUN apt-get update && apt-get install -y software-properties-common
-
-RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && apt-get install -y \
-    libssl-dev \
-    libfreetype6-dev \
-    libcairo2-dev \
-    libsqlite3-dev \
-    libgraphviz-dev \
-    libtesseract-dev \
-    libleptonica-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+COPY Scripts/install-build-dependencies-apt Scripts/
+RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
 # Build
 WORKDIR /opt/d2
@@ -27,23 +18,15 @@ RUN apt-get update && apt-get install -y curl software-properties-common && rm -
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Install native dependencies
-RUN add-apt-repository -y ppa:alex-p/tesseract-ocr && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    libssl1.1 \
-    libfreetype6 \
-    libcairo2 \
-    libsqlite3-0 \
-    tesseract-ocr \
-    poppler-utils \
-    maxima \
-    graphviz \
-    nodejs \
-    && rm -rf /var/lib/apt/lists/*
+COPY Scripts/install-runtime-dependencies-apt Scripts/
+RUN Scripts/install-runtime-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/d2
 
 # Install Node dependencies
+COPY Scripts/install-node-dependencies Scripts/
 COPY Node Node
-RUN cd Node && ./install-all
+RUN Scripts/install-node-dependencies
 
 # Add resources
 COPY Resources Resources

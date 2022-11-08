@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Installs all native dependencies that are needed to build D2 on macOS.
+
+set -e
+cd "$(dirname $0)/.."
+
+brew install \
+  cairo \
+  graphviz
+

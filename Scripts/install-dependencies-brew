@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Installs all native dependencies that are needed to build/run/develop D2 on macOS.
+
+set -e
+cd "$(dirname $0)/.."
+
+Scripts/install-build-dependencies-brew
+Scripts/install-runtime-dependencies-brew

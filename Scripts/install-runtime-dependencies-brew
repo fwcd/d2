@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Installs all native dependencies that are needed to run D2 on macOS.
+
+set -e
+cd "$(dirname $0)/.."
+
+brew install \
+  cairo \
+  graphviz \
+  tesseract \
+  node
+
+# TODO: brew tap vapor/tap needed?
+# TODO: ctls, pkg-config, poppler and gd needed?

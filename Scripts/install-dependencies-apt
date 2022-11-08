@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Installs all apt dependencies that are needed to build/run/develop D2.
+
+set -e
+cd "$(dirname $0)/.."
+
+Scripts/install-build-dependencies-apt
+Scripts/install-runtime-dependencies-apt

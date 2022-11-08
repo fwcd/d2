@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Installs all apt dependencies that are needed to build D2.
+
+set -e
+cd "$(dirname $0)/.."
+
+apt-get update
+apt-get install -y \
+  libcairo2-dev \
+  libsqlite3-dev \
+  libleptonica-dev \
+  libgraphviz-dev
+
+# TODO: poppler-utils and libssl1.1 needed?
