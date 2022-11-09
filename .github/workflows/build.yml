@@ -31,7 +31,7 @@ jobs:
       if: runner.os == 'macOS'
       run: Scripts/install-dependencies-brew
     - name: Install Swift
-      uses: fwal/setup-swift@v1
+      uses: swift-actions/setup-swift@v1
       with:
         swift-version: ${{ matrix.swift }}
     - name: Build
