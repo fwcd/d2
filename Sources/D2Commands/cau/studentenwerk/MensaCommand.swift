@@ -64,7 +64,7 @@ public class MensaCommand: StringCommand {
         meals.flatMap { meal in
             [
                 "**\(meal.name.nilIfEmpty ?? "_no title_")**",
-                ("\(meal.prices) \(meal.notes.compactMap(emojiOf(mealNote:)).joined(separator: " "))")
+                ("\(meal.prices) \(emojisOf(attributes: meal.attributes))")
                     .trimmingCharacters(in: .whitespacesAndNewlines)
                     .nilIfEmpty
                     ?? "_no properties_"
@@ -72,17 +72,17 @@ public class MensaCommand: StringCommand {
         }.joined(separator: "\n")
     }
 
-    private func emojiOf(mealNote: String) -> String? {
-        switch mealNote.lowercased() {
-            case "erdnüsse": return ":peanuts:"
-            case "vegetarisch": return ":corn:"
-            case "vegan": return ":sunflower:"
-            case "milch und laktose": return ":milk:"
-            case "rind": return ":cow2:"
-            case "schwein aus artgerechter haltung": return ":pig:"
-            case "eier": return ":egg:"
-            case "geflügel": return ":chicken:"
-            default: return nil
-        }
+    private func emojisOf(attributes: Meal.Attributes) -> String {
+        var emojis: [String] = []
+        if attributes.contains(.vegetarian) { emojis.append(":corn:") }
+        if attributes.contains(.vegan) { emojis.append(":sunflower:") }
+        if attributes.contains(.lactose) { emojis.append(":milk:") }
+        if attributes.contains(.beef) { emojis.append(":cow2:") }
+        if attributes.contains(.pork) { emojis.append(":pig:") }
+        if attributes.contains(.eggs) { emojis.append(":egg:") }
+        if attributes.contains(.poultry) { emojis.append(":chicken:") }
+        if attributes.contains(.peanuts) { emojis.append(":peanuts:") }
+        if attributes.contains(.fish) { emojis.append(":fish:") }
+        return emojis.joined(separator: " ")
     }
 }

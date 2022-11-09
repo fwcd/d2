@@ -211,8 +211,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-mensa.git",
       "state" : {
-        "revision" : "a236c61b0c00a1c24b65fa94151d270a74861f6f",
-        "version" : "0.1.3"
+        "revision" : "19a19f1b8b512d65b93c83194cce7a308af81cc9",
+        "version" : "0.1.4"
       }
     },
     {
