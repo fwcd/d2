@@ -7,7 +7,7 @@ metadata:
 spec:
   storageClassName: {{ .Values.storageClaim.storageClassName | quote }}
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: {{ .Values.storageClaim.size | quote }}
