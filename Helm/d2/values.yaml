@@ -22,7 +22,6 @@ d2:
 
 # Persistent storage claim configuration
 storageClaim:
-  storageClassName: ''
   size: 500M
 
 # Deployment configuration (replica count should be 1 until D2 properly supports sharding)
