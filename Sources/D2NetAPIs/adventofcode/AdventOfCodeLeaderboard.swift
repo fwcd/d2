@@ -10,7 +10,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
 
     public static let starsPerDay = 2
 
-    public let ownerId: String
+    public let ownerId: Int
     public let event: String
     public let members: [String: Member]
 
@@ -74,12 +74,12 @@ public struct AdventOfCodeLeaderboard: Decodable {
         public let globalScore: Int?
         public let localScore: Int?
         public let lastStarTs: Timestamp? // String or Int
-        public let id: String?
+        public let id: Int?
         public let completionDayLevel: [String: [String: StarCompletion]]?
         public let name: String?
 
         public var lastDay: Int { starCompletions.keys.max() ?? 1 }
-        public var displayName: String { name ?? "<anonymous user \(id ?? "?")>" }
+        public var displayName: String { name ?? "<anonymous user \(id.map(String.init) ?? "?")>" }
         public var starCompletions: [Int: [StarCompletion]] {
             Dictionary(uniqueKeysWithValues: completionDayLevel?
                 .compactMap { (k, v) in Int(k).map { ($0, v.values.sorted()) } }
