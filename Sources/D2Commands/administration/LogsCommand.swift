@@ -18,6 +18,10 @@ public class LogsCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let lineCount = Int(input) ?? defaultLineCount
-        output.append(.code(StoringLogHandler.lastOutputs.suffix(lineCount).joined(separator: "\n"), language: nil))
+        let logs = StoringLogHandler.lastOutputs
+            .suffix(lineCount)
+            .map { $0.replacingOccurrences(of: "```", with: "") }
+            .joined(separator: "\n")
+        output.append(.code(logs, language: nil))
     }
 }
