@@ -16,7 +16,7 @@ public struct MaskImageMapping<M>: ImageMapping where M: ImageMask {
             for x in 0..<width {
                 masked[y, x] = mask.contains(pos: Vec2(x: x, y: y), imageSize: Vec2(x: width, y: height))
                     ? image[y, x]
-                    : Colors.transparent
+                    : .transparent
             }
         }
 

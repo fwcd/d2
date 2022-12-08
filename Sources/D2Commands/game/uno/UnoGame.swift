@@ -5,7 +5,7 @@ public struct UnoGame: Game {
 
     public let name: String = "uno"
     public let renderFirstBoard: Bool = false
-    public let themeColor: Color? = Colors.red
+    public let themeColor: Color? = .red
     public let actions: [String: (ActionParameters<State>) throws -> ActionResult<State>] = [
         "move": {
             let next = try $0.state.childState(after: try UnoGame.parse(move: $0.args), options: .commit)

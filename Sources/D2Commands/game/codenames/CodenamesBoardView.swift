@@ -23,7 +23,7 @@ struct CodenamesBoardView {
                 let modelPos = Vec2(x: x, y: y)
                 let viewPos = (modelPos * (fieldIntSize + Vec2(both: intPadding))).asDouble
                 graphics.draw(Rectangle(fromX: viewPos.x, y: viewPos.y, width: fieldSize.x, height: fieldSize.y, color: color))
-                graphics.draw(Text(card.word, at: viewPos + Vec2(both: padding) + Vec2(y: fieldSize.y / 3), color: Colors.black))
+                graphics.draw(Text(card.word, at: viewPos + Vec2(both: padding) + Vec2(y: fieldSize.y / 3), color: .black))
             }
         }
 
@@ -38,7 +38,7 @@ struct CodenamesBoardView {
                 case .team(.red): return Color(rgb: 0xad2a10)
                 case .team(.blue): return Color(rgb: 0x101dad)
                 case .innocent: return Color(rgb: 0xf5efc6)
-                case .assasin: return Colors.black
+                case .assasin: return .black
             }
         }
     }

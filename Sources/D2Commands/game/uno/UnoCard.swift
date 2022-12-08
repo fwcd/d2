@@ -63,13 +63,13 @@ public enum UnoCard: Hashable {
             let ellipseX = size.x * 0.6
             let ellipseY = center.y - (size.x / 3)
             let cardPadding = size.x / 12
-            let renderColor = color?.color ?? Colors.black
+            let renderColor = color?.color ?? .black
             let img = try Image(fromSize: intSize)
             let graphics = CairoGraphics(fromImage: img)
 
-            graphics.draw(Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, cornerRadius: cardPadding, color: Colors.white))
+            graphics.draw(Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, cornerRadius: cardPadding, color: .white))
             graphics.draw(Rectangle(fromX: cardPadding, y: cardPadding, width: size.x - (cardPadding * 2), height: size.y - (cardPadding * 2), cornerRadius: cardPadding, color: renderColor))
-            graphics.draw(Ellipse(center: center, radius: Vec2(x: ellipseX, y: ellipseY), rotation: -Double.pi / 4.0, color: Colors.white))
+            graphics.draw(Ellipse(center: center, radius: Vec2(x: ellipseX, y: ellipseY), rotation: -Double.pi / 4.0, color: .white))
 
             switch self {
                 case let .number(n, _):

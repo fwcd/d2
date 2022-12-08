@@ -78,7 +78,7 @@ public class PatCommand: Command {
                             let cx = x - (width / 2)
                             let cy = y - (height / 2)
                             if (cx * cx) + (cy * cy) > radiusSquared {
-                                avatarImage[y, x] = Colors.transparent
+                                avatarImage[y, x] = .transparent
                             }
                         }
                     }

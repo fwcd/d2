@@ -56,14 +56,14 @@ struct PianoRenderer: ScaleRenderer {
             var rectangle: Rectangle<Double>
 
             if isWhite {
-                rectangle = Rectangle(fromX: Double(x), y: 0, width: Double(whiteKeyWidth), height: Double(whiteKeyHeight), color: Colors.white, isFilled: true)
+                rectangle = Rectangle(fromX: Double(x), y: 0, width: Double(whiteKeyWidth), height: Double(whiteKeyHeight), color: .white, isFilled: true)
                 x += whiteKeyWidth + whiteKeyPadding
             } else {
-                rectangle = Rectangle(fromX: Double(x - (blackKeyWidth / 2)), y: 0, width: Double(blackKeyWidth), height: Double(blackKeyHeight), color: Colors.black, isFilled: true)
+                rectangle = Rectangle(fromX: Double(x - (blackKeyWidth / 2)), y: 0, width: Double(blackKeyWidth), height: Double(blackKeyHeight), color: .black, isFilled: true)
             }
 
             if scaleSemitones.contains(note.semitone) {
-                rectangle.color = Colors.cyan.with(alpha: 128).alphaBlend(over: rectangle.color)
+                rectangle.color = .cyan.with(alpha: 128).alphaBlend(over: rectangle.color)
             }
 
             if isWhite {

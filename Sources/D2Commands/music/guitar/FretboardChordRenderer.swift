@@ -16,7 +16,7 @@ struct FretboardChordRenderer: ChordRenderer {
         height: Int = 200,
         gutterHeight: Double = 10,
         padding: Double = 20,
-        fgColor: Color = Colors.white,
+        fgColor: Color = .white,
         fretboard: Fretboard = Fretboard(),
         minFrets: Int = 7
     ) {

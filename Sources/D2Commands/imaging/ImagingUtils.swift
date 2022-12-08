@@ -34,7 +34,7 @@ func colorToAlpha(in image: Image, color: Color, squaredThreshold: Double = 0.01
         for x in 0..<image.width {
             let pixel = image[y, x]
             if pixel.euclideanDistance(to: color) < squaredThreshold {
-                output[y, x] = Colors.transparent
+                output[y, x] = .transparent
             } else {
                 output[y, x] = pixel
             }

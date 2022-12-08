@@ -28,8 +28,8 @@ public struct ThresholdImageMapping: ImageMapping {
         for y in 0..<height {
             for x in 0..<width {
                 thresholded[y, x] = image[y, x].luminance > threshold
-                    ? Colors.white
-                    : Colors.black
+                    ? .white
+                    : .black
             }
         }
 

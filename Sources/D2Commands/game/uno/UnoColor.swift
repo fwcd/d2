@@ -9,10 +9,10 @@ public enum UnoColor: String, Hashable, CaseIterable, RichValueConvertible {
 
     public var color: Color {
         switch self {
-            case .yellow: return Colors.yellow
-            case .red: return Colors.red
-            case .green: return Colors.green
-            case .blue: return Colors.blue
+            case .yellow: return .yellow
+            case .red: return .red
+            case .green: return .green
+            case .blue: return .blue
         }
     }
 

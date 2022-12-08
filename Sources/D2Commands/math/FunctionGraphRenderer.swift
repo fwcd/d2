@@ -18,7 +18,7 @@ struct FunctionGraphRenderer {
         scale: Double = 10.0,
         axisArrowSize: Double = 6.0,
         axisLabelSpacing: Int = 45,
-        axisColor: Color = Colors.gray
+        axisColor: Color = .gray
     ) {
         self.inputVariable = inputVariable
         self.width = width

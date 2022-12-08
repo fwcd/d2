@@ -26,7 +26,7 @@ public class QRCodeCommand: StringCommand {
             for y in 0..<qr.size {
                 for x in 0..<qr.size {
                     let module = qr.getModule(x: x, y: y)
-                    let color = module ? Colors.white : Colors.transparent
+                    let color: Color = module ? .white : .transparent
                     graphics.draw(Rectangle(
                         fromX: Double((x + margin) * scale),
                         y: Double((y + margin) * scale),

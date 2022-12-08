@@ -17,7 +17,7 @@ struct ASTRenderer {
         padding: Double = 10.0,
         nodeSpacing: Double = 50.0,
         layerSpacing: Double = 30.0,
-        color: Color = Colors.white
+        color: Color = .white
     ) {
         self.width = width
         self.height = height

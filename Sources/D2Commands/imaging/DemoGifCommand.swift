@@ -34,7 +34,7 @@ public class DemoGifCommand: VoidCommand {
                 let graphics = CairoGraphics(fromImage: image)
                 graphics.rotate(by: Double(angleIndex) * angle)
                 graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 100, y: 100))
-                graphics.draw(Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: Colors.blue))
+                graphics.draw(Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: .blue))
 
                 gif.frames.append(.init(image: image, delayTime: 100))
             }
