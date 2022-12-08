@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Workaround for FFI modulemap redefinition error when building swift-cairo
+# - https://github.com/orgs/Homebrew/discussions/4025
+# - https://github.com/tauri-apps/tauri/issues/1150#issuecomment-768310979
+
+# Removes FFI includes from the command-line tools since they are provided by Xcode
+# already and otherwise cause module redefinition errors. The includes are only renamed
+# rather than removed, thus reverting the change is reasy.
+
+set -e
+cd "$(dirname $0)/.."
+
+find "/Library/Developer/CommandLineTools/SDKs" \
+  -name "MacOSX*.sdk" \
+  -type d \
+  -depth 1 \
+  -exec bash -c 'ffidir="{}/usr/include/ffi" && [ -d "$ffidir" ] && echo "Moving $ffidir to $ffidir.backup..." && sudo mv "$ffidir"{,.backup}' \;

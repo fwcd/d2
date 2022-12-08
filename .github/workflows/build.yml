@@ -19,11 +19,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-      # Workaround for FFI modulemap redefinition error
-      # https://github.com/tauri-apps/tauri/issues/1150#issuecomment-768310979
+      # Workaround, see script for details
     - name: Remove duplicate FFI includes (macOS)
       if: runner.os == 'macOS'
-      run: sudo rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/usr/include/ffi
+      run: Scripts/remove-commandlinetools-ffi-includes
     - name: Install native dependencies (Linux)
       if: runner.os == 'Linux'
       run: sudo Scripts/install-build-dependencies-apt

@@ -50,6 +50,8 @@ Finally, use `swift build` to build D2 and `swift run` to run it. With `swift te
 
 > To suppress warnings, you can append `-Xswiftc -suppress-warnings` after `swift build` or `swift run`.
 
+> If your build fails with module redefinition errors regarding FFI includes, run `Scripts/remove-commandlinetools-ffi-includes` and try building again.
+
 ### With Docker (Compose)
 
 Make sure to have recent versions of Docker and Docker Compose installed and create a volume named `d2local` using `docker volume create d2local`.
