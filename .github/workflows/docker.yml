@@ -26,36 +26,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        # TODO: Ideally we could just build an aarch64 image too (under QEMU user-mode emulation) by using
-        #
-        #       platforms: linux/amd64,linux/arm64/v8
-        #
-        #       While this works for most build steps, this unfortunately fails with obscure
-        #       'invalid manifest' errors when building D2 with the Swift Package Manager under QEMU.
-        #       Further investigation revealed that these crashes occur due to `SIGTRAP`s sent to `swift-driver` while
-        #       fetching/checking out D2's dependencies. This can be reproduced by building the image
-        #       up to the step before `swift build -c release` and then manually running the Swift build e.g. in a
-        #       shell within such a container. The errors will occur and QEMU will place a core dump
-        #       (`*.core`) in the working directory (which can be inspected using `lldb /usr/bin/swift-driver --core <path/to/dump.core>`
-        #       and the command `bt all`).
-        #
-        #       Possible ways to resolve this issue:
-        #
-        #       - Use a GitHub-provisioned native ARM runner once available
-        #       - Try using full system emulation for aarch64 with QEMU with Docker
-        #         - It might not be trivial to set this up, most documentation seems to be focused
-        #           on running QEMU under user-mode emulation when building multiarch images
-        #         - Docker Desktop seemed to do something in this direction on M1 Macs prior to using the Virtualization framework
-        #         - A drackback would be that this is probably quite a bit slower
-        #         - https://reverseengineering.stackexchange.com/questions/15015/qemu-gdb-server-thread-problem
-        #           seems to deal with a similar problem.
-        #       - Investigate whether we can cross-compile Swift from x86_64 directly within the Docker build
-        #         - This would probably be the best (and fastest) approach, but might be non-trivial,
-        #           depending on how well the Swift Package Manager supports cross-compiling from x86_64 Linux hosts to
-        #           aarch64 Linux.
-        #         - https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
-        #           is a guide that explains how to do this (in general)
-        #         - https://github.com/rvolosatovs/docker-protobuf/pull/91 does something similar
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64/v8
         push: true
         tags: ghcr.io/fwcd/d2:latest
