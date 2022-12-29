@@ -1,7 +1,7 @@
-ARG SWIFTVERSION 5.7.2
-ARG UBUNTUDISTRO focal
+ARG SWIFTVERSION=5.7.2
+ARG UBUNTUDISTRO=focal
 
-FROM --platform=$BUILDPLATFORM swift:$SWIFTVERSION-$UBUNTUDISTRO AS builder
+FROM --platform=$BUILDPLATFORM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS builder
 
 ARG BUILDARCH
 ARG TARGETARCH
@@ -13,8 +13,8 @@ RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
 # Install the target toolchain for cross-compilation if needed
 # (only required for locating e.g. Swift standard library modules,
 # the actual compilation is done with the installed host Swift toolchain)
-COPY Scripts/install-cross-target-toolchain-$UBUNTUDISTRO Scripts/
-RUN Scripts/install-cross-target-toolchain-$UBUNTUDISTRO
+COPY Scripts/install-cross-target-toolchain-${UBUNTUDISTRO} Scripts/
+RUN Scripts/install-cross-target-toolchain-${UBUNTUDISTRO}
 
 # Build
 WORKDIR /opt/d2
@@ -24,7 +24,7 @@ COPY Package.swift Package.resolved ./
 COPY Scripts/build-release Scripts/
 RUN DEBIAN=ON Scripts/build-release
 
-FROM swift:$SWIFTVERSION-$UBUNTUDISTRO-slim AS runner
+FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
 
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
