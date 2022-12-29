@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname $0)/.."
+
+if [ -n "$TARGETOS" ]; then
+  case "$TARGETOS" in
+    linux)
+      vendor=unknown
+      os=linux-gnu
+      ;;
+    *)
+      echo "Unsupported target os '$TARGETOS'"
+      exit 1
+      ;;
+  esac
+else
+  echo "Please specify the target OS by setting the TARGETOS variable!"
+  exit 1
+fi
+
+if [ -n "$TARGETARCH" ]; then
+  case "$TARGETARCH" in
+    amd64) arch=x86_64;;
+    arm64) arch=arm64;;
+    *)
+      echo "Unsupported target arch '${D2TARGETARCH[@]}'"
+      exit 1
+      ;;
+  esac
+else
+  echo "Please specify the target arch by setting the TARGETARCH variable!"
+  exit 1
+fi
+
+config=release
+
+cd .build
+mkdir -p "$arch-$vendor-$os"/"$config"
+ln -s "$config" "$arch-$vendor-$os"/"$config"

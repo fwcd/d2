@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname $0)/.."
+
+extra_flags=()
+
+if [ -n "$TARGETARCH" ]; then
+  case "$TARGETARCH" in
+    amd64) extra_flags=(--arch x86_64);;
+    arm64) extra_flags=(--arch arm64);;
+    *)
+      echo "Unsupported target arch '$TARGETARCH'"
+      exit 1
+      ;;
+  esac
+fi
+
+exec swift build -c release "${extra_flags[@]}"

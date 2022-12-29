@@ -1,4 +1,4 @@
-FROM swift:5.7-focal as builder
+FROM --platform=$BUILDPLATFORM swift:5.7-focal AS builder
 
 # Install native dependencies
 COPY Scripts/install-build-dependencies-apt Scripts/
@@ -9,9 +9,10 @@ WORKDIR /opt/d2
 COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
-RUN swift build -c release
+COPY Scripts/build-release Scripts/
+RUN Scripts/build-release
 
-FROM swift:5.7-focal-slim as runner
+FROM swift:5.7-focal-slim AS runner
 
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
@@ -34,7 +35,8 @@ COPY LICENSE README.md ./
 
 # Set up .build folder in runner
 WORKDIR /opt/d2/.build
-RUN mkdir -p x86_64-unknown-linux-gnu/release && ln -s x86_64-unknown-linux-gnu/release release
+COPY Scripts/setup-dotbuild-tree Scripts/
+RUN Scripts/setup-dotbuild-tree
 
 # Copy font used by swiftplot to the correct path
 COPY --from=builder \
