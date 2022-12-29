@@ -9,11 +9,11 @@ if [ -n "$TARGETARCH" ]; then
   case "$TARGETARCH" in
     amd64)
       extra_flags+=(--arch x86_64)
-      debian_arch=x86_64
+      arch_name=x86_64
       ;;
     arm64)
       extra_flags+=(--arch arm64)
-      debian_arch=aarch64
+      arch_name=aarch64
       ;;
     *)
       echo "Unsupported target arch '$TARGETARCH'"
@@ -22,8 +22,8 @@ if [ -n "$TARGETARCH" ]; then
   esac
 fi
 
-if [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$DEBIAN" ]; then
-  triplet="$debian_arch-linux-gnu"
+if [ -n "$BUILDARCH" ] && [ -n "$TARGETARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$DEBIAN" ]; then
+  triplet="$arch_name-linux-gnu"
   extra_flags+=(
     -Xcc -I"/usr/include/$triplet"
     -Xlinker -L"/usr/lib/$triplet"

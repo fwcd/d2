@@ -5,12 +5,32 @@
 set -e
 cd "$(dirname $0)/.."
 
+dependencies=(
+  libcairo2-dev
+  libsqlite3-dev
+  libleptonica-dev
+  libtesseract-dev
+  libgraphviz-dev
+  # TODO: poppler-utils and libssl1.1 needed?
+)
+
+# Set up cross-compilation if needed
+if [ -n "$BUILDARCH" ] && [ -n "$TARGETARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ]; then
+  # Install sysroot for the target architecture
+  apt-get update
+  apt-get install -y \
+    crossbuild-essential-"$TARGETARCH"
+
+  # Configure dpkg to install packages for target architecture too
+  dpkg --add-architecture "$TARGETARCH"
+
+  # Suffix dependencies with architecture
+  for (( i=0; i<${#dependencies[@]}; i++ )); do
+    dependencies[$i]="${dependencies[$i]}:$TARGETARCH"
+  done
+fi
+
+# Install the dependencies
 apt-get update
 apt-get install -y \
-  libcairo2-dev \
-  libsqlite3-dev \
-  libleptonica-dev \
-  libtesseract-dev \
-  libgraphviz-dev
-
-# TODO: poppler-utils and libssl1.1 needed?
+  "${dependencies[@]}"

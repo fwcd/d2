@@ -3,9 +3,6 @@ FROM --platform=$BUILDPLATFORM swift:5.7-focal AS builder
 ARG BUILDARCH
 ARG TARGETARCH
 
-# Install cross compilation toolchain if needed
-RUN if [ "$BUILDARCH" != "$TARGETARCH" ]; then apt-get update && apt-get install -y crossbuild-essential-$TARGETARCH; fi
-
 # Install native dependencies
 COPY Scripts/install-build-dependencies-apt Scripts/
 RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
