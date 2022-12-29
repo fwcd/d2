@@ -10,7 +10,7 @@ COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
 COPY Scripts/build-release Scripts/
-RUN Scripts/build-release
+RUN TARGETARCH=$TARGETARCH Scripts/build-release
 
 FROM swift:5.7-focal-slim AS runner
 
@@ -36,7 +36,7 @@ COPY LICENSE README.md ./
 # Set up .build folder in runner
 WORKDIR /opt/d2/.build
 COPY Scripts/setup-dotbuild-tree Scripts/
-RUN Scripts/setup-dotbuild-tree
+RUN TARGETOS=$TARGETOS TARGETARCH=$TARGETARCH Scripts/setup-dotbuild-tree
 
 # Copy font used by swiftplot to the correct path
 COPY --from=builder \
