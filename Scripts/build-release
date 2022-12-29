@@ -7,13 +7,27 @@ extra_flags=()
 
 if [ -n "$TARGETARCH" ]; then
   case "$TARGETARCH" in
-    amd64) extra_flags=(--arch x86_64);;
-    arm64) extra_flags=(--arch arm64);;
+    amd64)
+      extra_flags+=(--arch x86_64)
+      debian_arch=x86_64
+      ;;
+    arm64)
+      extra_flags+=(--arch arm64)
+      debian_arch=aarch64
+      ;;
     *)
       echo "Unsupported target arch '$TARGETARCH'"
       exit 1
       ;;
   esac
+fi
+
+if [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$DEBIAN" ]; then
+  triplet="$debian_arch-linux-gnu"
+  extra_flags+=(
+    -Xcc -I"/usr/include/$triplet"
+    -Xlinker -L"/usr/lib/$triplet"
+  )
 fi
 
 exec swift build -c release "${extra_flags[@]}"

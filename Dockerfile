@@ -1,10 +1,16 @@
 FROM --platform=$BUILDPLATFORM swift:5.7-focal AS builder
 
+ARG BUILDARCH
+ARG TARGETARCH
+
+# Install cross compilation toolchain if needed
+RUN if [ "$BUILDARCH" != "$TARGETARCH" ]; then \
+    apt-get update && apt-get install -y crossbuild-essential-$TARGETARCH \
+fi
+
 # Install native dependencies
 COPY Scripts/install-build-dependencies-apt Scripts/
 RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
-
-ARG TARGETARCH
 
 # Build
 WORKDIR /opt/d2
@@ -12,7 +18,7 @@ COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
 COPY Scripts/build-release Scripts/
-RUN TARGETARCH=$TARGETARCH Scripts/build-release
+RUN DEBIAN=ON Scripts/build-release
 
 FROM swift:5.7-focal-slim AS runner
 
@@ -41,7 +47,7 @@ ARG TARGETARCH
 # Set up .build folder in runner
 WORKDIR /opt/d2/.build
 COPY Scripts/setup-dotbuild-tree Scripts/
-RUN TARGETOS=$TARGETOS TARGETARCH=$TARGETARCH Scripts/setup-dotbuild-tree
+RUN Scripts/setup-dotbuild-tree
 
 # Copy font used by swiftplot to the correct path
 COPY --from=builder \
