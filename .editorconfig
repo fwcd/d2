@@ -12,3 +12,6 @@ indent_size = 2
 
 [Package.resolved]
 indent_size = 2
+
+[Scripts/*]
+indent_size = 2
