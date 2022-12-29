@@ -3,9 +3,13 @@
 set -e
 cd "$(dirname $0)/.."
 
+# Set up cross-compilation if needed
+
+cross_target_toolchains_dir="$(pwd)/local/cross-target-toolchains"
 extra_flags=()
 
 if [ -n "$TARGETARCH" ]; then
+  echo "==> Setting flags for target arch '$TARGETARCH'"
   case "$TARGETARCH" in
     amd64)
       extra_flags+=(--arch x86_64)
@@ -22,12 +26,31 @@ if [ -n "$TARGETARCH" ]; then
   esac
 fi
 
-if [ -n "$BUILDARCH" ] && [ -n "$TARGETARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$DEBIAN" ]; then
-  triplet="$arch_name-linux-gnu"
-  extra_flags+=(
-    -Xcc -I"/usr/include/$triplet"
-    -Xlinker -L"/usr/lib/$triplet"
-  )
+if [ -n "$BUILDARCH" ] && [ -n "$TARGETARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ]; then
+  if [ -n "$DEBIAN" ]; then
+    echo "==> Adding cross-compilation sysroot to include and linker path"
+    triplet="$arch_name-linux-gnu"
+    extra_flags+=(
+      -Xcc -I"/usr/include/$triplet"
+      -Xlinker -L"/usr/lib/$triplet"
+    )
+  fi
+
+  if [ -n "$SWIFTVERSION" ]; then
+    cross_target_toolchain_dir="$cross_target_toolchains_dir/$TARGETARCH-$SWIFTVERSION"
+
+    echo "==> Checking $cross_target_toolchain_dir for cross target toolchain"
+    if [ -d "$cross_target_toolchain_dir" ]; then
+      echo "==> Adding cross target toolchain $cross_target_toolchain_dir to include path"
+      extra_flags+=(
+        -Xswiftc -I"$cross_target_toolchain_dir/usr/lib/swift"
+      )
+    else
+      echo "Warning: Not adding cross target toolchain since $cross_target_toolchain_dir does not exist! You probably have to run Scripts/install-cross-target-toolchain-* first (if applicable)."
+    fi
+  else
+    echo "Warning: Not adding cross target toolchain since SWIFTVERSION is not set!"
+  fi
 fi
 
 exec swift build -c release "${extra_flags[@]}"

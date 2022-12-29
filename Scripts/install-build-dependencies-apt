@@ -15,22 +15,23 @@ dependencies=(
 )
 
 # Set up cross-compilation if needed
+
 if [ -n "$BUILDARCH" ] && [ -n "$TARGETARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ]; then
-  # Install sysroot for the target architecture
+  echo "==> Installing cross-compilation sysroot for $TARGETARCH"
   apt-get update
   apt-get install -y \
     crossbuild-essential-"$TARGETARCH"
 
-  # Configure dpkg to install packages for target architecture too
+  echo "==> Configuring dpkg to install packages for $TARGETARCH"
   dpkg --add-architecture "$TARGETARCH"
 
-  # Suffix dependencies with architecture
+  echo "==> Setting dependencies to use $TARGETARCH"
   for (( i=0; i<${#dependencies[@]}; i++ )); do
     dependencies[$i]="${dependencies[$i]}:$TARGETARCH"
   done
 fi
 
-# Install the dependencies
+echo "==> Installing ${dependencies[@]}"
 apt-get update
 apt-get install -y \
   "${dependencies[@]}"
