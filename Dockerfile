@@ -4,6 +4,8 @@ FROM --platform=$BUILDPLATFORM swift:5.7-focal AS builder
 COPY Scripts/install-build-dependencies-apt Scripts/
 RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
+ARG TARGETARCH
+
 # Build
 WORKDIR /opt/d2
 COPY Sources Sources
@@ -32,6 +34,9 @@ RUN Scripts/install-node-dependencies
 # Add resources
 COPY Resources Resources
 COPY LICENSE README.md ./
+
+ARG TARGETOS
+ARG TARGETARCH
 
 # Set up .build folder in runner
 WORKDIR /opt/d2/.build
