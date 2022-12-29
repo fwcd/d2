@@ -35,6 +35,7 @@ fi
 
 config=release
 
+mkdir -p .build/"$arch-$vendor-$os"/"$config"
+
 cd .build
-mkdir -p "$arch-$vendor-$os"/"$config"
 ln -s "$config" "$arch-$vendor-$os"/"$config"
