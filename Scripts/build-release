@@ -37,4 +37,5 @@ if [ -n "$TARGETARCH" ]; then
   fi
 fi
 
+echo "==> Building D2 with flags ${extra_flags[@]}"
 exec swift build -c release "${extra_flags[@]}"
