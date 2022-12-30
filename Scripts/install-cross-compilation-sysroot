@@ -35,7 +35,15 @@ qemu-debootstrap --arch="$TARGETARCH" "$UBUNTUDISTRO" "$CROSSCOMPILESYSROOT"
 echo "==> Copying D2 scripts into sysroot..."
 sysroot_d2_dir="/opt/d2"
 mkdir -p "$CROSSCOMPILESYSROOT/$sysroot_d2_dir"
-cp -r ./Scripts "$CROSSCOMPILESYSROOT/$sysroot_d2_dir/"
+cp -R ./Scripts "$CROSSCOMPILESYSROOT/$sysroot_d2_dir/"
+
+output-for-debugging() {
+  echo "$1: $(cd "$1" && echo *)"
+}
+
+output-for-debugging "$CROSSCOMPILESYSROOT"
+output-for-debugging "$CROSSCOMPILESYSROOT/opt"
+output-for-debugging "$CROSSCOMPILESYSROOT/opt/d2"
 
 echo "==> Chrooting into sysroot and installing D2's dependencies..."
 chroot "$CROSSCOMPILESYSROOT"
