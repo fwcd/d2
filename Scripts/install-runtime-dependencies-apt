@@ -5,12 +5,14 @@
 set -e
 cd "$(dirname $0)/.."
 
-apt-get update
-apt-get install -y \
-  libcairo2 \
-  libsqlite3-0 \
-  tesseract-ocr \
-  graphviz \
+dependencies=(
+  libcairo2
+  libsqlite3-0
+  tesseract-ocr
+  graphviz
   nodejs
+  # TODO: poppler-utils and libssl1.1 needed?
+)
 
-# TODO: poppler-utils and libssl1.1 needed?
+apt-get update
+apt-get install -y "${dependencies[@]}"

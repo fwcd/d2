@@ -24,32 +24,16 @@ if [ -n "$TARGETARCH" ]; then
       exit 1
       ;;
   esac
-fi
 
-if [ -n "$BUILDARCH" ] && [ -n "$TARGETARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ]; then
-  if [ -n "$DEBIAN" ]; then
-    echo "==> Adding cross-compilation sysroot to include and linker path"
+  if [ -n "$BUILDARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$CROSSCOMPILESYSROOT" ]; then
+    echo "==> Adding cross-compilation sysroot $CROSSCOMPILESYSROOT to C compilation paths"
     triplet="$arch_name-linux-gnu"
     extra_flags+=(
-      -Xcc -I"/usr/include/$triplet"
-      -Xlinker -L"/usr/lib/$triplet"
+      -Xcc --sysroot="$CROSSCOMPILESYSROOT/usr/include"
+      # TODO: Linker?
     )
-  fi
 
-  if [ -n "$SWIFTVERSION" ]; then
-    cross_target_toolchain_dir="$cross_target_toolchains_dir/$TARGETARCH-$SWIFTVERSION"
-
-    echo "==> Checking $cross_target_toolchain_dir for cross target toolchain"
-    if [ -d "$cross_target_toolchain_dir" ]; then
-      echo "==> Adding cross target toolchain $cross_target_toolchain_dir to include path"
-      extra_flags+=(
-        -Xswiftc -I"$cross_target_toolchain_dir/usr/lib/swift"
-      )
-    else
-      echo "Warning: Not adding cross target toolchain since $cross_target_toolchain_dir does not exist! You probably have to run Scripts/install-cross-target-toolchain-* first (if applicable)."
-    fi
-  else
-    echo "Warning: Not adding cross target toolchain since SWIFTVERSION is not set!"
+    # TODO: Swift toolchain
   fi
 fi
 

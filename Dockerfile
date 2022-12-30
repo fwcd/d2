@@ -12,11 +12,10 @@ ARG TARGETARCH
 COPY Scripts/install-build-dependencies-apt Scripts/
 RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
-# Install the target toolchain for cross-compilation if needed
-# (only required for locating e.g. Swift standard library modules,
-# the actual compilation is done with the installed host Swift toolchain)
-COPY Scripts/install-cross-target-toolchain-${UBUNTUDISTRO} Scripts/
-RUN Scripts/install-cross-target-toolchain-${UBUNTUDISTRO}
+# Set up cross compilation sysroot if needed
+ARG CROSSCOMPILESYSROOT=/usr/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
+COPY Scripts/install-cross-compilation-sysroot Scripts/
+RUN if [ "$BUILDARCH" != "$TARGETARCH" ]; then Scripts/install-cross-compilation-sysroot fi
 
 # Build
 WORKDIR /opt/d2

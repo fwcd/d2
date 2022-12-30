@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Sets up a sysroot for cross-compilation on Ubuntu for Ubuntu.
+
+set -e
+cd "$(dirname $0)/.."
+
+if [ -z "$CROSSCOMPILESYSROOT" ]; then
+  echo "Please point CROSSCOMPILESYSROOT to the directory to which the sysroot will be installed!"
+  exit 1
+fi
+
+if [ -z "$TARGETARCH" ]; then
+  echo "Please set TARGETARCH to a target architecture to bootstrap the sysroot for!"
+  exit 1
+fi
+
+if [ -z "$UBUNTUDISTRO" ]; then
+  echo "Please set UBUNTUDISTRO to the short name of a Ubuntu version, e.g. 'focal'."
+  exit 1
+fi
+
+if ! command -v apt-get &>/dev/null; then
+  echo "Please make to be running a Debian-based distro and to have apt-get on your PATH!"
+  exit 1
+fi
+
+echo "==> Installing qemu-debootstrap..."
+apt-get update
+apt-get install -y debootstrap qemu-user-static schroot
+
+echo "==> Bootstrapping sysroot..."
+qemu-debootstrap --arch="$TARGETARCH" "$UBUNTUDISTRO" "$CROSSCOMPILESYSROOT"
+
+echo "==> Copying D2 scripts into sysroot..."
+sysroot_d2_dir="/opt/d2"
+mkdir -p "$CROSSCOMPILESYSROOT/$sysroot_d2_dir"
+cp -r ./Scripts "$CROSSCOMPILESYSROOT/$sysroot_d2_dir/"
+
+echo "==> Chrooting into sysroot and installing D2's dependencies..."
+schroot -c "$CROSSCOMPILESYSROOT"
+cd "$sysroot_d2_dir"
+Scripts/install-build-dependencies-apt
+
+# TODO: Install Swift too (and replace the current cross target toolchain mechanism)
