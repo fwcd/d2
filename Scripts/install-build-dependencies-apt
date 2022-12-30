@@ -14,6 +14,10 @@ dependencies=(
   # TODO: poppler-utils and libssl1.1 needed?
 )
 
+echo "==> Installing add-apt-repository"
+apt-get update
+apt-get install -y software-properties-common
+
 echo "==> Enabling all repositories"
 for repo in main universe multiverse; do
   add-apt-repository $repo
