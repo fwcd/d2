@@ -29,7 +29,7 @@ if [ -n "$TARGETARCH" ]; then
     echo "==> Adding cross-compilation sysroot $CROSSCOMPILESYSROOT to C compilation paths"
     triplet="$arch_name-linux-gnu"
     extra_flags+=(
-      -Xcc --sysroot="$CROSSCOMPILESYSROOT/usr/include"
+      -Xcc --sysroot="$CROSSCOMPILESYSROOT"
       # TODO: Linker?
     )
 
