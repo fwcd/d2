@@ -37,8 +37,16 @@ sysroot_d2_dir="/opt/d2"
 mkdir -p "$CROSSCOMPILESYSROOT/$sysroot_d2_dir"
 cp -r ./Scripts "$CROSSCOMPILESYSROOT/$sysroot_d2_dir/"
 
-echo "==> Chrooting into sysroot and installing D2's dependencies..."
-schroot -c "$CROSSCOMPILESYSROOT"
+echo "==> Setting up schroot..."
+echo "[cross-compile-sysroot]
+description=Cross-compile sysroot
+directory=$CROSSCOMPILESYSROOT
+root-users=$(whoami)
+users=$(whoami)
+type=directory" > /etc/schroot/chroot.d/cross-compile-sysroot
+
+echo "==> Schrooting into sysroot and installing D2's dependencies..."
+schroot -c cross-compile-sysroot
 cd "$sysroot_d2_dir"
 Scripts/install-build-dependencies-apt
 
