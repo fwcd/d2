@@ -8,14 +8,11 @@ ARG UBUNTUDISTRO
 ARG BUILDARCH
 ARG TARGETARCH
 
-# Install native dependencies
-COPY Scripts/install-build-dependencies-apt Scripts/
-RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
-
-# Set up cross compilation sysroot if needed
 ARG CROSSCOMPILESYSROOT=/usr/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
-COPY Scripts/install-cross-compilation-sysroot Scripts/
-RUN if [ "$BUILDARCH" != "$TARGETARCH" ]; then Scripts/install-cross-compilation-sysroot; fi
+
+# Install native dependencies or (if cross-compiling) set up sysroot
+COPY Scripts/install-build-dependencies-apt Scripts/install-cross-compilation-sysroot Scripts/
+RUN if [ "$BUILDARCH" == "$TARGETARCH" ]; then Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/* else Scripts/install-cross-compilation-sysroot; fi
 
 # Build
 WORKDIR /opt/d2
