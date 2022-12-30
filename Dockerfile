@@ -23,7 +23,7 @@ COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
 COPY Scripts/build-release Scripts/
-RUN DEBIAN=ON Scripts/build-release
+RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
 
