@@ -30,6 +30,7 @@ if [ -n "$TARGETARCH" ]; then
     triplet="$arch_name-linux-gnu"
     extra_flags+=(
       -Xcc -I"$CROSSCOMPILESYSROOT/usr/include"
+      -Xcxx -I"$CROSSCOMPILESYSROOT/usr/include"
       -Xlinker -L"$CROSSCOMPILESYSROOT/usr/lib"
     )
 
