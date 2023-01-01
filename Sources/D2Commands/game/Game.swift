@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 public protocol Game {
     associatedtype State: GameState

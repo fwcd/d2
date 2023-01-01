@@ -1,6 +1,6 @@
 import Foundation
 import Utils
-import Graphics
+import CairoGraphics
 import SwiftPlot
 import AGGRenderer
 
@@ -41,7 +41,7 @@ public class PlotCommand<P>: Command where P: SeriesPlot {
         plot.addSeries(columns[0], columns[1], label: "Plot", color: .blue)
         plot.drawGraph(renderer: renderer)
 
-        guard let data = Data(base64Encoded: renderer.base64Png()), let image = try? Image(fromPng: data) else {
+        guard let data = Data(base64Encoded: renderer.base64Png()), let image = try? CairoImage(pngData: data) else {
             output.append(errorText: "Could not render to valid PNG!")
             return
         }

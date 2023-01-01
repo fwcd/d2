@@ -1,5 +1,5 @@
 import D2MessageIO
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 

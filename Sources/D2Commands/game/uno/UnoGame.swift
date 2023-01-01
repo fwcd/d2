@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 public struct UnoGame: Game {
     public typealias State = UnoState

@@ -1,6 +1,6 @@
 import D2MessageIO
 import Utils
-import Graphics
+import CairoGraphics
 
 /// A sink for rich values.
 public protocol CommandOutput {
@@ -29,7 +29,7 @@ public extension CommandOutput {
         append(.embed(embed), to: channel)
     }
 
-    func append(_ image: Image, name: String? = nil, to channel: OutputChannel = .defaultChannel) throws {
+    func append(_ image: CairoImage, name: String? = nil, to channel: OutputChannel = .defaultChannel) throws {
         append(.image(image), to: channel)
     }
 

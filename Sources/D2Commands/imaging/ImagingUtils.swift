@@ -1,10 +1,10 @@
-import Graphics
+import CairoGraphics
 import Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.ImagingUtils")
 
-func findBoundingBox(in image: Image, where predicate: (Color) -> Bool) -> (Vec2<Int>, Vec2<Int>) {
+func findBoundingBox(in image: CairoImage, where predicate: (Color) -> Bool) -> (Vec2<Int>, Vec2<Int>) {
     var topLeft = image.size
     var bottomRight = Vec2<Int>(both: 0)
 
@@ -27,8 +27,8 @@ func findBoundingBox(in image: Image, where predicate: (Color) -> Bool) -> (Vec2
     }
 }
 
-func colorToAlpha(in image: Image, color: Color, squaredThreshold: Double = 0.01) throws -> Image {
-    let output = try Image(width: image.width, height: image.height)
+func colorToAlpha(in image: CairoImage, color: Color, squaredThreshold: Double = 0.01) throws -> CairoImage {
+    let output = try CairoImage(width: image.width, height: image.height)
 
     for y in 0..<image.height {
         for x in 0..<image.width {
@@ -44,12 +44,12 @@ func colorToAlpha(in image: Image, color: Color, squaredThreshold: Double = 0.01
     return output
 }
 
-func composeImage(from template: Image, with image: Image, between topLeft: Vec2<Int>, and bottomRight: Vec2<Int>) throws -> Image {
-    let composition = try Image(width: template.width, height: template.height)
-    let graphics = CairoGraphics(fromImage: composition)
+func composeImage(from template: CairoImage, with image: CairoImage, between topLeft: Vec2<Int>, and bottomRight: Vec2<Int>) throws -> CairoImage {
+    let composition = try CairoImage(width: template.width, height: template.height)
+    let graphics = CairoContext(image: composition)
 
-    graphics.draw(image, at: topLeft.asDouble, withSize: bottomRight - topLeft)
-    graphics.draw(template)
+    graphics.draw(image: image, at: topLeft.asDouble, withSize: bottomRight - topLeft)
+    graphics.draw(image: template)
 
     return composition
 }

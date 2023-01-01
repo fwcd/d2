@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 public struct WatermarkImageMapping: ImageMapping {
@@ -17,14 +17,14 @@ public struct WatermarkImageMapping: ImageMapping {
         self.text = text
     }
 
-    public func apply(to image: Image) throws -> Image {
+    public func apply(to image: CairoImage) throws -> CairoImage {
         let width = image.width
         let height = image.height
-        let result = try Image(width: width, height: height)
-        let graphics = CairoGraphics(fromImage: result)
+        let result = try CairoImage(width: width, height: height)
+        let graphics = CairoContext(image: result)
 
-        graphics.draw(image)
-        graphics.draw(Text(text, withSize: fontSize, at: Vec2(x: padding, y: Double(height) - fontSize - padding), color: .white.with(alpha: 128)))
+        graphics.draw(image: image)
+        graphics.draw(text: Text(text, withSize: fontSize, at: Vec2(x: padding, y: Double(height) - fontSize - padding), color: .white.with(alpha: 128)))
 
         return result
     }

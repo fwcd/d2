@@ -1,5 +1,5 @@
 import D2Permissions
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 
@@ -12,7 +12,7 @@ public class ToGifCommand: Command {
     )
     public let inputValueType: RichValueType = .image
     public let outputValueType: RichValueType = .gif
-    private let quantizers: [String: (Image) -> ColorQuantization] = [
+    private let quantizers: [String: (CairoImage) -> ColorQuantization] = [
         "uniform": { UniformQuantization(fromImage: $0) },
         "octree": { OctreeQuantization(fromImage: $0) }
     ]

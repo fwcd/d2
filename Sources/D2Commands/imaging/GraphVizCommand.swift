@@ -1,5 +1,5 @@
 import GraphViz
-import Graphics
+import CairoGraphics
 
 public class GraphVizCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -19,7 +19,7 @@ public class GraphVizCommand: StringCommand {
         Renderer(layout: layout).render(dot: input, to: .png) {
             do {
                 let data = try $0.get()
-                try output.append(try Image(fromPng: data))
+                try output.append(try CairoImage(pngData: data))
             } catch {
                 output.append(error, errorText: "Could not render graph")
             }

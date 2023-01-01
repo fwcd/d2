@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public class DownloadImageCommand: Command {
     public let info = CommandInfo(

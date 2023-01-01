@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 public struct MaskImageMapping<M>: ImageMapping where M: ImageMask {
@@ -6,11 +6,11 @@ public struct MaskImageMapping<M>: ImageMapping where M: ImageMask {
         // Do nothing
     }
 
-    public func apply(to image: Image) throws -> Image {
+    public func apply(to image: CairoImage) throws -> CairoImage {
         let width = image.width
         let height = image.height
         let mask = M.init()
-        let masked = try Image(width: width, height: height)
+        let masked = try CairoImage(width: width, height: height)
 
         for y in 0..<height {
             for x in 0..<width {

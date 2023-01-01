@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 struct PerceptronRenderer {
     private let width: Int
@@ -14,11 +14,10 @@ struct PerceptronRenderer {
         plotter = FunctionGraphRenderer(width: width, height: height)
     }
 
-    func render(model: inout SingleLayerPerceptron) throws -> Image? {
+    func render(model: inout SingleLayerPerceptron) throws -> CairoImage? {
         guard model.dimensions == 2 else { return nil }
 
-        let image = try Image(width: width, height: height)
-        let graphics: Graphics = CairoGraphics(fromImage: image)
+        let graphics = try CairoContext(width: width, height: height)
 
         plotter.render(to: graphics) { try? model.boundaryY(atX: $0) }
 
@@ -27,9 +26,10 @@ struct PerceptronRenderer {
             let x = plotter.pixelToFunctionX.inverseApply(point[0])
             let y = plotter.pixelToFunctionY.inverseApply(point[1])
             let color: Color = output > 0.5 ? .yellow : .cyan
-            graphics.draw(Ellipse(centerX: x, y: y, radius: 3, color: color, isFilled: true))
+            graphics.draw(ellipse: Ellipse(centerX: x, y: y, radius: 3, color: color, isFilled: true))
         }
 
+        let image = try graphics.makeImage()
         return image
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 import Utils
-import Graphics
+import CairoGraphics
 
 fileprivate let memeTemplatesFilePath = "local/memeTemplates"
 fileprivate let log = Logger(label: "D2Commands.ComposeMemeCommand")
@@ -41,10 +41,10 @@ public class ComposeMemeCommand: Command {
         }
     }
 
-    private func pickMemeTemplate() throws -> Image {
+    private func pickMemeTemplate() throws -> CairoImage {
         let fileManager = FileManager.default
         let urls = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: memeTemplatesFilePath), includingPropertiesForKeys: nil)
         guard let url = urls.filter({ $0.path.hasSuffix(".png") }).randomElement() else { throw ComposeMemeError.noMemeTemplateFound }
-        return try Image(fromPngFile: url)
+        return try CairoImage(pngFileUrl: url)
     }
 }

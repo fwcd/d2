@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 struct FunctionGraphRenderer {
@@ -31,16 +31,16 @@ struct FunctionGraphRenderer {
         pixelToFunctionY = AnyBijection(Scaling(by: -1.0 / scale).then(Translation(by: Double(height) / (2 * scale))))
     }
 
-    func render(ast: ExpressionASTNode) throws -> Image {
-        let image = try Image(width: width, height: height)
-        let graphics: Graphics = CairoGraphics(fromImage: image)
+    func render(ast: ExpressionASTNode) throws -> CairoImage {
+        let graphics = try CairoContext(width: width, height: height)
 
         render(to: graphics) { try? ast.evaluate(with: [inputVariable: $0]) }
 
+        let image = try graphics.makeImage()
         return image
     }
 
-    func render(to graphics: Graphics, _ plottedFunction: (Double) -> Double?) {
+    func render(to graphics: some GraphicsContext, _ plottedFunction: (Double) -> Double?) {
         var lastPos: Vec2<Double>? = nil
 
         // Draw axes
@@ -48,14 +48,14 @@ struct FunctionGraphRenderer {
         let yAxisX = pixelToFunctionX.inverseApply(0)
 
         // x-axis
-        graphics.draw(LineSegment(fromX: 0, y: xAxisY, toX: Double(width), y: xAxisY, color: axisColor))
-        graphics.draw(LineSegment(fromX: Double(width), y: xAxisY, toX: Double(width) - axisArrowSize, y: xAxisY - axisArrowSize, color: axisColor))
-        graphics.draw(LineSegment(fromX: Double(width), y: xAxisY, toX: Double(width) - axisArrowSize, y: xAxisY + axisArrowSize, color: axisColor))
+        graphics.draw(line: LineSegment(fromX: 0, y: xAxisY, toX: Double(width), y: xAxisY, color: axisColor))
+        graphics.draw(line: LineSegment(fromX: Double(width), y: xAxisY, toX: Double(width) - axisArrowSize, y: xAxisY - axisArrowSize, color: axisColor))
+        graphics.draw(line: LineSegment(fromX: Double(width), y: xAxisY, toX: Double(width) - axisArrowSize, y: xAxisY + axisArrowSize, color: axisColor))
 
         // y-axis
-        graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX, y: Double(height), color: axisColor))
-        graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX - axisArrowSize, y: axisArrowSize, color: axisColor))
-        graphics.draw(LineSegment(fromX: yAxisX, y: 0, toX: yAxisX + axisArrowSize, y: axisArrowSize, color: axisColor))
+        graphics.draw(line: LineSegment(fromX: yAxisX, y: 0, toX: yAxisX, y: Double(height), color: axisColor))
+        graphics.draw(line: LineSegment(fromX: yAxisX, y: 0, toX: yAxisX - axisArrowSize, y: axisArrowSize, color: axisColor))
+        graphics.draw(line: LineSegment(fromX: yAxisX, y: 0, toX: yAxisX + axisArrowSize, y: axisArrowSize, color: axisColor))
 
         let center = Vec2<Int>(x: width, y: height) / 2
         let trimmedHalfSize = (Vec2<Int>(x: width, y: height) / (2 * axisLabelSpacing)) * axisLabelSpacing
@@ -64,14 +64,14 @@ struct FunctionGraphRenderer {
         for x in stride(from: center.x - trimmedHalfSize.x, through: center.x + trimmedHalfSize.x, by: axisLabelSpacing) {
             let funcX = pixelToFunctionX.apply(Double(x))
             let pos = Vec2(x: Double(x), y: xAxisY + 18)
-            graphics.draw(Text(String(format: "%.1f", funcX), withSize: 10, at: pos, color: axisColor))
+            graphics.draw(text: Text(String(format: "%.1f", funcX), withSize: 10, at: pos, color: axisColor))
         }
 
         // Draw y-axis labels
         for y in stride(from: center.y - trimmedHalfSize.y, through: center.y + trimmedHalfSize.y, by: axisLabelSpacing) {
             let funcY = pixelToFunctionY.apply(Double(y))
             let pos = Vec2(x: yAxisX - 30, y: Double(y))
-            graphics.draw(Text(String(format: "%.1f", funcY), withSize: 10, at: pos, color: axisColor))
+            graphics.draw(text: Text(String(format: "%.1f", funcY), withSize: 10, at: pos, color: axisColor))
         }
 
         // Draw graph of function
@@ -82,7 +82,7 @@ struct FunctionGraphRenderer {
                 let clampedPos = pos.with(y: max(-5.0, min(Double(height + 5), pos.y)))
 
                 if let last = lastPos {
-                    graphics.draw(LineSegment(from: last, to: clampedPos))
+                    graphics.draw(line: LineSegment(from: last, to: clampedPos))
                 }
 
                 lastPos = clampedPos

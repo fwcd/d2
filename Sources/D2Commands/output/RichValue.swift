@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import Graphics
+import CairoGraphics
 import Utils
 import GIF
 import SwiftSoup
@@ -10,7 +10,7 @@ import SwiftSoup
 public enum RichValue: Addable {
     case none
     case text(String)
-    case image(Image)
+    case image(CairoImage)
     case table([[String]])
     case gif(GIF)
     case component(Message.Component)
@@ -46,7 +46,7 @@ public enum RichValue: Addable {
     public var asRoleMentions: [RoleID]? {
         extract { r -> [RoleID]? in if case let .roleMentions(mentions) = r { return mentions } else { return nil } }.flatMap { $0 }
     }
-    public var asImage: Image? {
+    public var asImage: CairoImage? {
         extract { if case let .image(image) = $0 { return image } else { return nil } }.first
     }
     public var asDomNode: Element? {

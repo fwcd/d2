@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public class CreateEmojiCommand: Command {
     public let info = CommandInfo(

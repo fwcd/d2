@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 import Logging
@@ -65,8 +65,8 @@ public class PatCommand: Command {
                         return
                     }
 
-                    let patHand = try Image(fromPngFile: "Resources/fun/patHand.png")
-                    let avatarImage = try Image(fromPng: data)
+                    let patHand = try CairoImage(pngFilePath: "Resources/fun/patHand.png")
+                    let avatarImage = try CairoImage(pngData: data)
                     let width = avatarImage.width
                     let height = avatarImage.height
                     let radiusSquared = (width * height) / 4
@@ -85,12 +85,12 @@ public class PatCommand: Command {
 
                     // Render the animation
                     for i in 0..<self.frameCount {
-                        let frame = try Image(width: width, height: height)
+                        let frame = try CairoImage(width: width, height: height)
                         let percent = Double(i) / Double(self.frameCount)
-                        let graphics = CairoGraphics(fromImage: frame)
+                        let graphics = CairoContext(image: frame)
 
-                        graphics.draw(avatarImage)
-                        graphics.draw(patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
+                        graphics.draw(image: avatarImage)
+                        graphics.draw(image: patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
 
                         gif.frames.append(.init(image: frame, delayTime: self.delayTime))
                     }

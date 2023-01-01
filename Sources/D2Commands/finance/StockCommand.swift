@@ -2,7 +2,7 @@ import Foundation
 import D2NetAPIs
 import D2MessageIO
 import Utils
-import Graphics
+import CairoGraphics
 import SwiftPlot
 import AGGRenderer
 
@@ -74,7 +74,7 @@ public class StockCommand: StringCommand {
         String(format: "USD %.2f", price)
     }
 
-    private func presentStock(name: String, values: [YahooFinanceStockDataPoint]) throws -> Image {
+    private func presentStock(name: String, values: [YahooFinanceStockDataPoint]) throws -> CairoImage {
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         graph.addSeries(
             (0..<values.count).map(Double.init),
@@ -85,7 +85,7 @@ public class StockCommand: StringCommand {
         return try render(plot: graph)
     }
 
-    private func render<P>(plot: P) throws -> Image where P: Plot {
+    private func render<P>(plot: P) throws -> CairoImage where P: Plot {
         let renderer = AGGRenderer()
         plot.drawGraph(renderer: renderer)
 
@@ -93,6 +93,6 @@ public class StockCommand: StringCommand {
             throw AdventOfCodeError.noPlotImageData
         }
 
-        return try Image(fromPng: pngData)
+        return try CairoImage(pngData: pngData)
     }
 }

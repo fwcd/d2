@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 /// An animation that applies a progress-dependent
@@ -19,7 +19,7 @@ public struct TransformAnimation<T>: Animation where T: ImageTransform {
         useVirtualEdges = kvArgs[Key.virtualedges].flatMap(Bool.init) ?? false
     }
 
-    public func renderFrame(from image: Image, to frame: Image, percent: Double) {
+    public func renderFrame(from image: CairoImage, to frame: CairoImage, percent: Double) {
         let width = image.width
         let height = image.height
         let size = Vec2<Int>(x: width, y: height)

@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 public struct ColorToAlphaImageMapping: ImageMapping {
     private let color: Color
@@ -17,7 +17,7 @@ public struct ColorToAlphaImageMapping: ImageMapping {
         color = Color(rgb: colorRGB)
     }
 
-    public func apply(to image: Image) throws -> Image {
+    public func apply(to image: CairoImage) throws -> CairoImage {
         // TODO: Add a key-value argument that optionally specifies this
         // Tolerance is specified in squared [0, 1] RGB space
         return try colorToAlpha(in: image, color: color)

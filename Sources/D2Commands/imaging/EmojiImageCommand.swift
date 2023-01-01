@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public class EmojiImageCommand: StringCommand {
     public let info = CommandInfo(
@@ -44,7 +44,7 @@ public class EmojiImageCommand: StringCommand {
                         return
                     }
 
-                    output.append(.image(try Image(fromPng: data)))
+                    output.append(.image(try CairoImage(pngData: data)))
                 } catch {
                     output.append(error, errorText: "Could not fetch emoji image")
                 }

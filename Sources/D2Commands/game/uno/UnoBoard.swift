@@ -1,6 +1,6 @@
 import Logging
 import Utils
-import Graphics
+import CairoGraphics
 
 fileprivate let log = Logger(label: "D2Commands.UnoBoard")
 
@@ -26,16 +26,16 @@ public struct UnoBoard: RichValueConvertible {
         topColor = card.color
     }
 
-    private func createImage() -> Image? {
+    private func createImage() -> CairoImage? {
         do {
             let intSize = Vec2<Int>(x: 200, y: 200)
             let center = (intSize / 2).asDouble
-            let img = try Image(fromSize: intSize)
-            let graphics = CairoGraphics(fromImage: img)
+            let img = try CairoImage(size: intSize)
+            let graphics = CairoContext(image: img)
 
             for card in discardPile {
                 if let cardImage = card.card.image {
-                    graphics.draw(cardImage, at: center - (cardImage.size.asDouble / 2), rotation: card.rotation)
+                    graphics.draw(image: cardImage, at: center - (cardImage.size.asDouble / 2), rotation: card.rotation)
                 }
             }
 

@@ -1,8 +1,8 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public protocol Animation: KeyParameterizable {
     init(pos: Vec2<Int>?, kvArgs: [Key: String]) throws
 
-    func renderFrame(from image: Image, to frame: Image, percent: Double) throws
+    func renderFrame(from image: CairoImage, to frame: CairoImage, percent: Double) throws
 }

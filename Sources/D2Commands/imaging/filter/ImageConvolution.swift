@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) -> [[Color]] {
     let height = pixels.count

@@ -1,9 +1,9 @@
 import Utils
-import Graphics
+import CairoGraphics
 import GIF
 
 extension InteractiveTextChannel {
-    public func send(image: Image) throws {
+    public func send(image: CairoImage) throws {
         send(try Message(fromImage: image))
     }
 
@@ -13,7 +13,7 @@ extension InteractiveTextChannel {
 }
 
 extension Message {
-    public init(fromImage image: Image, name: String? = nil) throws {
+    public init(fromImage image: CairoImage, name: String? = nil) throws {
         self.init(content: "", embed: nil, files: [
             Message.FileUpload(data: try image.pngEncoded(), filename: name ?? "image.png", mimeType: "image/png")
         ], tts: false)

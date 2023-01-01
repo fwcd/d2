@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 /// A simple function from image to image that
 /// is either applied directly to an image or
@@ -6,5 +6,5 @@ import Graphics
 public protocol ImageMapping {
     init(args: String?) throws
 
-    func apply(to image: Image) throws -> Image
+    func apply(to image: CairoImage) throws -> CairoImage
 }

@@ -1,5 +1,5 @@
 import D2MessageIO
-import Graphics
+import CairoGraphics
 import Utils
 import QRCodeGenerator
 
@@ -20,14 +20,14 @@ public class QRCodeCommand: StringCommand {
             let scale = 4
             let margin = 4 // in modules
             let imageSize = (qr.size + 2 * margin) * scale
-            let image = try Image(width: imageSize, height: imageSize)
-            let graphics = CairoGraphics(fromImage: image)
+            let image = try CairoImage(width: imageSize, height: imageSize)
+            let graphics = CairoContext(image: image)
 
             for y in 0..<qr.size {
                 for x in 0..<qr.size {
                     let module = qr.getModule(x: x, y: y)
                     let color: Color = module ? .white : .transparent
-                    graphics.draw(Rectangle(
+                    graphics.draw(rect: Rectangle(
                         fromX: Double((x + margin) * scale),
                         y: Double((y + margin) * scale),
                         width: Double(scale),

@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 public struct ChessTheme {
     public static let defaultTheme: ChessTheme = ChessTheme(

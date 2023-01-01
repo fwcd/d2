@@ -1,5 +1,5 @@
 import D2MessageIO
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 import Logging
@@ -89,7 +89,7 @@ public class AnimateCommand<A>: Command where A: Animation {
 
                 for i in 0..<frameCount {
                     log.debug("Creating frame \(i)")
-                    let frame = try Image(width: width, height: height)
+                    let frame = try CairoImage(width: width, height: height)
                     let percent = Double(i) / Double(frameCount)
 
                     log.debug("Rendering frame \(i)")
@@ -103,7 +103,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                 let frameCount = sourceGif.frames.count
 
                 gif.frames = try sourceGif.frames.enumerated().map { (i, f) in
-                    let frame = try Image(width: f.image.width, height: f.image.height)
+                    let frame = try CairoImage(width: f.image.width, height: f.image.height)
                     let percent = Double(i) / Double(frameCount)
 
                     try animation.renderFrame(from: f.image, to: frame, percent: percent)

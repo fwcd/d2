@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import D2MessageIO
 import Utils
-import Graphics
+import CairoGraphics
 import GIF
 import Dispatch
 
@@ -110,7 +110,7 @@ public struct MessageParser {
                             let data = try $0.get()
                             values.append(.lazy(.lazy {
                                 do {
-                                    return .image(try Image(fromPng: data))
+                                    return .image(try CairoImage(pngData: data))
                                 } catch {
                                     log.error("Could not decode PNG: \(error)")
                                     return .none

@@ -3,7 +3,7 @@ import Foundation
 import Logging
 import D2Permissions
 import D2NetAPIs
-import Graphics
+import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")

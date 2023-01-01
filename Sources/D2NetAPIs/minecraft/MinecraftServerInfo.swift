@@ -1,5 +1,5 @@
 import Foundation
-import Graphics
+import CairoGraphics
 import Utils
 
 fileprivate let pngDataUrlPattern = try! Regex(from: "data:image\\/png;base64,(.*)")
@@ -12,11 +12,11 @@ public struct MinecraftServerInfo: Codable {
     public let modinfo: LegacyModInfo? // deprecated (pre-1.13)
     public let favicon: String?
 
-    public var faviconImage: Image? {
+    public var faviconImage: CairoImage? {
         favicon
             .flatMap { pngDataUrlPattern.firstGroups(in: $0) }
             .flatMap { Data(base64Encoded: $0[1]) }
-            .flatMap { try? Image(fromPng: $0) }
+            .flatMap { try? CairoImage(pngData: $0) }
     }
 
     public struct Version: Codable {

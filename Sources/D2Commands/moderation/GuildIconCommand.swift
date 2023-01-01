@@ -1,6 +1,6 @@
 import D2MessageIO
 import Utils
-import Graphics
+import CairoGraphics
 
 public class GuildIconCommand: StringCommand {
     public let info = CommandInfo(
@@ -27,7 +27,7 @@ public class GuildIconCommand: StringCommand {
         //       this is handled with user avatars.
         Promise.catching { try HTTPRequest(host: "cdn.discordapp.com", path: "/icons/\(guild.id)/\(icon).png") }
             .then { $0.runAsync() }
-            .mapCatching { try Image(fromPng: $0) }
+            .mapCatching { try CairoImage(pngData: $0) }
             .listen {
                 do {
                     try output.append($0.get())

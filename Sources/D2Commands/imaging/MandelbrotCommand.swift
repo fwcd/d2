@@ -1,7 +1,7 @@
 import Logging
 import D2MessageIO
 import Utils
-import Graphics
+import CairoGraphics
 import Foundation
 
 fileprivate let log = Logger(label: "D2Commands.MandelbrotCommand")
@@ -21,7 +21,7 @@ public class MandelbrotCommand: StringCommand {
         do {
             let width = 400
             let height = 300
-            let image = try Image(width: width, height: height)
+            let image = try CairoImage(width: width, height: height)
 
             var hasher = Hasher()
             let time = Int(Date().timeIntervalSince1970 * 10) % 256

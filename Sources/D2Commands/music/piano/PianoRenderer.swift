@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 import MusicTheory
 
@@ -39,14 +39,14 @@ struct PianoRenderer: ScaleRenderer {
         self.upperBound = upperBound
     }
 
-    func render(scale: any Scale) throws -> Image {
+    func render(scale: any Scale) throws -> CairoImage {
         let scaleSemitones = Set(scale.notes.map(\.semitone))
 
         let notes = self.notes
         let whiteKeyCount = notes.count(forWhich: { $0.accidental == .none })
         let width = whiteKeyWidth * whiteKeyCount + whiteKeyPadding * (whiteKeyCount - 1)
-        let image = try Image(width: width, height: whiteKeyHeight)
-        let graphics = CairoGraphics(fromImage: image)
+        let image = try CairoImage(width: width, height: whiteKeyHeight)
+        let graphics = CairoContext(image: image)
         var whiteKeys = [Rectangle<Double>]()
         var blackKeys = [Rectangle<Double>]()
         var x = 0
@@ -76,11 +76,11 @@ struct PianoRenderer: ScaleRenderer {
         // Make sure that the black keys are visually "on top" of the white keys
 
         for whiteKey in whiteKeys {
-            graphics.draw(whiteKey)
+            graphics.draw(rect: whiteKey)
         }
 
         for blackKey in blackKeys {
-            graphics.draw(blackKey)
+            graphics.draw(rect: blackKey)
         }
 
         return image

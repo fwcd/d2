@@ -1,7 +1,7 @@
 import Logging
 import D2MessageIO
 import D2Permissions
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 
@@ -30,11 +30,11 @@ public class DemoGifCommand: VoidCommand {
             for angleIndex in 0..<angleCount {
                 log.info("Creating frame \(angleIndex) of \(angleCount)")
 
-                let image = try Image(width: width, height: height)
-                let graphics = CairoGraphics(fromImage: image)
+                let image = try CairoImage(width: width, height: height)
+                let graphics = CairoContext(image: image)
                 graphics.rotate(by: Double(angleIndex) * angle)
-                graphics.draw(try Image(fromPngFile: "Resources/chess/whiteKnight.png"), at: Vec2(x: 100, y: 100))
-                graphics.draw(Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: .blue))
+                graphics.draw(image: try CairoImage(pngFilePath: "Resources/chess/whiteKnight.png"), at: Vec2(x: 100, y: 100))
+                graphics.draw(rect: Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: .blue))
 
                 gif.frames.append(.init(image: image, delayTime: 100))
             }

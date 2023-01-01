@@ -3,7 +3,7 @@ import D2NetAPIs
 import Foundation
 import SwiftPlot
 import AGGRenderer
-import Graphics
+import CairoGraphics
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
@@ -115,7 +115,7 @@ public class AdventOfCodeCommand: StringCommand {
         }
     }
 
-    private func presentStarGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+    private func presentStarGraph(board: AdventOfCodeLeaderboard) throws -> CairoImage {
         let topMembers = extractTopMembers(count: 28, from: board)
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let start = board.startDate ?? adventOfCodeStart
@@ -140,7 +140,7 @@ public class AdventOfCodeCommand: StringCommand {
         return try render(plot: graph)
     }
 
-    private func presentParticipationGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+    private func presentParticipationGraph(board: AdventOfCodeLeaderboard) throws -> CairoImage {
         var graph = BarGraph<Int, Double>()
         let calendar = Calendar.current
         let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
@@ -157,7 +157,7 @@ public class AdventOfCodeCommand: StringCommand {
         return try render(plot: graph)
     }
 
-    private func presentTimesGraph(board: AdventOfCodeLeaderboard) throws -> Image {
+    private func presentTimesGraph(board: AdventOfCodeLeaderboard) throws -> CairoImage {
         let topMembers = extractTopMembers(count: 28, from: board)
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let calendar = Calendar.current
@@ -181,7 +181,7 @@ public class AdventOfCodeCommand: StringCommand {
         return try render(plot: graph)
     }
 
-    private func render<P>(plot: P) throws -> Image where P: Plot {
+    private func render<P>(plot: P) throws -> CairoImage where P: Plot {
         let renderer = AGGRenderer()
         plot.drawGraph(renderer: renderer)
 
@@ -189,7 +189,7 @@ public class AdventOfCodeCommand: StringCommand {
             throw AdventOfCodeError.noPlotImageData
         }
 
-        return try Image(fromPng: pngData)
+        return try CairoImage(pngData: pngData)
     }
 
     private func presentScoreEmbed(board: AdventOfCodeLeaderboard) throws -> Embed {

@@ -1,5 +1,5 @@
 import SwiftyTesseract
-import Graphics
+import CairoGraphics
 
 fileprivate struct ResourceLanguageModelDataSource: LanguageModelDataSource {
     let path: String

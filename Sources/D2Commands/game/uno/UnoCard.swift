@@ -1,5 +1,5 @@
 import Logging
-import Graphics
+import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.UnoCard")
@@ -25,7 +25,7 @@ public enum UnoCard: Hashable {
     public var drawCardCount: Int { return label?.drawCardCount ?? 0 }
     public var skipDistance: Int { return label?.skipDistance ?? 0 }
     public var canPickColor: Bool { return label?.canPickColor ?? false }
-    public var image: Image? { return createImage() }
+    public var image: CairoImage? { return createImage() }
 
     public static func from(rawLabelOrNum: String, rawColor: String? = nil) throws -> UnoCard {
         let color: UnoColor? = try rawColor.map {
@@ -55,7 +55,7 @@ public enum UnoCard: Hashable {
         }
     }
 
-    private func createImage() -> Image? {
+    private func createImage() -> CairoImage? {
         do {
             let intSize = Vec2<Int>(x: 100, y: 140)
             let size = intSize.asDouble
@@ -64,20 +64,20 @@ public enum UnoCard: Hashable {
             let ellipseY = center.y - (size.x / 3)
             let cardPadding = size.x / 12
             let renderColor = color?.color ?? .black
-            let img = try Image(fromSize: intSize)
-            let graphics = CairoGraphics(fromImage: img)
+            let img = try CairoImage(size: intSize)
+            let graphics = CairoContext(image: img)
 
-            graphics.draw(Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, cornerRadius: cardPadding, color: .white))
-            graphics.draw(Rectangle(fromX: cardPadding, y: cardPadding, width: size.x - (cardPadding * 2), height: size.y - (cardPadding * 2), cornerRadius: cardPadding, color: renderColor))
-            graphics.draw(Ellipse(center: center, radius: Vec2(x: ellipseX, y: ellipseY), rotation: -Double.pi / 4.0, color: .white))
+            graphics.draw(rect: Rectangle(fromX: 0, y: 0, width: size.x, height: size.y, cornerRadius: cardPadding, color: .white))
+            graphics.draw(rect: Rectangle(fromX: cardPadding, y: cardPadding, width: size.x - (cardPadding * 2), height: size.y - (cardPadding * 2), cornerRadius: cardPadding, color: renderColor))
+            graphics.draw(ellipse: Ellipse(center: center, radius: Vec2(x: ellipseX, y: ellipseY), rotation: -Double.pi / 4.0, color: .white))
 
             switch self {
                 case let .number(n, _):
-                    graphics.draw(Text(String(n), withSize: size.x * 0.6, at: Vec2(x: size.x * 0.3, y: size.y * 0.65), color: renderColor))
+                    graphics.draw(text: Text(String(n), withSize: size.x * 0.6, at: Vec2(x: size.x * 0.3, y: size.y * 0.65), color: renderColor))
                 case let .action(label, _):
-                    let icon = try Image(fromPngFile: label.resourcePngPath)
+                    let icon = try CairoImage(pngFilePath: label.resourcePngPath)
                     let iconSize = Vec2(x: size.x, y: size.x).floored
-                    graphics.draw(icon, at: center - (iconSize.asDouble / 2), withSize: iconSize)
+                    graphics.draw(image: icon, at: center - (iconSize.asDouble / 2), withSize: iconSize)
             }
 
             return img

@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 fileprivate let asciiShades = [
     "@", "o", ":", "-", ".", " "

@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 struct ASTRenderer {
@@ -28,23 +28,22 @@ struct ASTRenderer {
         self.color = color
     }
 
-    func render(ast: ExpressionASTNode) throws -> Image {
-        let image = try Image(width: width, height: height)
-        let graphics: Graphics = CairoGraphics(fromImage: image)
+    func render(ast: ExpressionASTNode) throws -> CairoImage {
+        let graphics = try CairoContext(width: width, height: height)
 
         try render(ast, to: graphics, at: Vec2(x: Double(width / 2), y: padding), scaledNodeSpacing: nodeSpacing)
 
-        return image
+        return try graphics.makeImage()
     }
 
-    private func render(_ node: ExpressionASTNode, to graphics: Graphics, at position: Vec2<Double>, scaledNodeSpacing: Double) throws {
-        graphics.draw(Text(node.label, withSize: fontSize, at: position, color: color))
+    private func render(_ node: ExpressionASTNode, to graphics: some GraphicsContext, at position: Vec2<Double>, scaledNodeSpacing: Double) throws {
+        graphics.draw(text: Text(node.label, withSize: fontSize, at: position, color: color))
 
         let childs = node.childs
         var childPos = Vec2(x: position.x - ((Double(childs.count - 1) * scaledNodeSpacing) / 2.0), y: position.y + layerSpacing)
 
         for child in childs {
-            graphics.draw(LineSegment(from: position, to: childPos - Vec2(y: fontSize), color: color))
+            graphics.draw(line: LineSegment(from: position, to: childPos - Vec2(y: fontSize), color: color))
             try render(child, to: graphics, at: childPos, scaledNodeSpacing: scaledNodeSpacing * 0.8)
 
             childPos = childPos + Vec2(x: scaledNodeSpacing)

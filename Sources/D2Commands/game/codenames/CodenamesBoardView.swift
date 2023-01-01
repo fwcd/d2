@@ -1,8 +1,8 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 struct CodenamesBoardView {
-    let image: Image
+    let image: CairoImage
 
     init(model: CodenamesBoardModel, allUncovered: Bool = false) throws {
         let intPadding = 5
@@ -11,8 +11,8 @@ struct CodenamesBoardView {
         let fieldSize = fieldIntSize.asDouble
         let intSize = (fieldIntSize + Vec2<Int>(both: intPadding)) * Vec2<Int>(x: model.width, y: model.height)
 
-        let image = try Image(fromSize: intSize)
-        let graphics = CairoGraphics(fromImage: image)
+        let image = try CairoImage(size: intSize)
+        let graphics = CairoContext(image: image)
 
         for y in 0..<model.height {
             for x in 0..<model.width {
@@ -22,8 +22,8 @@ struct CodenamesBoardView {
                 let color = Self.colorOf(card: card)
                 let modelPos = Vec2(x: x, y: y)
                 let viewPos = (modelPos * (fieldIntSize + Vec2(both: intPadding))).asDouble
-                graphics.draw(Rectangle(fromX: viewPos.x, y: viewPos.y, width: fieldSize.x, height: fieldSize.y, color: color))
-                graphics.draw(Text(card.word, at: viewPos + Vec2(both: padding) + Vec2(y: fieldSize.y / 3), color: .black))
+                graphics.draw(rect: Rectangle(fromX: viewPos.x, y: viewPos.y, width: fieldSize.x, height: fieldSize.y, color: color))
+                graphics.draw(text: Text(card.word, at: viewPos + Vec2(both: padding) + Vec2(y: fieldSize.y / 3), color: .black))
             }
         }
 

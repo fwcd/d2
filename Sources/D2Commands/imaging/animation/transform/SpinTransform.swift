@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 public struct SpinTransform: ImageTransform {

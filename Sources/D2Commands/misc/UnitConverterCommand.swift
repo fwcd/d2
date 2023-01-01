@@ -1,6 +1,6 @@
 import Foundation
 import GraphViz
-import Graphics
+import CairoGraphics
 import Utils
 
 fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
@@ -252,7 +252,7 @@ public class UnitConverterCommand: StringCommand {
                 graph.render(using: .fdp, to: .png) {
                     do {
                         let data = try $0.get()
-                        try output.append(Image(fromPng: data))
+                        try output.append(CairoImage(pngData: data))
                     } catch {
                         output.append(error, errorText: "Could not render unit conversion graph")
                     }

@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 import Foundation

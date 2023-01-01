@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Foundation
 
 public class Base64DecoderCommand: StringCommand {
@@ -17,7 +17,7 @@ public class Base64DecoderCommand: StringCommand {
             return
         }
 
-        if let image = try? Image(fromPng: data) {
+        if let image = try? CairoImage(pngData: data) {
             do {
                 try output.append(image)
             } catch {

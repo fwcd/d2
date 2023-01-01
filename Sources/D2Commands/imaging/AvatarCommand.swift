@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2Permissions
-import Graphics
+import CairoGraphics
 import GIF
 import Utils
 import Foundation
@@ -43,7 +43,7 @@ public class AvatarCommand: Command {
                     if data.isEmpty {
                         output.append(errorText: "No avatar available")
                     } else if avatarUrl.path.hasSuffix(".png") {
-                        output.append(.image(try Image(fromPng: data)))
+                        output.append(.image(try CairoImage(pngData: data)))
                     } else if avatarUrl.path.hasSuffix(".gif") {
                         output.append(.gif(try GIF(data: data)))
                     } else {

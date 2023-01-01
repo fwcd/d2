@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 fileprivate let argsPattern = try! Regex(from: "(x|y)?\\s*(\\d+)?")
 
@@ -26,7 +26,7 @@ public struct TileImageMapping: ImageMapping {
         self.replicas = replicas
     }
 
-    public func apply(to image: Image) throws -> Image {
+    public func apply(to image: CairoImage) throws -> CairoImage {
         let width = image.width
         let height = image.height
         let newWidth: Int
@@ -42,7 +42,7 @@ public struct TileImageMapping: ImageMapping {
         }
 
         let pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
-        let tiled = try Image(width: newWidth, height: newHeight)
+        let tiled = try CairoImage(width: newWidth, height: newHeight)
 
         for y in 0..<height {
             for x in 0..<width {

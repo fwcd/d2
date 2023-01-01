@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public struct ChessBoard: RichValueConvertible {
     public var model: ChessBoardModel

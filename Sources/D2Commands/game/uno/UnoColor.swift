@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 import Utils
 
 public enum UnoColor: String, Hashable, CaseIterable, RichValueConvertible {

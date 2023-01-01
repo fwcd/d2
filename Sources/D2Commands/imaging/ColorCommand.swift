@@ -1,5 +1,5 @@
 import D2MessageIO
-import Graphics
+import CairoGraphics
 
 public class ColorCommand: StringCommand {
     public let info = CommandInfo(
@@ -21,9 +21,9 @@ public class ColorCommand: StringCommand {
             let color = isRGB ? Color(rgb: hexCode) : Color(argb: hexCode)
             let width = 100
             let height = 50
-            let image = try Image(width: width, height: height)
-            let graphics = CairoGraphics(fromImage: image)
-            graphics.draw(Rectangle(fromX: 0, y: 0, width: Double(width), height: Double(height), color: color, isFilled: true))
+            let image = try CairoImage(width: width, height: height)
+            let graphics = CairoContext(image: image)
+            graphics.draw(rect: Rectangle(fromX: 0, y: 0, width: Double(width), height: Double(height), color: color, isFilled: true))
             try output.append(image)
         } catch {
             output.append(error, errorText: "Could not create image")

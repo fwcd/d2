@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
 
@@ -25,7 +25,7 @@ public struct CropImageMapping: ImageMapping {
         (topLeftX, topLeftY, bottomRightX, bottomRightY) = (parsedBounds[0], parsedBounds[1], parsedBounds[2], parsedBounds[3])
     }
 
-    public func apply(to image: Image) throws -> Image {
+    public func apply(to image: CairoImage) throws -> CairoImage {
         let inputWidth = image.width
         let inputHeight = image.height
 
@@ -40,7 +40,7 @@ public struct CropImageMapping: ImageMapping {
             throw CropError.invalidDimensions("Make sure that the width/height of the cropped dimensions are positive!")
         }
 
-        let cropped = try Image(width: width, height: height)
+        let cropped = try CairoImage(width: width, height: height)
 
         for y in 0..<height {
             for x in 0..<width {

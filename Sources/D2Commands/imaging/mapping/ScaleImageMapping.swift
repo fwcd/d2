@@ -1,4 +1,4 @@
-import Graphics
+import CairoGraphics
 
 public struct ScaleImageMapping: ImageMapping {
     private let factor: Double
@@ -17,10 +17,10 @@ public struct ScaleImageMapping: ImageMapping {
         self.factor = factor
     }
 
-    public func apply(to image: Image) throws -> Image {
+    public func apply(to image: CairoImage) throws -> CairoImage {
         let width = Int(Double(image.width) * factor)
         let height = Int(Double(image.height) * factor)
-        let scaled = try Image(width: width, height: height)
+        let scaled = try CairoImage(width: width, height: height)
 
         guard (0..<maxWidth).contains(width), (0..<maxHeight).contains(height) else {
             throw ScaleError.outOfBounds("Please ensure that your size is within the bounds of \(maxWidth), \(maxHeight)!")

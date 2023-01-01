@@ -1,6 +1,6 @@
 import Foundation
 import GraphViz
-import Graphics
+import CairoGraphics
 import D2MessageIO
 import Utils
 
@@ -56,7 +56,7 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                     graph.render(using: .fdp, to: .png) {
                         do {
                             let data = try $0.get()
-                            try output.append(Image(fromPng: data))
+                            try output.append(CairoImage(pngData: data))
                         } catch {
                             output.append(error, errorText: "Could not render people-in-channels graph.")
                         }

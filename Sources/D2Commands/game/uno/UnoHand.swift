@@ -1,12 +1,10 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public struct UnoHand: RichValueConvertible {
     public var cards: [UnoCard]
     public var isEmpty: Bool { return cards.isEmpty }
-    public var asRichValue: RichValue { return cards
-        .compactMap { $0.image }
-        .horizontallyImageJoined()
+    public var asRichValue: RichValue { return CairoContext.joinHorizontally(images: cards.compactMap(\.image))
         .map { RichValue.image($0) }
         ?? .none }
 }

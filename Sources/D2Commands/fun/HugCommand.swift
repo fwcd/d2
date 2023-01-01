@@ -1,5 +1,5 @@
 import Utils
-import Graphics
+import CairoGraphics
 
 public class HugCommand: Command {
     public let info = CommandInfo(
@@ -34,8 +34,8 @@ public class HugCommand: Command {
             .then { $0.runAsync() }
             .listen {
                 do {
-                    let image = try Image(fromPng: $0.get())
-                    let rawTemplate = try Image(fromPngFile: "Resources/fun/hugTemplate.png")
+                    let image = try CairoImage(pngData: $0.get())
+                    let rawTemplate = try CairoImage(pngFilePath: "Resources/fun/hugTemplate.png")
                     let green = Color(rgb: 0x00FF03)
                     let (topLeft, bottomRight) = findBoundingBox(in: rawTemplate) { $0.squaredEuclideanDistance(to: green) < 0.01 }
                     let template = try colorToAlpha(in: rawTemplate, color: green, squaredThreshold: 0.6)
