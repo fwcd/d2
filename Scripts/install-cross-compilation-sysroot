@@ -30,12 +30,19 @@ if ! command -v apt-get &>/dev/null; then
   exit 1
 fi
 
-echo "==> Installing qemu-debootstrap..."
+# See https://wiki.ubuntu.com/ARM/RootfsFromScratch/QemuDebootstrap
+
+echo "==> Installing debootstrap..."
 apt-get update
-apt-get install -y debootstrap qemu-user-static schroot
+apt-get install -y debootstrap qemu-user-static
 
 echo "==> Bootstrapping sysroot..."
-qemu-debootstrap --arch="$TARGETARCH" "$UBUNTUDISTRO" "$CROSSCOMPILESYSROOT"
+debootstrap \
+  --verbose \
+  --foreign \
+  --arch="$TARGETARCH" \
+  "$UBUNTUDISTRO" \
+  "$CROSSCOMPILESYSROOT"
 
 echo "==> Copying D2 scripts into sysroot..."
 sysroot_d2_dir="/opt/d2"
