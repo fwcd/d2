@@ -5,6 +5,11 @@
 set -e
 cd "$(dirname $0)/.."
 
+if [ "$(uname -s)" != "Linux" ]; then
+  echo "Creating cross-compilation sysroots is only supported on Linux!"
+  exit 1
+fi
+
 if [ -z "$CROSSCOMPILESYSROOT" ]; then
   echo "Please point CROSSCOMPILESYSROOT to the directory to which the sysroot will be installed!"
   exit 1
