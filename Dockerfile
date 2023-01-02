@@ -19,7 +19,7 @@ WORKDIR /opt/d2
 COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
-COPY Scripts/build-release Scripts/
+COPY Scripts/get-linux-arch-name Scripts/build-release Scripts/
 RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
