@@ -10,20 +10,8 @@ extra_flags=()
 
 if [ -n "$TARGETARCH" ]; then
   echo "==> Setting flags for target arch '$TARGETARCH'"
-  case "$TARGETARCH" in
-    amd64)
-      extra_flags+=(--arch x86_64)
-      arch_name=x86_64
-      ;;
-    arm64)
-      extra_flags+=(--arch arm64)
-      arch_name=aarch64
-      ;;
-    *)
-      echo "Unsupported target arch '$TARGETARCH'"
-      exit 1
-      ;;
-  esac
+  arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
+  extra_flags+=(--arch "$arch_name")
 
   if [ -n "$BUILDARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$CROSSCOMPILESYSROOT" ]; then
     echo "==> Adding cross-compilation sysroot $CROSSCOMPILESYSROOT to C compilation paths"
