@@ -18,7 +18,7 @@ public struct TriggerReactionHandler: MessageHandler {
             .init(keywords: ["ghost"], emoji: "👻"),
             .init(authorNames: ["sep", "lord_constantin"], messageTypes: [.guildMemberJoin], emoji: "♾️"),
             .init(messageTypes: [.userPremiumGuildSubscription], emoji: "💎"),
-            .init(probability: 0.0002, emoji: "🛸"),
+            .init(probability: 0.0001, emoji: "🛸"),
             .init { message in
                 Promise.catchingThen {
                     guard goodMorningPattern.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }
