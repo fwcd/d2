@@ -6,23 +6,24 @@ import AGGRenderer
 import CairoGraphics
 import Utils
 
-fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
-fileprivate let adventOfCodeYear: Int = Calendar.current.component(.year, from: Date())
-fileprivate let adventOfCodeEvent: String = String(adventOfCodeYear)
-fileprivate let adventOfCodeStart: Date = {
+fileprivate let (adventOfCodeStart, adventOfCodeEnd): (Date, Date) = {
     var components = DateComponents()
-    components.year = adventOfCodeYear
     components.month = 12
     components.day = 1
-    return Calendar.current.date(from: components)!
+    components.hour = 6
+    components.minute = 0
+    guard let start = Calendar.current.nextDate(after: Date(), matching: components, matchingPolicy: .nextTime, direction: .backward) else {
+        fatalError("No Advent of Code start date found!")
+    }
+    guard let end = Calendar.current.date(bySetting: .day, value: 26, of: start) else {
+        fatalError("No Advent of Code end date found!")
+    }
+    return (start, end)
 }()
-fileprivate let adventOfCodeEnd: Date = {
-    var components = DateComponents()
-    components.year = adventOfCodeYear
-    components.month = 12
-    components.day = 26
-    return Calendar.current.date(from: components)!
-}()
+fileprivate let adventOfCodeYear: Int = Calendar.current.component(.year, from: adventOfCodeStart)
+fileprivate let adventOfCodeEvent: String = String(adventOfCodeYear)
+
+fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
