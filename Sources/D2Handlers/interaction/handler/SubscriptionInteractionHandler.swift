@@ -4,12 +4,14 @@ import NIO
 
 public struct SubscriptionInteractionHandler: InteractionHandler {
     public let commandPrefix: String
+    private let hostInfo: HostInfo
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
     private let eventLoopGroup: any EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, eventLoopGroup: any EventLoopGroup) {
+    public init(commandPrefix: String, hostInfo: HostInfo, registry: CommandRegistry, manager: SubscriptionManager, eventLoopGroup: any EventLoopGroup) {
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.registry = registry
         self.manager = manager
         self.eventLoopGroup = eventLoopGroup
@@ -29,6 +31,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,
+                hostInfo: hostInfo,
                 subscriptions: $1,
                 eventLoopGroup: eventLoopGroup
             )

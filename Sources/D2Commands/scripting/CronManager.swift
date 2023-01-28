@@ -14,17 +14,20 @@ public class CronManager {
     private let registry: CommandRegistry
     private let client: any MessageClient
     private let commandPrefix: String
+    private let hostInfo: HostInfo
     private let eventLoopGroup: any EventLoopGroup
 
     public init(
         registry: CommandRegistry,
         client: any MessageClient,
         commandPrefix: String,
+        hostInfo: HostInfo,
         eventLoopGroup: any EventLoopGroup
     ) {
         self.registry = registry
         self.client = client
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.eventLoopGroup = eventLoopGroup
         sync()
     }
@@ -57,6 +60,7 @@ public class CronManager {
                 registry: registry,
                 message: Message(content: "", channelId: schedule.channelId),
                 commandPrefix: commandPrefix,
+                hostInfo: hostInfo,
                 subscriptions: SubscriptionSet(), // TODO: Support subscriptions?
                 eventLoopGroup: eventLoopGroup
             )

@@ -3,6 +3,7 @@ import Dispatch
 import Foundation
 import Logging
 import NIO
+import D2Commands
 import D2Handlers
 import D2MessageIO
 import D2DiscordIO
@@ -44,6 +45,7 @@ struct D2: ParsableCommand {
 
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let commandPrefix = config?.commandPrefix ?? "%"
+        let hostInfo = config?.hostInfo ?? HostInfo()
         let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
@@ -61,6 +63,7 @@ struct D2: ParsableCommand {
 
         var handler: D2Delegate! = try D2Delegate(
             withPrefix: commandPrefix,
+            hostInfo: hostInfo,
             initialPresence: actualInitialPresence,
             useMIOCommands: config?.useMIOCommands ?? false,
             mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild,

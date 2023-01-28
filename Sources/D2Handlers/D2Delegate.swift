@@ -13,6 +13,7 @@ fileprivate let log = Logger(label: "D2Handlers.D2Delegate")
 /// A client delegate that dispatches commands.
 public class D2Delegate: MessageDelegate {
     private let commandPrefix: String
+    private let hostInfo: HostInfo
     private let initialPresence: String?
     private let useMIOCommands: Bool
     private let mioCommandGuildId: GuildID?
@@ -35,6 +36,7 @@ public class D2Delegate: MessageDelegate {
 
     public init(
         withPrefix commandPrefix: String,
+        hostInfo: HostInfo,
         initialPresence: String? = nil,
         useMIOCommands: Bool = false,
         mioCommandGuildId: GuildID? = nil,
@@ -42,6 +44,7 @@ public class D2Delegate: MessageDelegate {
         client: any MessageClient
     ) throws {
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.initialPresence = initialPresence
         self.useMIOCommands = useMIOCommands
         self.mioCommandGuildId = mioCommandGuildId
@@ -51,7 +54,7 @@ public class D2Delegate: MessageDelegate {
         messageDB = try MessageDatabase()
         partyGameDB = try PartyGameDatabase()
         eventListenerBus = EventListenerBus()
-        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix, eventLoopGroup: eventLoopGroup)
+        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix, hostInfo: hostInfo, eventLoopGroup: eventLoopGroup)
         subscriptionManager = SubscriptionManager(registry: registry)
         permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
@@ -71,8 +74,8 @@ public class D2Delegate: MessageDelegate {
         ]
         messageHandlers = [
             SpamHandler(config: _spamConfiguration),
-            CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
-            SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
+            CommandHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
+            SubscriptionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
@@ -94,11 +97,11 @@ public class D2Delegate: MessageDelegate {
             MessageDatabaseChannelHandler(messageDB: messageDB)
         ]
         interactionHandlers = [
-            SubscriptionInteractionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup)
+            SubscriptionInteractionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup)
         ]
 
         if useMIOCommands {
-            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, permissionManager: permissionManager, eventLoopGroup: eventLoopGroup))
+            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, hostInfo: hostInfo, permissionManager: permissionManager, eventLoopGroup: eventLoopGroup))
         }
 
         registry["ping"] = PingCommand()
@@ -579,6 +582,7 @@ public class D2Delegate: MessageDelegate {
                     registry: self.registry,
                     message: m,
                     commandPrefix: self.commandPrefix,
+                    hostInfo: self.hostInfo,
                     subscriptions: .init(),
                     eventLoopGroup: self.eventLoopGroup
                 ))
@@ -619,6 +623,7 @@ public class D2Delegate: MessageDelegate {
                 registry: self.registry,
                 message: message,
                 commandPrefix: self.commandPrefix,
+                hostInfo: self.hostInfo,
                 subscriptions: .init(),
                 eventLoopGroup: self.eventLoopGroup
             ))
