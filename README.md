@@ -78,6 +78,8 @@ d2:
       clientName: Discord
   config:
     commandPrefix: '%'
+    hostInfo:
+      instanceName: prod/k8s/yourDisplayName
   platformTokens:
     discord: 'YOUR_DISCORD_API_TOKEN'
 ```
