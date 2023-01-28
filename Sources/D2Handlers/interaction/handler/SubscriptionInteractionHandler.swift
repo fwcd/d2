@@ -3,7 +3,7 @@ import D2Commands
 import NIO
 
 public struct SubscriptionInteractionHandler: InteractionHandler {
-    public let commandPrefix: String
+    private let commandPrefix: String
     private let hostInfo: HostInfo
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
