@@ -16,7 +16,9 @@ jobs:
     - name: Set up Kubernetes CLI
       uses: azure/setup-kubectl@v3
     - name: Configure Kubernetes context
-      run: echo "${{ secrets.PROD_KUBECTL }}" | base64 --decode > ~/.kube/config
+      run: |
+        mkdir ~/.kube
+        echo "${{ secrets.PROD_KUBECTL }}" | base64 --decode > ~/.kube/config
     - name: Set up values
       run: |
         mkdir local
