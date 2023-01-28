@@ -1,8 +1,8 @@
 /// Information about the host running D2.
 public struct HostInfo: Hashable, Codable {
-    public var displayName: String?
+    public var instanceName: String?
 
-    public init(displayName: String? = nil) {
-        self.displayName = displayName
+    public init(instanceName: String? = nil) {
+        self.instanceName = instanceName
     }
 }

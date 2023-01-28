@@ -19,6 +19,13 @@ public class PingCommand: Command {
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         let deltaMs = (context.message.timestamp?.timeIntervalSinceNow).map { $0 * -1000.0 }
-        output.append("\(response)\(deltaMs.map { " in \(String(format: "%.2f", $0)) ms" } ?? "")!")
+        let instanceName = context.hostInfo?.instanceName ?? "unknown"
+        let message = [
+            response,
+            deltaMs.map { "in \(String(format: "%.2f", $0)) ms" },
+            "(instance: \(instanceName))"
+        ].compactMap { $0 }.joined(separator: " ")
+
+        output.append(message)
     }
 }
