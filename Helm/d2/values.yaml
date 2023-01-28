@@ -15,7 +15,7 @@ d2:
     # Add users of the form {"value": "[discord user id]", "clientName": "Discord"}
     users: []
   config:
-    commandPrefix: '\\'
+    commandPrefix: '%'
     setPresenceInitially: false
     useMIOCommands: false
   netApiKeys: {}
