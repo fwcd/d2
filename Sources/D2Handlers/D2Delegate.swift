@@ -106,6 +106,7 @@ public class D2Delegate: MessageDelegate {
 
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
+        registry["instance"] = InstanceCommand()
         registry["vertical"] = VerticalCommand()
         registry["bfinterpret", aka: ["bf"]] = BFInterpretCommand()
         registry["bfencode"] = BFEncodeCommand()
