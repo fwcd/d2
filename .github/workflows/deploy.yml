@@ -22,6 +22,7 @@ jobs:
     - name: Set up values
       run: |
         mkdir local
+        version="$(Scripts/get-version)"
         cat << EOF > local/values.yaml
         d2:
           adminWhitelist:
@@ -31,7 +32,7 @@ jobs:
           config:
             commandPrefix: '%'
             hostInfo:
-              instanceName: 'prod/k8s/gh-actions/${{ github.sha }}'
+              instanceName: 'prod/k8s/gh-actions/$version'
           platformTokens:
             discord: '${{ secrets.PROD_DISCORD_TOKEN }}'
         EOF

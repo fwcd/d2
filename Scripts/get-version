@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Outputs the D2 version.
+
+git rev-parse --short HEAD
