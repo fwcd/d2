@@ -32,7 +32,12 @@ struct D2: ParsableCommand {
 
         LoggingSystem.bootstrap {
             let level = $0.starts(with: "D2") ? logLevel : dependencyLogLevel
-            return StoringLogHandler(label: $0, logLevel: level)
+            return StoringLogHandler(
+                label: $0,
+                printToStdout: true,
+                autoFlushStdout: true,
+                logLevel: level
+            )
         }
 
         let log = Logger(label: "D2.main")
