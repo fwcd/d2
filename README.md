@@ -82,6 +82,12 @@ d2:
       instanceName: prod/k8s/yourDisplayName
   platformTokens:
     discord: 'YOUR_DISCORD_API_TOKEN'
+  netApiKeys: # optional
+    mapQuest: YOUR_MAP_QUEST_KEY
+    wolframAlpha: YOUR_WOLFRAM_ALPHA_KEY
+    gitlab: YOUR_GITLAB_KEY
+    openweathermap: YOUR_OPENWEATHERMAP_KEY
+    ...
 ```
 
 <!-- TODO: Document that netApiKeys can be set here too -->
