@@ -14,5 +14,6 @@ struct Config: Codable {
         var level: Logger.Level?
         var dependencyLevel: Logger.Level?
         var printToStdout: Bool?
+        var channel: ChannelID?
     }
 }

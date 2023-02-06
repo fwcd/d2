@@ -15,19 +15,16 @@ public struct D2LogHandler: LogHandler {
         timestampFormatKey: .string("dd.MM.yyyy HH:mm:ss")
     ]
 
-    private let logBuffer: LogBuffer
+    private let logOutput: LogOutput
     private let label: String
-    private let printToStdout: Bool
 
-    public init(
+    init(
         label: String,
-        logBuffer: LogBuffer,
-        printToStdout: Bool,
+        logOutput: LogOutput,
         logLevel: Logger.Level = .info
     ) {
         self.label = label
-        self.logBuffer = logBuffer
-        self.printToStdout = printToStdout
+        self.logOutput = logOutput
         self.logLevel = logLevel
     }
 
@@ -35,12 +32,8 @@ public struct D2LogHandler: LogHandler {
         let mergedMetadata = self.metadata.merging(metadata ?? [:], uniquingKeysWith: { _, newKey in newKey })
         let output = "\(timestamp(using: mergedMetadata)) [\(level)] \(label): \(message)"
 
-        if printToStdout {
-            print(output)
-        }
-
         Self.dispatchQueue.async {
-            logBuffer.push(output)
+            logOutput.publish(output)
         }
     }
 

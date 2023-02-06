@@ -30,31 +30,41 @@ struct D2: ParsableCommand {
         Backtrace.install()
         #endif
 
+        // Read config and logging options
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
-        let logBuffer = LogBuffer()
-
         let logLevel = self.logLevel ?? config?.log?.level ?? .info
         let dependencyLogLevel = self.dependencyLogLevel ?? config?.log?.dependencyLevel ?? .notice
         let printToStdout = config?.log?.printToStdout ?? true
 
+        // Set up logging and register default outputs
+        let logBuffer = LogBuffer()
+        let logOutput = LogOutput()
+
+        if printToStdout {
+            logOutput.register {
+                print($0)
+            }
+        }
+
+        logOutput.register {
+            logBuffer.push($0)
+        }
+
         LoggingSystem.bootstrap {
             let level = $0.starts(with: "D2") ? logLevel : dependencyLogLevel
-            return D2LogHandler(
-                label: $0,
-                logBuffer: logBuffer,
-                printToStdout: printToStdout,
-                logLevel: level
-            )
+            return D2LogHandler(label: $0, logOutput: logOutput, logLevel: level)
         }
 
         let log = Logger(label: "D2.main")
 
+        // Set up local directory
         var localDirExists: ObjCBool = false
         if !FileManager.default.fileExists(atPath: "local", isDirectory: &localDirExists) || !localDirExists.boolValue {
             log.error("Please make sure to create a 'local' directory with e.g. the 'platformTokens.json' etc. as described in the README!")
             return
         }
 
+        // Read D2 config
         let commandPrefix = config?.commandPrefix ?? "%"
         let hostInfo = config?.hostInfo ?? HostInfo()
         let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
@@ -101,7 +111,7 @@ struct D2: ParsableCommand {
             log.notice("No platform was created since no tokens were provided.")
         }
 
-        // Setup interrupt signal handler
+        // Set up interrupt signal handler
         signal(SIGINT, SIG_IGN)
         let source = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
         source.setEventHandler {
@@ -113,6 +123,13 @@ struct D2: ParsableCommand {
             Self.exit()
         }
         source.resume()
+
+        // Register channel log output if needed
+        if let logChannel = config?.log?.channel {
+            logOutput.register {
+                combinedClient.sendMessage($0, to: logChannel)
+            }
+        }
 
         // Start the platforms
         for platform in platforms {
