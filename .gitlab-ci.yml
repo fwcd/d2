@@ -1,4 +1,4 @@
-image: "swift:5.7-focal"
+image: "swift:5.7"
 
 stages:
   - build
