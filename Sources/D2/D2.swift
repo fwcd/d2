@@ -17,10 +17,10 @@ import Backtrace
 @main
 struct D2: ParsableCommand {
     @Option(name: .shortAndLong, help: "The logging level")
-    var logLevel: Logger.Level = .info
+    var logLevel: Logger.Level?
 
     @Option(name: .shortAndLong, help: "The logging level for dependencies (e.g. swift-discord)")
-    var dependencyLogLevel: Logger.Level = .notice
+    var dependencyLogLevel: Logger.Level?
 
     @Option(name: .shortAndLong, help: "The initial activity message")
     var initialPresence: String?
@@ -30,12 +30,19 @@ struct D2: ParsableCommand {
         Backtrace.install()
         #endif
 
+        let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
+        let logBuffer = LogBuffer()
+
+        let logLevel = self.logLevel ?? config?.log?.level ?? .info
+        let dependencyLogLevel = self.dependencyLogLevel ?? config?.log?.dependencyLevel ?? .notice
+        let printToStdout = config?.log?.printToStdout ?? true
+
         LoggingSystem.bootstrap {
             let level = $0.starts(with: "D2") ? logLevel : dependencyLogLevel
-            return StoringLogHandler(
+            return D2LogHandler(
                 label: $0,
-                printToStdout: true,
-                autoFlushStdout: true,
+                logBuffer: logBuffer,
+                printToStdout: printToStdout,
                 logLevel: level
             )
         }
@@ -48,7 +55,6 @@ struct D2: ParsableCommand {
             return
         }
 
-        let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let commandPrefix = config?.commandPrefix ?? "%"
         let hostInfo = config?.hostInfo ?? HostInfo()
         let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
@@ -63,7 +69,7 @@ struct D2: ParsableCommand {
 
         // Create platforms
         var combinedClient: CombinedMessageClient! = CombinedMessageClient(mioCommandClientName: "Discord")
-        var platforms: [Startable] = []
+        var platforms: [any Startable] = []
         var createdAnyPlatform = false
 
         var handler: D2Delegate! = try D2Delegate(
@@ -72,6 +78,7 @@ struct D2: ParsableCommand {
             initialPresence: actualInitialPresence,
             useMIOCommands: config?.useMIOCommands ?? false,
             mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild,
+            logBuffer: logBuffer,
             eventLoopGroup: eventLoopGroup,
             client: combinedClient
         )

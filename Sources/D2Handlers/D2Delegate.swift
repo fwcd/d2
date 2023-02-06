@@ -40,6 +40,7 @@ public class D2Delegate: MessageDelegate {
         initialPresence: String? = nil,
         useMIOCommands: Bool = false,
         mioCommandGuildId: GuildID? = nil,
+        logBuffer: LogBuffer,
         eventLoopGroup: any EventLoopGroup,
         client: any MessageClient
     ) throws {
@@ -145,7 +146,7 @@ public class D2Delegate: MessageDelegate {
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()
         registry["rolereactions"] = RoleReactionsCommand(configuration: _roleReactionsConfiguration)
-        registry["logs"] = LogsCommand()
+        registry["logs"] = LogsCommand(logBuffer: logBuffer)
         registry["embeddescription", aka: ["description"]] = EmbedDescriptionCommand()
         registry["embedfooter", aka: ["footer"]] = EmbedFooterCommand()
         registry["embedfields", aka: ["fields"]] = EmbedFieldsCommand()
