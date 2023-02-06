@@ -7,7 +7,6 @@ import Utils
 /// A handler that logs to the console and stores
 /// the last n lines in a global cyclic queue.
 public struct D2LogHandler: LogHandler {
-    private static let dispatchQueue = DispatchQueue(label: "D2LogHandler.dispatchQueue")
     public static let timestampFormatKey = "timestamp"
 
     public var logLevel: Logger.Level
@@ -32,9 +31,7 @@ public struct D2LogHandler: LogHandler {
         let mergedMetadata = self.metadata.merging(metadata ?? [:], uniquingKeysWith: { _, newKey in newKey })
         let output = "\(timestamp(using: mergedMetadata)) [\(level)] \(label): \(message)"
 
-        Self.dispatchQueue.async {
-            logOutput.publish(output)
-        }
+        logOutput.publishAsync(output)
     }
 
     private func timestamp(using metadata: Logger.Metadata?) -> String {

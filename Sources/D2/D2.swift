@@ -41,12 +41,12 @@ struct D2: ParsableCommand {
         let logOutput = LogOutput()
 
         if printToStdout {
-            logOutput.register {
+            logOutput.registerAsync {
                 print($0)
             }
         }
 
-        logOutput.register {
+        logOutput.registerAsync {
             logBuffer.push($0)
         }
 
@@ -126,7 +126,7 @@ struct D2: ParsableCommand {
 
         // Register channel log output if needed
         if let logChannel = config?.log?.channel {
-            logOutput.register {
+            logOutput.registerAsync {
                 combinedClient.sendMessage($0, to: logChannel)
             }
         }
