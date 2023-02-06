@@ -15,7 +15,7 @@ FROM swift:5.7-slim as runner
 
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 
 # Install native dependencies
 COPY Scripts/install-runtime-dependencies-apt Scripts/
