@@ -83,6 +83,7 @@ public class D2Delegate: MessageDelegate {
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
             TriggerReactionHandler(cityConfig: _cityConfiguration),
             CountToNHandler(),
+            UniversalSummoningHandler(hostInfo: hostInfo),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
