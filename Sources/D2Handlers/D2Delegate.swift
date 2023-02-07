@@ -79,11 +79,11 @@ public class D2Delegate: MessageDelegate {
             SubscriptionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
-            HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
             TriggerReactionHandler(cityConfig: _cityConfiguration),
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
+            HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
