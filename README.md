@@ -90,8 +90,6 @@ d2:
     ...
 ```
 
-<!-- TODO: Document that netApiKeys can be set here too -->
-
 You can now upgrade/install D2 to the cluster using `helm upgrade --install -f path/to/local/values.yaml d2 Helm/d2`.
 
 To uninstall it, just run `helm uninstall d2`.
