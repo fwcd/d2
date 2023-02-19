@@ -6,6 +6,7 @@ set -e
 cd "$(dirname $0)/.."
 
 brew install \
+  pkg-config \
   cairo \
   graphviz
 
