@@ -91,12 +91,11 @@ public class HelpCommand: StringCommand {
     private func commandHelpEmbed(for name: String, command: any Command) -> Embed {
         return Embed(
             title: ":question: \(commandPrefix)\(name): `\(command.inputValueType) -> \(command.outputValueType)`",
-            description: """
-                \(command.info.longDescription)
-
-                \(command.info.helpText ?? "")
-                """.trimmingCharacters(in: .whitespaces),
-            footer: Embed.Footer(text: command.info.category.plainDescription)
+            description: [
+                command.info.longDescription,
+                command.info.helpText,
+            ].compactMap { $0 }.joined(separator: "\n\n"),
+            footer: Embed.Footer(text: "\(command.info.category.plainDescription) - \(command.info.requiredPermissionLevel)")
         )
     }
 }
