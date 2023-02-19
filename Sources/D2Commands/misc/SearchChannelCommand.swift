@@ -5,7 +5,7 @@ public class SearchChannelCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Searches for a channel on the current guild",
-        requiredPermissionLevel: .vip // TODO: Figure out channel permissions, then filter them correctly and enable it for .basic
+        requiredPermissionLevel: .mod // TODO: Figure out channel permissions, then filter them correctly and enable it for .basic
     )
 
     public init() {}
