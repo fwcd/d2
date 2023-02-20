@@ -24,6 +24,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.1.4"),
         .package(url: "https://github.com/fwcd/swift-music-theory.git", from: "0.1.0"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.44.0"),
+        .package(url: "https://github.com/Kitura/BlueSocket.git", .upToNextMinor(from: "2.0.4")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.3.3"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", revision: "b3a49f4a9fbee3c7320591dbc7263c192244063e"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
@@ -103,6 +104,7 @@ let package = Package(
                 .product(name: "AGGRenderer", package: "swiftplot"),
                 .product(name: "SwiftyTesseract", package: "SwiftyTesseract"),
                 .product(name: "NIOCronScheduler", package: "NIOCronScheduler"),
+                .product(name: "Socket", package: "BlueSocket"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),
@@ -133,6 +135,7 @@ let package = Package(
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "XMLCoder", package: "XMLCoder"),
                 .product(name: "CodableCSV", package: "CodableCSV"),
+                .product(name: "Socket", package: "BlueSocket"),
             ]
         ),
         .target(
