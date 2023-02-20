@@ -2,17 +2,17 @@
 
 [![Build](https://github.com/fwcd/d2/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/d2/actions/workflows/build.yml)
 
-General-purpose assistant for Discord and IRC featuring more than 300 commands, including:
+General-purpose assistant for Discord and IRC with more than 340 commands, including:
 
-* 💬 Various useful chat utilities, e.g. polls or coin flips
-* ⚙️ A flexible command system that supports chaining, piping and permissions
-* 🎲 Multiplayer board and card games, such as chess or Uno
-* 📙 Integration with a wide range of web APIs, including WolframAlpha, MediaWiki, Reddit and OpenWeatherMap
-* 🖼 Image processing capabilities, including generation of animated GIFs
-* 📊 Tools for mathematics and linear algebra, e.g. a linear system solver
-* 🎵 Music theory utilities, including a chord finder
-* 🖥 Programming tools, including a Haskell API search and a Prolog interpreter
-* 🍬 Humorous commands, e.g. for jokes
+- **Various utilities**, including polls and coin flips
+- **Multiplayer games**, including chess, uno, hangman, codenames, wordle and others
+- **50+ Web APIs**, including dictionaries, news, weather, comics, recipes and more
+- **Image processors**, including various filters, animators and QR code generators
+- **Mathematical utilities**, including equation solvers, plotters, matrix operations and LaTeX renderers
+- **Musical utilities**, including chord finders, fretboard and piano visualizers
+- **Programming utilities**, including a Haskell API search and a Prolog interpreter
+- **Moderational utilities**, including automatic thread management, message previews, role reactions and bulk deletion
+- **Humorous and fun stuff**, including various party games and joke finders
 
 ## Getting Started
 
