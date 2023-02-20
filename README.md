@@ -4,7 +4,6 @@
 
 General-purpose assistant for Discord and IRC with more than 340 commands, including:
 
-- **Various utilities**, including polls and coin flips
 - **Multiplayer games**, including chess, uno, hangman, codenames, wordle and others
 - **50+ Web APIs**, including dictionaries, news, weather, comics, recipes and more
 - **Image processors**, including various filters, animators and QR code generators
@@ -12,6 +11,7 @@ General-purpose assistant for Discord and IRC with more than 340 commands, inclu
 - **Musical utilities**, including chord finders, fretboard and piano visualizers
 - **Programming utilities**, including a Haskell API search and a Prolog interpreter
 - **Moderational utilities**, including automatic thread management, message previews, role reactions and bulk deletion
+- **Miscellaneous utilities**, including polls and coin flips
 - **Humorous and fun stuff**, including various party games and joke finders
 
 ## Getting Started
