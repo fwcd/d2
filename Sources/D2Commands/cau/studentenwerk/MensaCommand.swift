@@ -40,20 +40,26 @@ public class MensaCommand: StringCommand {
         Task {
             do {
                 let canteen = try await client.canteen(for: canteenId)
-                let meals = try await client.meals(for: canteenId)
-                let mealsByCategory = [String?: [Meal]](grouping: meals, by: \.category)
-                    .map { (key: $0.key ?? "No title", value: $0.value) }
-                    .sorted(by: ascendingComparator(comparing: \.key))
-                output.append(Embed(
-                    title: ":fork_knife_plate: Today's menu for \(canteen.name)",
-                    fields: mealsByCategory.compactMap { (category, meals) -> Embed.Field? in
-                        guard !meals.isEmpty else { return nil }
-                        return Embed.Field(
-                            name: "**+++ \(category) +++**",
-                            value: self.format(meals: meals.sorted(by: ascendingComparator(comparing: \.name)))
-                        )
-                    }
-                ))
+                do {
+                    let meals = try await client.meals(for: canteenId)
+                    let mealsByCategory = [String?: [Meal]](grouping: meals, by: \.category)
+                        .map { (key: $0.key ?? "No title", value: $0.value) }
+                        .sorted(by: ascendingComparator(comparing: \.key))
+                    output.append(Embed(
+                        title: ":fork_knife_plate: Today's menu for \(canteen.name)",
+                        fields: mealsByCategory.compactMap { (category, meals) -> Embed.Field? in
+                            guard !meals.isEmpty else { return nil }
+                            return Embed.Field(
+                                name: "**+++ \(category) +++**",
+                                value: self.format(meals: meals.sorted(by: ascendingComparator(comparing: \.name)))
+                            )
+                        }
+                    ))
+                } catch MensaError.notFound {
+                    output.append(Embed(
+                        title: ":fork_knife_plate: No menu for \(canteen.name) today"
+                    ))
+                }
             } catch {
                 output.append(error, errorText: "An error occurred while requesting the menu")
             }
