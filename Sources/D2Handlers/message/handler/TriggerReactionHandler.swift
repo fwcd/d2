@@ -4,7 +4,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let goodMorningPattern = try! Regex(from: "\\bg(?:u+te+n|oo+d+)\\s+mo+(?:rni+ng|(?:rge+|i+)n)\\b", caseSensitive: false)
+fileprivate let goodMorningOrEveningPattern = try! Regex(from: "\\bg(?:u+te+n?|oo+d+)\\s+(?:mo+(?:rni+ng|(?:rge+|i+)|n)|e+veni+ng|ta+g|na+cht)\\b", caseSensitive: false)
 
 public struct TriggerReactionHandler: MessageHandler {
     private let triggers: [ReactionTrigger]
@@ -21,7 +21,7 @@ public struct TriggerReactionHandler: MessageHandler {
             .init(probability: 0.0001, emoji: "🛸"),
             .init { message in
                 Promise.catchingThen {
-                    guard goodMorningPattern.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }
+                    guard goodMorningOrEveningPattern.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }
 
                     let calendar = Calendar.current
                     let todayComponents = calendar.dateComponents([.month, .day], from: Date())
