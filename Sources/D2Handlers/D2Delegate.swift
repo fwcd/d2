@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2NetAPIs
 import Foundation
 import Logging
 import Utils
@@ -80,7 +81,14 @@ public class D2Delegate: MessageDelegate {
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
-            TriggerReactionHandler(cityConfig: _cityConfiguration),
+            TriggerReactionHandler {
+                guard let city = cityConfiguration.city else { throw ReactionTriggerError.other("No city specified") }
+                return OpenWeatherMapQuery(city: city).perform()
+                    .mapCatching {
+                        guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
+                        return emoji
+                    }
+            },
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),

@@ -9,7 +9,7 @@ fileprivate let goodMorningOrEveningPattern = try! Regex(from: "\\bg(?:u+te+n?|o
 public struct TriggerReactionHandler: MessageHandler {
     private let triggers: [ReactionTrigger]
 
-    public init(cityConfig: AutoSerializing<CityConfiguration>, triggers: [ReactionTrigger]? = nil) {
+    public init(triggers: [ReactionTrigger]? = nil, weatherEmojiProvider: @escaping () throws -> Promise<String, any Error>) {
         self.triggers = triggers ?? [
             .init(keywords: ["hello"], emoji: "👋"),
             .init(keywords: ["hmmm"], emoji: "🤔"),
@@ -52,12 +52,8 @@ public struct TriggerReactionHandler: MessageHandler {
                     }
 
                     // React with the weather
-                    guard let city = cityConfig.wrappedValue.city else { throw ReactionTriggerError.other("No city specified") }
-                    return OpenWeatherMapQuery(city: city).perform()
-                        .mapCatching {
-                            guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
-                            return emoji
-                        }
+                    return try weatherEmojiProvider()
+
                 }
             }
         ]
