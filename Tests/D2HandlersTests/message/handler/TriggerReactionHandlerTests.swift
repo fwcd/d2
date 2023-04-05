@@ -7,7 +7,12 @@ import D2TestUtils
 final class TriggerReactionHandlers: XCTestCase {
     func testGoodMorningReaction() {
         XCTAssertFalse(messageTriggersWeather("good mornin"))
+        XCTAssertFalse(messageTriggersWeather("Moin"))
         XCTAssert(messageTriggersWeather("good morning"))
+        XCTAssert(messageTriggersWeather("guten moin"))
+        XCTAssert(messageTriggersWeather("Guten Morgen"))
+        XCTAssert(messageTriggersWeather("Guten   mooorgen"))
+        XCTAssert(messageTriggersWeather("Guten Morgen, guten Morgen, guten Morgen, Sonnenschein!"))
     }
 
     private func messageTriggersWeather(_ content: String) -> Bool {
