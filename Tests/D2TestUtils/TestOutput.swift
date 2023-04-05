@@ -68,4 +68,19 @@ extension TestOutput: DefaultMessageClient {
         append(message: message)
         return Promise(.success(message))
     }
+
+    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error> {
+        for i in messages.indices where messages[i].id == messageId {
+            let reactions = Dictionary(grouping: messages[i].reactions, by: \.emoji.description)
+            // TODO: Add proper conversion from emoji string to Emoji structure
+            var reaction = reactions[emoji]?.first ?? Message.Reaction(
+                count: 0,
+                me: true,
+                emoji: .init(managed: false, animated: false, name: emoji, requireColons: false)
+            )
+            reaction.count += 1
+            return .init(messages[i])
+        }
+        return .init(nil)
+    }
 }
