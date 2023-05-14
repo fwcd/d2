@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+(\\S+)")
+fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+:?(\\S+):?")
 
 public class ReactCommand: StringCommand {
     public let info = CommandInfo(
@@ -22,9 +22,22 @@ public class ReactCommand: StringCommand {
             output.append(errorText: info.helpText!)
             return
         }
+
         let messageId = MessageID(parsedArgs[1], clientName: client.name)
         let channelId = MessageID(parsedArgs[2], clientName: client.name)
-        let emoji = parsedArgs[3]
-        client.createReaction(for: messageId, on: channelId, emoji: emoji)
+        var emojiString = parsedArgs[3]
+
+        if !emojiString.unicodeScalars.contains(where: \.properties.isEmoji) {
+            // Try resolving the emoji via the guilds
+            let potentialMatches = (client.guilds ?? [])
+                .flatMap { $0.emojis.values.filter { $0.name == emojiString } }
+            guard let emoji = potentialMatches.first else {
+                output.append(errorText: "Could not find match for emoji \(emojiString)")
+                return
+            }
+            emojiString = emoji.compactDescription
+        }
+
+        client.createReaction(for: messageId, on: channelId, emoji: emojiString)
     }
 }
