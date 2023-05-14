@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+:?(\\S+):?")
+fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+:?([^:\\s]+):?")
 
 public class ReactCommand: StringCommand {
     public let info = CommandInfo(
