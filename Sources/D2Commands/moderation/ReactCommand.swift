@@ -10,8 +10,15 @@ public class ReactCommand: StringCommand {
         helpText: "Syntax: [message id] [channel id] [emoji name]",
         requiredPermissionLevel: .admin
     )
+    private let timer: RepeatingTimer?
 
-    public init() {}
+    public init(temporary: Bool = false) {
+        if temporary {
+            timer = RepeatingTimer(interval: .seconds(5))
+        } else {
+            timer = nil
+        }
+    }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
         guard let client = context.client else {
@@ -39,5 +46,9 @@ public class ReactCommand: StringCommand {
         }
 
         client.createReaction(for: messageId, on: channelId, emoji: emojiString)
+
+        timer?.schedule(beginImmediately: false) { (_, _) in
+            client.deleteOwnReaction(for: messageId, on: channelId, emoji: emojiString)
+        }
     }
 }

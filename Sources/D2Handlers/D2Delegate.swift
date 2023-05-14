@@ -411,6 +411,7 @@ public class D2Delegate: MessageDelegate {
         registry["pickprogramminglanguage", aka: ["picklanguage", "picklang"]] = PickProgrammingLanguageCommand()
         registry["directmessage", aka: ["dm", "whisper"]] = DirectMessageCommand()
         registry["react"] = ReactCommand()
+        registry["temporaryreact", aka: ["tempreact", "tmpreact", "tr"]] = ReactCommand(temporary: true)
         registry["channelmessage", aka: ["m"]] = ChannelMessageCommand()
         registry["asciiart", aka: ["ascii"]] = AsciiArtCommand()
         registry["tofile"] = ToFileCommand()
