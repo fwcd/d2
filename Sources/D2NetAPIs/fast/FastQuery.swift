@@ -31,7 +31,7 @@ public struct FastQuery {
                 ).runAsync().map { data in
                     let seconds = -startTime.timeIntervalSinceNow
                     let megabits = Double(data.count) / 125_000.0
-                    return FastResult(megabitsPerSecond: megabits / seconds)
+                    return FastResult(megabits: megabits, seconds: seconds)
                 }
             }
     }

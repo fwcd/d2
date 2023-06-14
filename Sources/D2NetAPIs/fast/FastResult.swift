@@ -1,3 +1,4 @@
 public struct FastResult {
-    public let megabitsPerSecond: Double
+    public let megabits: Double
+    public let seconds: Double
 }

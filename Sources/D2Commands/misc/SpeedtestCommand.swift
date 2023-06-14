@@ -14,7 +14,7 @@ public class SpeedtestCommand: StringCommand {
         FastQuery().perform().listen {
             do {
                 let result = try $0.get()
-                output.append("The network speed is \(result.megabitsPerSecond) Mbit/s")
+                output.append(String(format: "The network speed is %.2f Mbit/s", result.megabits / result.seconds))
             } catch {
                 output.append(error, errorText: "Could not fetch network speed")
             }
