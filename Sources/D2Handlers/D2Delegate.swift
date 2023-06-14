@@ -432,6 +432,7 @@ public class D2Delegate: MessageDelegate {
         registry["cssselect", aka: ["cssselector", "selector", "select"]] = CSSSelectorCommand()
         registry["geocode", aka: ["geo", "geocoords", "coords"]] = GeocodeCommand()
         registry["geoip"] = GeoIPCommand()
+        registry["speedtest", aka: ["speed", "networkspeed"]] = SpeedtestCommand()
         registry["tiervehicles", aka: ["tier", "tierscooters"]] = TierVehiclesCommand()
         registry["guildicon", aka: ["icon", "guildimage", "servericon", "serveravatar", "serverimage"]] = GuildIconCommand()
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
