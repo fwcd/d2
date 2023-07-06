@@ -13,10 +13,14 @@ spec:
     metadata:
       labels:
         {{- include "d2.selectorLabels" . | nindent 8 }}
+      annotations:
+        # Make sure that the pods are recreated automatically
+        timestamp: {{ now | quote }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         volumeMounts:
         - name: d2-local
           mountPath: {{ .Values.paths.install }}/local

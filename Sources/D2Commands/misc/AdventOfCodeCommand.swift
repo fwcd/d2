@@ -7,22 +7,6 @@ import CairoGraphics
 import Utils
 
 fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
-fileprivate let adventOfCodeYear: Int = Calendar.current.component(.year, from: Date())
-fileprivate let adventOfCodeEvent: String = String(adventOfCodeYear)
-fileprivate let adventOfCodeStart: Date = {
-    var components = DateComponents()
-    components.year = adventOfCodeYear
-    components.month = 12
-    components.day = 1
-    return Calendar.current.date(from: components)!
-}()
-fileprivate let adventOfCodeEnd: Date = {
-    var components = DateComponents()
-    components.year = adventOfCodeYear
-    components.month = 12
-    components.day = 26
-    return Calendar.current.date(from: components)!
-}()
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -33,6 +17,25 @@ public class AdventOfCodeCommand: StringCommand {
     )
     @AutoSerializing(filePath: "local/adventOfCodeConfig.json") private var configuration: AdventOfCodeConfiguration = .init()
     private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
+
+    private var dateRange: Range<Date> {
+        var components = DateComponents()
+        components.month = 12
+        components.day = 1
+        components.hour = 6
+        components.minute = 0
+        guard let start = Calendar.current.nextDate(after: Date(), matching: components, matchingPolicy: .nextTime, direction: .backward) else {
+            fatalError("No Advent of Code start date found!")
+        }
+        guard let end = Calendar.current.date(bySetting: .day, value: 26, of: start) else {
+            fatalError("No Advent of Code end date found!")
+        }
+        return start..<end
+    }
+    private var startDate: Date { dateRange.lowerBound }
+    private var endDate: Date { dateRange.upperBound }
+    private var year: Int { Calendar.current.component(.year, from: startDate) }
+    private var event: String { String(year) }
 
     public init() {
         subcommands = [
@@ -106,7 +109,7 @@ public class AdventOfCodeCommand: StringCommand {
             output.append(errorText: "Please set a leaderboard before querying it!")
             return
         }
-        AdventOfCodeLeaderboardQuery(event: adventOfCodeEvent, ownerId: ownerId).perform().listen {
+        AdventOfCodeLeaderboardQuery(event: event, ownerId: ownerId).perform().listen {
             do {
                 try action($0.get())
             } catch {
@@ -118,7 +121,7 @@ public class AdventOfCodeCommand: StringCommand {
     private func presentStarGraph(board: AdventOfCodeLeaderboard) throws -> CairoImage {
         let topMembers = extractTopMembers(count: 28, from: board)
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
-        let start = board.startDate ?? adventOfCodeStart
+        let start = board.startDate ?? startDate
 
         for member in topMembers {
             let base = AdventOfCodeLeaderboard.Member.StarScore(score: 0, date: start)
@@ -143,8 +146,8 @@ public class AdventOfCodeCommand: StringCommand {
     private func presentParticipationGraph(board: AdventOfCodeLeaderboard) throws -> CairoImage {
         var graph = BarGraph<Int, Double>()
         let calendar = Calendar.current
-        let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
-        let endDay = calendar.component(.day, from: min(Date(), board.endDate ?? adventOfCodeEnd))
+        let startDay = calendar.component(.day, from: board.startDate ?? startDate)
+        let endDay = calendar.component(.day, from: min(Date(), board.endDate ?? endDate))
         let days = startDay...endDay
         let participations = days.map { day in board.members.values.count(forWhich: { $0.starCompletions.keys.contains(day) }) }
 
@@ -161,8 +164,8 @@ public class AdventOfCodeCommand: StringCommand {
         let topMembers = extractTopMembers(count: 28, from: board)
         var graph = LineGraph<Double, Double>(enablePrimaryAxisGrid: true)
         let calendar = Calendar.current
-        let startDay = calendar.component(.day, from: board.startDate ?? adventOfCodeStart)
-        let endDay = calendar.component(.day, from: min(Date(), board.endDate ?? adventOfCodeEnd))
+        let startDay = calendar.component(.day, from: board.startDate ?? startDate)
+        let endDay = calendar.component(.day, from: min(Date(), board.endDate ?? endDate))
 
         for member in topMembers {
             let times = (startDay...endDay).compactMap { day in board.timeToCompletion(member: member, day: day).map { (day, $0) } }
@@ -196,7 +199,7 @@ public class AdventOfCodeCommand: StringCommand {
         let topMembers = extractTopMembers(count: 15, from: board)
 
         return Embed(
-            title: ":christmas_tree: Advent of Code \(adventOfCodeEvent) Leaderboard - Top \(topMembers.count)",
+            title: ":christmas_tree: Advent of Code \(event) Leaderboard - Top \(topMembers.count)",
             description: topMembers
                 .enumerated()
                 .map { (i, member) in [
@@ -230,7 +233,7 @@ public class AdventOfCodeCommand: StringCommand {
             .sorted(by: ascendingComparator(comparing: \.key))
 
         return Embed(
-            title: ":stopwatch: Advent of Code \(adventOfCodeEvent) Best Times for Day \(day) - Top \(min(topMembers.map(\.value.count).max() ?? 0, maxTopMembers))",
+            title: ":stopwatch: Advent of Code \(event) Best Times for Day \(day) - Top \(min(topMembers.map(\.value.count).max() ?? 0, maxTopMembers))",
             fields: topMembers.map { (name, tms) in
                 Embed.Field(
                     name: name,

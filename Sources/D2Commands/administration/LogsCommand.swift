@@ -11,14 +11,16 @@ public class LogsCommand: StringCommand {
         requiredPermissionLevel: .admin
     )
     private let defaultLineCount: Int
+    private let logBuffer: LogBuffer
 
-    public init(defaultLineCount: Int = 10) {
+    public init(defaultLineCount: Int = 10, logBuffer: LogBuffer) {
         self.defaultLineCount = defaultLineCount
+        self.logBuffer = logBuffer
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         let lineCount = Int(input) ?? defaultLineCount
-        let logs = StoringLogHandler.lastOutputs
+        let logs = logBuffer
             .suffix(lineCount)
             .map { $0.replacingOccurrences(of: "```", with: "") }
             .joined(separator: "\n")

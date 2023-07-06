@@ -2,6 +2,7 @@ public enum PermissionLevel: Int, Codable, Comparable {
     case admin = 500
     case dev = 100
     case vip = 50
+    case mod = 30
     case basic = 10
 
     public static func of(_ str: String) -> PermissionLevel? {
@@ -9,6 +10,7 @@ public enum PermissionLevel: Int, Codable, Comparable {
             case "admin": return .admin
             case "dev": return .dev
             case "vip": return .vip
+            case "mod": return .mod
             case "basic": return .basic
             default: return nil
         }

@@ -5,11 +5,13 @@ import D2Commands
 
 public struct MIOCommandInteractionHandler: InteractionHandler {
     private let registry: CommandRegistry
+    private let hostInfo: HostInfo
     private let permissionManager: PermissionManager
     private let eventLoopGroup: any EventLoopGroup
 
-    public init(registry: CommandRegistry, permissionManager: PermissionManager, eventLoopGroup: any EventLoopGroup) {
+    public init(registry: CommandRegistry, hostInfo: HostInfo, permissionManager: PermissionManager, eventLoopGroup: any EventLoopGroup) {
         self.registry = registry
+        self.hostInfo = hostInfo
         self.permissionManager = permissionManager
         self.eventLoopGroup = eventLoopGroup
     }
@@ -33,6 +35,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
                 guildMember: interaction.member
             ),
             commandPrefix: "/", // TODO: Find a more elegant solution than hardcoding the slash
+            hostInfo: hostInfo,
             subscriptions: .init(), // TODO: Support subscriptions here
             eventLoopGroup: eventLoopGroup
         )

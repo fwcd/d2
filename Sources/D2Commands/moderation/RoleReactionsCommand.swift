@@ -8,7 +8,7 @@ public class RoleReactionsCommand: StringCommand {
     public private(set) var info = CommandInfo(
         category: .moderation,
         shortDescription: "Adds reactions to a message that automatically assign roles",
-        requiredPermissionLevel: .vip,
+        requiredPermissionLevel: .mod,
         platformAvailability: ["Discord"]
     )
     @AutoSerializing private var configuration: RoleReactionsConfiguration

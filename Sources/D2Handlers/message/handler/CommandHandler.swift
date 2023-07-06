@@ -42,6 +42,7 @@ fileprivate let commandPattern = try! Regex(from: "(\\w+)(?:\\^(\\d+))?(?:\\s+([
 /// Handles (possibly piped or chained) command invocations.
 public class CommandHandler: MessageHandler {
     private let commandPrefix: String
+    private let hostInfo: HostInfo
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
     private let subscriptionManager: SubscriptionManager
@@ -62,6 +63,7 @@ public class CommandHandler: MessageHandler {
 
     public init(
         commandPrefix: String,
+        hostInfo: HostInfo,
         registry: CommandRegistry,
         permissionManager: PermissionManager,
         subscriptionManager: SubscriptionManager,
@@ -74,6 +76,7 @@ public class CommandHandler: MessageHandler {
         pipeSeparator: Character = "|"
     ) {
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.registry = registry
         self.permissionManager = permissionManager
         self.subscriptionManager = subscriptionManager
@@ -133,6 +136,7 @@ public class CommandHandler: MessageHandler {
                                 registry: self.registry,
                                 message: sent,
                                 commandPrefix: self.commandPrefix,
+                                hostInfo: self.hostInfo,
                                 subscriptions: pipeSink.context.subscriptions,
                                 eventLoopGroup: self.eventLoopGroup
                             ))
@@ -196,6 +200,7 @@ public class CommandHandler: MessageHandler {
                             registry: registry,
                             message: message,
                             commandPrefix: commandPrefix,
+                            hostInfo: hostInfo,
                             subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name),
                             eventLoopGroup: eventLoopGroup
                         )

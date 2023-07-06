@@ -176,10 +176,10 @@ public struct Message: ExpressibleByStringLiteral {
         }
 
         public struct Button {
-            public let customId: String
-            public let style: Style?
-            public let label: String?
-            public let disabled: Bool?
+            public var customId: String
+            public var style: Style?
+            public var label: String?
+            public var disabled: Bool?
 
             // TODO: Emojis & co
 
@@ -205,12 +205,12 @@ public struct Message: ExpressibleByStringLiteral {
         }
 
         public struct SelectMenu {
-            public let customId: String
-            public let options: [Option]
-            public let placeholder: String?
-            public let minValues: Int?
-            public let maxValues: Int?
-            public let disabled: Bool?
+            public var customId: String
+            public var options: [Option]
+            public var placeholder: String?
+            public var minValues: Int?
+            public var maxValues: Int?
+            public var disabled: Bool?
 
             public init(
                 customId: String,
@@ -229,11 +229,11 @@ public struct Message: ExpressibleByStringLiteral {
             }
 
             public struct Option {
-                public let label: String
-                public let value: String
-                public let description: String?
-                public let emoji: Emoji?
-                public let `default`: Bool?
+                public var label: String
+                public var value: String
+                public var description: String?
+                public var emoji: Emoji?
+                public var `default`: Bool?
 
                 public init(
                     label: String,
@@ -261,11 +261,11 @@ public struct Message: ExpressibleByStringLiteral {
     }
 
     public struct MessageApplication {
-        public let id: ID
-        public let coverImage: String?
-        public let description: String?
-        public let icon: String?
-        public let name: String?
+        public var id: ID
+        public var coverImage: String?
+        public var description: String?
+        public var icon: String?
+        public var name: String?
 
         public init(id: ID, coverImage: String? = nil, description: String? = nil, icon: String? = nil, name: String? = nil) {
             self.id = id
@@ -277,11 +277,11 @@ public struct Message: ExpressibleByStringLiteral {
     }
 
     public struct Reaction {
-        public let count: Int
-        public let me: Bool
-        public let emoji: Emoji
+        public var count: Int
+        public var me: Bool
+        public var emoji: Emoji
 
-        public let users: [UserID]?
+        public var users: [UserID]?
 
         public init(count: Int, me: Bool, emoji: Emoji, users: [UserID]? = nil) {
             self.count = count

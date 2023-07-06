@@ -2,6 +2,7 @@
 image:
   repository: ghcr.io/fwcd/d2
   tag: latest
+  pullPolicy: Always
 
 # Container paths for D2
 paths:
@@ -14,8 +15,8 @@ d2:
     # Add users of the form {"value": "[discord user id]", "clientName": "Discord"}
     users: []
   config:
-    commandPrefix: '\\'
-    setPresenceInitially: false
+    commandPrefix: '%'
+    setPresenceInitially: true
     useMIOCommands: false
   netApiKeys: {}
   platformTokens: {}

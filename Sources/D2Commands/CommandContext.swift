@@ -11,6 +11,7 @@ public struct CommandContext {
     public let message: Message
     public let channel: InteractiveTextChannel?
     public let commandPrefix: String
+    public let hostInfo: HostInfo?
     public let subscriptions: SubscriptionSet
 
     /// The global event loop group.
@@ -28,6 +29,7 @@ public struct CommandContext {
         registry: CommandRegistry,
         message: Message,
         commandPrefix: String,
+        hostInfo: HostInfo? = nil,
         subscriptions: SubscriptionSet,
         eventLoopGroup: (any EventLoopGroup)? = nil
     ) {
@@ -35,6 +37,7 @@ public struct CommandContext {
         self.registry = registry
         self.message = message
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.subscriptions = subscriptions
         self.eventLoopGroup = eventLoopGroup
 

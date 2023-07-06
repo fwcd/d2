@@ -4,6 +4,9 @@ metadata:
   name: {{ include "d2.fullname" . }}-local-claim
   labels:
     {{- include "d2.labels" . | nindent 4 }}
+  annotations:
+    # Keep PVC even after issuing 'helm uninstall'
+    'helm.sh/resource-policy': keep
 spec:
   accessModes:
   - ReadWriteOnce

@@ -8,12 +8,14 @@ fileprivate let log = Logger(label: "D2Handlers.SubscriptionHandler")
 /// Handles messages from command subscriptions.
 public struct SubscriptionHandler: MessageHandler {
     private let commandPrefix: String
+    private let hostInfo: HostInfo
     private let registry: CommandRegistry
     private let manager: SubscriptionManager
     private let eventLoopGroup: any EventLoopGroup
 
-    public init(commandPrefix: String, registry: CommandRegistry, manager: SubscriptionManager, eventLoopGroup: any EventLoopGroup) {
+    public init(commandPrefix: String, hostInfo: HostInfo, registry: CommandRegistry, manager: SubscriptionManager, eventLoopGroup: any EventLoopGroup) {
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.registry = registry
         self.manager = manager
         self.eventLoopGroup = eventLoopGroup
@@ -31,6 +33,7 @@ public struct SubscriptionHandler: MessageHandler {
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,
+                hostInfo: hostInfo,
                 subscriptions: subs,
                 eventLoopGroup: eventLoopGroup
             )
@@ -39,9 +42,10 @@ public struct SubscriptionHandler: MessageHandler {
                 for sent in sentMessages {
                     command?.onSuccessfullySent(context: CommandContext(
                         client: client,
-                        registry: self.registry,
+                        registry: registry,
                         message: sent,
-                        commandPrefix: self.commandPrefix,
+                        commandPrefix: commandPrefix,
+                        hostInfo: hostInfo,
                         subscriptions: subs,
                         eventLoopGroup: eventLoopGroup
                     ))

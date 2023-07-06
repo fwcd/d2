@@ -1,4 +1,5 @@
 import D2MessageIO
+import D2NetAPIs
 import Foundation
 import Logging
 import Utils
@@ -13,6 +14,7 @@ fileprivate let log = Logger(label: "D2Handlers.D2Delegate")
 /// A client delegate that dispatches commands.
 public class D2Delegate: MessageDelegate {
     private let commandPrefix: String
+    private let hostInfo: HostInfo
     private let initialPresence: String?
     private let useMIOCommands: Bool
     private let mioCommandGuildId: GuildID?
@@ -35,13 +37,16 @@ public class D2Delegate: MessageDelegate {
 
     public init(
         withPrefix commandPrefix: String,
+        hostInfo: HostInfo,
         initialPresence: String? = nil,
         useMIOCommands: Bool = false,
         mioCommandGuildId: GuildID? = nil,
+        logBuffer: LogBuffer,
         eventLoopGroup: any EventLoopGroup,
         client: any MessageClient
     ) throws {
         self.commandPrefix = commandPrefix
+        self.hostInfo = hostInfo
         self.initialPresence = initialPresence
         self.useMIOCommands = useMIOCommands
         self.mioCommandGuildId = mioCommandGuildId
@@ -51,7 +56,7 @@ public class D2Delegate: MessageDelegate {
         messageDB = try MessageDatabase()
         partyGameDB = try PartyGameDatabase()
         eventListenerBus = EventListenerBus()
-        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix, eventLoopGroup: eventLoopGroup)
+        cronManager = CronManager(registry: registry, client: client, commandPrefix: commandPrefix, hostInfo: hostInfo, eventLoopGroup: eventLoopGroup)
         subscriptionManager = SubscriptionManager(registry: registry)
         permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
@@ -71,14 +76,22 @@ public class D2Delegate: MessageDelegate {
         ]
         messageHandlers = [
             SpamHandler(config: _spamConfiguration),
-            CommandHandler(commandPrefix: commandPrefix, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
-            SubscriptionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
+            CommandHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
+            SubscriptionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
-            HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
-            TriggerReactionHandler(cityConfig: _cityConfiguration),
+            TriggerReactionHandler {
+                guard let city = cityConfiguration.city else { throw ReactionTriggerError.other("No city specified") }
+                return OpenWeatherMapQuery(city: city).perform()
+                    .mapCatching {
+                        guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
+                        return emoji
+                    }
+            },
             CountToNHandler(),
+            UniversalSummoningHandler(hostInfo: hostInfo),
+            HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
@@ -94,15 +107,16 @@ public class D2Delegate: MessageDelegate {
             MessageDatabaseChannelHandler(messageDB: messageDB)
         ]
         interactionHandlers = [
-            SubscriptionInteractionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup)
+            SubscriptionInteractionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup)
         ]
 
         if useMIOCommands {
-            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, permissionManager: permissionManager, eventLoopGroup: eventLoopGroup))
+            interactionHandlers.append(MIOCommandInteractionHandler(registry: registry, hostInfo: hostInfo, permissionManager: permissionManager, eventLoopGroup: eventLoopGroup))
         }
 
         registry["ping"] = PingCommand()
         registry["beep"] = PingCommand(response: "Bop")
+        registry["instance"] = InstanceCommand()
         registry["vertical"] = VerticalCommand()
         registry["bfinterpret", aka: ["bf"]] = BFInterpretCommand()
         registry["bfencode"] = BFEncodeCommand()
@@ -141,7 +155,7 @@ public class D2Delegate: MessageDelegate {
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()
         registry["rolereactions"] = RoleReactionsCommand(configuration: _roleReactionsConfiguration)
-        registry["logs"] = LogsCommand()
+        registry["logs"] = LogsCommand(logBuffer: logBuffer)
         registry["embeddescription", aka: ["description"]] = EmbedDescriptionCommand()
         registry["embedfooter", aka: ["footer"]] = EmbedFooterCommand()
         registry["embedfields", aka: ["fields"]] = EmbedFieldsCommand()
@@ -299,6 +313,7 @@ public class D2Delegate: MessageDelegate {
         registry["pokequiz"] = PokeQuizCommand()
         registry["fortunecookie", aka: ["fortune"]] = FortuneCookieCommand()
         registry["iambored"] = IAmBoredCommand()
+        registry["interject"] = InterjectCommand()
         registry["discordinder"] = DiscordinderCommand(inventoryManager: inventoryManager)
         registry["pickupline"] = PickupLineCommand()
         registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
@@ -395,6 +410,8 @@ public class D2Delegate: MessageDelegate {
         registry["pickrandom", aka: ["pick"]] = PickRandomCommand()
         registry["pickprogramminglanguage", aka: ["picklanguage", "picklang"]] = PickProgrammingLanguageCommand()
         registry["directmessage", aka: ["dm", "whisper"]] = DirectMessageCommand()
+        registry["react"] = ReactCommand()
+        registry["temporaryreact", aka: ["tempreact", "tmpreact", "tr"]] = ReactCommand(temporary: true)
         registry["channelmessage", aka: ["m"]] = ChannelMessageCommand()
         registry["asciiart", aka: ["ascii"]] = AsciiArtCommand()
         registry["tofile"] = ToFileCommand()
@@ -415,6 +432,7 @@ public class D2Delegate: MessageDelegate {
         registry["cssselect", aka: ["cssselector", "selector", "select"]] = CSSSelectorCommand()
         registry["geocode", aka: ["geo", "geocoords", "coords"]] = GeocodeCommand()
         registry["geoip"] = GeoIPCommand()
+        registry["speedtest", aka: ["speed", "networkspeed"]] = SpeedtestCommand()
         registry["tiervehicles", aka: ["tier", "tierscooters"]] = TierVehiclesCommand()
         registry["guildicon", aka: ["icon", "guildimage", "servericon", "serveravatar", "serverimage"]] = GuildIconCommand()
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
@@ -579,6 +597,7 @@ public class D2Delegate: MessageDelegate {
                     registry: self.registry,
                     message: m,
                     commandPrefix: self.commandPrefix,
+                    hostInfo: self.hostInfo,
                     subscriptions: .init(),
                     eventLoopGroup: self.eventLoopGroup
                 ))
@@ -619,6 +638,7 @@ public class D2Delegate: MessageDelegate {
                 registry: self.registry,
                 message: message,
                 commandPrefix: self.commandPrefix,
+                hostInfo: self.hostInfo,
                 subscriptions: .init(),
                 eventLoopGroup: self.eventLoopGroup
             ))
