@@ -92,6 +92,7 @@ public class D2Delegate: MessageDelegate {
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
+            LuckyNumberHandler(luckyNumber: 69),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
