@@ -21,7 +21,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-utils.git", from: "2.0.1"),
         .package(url: "https://github.com/fwcd/swift-graphics.git", from: "2.1.0"),
         .package(url: "https://github.com/fwcd/swift-gif.git", from: "2.1.0"),
-        .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.1.9"),
+        .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.1.10"),
         .package(url: "https://github.com/fwcd/swift-music-theory.git", from: "0.1.0"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.44.0"),
         .package(url: "https://github.com/Kitura/BlueSocket.git", .upToNextMinor(from: "2.0.4")),
