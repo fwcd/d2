@@ -10,12 +10,13 @@ ARG TARGETARCH
 
 ARG CROSSCOMPILESYSROOT=/usr/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
 
+WORKDIR /opt/d2
+
 # Install native dependencies or (if cross-compiling) set up sysroot
 COPY Scripts/install-build-dependencies-apt Scripts/install-cross-compilation-sysroot Scripts/get-linux-arch-name Scripts/
 RUN if [ "$BUILDARCH" = "$TARGETARCH" ]; then Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*; else Scripts/install-cross-compilation-sysroot; fi
 
 # Build
-WORKDIR /opt/d2
 COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
