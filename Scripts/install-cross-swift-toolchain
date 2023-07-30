@@ -6,11 +6,12 @@
 set -e
 cd "$(dirname $0)/.."
 
-downloads_dir="$(pwd)/local/downloads"
-toolchains_dir="$(pwd)/local/cross-target-toolchains"
+downloads_dir="$(mktemp -d /tmp/d2-swift-downloads.XXXXXXXX)"
 flags_path="$toolchains_dir/build-flags.txt"
 
-for var in BUILDARCH TARGETARCH SWIFTVERSION; do
+trap 'rm -rf -- "$downloads_dir"' EXIT
+
+for var in BUILDARCH TARGETARCH SWIFTVERSION TOOLCHAINDIR; do
   if [ -z ${!var} ]; then
     echo "Please set the variable $var!"
     exit 1
@@ -26,19 +27,33 @@ case "$TARGETARCH" in
     ;;
 esac
 
+case "$UBUNTUDISTRO" in
+  jammy)
+    ubuntu_major='22'
+    ubuntu_minor='04'
+    ;;
+  focal)
+    ubuntu_major='20'
+    ubuntu_minor='04'
+    ;;
+  *)
+    echo "Unsupported Ubuntu version '$UBUNTUDISTRO'"
+    exit 1
+    ;;
+esac
+
 if [ "$BUILDARCH" != "$TARGETARCH" ]; then
-  archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu20.04-$arch_name.tar.gz"
-  archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu2004-$arch_name/swift-$SWIFTVERSION-RELEASE/$archive_name"
+  archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor-$arch_name.tar.gz"
+  archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor-$arch_name/swift-$SWIFTVERSION-RELEASE/$archive_name"
   toolchain_dir="$toolchains_dir/$TARGETARCH-$SWIFTVERSION"
 
-  echo "==> Setting up local directories"
-  mkdir -p "$downloads_dir"
+  echo "==> Creating toolchain directory $toolchain_dir if needed"
   mkdir -p "$toolchain_dir"
 
   cd "$downloads_dir"
 
   if [ ! -f "$archive_name" ]; then
-    echo "==> Downloading Swift toolchain for $TARGETARCH"
+    echo "==> Downloading Swift toolchain for $TARGETARCH to $(pwd)"
     curl -OL "$archive_url"
   fi
 
