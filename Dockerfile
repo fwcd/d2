@@ -1,4 +1,4 @@
-FROM swift:5.7 as builder
+FROM swift:5.8 as builder
 
 # Install native dependencies
 COPY Scripts/install-build-dependencies-apt Scripts/
@@ -11,7 +11,7 @@ COPY Tests Tests
 COPY Package.swift Package.resolved ./
 RUN swift build -c release
 
-FROM swift:5.7-slim as runner
+FROM swift:5.8-slim as runner
 
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
