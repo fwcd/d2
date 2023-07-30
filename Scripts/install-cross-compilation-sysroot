@@ -63,10 +63,11 @@ output-for-debugging "$CROSSCOMPILESYSROOT"
 output-for-debugging "$CROSSCOMPILESYSROOT/opt"
 output-for-debugging "$CROSSCOMPILESYSROOT/opt/d2"
 
+echo "==> Installing Swift into sysroot..."
+TOOLCHAINDIR=/opt/swift Scripts/install-cross-swift-toolchain
+
 echo "==> Chrooting into sysroot and installing D2's dependencies..."
 cat << EOF | chroot "$CROSSCOMPILESYSROOT"
 cd "$sysroot_d2_dir"
 Scripts/install-build-dependencies-apt
 EOF
-
-# TODO: Install Swift too (and replace the current cross target toolchain mechanism)
