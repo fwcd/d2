@@ -6,21 +6,21 @@
 set -e
 cd "$(dirname $0)/.."
 
-downloads_dir="$(mktemp -d /tmp/d2-swift-downloads.XXXXXXXX)"
-flags_path="$toolchains_dir/build-flags.txt"
-
-trap 'rm -rf -- "$downloads_dir"' EXIT
-
-for var in BUILDARCH TARGETARCH SWIFTVERSION TOOLCHAINDIR; do
+for var in BUILDARCH TARGETARCH SWIFTVERSION UBUNTUDISTRO TOOLCHAINDIR; do
   if [ -z ${!var} ]; then
     echo "Please set the variable $var!"
     exit 1
   fi
 done
 
+downloads_dir="$(mktemp -d /tmp/d2-swift-downloads.XXXXXXXX)"
+toolchain_dir="$(cd "$TOOLCHAINDIR" && pwd)"
+
+trap 'rm -rf -- "$downloads_dir"' EXIT
+
 case "$TARGETARCH" in
-  amd64) arch_name=x86_64;;
-  arm64) arch_name=aarch64;;
+  amd64) arch_suffix=;;
+  arm64) arch_suffix=-aarch64;;
   *)
     echo "Unsupported target arch '$TARGETARCH'"
     exit 1
@@ -43,22 +43,19 @@ case "$UBUNTUDISTRO" in
 esac
 
 if [ "$BUILDARCH" != "$TARGETARCH" ]; then
-  archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor-$arch_name.tar.gz"
-  archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor-$arch_name/swift-$SWIFTVERSION-RELEASE/$archive_name"
-  toolchain_dir="$toolchains_dir/$TARGETARCH-$SWIFTVERSION"
-
-  echo "==> Creating toolchain directory $toolchain_dir if needed"
-  mkdir -p "$toolchain_dir"
+  archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor$arch_suffix.tar.gz"
+  archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor$arch_suffix/swift-$SWIFTVERSION-RELEASE/$archive_name"
 
   cd "$downloads_dir"
 
   if [ ! -f "$archive_name" ]; then
-    echo "==> Downloading Swift toolchain for $TARGETARCH to $(pwd)"
+    echo "==> Downloading Swift toolchain for $TARGETARCH from $archive_url to $(pwd)"
     curl -OL "$archive_url"
   fi
 
-  if [ ! -d "$toolchain_dir" ]; then
-    echo "==> Unpacking Swift toolchain for $TARGETARCH into $toolchain_dir"
-    tar -xvf "$archive_name" --strip-components 1 -C "$toolchain_dir"
-  fi
+  echo "==> Creating toolchain directory $toolchain_dir if needed"
+  mkdir -p "$toolchain_dir"
+
+  echo "==> Unpacking Swift toolchain for $TARGETARCH into $toolchain_dir"
+  tar -xvf "$archive_name" --strip-components 1 -C "$toolchain_dir"
 fi
