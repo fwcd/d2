@@ -5,25 +5,28 @@ cd "$(dirname $0)/.."
 
 # Set up cross-compilation if needed
 
-cross_target_toolchains_dir="$(pwd)/local/cross-target-toolchains"
 extra_flags=()
 
 if [ -n "$TARGETARCH" ]; then
   echo "==> Setting flags for target arch '$TARGETARCH'"
   arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
-  extra_flags+=(--arch "$arch_name")
 
-  if [ -n "$BUILDARCH" ] && [ "$BUILDARCH" != "$TARGETARCH" ] && [ -n "$CROSSCOMPILESYSROOT" ]; then
-    echo "==> Adding cross-compilation sysroot $CROSSCOMPILESYSROOT to C compilation paths"
-    triplet="$arch_name-linux-gnu"
-    extra_flags+=(
-      -Xcc -I"$CROSSCOMPILESYSROOT/usr/include"
-      -Xcxx -I"$CROSSCOMPILESYSROOT/usr/include"
-      -Xlinker -L"$CROSSCOMPILESYSROOT/usr/lib"
-    )
-
-    # TODO: Swift toolchain
+  # Workaround for https://github.com/stephencelis/CSQLite/pull/1
+  if [ ! -f /usr/include/sqlite3.h ]; then
+    ln -s {"$TARGETSYSROOT",}/usr/include/sqlite3.h
   fi
+
+  extra_flags+=(
+    --arch "$arch_name"
+    --sdk "$TARGETSYSROOT"
+    # TODO: Figure out which of these flags are redundant
+    -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
+    -Xcc -I"$TARGETSYSROOT/usr/include"
+    -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
+    -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
+    -Xcxx -I"$TARGETSYSROOT/usr/include"
+    -Xlinker -L"$TARGETSYSROOT/usr/lib"
+  )
 fi
 
 echo "==> Building D2 with flags ${extra_flags[@]}"

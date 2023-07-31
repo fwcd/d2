@@ -1,6 +1,14 @@
 ARG SWIFTVERSION=5.8.1
 ARG UBUNTUDISTRO=jammy
 
+FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS sysroot
+
+WORKDIR /opt/d2
+
+# Install build dependencies into target sysroot
+COPY Scripts/install-build-dependencies-apt Scripts/
+RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
+
 FROM --platform=$BUILDPLATFORM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS builder
 
 ARG SWIFTVERSION
@@ -8,19 +16,19 @@ ARG UBUNTUDISTRO
 ARG BUILDARCH
 ARG TARGETARCH
 
-ARG CROSSCOMPILESYSROOT=/usr/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
+ARG TARGETSYSROOT=/usr/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
 
 WORKDIR /opt/d2
 
-# Install native dependencies or (if cross-compiling) set up sysroot
-COPY Scripts/install-build-dependencies-apt Scripts/install-cross-compilation-sysroot Scripts/get-linux-arch-name Scripts/
-RUN if [ "$BUILDARCH" = "$TARGETARCH" ]; then Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*; else Scripts/install-cross-compilation-sysroot; fi
+# Copy target sysroot into builder
+# TODO: Only copy stuff that we need for compilation (/usr/lib, /usr/include etc.)
+COPY --from=sysroot / ${TARGETSYSROOT}
 
-# Build
+# (Cross-)compile D2
 COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
-COPY Scripts/build-release Scripts/
+COPY Scripts/build-release Scripts/get-linux-arch-name Scripts/
 RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
