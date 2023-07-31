@@ -26,6 +26,7 @@ if [ -n "$TARGETARCH" ]; then
     -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
     -Xcxx -I"$TARGETSYSROOT/usr/include"
     -Xlinker -L"$TARGETSYSROOT/usr/lib"
+    -Xlinker -L"$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu" # libtesseract installs there
   )
 fi
 
