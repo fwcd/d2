@@ -6,57 +6,12 @@
 set -e
 cd "$(dirname $0)/.."
 
-for var in TARGETARCH SWIFTVERSION UBUNTUDISTRO TOOLCHAINDIR; do
+for var in TARGETARCH SWIFTVERSION UBUNTUDISTRO DEST; do
   if [ -z ${!var} ]; then
     echo "Please set the variable $var!"
     exit 1
   fi
 done
-
-downloads_dir="/tmp/d2-swift-downloads"
-
-mkdir -p "$downloads_dir" "$TOOLCHAINDIR"
-
-toolchain_dir="$(cd "$TOOLCHAINDIR" && pwd)"
-
-arch_suffix() {
-  case "$1" in
-    amd64) ;;
-    arm64) echo "-aarch64";;
-    *)
-      echo "Unsupported arch '$1'"
-      exit 1
-      ;;
-  esac
-}
-
-case "$UBUNTUDISTRO" in
-  jammy)
-    ubuntu_major='22'
-    ubuntu_minor='04'
-    ;;
-  focal)
-    ubuntu_major='20'
-    ubuntu_minor='04'
-    ;;
-  *)
-    echo "Unsupported Ubuntu version '$UBUNTUDISTRO'"
-    exit 1
-    ;;
-esac
-
-archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor$(arch_suffix $TARGETARCH).tar.gz"
-archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor$(arch_suffix $TARGETARCH)/swift-$SWIFTVERSION-RELEASE/$archive_name"
-archive_path="$downloads_dir/$archive_name"
-
-(
-  cd "$downloads_dir"
-
-  if [ ! -f "$archive_name" ]; then
-    echo "==> Downloading Swift toolchain for $TARGETARCH from $archive_url to $(pwd)"
-    curl -OL "$archive_url"
-  fi
-)
 
 # Based on https://github.com/apple/swift-package-manager/blob/6478e2724/Utilities/build_ubuntu_cross_compilation_toolchain
 # 
@@ -67,6 +22,7 @@ archive_path="$downloads_dir/$archive_name"
 # See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 
 set -eu
+# set -xv
 
 function realpath() {
   if [[ "${1:0:1}" = / ]]; then
@@ -121,11 +77,8 @@ function fix_glibc_modulemap() {
   done
 }
 
-# set -xv
-# where to get stuff from
-dest="$toolchain_dir"
-linux_swift_pkg="$archive_path"
-test -f "$linux_swift_pkg"
+mkdir -p "$DEST"
+dest="$(realpath $DEST)"
 
 # config
 blocks_h_url="https://raw.githubusercontent.com/apple/swift-corelibs-libdispatch/main/src/BlocksRuntime/Block.h"
@@ -173,7 +126,43 @@ function unpack() {
   "unpack_$ext" "$@"
 }
 
+arch_suffix() {
+  case "$1" in
+    amd64) ;;
+    arm64) echo "-aarch64";;
+    *)
+      echo "Unsupported arch '$1'"
+      exit 1
+      ;;
+  esac
+}
+
 cd "$dest"
+
+case "$UBUNTUDISTRO" in
+  jammy)
+    ubuntu_major='22'
+    ubuntu_minor='04'
+    ;;
+  focal)
+    ubuntu_major='20'
+    ubuntu_minor='04'
+    ;;
+  *)
+    echo "Unsupported Ubuntu version '$UBUNTUDISTRO'"
+    exit 1
+    ;;
+esac
+
+archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor$(arch_suffix $TARGETARCH).tar.gz"
+archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor$(arch_suffix $TARGETARCH)/swift-$SWIFTVERSION-RELEASE/$archive_name"
+
+echo "==> Downloading target Swift toolchain from $archive_url"
+archive_path="$(download_with_cache "$archive_url" "$archive_name")"
+
+# where to get stuff from
+linux_swift_pkg="$archive_path"
+test -f "$linux_swift_pkg"
 
 rm -rf $cross_tc_basename
 mkdir -p "$cross_tc_basename/$linux_sdk_name"
