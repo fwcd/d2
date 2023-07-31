@@ -24,7 +24,7 @@ done
 set -eu
 # set -xv
 
-function realpath() {
+realpath() {
   if [[ "${1:0:1}" = / ]]; then
   echo "$1"
   else
@@ -35,7 +35,7 @@ function realpath() {
   fi
 }
 
-function fix_glibc_modulemap() {
+fix_glibc_modulemap() {
   local glc_mm
   local tmp
   local inc_dir
@@ -92,12 +92,12 @@ pkg_names=( libc6-dev linux-libc-dev libicu70 libgcc-12-dev libicu-dev libc6 lib
 pkgs=()
 
 # url
-function download_stdout() {
+download_stdout() {
   curl --fail -s "$1"
 }
 
 # url, key
-function download_with_cache() {
+download_with_cache() {
   mkdir -p "$dest/cache"
   local out
   out="$dest/cache/$2"
@@ -109,7 +109,7 @@ function download_with_cache() {
 }
 
 # dst, file
-function unpack_deb() {
+unpack_deb() {
   local tmp
   tmp=$(mktemp -d /tmp/.unpack_deb_XXXXXX)
   (
@@ -121,7 +121,7 @@ function unpack_deb() {
 }
 
 # dst, file
-function unpack() {
+unpack() {
   ext=${2##*.}
   "unpack_$ext" "$@"
 }
