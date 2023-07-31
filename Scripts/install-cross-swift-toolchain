@@ -13,10 +13,10 @@ for var in TARGETARCH SWIFTVERSION UBUNTUDISTRO TOOLCHAINDIR; do
   fi
 done
 
-downloads_dir="$(mktemp -d /tmp/d2-swift-downloads.XXXXXXXX)"
+downloads_dir="/tmp/d2-swift-downloads"
 toolchain_dir="$(cd "$TOOLCHAINDIR" && pwd)"
 
-trap 'rm -rf -- "$downloads_dir"' EXIT
+mkdir -p "$downloads_dir"
 
 case "$TARGETARCH" in
   amd64) arch_suffix=;;
