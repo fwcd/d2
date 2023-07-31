@@ -18,14 +18,16 @@ toolchain_dir="$(cd "$TOOLCHAINDIR" && pwd)"
 
 mkdir -p "$downloads_dir"
 
-case "$TARGETARCH" in
-  amd64) arch_suffix=;;
-  arm64) arch_suffix=-aarch64;;
-  *)
-    echo "Unsupported target arch '$TARGETARCH'"
-    exit 1
-    ;;
-esac
+arch_suffix() {
+  case "$1" in
+    amd64) ;;
+    arm64) echo "-aarch64";;
+    *)
+      echo "Unsupported arch '$1'"
+      exit 1
+      ;;
+  esac
+}
 
 case "$UBUNTUDISTRO" in
   jammy)
@@ -42,21 +44,21 @@ case "$UBUNTUDISTRO" in
     ;;
 esac
 
-archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor$arch_suffix.tar.gz"
-archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor$arch_suffix/swift-$SWIFTVERSION-RELEASE/$archive_name"
+archive_name="swift-$SWIFTVERSION-RELEASE-ubuntu$ubuntu_major.$ubuntu_minor$(arch_suffix $TARGETARCH).tar.gz"
+archive_url="https://download.swift.org/swift-$SWIFTVERSION-release/ubuntu$ubuntu_major$ubuntu_minor$(arch_suffix $TARGETARCH)/swift-$SWIFTVERSION-RELEASE/$archive_name"
+archive_path="$downloads_dir/$archive_name"
 
-cd "$downloads_dir"
+(
+  cd "$downloads_dir"
 
-if [ ! -f "$archive_name" ]; then
-  echo "==> Downloading Swift toolchain for $TARGETARCH from $archive_url to $(pwd)"
-  curl -OL "$archive_url"
-fi
+  if [ ! -f "$archive_name" ]; then
+    echo "==> Downloading Swift toolchain for $TARGETARCH from $archive_url to $(pwd)"
+    curl -OL "$archive_url"
+  fi
+)
 
 echo "==> Creating toolchain directory $toolchain_dir if needed"
 mkdir -p "$toolchain_dir"
-
-echo "==> Unpacking Swift toolchain for $TARGETARCH into $toolchain_dir"
-tar -xvf "$archive_name" --strip-components 1 -C "$toolchain_dir"
 
 # FIXME: Adapt script below
 exit 1
@@ -70,41 +72,6 @@ exit 1
 # See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 
 set -eu
-
-PATH="/bin:/usr/bin:$(brew --prefix)/bin"
-export PATH
-VERSION=${VERSION:-5.7-RELEASE}
-if [[ -z "${VERSION##*RELEASE*}" ]]; then
-  branch=swift-${VERSION%%RELEASE}release
-elif [[ -z "${VERSION##DEVELOPMENT-SNAPSHOT*}" ]]; then
-  branch=development
-else
-  branch=swift-${VERSION%%DEV*}branch
-fi
-
-function usage() {
-  echo >&2 "Usage: $0 TMP-DIR SWIFT-FOR-MACOS.pkg SWIFT-FOR-LINUX.tar.gz"
-  echo >&2
-  echo >&2 "Example: $0 /tmp/ ~/Downloads/swift-${VERSION}-osx.pkg ~/Downloads/swift-${VERSION}-ubuntu22.04.tar.gz"
-  echo >&2
-  echo >&2 "Complete example:"
-  echo >&2 "  # Download the Swift binaries for Ubuntu and macOS"
-  echo >&2 "  curl -o ~/Downloads/swift-${VERSION}-ubuntu22.04.tar.gz https://swift.org/builds/${branch}/ubuntu2204/swift-${VERSION}/swift-${VERSION}-ubuntu22.04.tar.gz"
-  echo >&2 "  curl -o ~/Downloads/swift-${VERSION}-osx.pkg https://swift.org/builds/${branch}/xcode/swift-${VERSION}/swift-${VERSION}-osx.pkg"
-  echo >&2 "  # Compile the SDK and toolchain from that"
-  echo >&2 "  $0 /tmp/ ~/Downloads/swift-${VERSION}-osx.pkg ~/Downloads/swift-${VERSION}-ubuntu22.04.tar.gz"
-  echo >&2 "  # Create a test application"
-  echo >&2 "  mkdir my-test-app"
-  echo >&2 "  cd my-test-app"
-  echo >&2 "  swift package init --type=executable"
-  echo >&2 "  # Build it for Ubuntu"
-  echo >&2 "  swift build --destination /tmp/cross-toolchain/ubuntu-jammy-destination.json"
-}
-
-if [[ $# -ne 3 ]]; then
-  usage
-  exit 1
-fi
 
 function realpath() {
   if [[ "${1:0:1}" = / ]]; then
@@ -161,20 +128,18 @@ function fix_glibc_modulemap() {
 
 # set -xv
 # where to get stuff from
-dest=$(realpath "$1")
-macos_swift_pkg=$(realpath "$2")
-linux_swift_pkg=$(realpath "$3")
-test -f "$macos_swift_pkg"
+dest="$toolchain_dir"
+linux_swift_pkg="$archive_path"
 test -f "$linux_swift_pkg"
 
 # config
 blocks_h_url="https://raw.githubusercontent.com/apple/swift-corelibs-libdispatch/main/src/BlocksRuntime/Block.h"
 xc_tc_name="swift.xctoolchain"
-linux_sdk_name="ubuntu-jammy.sdk"
+linux_sdk_name="ubuntu-$UBUNTUDISTRO.sdk"
 cross_tc_basename="cross-toolchain"
 clang_package_url="https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-apple-darwin.tar.xz"
 ubuntu_mirror="http://gb.archive.ubuntu.com/ubuntu"
-packages_file="$ubuntu_mirror/dists/jammy/main/binary-amd64/Packages.gz"
+packages_file="$ubuntu_mirror/dists/$UBUNTUDISTRO/main/binary-amd64/Packages.gz"
 pkg_names=( libc6-dev linux-libc-dev libicu70 libgcc-12-dev libicu-dev libc6 libgcc-s1 libstdc++-12-dev libstdc++6 zlib1g-dev )
 pkgs=()
 
@@ -203,21 +168,6 @@ function unpack_deb() {
     cd "$tmp"
     ar -x "$2"
     tar -C "$1" -xf data.tar.*
-  )
-  rm -rf "$tmp"
-}
-
-# dst, file
-function unpack_pkg() {
-  local tmp
-  tmp=$(mktemp -d /tmp/.unpack_pkg_XXXXXX)
-  (
-    cd "$tmp"
-    xar -xf "$2"
-  )
-  (
-    cd "$1"
-    cat "$tmp"/*.pkg/Payload | gunzip -dc | cpio -i
   )
   rm -rf "$tmp"
 }
@@ -303,7 +253,7 @@ rm -rf "$tmp"
 # fix up glibc modulemap
 fix_glibc_modulemap "$cross_tc_basename/$xc_tc_name/usr/lib/swift/linux/x86_64/glibc.modulemap"
 
-cat > "$cross_tc_basename/ubuntu-jammy-destination.json" <<EOF
+cat > "$cross_tc_basename/ubuntu-$UBUNTUDISTRO-destination.json" <<EOF
 {
   "version": 1,
   "sdk": "$(pwd)/$cross_tc_basename/$linux_sdk_name",
@@ -324,7 +274,7 @@ cat > "$cross_tc_basename/ubuntu-jammy-destination.json" <<EOF
 EOF
 
 echo
-echo "OK, your cross compilation toolchain for Ubuntu Jammy is now ready to be used"
+echo "OK, your cross compilation toolchain for Ubuntu $UBUNTUDISTRO is now ready to be used"
 echo " - SDK: $(pwd)/$cross_tc_basename/$linux_sdk_name"
 echo " - toolchain: $(pwd)/$cross_tc_basename/$xc_tc_name"
-echo " - SwiftPM destination.json: $(pwd)/$cross_tc_basename/ubuntu-jammy-destination.json"
+echo " - SwiftPM destination.json: $(pwd)/$cross_tc_basename/ubuntu-$UBUNTUDISTRO-destination.json"
