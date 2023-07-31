@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Downloads a target toolchain when cross-compiling. We use the (already installed) host compiler
-# but use the libraries from the downloaded toolchain.
+# Assembles a Swift toolchain for cross-compilation.
+# We use the (already installed) host compiler but use the libraries from the downloaded toolchain.
 
 set -e
 cd "$(dirname $0)/.."
@@ -14,9 +14,10 @@ for var in TARGETARCH SWIFTVERSION UBUNTUDISTRO TOOLCHAINDIR; do
 done
 
 downloads_dir="/tmp/d2-swift-downloads"
-toolchain_dir="$(cd "$TOOLCHAINDIR" && pwd)"
 
-mkdir -p "$downloads_dir"
+mkdir -p "$downloads_dir" "$TOOLCHAINDIR"
+
+toolchain_dir="$(cd "$TOOLCHAINDIR" && pwd)"
 
 arch_suffix() {
   case "$1" in
@@ -56,12 +57,6 @@ archive_path="$downloads_dir/$archive_name"
     curl -OL "$archive_url"
   fi
 )
-
-echo "==> Creating toolchain directory $toolchain_dir if needed"
-mkdir -p "$toolchain_dir"
-
-# FIXME: Adapt script below
-exit 1
 
 # Based on https://github.com/apple/swift-package-manager/blob/6478e2724/Utilities/build_ubuntu_cross_compilation_toolchain
 # 
@@ -104,7 +99,7 @@ function fix_glibc_modulemap() {
   rm -rf "$inc_dir"
   mkdir "$inc_dir"
   cat "$tmp" | while IFS='' read line; do
-    if [[ "$line" =~ ^(\ *header\ )\"\/+usr\/include\/(x86_64-linux-gnu\/)?([^\"]+)\" ]]; then
+    if [[ "$line" =~ ^(\ *header\ )\"\/+usr\/include\/($linux_arch-linux-gnu\/)?([^\"]+)\" ]]; then
       local orig_inc
       local rel_repl_inc
       local repl_inc
@@ -137,9 +132,9 @@ blocks_h_url="https://raw.githubusercontent.com/apple/swift-corelibs-libdispatch
 xc_tc_name="swift.xctoolchain"
 linux_sdk_name="ubuntu-$UBUNTUDISTRO.sdk"
 cross_tc_basename="cross-toolchain"
-clang_package_url="https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-apple-darwin.tar.xz"
-ubuntu_mirror="http://gb.archive.ubuntu.com/ubuntu"
-packages_file="$ubuntu_mirror/dists/$UBUNTUDISTRO/main/binary-amd64/Packages.gz"
+ubuntu_mirror="http://ports.ubuntu.com/ubuntu-ports" # TODO: Use normal mirror if $TARGETARCH is amd64 or the like
+packages_file="$ubuntu_mirror/dists/$UBUNTUDISTRO/main/binary-$TARGETARCH/Packages.gz"
+linux_arch="$(Scripts/get-linux-arch-name $TARGETARCH)"
 pkg_names=( libc6-dev linux-libc-dev libicu70 libgcc-12-dev libicu-dev libc6 libgcc-s1 libstdc++-12-dev libstdc++6 zlib1g-dev )
 pkgs=()
 
@@ -211,15 +206,6 @@ rm -rf "$tmp"
   cd $cross_tc_basename
   mkdir -p "$xc_tc_name/usr/bin"
 
-  clang_txz="$(download_with_cache "$clang_package_url" clang.tar.xz)"
-  tmp=$(mktemp -d "$dest/tmp_pkgs_XXXXXX")
-  (
-    cd "$tmp"
-    tar --strip-components=1 -zxf "$clang_txz"
-  )
-  cp "$tmp/bin/lld" "$xc_tc_name/usr/bin/ld.lld"
-  rm -rf "$tmp"
-
   # fix absolute symlinks
   find "$linux_sdk_name" -type l | while read -r line; do
     dst=$(readlink "$line")
@@ -230,20 +216,15 @@ rm -rf "$tmp"
       ln -s "${fixedlink#./}" "${line#./}"
     fi
   done
-  ln -s 5 "$linux_sdk_name/usr/lib/gcc/x86_64-linux-gnu/9"
-
-  tmp=$(mktemp -d "$dest/tmp_pkgs_XXXXXX")
-  unpack "$tmp" "$macos_swift_pkg"
-  rsync -a "$tmp/" "$xc_tc_name"
-  rm -rf "$tmp"
+  ln -s 5 "$linux_sdk_name/usr/lib/gcc/$linux_arch-linux-gnu/9"
 
   tmp=$(mktemp -d "$dest/tmp_pkgs_XXXXXX")
   tar -C "$tmp" --strip-components 1 -xf "$linux_swift_pkg"
-  rsync -a "$tmp/usr/lib/swift/linux" "$xc_tc_name/usr/lib/swift/"
-  rsync -a "$tmp/usr/lib/swift_static/linux" "$xc_tc_name/usr/lib/swift_static/"
-  rsync -a "$tmp/usr/lib/swift/dispatch" "$linux_sdk_name/usr/include/"
-  rsync -a "$tmp/usr/lib/swift/os" "$linux_sdk_name/usr/include/"
-  rsync -a "$tmp/usr/lib/swift/CoreFoundation" "$linux_sdk_name/usr/include/"
+  rsync -a --mkpath "$tmp/usr/lib/swift/linux" "$xc_tc_name/usr/lib/swift/"
+  rsync -a --mkpath "$tmp/usr/lib/swift_static/linux" "$xc_tc_name/usr/lib/swift_static/"
+  rsync -a --mkpath "$tmp/usr/lib/swift/dispatch" "$linux_sdk_name/usr/include/"
+  rsync -a --mkpath "$tmp/usr/lib/swift/os" "$linux_sdk_name/usr/include/"
+  rsync -a --mkpath "$tmp/usr/lib/swift/CoreFoundation" "$linux_sdk_name/usr/include/"
   rm -rf "$tmp"
   curl --fail -s -o "$linux_sdk_name/usr/include/Block.h" "$blocks_h_url"
   if [ ! -e "$xc_tc_name/usr/bin/swift-autolink-extract" ]; then
@@ -251,21 +232,21 @@ rm -rf "$tmp"
   fi
 )
 # fix up glibc modulemap
-fix_glibc_modulemap "$cross_tc_basename/$xc_tc_name/usr/lib/swift/linux/x86_64/glibc.modulemap"
+fix_glibc_modulemap "$cross_tc_basename/$xc_tc_name/usr/lib/swift/linux/$linux_arch/glibc.modulemap"
 
 cat > "$cross_tc_basename/ubuntu-$UBUNTUDISTRO-destination.json" <<EOF
 {
   "version": 1,
   "sdk": "$(pwd)/$cross_tc_basename/$linux_sdk_name",
   "toolchain-bin-dir": "$(pwd)/$cross_tc_basename/$xc_tc_name/usr/bin",
-  "target": "x86_64-unknown-linux-gnu",
+  "target": "$linux_arch-unknown-linux-gnu",
   "extra-cc-flags": [
     "-fPIC"
   ],
   "extra-swiftc-flags": [
     "-use-ld=lld",
     "-tools-directory", "$(pwd)/$cross_tc_basename/$xc_tc_name/usr/bin",
-    "-sdk", "$(pwd)/$cross_tc_basename/$linux_sdk_name",
+    "-sdk", "$(pwd)/$cross_tc_basename/$linux_sdk_name"
   ],
   "extra-cpp-flags": [
     "-lstdc++"
