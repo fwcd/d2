@@ -30,14 +30,22 @@ if [ "$BUILDARCH" == "$TARGETARCH" ]; then
   echo "==> Installing build essentials"
   apt-get install -y build-essential
 else
-  echo "==> Installing cross-GCC"
-  apt-get install -y gcc-$arch_name-linux-gnu
-
   # Apparently, we need to symlink libstdc++ manually
   if [ ! -f "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu/libstdc++.so" ]; then
     echo "==> Symlinking libstdc++"
     ln -s "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu/libstdc++.so"{.6,}
   fi
+
+  # Symlinking the sysroot libs into the cross-GCC libs
+  # fixes a very strange linking issue where the linker would
+  # try resolving libc in /lib/$arch_name-linux-gnu. This also
+  # needs to happen before installing the cross-GCC package.
+  echo "==> Symlinking sysroot libs into cross-GCC libs"
+  mkdir -p "/usr/$arch_name-linux-gnu"
+  ln -s "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu" "/usr/$arch_name-linux-gnu/lib"
+
+  echo "==> Installing cross-GCC"
+  apt-get install -y gcc-$arch_name-linux-gnu
 fi
 
 # Workaround for https://github.com/stephencelis/CSQLite/pull/1
