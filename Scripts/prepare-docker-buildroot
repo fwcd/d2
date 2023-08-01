@@ -37,12 +37,6 @@ if [ "$BUILDARCH" != "$TARGETARCH" ]; then
     echo "==> Symlinking libstdc++"
     ln -s /usr/$arch_name-linux-gnu/lib/libstdc++.so{.6,}
   fi
-
-  # For some reason, libc seems to be expected in /lib/$arch_name-linux-gnu
-  if [ ! -f /lib/$arch_name-linux-gnu/libc.so ]; then
-    echo "==> Symlinking libc"
-    ln -s /usr/$arch_name-linux-gnu/lib/libc.so /lib/$arch_name-linux-gnu/libc.so
-  fi
 fi
 
 # Workaround for https://github.com/stephencelis/CSQLite/pull/1
