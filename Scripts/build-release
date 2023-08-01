@@ -7,7 +7,7 @@ cd "$(dirname $0)/.."
 
 extra_flags=()
 
-if [ -n "$TARGETARCH" ]; then
+if [ -n "$TARGETARCH" ] && [ -n "$TARGETSYSROOT" ]; then
   echo "==> Setting flags for target arch '$TARGETARCH'"
   arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
 
@@ -19,8 +19,8 @@ if [ -n "$TARGETARCH" ]; then
   # There seem to be some strange errors with <tgmath.h> (glibc)
   # on host + target x86_64. Since this header seems to be provided
   # elsewhere, we can remove it from the target sysroot as a workaround.
-  if [ -n "$TARGETSYSROOT" ] && [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ]; then
-    rm "$TARGETSYSROOT/usr/include/tgmath.h"
+  if [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ] && [ -f "$TARGETSYSROOT/usr/include/tgmath.h" ]; then
+    mv "$TARGETSYSROOT/usr/include/tgmath.h{,.backup}"
   fi
 
   extra_flags+=(
