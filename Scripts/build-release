@@ -17,14 +17,10 @@ if [ -n "$TARGETARCH" ]; then
   fi
 
   # There seem to be some strange errors with <tgmath.h> (glibc)
-  # when including the native /usr/include on an x86_64 host,
-  # therefore we'll only include it when cross-compiling.
-  if [ "$BUILDARCH" != "$TARGETARCH" ]; then
-    extra_flags+=(
-      -Xcc -I"$TARGETSYSROOT/usr/include"
-      -Xcc -I"$TARGETSYSROOT/usr/include/$arch_name-linux-gnu"
-      -Xcxx -I"$TARGETSYSROOT/usr/include"
-    )
+  # on host + target x86_64. Since this header seems to be provided
+  # elsewhere, we can remove it from the target sysroot as a workaround.
+  if [ -n "$TARGETSYSROOT" ] && [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ]; then
+    rm "$TARGETSYSROOT/usr/include/tgmath.h"
   fi
 
   extra_flags+=(
@@ -32,6 +28,7 @@ if [ -n "$TARGETARCH" ]; then
     --sdk "$TARGETSYSROOT"
     # TODO: Figure out which of these flags are redundant
     -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
+    -Xcc -I"$TARGETSYSROOT/usr/include"
     -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
     -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
     -Xlinker -L"$TARGETSYSROOT/usr/lib"
