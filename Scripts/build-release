@@ -15,8 +15,8 @@ if [ -n "$TARGETARCH" ] && [ -n "$TARGETSYSROOT" ]; then
     --arch "$arch_name"
     --sdk "$TARGETSYSROOT"
     -Xswiftc -use-ld=lld
-    -Xswiftc -tools-directory -Xswiftc "/usr/$arch_name-linux-gnu/bin"
     -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
+    -Xswiftc -tools-directory -Xswiftc "/usr/$arch_name-linux-gnu/bin"
     -Xcc -I"$TARGETSYSROOT/usr/include"
     -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
     -Xcc -I"$TARGETSYSROOT/usr/include/$arch_name-linux-gnu"
