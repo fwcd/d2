@@ -26,8 +26,9 @@ if [ -n "$TARGETARCH" ]; then
   extra_flags+=(
     --arch "$arch_name"
     --sdk "$TARGETSYSROOT"
-    # TODO: Figure out which of these flags are redundant
+    -Xswiftc -use-ld=lld
     -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
+    # TODO: Figure out which of these flags are redundant
     -Xcc -I"$TARGETSYSROOT/usr/include"
     -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
     -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
