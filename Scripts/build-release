@@ -16,15 +16,24 @@ if [ -n "$TARGETARCH" ]; then
     ln -s {"$TARGETSYSROOT",}/usr/include/sqlite3.h
   fi
 
+  # There seem to be some strange errors with <tgmath.h> (glibc)
+  # when including the native /usr/include on an x86_64 host,
+  # therefore we'll only include it when cross-compiling.
+  if [ "$BUILDARCH" != "$TARGETARCH" ]; then
+    extra_flags+=(
+      -Xcc -I"$TARGETSYSROOT/usr/include"
+      -Xcc -I"$TARGETSYSROOT/usr/include/$arch_name-linux-gnu"
+      -Xcxx -I"$TARGETSYSROOT/usr/include"
+    )
+  fi
+
   extra_flags+=(
     --arch "$arch_name"
     --sdk "$TARGETSYSROOT"
     # TODO: Figure out which of these flags are redundant
     -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
-    -Xcc -I"$TARGETSYSROOT/usr/include"
     -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
     -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
-    -Xcxx -I"$TARGETSYSROOT/usr/include"
     -Xlinker -L"$TARGETSYSROOT/usr/lib"
     -Xlinker -L"$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu" # libtesseract installs there
   )
