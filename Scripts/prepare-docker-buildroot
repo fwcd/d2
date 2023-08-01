@@ -23,11 +23,13 @@ fi
 
 arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
 
-echo "==> Installing build essentials..."
+echo "==> Updating apt..."
 apt-get update
-apt-get install -y build-essential
 
-if [ "$BUILDARCH" != "$TARGETARCH" ]; then
+if [ "$BUILDARCH" == "$TARGETARCH" ]; then
+  echo "==> Installing build essentials"
+  apt-get install -y build-essential
+else
   echo "==> Installing cross-GCC"
   apt-get install -y gcc-$arch_name-linux-gnu
 
