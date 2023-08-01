@@ -12,6 +12,7 @@ dependencies=(
   libleptonica-dev
   libtesseract-dev
   libgraphviz-dev
+  libstdc++-12-dev
   # TODO: poppler-utils and libssl1.1 needed?
 )
 
