@@ -37,6 +37,11 @@ RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
 
+ARG TARGETARCH
+ARG UBUNTUDISTRO
+
+ARG TARGETSYSROOT=/usr/local/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
+
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
@@ -44,6 +49,10 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # Install native dependencies
 COPY Scripts/install-runtime-dependencies-apt Scripts/
 RUN Scripts/install-runtime-dependencies-apt && rm -rf /var/lib/apt/lists/*
+
+# Link 'sysroot' to / to make sure D2 can find the Swift stdlibs
+# (the runpath within the D2 executable still points to its /usr/lib/swift)
+RUN ln -s / ${TARGETSYSROOT}
 
 WORKDIR /opt/d2
 
