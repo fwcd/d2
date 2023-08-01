@@ -6,7 +6,6 @@ set -e
 cd "$(dirname $0)/.."
 
 dependencies=(
-  build-essential
   libcairo2-dev
   libsqlite3-dev
   libleptonica-dev

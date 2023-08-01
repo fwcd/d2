@@ -24,11 +24,15 @@ WORKDIR /opt/d2
 # TODO: Only copy stuff that we need for compilation (/usr/lib, /usr/include etc.)
 COPY --from=sysroot / ${TARGETSYSROOT}
 
+# Install (cross-)GCC and patch some paths
+COPY Scripts/prepare-docker-buildroot Scripts/get-linux-arch-name Scripts/
+RUN Scripts/prepare-docker-buildroot
+
 # (Cross-)compile D2
 COPY Sources Sources
 COPY Tests Tests
 COPY Package.swift Package.resolved ./
-COPY Scripts/build-release Scripts/get-linux-arch-name Scripts/
+COPY Scripts/build-release Scripts/
 RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner

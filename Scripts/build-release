@@ -1,9 +1,9 @@
 #!/bin/bash
 
+# (Cross-)compile D2
+
 set -e
 cd "$(dirname $0)/.."
-
-# Set up cross-compilation if needed
 
 extra_flags=()
 
@@ -11,24 +11,12 @@ if [ -n "$TARGETARCH" ] && [ -n "$TARGETSYSROOT" ]; then
   echo "==> Setting flags for target arch '$TARGETARCH'"
   arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
 
-  # Workaround for https://github.com/stephencelis/CSQLite/pull/1
-  if [ ! -f /usr/include/sqlite3.h ]; then
-    ln -s {"$TARGETSYSROOT",}/usr/include/sqlite3.h
-  fi
-
-  # There seem to be some strange errors with <tgmath.h> (glibc)
-  # on host + target x86_64. Since this header seems to be provided
-  # elsewhere, we can remove it from the target sysroot as a workaround.
-  if [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ] && [ -f "$TARGETSYSROOT/usr/include/tgmath.h" ]; then
-    mv "$TARGETSYSROOT/usr/include/tgmath.h{,.backup}"
-  fi
-
   extra_flags+=(
     --arch "$arch_name"
     --sdk "$TARGETSYSROOT"
     -Xswiftc -use-ld=lld
+    -Xswiftc -tools-directory -Xswiftc "/usr/$arch_name-linux-gnu/bin"
     -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
-    # TODO: Figure out which of these flags are redundant
     -Xcc -I"$TARGETSYSROOT/usr/include"
     -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
     -Xcc -I"$TARGETSYSROOT/usr/include/$arch_name-linux-gnu"

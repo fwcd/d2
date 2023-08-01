@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Prepares the build stage during the Docker image build. This assumes
+# that the target sysroot has already been installed to $TARGETSYSROOT.
+
+set -e
+cd "$(dirname $0)/.."
+
+if [ -z "$BUILDARCH" ]; then
+  echo "Please make sure to specify BUILDARCH!"
+  exit 1
+fi
+
+if [ -z "$TARGETARCH" ]; then
+  echo "Please make sure to specify TARGETARCH!"
+  exit 1
+fi
+
+if [ -z "$TARGETSYSROOT" ]; then
+  echo "Please make sure to specify TARGETSYSROOT!"
+  exit 1
+fi
+
+arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
+
+echo "==> Installing cross-GCC"
+apt-get update
+apt-get install -y gcc-$arch_name-linux-gnu
+
+# Installing cross-GCC seems to install libstdc++, but not
+# link it. Therefore we'll create this manually.
+if [ ! -f /usr/$arch_name-linux-gnu/lib/libstdc++.so ]; then
+  echo "==> Symlinking libstdc++"
+  ln -s /usr/$arch_name-linux-gnu/lib/libstdc++.so{.6,}
+fi
+
+# Workaround for https://github.com/stephencelis/CSQLite/pull/1
+if [ ! -f /usr/include/sqlite3.h ]; then
+  echo "==> Patching sqlite3.h"
+  ln -s {"$TARGETSYSROOT",}/usr/include/sqlite3.h
+fi
+
+# There seem to be some strange errors with <tgmath.h> (glibc)
+# on host + target x86_64. Since this header seems to be provided
+# elsewhere, we can remove it from the target sysroot as a workaround.
+if [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ] && [ -f "$TARGETSYSROOT/usr/include/tgmath.h" ]; then
+  echo "==> Patching tgmath.h"
+  mv "$TARGETSYSROOT/usr/include/tgmath.h{,.backup}"
+fi
