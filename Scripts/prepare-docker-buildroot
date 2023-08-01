@@ -56,5 +56,5 @@ fi
 # elsewhere, we can remove it from the target sysroot as a workaround.
 if [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ] && [ -f "$TARGETSYSROOT/usr/include/tgmath.h" ]; then
   echo "==> Patching tgmath.h"
-  mv "$TARGETSYSROOT/usr/include/tgmath.h{,.backup}"
+  mv "$TARGETSYSROOT/usr/include/tgmath.h"{,.backup}
 fi
