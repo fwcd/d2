@@ -33,11 +33,10 @@ else
   echo "==> Installing cross-GCC"
   apt-get install -y gcc-$arch_name-linux-gnu
 
-  # Installing cross-GCC seems to install libstdc++, but not
-  # link it. Therefore we'll create this manually.
-  if [ ! -f /usr/$arch_name-linux-gnu/lib/libstdc++.so ]; then
+  # Apparently, we need to symlink libstdc++ manually
+  if [ ! -f "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu/libstdc++.so" ]; then
     echo "==> Symlinking libstdc++"
-    ln -s /usr/$arch_name-linux-gnu/lib/libstdc++.so{.6,}
+    ln -s "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu/libstdc++.so"{.6,}
   fi
 fi
 
