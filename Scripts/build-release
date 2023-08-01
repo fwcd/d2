@@ -31,6 +31,7 @@ if [ -n "$TARGETARCH" ]; then
     # TODO: Figure out which of these flags are redundant
     -Xcc -I"$TARGETSYSROOT/usr/include"
     -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
+    -Xcc -I"$TARGETSYSROOT/usr/include/$arch_name-linux-gnu"
     -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
     -Xlinker -L"$TARGETSYSROOT/usr/lib"
     -Xlinker -L"$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu" # libtesseract installs there
