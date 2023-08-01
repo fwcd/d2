@@ -23,15 +23,20 @@ fi
 
 arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
 
-echo "==> Installing cross-GCC"
+echo "==> Installing build essentials..."
 apt-get update
-apt-get install -y gcc-$arch_name-linux-gnu
+apt-get install -y build-essential
 
-# Installing cross-GCC seems to install libstdc++, but not
-# link it. Therefore we'll create this manually.
-if [ ! -f /usr/$arch_name-linux-gnu/lib/libstdc++.so ]; then
-  echo "==> Symlinking libstdc++"
-  ln -s /usr/$arch_name-linux-gnu/lib/libstdc++.so{.6,}
+if [ "$BUILDARCH" != "$TARGETARCH" ]; then
+  echo "==> Installing cross-GCC"
+  apt-get install -y gcc-$arch_name-linux-gnu
+
+  # Installing cross-GCC seems to install libstdc++, but not
+  # link it. Therefore we'll create this manually.
+  if [ ! -f /usr/$arch_name-linux-gnu/lib/libstdc++.so ]; then
+    echo "==> Symlinking libstdc++"
+    ln -s /usr/$arch_name-linux-gnu/lib/libstdc++.so{.6,}
+  fi
 fi
 
 # Workaround for https://github.com/stephencelis/CSQLite/pull/1
