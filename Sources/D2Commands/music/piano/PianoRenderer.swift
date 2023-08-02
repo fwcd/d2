@@ -43,7 +43,7 @@ struct PianoRenderer: ScaleRenderer {
         let scaleSemitones = Set(scale.notes.map(\.semitone))
 
         let notes = self.notes
-        let whiteKeyCount = notes.count(forWhich: { $0.accidental == .none })
+        let whiteKeyCount = notes.count(forWhich: { $0.accidental == .zero })
         let width = whiteKeyWidth * whiteKeyCount + whiteKeyPadding * (whiteKeyCount - 1)
         let image = try CairoImage(width: width, height: whiteKeyHeight)
         let graphics = CairoContext(image: image)
@@ -52,7 +52,7 @@ struct PianoRenderer: ScaleRenderer {
         var x = 0
 
         for note in notes {
-            let isWhite = note.accidental == .none
+            let isWhite = note.accidental == .zero
             var rectangle: Rectangle<Double>
 
             if isWhite {
