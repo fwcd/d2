@@ -20,7 +20,7 @@ else
 fi
 
 if [ -n "$TARGETARCH" ]; then
-  arch="$(Scripts/get-linux-arch-name $TARGETARCH)"
+  arch="$(Scripts/standard-arch-name $TARGETARCH)"
 else
   echo "Please specify the target arch by setting the TARGETARCH variable!"
   exit 1

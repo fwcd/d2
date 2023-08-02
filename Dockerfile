@@ -25,7 +25,7 @@ WORKDIR /opt/d2
 COPY --from=sysroot / ${TARGETSYSROOT}
 
 # Install (cross-)GCC and patch some paths
-COPY Scripts/prepare-docker-buildroot Scripts/get-linux-arch-name Scripts/
+COPY Scripts/prepare-docker-buildroot Scripts/standard-arch-name Scripts/
 RUN Scripts/prepare-docker-buildroot
 
 # (Cross-)compile D2
@@ -70,7 +70,7 @@ ARG TARGETARCH
 
 # Set up .build folder in runner
 WORKDIR /opt/d2/.build
-COPY Scripts/prepare-docker-dotbuild Scripts/get-linux-arch-name Scripts/
+COPY Scripts/prepare-docker-dotbuild Scripts/standard-arch-name Scripts/
 RUN Scripts/prepare-docker-dotbuild
 
 # Copy font used by swiftplot to the correct path

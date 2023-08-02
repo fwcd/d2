@@ -9,7 +9,7 @@ extra_flags=()
 
 if [ -n "$TARGETARCH" ] && [ -n "$TARGETSYSROOT" ]; then
   echo "==> Setting flags for target arch '$TARGETARCH'"
-  arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
+  arch_name="$(Scripts/standard-arch-name $TARGETARCH)"
 
   extra_flags+=(
     --arch "$arch_name"
