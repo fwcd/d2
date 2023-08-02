@@ -20,14 +20,7 @@ else
 fi
 
 if [ -n "$TARGETARCH" ]; then
-  case "$TARGETARCH" in
-    amd64) arch=x86_64;;
-    arm64) arch=arm64;;
-    *)
-      echo "Unsupported target arch '${D2TARGETARCH[@]}'"
-      exit 1
-      ;;
-  esac
+  arch="$(Scripts/get-linux-arch-name $TARGETARCH)"
 else
   echo "Please specify the target arch by setting the TARGETARCH variable!"
   exit 1

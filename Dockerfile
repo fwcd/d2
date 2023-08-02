@@ -70,8 +70,8 @@ ARG TARGETARCH
 
 # Set up .build folder in runner
 WORKDIR /opt/d2/.build
-COPY Scripts/setup-dotbuild-tree Scripts/
-RUN Scripts/setup-dotbuild-tree
+COPY Scripts/prepare-docker-dotbuild Scripts/get-linux-arch-name Scripts/
+RUN Scripts/prepare-docker-dotbuild
 
 # Copy font used by swiftplot to the correct path
 COPY --from=builder \
