@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Prepares the build stage during the Docker image build. This assumes
+# that the target sysroot has already been installed to $TARGETSYSROOT.
+
+set -e
+cd "$(dirname $0)/.."
+
+if [ -z "$BUILDARCH" ]; then
+  echo "Please make sure to specify BUILDARCH!"
+  exit 1
+fi
+
+if [ -z "$TARGETARCH" ]; then
+  echo "Please make sure to specify TARGETARCH!"
+  exit 1
+fi
+
+if [ -z "$TARGETSYSROOT" ]; then
+  echo "Please make sure to specify TARGETSYSROOT!"
+  exit 1
+fi
+
+arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
+
+echo "==> Updating apt..."
+apt-get update
+
+if [ "$BUILDARCH" == "$TARGETARCH" ]; then
+  echo "==> Installing build essentials"
+  apt-get install -y build-essential
+else
+  # Apparently, we need to symlink libstdc++ manually
+  if [ ! -f "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu/libstdc++.so" ]; then
+    echo "==> Symlinking libstdc++"
+    ln -s "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu/libstdc++.so"{.6,}
+  fi
+
+  # Symlinking the sysroot libs into the cross-GCC libs
+  # fixes a very strange linking issue where the linker would
+  # try resolving libc in /lib/$arch_name-linux-gnu. This also
+  # needs to happen before installing the cross-GCC package.
+  echo "==> Symlinking sysroot libs into cross-GCC libs"
+  mkdir -p "/usr/$arch_name-linux-gnu"
+  ln -s "$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu" "/usr/$arch_name-linux-gnu/lib"
+
+  echo "==> Installing cross-GCC"
+  apt-get install -y gcc-$arch_name-linux-gnu
+fi
+
+# Workaround for https://github.com/stephencelis/CSQLite/pull/1
+if [ ! -f /usr/include/sqlite3.h ]; then
+  echo "==> Patching sqlite3.h"
+  ln -s {"$TARGETSYSROOT",}/usr/include/sqlite3.h
+fi
+
+# There seem to be some strange errors with <tgmath.h> (glibc)
+# on host + target x86_64. Since this header seems to be provided
+# elsewhere, we can remove it from the target sysroot as a workaround.
+if [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = amd64 ] && [ -f "$TARGETSYSROOT/usr/include/tgmath.h" ]; then
+  echo "==> Patching tgmath.h"
+  mv "$TARGETSYSROOT/usr/include/tgmath.h"{,.backup}
+fi

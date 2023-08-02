@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# (Cross-)compile D2
+
+set -e
+cd "$(dirname $0)/.."
+
+extra_flags=()
+
+if [ -n "$TARGETARCH" ] && [ -n "$TARGETSYSROOT" ]; then
+  echo "==> Setting flags for target arch '$TARGETARCH'"
+  arch_name="$(Scripts/get-linux-arch-name $TARGETARCH)"
+
+  extra_flags+=(
+    --arch "$arch_name"
+    --sdk "$TARGETSYSROOT"
+    -Xswiftc -use-ld=lld
+    -Xswiftc -resource-dir -Xswiftc "$TARGETSYSROOT/usr/lib/swift"
+    -Xswiftc -tools-directory -Xswiftc "/usr/$arch_name-linux-gnu/bin"
+    -Xcc -I"$TARGETSYSROOT/usr/include"
+    -Xcc -I"$TARGETSYSROOT/usr/include/freetype2"
+    -Xcc -I"$TARGETSYSROOT/usr/include/$arch_name-linux-gnu"
+    -Xcc -I"$TARGETSYSROOT/usr/include/cairo"
+    -Xlinker -L"$TARGETSYSROOT/usr/lib"
+    -Xlinker -L"$TARGETSYSROOT/usr/lib/$arch_name-linux-gnu" # libtesseract installs there
+  )
+fi
+
+echo "==> Building D2 with flags ${extra_flags[@]}"
+exec swift build -c release "${extra_flags[@]}"

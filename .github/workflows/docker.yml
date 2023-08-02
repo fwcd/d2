@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -25,11 +26,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        # TODO: Ideally we could just build an aarch64 image too (under QEMU user-mode emulation) by using
-        #
-        #       platforms: linux/amd64,linux/arm64/v8
-        #
-        # See https://github.com/fwcd/d2/issues/124
-        platforms: linux/amd64
-        push: true
+        platforms: linux/amd64,linux/arm64/v8
+        push: true # TODO: Only push on main
         tags: ghcr.io/fwcd/d2:latest
+  

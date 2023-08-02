@@ -5,12 +5,25 @@
 set -e
 cd "$(dirname $0)/.."
 
-apt-get update
-apt-get install -y \
-  libcairo2-dev \
-  libsqlite3-dev \
-  libleptonica-dev \
-  libtesseract-dev \
+dependencies=(
+  libcairo2-dev
+  libsqlite3-dev
+  libleptonica-dev
+  libtesseract-dev
   libgraphviz-dev
+  libstdc++-12-dev
+  # TODO: poppler-utils and libssl1.1 needed?
+)
 
-# TODO: poppler-utils and libssl1.1 needed?
+echo "==> Installing add-apt-repository"
+apt-get update
+apt-get install -y software-properties-common
+
+echo "==> Enabling all repositories"
+for repo in main universe multiverse; do
+  add-apt-repository $repo
+done
+
+echo "==> Installing ${dependencies[@]}"
+apt-get update
+apt-get install -y "${dependencies[@]}"
