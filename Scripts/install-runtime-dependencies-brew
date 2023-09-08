@@ -8,7 +8,6 @@ cd "$(dirname $0)/.."
 brew install \
   cairo \
   graphviz \
-  tesseract \
   node
 
 # TODO: brew tap vapor/tap needed?
