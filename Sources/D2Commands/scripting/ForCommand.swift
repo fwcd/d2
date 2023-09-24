@@ -12,13 +12,13 @@ public class ForCommand: StringCommand {
         category: .scripting,
         shortDescription: "Iterates over a range",
         longDescription: "Iterates over a range and outputs the running index at each iteration",
-        requiredPermissionLevel: .vip
+        requiredPermissionLevel: .admin
     )
     public let outputValueType: RichValueType = .text
     private let timer: RepeatingTimer
     private let maxRangeLength: Int
 
-    public init(intervalSeconds: Int = 1, maxRangeLength: Int = 6) {
+    public init(intervalSeconds: Int = 1, maxRangeLength: Int = 64) {
         timer = RepeatingTimer(interval: .seconds(intervalSeconds))
         self.maxRangeLength = maxRangeLength
     }
