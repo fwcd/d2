@@ -87,4 +87,4 @@ COPY --from=builder \
 COPY --from=builder "/opt/d2/.build/release/D2" "release/D2"
 
 WORKDIR /opt/d2
-CMD [".build/release/D2"]
+ENTRYPOINT [".build/release/D2"]
