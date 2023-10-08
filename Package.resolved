@@ -37,15 +37,6 @@
       }
     },
     {
-      "identity" : "csqlite",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stephencelis/CSQLite.git",
-      "state" : {
-        "revision" : "9106e983d5e3d5149ee35281ec089484b0def018",
-        "version" : "0.0.3"
-      }
-    },
-    {
       "identity" : "emoji-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/safx/Emoji-Swift.git",

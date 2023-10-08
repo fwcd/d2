@@ -33,7 +33,7 @@ struct D2: ParsableCommand {
         // Read config and logging options
         let config = try? DiskJsonSerializer().readJson(as: Config.self, fromFile: "local/config.json")
         let logLevel = self.logLevel ?? config?.log?.level ?? .info
-        let dependencyLogLevel = self.dependencyLogLevel ?? config?.log?.dependencyLevel ?? .notice
+        let dependencyLogLevel = self.dependencyLogLevel ?? config?.log?.dependencyLevel ?? .info
         let printToStdout = config?.log?.printToStdout ?? true
 
         // Set up logging and register default outputs
