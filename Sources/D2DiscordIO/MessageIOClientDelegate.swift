@@ -15,12 +15,12 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
     }
 
     public func client(_ discordClient: DiscordClient, didConnect connected: Bool) {
-        log.debug("Connected")
+        log.info("Connected")
         inner.on(connect: connected, client: overlayClient(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDisconnectWithReason reason: String) {
-        log.debug("Got disconnect with reason \(reason)")
+        log.info("Got disconnect with reason \(reason)")
         inner.on(disconnectWithReason: reason, client: overlayClient(with: discordClient))
     }
 
