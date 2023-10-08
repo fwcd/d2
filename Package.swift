@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.1.1"),
+        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.1.2"),
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.3.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.4.3"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
@@ -23,7 +23,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-gif.git", from: "2.1.0"),
         .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.1.10"),
         .package(url: "https://github.com/fwcd/swift-music-theory.git", from: "0.1.0"),
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.44.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.59.0"),
         .package(url: "https://github.com/Kitura/BlueSocket.git", .upToNextMinor(from: "2.0.4")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.3.3"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", revision: "b3a49f4a9fbee3c7320591dbc7263c192244063e"),
