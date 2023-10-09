@@ -4,6 +4,8 @@ on:
   workflow_run:
     workflows:
     - Docker
+    branches:
+    - main
     types:
     - completed
   workflow_dispatch:
@@ -11,7 +13,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: (github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch') && github.repository == 'fwcd/d2' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: (github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch') && github.repository == 'fwcd/d2' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
     - name: Trigger deployment
