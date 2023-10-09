@@ -22,11 +22,19 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/fwcd/d2
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=long
     - name: Build and Push image
       uses: docker/build-push-action@v4
       with:
         context: .
         platforms: linux/amd64,linux/arm64/v8
         push: ${{ github.ref == 'refs/heads/main' }}
-        tags: ghcr.io/fwcd/d2:latest
-  
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
