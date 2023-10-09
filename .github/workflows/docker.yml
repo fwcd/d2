@@ -23,12 +23,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/fwcd/d2
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,format=long
+      uses: docker/metadata-action@v4
+      with:
+        images: ghcr.io/fwcd/d2
+        tags: |
+          type=raw,value=latest,enable={{is_default_branch}}
+          type=sha,format=long
     - name: Build and Push image
       uses: docker/build-push-action@v4
       with:
