@@ -8,17 +8,17 @@ public class RemoveAllMIOCommandsCommand: VoidCommand {
     public init() {}
 
     public func invoke(output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client present")
             return
         }
 
-        client.getMIOCommands().listen {
+        sink.getMIOCommands().listen {
             do {
                 let mioCommands = try $0.get()
 
                 for mioCommand in mioCommands {
-                    client.deleteMIOCommand(mioCommand.id)
+                    sink.deleteMIOCommand(mioCommand.id)
                 }
 
                 output.append("Deleted \(mioCommands.count) MIO commands")

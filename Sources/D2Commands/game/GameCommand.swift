@@ -166,8 +166,8 @@ public class GameCommand<G: Game>: Command {
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let author = context.author.map({ gamePlayer(from: $0, context: context) }) else { return }
 
-        if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel, let client = context.client {
-            let channelName = client.guildForChannel(channel.id)?.channels[channel.id]?.name
+        if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel, let sink = context.sink {
+            let channelName = sink.guildForChannel(channel.id)?.channels[channel.id]?.name
             let continueSubscription = perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, channelName: channelName, output: output, author: author)
             if !continueSubscription {
                 context.unsubscribeFromChannel()
@@ -176,7 +176,7 @@ public class GameCommand<G: Game>: Command {
     }
 
     private func gamePlayer(from user: User, context: CommandContext) -> GamePlayer {
-        GamePlayer(from: user, isAutomatic: user.id == context.client?.me?.id)
+        GamePlayer(from: user, isAutomatic: user.id == context.sink?.me?.id)
     }
 
     /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.

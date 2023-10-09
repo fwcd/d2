@@ -11,7 +11,7 @@ public class GuildChannelsCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available!")
             return
         }
@@ -27,11 +27,11 @@ public class GuildChannelsCommand: StringCommand {
             guildId = guild.id
             useChannelLinks = true
         } else {
-            guildId = GuildID(input, clientName: client.name)
+            guildId = GuildID(input, clientName: sink.name)
             useChannelLinks = false
         }
 
-        guard let guild = client.guild(for: guildId) else {
+        guard let guild = sink.guild(for: guildId) else {
             output.append(errorText: "No guild with this id found!")
             return
         }

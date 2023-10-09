@@ -12,29 +12,29 @@ public struct RoleReactionHandler: ReactionHandler {
         self._configuration = configuration
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any Sink) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
         if
             let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
-            let guild = client.guildForChannel(channelId),
+            let guild = sink.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
             !member.user.bot,
             !member.roleIds.contains(roleId) {
             log.info("Adding role \(role.name) upong reaction to \(member.displayName)")
-            client.addGuildMemberRole(roleId, to: userId, on: guild.id, reason: "Reaction")
+            sink.addGuildMemberRole(roleId, to: userId, on: guild.id, reason: "Reaction")
         }
     }
 
-    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any Sink) {
+    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
         if
             let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
-            let guild = client.guildForChannel(channelId),
+            let guild = sink.guildForChannel(channelId),
             let role = guild.roles[roleId],
             let member = guild.members[userId],
             !member.user.bot,
             member.roleIds.contains(roleId) {
             log.info("Removing role \(role.name) upong reaction from \(member.displayName)")
-            client.removeGuildMemberRole(roleId, from: userId, on: guild.id, reason: "Reaction")
+            sink.removeGuildMemberRole(roleId, from: userId, on: guild.id, reason: "Reaction")
         }
     }
 }

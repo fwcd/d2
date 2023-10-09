@@ -26,7 +26,7 @@ public class GuildInfoCommand: VoidCommand {
 
         output.append(Embed(
             title: ":chart_with_upwards_trend: Guild Info for `\(guild.name)`",
-            thumbnail: context.client?.name == "Discord"
+            thumbnail: context.sink?.name == "Discord"
                 ? guild.icon.flatMap { URL(string: "https://cdn.discordapp.com/icons/\(guild.id)/\($0).png").map(Embed.Thumbnail.init(url:)) }
                 : nil,
             fields: computeStats(for: guild)

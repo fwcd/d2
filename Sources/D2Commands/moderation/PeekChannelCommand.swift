@@ -13,7 +13,7 @@ public class PeekChannelCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available!")
             return
         }
@@ -23,7 +23,7 @@ public class PeekChannelCommand: StringCommand {
         if input.isEmpty {
             parsedId = context.channel?.id
         } else {
-            parsedId = idPattern.firstGroups(in: input)?.first.map { ChannelID($0, clientName: client.name) }
+            parsedId = idPattern.firstGroups(in: input)?.first.map { ChannelID($0, clientName: sink.name) }
         }
 
         guard let channelId = parsedId else {
@@ -31,7 +31,7 @@ public class PeekChannelCommand: StringCommand {
             return
         }
 
-        client.getMessages(for: channelId, limit: 20).listen {
+        sink.getMessages(for: channelId, limit: 20).listen {
             do {
                 let messages = try $0.get()
                 output.append(Embed(

@@ -16,17 +16,17 @@ public struct StreamerRoleHandler: PresenceHandler {
         self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 
-    public func handle(presenceUpdate presence: Presence, client: any Sink) {
+    public func handle(presenceUpdate presence: Presence, sink: any Sink) {
         log.trace("Presence activities: \(presence.activities)")
         guard let guildId = presence.guildId else { return }
         if
             let roleId = streamerRoleConfiguration.streamerRoles[guildId],
-            let guild = client.guild(for: guildId),
+            let guild = sink.guild(for: guildId),
             let member = guild.members[presence.user.id] {
             if presence.activities.contains(where: { $0.type == .stream }) {
                 if !member.roleIds.contains(roleId) {
                     log.info("Adding streamer role to \(member.displayName)")
-                    client.addGuildMemberRole(roleId, to: presence.user.id, on: guildId, reason: "Streaming").listenOrLogError { success in
+                    sink.addGuildMemberRole(roleId, to: presence.user.id, on: guildId, reason: "Streaming").listenOrLogError { success in
                         if !success {
                             log.warning("Adding streamer role to \(member.displayName) failed")
                         }
@@ -36,7 +36,7 @@ public struct StreamerRoleHandler: PresenceHandler {
                 }
             } else if member.roleIds.contains(roleId) {
                 log.info("Removing streamer role from \(member.displayName)")
-                client.removeGuildMemberRole(roleId, from: presence.user.id, on: guildId, reason: "No longer streaming")
+                sink.removeGuildMemberRole(roleId, from: presence.user.id, on: guildId, reason: "No longer streaming")
             } else {
                 log.debug("Not removing streamer role from \(member.displayName).")
             }

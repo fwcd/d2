@@ -21,7 +21,7 @@ public class ReactCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available")
             return
         }
@@ -30,13 +30,13 @@ public class ReactCommand: StringCommand {
             return
         }
 
-        let messageId = MessageID(parsedArgs[1], clientName: client.name)
-        let channelId = MessageID(parsedArgs[2], clientName: client.name)
+        let messageId = MessageID(parsedArgs[1], clientName: sink.name)
+        let channelId = MessageID(parsedArgs[2], clientName: sink.name)
         var emojiString = parsedArgs[3]
 
         if !emojiString.unicodeScalars.contains(where: \.properties.isEmoji) {
             // Try resolving the emoji via the guilds
-            let potentialMatches = (client.guilds ?? [])
+            let potentialMatches = (sink.guilds ?? [])
                 .flatMap { $0.emojis.values.filter { $0.name == emojiString } }
             guard let emoji = potentialMatches.first else {
                 output.append(errorText: "Could not find match for emoji \(emojiString)")
@@ -45,10 +45,10 @@ public class ReactCommand: StringCommand {
             emojiString = emoji.compactDescription
         }
 
-        client.createReaction(for: messageId, on: channelId, emoji: emojiString)
+        sink.createReaction(for: messageId, on: channelId, emoji: emojiString)
 
         timer?.schedule(beginImmediately: false) { (_, _) in
-            client.deleteOwnReaction(for: messageId, on: channelId, emoji: emojiString)
+            sink.deleteOwnReaction(for: messageId, on: channelId, emoji: emojiString)
         }
     }
 }

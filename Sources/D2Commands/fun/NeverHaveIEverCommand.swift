@@ -32,7 +32,7 @@ public class NeverHaveIEverCommand: StringCommand {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
 
         for emoji in ["🍹", "❌"] {
-            context.client?.createReaction(for: messageId, on: channelId, emoji: emoji)
+            context.sink?.createReaction(for: messageId, on: channelId, emoji: emoji)
         }
     }
 }

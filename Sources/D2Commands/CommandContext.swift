@@ -6,7 +6,7 @@ import NIO
 fileprivate let log = Logger(label: "D2Commands.CommandContext")
 
 public struct CommandContext {
-    public let client: (any Sink)?
+    public let sink: (any Sink)?
     public let registry: CommandRegistry
     public let message: Message
     public let channel: InteractiveTextChannel?
@@ -20,12 +20,12 @@ public struct CommandContext {
     public var author: User? { message.author }
     public var timestamp: Date? { message.timestamp }
     public var guildMember: Guild.Member? { message.guildMember }
-    public var guild: Guild? { message.channelId.flatMap { client?.guildForChannel($0) } }
+    public var guild: Guild? { message.channelId.flatMap { sink?.guildForChannel($0) } }
 
     public var isSubscribed: Bool { (channel?.id).map { subscriptions.contains($0) } ?? false }
 
     public init(
-        client: (any Sink)?,
+        sink: (any Sink)?,
         registry: CommandRegistry,
         message: Message,
         commandPrefix: String,
@@ -33,7 +33,7 @@ public struct CommandContext {
         subscriptions: SubscriptionSet,
         eventLoopGroup: (any EventLoopGroup)? = nil
     ) {
-        self.client = client
+        self.sink = sink
         self.registry = registry
         self.message = message
         self.commandPrefix = commandPrefix
@@ -41,7 +41,7 @@ public struct CommandContext {
         self.subscriptions = subscriptions
         self.eventLoopGroup = eventLoopGroup
 
-        channel = client.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, client: c) } }
+        channel = sink.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, sink: c) } }
     }
 
     /// Subscribes to the current channel.

@@ -25,7 +25,7 @@ public class PronounRoleCommand: StringCommand {
             output.append(errorText: "No guild available")
             return
         }
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available")
             return
         }
@@ -35,7 +35,7 @@ public class PronounRoleCommand: StringCommand {
         }
         let name = parsedInput[1]
         let rawRoleId = parsedInput[2].nilIfEmpty
-        let roleId = rawRoleId.map { RoleID($0, clientName: client.name) }
+        let roleId = rawRoleId.map { RoleID($0, clientName: sink.name) }
 
         var roles = config.pronounRoles[guild.id] ?? [:]
         roles[name] = roleId

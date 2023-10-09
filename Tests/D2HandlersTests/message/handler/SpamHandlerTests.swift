@@ -94,7 +94,7 @@ final class SpamHandlerTests: XCTestCase {
 
     private func spam(after interval: TimeInterval = 0) {
         timestamp += interval
-        let _ = handler.handle(message: Message(content: "@everyone", author: user, channelId: channelId, mentionEveryone: true, timestamp: timestamp), from: output)
+        let _ = handler.handle(message: Message(content: "@everyone", author: user, channelId: channelId, mentionEveryone: true, timestamp: timestamp), sink: output)
     }
 
     private func isWarned() -> Bool {

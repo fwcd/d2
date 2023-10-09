@@ -13,7 +13,7 @@ public struct IRCPlatform: MessagePlatform {
 
     public init(
         with delegate: any MessageDelegate,
-        combinedClient: CombinedSink,
+        combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token config: IRCConfig
     ) throws {
@@ -23,7 +23,7 @@ public struct IRCPlatform: MessagePlatform {
         log.info("Initializing IRC backend (\(config.host):\(config.port))...")
         manager = IRCClientManager(
             inner: delegate,
-            combinedClient: combinedClient,
+            combinedSink: combinedSink,
             eventLoopGroup: eventLoopGroup,
             config: config,
             name: name,

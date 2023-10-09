@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
 
 public class IRCClientManager: IRCClientDelegate {
     private let inner: any MessageDelegate
-    private let combinedClient: any Sink
+    private let combinedSink: CombinedSink
     private let name: String
 
     private var joined: Bool = false
@@ -16,14 +16,14 @@ public class IRCClientManager: IRCClientDelegate {
 
     public init(
         inner: any MessageDelegate,
-        combinedClient: CombinedSink,
+        combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         config: IRCConfig,
         name: String,
         channelsToJoin: [String]
     ) {
         self.inner = inner
-        self.combinedClient = combinedClient
+        self.combinedSink = combinedSink
         self.name = name
         self.channelsToJoin = channelsToJoin
 
@@ -36,7 +36,7 @@ public class IRCClientManager: IRCClientDelegate {
         ))
         ircClient.delegate = self
 
-        combinedClient.register(client: IRCSink(ircClient: ircClient, name: name))
+        combinedSink.register(sink: IRCSink(client: ircClient, name: name))
     }
 
     public func connect() {
@@ -85,10 +85,10 @@ public class IRCClientManager: IRCClientDelegate {
             channelId: ID(channelName.stringValue, clientName: name)
         )
 
-        inner.on(createMessage: m, client: overlayClient(with: ircClient))
+        inner.on(createMessage: m, sink: overlaySink(with: ircClient))
     }
 
-    private func overlayClient(with ircClient: IRCClient) -> Sink {
-        OverlaySink(inner: combinedClient, name: name)
+    private func overlaySink(with ircClient: IRCClient) -> Sink {
+        OverlaySink(inner: combinedSink, name: name)
     }
 }

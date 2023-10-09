@@ -29,7 +29,7 @@ public class TLDRCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client, let channelId = context.channel?.id else {
+        guard let sink = context.sink, let channelId = context.channel?.id else {
             output.append(errorText: "No MessageIO client/channel/guild available")
             return
         }
@@ -38,7 +38,7 @@ public class TLDRCommand: StringCommand {
             return
         }
 
-        let tldrChannelName = parsedArgs[1].nilIfEmpty.map { ID($0, clientName: client.name) } ?? channelId
+        let tldrChannelName = parsedArgs[1].nilIfEmpty.map { ID($0, clientName: sink.name) } ?? channelId
         let messageCount = parsedArgs[2].nilIfEmpty.flatMap(Int.init) ?? 80
 
         guard messageCount <= maxMessageCount else {
@@ -48,7 +48,7 @@ public class TLDRCommand: StringCommand {
 
         // TODO: Support more messages using message db
 
-        client.getMessages(for: tldrChannelName, limit: messageCount).listenOrLogError { messages in
+        sink.getMessages(for: tldrChannelName, limit: messageCount).listenOrLogError { messages in
             let sentences = messages
                 .sorted(by: ascendingComparator { $0.timestamp ?? .distantPast })
                 .flatMap { $0.content.split(separator: ".").map(String.init) }

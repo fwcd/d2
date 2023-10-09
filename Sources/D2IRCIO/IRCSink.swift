@@ -9,12 +9,12 @@ fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
 fileprivate let mentionPattern = try! Regex(from: "<@.+?>")
 
 struct IRCSink: DefaultSink {
-    private let ircClient: IRCClient
+    private let client: IRCClient
 
     let name: String
 
-    init(ircClient: IRCClient, name: String) {
-        self.ircClient = ircClient
+    init(client: IRCClient, name: String) {
+        self.client = client
         self.name = name
     }
 
@@ -46,7 +46,7 @@ struct IRCSink: DefaultSink {
             return Promise(.failure(IRCSinkError.invalidChannelName(channelId.value)))
         }
 
-        ircClient.send(.PRIVMSG([.channel(channelName)], text))
+        client.send(.PRIVMSG([.channel(channelName)], text))
 
         return Promise(.success(message))
     }

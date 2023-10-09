@@ -13,8 +13,8 @@ public struct MentionD2Handler: MessageHandler {
         self.conversator = conversator
     }
 
-    public func handleRaw(message: Message, from client: any Sink) -> Bool {
-        if let me = client.me,
+    public func handleRaw(message: Message, sink: any Sink) -> Bool {
+        if let me = sink.me,
             !message.mentionEveryone,
             message.mentions(user: me),
             let messageId = message.id,
@@ -22,9 +22,9 @@ public struct MentionD2Handler: MessageHandler {
             let channelId = message.channelId {
             queue.async {
                 if let answer = try? conversator.answer(input: mentionPattern.replace(in: message.content, with: ""), on: guild.id) {
-                    client.sendMessage(Message(content: answer.cleaningMentions(with: guild)), to: channelId)
+                    sink.sendMessage(Message(content: answer.cleaningMentions(with: guild)), to: channelId)
                 } else {
-                    client.createReaction(for: messageId, on: channelId, emoji: "🤔")
+                    sink.createReaction(for: messageId, on: channelId, emoji: "🤔")
                 }
             }
             return true

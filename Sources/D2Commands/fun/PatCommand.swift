@@ -48,7 +48,7 @@ public class PatCommand: Command {
             output.append(errorText: "No author")
             return
         }
-        guard let avatarUrl = context.client?.avatarUrlForUser(user.id, with: user.avatar, size: 128, preferredExtension: "png") else {
+        guard let avatarUrl = context.sink?.avatarUrlForUser(user.id, with: user.avatar, size: 128, preferredExtension: "png") else {
             output.append(errorText: "Could not fetch avatar URL")
             return
         }

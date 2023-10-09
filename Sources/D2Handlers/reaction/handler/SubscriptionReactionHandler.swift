@@ -15,16 +15,16 @@ public struct SubscriptionReactionHandler: ReactionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any Sink) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
         guard
-            let guild = client.guildForChannel(channelId),
+            let guild = sink.guildForChannel(channelId),
             let member = guild.members[userId] else { return }
         // TODO: Query the actual message that the user reacted to here
         let message = Message(content: "Dummy", channelId: channelId, id: messageId)
         let user = member.user
         manager.notifySubscriptions(on: channelId, isBot: user.bot) {
             let context = CommandContext(
-                client: client,
+                sink: sink,
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,

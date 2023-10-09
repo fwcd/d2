@@ -26,12 +26,12 @@ public class PresenceCommand: StringCommand {
             let status = parsedArgs[2].nilIfEmpty.flatMap { Presence.Status(rawValue: $0) } ?? .online
             let customText = parsedArgs[3]
 
-            guard let client = context.client else {
+            guard let sink = context.sink else {
                 output.append(errorText: "No client found")
                 return
             }
 
-            client.setPresence(PresenceUpdate(activities: [Presence.Activity(name: customText, type: activityType)], status: status))
+            sink.setPresence(PresenceUpdate(activities: [Presence.Activity(name: customText, type: activityType)], status: status))
         } else {
             output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
         }

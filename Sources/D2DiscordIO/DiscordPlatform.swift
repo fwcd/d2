@@ -14,14 +14,14 @@ public struct DiscordPlatform: MessagePlatform {
 
     public init(
         with delegate: any MessageDelegate,
-        combinedClient: CombinedSink,
+        combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
     ) {
         log.info("Initializing Discord backend...")
         manager = DiscordClientManager(
             inner: delegate,
-            combinedClient: combinedClient,
+            combinedSink: combinedSink,
             eventLoopGroup: eventLoopGroup,
             token: token
         )

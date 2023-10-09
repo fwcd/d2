@@ -32,13 +32,13 @@ public class CycleThroughCommand: StringCommand {
             return
         }
 
-        let client = context.client!
+        let sink = context.sink!
         let channelId = context.channel!.id
 
-        client.sendMessage(Message(content: String(firstFrame)), to: channelId).listenOrLogError { sentMessage in
+        sink.sendMessage(Message(content: String(firstFrame)), to: channelId).listenOrLogError { sentMessage in
             self.timer.schedule(nTimes: self.loops * frames.count) { i, _ in
                 let frame = String(frames[i % frames.count])
-                client.editMessage(sentMessage!.id!, on: channelId, content: frame)
+                sink.editMessage(sentMessage!.id!, on: channelId, content: frame)
             }
         }
     }

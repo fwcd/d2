@@ -15,7 +15,7 @@ public protocol MessagePlatform: Startable {
     /// to block and to finish quickly.
     init(
         with delegate: any MessageDelegate,
-        combinedClient: CombinedSink,
+        combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: Token
     ) throws

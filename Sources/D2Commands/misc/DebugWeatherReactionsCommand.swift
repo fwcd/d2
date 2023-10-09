@@ -13,7 +13,7 @@ public class DebugWeatherReactionsCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available")
             return
         }
@@ -44,7 +44,7 @@ public class DebugWeatherReactionsCommand: StringCommand {
 
         for weather in weathers {
             if let emoji = OpenWeatherMapWeather.Weather.emojiFor(main: weather.main, description: weather.description) {
-                client.createReaction(for: messageId, on: channelId, emoji: emoji)
+                sink.createReaction(for: messageId, on: channelId, emoji: emoji)
             } else {
                 log.warning("Weather \(weather) has no emoji representation")
             }

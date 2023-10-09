@@ -12,12 +12,12 @@ public struct LuckyNumberHandler: MessageHandler {
         self.minimumNumberCount = minimumNumberCount
     }
 
-    public func handle(message: Message, from client: any Sink) -> Bool {
+    public func handle(message: Message, sink: any Sink) -> Bool {
         if let channelId = message.channelId {
             let numbers = numberPattern.allGroups(in: message.content).compactMap { Int($0[0]) }
             let sum = numbers.reduce(0, +)
             if sum == luckyNumber && numbers.count >= minimumNumberCount {
-                client.sendMessage(
+                sink.sendMessage(
                     """
                     All the numbers in your message added up to \(luckyNumber). Congrats!
                     ```

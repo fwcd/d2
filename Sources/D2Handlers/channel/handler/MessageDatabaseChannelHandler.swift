@@ -11,9 +11,9 @@ public struct MessageDatabaseChannelHandler: ChannelHandler {
         self.messageDB = messageDB
     }
 
-    private func update(channel: Channel, on eventName: String, client: any Sink) {
+    private func update(channel: Channel, on eventName: String, sink: any Sink) {
         do {
-            if let guild = client.guildForChannel(channel.id) {
+            if let guild = sink.guildForChannel(channel.id) {
                 log.info("Updating channel '\(channel.name)' on \(eventName) into message database...")
                 try messageDB.insert(channel: channel, on: guild)
             }
@@ -22,19 +22,19 @@ public struct MessageDatabaseChannelHandler: ChannelHandler {
         }
     }
 
-    public func handle(channelCreate channel: Channel, client: any Sink) {
-        update(channel: channel, on: "creation", client: client)
+    public func handle(channelCreate channel: Channel, sink: any Sink) {
+        update(channel: channel, on: "creation", sink: sink)
     }
 
-    public func handle(channelUpdate channel: Channel, client: any Sink) {
-        update(channel: channel, on: "update", client: client)
+    public func handle(channelUpdate channel: Channel, sink: any Sink) {
+        update(channel: channel, on: "update", sink: sink)
     }
 
-    public func handle(threadCreate thread: Channel, client: any Sink) {
-        update(channel: thread, on: "thread creation", client: client)
+    public func handle(threadCreate thread: Channel, sink: any Sink) {
+        update(channel: thread, on: "thread creation", sink: sink)
     }
 
-    public func handle(threadUpdate thread: Channel, client: any Sink) {
-        update(channel: thread, on: "thread update", client: client)
+    public func handle(threadUpdate thread: Channel, sink: any Sink) {
+        update(channel: thread, on: "thread update", sink: sink)
     }
 }

@@ -39,7 +39,7 @@ public class PollCommand: StringCommand {
                 output.append(errorText: "Too many options!")
                 return
             }
-            guard let client = context.client else {
+            guard let sink = context.sink else {
                 output.append(errorText: "Missing client")
                 return
             }
@@ -61,10 +61,10 @@ public class PollCommand: StringCommand {
                 reactions = range.compactMap { numberEmojiOf(digit: $0) }
             }
 
-            client.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
+            sink.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
                 if let nextMessageId = sentMessage?.id {
                     for reaction in reactions {
-                        client.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
+                        sink.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
                     }
                 }
             }

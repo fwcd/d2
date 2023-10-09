@@ -24,12 +24,12 @@ public class MessageDatabaseCommand: StringCommand {
                 output.append("Successfully generated/updated \(count) \("transition".pluralized(with: count))")
             },
             "debugRebuild": { [unowned self] output, context in
-                guard let client = context.client, let guildId = context.guild?.id else {
+                guard let sink = context.sink, let guildId = context.guild?.id else {
                     output.append(errorText: "Debug-rebuilding the message database requires a client and a guild")
                     return
                 }
                 output.append("Debug-rebuilding database...")
-                self.messageDB.rebuildMessages(with: client, from: guildId, debugMode: true) {
+                self.messageDB.rebuildMessages(with: sink, from: guildId, debugMode: true) {
                     output.append("Querying channel `\($0)`...")
                 }.listen {
                     do {
@@ -41,12 +41,12 @@ public class MessageDatabaseCommand: StringCommand {
                 }
             },
             "rebuild": { [unowned self] output, context in
-                guard let client = context.client, let guildId = context.guild?.id else {
+                guard let sink = context.sink, let guildId = context.guild?.id else {
                     output.append(errorText: "Rebuilding the message database requires a client and a guild")
                     return
                 }
                 output.append("Rebuilding database...")
-                self.messageDB.rebuildMessages(with: client, from: guildId) {
+                self.messageDB.rebuildMessages(with: sink, from: guildId) {
                     log.info("Querying channel `\($0)`...")
                 }.listen {
                     do {
