@@ -91,8 +91,8 @@ extension Message.Component.SelectMenu.Option: DiscordAPIConvertible {
 // FROM Discord conversions
 
 extension DiscordMessage: MessageIOClientConvertible {
-    public func usingMessageIO(with client: any MessageClient) -> Message {
-        let guild = guildId.flatMap { client.guild(for: $0.usingMessageIO) }
+    public func usingMessageIO(with sink: any Sink) -> Message {
+        let guild = guildId.flatMap { sink.guild(for: $0.usingMessageIO) }
         let member = (author?.id).flatMap { guild?.members[$0.usingMessageIO] }
         return Message(
             content: content ?? "",

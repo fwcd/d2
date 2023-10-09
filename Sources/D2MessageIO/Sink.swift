@@ -2,10 +2,10 @@ import Foundation
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2MessageIO.MessageClient")
+fileprivate let log = Logger(label: "D2MessageIO.Sink")
 
 /// An entry-point for commands sent to the message backend.
-public protocol MessageClient {
+public protocol Sink {
     var name: String { get }
     var me: User? { get }
     var guilds: [Guild]? { get }
@@ -102,7 +102,7 @@ public protocol MessageClient {
     func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, any Error>
 }
 
-public extension MessageClient {
+public extension Sink {
     func sendMessage(_ content: String, to channelId: ChannelID) {
         sendMessage(Message(content: content), to: channelId)
     }

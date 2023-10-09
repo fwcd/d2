@@ -11,7 +11,7 @@ public struct MessageDatabaseHandler: MessageHandler {
         self.messageDB = messageDB
     }
 
-    public func handle(message: Message, from client: any MessageClient) -> Bool {
+    public func handle(message: Message, sink: any Sink) -> Bool {
         if !(message.author?.bot ?? true) {
             if let guildId = message.guild?.id {
                 do {

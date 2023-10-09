@@ -12,20 +12,20 @@ public class CronManager {
     private let msgParser: MessageParser = .init()
 
     private let registry: CommandRegistry
-    private let client: any MessageClient
+    private let sink: any Sink
     private let commandPrefix: String
     private let hostInfo: HostInfo
     private let eventLoopGroup: any EventLoopGroup
 
     public init(
         registry: CommandRegistry,
-        client: any MessageClient,
+        sink: any Sink,
         commandPrefix: String,
         hostInfo: HostInfo,
         eventLoopGroup: any EventLoopGroup
     ) {
         self.registry = registry
-        self.client = client
+        self.sink = sink
         self.commandPrefix = commandPrefix
         self.hostInfo = hostInfo
         self.eventLoopGroup = eventLoopGroup
@@ -56,7 +56,7 @@ public class CronManager {
 
         msgParser.parse(commandArgs).listenOrLogError { [self] input in
             let context = CommandContext(
-                client: client,
+                sink: sink,
                 registry: registry,
                 message: Message(content: "", channelId: schedule.channelId),
                 commandPrefix: commandPrefix,

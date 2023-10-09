@@ -21,9 +21,9 @@ public class LastMessageCommand: Command {
     public init() {}
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
-        context.client?.getMessages(for: context.channel!.id, limit: 2)
+        context.sink?.getMessages(for: context.channel!.id, limit: 2)
             .then { Promise(Result.from($0[safely: 1], errorIfNil: LastMessageError.noLastMessage)) }
-            .then { MessageParser().parse(message: $0, clientName: context.client?.name, guild: context.guild) }
+            .then { MessageParser().parse(message: $0, clientName: context.sink?.name, guild: context.guild) }
             .listen {
                 do {
                     output.append(try $0.get())

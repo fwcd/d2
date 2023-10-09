@@ -40,7 +40,7 @@ public class ThreadCommand: StringCommand {
                 }
                 config.permanentlyArchivedThreadIds.insert(channel.id)
                 output.append("Added `\(channel.name)` to permanently archived threads.")
-                context.client?.modifyChannel(channel.id, with: .init(archived: true)).listenOrLogError { _ in
+                context.sink?.modifyChannel(channel.id, with: .init(archived: true)).listenOrLogError { _ in
                     log.info("Permanently archived `\(channel.name)` upon command")
                 }
             }
@@ -60,7 +60,7 @@ public class ThreadCommand: StringCommand {
             output.append(errorText: "Subcommand `\(input)` not in the subcommands \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
-        guard let channelId = context.channel?.id, let channel = context.client?.channel(for: channelId) else {
+        guard let channelId = context.channel?.id, let channel = context.sink?.channel(for: channelId) else {
             output.append(errorText: "No channel available")
             return
         }

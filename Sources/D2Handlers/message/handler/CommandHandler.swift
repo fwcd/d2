@@ -89,7 +89,7 @@ public class CommandHandler: MessageHandler {
         self.pipeSeparator = pipeSeparator
     }
 
-    public func handle(message: Message, from client: any MessageClient) -> Bool {
+    public func handle(message: Message, sink: any Sink) -> Bool {
         guard message.content.starts(with: commandPrefix),
             !message.dm || (message.author.map { permissionManager.user($0, hasPermission: .vip) } ?? false),
             let channelId = message.channelId else { return false }
@@ -98,7 +98,7 @@ public class CommandHandler: MessageHandler {
             return false
         }
         guard currentlyRunningCommands < maxConcurrentlyRunningCommands || unconditionallyAllowedCommands.contains(where: { message.content.starts(with: "\(commandPrefix)\($0)") }) else {
-            client.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
+            sink.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
             log.notice("Command invocation not processed, since max concurrent operation count was reached")
             return false
         }
@@ -107,19 +107,19 @@ public class CommandHandler: MessageHandler {
 
         // Precedence: Chain < Pipe
         for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
-            if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, client: client) {
+            if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, sink: sink) {
                 guard permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
-                    client.sendMessage("Your pipe is too long.", to: channelId)
+                    sink.sendMessage("Your pipe is too long.", to: channelId)
                     log.notice("Too long pipe")
                     return true
                 }
 
                 // Ensure that all commands are available on the current platform
-                let platform = client.name
+                let platform = sink.name
                 for component in pipe {
                     if let availability = component.command.info.platformAvailability {
                         guard availability.contains(platform) else {
-                            client.sendMessage("Sorry, the command `\(component.name)` is unavailable on your platform (`\(platform)`). It is supported on: \(availability.map { "`\($0)`" }.joined(separator: ", "))", to: channelId)
+                            sink.sendMessage("Sorry, the command `\(component.name)` is unavailable on your platform (`\(platform)`). It is supported on: \(availability.map { "`\($0)`" }.joined(separator: ", "))", to: channelId)
                             log.notice("\(component.name) is unavailable on \(platform)")
                             return true
                         }
@@ -132,7 +132,7 @@ public class CommandHandler: MessageHandler {
                     pipeSink.output = MessageIOOutput(context: pipeSink.context) { sentMessages in
                         for sent in sentMessages {
                             sinkCommand.onSuccessfullySent(context: CommandContext(
-                                client: client,
+                                sink: sink,
                                 registry: self.registry,
                                 message: sent,
                                 commandPrefix: self.commandPrefix,
@@ -155,7 +155,7 @@ public class CommandHandler: MessageHandler {
                     self.currentlyRunningCommands += 1
                     log.debug("Currently running \(self.currentlyRunningCommands) commands")
 
-                    self.msgParser.parse(pipeSource.args, message: message, clientName: client.name, guild: pipeSource.context.guild).listenOrLogError { input in
+                    self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild).listenOrLogError { input in
                         // Execute the pipe
                         let runner = RunnablePipe(pipeSource: pipeSource, input: input)
                         runner.run()
@@ -174,7 +174,7 @@ public class CommandHandler: MessageHandler {
         return true
     }
 
-    private func constructPipe(rawPipeCommand: String, message: Message, client: any MessageClient) -> [PipeComponent]? {
+    private func constructPipe(rawPipeCommand: String, message: Message, sink: any Sink) -> [PipeComponent]? {
         guard let channelId = message.channelId, let author = message.author else { return nil }
         let isBot = author.bot
         var pipe = [PipeComponent]()
@@ -196,7 +196,7 @@ public class CommandHandler: MessageHandler {
                         log.debug("Appending '\(name)' to pipe")
 
                         let context = CommandContext(
-                            client: client,
+                            sink: sink,
                             registry: registry,
                             message: message,
                             commandPrefix: commandPrefix,
@@ -212,7 +212,7 @@ public class CommandHandler: MessageHandler {
                         }
                     } else {
                         log.notice("Rejected '\(name)' by \(author.displayTag) due to insufficient permissions")
-                        client.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
+                        sink.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
                         return nil
                     }
 
@@ -221,7 +221,7 @@ public class CommandHandler: MessageHandler {
                     log.notice("Did not recognize command '\(name)'")
                     if !isBot {
                         let alternative = registry.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
-                        client.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
+                        sink.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
                     }
                     return nil
                 }

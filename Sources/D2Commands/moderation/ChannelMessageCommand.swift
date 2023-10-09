@@ -19,7 +19,7 @@ public class ChannelMessageCommand: StringCommand {
             return
         }
 
-        guard let platform = parsedArgs[1].nilIfEmpty ?? context.client?.name else {
+        guard let platform = parsedArgs[1].nilIfEmpty ?? context.sink?.name else {
             output.append(errorText: "No platform found")
             return
         }

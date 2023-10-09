@@ -36,7 +36,7 @@ public class WouldYouRatherCommand: StringCommand {
 
     public func onSuccessfullySent(context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
-        context.client?.createReaction(for: messageId, on: channelId, emoji: emojiA)
-        context.client?.createReaction(for: messageId, on: channelId, emoji: emojiB)
+        context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiA)
+        context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiB)
     }
 }

@@ -11,7 +11,7 @@ public class DeleteEmojiCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client, let guild = context.guild else {
+        guard let sink = context.sink, let guild = context.guild else {
             output.append(errorText: "Please make sure that a client and a guild exists!")
             return
         }
@@ -24,7 +24,7 @@ public class DeleteEmojiCommand: StringCommand {
             return
         }
 
-        client.deleteEmoji(from: guild.id, emojiId: emojiId)
+        sink.deleteEmoji(from: guild.id, emojiId: emojiId)
             .listen {
                 if (try? $0.get()) ?? false {
                     output.append("Successfully deleted emoji!")

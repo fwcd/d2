@@ -4,20 +4,20 @@ import Utils
 /// client reference.
 public struct InteractiveTextChannel {
     public let id: ChannelID
-    private let client: any MessageClient
+    private let sink: any Sink
 
-    public init(id: ChannelID, client: any MessageClient) {
+    public init(id: ChannelID, sink: any Sink) {
         self.id = id
-        self.client = client
+        self.sink = sink
     }
 
     @discardableResult
     public func send(_ message: Message) -> Promise<Message?, any Error> {
-        client.sendMessage(message, to: id)
+        sink.sendMessage(message, to: id)
     }
 
     @discardableResult
     public func triggerTyping() -> Promise<Bool, any Error> {
-        client.triggerTyping(on: id)
+        sink.triggerTyping(on: id)
     }
 }

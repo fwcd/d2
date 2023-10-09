@@ -1,23 +1,47 @@
 import IRC
+import NIO
 import Logging
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2IRCIO.MessageIOClientDelegate")
+fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
 
-public class MessageIOClientDelegate: IRCClientDelegate {
-    private let inner: any MessageDelegate
-    private let sinkClient: any MessageClient
+public class IRCClientManager: IRCClientDelegate {
+    private let receiver: any Receiver
+    private let combinedSink: CombinedSink
     private let name: String
 
     private var joined: Bool = false
     private var channelsToJoin: [String]
 
-    public init(inner: any MessageDelegate, sinkClient: any MessageClient, name: String, channelsToJoin: [String]) {
-        log.debug("Creating delegate for \(name)")
-        self.inner = inner
-        self.sinkClient = sinkClient
+    private var ircClient: IRCClient
+
+    public init(
+        receiver: any Receiver,
+        combinedSink: CombinedSink,
+        eventLoopGroup: any EventLoopGroup,
+        config: IRCConfig,
+        name: String,
+        channelsToJoin: [String]
+    ) {
+        self.receiver = receiver
+        self.combinedSink = combinedSink
         self.name = name
         self.channelsToJoin = channelsToJoin
+
+        ircClient = IRCClient(options: IRCClientOptions(
+            port: config.port,
+            host: config.host,
+            password: config.password,
+            nickname: IRCNickName(config.nickname)!,
+            eventLoopGroup: eventLoopGroup
+        ))
+        ircClient.delegate = self
+
+        combinedSink.register(sink: IRCSink(client: ircClient, name: name))
+    }
+
+    public func connect() {
+        ircClient.connect()
     }
 
     public func clientFailedToRegister(_ ircClient: IRCClient) {
@@ -62,10 +86,10 @@ public class MessageIOClientDelegate: IRCClientDelegate {
             channelId: ID(channelName.stringValue, clientName: name)
         )
 
-        inner.on(createMessage: m, client: overlayClient(with: ircClient))
+        receiver.on(createMessage: m, sink: overlaySink(with: ircClient))
     }
 
-    private func overlayClient(with ircClient: IRCClient) -> MessageClient {
-        OverlayMessageClient(inner: sinkClient, name: name)
+    private func overlaySink(with ircClient: IRCClient) -> Sink {
+        OverlaySink(inner: combinedSink, name: name)
     }
 }

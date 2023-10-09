@@ -15,7 +15,7 @@ public class RickrollCommand: Command {
             output.append(errorText: "No message/channel id available")
             return
         }
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available")
             return
         }
@@ -29,7 +29,7 @@ public class RickrollCommand: Command {
         if keepMessage {
             rickroll(output: output, mentions: mentions)
         } else {
-            client.deleteMessage(messageId, on: channelId).listenOrLogError { _ in
+            sink.deleteMessage(messageId, on: channelId).listenOrLogError { _ in
                 self.rickroll(output: output, mentions: mentions)
             }
         }

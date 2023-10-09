@@ -31,7 +31,7 @@ public class ClearCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No MessageIO client available")
             return
         }
@@ -44,7 +44,7 @@ public class ClearCommand: StringCommand {
             return
         }
 
-        client.getMessages(for: channelId, limit: n + 1).listenOrLogError { messages in
+        sink.getMessages(for: channelId, limit: n + 1).listenOrLogError { messages in
             let deletions = messages.map { Deletion(message: $0, isIntended: $0.id != context.message.id) }
             let intended = deletions.filter { $0.isIntended }.map { $0.message }
 
@@ -64,7 +64,7 @@ public class ClearCommand: StringCommand {
     }
 
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
-        if let client = context.client, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
+        if let sink = context.sink, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
             let intendedDeletionCount = deletions.filter { $0.isIntended }.count
             let confirmationDeletionCount = deletions.count - intendedDeletionCount
             preparedDeletions[channel.id] = nil
@@ -72,7 +72,7 @@ public class ClearCommand: StringCommand {
             if content == confirmationString {
                 log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
                 if deletions.count == 1, let messageId = deletions.first?.message.id {
-                    client.deleteMessage(messageId, on: channel.id).listenOrLogError { success in
+                    sink.deleteMessage(messageId, on: channel.id).listenOrLogError { success in
                         if success {
                             self.finallyConfirmed.insert(channel.id)
                             output.append(":wastebasket: Deleted message")
@@ -86,7 +86,7 @@ public class ClearCommand: StringCommand {
                         output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
                         return
                     }
-                    client.bulkDeleteMessages(messageIds, on: channel.id).listenOrLogError { success in
+                    sink.bulkDeleteMessages(messageIds, on: channel.id).listenOrLogError { success in
                         if success {
                             self.finallyConfirmed.insert(channel.id)
                             output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
@@ -114,14 +114,14 @@ public class ClearCommand: StringCommand {
             // While preparing a deletion, memorize all messages
             preparedDeletions[channelId]!.append(Deletion(message: message, isIntended: false))
         } else if let messageId = message.id, finallyConfirmed.remove(channelId) != nil {
-            guard let client = context.client else {
+            guard let sink = context.sink else {
                 log.warning("No client available for deleting the final confirmation message")
                 return
             }
 
             // Automatically delete the final confirmation message after some time
             finalConfirmationDeletionTimer.schedule(beginImmediately: false) { _, _ in
-                client.deleteMessage(messageId, on: channelId)
+                sink.deleteMessage(messageId, on: channelId)
             }
         }
     }

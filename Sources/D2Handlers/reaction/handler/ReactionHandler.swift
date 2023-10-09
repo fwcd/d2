@@ -3,17 +3,17 @@ import D2MessageIO
 /// Anything that handles incoming reactions
 /// to messages from Discord.
 public protocol ReactionHandler {
-    mutating func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient)
+    mutating func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink)
 
-    mutating func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient)
+    mutating func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink)
 
-    mutating func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: any MessageClient)
+    mutating func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, sink: any Sink)
 }
 
 public extension ReactionHandler {
-    func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {}
+    func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {}
 
-    func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {}
+    func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {}
 
-    func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: any MessageClient) {}
+    func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, sink: any Sink) {}
 }

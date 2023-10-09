@@ -25,12 +25,12 @@ public struct SpamHandler: MessageHandler {
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)
     }
 
-    public mutating func handle(message: Message, from client: any MessageClient) -> Bool {
+    public mutating func handle(message: Message, sink: any Sink) -> Bool {
         guard
             isPossiblySpam(message: message),
             let author = message.author,
             let channelId = message.channelId,
-            let guild = client.guildForChannel(channelId),
+            let guild = sink.guildForChannel(channelId),
             let daysOnGuild = guild.members[author.id].map({ Int(-$0.joinedAt.timeIntervalSinceNow / 86400) }),
             let limits = config.limitsByDaysOnGuild.filter({ daysOnGuild >= $0.key }).max(by: ascendingComparator(comparing: \.key))?.value else { return false }
 
@@ -38,10 +38,10 @@ public struct SpamHandler: MessageHandler {
 
         if isSpamming(userId: author.id, limits: limits) {
             if cautionedSpammers.contains(author.id) {
-                client.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author.id)> for spamming!"), to: channelId)
-                penalize(spammer: author.id, on: guild, client: client)
+                sink.sendMessage(Message(content: ":octagonal_sign: Penalizing <@\(author.id)> for spamming!"), to: channelId)
+                penalize(spammer: author.id, on: guild, sink: sink)
             } else {
-                client.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author.id)>!"), to: channelId)
+                sink.sendMessage(Message(content: ":warning: Please stop spamming, <@\(author.id)>!"), to: channelId)
                 cautionedSpammers.insert(author.id)
             }
             return true
@@ -58,21 +58,21 @@ public struct SpamHandler: MessageHandler {
         lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == userId } ?? false }) > limits.maxSpamMessagesPerInterval
     }
 
-    private func penalize(spammer user: UserID, on guild: Guild, client: any MessageClient) {
+    private func penalize(spammer user: UserID, on guild: Guild, sink: any Sink) {
         guard let member = guild.members[user] else { return }
 
         if let role = config.spammerRoles[guild.id] {
-            add(role: role, to: user, on: guild, client: client).listenOrLogError {
+            add(role: role, to: user, on: guild, sink: sink).listenOrLogError {
                 if self.config.removeOtherRolesFromSpammer {
-                    self.remove(roles: member.roleIds, from: user, on: guild, client: client)
+                    self.remove(roles: member.roleIds, from: user, on: guild, sink: sink)
                 }
             }
         }
     }
 
     @discardableResult
-    private func add(role: RoleID, to user: UserID, on guild: Guild, client: any MessageClient) -> Promise<Void, any Error> {
-        client.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming").peekListen {
+    private func add(role: RoleID, to user: UserID, on guild: Guild, sink: any Sink) -> Promise<Void, any Error> {
+        sink.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming").peekListen {
             if case .success(false) = $0 {
                 log.warning("Could not add role \(role) to spammer \(user)")
             }
@@ -80,17 +80,17 @@ public struct SpamHandler: MessageHandler {
     }
 
     @discardableResult
-    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: any MessageClient) -> Promise<Void, any Error> {
+    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, sink: any Sink) -> Promise<Void, any Error> {
         var remainingRoles = roles
         guard let role = remainingRoles.popLast() else {
             return Promise(.success(()))
         }
 
-        return client.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming").then { success in
+        return sink.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming").then { success in
             if !success {
                 log.warning("Could not remove role \(role) from spammer \(user)")
             }
-            return self.remove(roles: remainingRoles, from: user, on: guild, client: client)
+            return self.remove(roles: remainingRoles, from: user, on: guild, sink: sink)
         }
     }
 }

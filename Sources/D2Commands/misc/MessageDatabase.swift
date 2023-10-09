@@ -72,7 +72,7 @@ public class MessageDatabase: MarkovPredictor {
         db = try Connection("local/messages.sqlite3")
     }
 
-    public func setupTables(client: any MessageClient) throws {
+    public func setupTables(sink: any Sink) throws {
         try db.transaction {
             try db.run(guilds.create(ifNotExists: true) {
                 $0.column(guildId, primaryKey: true)
@@ -161,8 +161,8 @@ public class MessageDatabase: MarkovPredictor {
         try db.prepare(sql, values)
     }
 
-    private func insertMessages(with client: any MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, any Error> {
-        client.getMessages(for: id, limit: client.messageFetchLimit ?? 20, selection: selection)
+    private func insertMessages(with sink: any Sink, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, any Error> {
+        sink.getMessages(for: id, limit: sink.messageFetchLimit ?? 20, selection: selection)
             .mapCatching { messages -> MessageID? in
                 guard !messages.isEmpty else { return nil }
 
@@ -180,15 +180,15 @@ public class MessageDatabase: MarkovPredictor {
             .then {
                 if let msgId = $0 {
                     log.info("Fetching messages before \(msgId)")
-                    return self.insertMessages(with: client, from: id, selection: .before(msgId))
+                    return self.insertMessages(with: sink, from: id, selection: .before(msgId))
                 } else {
                     return Promise(.success(nil))
                 }
             }
     }
 
-    public func rebuildMessages(with client: any MessageClient, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, any Error> {
-        guard let guild = client.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
+    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, any Error> {
+        guard let guild = sink.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
 
         do {
             log.notice("Rebuilding messages in database...")
@@ -196,11 +196,11 @@ public class MessageDatabase: MarkovPredictor {
 
             let guildChannels = debugMode ? guild.channels.prefix(10).compactMap { $0 } : Array(guild.channels)
             let promises: [Promise<Void, any Error>] = guildChannels.map { ch in
-                client.isGuildTextChannel(ch.key).then {
+                sink.isGuildTextChannel(ch.key).then {
                     if $0 {
                         log.info("Fetching messages from channel \(ch.value.name)")
                         progressListener?(ch.value.name)
-                        return self.insertMessages(with: client, from: ch.key).void()
+                        return self.insertMessages(with: sink, from: ch.key).void()
                     } else {
                         return Promise(.success(()))
                     }

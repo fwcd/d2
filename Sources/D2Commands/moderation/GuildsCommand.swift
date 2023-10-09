@@ -12,7 +12,7 @@ public class GuildsCommand: VoidCommand {
     public init() {}
 
     public func invoke(output: any CommandOutput, context: CommandContext) {
-        guard let guilds = context.client?.guilds else {
+        guard let guilds = context.sink?.guilds else {
             output.append(errorText: "Could not fetch guilds")
             return
         }

@@ -21,7 +21,7 @@ public class MessageIOOutput: CommandOutput {
     }
 
     public func append(_ value: RichValue, to channel: OutputChannel) {
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             log.warning("Cannot append to MessageIO without a client!")
             return
         }
@@ -50,26 +50,26 @@ public class MessageIOOutput: CommandOutput {
                 }
                 return .success(messages)
             }
-            .then { sequence(promises: $0.map { m in { self.send(message: m, with: client, to: channel) } }) }
+            .then { sequence(promises: $0.map { m in { self.send(message: m, with: sink, to: channel) } }) }
             .map { $0.compactMap { $0 } }
             .listenOrLogError { self.onSent?($0) }
     }
 
-    private func send(message: Message, with client: any MessageClient, to channel: OutputChannel) -> Promise<Message?, any Error> {
+    private func send(message: Message, with sink: any Sink, to channel: OutputChannel) -> Promise<Message?, any Error> {
         switch channel {
             case .guildChannel(let id):
-                return client.sendMessage(message, to: id)
+                return sink.sendMessage(message, to: id)
             case .dmChannel(let id):
-                return client.createDM(with: id)
+                return sink.createDM(with: id)
                     .thenCatching { channelId in
                         guard let id = channelId else {
                             throw MessageIOOutputError.couldNotSendDM
                         }
-                        return client.sendMessage(message, to: id)
+                        return sink.sendMessage(message, to: id)
                     }
             case .defaultChannel:
                 if let textChannelId = self.context.channel?.id {
-                    return client.sendMessage(message, to: textChannelId)
+                    return sink.sendMessage(message, to: textChannelId)
                 } else {
                     return Promise(.failure(MessageIOOutputError.noDefaultChannelAvailable))
                 }

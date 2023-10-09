@@ -12,7 +12,7 @@ public class CreateEmojiCommand: Command {
     public init() {}
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
-        guard let client = context.client, let guild = context.guild else {
+        guard let sink = context.sink, let guild = context.guild else {
             output.append(errorText: "Please make sure that a client and a guild exists!")
             return
         }
@@ -27,7 +27,7 @@ public class CreateEmojiCommand: Command {
             return
         }
 
-        client.createEmoji(on: guild.id, name: name, image: encoded)
+        sink.createEmoji(on: guild.id, name: name, image: encoded)
             .listen {
                 do {
                     guard let emoji = try $0.get() else {

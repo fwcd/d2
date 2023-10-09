@@ -84,7 +84,7 @@ public class PortalCommand: StringCommand {
 
     private func endpointName(context: CommandContext) -> String {
         let channelName = context.channel.flatMap { channel in context.guild.map { "\($0.channels[channel.id]?.name ?? "<unnamed channel>") on server \($0.name)" } } ?? "<unknown channel>"
-        let platformName = context.client?.name ?? "<unknown platform>"
+        let platformName = context.sink?.name ?? "<unknown platform>"
         return "\(channelName) (\(platformName))"
     }
 

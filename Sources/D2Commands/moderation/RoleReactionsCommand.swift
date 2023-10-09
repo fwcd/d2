@@ -12,13 +12,13 @@ public class RoleReactionsCommand: StringCommand {
         platformAvailability: ["Discord"]
     )
     @AutoSerializing private var configuration: RoleReactionsConfiguration
-    private var subcommands: [String: (CommandOutput, MessageClient, ChannelID, MessageID, String) -> Void] = [:]
+    private var subcommands: [String: (CommandOutput, Sink, ChannelID, MessageID, String) -> Void] = [:]
 
     public init(configuration: AutoSerializing<RoleReactionsConfiguration>) {
         self._configuration = configuration
         subcommands = [
-            "attach": { [unowned self] output, client, channelId, messageId, args in
-                guard let guild = client.guildForChannel(channelId) else {
+            "attach": { [unowned self] output, sink, channelId, messageId, args in
+                guard let guild = sink.guildForChannel(channelId) else {
                     output.append(errorText: "Not on a guild!")
                     return
                 }
@@ -33,7 +33,7 @@ public class RoleReactionsCommand: StringCommand {
 
                     for (emoji, _) in mappings {
                         // TODO: Handle asynchronous errors properly
-                        client.createReaction(for: messageId, on: channelId, emoji: emoji).listenOrLogError { _ in }
+                        sink.createReaction(for: messageId, on: channelId, emoji: emoji).listenOrLogError { _ in }
                     }
 
                     output.append("Successfully added role reactions to the message.")
@@ -41,7 +41,7 @@ public class RoleReactionsCommand: StringCommand {
                     output.append(error, errorText: "Could not attach role reactions.")
                 }
             },
-            "detach": { [unowned self] output, client, channelId, messageId, _ in
+            "detach": { [unowned self] output, sink, channelId, messageId, _ in
                 guard let mappings = self.configuration.roleMessages[messageId] else {
                     output.append(errorText: "This message is not a (known) reaction message!")
                     return
@@ -51,7 +51,7 @@ public class RoleReactionsCommand: StringCommand {
 
                 for (emoji, _) in mappings {
                     // TODO: Handle asynchronous errors properly
-                    client.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji).listenOrLogError { _ in }
+                    sink.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji).listenOrLogError { _ in }
                 }
 
                 output.append("Successfully removed role reactions from the message.")
@@ -71,14 +71,14 @@ public class RoleReactionsCommand: StringCommand {
             output.append(errorText: info.helpText!)
             return
         }
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client available")
             return
         }
 
         let subcommandName = parsedArgs[1]
-        let channelId = ID(parsedArgs[2], clientName: client.name)
-        let messageId = ID(parsedArgs[3], clientName: client.name)
+        let channelId = ID(parsedArgs[2], clientName: sink.name)
+        let messageId = ID(parsedArgs[3], clientName: sink.name)
         let subcommandArgs = parsedArgs[4]
 
         guard let subcommand = subcommands[subcommandName] else {
@@ -86,7 +86,7 @@ public class RoleReactionsCommand: StringCommand {
             return
         }
 
-        subcommand(output, client, channelId, messageId, subcommandArgs)
+        subcommand(output, sink, channelId, messageId, subcommandArgs)
     }
 
     private func parseReactionMappings(from s: String, on guild: Guild) throws -> RoleReactionsConfiguration.Mappings {

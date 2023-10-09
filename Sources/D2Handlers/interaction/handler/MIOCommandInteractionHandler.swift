@@ -16,7 +16,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
+    public func handle(interaction: Interaction, sink: any Sink) -> Bool {
         guard
             interaction.type == .mioCommand,
             let data = interaction.data,
@@ -25,13 +25,13 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
         let content = invocation.options.compactMap { $0.value as? String }.joined(separator: " ")
         let input = RichValue.text(content)
         let context = CommandContext(
-            client: client,
+            sink: sink,
             registry: registry,
             message: Message(
                 content: content,
                 author: interaction.member?.user,
                 channelId: interaction.channelId,
-                guild: interaction.guildId.flatMap(client.guild(for:)),
+                guild: interaction.guildId.flatMap(sink.guild(for:)),
                 guildMember: interaction.member
             ),
             commandPrefix: "/", // TODO: Find a more elegant solution than hardcoding the slash

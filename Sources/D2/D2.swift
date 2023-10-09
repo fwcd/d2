@@ -78,11 +78,11 @@ struct D2: ParsableCommand {
         let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 
         // Create platforms
-        var combinedClient: CombinedMessageClient! = CombinedMessageClient(mioCommandClientName: "Discord")
+        var combinedSink: CombinedSink! = CombinedSink(mioCommandSinkName: "Discord")
         var platforms: [any Startable] = []
         var createdAnyPlatform = false
 
-        var handler: D2Delegate! = try D2Delegate(
+        var receiver: D2Receiver! = try D2Receiver(
             withPrefix: commandPrefix,
             hostInfo: hostInfo,
             initialPresence: actualInitialPresence,
@@ -90,18 +90,28 @@ struct D2: ParsableCommand {
             mioCommandGuildId: config?.useMIOCommandsOnlyOnGuild,
             logBuffer: logBuffer,
             eventLoopGroup: eventLoopGroup,
-            client: combinedClient
+            sink: combinedSink
         )
 
         if let discordToken = tokens.discord {
             createdAnyPlatform = true
-            platforms.append(DiscordPlatform(with: handler, combinedClient: combinedClient, eventLoopGroup: eventLoopGroup, token: discordToken))
+            platforms.append(DiscordPlatform(
+                receiver: receiver,
+                combinedSink: combinedSink,
+                eventLoopGroup: eventLoopGroup,
+                token: discordToken
+            ))
         }
 
         for irc in tokens.irc ?? [] {
             do {
                 createdAnyPlatform = true
-                platforms.append(try IRCPlatform(with: handler, combinedClient: combinedClient, eventLoopGroup: eventLoopGroup, token: irc))
+                platforms.append(try IRCPlatform(
+                    receiver: receiver,
+                    combinedSink: combinedSink,
+                    eventLoopGroup: eventLoopGroup,
+                    token: irc
+                ))
             } catch {
                 log.warning("Could not create IRC platform: \(error)")
             }
@@ -117,8 +127,8 @@ struct D2: ParsableCommand {
         source.setEventHandler {
             log.info("Shutting down...")
             platforms.removeAll()
-            handler = nil
-            combinedClient = nil
+            receiver = nil
+            combinedSink = nil
             try! eventLoopGroup.syncShutdownGracefully()
             Self.exit()
         }
@@ -127,7 +137,7 @@ struct D2: ParsableCommand {
         // Register channel log output if needed
         if let logChannel = config?.log?.channel {
             logOutput.registerAsync {
-                combinedClient.sendMessage($0, to: logChannel)
+                combinedSink.sendMessage($0, to: logChannel)
             }
         }
 

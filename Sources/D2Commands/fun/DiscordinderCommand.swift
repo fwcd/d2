@@ -80,7 +80,7 @@ public class DiscordinderCommand: StringCommand {
             output.append(errorText: "Not on a guild!")
             return false
         }
-        guard let client = context.client else {
+        guard let sink = context.sink else {
             output.append(errorText: "No client")
             return false
         }
@@ -110,7 +110,7 @@ public class DiscordinderCommand: StringCommand {
         }
         let candidatePresence = guild.presences[candidateId]
 
-        client.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, client: client)), to: channelId).listenOrLogError { sentMessage in
+        sink.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, sink: sink)), to: channelId).listenOrLogError { sentMessage in
             guard let messageId = sentMessage?.id else { return }
 
             context.subscribeToChannel()
@@ -119,7 +119,7 @@ public class DiscordinderCommand: StringCommand {
 
             let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
             for reaction in reactions {
-                client.createReaction(for: messageId, on: channelId, emoji: reaction)
+                sink.createReaction(for: messageId, on: channelId, emoji: reaction)
             }
         }
 
@@ -132,11 +132,11 @@ public class DiscordinderCommand: StringCommand {
         context.unsubscribeFromChannel()
     }
 
-    private func embedOf(member: Guild.Member, presence: Presence?, client: any MessageClient) -> Embed {
+    private func embedOf(member: Guild.Member, presence: Presence?, sink: any Sink) -> Embed {
         Embed(
             title: member.displayName,
             description: (presence?.activities.first).map { descriptionOf(activity: $0) },
-            image: client.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
+            image: sink.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
         )
     }
 

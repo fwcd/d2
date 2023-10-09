@@ -35,7 +35,7 @@ public class UserInfoCommand: Command {
 
         output.append(Embed(
             title: "\(user.username)#\(user.discriminator)",
-            thumbnail: context.client?.name == "Discord"
+            thumbnail: context.sink?.name == "Discord"
                 ? URL(string: "https://cdn.discordapp.com/avatars/\(user.id)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) }
                 : nil,
             footer: Embed.Footer(text: "ID: \(user.id)"),

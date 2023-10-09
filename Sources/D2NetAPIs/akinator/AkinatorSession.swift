@@ -2,7 +2,7 @@ import Foundation
 import Utils
 import Logging
 
-// Ported from https://github.com/janniksam/Akinator.Api.Net/blob/master/Akinator.Api.Net/AkinatorClient.cs
+// Ported from https://github.com/janniksam/Akinator.Api.Net/blob/master/Akinator.Api.Net/Akinatorsink.cs
 // MIT-licensed, Copyright (c) 2019 Jannik
 
 fileprivate let jQuerySignature = "jQuery331023608747682107778"

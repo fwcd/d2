@@ -9,6 +9,6 @@ public class IOPlatformCommand: VoidCommand {
     public init() {}
 
     public func invoke(output: any CommandOutput, context: CommandContext) {
-        output.append("You are talking with me via `\(context.client?.name ?? "?")`.")
+        output.append("You are talking with me via `\(context.sink?.name ?? "?")`.")
     }
 }

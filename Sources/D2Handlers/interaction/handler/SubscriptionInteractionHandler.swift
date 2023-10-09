@@ -17,17 +17,17 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
+    public func handle(interaction: Interaction, sink: any Sink) -> Bool {
         guard
             interaction.type == .messageComponent,
             let customId = interaction.data?.customId,
             let channelId = interaction.channelId,
             let member = interaction.member else { return false }
-        let message = interaction.message ?? Message(content: "Dummy", channelId: channelId, id: MessageID("", clientName: client.name))
+        let message = interaction.message ?? Message(content: "Dummy", channelId: channelId, id: MessageID("", clientName: sink.name))
         let user = member.user
         manager.notifySubscriptions(on: channelId, isBot: user.bot) {
             let context = CommandContext(
-                client: client,
+                sink: sink,
                 registry: registry,
                 message: message,
                 commandPrefix: commandPrefix,

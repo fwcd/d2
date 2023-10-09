@@ -22,7 +22,7 @@ public struct HaikuHandler: MessageHandler {
         self.inventoryManager = inventoryManager
     }
 
-    public func handle(message: Message, from client: any MessageClient) -> Bool {
+    public func handle(message: Message, sink: any Sink) -> Bool {
         if let channelId = message.channelId,
             configuration.enabledChannelIds.contains(channelId),
             let author = message.guildMember,
@@ -38,7 +38,7 @@ public struct HaikuHandler: MessageHandler {
             )
             inventoryManager[author.user].append(item: item, to: "Haikus")
 
-            client.sendMessage(Message(embed: Embed(
+            sink.sendMessage(Message(embed: Embed(
                 title: "A Haiku by `\(author.displayName)`",
                 description: haiku.joined(separator: "\n")
             )), to: channelId)

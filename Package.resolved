@@ -166,8 +166,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-discord.git",
       "state" : {
-        "revision" : "b15e50ab0aa6e26b002c246503186371a4d3133f",
-        "version" : "10.1.2"
+        "revision" : "6ac860ee373724e65e6d62c26601fa8edf5aabda",
+        "version" : "10.1.3"
       }
     },
     {

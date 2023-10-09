@@ -27,7 +27,7 @@ final class TriggerReactionHandlers: XCTestCase {
             id: ID("Dummy Message")
         )
         output.messages.append(message)
-        _ = handler.handle(message: message, from: output)
+        _ = handler.handle(message: message, sink: output)
         return output.lastReactions.contains { $0.emoji.name == emoji }
     }
 }

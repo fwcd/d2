@@ -7,12 +7,13 @@ fileprivate let log = Logger(label: "D2IRCIO.IRCPlatform")
 
 public struct IRCPlatform: MessagePlatform {
     private let config: IRCConfig
-    private let ircClient: IRCClient
+    private let manager: IRCClientManager
+
     public let name: String
 
     public init(
-        with delegate: any MessageDelegate,
-        combinedClient: CombinedMessageClient,
+        receiver: any Receiver,
+        combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token config: IRCConfig
     ) throws {
@@ -20,21 +21,18 @@ public struct IRCPlatform: MessagePlatform {
         name = "IRC \(config.host):\(config.port)"
 
         log.info("Initializing IRC backend (\(config.host):\(config.port))...")
-        ircClient = IRCClient(options: IRCClientOptions(
-            port: config.port,
-            host: config.host,
-            password: config.password,
-            nickname: IRCNickName(config.nickname)!,
-            eventLoopGroup: eventLoopGroup
-        ))
-
-        combinedClient.register(client: IRCMessageClient(ircClient: ircClient, name: name))
-
-        ircClient.delegate = MessageIOClientDelegate(inner: delegate, sinkClient: combinedClient, name: name, channelsToJoin: config.autojoinedChannels ?? [])
+        manager = IRCClientManager(
+            receiver: receiver,
+            combinedSink: combinedSink,
+            eventLoopGroup: eventLoopGroup,
+            config: config,
+            name: name,
+            channelsToJoin: config.autojoinedChannels ?? []
+        )
     }
 
     public func start() throws {
         log.info("Starting IRC client (\(config.host):\(config.port))")
-        ircClient.connect()
+        manager.connect()
     }
 }
