@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.1.2"),
+        .package(url: "https://github.com/fwcd/swift-discord.git", from: "10.1.3"),
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.3.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.4.3"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
