@@ -2,22 +2,45 @@ import IRC
 import Logging
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2IRCIO.MessageIOClientDelegate")
+fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
 
-public class MessageIOClientDelegate: IRCClientDelegate {
+public class IRCClientManager: IRCClientDelegate {
     private let inner: any MessageDelegate
-    private let sinkClient: any MessageClient
+    private let combinedClient: any MessageClient
     private let name: String
 
     private var joined: Bool = false
     private var channelsToJoin: [String]
 
-    public init(inner: any MessageDelegate, sinkClient: any MessageClient, name: String, channelsToJoin: [String]) {
-        log.debug("Creating delegate for \(name)")
+    private var ircClient: IRCClient
+
+    public init(
+        inner: any MessageDelegate,
+        combinedClient: CombinedMessageClient,
+        eventLoopGroup: any EventLoopGroup,
+        config: IRCConfig,
+        name: String,
+        channelsToJoin: [String]
+    ) {
         self.inner = inner
-        self.sinkClient = sinkClient
+        self.combinedClient = combinedClient
         self.name = name
         self.channelsToJoin = channelsToJoin
+
+        ircClient = IRCClient(options: IRCClientOptions(
+            port: config.port,
+            host: config.host,
+            password: config.password,
+            nickname: IRCNickName(config.nickname)!,
+            eventLoopGroup: eventLoopGroup
+        ))
+        ircClient.delegate = self
+
+        combinedClient.register(client: IRCMessageClient(ircClient: ircClient, name: name))
+    }
+
+    public func connect() {
+        ircClient.connect()
     }
 
     public func clientFailedToRegister(_ ircClient: IRCClient) {
@@ -66,6 +89,6 @@ public class MessageIOClientDelegate: IRCClientDelegate {
     }
 
     private func overlayClient(with ircClient: IRCClient) -> MessageClient {
-        OverlayMessageClient(inner: sinkClient, name: name)
+        OverlayMessageClient(inner: combinedClient, name: name)
     }
 }
