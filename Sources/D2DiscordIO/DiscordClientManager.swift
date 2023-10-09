@@ -41,9 +41,9 @@ public class DiscordClientManager: DiscordClientDelegate {
         receiver.on(connect: connected, sink: overlaySink(with: discordClient))
     }
 
-    public func client(_ discordClient: DiscordClient, didDisconnectWithReason reason: String) {
+    public func client(_ client: DiscordClient, didDisconnectWithReason reason: DiscordGatewayCloseReason, closed: Bool) {
         log.info("Got disconnect with reason \(reason)")
-        receiver.on(disconnectWithReason: reason, sink: overlaySink(with: discordClient))
+        receiver.on(disconnectWithReason: String(describing: reason), sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateChannel channel: DiscordChannel) {
