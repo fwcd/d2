@@ -1,7 +1,7 @@
 import Utils
 
 /// A handler for events from the message backend.
-public protocol MessageDelegate {
+public protocol Receiver {
     func on(connect connected: Bool, sink: any Sink)
 
     func on(disconnectWithReason reason: String, sink: any Sink)
@@ -59,7 +59,7 @@ public protocol MessageDelegate {
     func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, sink: any Sink)
 }
 
-public extension MessageDelegate {
+public extension Receiver {
     func on(connect connected: Bool, sink: any Sink) {}
 
     func on(disconnectWithReason reason: String, sink: any Sink) {}

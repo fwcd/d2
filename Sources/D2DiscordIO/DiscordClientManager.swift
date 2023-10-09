@@ -7,19 +7,19 @@ import D2MessageIO
 fileprivate let log = Logger(label: "D2DiscordIO.DiscordClientManager")
 
 public class DiscordClientManager: DiscordClientDelegate {
-    private let inner: any MessageDelegate
+    private let receiver: any Receiver
     private let combinedSink: CombinedSink
 
     private let queue: DispatchQueue
     private var discordClient: DiscordClient!
 
     public init(
-        inner: any MessageDelegate,
+        receiver: any Receiver,
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
     ) {
-        self.inner = inner
+        self.receiver = receiver
         self.combinedSink = combinedSink
 
         queue = DispatchQueue(label: "Discord handle queue")
@@ -38,57 +38,57 @@ public class DiscordClientManager: DiscordClientDelegate {
 
     public func client(_ discordClient: DiscordClient, didConnect connected: Bool) {
         log.info("Connected")
-        inner.on(connect: connected, sink: overlaySink(with: discordClient))
+        receiver.on(connect: connected, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDisconnectWithReason reason: String) {
         log.info("Got disconnect with reason \(reason)")
-        inner.on(disconnectWithReason: reason, sink: overlaySink(with: discordClient))
+        receiver.on(disconnectWithReason: reason, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateChannel channel: DiscordChannel) {
         log.debug("Got channel create: \(channel.id)")
-        inner.on(createChannel: channel.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(createChannel: channel.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteChannel channel: DiscordChannel) {
         log.debug("Got channel delete: \(channel.id)")
-        inner.on(deleteChannel: channel.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(deleteChannel: channel.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateChannel channel: DiscordChannel) {
         log.debug("Got channel update: \(channel.id)")
-        inner.on(updateChannel: channel.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(updateChannel: channel.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateThread thread: DiscordChannel) {
         log.debug("Got thread create: \(thread.id)")
-        inner.on(createThread: thread.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(createThread: thread.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteThread thread: DiscordChannel) {
         log.debug("Got thread delete: \(thread.id)")
-        inner.on(deleteThread: thread.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(deleteThread: thread.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateThread thread: DiscordChannel) {
         log.debug("Got thread update: \(thread.id)")
-        inner.on(updateThread: thread.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(updateThread: thread.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateGuild guild: DiscordGuild) {
         log.debug("Created guild")
-        inner.on(createGuild: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(createGuild: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteGuild guild: DiscordGuild) {
         log.debug("Deleted guild")
-        inner.on(deleteGuild: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(deleteGuild: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateGuild guild: DiscordGuild) {
         log.debug("Updated guild")
-        inner.on(updateGuild: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(updateGuild: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didAddGuildMember member: DiscordGuildMember) {
@@ -97,7 +97,7 @@ public class DiscordClientManager: DiscordClientDelegate {
             log.error("Guild member \(member.user.username ?? "?") has no guild id")
             return
         }
-        inner.on(addGuildMember: member.usingMessageIO(in: guildId), sink: overlaySink(with: discordClient))
+        receiver.on(addGuildMember: member.usingMessageIO(in: guildId), sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didRemoveGuildMember member: DiscordGuildMember) {
@@ -106,7 +106,7 @@ public class DiscordClientManager: DiscordClientDelegate {
             log.error("Guild member \(member.user.username ?? "?") has no guild id")
             return
         }
-        inner.on(removeGuildMember: member.usingMessageIO(in: guildId), sink: overlaySink(with: discordClient))
+        receiver.on(removeGuildMember: member.usingMessageIO(in: guildId), sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateGuildMember member: DiscordGuildMember) {
@@ -115,60 +115,60 @@ public class DiscordClientManager: DiscordClientDelegate {
             log.error("Guild member \(member.user.username ?? "?") has no guild id")
             return
         }
-        inner.on(updateGuildMember: member.usingMessageIO(in: guildId), sink: overlaySink(with: discordClient))
+        receiver.on(updateGuildMember: member.usingMessageIO(in: guildId), sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateMessage message: DiscordMessage) {
         log.debug("Got message update")
         let sink = overlaySink(with: discordClient)
-        inner.on(updateMessage: message.usingMessageIO(with: sink), sink: sink)
+        receiver.on(updateMessage: message.usingMessageIO(with: sink), sink: sink)
     }
 
     public func client(_ discordClient: DiscordClient, didCreateMessage message: DiscordMessage) {
         log.debug("Got message")
         let sink = overlaySink(with: discordClient)
-        inner.on(createMessage: message.usingMessageIO(with: sink), sink: sink)
+        receiver.on(createMessage: message.usingMessageIO(with: sink), sink: sink)
     }
 
     public func client(_ discordClient: DiscordClient, didAddReaction reaction: DiscordEmoji, toMessage messageID: Discord.MessageID, onChannel channel: DiscordChannel, user userID: Discord.UserID) {
         log.debug("Did add reaction")
-        inner.on(addReaction: reaction.usingMessageIO, to: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(addReaction: reaction.usingMessageIO, to: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didRemoveReaction reaction: DiscordEmoji, fromMessage messageID: Discord.MessageID, onChannel channel: DiscordChannel, user userID: Discord.UserID) {
         log.debug("Did remove reaction")
-        inner.on(removeReaction: reaction.usingMessageIO, from: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(removeReaction: reaction.usingMessageIO, from: messageID.usingMessageIO, on: channel.id.usingMessageIO, by: userID.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didRemoveAllReactionsFrom messageID: Discord.MessageID, onChannel channel: DiscordChannel) {
         log.debug("Did remove all reactions")
-        inner.on(removeAllReactionsFrom: messageID.usingMessageIO, on: channel.id.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(removeAllReactionsFrom: messageID.usingMessageIO, on: channel.id.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didCreateRole role: DiscordRole, onGuild guild: DiscordGuild) {
         log.debug("Got role create: \(role.name) on guild \(guild.name ?? "?")")
-        inner.on(createRole: role.usingMessageIO, on: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(createRole: role.usingMessageIO, on: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didDeleteRole role: DiscordRole, onGuild guild: DiscordGuild) {
         log.debug("Got role delete: \(role.name) on guild \(guild.name ?? "?")")
-        inner.on(deleteRole: role.usingMessageIO, from: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(deleteRole: role.usingMessageIO, from: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateRole role: DiscordRole, onGuild guild: DiscordGuild) {
         log.debug("Got role update: \(role.name) on guild \(guild.name ?? "?")")
-        inner.on(updateRole: role.usingMessageIO, on: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(updateRole: role.usingMessageIO, on: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didReceivePresenceUpdate presence: DiscordPresence) {
         log.debug("Got presence update")
-        inner.on(receivePresenceUpdate: presence.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(receivePresenceUpdate: presence.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didReceiveReady ready: DiscordReadyEvent) {
         log.debug("Received ready")
         // TODO: Add a strongly-typed ReadyEvent in D2MessageIO
-        inner.on(receiveReady: [
+        receiver.on(receiveReady: [
             "gatewayVersion": ready.gatewayVersion as Any,
             "shard": ready.shard as Any
         ], sink: overlaySink(with: discordClient))
@@ -177,24 +177,24 @@ public class DiscordClientManager: DiscordClientDelegate {
     public func client(_ discordClient: DiscordClient, didCreateInteraction interaction: DiscordInteraction) {
         log.debug("Created interaction")
         let sink = overlaySink(with: discordClient)
-        inner.on(createInteraction: interaction.usingMessageIO(with: sink), sink: sink)
+        receiver.on(createInteraction: interaction.usingMessageIO(with: sink), sink: sink)
     }
 
     public func client(_ discordClient: DiscordClient, didReceiveVoiceStateUpdate voiceState: DiscordVoiceState) {
         log.debug("Got voice state update")
-        inner.on(receiveVoiceStateUpdate: voiceState.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(receiveVoiceStateUpdate: voiceState.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didHandleGuildMemberChunk chunk: [DiscordGuildMember], forGuild guild: DiscordGuild) {
         log.debug("Handling guild member chunk")
         let newChunk = Dictionary(uniqueKeysWithValues: chunk.map { ($0.id.usingMessageIO, $0.usingMessageIO(in: guild.id.usingMessageIO)) })
-        inner.on(handleGuildMemberChunk: newChunk, for: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(handleGuildMemberChunk: newChunk, for: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     public func client(_ discordClient: DiscordClient, didUpdateEmojis emojis: [DiscordEmoji], onGuild guild: DiscordGuild) {
         log.debug("Got updated emojis")
         let newEmojis = Dictionary(uniqueKeysWithValues: emojis.compactMap { e in e.id.map { ($0.usingMessageIO, e.usingMessageIO) } })
-        inner.on(updateEmojis: newEmojis, on: guild.usingMessageIO, sink: overlaySink(with: discordClient))
+        receiver.on(updateEmojis: newEmojis, on: guild.usingMessageIO, sink: overlaySink(with: discordClient))
     }
 
     private func overlaySink(with discordClient: DiscordClient) -> Sink {

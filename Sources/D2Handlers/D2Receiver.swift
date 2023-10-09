@@ -9,10 +9,10 @@ import D2Permissions
 import class NIO.MultiThreadedEventLoopGroup
 import protocol NIO.EventLoopGroup
 
-fileprivate let log = Logger(label: "D2Handlers.D2Delegate")
+fileprivate let log = Logger(label: "D2Handlers.D2Receiver")
 
-/// A client delegate that dispatches commands.
-public class D2Delegate: MessageDelegate {
+/// The main event handler by D2.
+public class D2Receiver: Receiver {
     private let commandPrefix: String
     private let hostInfo: HostInfo
     private let initialPresence: String?

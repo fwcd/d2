@@ -14,7 +14,7 @@ public protocol MessagePlatform: Startable {
     /// Performs synchronous setup. This method is expected not
     /// to block and to finish quickly.
     init(
-        with delegate: any MessageDelegate,
+        receiver: any Receiver,
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: Token

@@ -82,7 +82,7 @@ struct D2: ParsableCommand {
         var platforms: [any Startable] = []
         var createdAnyPlatform = false
 
-        var handler: D2Delegate! = try D2Delegate(
+        var receiver: D2Receiver! = try D2Receiver(
             withPrefix: commandPrefix,
             hostInfo: hostInfo,
             initialPresence: actualInitialPresence,
@@ -95,13 +95,23 @@ struct D2: ParsableCommand {
 
         if let discordToken = tokens.discord {
             createdAnyPlatform = true
-            platforms.append(DiscordPlatform(with: handler, combinedSink: combinedSink, eventLoopGroup: eventLoopGroup, token: discordToken))
+            platforms.append(DiscordPlatform(
+                receiver: receiver,
+                combinedSink: combinedSink,
+                eventLoopGroup: eventLoopGroup,
+                token: discordToken
+            ))
         }
 
         for irc in tokens.irc ?? [] {
             do {
                 createdAnyPlatform = true
-                platforms.append(try IRCPlatform(with: handler, combinedSink: combinedSink, eventLoopGroup: eventLoopGroup, token: irc))
+                platforms.append(try IRCPlatform(
+                    receiver: receiver,
+                    combinedSink: combinedSink,
+                    eventLoopGroup: eventLoopGroup,
+                    token: irc
+                ))
             } catch {
                 log.warning("Could not create IRC platform: \(error)")
             }
@@ -117,7 +127,7 @@ struct D2: ParsableCommand {
         source.setEventHandler {
             log.info("Shutting down...")
             platforms.removeAll()
-            handler = nil
+            receiver = nil
             combinedSink = nil
             try! eventLoopGroup.syncShutdownGracefully()
             Self.exit()

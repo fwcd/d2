@@ -5,7 +5,7 @@ import D2MessageIO
 fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
 
 public class IRCClientManager: IRCClientDelegate {
-    private let inner: any MessageDelegate
+    private let receiver: any Receiver
     private let combinedSink: CombinedSink
     private let name: String
 
@@ -15,14 +15,14 @@ public class IRCClientManager: IRCClientDelegate {
     private var ircClient: IRCClient
 
     public init(
-        inner: any MessageDelegate,
+        receiver: any Receiver,
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         config: IRCConfig,
         name: String,
         channelsToJoin: [String]
     ) {
-        self.inner = inner
+        self.receiver = receiver
         self.combinedSink = combinedSink
         self.name = name
         self.channelsToJoin = channelsToJoin
@@ -85,7 +85,7 @@ public class IRCClientManager: IRCClientDelegate {
             channelId: ID(channelName.stringValue, clientName: name)
         )
 
-        inner.on(createMessage: m, sink: overlaySink(with: ircClient))
+        receiver.on(createMessage: m, sink: overlaySink(with: ircClient))
     }
 
     private func overlaySink(with ircClient: IRCClient) -> Sink {
