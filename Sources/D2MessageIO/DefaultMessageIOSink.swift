@@ -4,11 +4,11 @@ import Utils
 /// A message client that may implement its methods only partially.
 ///
 /// This is a separate protocol to ensure that message clients like
-/// `OverlayMessageClient` or `CombinedMessageClient` implement the
+/// `OverlayMessageIOSink` or `CombinedMessageIOSink` implement the
 /// full set of methods.
-public protocol DefaultMessageClient: MessageClient {}
+public protocol DefaultMessageIOSink: MessageIOSink {}
 
-public extension DefaultMessageClient {
+public extension DefaultMessageIOSink {
     var me: D2MessageIO.User? { nil }
     var messageFetchLimit: Int? { nil }
     var guilds: [Guild]? { nil }

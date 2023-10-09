@@ -34,7 +34,7 @@ public class MessageIOInteractionOutput: CommandOutput {
             .listenOrLogError { _ in }
     }
 
-    private func send(message: Message, with client: any MessageClient, to channel: OutputChannel) -> Promise<Bool, any Error> {
+    private func send(message: Message, with client: any MessageIOSink, to channel: OutputChannel) -> Promise<Bool, any Error> {
         switch channel {
             case .defaultChannel:
                 guard let token = interaction.token else {

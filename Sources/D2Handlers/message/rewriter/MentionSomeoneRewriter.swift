@@ -4,7 +4,7 @@ import Utils
 fileprivate let someonePattern = try! Regex(from: "@someone")
 
 public struct MentionSomeoneRewriter: MessageRewriter {
-    public func rewrite(message: Message, from client: any MessageClient) -> Message? {
+    public func rewrite(message: Message, from client: any MessageIOSink) -> Message? {
         var m = message
         let mentionCount = someonePattern.matchCount(in: m.content)
         if mentionCount > 0,

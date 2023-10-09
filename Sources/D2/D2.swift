@@ -78,7 +78,7 @@ struct D2: ParsableCommand {
         let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 
         // Create platforms
-        var combinedClient: CombinedMessageClient! = CombinedMessageClient(mioCommandClientName: "Discord")
+        var combinedClient: CombinedMessageIOSink! = CombinedMessageIOSink(mioCommandClientName: "Discord")
         var platforms: [any Startable] = []
         var createdAnyPlatform = false
 

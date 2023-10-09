@@ -43,7 +43,7 @@ public class D2Delegate: MessageDelegate {
         mioCommandGuildId: GuildID? = nil,
         logBuffer: LogBuffer,
         eventLoopGroup: any EventLoopGroup,
-        client: any MessageClient
+        client: any MessageIOSink
     ) throws {
         self.commandPrefix = commandPrefix
         self.hostInfo = hostInfo
@@ -461,7 +461,7 @@ public class D2Delegate: MessageDelegate {
         registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
     }
 
-    public func on(receiveReady: [String: Any], client: any MessageClient) {
+    public func on(receiveReady: [String: Any], client: any MessageIOSink) {
         let guildCount = client.guilds?.count ?? 0
         log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
@@ -539,7 +539,7 @@ public class D2Delegate: MessageDelegate {
         }
     }
 
-    public func on(receivePresenceUpdate presence: Presence, client: any MessageClient) {
+    public func on(receivePresenceUpdate presence: Presence, client: any MessageIOSink) {
         for (_, entry) in registry {
             if case let .command(command) = entry {
                 command.onReceivedUpdated(presence: presence)
@@ -554,7 +554,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.activities.first.map { RichValue.text($0.name) } ?? .none)
     }
 
-    public func on(createGuild guild: Guild, client: any MessageClient) {
+    public func on(createGuild guild: Guild, client: any MessageIOSink) {
         do {
             log.info("Inserting guild '\(guild.name)' into message database...")
             try messageDB.insert(guild: guild)
@@ -571,7 +571,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
     }
 
-    public func on(createMessage message: Message, client: any MessageClient) {
+    public func on(createMessage message: Message, client: any MessageIOSink) {
         var m = message
 
         for rewriter in messageRewriters {
@@ -605,7 +605,7 @@ public class D2Delegate: MessageDelegate {
         }
     }
 
-    public func on(createInteraction interaction: Interaction, client: any MessageClient) {
+    public func on(createInteraction interaction: Interaction, client: any MessageIOSink) {
         for i in interactionHandlers.indices {
             if interactionHandlers[i].handle(interaction: interaction, client: client) {
                 return
@@ -613,25 +613,25 @@ public class D2Delegate: MessageDelegate {
         }
     }
 
-    public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
+    public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageIOSink) {
         for i in reactionHandlers.indices {
             reactionHandlers[i].handle(createdReaction: reaction, to: messageId, on: channelId, by: userId, client: client)
         }
     }
 
-    public func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
+    public func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageIOSink) {
         for i in reactionHandlers.indices {
             reactionHandlers[i].handle(deletedReaction: reaction, from: messageId, on: channelId, by: userId, client: client)
         }
     }
 
-    public func on(removeAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: any MessageClient) {
+    public func on(removeAllReactionsFrom messageId: MessageID, on channelId: ChannelID, client: any MessageIOSink) {
         for i in reactionHandlers.indices {
             reactionHandlers[i].handle(deletedAllReactionsFrom: messageId, on: channelId, client: client)
         }
     }
 
-    public func on(updateMessage message: Message, client: any MessageClient) {
+    public func on(updateMessage message: Message, client: any MessageIOSink) {
         MessageParser().parse(message: message, clientName: client.name, guild: message.guild).listenOrLogError {
             self.eventListenerBus.fire(event: .updateMessage, with: $0, context: CommandContext(
                 client: client,
@@ -645,11 +645,11 @@ public class D2Delegate: MessageDelegate {
         }
     }
 
-    public func on(disconnectWithReason reason: String, client: any MessageClient) {
+    public func on(disconnectWithReason reason: String, client: any MessageIOSink) {
         eventListenerBus.fire(event: .disconnectWithReason, with: .text(reason))
     }
 
-    public func on(createChannel channel: Channel, client: any MessageClient) {
+    public func on(createChannel channel: Channel, client: any MessageIOSink) {
         for i in channelHandlers.indices {
             channelHandlers[i].handle(channelCreate: channel, client: client)
         }
@@ -657,7 +657,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
     }
 
-    public func on(deleteChannel channel: Channel, client: any MessageClient) {
+    public func on(deleteChannel channel: Channel, client: any MessageIOSink) {
         for i in channelHandlers.indices {
             channelHandlers[i].handle(channelDelete: channel, client: client)
         }
@@ -665,7 +665,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .deleteChannel, with: .none) // TODO: Pass channel ID?
     }
 
-    public func on(updateChannel channel: Channel, client: any MessageClient) {
+    public func on(updateChannel channel: Channel, client: any MessageIOSink) {
         for i in channelHandlers.indices {
             channelHandlers[i].handle(channelUpdate: channel, client: client)
         }
@@ -673,29 +673,29 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
     }
 
-    public func on(createThread thread: Channel, client: any MessageClient) {
+    public func on(createThread thread: Channel, client: any MessageIOSink) {
         for i in channelHandlers.indices {
             channelHandlers[i].handle(threadCreate: thread, client: client)
         }
     }
 
-    public func on(deleteThread thread: Channel, client: any MessageClient) {
+    public func on(deleteThread thread: Channel, client: any MessageIOSink) {
         for i in channelHandlers.indices {
             channelHandlers[i].handle(threadDelete: thread, client: client)
         }
     }
 
-    public func on(updateThread thread: Channel, client: any MessageClient) {
+    public func on(updateThread thread: Channel, client: any MessageIOSink) {
         for i in channelHandlers.indices {
             channelHandlers[i].handle(threadUpdate: thread, client: client)
         }
     }
 
-    public func on(deleteGuild guild: Guild, client: any MessageClient) {
+    public func on(deleteGuild guild: Guild, client: any MessageIOSink) {
         eventListenerBus.fire(event: .deleteGuild, with: .none) // TODO: Pass guild ID?
     }
 
-    public func on(updateGuild guild: Guild, client: any MessageClient) {
+    public func on(updateGuild guild: Guild, client: any MessageIOSink) {
         do {
             log.info("Updating guild '\(guild.name)' in message database...")
             try messageDB.insert(guild: guild)
@@ -706,7 +706,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .updateGuild, with: .none) // TODO: Pass guild ID?
     }
 
-    public func on(addGuildMember member: Guild.Member, client: any MessageClient) {
+    public func on(addGuildMember member: Guild.Member, client: any MessageIOSink) {
         do {
             if let guild = client.guild(for: member.guildId) {
                 log.info("Inserting member '\(member.displayName)' into message database...")
@@ -719,11 +719,11 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .addGuildMember, with: .mentions([member.user]))
     }
 
-    public func on(removeGuildMember member: Guild.Member, client: any MessageClient) {
+    public func on(removeGuildMember member: Guild.Member, client: any MessageIOSink) {
         eventListenerBus.fire(event: .removeGuildMember, with: .mentions([member.user]))
     }
 
-    public func on(updateGuildMember member: Guild.Member, client: any MessageClient) {
+    public func on(updateGuildMember member: Guild.Member, client: any MessageIOSink) {
         do {
             if let guild = client.guild(for: member.guildId) {
                 log.info("Updating member '\(member.displayName)' in message database...")
@@ -736,7 +736,7 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .updateGuildMember, with: .mentions([member.user]))
     }
 
-    public func on(createRole role: Role, on guild: Guild, client: any MessageClient) {
+    public func on(createRole role: Role, on guild: Guild, client: any MessageIOSink) {
         do {
             log.info("Inserting role '\(role.name)' on '\(guild.name)' into message database...")
             try messageDB.insert(role: role, on: guild)
@@ -747,11 +747,11 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .createRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
-    public func on(deleteRole role: Role, from guild: Guild, client: any MessageClient) {
+    public func on(deleteRole role: Role, from guild: Guild, client: any MessageIOSink) {
         eventListenerBus.fire(event: .deleteRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
-    public func on(updateRole role: Role, on guild: Guild, client: any MessageClient) {
+    public func on(updateRole role: Role, on guild: Guild, client: any MessageIOSink) {
         do {
             log.info("Updating role '\(role.name)' on '\(guild.name)' in message database...")
             try messageDB.insert(role: role, on: guild)
@@ -762,19 +762,19 @@ public class D2Delegate: MessageDelegate {
         eventListenerBus.fire(event: .updateRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
-    public func on(connect connected: Bool, client: any MessageClient) {
+    public func on(connect connected: Bool, client: any MessageIOSink) {
         eventListenerBus.fire(event: .connect, with: .none) // TODO: Pass 'connected'?
     }
 
-    public func on(receiveVoiceStateUpdate state: VoiceState, client: any MessageClient) {
+    public func on(receiveVoiceStateUpdate state: VoiceState, client: any MessageIOSink) {
         eventListenerBus.fire(event: .receiveVoiceStateUpdate, with: .none) // TODO: Pass state?
     }
 
-    public func on(handleGuildMemberChunk chunk: [UserID: Guild.Member], for guild: Guild, client: any MessageClient) {
+    public func on(handleGuildMemberChunk chunk: [UserID: Guild.Member], for guild: Guild, client: any MessageIOSink) {
         eventListenerBus.fire(event: .handleGuildMemberChunk, with: .none) // TODO: Pass state?
     }
 
-    public func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: any MessageClient) {
+    public func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, client: any MessageIOSink) {
         do {
             log.info("Updating emojis on '\(guild.name)' in message database...")
             for emoji in emojis.values {

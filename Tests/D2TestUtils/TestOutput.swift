@@ -3,7 +3,7 @@ import Utils
 import D2MessageIO
 @testable import D2Commands
 
-/// An implementation of CommandOutput and MessageClient
+/// An implementation of CommandOutput and MessageIOSink
 /// that writes all messages into an array.
 public class TestOutput {
     private var _messages = [Message]() {
@@ -60,7 +60,7 @@ extension TestOutput: CommandOutput {
     }
 }
 
-extension TestOutput: DefaultMessageClient {
+extension TestOutput: DefaultMessageIOSink {
     public var name: String { "Test" }
 
     public func guild(for guildId: GuildID) -> Guild? {

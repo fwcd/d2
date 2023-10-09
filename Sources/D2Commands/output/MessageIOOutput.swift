@@ -55,7 +55,7 @@ public class MessageIOOutput: CommandOutput {
             .listenOrLogError { self.onSent?($0) }
     }
 
-    private func send(message: Message, with client: any MessageClient, to channel: OutputChannel) -> Promise<Message?, any Error> {
+    private func send(message: Message, with client: any MessageIOSink, to channel: OutputChannel) -> Promise<Message?, any Error> {
         switch channel {
             case .guildChannel(let id):
                 return client.sendMessage(message, to: id)

@@ -12,7 +12,7 @@ public class RoleReactionsCommand: StringCommand {
         platformAvailability: ["Discord"]
     )
     @AutoSerializing private var configuration: RoleReactionsConfiguration
-    private var subcommands: [String: (CommandOutput, MessageClient, ChannelID, MessageID, String) -> Void] = [:]
+    private var subcommands: [String: (CommandOutput, MessageIOSink, ChannelID, MessageID, String) -> Void] = [:]
 
     public init(configuration: AutoSerializing<RoleReactionsConfiguration>) {
         self._configuration = configuration

@@ -17,7 +17,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
+    public func handle(interaction: Interaction, client: any MessageIOSink) -> Bool {
         guard
             interaction.type == .messageComponent,
             let customId = interaction.data?.customId,

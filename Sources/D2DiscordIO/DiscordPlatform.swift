@@ -14,7 +14,7 @@ public struct DiscordPlatform: MessagePlatform {
 
     public init(
         with delegate: any MessageDelegate,
-        combinedClient: CombinedMessageClient,
+        combinedClient: CombinedMessageIOSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
     ) {

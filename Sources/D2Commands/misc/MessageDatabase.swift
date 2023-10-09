@@ -72,7 +72,7 @@ public class MessageDatabase: MarkovPredictor {
         db = try Connection("local/messages.sqlite3")
     }
 
-    public func setupTables(client: any MessageClient) throws {
+    public func setupTables(client: any MessageIOSink) throws {
         try db.transaction {
             try db.run(guilds.create(ifNotExists: true) {
                 $0.column(guildId, primaryKey: true)
@@ -161,7 +161,7 @@ public class MessageDatabase: MarkovPredictor {
         try db.prepare(sql, values)
     }
 
-    private func insertMessages(with client: any MessageClient, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, any Error> {
+    private func insertMessages(with client: any MessageIOSink, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, any Error> {
         client.getMessages(for: id, limit: client.messageFetchLimit ?? 20, selection: selection)
             .mapCatching { messages -> MessageID? in
                 guard !messages.isEmpty else { return nil }
@@ -187,7 +187,7 @@ public class MessageDatabase: MarkovPredictor {
             }
     }
 
-    public func rebuildMessages(with client: any MessageClient, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, any Error> {
+    public func rebuildMessages(with client: any MessageIOSink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, any Error> {
         guard let guild = client.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
 
         do {

@@ -13,7 +13,7 @@ public struct IRCPlatform: MessagePlatform {
 
     public init(
         with delegate: any MessageDelegate,
-        combinedClient: CombinedMessageClient,
+        combinedClient: CombinedMessageIOSink,
         eventLoopGroup: any EventLoopGroup,
         token config: IRCConfig
     ) throws {

@@ -3,6 +3,6 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum DiscordMessageClientError: Error {
+public enum DiscordSinkError: Error {
     case invalidResponse(HTTPURLResponse?)
 }

@@ -11,7 +11,7 @@ public struct UniversalSummoningHandler: MessageHandler {
         self.hostInfo = hostInfo
     }
 
-    public func handle(message: Message, from client: any MessageClient) -> Bool {
+    public func handle(message: Message, from client: any MessageIOSink) -> Bool {
         if message.content.trimmingCharacters(in: .whitespacesAndNewlines) == theMagicWords,
            let channelId = message.channelId {
             client.sendMessage(Message(content: "Hey, \(hostInfo.instanceName ?? "unknown D2") here"), to: channelId)

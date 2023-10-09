@@ -5,10 +5,10 @@ import Emoji
 import IRC
 import Logging
 
-fileprivate let log = Logger(label: "D2IRCIO.IRCMessageClient")
+fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
 fileprivate let mentionPattern = try! Regex(from: "<@.+?>")
 
-struct IRCMessageClient: DefaultMessageClient {
+struct IRCSink: DefaultMessageIOSink {
     private let ircClient: IRCClient
 
     let name: String
@@ -43,7 +43,7 @@ struct IRCMessageClient: DefaultMessageClient {
 
         guard let channelName = IRCChannelName(channelId.value) else {
             log.warning("Could not convert \(channelId.value) (maybe it is missing a leading '#'?)")
-            return Promise(.failure(IRCMessageClientError.invalidChannelName(channelId.value)))
+            return Promise(.failure(IRCSinkError.invalidChannelName(channelId.value)))
         }
 
         ircClient.send(.PRIVMSG([.channel(channelName)], text))

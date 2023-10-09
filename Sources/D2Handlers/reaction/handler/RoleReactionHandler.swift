@@ -12,7 +12,7 @@ public struct RoleReactionHandler: ReactionHandler {
         self._configuration = configuration
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageIOSink) {
         if
             let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
             let guild = client.guildForChannel(channelId),
@@ -25,7 +25,7 @@ public struct RoleReactionHandler: ReactionHandler {
         }
     }
 
-    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageClient) {
+    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageIOSink) {
         if
             let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
             let guild = client.guildForChannel(channelId),

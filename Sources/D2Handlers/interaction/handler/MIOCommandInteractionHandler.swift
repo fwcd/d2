@@ -16,7 +16,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(interaction: Interaction, client: any MessageClient) -> Bool {
+    public func handle(interaction: Interaction, client: any MessageIOSink) -> Bool {
         guard
             interaction.type == .mioCommand,
             let data = interaction.data,
