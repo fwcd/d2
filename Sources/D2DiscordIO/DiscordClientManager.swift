@@ -1,17 +1,39 @@
+import Dispatch
 import Discord
 import Logging
+import NIO
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2DiscordIO.MessageIOClientDelegate")
+fileprivate let log = Logger(label: "D2DiscordIO.DiscordClientManager")
 
-public class MessageIOClientDelegate: DiscordClientDelegate {
+public class DiscordClientManager: DiscordClientDelegate {
     private let inner: any MessageDelegate
-    private let sinkClient: any MessageClient
+    private let combinedClient: CombinedMessageClient
 
-    public init(inner: any MessageDelegate, sinkClient: any MessageClient) {
-        log.debug("Creating delegate")
+    private let queue: DispatchQueue
+    private var discordClient: DiscordClient!
+
+    public init(
+        inner: any MessageDelegate,
+        combinedClient: CombinedMessageClient,
+        eventLoopGroup: any EventLoopGroup,
+        token: String
+    ) {
         self.inner = inner
-        self.sinkClient = sinkClient
+        self.combinedClient = combinedClient
+
+        queue = DispatchQueue(label: "Discord handle queue")
+        discordClient = DiscordClient(token: DiscordToken(rawValue: "Bot \(token)"), delegate: self, configuration: [
+            .handleQueue(queue),
+            .intents(.allIntents),
+            .eventLoopGroup(eventLoopGroup),
+        ])
+
+        combinedClient.register(client: DiscordMessageClient(client: discordClient))
+    }
+
+    public func connect() {
+        discordClient.connect()
     }
 
     public func client(_ discordClient: DiscordClient, didConnect connected: Bool) {
@@ -176,6 +198,6 @@ public class MessageIOClientDelegate: DiscordClientDelegate {
     }
 
     private func overlayClient(with discordClient: DiscordClient) -> MessageClient {
-        OverlayMessageClient(inner: sinkClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
+        OverlayMessageClient(inner: combinedClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
     }
 }
