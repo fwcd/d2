@@ -11,7 +11,6 @@ public class EventListenerBus {
 
     public enum Event: String, CaseIterable {
         case connect
-        case disconnectWithReason
         case createChannel
         case deleteChannel
         case updateChannel

@@ -646,7 +646,7 @@ public class D2Receiver: Receiver {
     }
 
     public func on(disconnectWithReason reason: String, sink: any Sink) {
-        eventListenerBus.fire(event: .disconnectWithReason, with: .text(reason))
+        fatalError("Disconnected with reason: \(reason)")
     }
 
     public func on(createChannel channel: Channel, sink: any Sink) {
