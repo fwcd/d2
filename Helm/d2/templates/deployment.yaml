@@ -20,6 +20,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        tty: true
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         volumeMounts:
         - name: d2-local
