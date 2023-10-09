@@ -67,7 +67,7 @@ public struct TriggerReactionHandler: MessageHandler {
         ])
     }
 
-    public func handle(message: Message, from client: any MessageIOSink) -> Bool {
+    public func handle(message: Message, from client: any Sink) -> Bool {
         if let messageId = message.id, let channelId = message.channelId {
             for trigger in triggers {
                 trigger.emoji(message).listen {

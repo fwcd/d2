@@ -8,7 +8,7 @@ import Logging
 fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
 fileprivate let mentionPattern = try! Regex(from: "<@.+?>")
 
-struct IRCSink: DefaultMessageIOSink {
+struct IRCSink: DefaultSink {
     private let ircClient: IRCClient
 
     let name: String

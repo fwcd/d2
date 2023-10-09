@@ -16,7 +16,7 @@ public struct StreamerRoleHandler: PresenceHandler {
         self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 
-    public func handle(presenceUpdate presence: Presence, client: any MessageIOSink) {
+    public func handle(presenceUpdate presence: Presence, client: any Sink) {
         log.trace("Presence activities: \(presence.activities)")
         guard let guildId = presence.guildId else { return }
         if

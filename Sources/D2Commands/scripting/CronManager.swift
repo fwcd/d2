@@ -12,14 +12,14 @@ public class CronManager {
     private let msgParser: MessageParser = .init()
 
     private let registry: CommandRegistry
-    private let client: any MessageIOSink
+    private let client: any Sink
     private let commandPrefix: String
     private let hostInfo: HostInfo
     private let eventLoopGroup: any EventLoopGroup
 
     public init(
         registry: CommandRegistry,
-        client: any MessageIOSink,
+        client: any Sink,
         commandPrefix: String,
         hostInfo: HostInfo,
         eventLoopGroup: any EventLoopGroup

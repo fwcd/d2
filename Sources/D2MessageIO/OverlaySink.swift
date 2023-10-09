@@ -2,15 +2,15 @@ import Foundation
 import Utils
 
 /// A decorator message client that uses a custom 'name' and 'me'.
-public struct OverlayMessageIOSink: MessageIOSink {
-    private let inner: any MessageIOSink
+public struct OverlaySink: Sink {
+    private let inner: any Sink
 
     public let name: String
     public let me: User?
     public var guilds: [Guild]? { inner.guilds }
     public var messageFetchLimit: Int? { inner.messageFetchLimit }
 
-    public init(inner: any MessageIOSink, name: String, me: User? = nil) {
+    public init(inner: any Sink, name: String, me: User? = nil) {
         self.inner = inner
         self.name = name
         self.me = me

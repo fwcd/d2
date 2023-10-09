@@ -22,7 +22,7 @@ public struct HaikuHandler: MessageHandler {
         self.inventoryManager = inventoryManager
     }
 
-    public func handle(message: Message, from client: any MessageIOSink) -> Bool {
+    public func handle(message: Message, from client: any Sink) -> Bool {
         if let channelId = message.channelId,
             configuration.enabledChannelIds.contains(channelId),
             let author = message.guildMember,

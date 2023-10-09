@@ -13,7 +13,7 @@ public struct MentionD2Handler: MessageHandler {
         self.conversator = conversator
     }
 
-    public func handleRaw(message: Message, from client: any MessageIOSink) -> Bool {
+    public func handleRaw(message: Message, from client: any Sink) -> Bool {
         if let me = client.me,
             !message.mentionEveryone,
             message.mentions(user: me),

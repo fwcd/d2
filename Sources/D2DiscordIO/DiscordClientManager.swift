@@ -8,14 +8,14 @@ fileprivate let log = Logger(label: "D2DiscordIO.DiscordClientManager")
 
 public class DiscordClientManager: DiscordClientDelegate {
     private let inner: any MessageDelegate
-    private let combinedClient: CombinedMessageIOSink
+    private let combinedClient: CombinedSink
 
     private let queue: DispatchQueue
     private var discordClient: DiscordClient!
 
     public init(
         inner: any MessageDelegate,
-        combinedClient: CombinedMessageIOSink,
+        combinedClient: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
     ) {
@@ -197,7 +197,7 @@ public class DiscordClientManager: DiscordClientDelegate {
         inner.on(updateEmojis: newEmojis, on: guild.usingMessageIO, client: overlayClient(with: discordClient))
     }
 
-    private func overlayClient(with discordClient: DiscordClient) -> MessageIOSink {
-        OverlayMessageIOSink(inner: combinedClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
+    private func overlayClient(with discordClient: DiscordClient) -> Sink {
+        OverlaySink(inner: combinedClient, name: discordClientName, me: discordClient.user?.usingMessageIO)
     }
 }

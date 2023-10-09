@@ -4,11 +4,11 @@ import Utils
 /// A message client that may implement its methods only partially.
 ///
 /// This is a separate protocol to ensure that message clients like
-/// `OverlayMessageIOSink` or `CombinedMessageIOSink` implement the
+/// `OverlaySink` or `CombinedSink` implement the
 /// full set of methods.
-public protocol DefaultMessageIOSink: MessageIOSink {}
+public protocol DefaultSink: Sink {}
 
-public extension DefaultMessageIOSink {
+public extension DefaultSink {
     var me: D2MessageIO.User? { nil }
     var messageFetchLimit: Int? { nil }
     var guilds: [Guild]? { nil }

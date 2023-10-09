@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
 
 public class IRCClientManager: IRCClientDelegate {
     private let inner: any MessageDelegate
-    private let combinedClient: any MessageIOSink
+    private let combinedClient: any Sink
     private let name: String
 
     private var joined: Bool = false
@@ -16,7 +16,7 @@ public class IRCClientManager: IRCClientDelegate {
 
     public init(
         inner: any MessageDelegate,
-        combinedClient: CombinedMessageIOSink,
+        combinedClient: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         config: IRCConfig,
         name: String,
@@ -88,7 +88,7 @@ public class IRCClientManager: IRCClientDelegate {
         inner.on(createMessage: m, client: overlayClient(with: ircClient))
     }
 
-    private func overlayClient(with ircClient: IRCClient) -> MessageIOSink {
-        OverlayMessageIOSink(inner: combinedClient, name: name)
+    private func overlayClient(with ircClient: IRCClient) -> Sink {
+        OverlaySink(inner: combinedClient, name: name)
     }
 }

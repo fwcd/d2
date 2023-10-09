@@ -25,7 +25,7 @@ public struct SpamHandler: MessageHandler {
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)
     }
 
-    public mutating func handle(message: Message, from client: any MessageIOSink) -> Bool {
+    public mutating func handle(message: Message, from client: any Sink) -> Bool {
         guard
             isPossiblySpam(message: message),
             let author = message.author,
@@ -58,7 +58,7 @@ public struct SpamHandler: MessageHandler {
         lastSpamMessages.count(forWhich: { ($0.author?.id).map { id in id == userId } ?? false }) > limits.maxSpamMessagesPerInterval
     }
 
-    private func penalize(spammer user: UserID, on guild: Guild, client: any MessageIOSink) {
+    private func penalize(spammer user: UserID, on guild: Guild, client: any Sink) {
         guard let member = guild.members[user] else { return }
 
         if let role = config.spammerRoles[guild.id] {
@@ -71,7 +71,7 @@ public struct SpamHandler: MessageHandler {
     }
 
     @discardableResult
-    private func add(role: RoleID, to user: UserID, on guild: Guild, client: any MessageIOSink) -> Promise<Void, any Error> {
+    private func add(role: RoleID, to user: UserID, on guild: Guild, client: any Sink) -> Promise<Void, any Error> {
         client.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming").peekListen {
             if case .success(false) = $0 {
                 log.warning("Could not add role \(role) to spammer \(user)")
@@ -80,7 +80,7 @@ public struct SpamHandler: MessageHandler {
     }
 
     @discardableResult
-    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: any MessageIOSink) -> Promise<Void, any Error> {
+    private func remove(roles: [RoleID], from user: UserID, on guild: Guild, client: any Sink) -> Promise<Void, any Error> {
         var remainingRoles = roles
         guard let role = remainingRoles.popLast() else {
             return Promise(.success(()))

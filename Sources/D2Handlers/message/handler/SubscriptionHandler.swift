@@ -21,7 +21,7 @@ public struct SubscriptionHandler: MessageHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(message: Message, from client: any MessageIOSink) -> Bool {
+    public func handle(message: Message, from client: any Sink) -> Bool {
         guard !manager.isEmpty, let channelId = message.channelId else { return false }
 
         let isBot = message.author?.bot ?? false

@@ -15,7 +15,7 @@ public struct SubscriptionReactionHandler: ReactionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any MessageIOSink) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, client: any Sink) {
         guard
             let guild = client.guildForChannel(channelId),
             let member = guild.members[userId] else { return }

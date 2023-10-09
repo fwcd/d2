@@ -4,9 +4,9 @@ import Utils
 /// client reference.
 public struct InteractiveTextChannel {
     public let id: ChannelID
-    private let client: any MessageIOSink
+    private let client: any Sink
 
-    public init(id: ChannelID, client: any MessageIOSink) {
+    public init(id: ChannelID, client: any Sink) {
         self.id = id
         self.client = client
     }

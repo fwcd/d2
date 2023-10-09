@@ -2,15 +2,15 @@ import Foundation
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2MessageIO.CombinedMessageIOSink")
+fileprivate let log = Logger(label: "D2MessageIO.CombinedSink")
 
-/// A MessageIOSink that combines multiple clients and
+/// A Sink that combines multiple clients and
 /// dispatches requests dynamically based on the ID's client name.
-public class CombinedMessageIOSink: MessageIOSink {
-    private var clients: [String: any MessageIOSink] = [:]
+public class CombinedSink: Sink {
+    private var clients: [String: any Sink] = [:]
 
     private let mioCommandClientName: String?
-    private var mioCommandClient: (any MessageIOSink)? { mioCommandClientName.flatMap { clients[$0] } }
+    private var mioCommandClient: (any Sink)? { mioCommandClientName.flatMap { clients[$0] } }
 
     public var me: User? { nil }
     public var name: String { "Combined" }
@@ -23,12 +23,12 @@ public class CombinedMessageIOSink: MessageIOSink {
     }
 
     @discardableResult
-    public func register(client: any MessageIOSink) -> any MessageIOSink {
+    public func register(client: any Sink) -> any Sink {
         clients[client.name] = client
-        return OverlayMessageIOSink(inner: self, name: client.name, me: client.me)
+        return OverlaySink(inner: self, name: client.name, me: client.me)
     }
 
-    private func withClient<T>(of id: ID, _ action: (any MessageIOSink) throws -> T?) rethrows -> T? {
+    private func withClient<T>(of id: ID, _ action: (any Sink) throws -> T?) rethrows -> T? {
         if let client = clients[id.clientName] {
             return try action(client)
         } else {
@@ -135,43 +135,43 @@ public class CombinedMessageIOSink: MessageIOSink {
     }
 
     public func getMIOCommands() -> Promise<[MIOCommand], any Error> {
-        guard let client = mioCommandClient else { return Promise(.failure(MessageIOSinkError.noMIOCommandClient)) }
+        guard let client = mioCommandClient else { return Promise(.failure(SinkError.noMIOCommandClient)) }
         return client.getMIOCommands()
     }
 
     public func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        guard let client = mioCommandClient else { return Promise(.failure(MessageIOSinkError.noMIOCommandClient)) }
+        guard let client = mioCommandClient else { return Promise(.failure(SinkError.noMIOCommandClient)) }
         return client.createMIOCommand(name: name, description: description, options: options)
     }
 
     public func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        guard let client = mioCommandClient else { return Promise(.failure(MessageIOSinkError.noMIOCommandClient)) }
+        guard let client = mioCommandClient else { return Promise(.failure(SinkError.noMIOCommandClient)) }
         return client.editMIOCommand(commandId, name: name, description: description, options: options)
     }
 
     public func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, any Error> {
-        guard let client = mioCommandClient else { return Promise(.failure(MessageIOSinkError.noMIOCommandClient)) }
+        guard let client = mioCommandClient else { return Promise(.failure(SinkError.noMIOCommandClient)) }
         return client.deleteMIOCommand(commandId)
     }
 
     public func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], any Error> {
-        withClient(of: guildId) { $0.getMIOCommands(on: guildId) } ?? Promise(.failure(MessageIOSinkError.noMIOCommandClient))
+        withClient(of: guildId) { $0.getMIOCommands(on: guildId) } ?? Promise(.failure(SinkError.noMIOCommandClient))
     }
 
     public func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        withClient(of: guildId) { $0.createMIOCommand(on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(MessageIOSinkError.noMIOCommandClient))
+        withClient(of: guildId) { $0.createMIOCommand(on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(SinkError.noMIOCommandClient))
     }
 
     public func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        withClient(of: guildId) { $0.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(MessageIOSinkError.noMIOCommandClient))
+        withClient(of: guildId) { $0.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(SinkError.noMIOCommandClient))
     }
 
     public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, any Error> {
-        withClient(of: guildId) { $0.deleteMIOCommand(commandId, on: guildId) } ?? Promise(.failure(MessageIOSinkError.noMIOCommandClient))
+        withClient(of: guildId) { $0.deleteMIOCommand(commandId, on: guildId) } ?? Promise(.failure(SinkError.noMIOCommandClient))
     }
 
     public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, any Error> {
-        guard let client = mioCommandClient else { return Promise(.failure(MessageIOSinkError.noMIOCommandClient)) }
+        guard let client = mioCommandClient else { return Promise(.failure(SinkError.noMIOCommandClient)) }
         return client.createInteractionResponse(for: interactionId, token: token, response: response)
     }
 }

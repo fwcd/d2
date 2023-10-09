@@ -6,7 +6,7 @@ import Discord
 
 fileprivate let log = Logger(label: "D2DiscordIO.DiscordSink")
 
-struct DiscordSink: DefaultMessageIOSink {
+struct DiscordSink: DefaultSink {
     private let client: DiscordClient
 
     var name: String { discordClientName }

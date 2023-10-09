@@ -132,7 +132,7 @@ public class DiscordinderCommand: StringCommand {
         context.unsubscribeFromChannel()
     }
 
-    private func embedOf(member: Guild.Member, presence: Presence?, client: any MessageIOSink) -> Embed {
+    private func embedOf(member: Guild.Member, presence: Presence?, client: any Sink) -> Embed {
         Embed(
             title: member.displayName,
             description: (presence?.activities.first).map { descriptionOf(activity: $0) },

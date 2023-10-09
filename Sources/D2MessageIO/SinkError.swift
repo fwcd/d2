@@ -1,4 +1,4 @@
-public enum MessageIOSinkError: Error {
+public enum SinkError: Error {
     case couldNotFindClientWithName(String)
     case noMIOCommandClient
 }
