@@ -1,4 +1,5 @@
 import IRC
+import NIO
 import Logging
 import D2MessageIO
 
