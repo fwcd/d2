@@ -11,7 +11,7 @@ import protocol NIO.EventLoopGroup
 
 fileprivate let log = Logger(label: "D2Handlers.D2Receiver")
 
-/// The main event handler by D2.
+/// D2's main event handler.
 public class D2Receiver: Receiver {
     private let commandPrefix: String
     private let hostInfo: HostInfo
