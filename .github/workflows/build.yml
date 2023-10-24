@@ -17,10 +17,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-      # Workaround, see script for details
-    - name: Remove duplicate FFI includes (macOS)
-      if: runner.os == 'macOS'
-      run: Scripts/remove-commandlinetools-ffi-includes
     - name: Install native dependencies (Linux)
       if: runner.os == 'Linux'
       run: sudo Scripts/install-build-dependencies-apt
