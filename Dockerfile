@@ -1,4 +1,5 @@
-ARG SWIFTVERSION=5.9.1
+# FIXME: There are still issues with 5.9, see https://github.com/apple/swift-sdk-generator/issues/12#issuecomment-1777670789
+ARG SWIFTVERSION=5.8.1
 ARG UBUNTUDISTRO=jammy
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS sysroot
