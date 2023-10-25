@@ -34,7 +34,7 @@ public class ToFileCommand: Command {
                 return
             }
 
-            output.append(.files([Message.FileUpload(data: data, filename: name.asText ?? "", mimeType: "plain/text")]))
+            output.append(.files([Message.FileUpload(data: data, filename: name.asText ?? "", mimeType: "text/plain")]))
         } else {
             output.append(errorText: info.helpText!)
         }
