@@ -80,9 +80,18 @@ public class MessageIOOutput: CommandOutput {
         var remaining = message
         var results = [Message]()
 
-        while remaining.content.count > contentLimit {
-            results.append(Message(content: String(remaining.content.prefix(contentLimit))))
-            remaining.content.removeFirst(contentLimit)
+        if remaining.content.count > contentLimit {
+            if let data = remaining.content.data(using: .utf8) {
+                remaining.content = ""
+                remaining.files.append(Message.FileUpload(
+                    data: data,
+                    filename: "output.txt",
+                    mimeType: "text/plain"
+                ))
+            } else {
+                log.warning("Message content could not be UTF-8-encoded, this is probably not good. Truncating it to the content limit and letting the lower levels deal with it...")
+                remaining.content = String(remaining.content.prefix(contentLimit))
+            }
         }
 
         while remaining.embeds.count > 1, let embed = remaining.embeds.first {
