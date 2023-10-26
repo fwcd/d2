@@ -457,6 +457,7 @@ public class D2Receiver: Receiver {
         registry["techsupport", aka: ["helpme", "helpmenowplz"]] = TechSupportCommand(permissionManager: permissionManager)
         registry["about"] = AboutCommand(commandPrefix: commandPrefix)
         registry["uptime"] = UptimeCommand()
+        registry["restarts"] = RestartsCommand(hostInfo: hostInfo)
         registry["search", aka: ["s"]] = SearchCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
         registry["rerun", aka: ["re"]] = ReRunCommand(permissionManager: permissionManager, mostRecentPipeRunner: _mostRecentPipeRunner)
         registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
