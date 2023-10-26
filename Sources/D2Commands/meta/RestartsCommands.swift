@@ -20,6 +20,8 @@ public class RestartsCommand: StringCommand {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
 
+        // TODO: Display time deltas (i.e. how long each instance was running)
+
         output.append(.table(restarts.map {
             [dateFormatter.string(from: $0.timestamp), $0.instanceName ?? "?"]
         }))
