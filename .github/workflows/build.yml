@@ -22,7 +22,12 @@ jobs:
       run: sudo Scripts/install-build-dependencies-apt
     - name: Install native dependencies (macOS)
       if: runner.os == 'macOS'
-      run: Scripts/install-dependencies-brew
+      run: |
+        # Work around an upstream issue with the runner image:
+        # https://github.com/actions/runner-images/issues/8500
+        brew upgrade || brew link --overwrite python@3.11
+
+        Scripts/install-dependencies-brew
     - name: Install Swift
       uses: swift-actions/setup-swift@v1
       with:
