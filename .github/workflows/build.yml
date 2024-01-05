@@ -12,12 +12,7 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest', 'macos-13']
-        swift: ['5.8', '5.9']
-        exclude:
-        # Compiler crashes due to a bug: https://github.com/fwcd/d2/actions/runs/7880565521/job/21502800704
-        # TODO: Remove this once we bump D2's minimum Swift version to 5.9+
-        - os: 'macos-13'
-          swift: '5.8'
+        swift: ['5.9']
 
     runs-on: ${{ matrix.os }}
     steps:
