@@ -34,7 +34,11 @@ public class ExamCommand: StringCommand {
         exams.first { $0.module?.code == query }
             ?? exams.first { $0.module?.name == query }
             ?? exams.min(by: ascendingComparator {
-                ($0.module?.name ?? $0.module?.code)?.levenshteinDistance(to: query) ?? .max
+                [$0.module?.name, $0.module?.code]
+                    .compactMap { $0 }
+                    .map { $0.lcsDistance(to: query, caseSensitive: false) }
+                    .min()
+                    ?? .max
             })
     }
 
