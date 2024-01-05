@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2NetAPIs
+import Utils
 
 public class ExamCommand: StringCommand {
     public let info = CommandInfo(
@@ -11,14 +12,30 @@ public class ExamCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        CAUCSExamsQuery().perform().listen {
+        CAUCSExamsQuery().perform().listen { [self] in
             do {
                 let exams = try $0.get()
-                output.append(self.embed(of: exams))
+                if !input.isEmpty {
+                    if let exam = bestMatch(for: input, in: exams) {
+                        output.append(embed(of: exam))
+                    } else {
+                        output.append(errorText: "Could not find a matching exam")
+                    }
+                } else {
+                    output.append(embed(of: exams))
+                }
             } catch {
                 output.append(error, errorText: "Could not query CAU CS exams")
             }
         }
+    }
+
+    private func bestMatch(for query: String, in exams: [Exam]) -> Exam? {
+        exams.first { $0.module?.code == query }
+            ?? exams.first { $0.module?.name == query }
+            ?? exams.min(by: ascendingComparator {
+                ($0.module?.name ?? $0.module?.code)?.levenshteinDistance(to: query) ?? .max
+            })
     }
 
     private func embed(of exam: Exam) -> Embed {
