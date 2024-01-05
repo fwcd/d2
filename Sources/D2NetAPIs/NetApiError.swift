@@ -11,6 +11,7 @@ public enum NetApiError: Error {
     case imageError(String)
     case jsonIOError(any Error)
     case jsonParseError(String, String)
+    case documentError(String)
     case foundNoMatches(String)
     case noResults(String)
     case apiError(String)

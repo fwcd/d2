@@ -138,6 +138,7 @@ public class D2Receiver: Receiver {
         registry["mdb"] = MDBCommand()
         registry["timetable"] = TimeTableCommand()
         registry["univis"] = UnivISCommand()
+        registry["exam", aka: ["exams"]] = ExamCommand()
         registry["mensa"] = MensaCommand()
         registry["yo"] = YoCommand()
         registry["countdown", aka: ["countdowns", "events"]] = CountdownCommand(builtInGoals: ["Christmas Eve": ChristmasEveGoal(), "New Year's Eve": NewYearsEveGoal()])
