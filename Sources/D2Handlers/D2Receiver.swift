@@ -390,7 +390,7 @@ public class D2Receiver: Receiver {
         registry["thenewyorktimes", aka: ["newyorktimes", "nytimes", "nyt"]] = FeedCommand(url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", description: "New York Times - Top Stories", presenter: FeedListPresenter())
         registry["thewallstreetjournal", aka: ["wallstreetjournal", "wsj"]] = FeedCommand(url: "https://feeds.a.dj.com/rss/RSSWorldNews.xml", description: "The Wall Street Journal", presenter: FeedListPresenter())
         registry["theguardian"] = FeedCommand(url: "https://www.theguardian.com/world/rss", description: "The Guardian - World News", presenter: FeedListPresenter())
-        registry["thetelegraph", aka: ["telegraph"]] = FeedCommand(url: "https://www.telegraph.co.uk/rss.xml", description: "The Telegraph", presenter: FeedListPresenter())
+        registry["theeconomist", aka: ["economist"]] = FeedCommand(url: "https://www.economist.com/international/rss.xml", description: "The Economist - International", presenter: FeedListPresenter())
         registry["bbc"] = FeedCommand(url: "https://feeds.bbci.co.uk/news/rss.xml", description: "BBC News - Top Stories", presenter: FeedListPresenter())
         registry["cnn"] = FeedCommand(url: "http://rss.cnn.com/rss/edition.rss", description: "CNN", presenter: FeedListPresenter())
         registry["washingtonpost"] = FeedCommand(url: "http://feeds.washingtonpost.com/rss/world", description: "Washington Post - World", presenter: FeedListPresenter())
