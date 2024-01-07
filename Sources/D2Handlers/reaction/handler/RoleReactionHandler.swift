@@ -8,8 +8,8 @@ fileprivate let log = Logger(label: "D2Handlers.RoleReactionHandler")
 public struct RoleReactionHandler: ReactionHandler {
     @Binding private var configuration: RoleReactionsConfiguration
 
-    public init(configuration: Binding<RoleReactionsConfiguration>) {
-        self._configuration = configuration
+    public init(@Binding configuration: RoleReactionsConfiguration) {
+        self._configuration = _configuration
     }
 
     public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {

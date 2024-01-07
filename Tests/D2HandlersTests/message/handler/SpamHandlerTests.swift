@@ -15,7 +15,7 @@ final class SpamHandlerTests: XCTestCase {
     override func setUp() {
         timestamp = Date()
         @Box var config = SpamConfiguration()
-        handler = SpamHandler(config: $config) { [unowned self] in
+        handler = SpamHandler($config: $config) { [unowned self] in
             timestamp
         }
         output = TestOutput()

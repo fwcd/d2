@@ -17,8 +17,8 @@ fileprivate let messageLinkPattern = try! Regex(from: "https?://discord(?:app)?.
 public struct MessagePreviewHandler: MessageHandler {
     @Binding private var configuration: MessagePreviewsConfiguration
 
-    public init(configuration: Binding<MessagePreviewsConfiguration>) {
-        self._configuration = configuration
+    public init(@Binding configuration: MessagePreviewsConfiguration) {
+        self._configuration = _configuration
     }
 
     public func handle(message: Message, sink: any Sink) -> Bool {

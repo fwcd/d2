@@ -8,8 +8,8 @@ public class StreamerRoleCommand: Command {
     )
     @Binding private var streamerRoleConfiguration: StreamerRoleConfiguration
 
-    public init(streamerRoleConfiguration: Binding<StreamerRoleConfiguration>) {
-        self._streamerRoleConfiguration = streamerRoleConfiguration
+    public init(@Binding streamerRoleConfiguration: StreamerRoleConfiguration) {
+        self._streamerRoleConfiguration = _streamerRoleConfiguration
     }
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {

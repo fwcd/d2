@@ -12,7 +12,7 @@ public class WeatherCommand: StringCommand {
 
     @Binding private var config: CityConfiguration
 
-    public init(config _config: Binding<CityConfiguration>) {
+    public init(@Binding config: CityConfiguration) {
         self._config = _config
     }
 

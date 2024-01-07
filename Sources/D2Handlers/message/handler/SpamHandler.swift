@@ -19,8 +19,8 @@ public struct SpamHandler: MessageHandler {
     private let lastSpamMessages: ExpiringList<Message>
     private var cautionedSpammers = Set<UserID>()
 
-    public init(config: Binding<SpamConfiguration>, dateProvider: @escaping () -> Date = Date.init) {
-        self._config = config
+    public init(@Binding config: SpamConfiguration, dateProvider: @escaping () -> Date = Date.init) {
+        self._config = _config
         self.dateProvider = dateProvider
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)
     }

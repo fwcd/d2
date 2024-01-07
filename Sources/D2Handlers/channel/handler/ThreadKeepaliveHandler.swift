@@ -8,7 +8,7 @@ fileprivate let log = Logger(label: "D2Handlers.ThreadKeepaliveHandler")
 public struct ThreadKeepaliveHandler: ChannelHandler {
     @Binding private var config: ThreadConfiguration
 
-    public init(config _config: Binding<ThreadConfiguration>) {
+    public init(@Binding config: ThreadConfiguration) {
         self._config = _config
     }
 

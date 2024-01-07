@@ -14,13 +14,13 @@ public struct TriggerReactionHandler: MessageHandler {
     }
 
     public init(
-        configuration: Binding<TriggerReactionConfiguration>,
-        cityConfiguration: Binding<CityConfiguration>
+        @Binding configuration: TriggerReactionConfiguration,
+        @Binding cityConfiguration: CityConfiguration
     ) {
         self.init(
-            configuration: { configuration.wrappedValue },
+            $configuration: $configuration,
             weatherEmojiProvider: {
-                guard let city = cityConfiguration.wrappedValue.city else { throw ReactionTriggerError.other("No city specified") }
+                guard let city = cityConfiguration.city else { throw ReactionTriggerError.other("No city specified") }
                 return OpenWeatherMapQuery(city: city).perform()
                     .mapCatching {
                         guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
@@ -31,7 +31,7 @@ public struct TriggerReactionHandler: MessageHandler {
     }
 
     public init(
-        configuration: @escaping () -> TriggerReactionConfiguration,
+        @Binding configuration: TriggerReactionConfiguration,
         weatherEmojiProvider: @escaping () throws -> Promise<String, any Error>
     ) {
         self.init(triggers: [
@@ -47,7 +47,7 @@ public struct TriggerReactionHandler: MessageHandler {
                 Promise.catchingThen {
                     guard goodMorningOrEveningPattern.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }
 
-                    if configuration().dateSpecificReactions {
+                    if configuration.dateSpecificReactions {
                         let calendar = Calendar.current
                         let todayComponents = calendar.dateComponents([.month, .day], from: Date())
 
@@ -77,7 +77,7 @@ public struct TriggerReactionHandler: MessageHandler {
                         }
                     }
 
-                    if configuration().weatherReactions {
+                    if configuration.weatherReactions {
                         return try weatherEmojiProvider()
                     }
 

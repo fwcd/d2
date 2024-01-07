@@ -10,8 +10,8 @@ public class HaikusCommand: StringCommand {
     @Binding private var configuration: HaikuConfiguration
     private var subcommands: [String: (CommandOutput, ChannelID) -> Void] = [:]
 
-    public init(configuration: Binding<HaikuConfiguration>) {
-        self._configuration = configuration
+    public init(@Binding configuration: HaikuConfiguration) {
+        self._configuration = _configuration
 
         subcommands = [
             "enable": { [unowned self] output, channelId in

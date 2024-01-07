@@ -13,12 +13,12 @@ public struct HaikuHandler: MessageHandler {
     private let inventoryManager: InventoryManager
 
     public init(
-        configuration: Binding<HaikuConfiguration>,
+        @Binding configuration: HaikuConfiguration,
         inventoryManager: InventoryManager,
         syllableCounts: [Int] = [5, 7, 5]
     ) {
         self.syllableCounts = syllableCounts
-        self._configuration = configuration
+        self._configuration = _configuration
         self.inventoryManager = inventoryManager
     }
 

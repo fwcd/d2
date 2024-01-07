@@ -14,8 +14,8 @@ public class SpammerRoleCommand: StringCommand {
     )
     @Binding private var spamConfiguration: SpamConfiguration
 
-    public init(spamConfiguration: Binding<SpamConfiguration>) {
-        self._spamConfiguration = spamConfiguration
+    public init(@Binding spamConfiguration: SpamConfiguration) {
+        self._spamConfiguration = _spamConfiguration
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {

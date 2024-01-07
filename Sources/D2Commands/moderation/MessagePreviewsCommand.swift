@@ -11,8 +11,8 @@ public class MessagePreviewsCommand: StringCommand {
     @Binding private var configuration: MessagePreviewsConfiguration
     private var subcommands: [String: (CommandOutput, GuildID) -> Void] = [:]
 
-    public init(configuration: Binding<MessagePreviewsConfiguration>) {
-        self._configuration = configuration
+    public init(@Binding configuration: MessagePreviewsConfiguration) {
+        self._configuration = _configuration
         subcommands = [
             "enable": { [unowned self] output, guildId in
                 self.configuration.enabledGuildIds.insert(guildId)

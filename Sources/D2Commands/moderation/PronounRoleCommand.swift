@@ -16,7 +16,7 @@ public class PronounRoleCommand: StringCommand {
     )
     @Binding private var config: PronounRoleConfiguration
 
-    public init(config _config: Binding<PronounRoleConfiguration>) {
+    public init(@Binding config: PronounRoleConfiguration) {
         self._config = _config
     }
 

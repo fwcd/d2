@@ -14,8 +14,8 @@ public class RoleReactionsCommand: StringCommand {
     @Binding private var configuration: RoleReactionsConfiguration
     private var subcommands: [String: (CommandOutput, Sink, ChannelID, MessageID, String) -> Void] = [:]
 
-    public init(configuration: Binding<RoleReactionsConfiguration>) {
-        self._configuration = configuration
+    public init(@Binding configuration: RoleReactionsConfiguration) {
+        self._configuration = _configuration
         subcommands = [
             "attach": { [unowned self] output, sink, channelId, messageId, args in
                 guard let guild = sink.guildForChannel(channelId) else {

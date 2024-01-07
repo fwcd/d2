@@ -13,11 +13,11 @@ public class ThreadCommand: StringCommand {
     @Binding private var config: ThreadConfiguration
     private var subcommands: [String: (CommandOutput, Channel, CommandContext) -> Void] = [:]
 
-    public init(config _config: Binding<ThreadConfiguration>) {
+    public init(@Binding config: ThreadConfiguration) {
         self._config = _config
 
         subcommands = [
-            "enable-keepalive": { [unowned self] output, channel, _ in
+            "enable-keepalive": { output, channel, _ in
                 guard channel.type == .text else {
                     output.append(errorText: "Thread keepalives can only be enabled in guild text channels (whose child threads are considered)")
                     return
@@ -25,7 +25,7 @@ public class ThreadCommand: StringCommand {
                 config.keepaliveParentChannelIds.insert(channel.id)
                 output.append("Added `\(channel.name)` to thread keepalive parent channels.")
             },
-            "disable-keepalive": { [unowned self] output, channel, _ in
+            "disable-keepalive": { output, channel, _ in
                 guard channel.type == .text else {
                     output.append(errorText: "Thread keepalives can only be disabled in guild text channels (whose child threads are considered)")
                     return
@@ -33,7 +33,7 @@ public class ThreadCommand: StringCommand {
                 config.keepaliveParentChannelIds.remove(channel.id)
                 output.append("Removed `\(channel.name)` from thread keepalive parent channels.")
             },
-            "archive": { [unowned self] output, channel, context in
+            "archive": { output, channel, context in
                 guard channel.isThread else {
                     output.append(errorText: "Only thread channels can be archived, please make sure that you are in a thread")
                     return

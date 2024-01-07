@@ -12,8 +12,8 @@ fileprivate let log = Logger(label: "D2Handlers.StreamerRoleHandler")
 public struct StreamerRoleHandler: PresenceHandler {
     @Binding private var streamerRoleConfiguration: StreamerRoleConfiguration
 
-    public init(streamerRoleConfiguration: Binding<StreamerRoleConfiguration>) {
-        self._streamerRoleConfiguration = streamerRoleConfiguration
+    public init(@Binding streamerRoleConfiguration: StreamerRoleConfiguration) {
+        self._streamerRoleConfiguration = _streamerRoleConfiguration
     }
 
     public func handle(presenceUpdate presence: Presence, sink: any Sink) {
