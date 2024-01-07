@@ -8,10 +8,10 @@ public class MessagePreviewsCommand: StringCommand {
         helpText: "Syntax: [enable|disable]",
         requiredPermissionLevel: .vip
     )
-    @AutoSerializing private var configuration: MessagePreviewsConfiguration
+    @Binding private var configuration: MessagePreviewsConfiguration
     private var subcommands: [String: (CommandOutput, GuildID) -> Void] = [:]
 
-    public init(configuration: AutoSerializing<MessagePreviewsConfiguration>) {
+    public init(configuration: Binding<MessagePreviewsConfiguration>) {
         self._configuration = configuration
         subcommands = [
             "enable": { [unowned self] output, guildId in

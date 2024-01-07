@@ -7,10 +7,10 @@ public class HaikusCommand: StringCommand {
         shortDescription: "Enables/disables Haikus in a channel",
         requiredPermissionLevel: .admin
     )
-    @AutoSerializing private var configuration: HaikuConfiguration
+    @Binding private var configuration: HaikuConfiguration
     private var subcommands: [String: (CommandOutput, ChannelID) -> Void] = [:]
 
-    public init(configuration: AutoSerializing<HaikuConfiguration>) {
+    public init(configuration: Binding<HaikuConfiguration>) {
         self._configuration = configuration
 
         subcommands = [

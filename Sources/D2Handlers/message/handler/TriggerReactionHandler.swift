@@ -14,8 +14,8 @@ public struct TriggerReactionHandler: MessageHandler {
     }
 
     public init(
-        configuration: AutoSerializing<TriggerReactionConfiguration>,
-        cityConfiguration: AutoSerializing<CityConfiguration>
+        configuration: Binding<TriggerReactionConfiguration>,
+        cityConfiguration: Binding<CityConfiguration>
     ) {
         self.init(
             configuration: { configuration.wrappedValue },

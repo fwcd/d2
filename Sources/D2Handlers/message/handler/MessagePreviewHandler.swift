@@ -15,9 +15,9 @@ fileprivate let messageLinkPattern = try! Regex(from: "https?://discord(?:app)?.
 
 /// Displays previews of linked messages.
 public struct MessagePreviewHandler: MessageHandler {
-    @AutoSerializing private var configuration: MessagePreviewsConfiguration
+    @Binding private var configuration: MessagePreviewsConfiguration
 
-    public init(configuration: AutoSerializing<MessagePreviewsConfiguration>) {
+    public init(configuration: Binding<MessagePreviewsConfiguration>) {
         self._configuration = configuration
     }
 

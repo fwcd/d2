@@ -14,9 +14,9 @@ public class PronounRoleCommand: StringCommand {
         helpText: "Syntax: [pronouns, e.g. They/Them] [role id]",
         requiredPermissionLevel: .admin
     )
-    @AutoSerializing private var config: PronounRoleConfiguration
+    @Binding private var config: PronounRoleConfiguration
 
-    public init(config _config: AutoSerializing<PronounRoleConfiguration>) {
+    public init(config _config: Binding<PronounRoleConfiguration>) {
         self._config = _config
     }
 

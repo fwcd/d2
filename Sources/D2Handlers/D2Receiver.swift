@@ -76,29 +76,29 @@ public class D2Receiver: Receiver {
             MentionSomeoneRewriter()
         ]
         messageHandlers = [
-            SpamHandler(config: _spamConfiguration),
+            SpamHandler(config: $spamConfiguration),
             CommandHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
             SubscriptionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
-            MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
-            TriggerReactionHandler(configuration: _triggerReactionConfiguration, cityConfiguration: _cityConfiguration),
+            MessagePreviewHandler(configuration: $messagePreviewsConfiguration),
+            TriggerReactionHandler(configuration: $triggerReactionConfiguration, cityConfiguration: $cityConfiguration),
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
-            HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
+            HaikuHandler(configuration: $haikuConfiguration, inventoryManager: inventoryManager),
             LuckyNumberHandler(luckyNumber: 69, minimumNumberCount: 2),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
-            RoleReactionHandler(configuration: _roleReactionsConfiguration),
+            RoleReactionHandler(configuration: $roleReactionsConfiguration),
             SubscriptionReactionHandler(commandPrefix: commandPrefix, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MessageDatabaseReactionHandler(messageDB: messageDB)
         ]
         presenceHandlers = [
-            StreamerRoleHandler(streamerRoleConfiguration: _streamerRoleConfiguration)
+            StreamerRoleHandler(streamerRoleConfiguration: $streamerRoleConfiguration)
         ]
         channelHandlers = [
-            ThreadKeepaliveHandler(config: _threadConfiguration),
+            ThreadKeepaliveHandler(config: $threadConfiguration),
             MessageDatabaseChannelHandler(messageDB: messageDB)
         ]
         interactionHandlers = [
@@ -124,8 +124,8 @@ public class D2Receiver: Receiver {
         registry["say"] = SayCommand()
         registry["campus"] = CampusCommand()
         registry["type"] = TriggerTypingCommand()
-        registry["city"] = CityCommand(config: _cityConfiguration)
-        registry["weather"] = WeatherCommand(config: _cityConfiguration)
+        registry["city"] = CityCommand(config: $cityConfiguration)
+        registry["weather"] = WeatherCommand(config: $cityConfiguration)
         registry["lightning", aka: ["l", "zap"]] = LightningCommand()
         registry["sunrisesunset", aka: ["sunrise", "sunset", "twilight", "dawn", "dusk"]] = SunriseSunsetCommand()
         registry["webcam"] = WebcamCommand()
@@ -141,16 +141,16 @@ public class D2Receiver: Receiver {
         registry["grant"] = GrantPermissionCommand(permissionManager: permissionManager)
         registry["revoke"] = RevokePermissionCommand(permissionManager: permissionManager)
         registry["simulate"] = SimulatePermissionCommand(permissionManager: permissionManager)
-        registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: _spamConfiguration)
-        registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: _streamerRoleConfiguration)
-        registry["messagepreviews"] = MessagePreviewsCommand(configuration: _messagePreviewsConfiguration)
-        registry["haikus"] = HaikusCommand(configuration: _haikuConfiguration)
-        registry["thread"] = ThreadCommand(config: _threadConfiguration)
+        registry["spammerrole"] = SpammerRoleCommand(spamConfiguration: $spamConfiguration)
+        registry["streamerrole", aka: ["twitchrole"]] = StreamerRoleCommand(streamerRoleConfiguration: $streamerRoleConfiguration)
+        registry["messagepreviews"] = MessagePreviewsCommand(configuration: $messagePreviewsConfiguration)
+        registry["haikus"] = HaikusCommand(configuration: $haikuConfiguration)
+        registry["thread"] = ThreadCommand(config: $threadConfiguration)
         registry["threads"] = ThreadsCommand()
         registry["permissions"] = ShowPermissionsCommand(permissionManager: permissionManager)
         registry["userinfo", aka: ["user"]] = UserInfoCommand()
         registry["clear"] = ClearCommand()
-        registry["rolereactions"] = RoleReactionsCommand(configuration: _roleReactionsConfiguration)
+        registry["rolereactions"] = RoleReactionsCommand(configuration: $roleReactionsConfiguration)
         registry["logs"] = LogsCommand(logBuffer: logBuffer)
         registry["embeddescription", aka: ["description"]] = EmbedDescriptionCommand()
         registry["embedfooter", aka: ["footer"]] = EmbedFooterCommand()
@@ -433,8 +433,8 @@ public class D2Receiver: Receiver {
         registry["guildinfo", aka: ["stats", "server", "serverstats", "serverinfo", "guild", "guildstats"]] = GuildInfoCommand(messageDB: messageDB)
         registry["guildchannels", aka: ["channels", "serverchannels"]] = GuildChannelsCommand()
         registry["peekchannel", aka: ["peek", "peekmessages"]] = PeekChannelCommand()
-        registry["pronouns"] = PronounsCommand(config: _pronounRoleConfiguration)
-        registry["pronounrole"] = PronounRoleCommand(config: _pronounRoleConfiguration)
+        registry["pronouns"] = PronounsCommand(config: $pronounRoleConfiguration)
+        registry["pronounrole"] = PronounRoleCommand(config: $pronounRoleConfiguration)
         registry["guilds"] = GuildsCommand()
         registry["searchchannel", aka: ["findchannel", "sc"]] = SearchChannelCommand()
         registry["whatsup"] = WhatsUpCommand()

@@ -12,9 +12,9 @@ public class SpammerRoleCommand: StringCommand {
         longDescription: "Sets the role which is automatically assigned to spammers",
         requiredPermissionLevel: .admin
     )
-    @AutoSerializing private var spamConfiguration: SpamConfiguration
+    @Binding private var spamConfiguration: SpamConfiguration
 
-    public init(spamConfiguration: AutoSerializing<SpamConfiguration>) {
+    public init(spamConfiguration: Binding<SpamConfiguration>) {
         self._spamConfiguration = spamConfiguration
     }
 

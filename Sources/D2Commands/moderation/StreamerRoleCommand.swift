@@ -6,9 +6,9 @@ public class StreamerRoleCommand: Command {
         shortDescription: "Configures a role to auto-assign to streamers",
         requiredPermissionLevel: .admin
     )
-    @AutoSerializing private var streamerRoleConfiguration: StreamerRoleConfiguration
+    @Binding private var streamerRoleConfiguration: StreamerRoleConfiguration
 
-    public init(streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>) {
+    public init(streamerRoleConfiguration: Binding<StreamerRoleConfiguration>) {
         self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 

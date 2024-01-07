@@ -6,9 +6,9 @@ import Logging
 fileprivate let log = Logger(label: "D2Handlers.ThreadKeepaliveHandler")
 
 public struct ThreadKeepaliveHandler: ChannelHandler {
-    @AutoSerializing private var config: ThreadConfiguration
+    @Binding private var config: ThreadConfiguration
 
-    public init(config _config: AutoSerializing<ThreadConfiguration>) {
+    public init(config _config: Binding<ThreadConfiguration>) {
         self._config = _config
     }
 

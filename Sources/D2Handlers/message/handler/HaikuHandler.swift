@@ -9,11 +9,11 @@ fileprivate let log = Logger(label: "D2Handlers.HaikuHandler")
 public struct HaikuHandler: MessageHandler {
     private let syllableCounts: [Int]
 
-    @AutoSerializing private var configuration: HaikuConfiguration
+    @Binding private var configuration: HaikuConfiguration
     private let inventoryManager: InventoryManager
 
     public init(
-        configuration: AutoSerializing<HaikuConfiguration>,
+        configuration: Binding<HaikuConfiguration>,
         inventoryManager: InventoryManager,
         syllableCounts: [Int] = [5, 7, 5]
     ) {

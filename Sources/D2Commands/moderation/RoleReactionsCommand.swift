@@ -11,10 +11,10 @@ public class RoleReactionsCommand: StringCommand {
         requiredPermissionLevel: .mod,
         platformAvailability: ["Discord"]
     )
-    @AutoSerializing private var configuration: RoleReactionsConfiguration
+    @Binding private var configuration: RoleReactionsConfiguration
     private var subcommands: [String: (CommandOutput, Sink, ChannelID, MessageID, String) -> Void] = [:]
 
-    public init(configuration: AutoSerializing<RoleReactionsConfiguration>) {
+    public init(configuration: Binding<RoleReactionsConfiguration>) {
         self._configuration = configuration
         subcommands = [
             "attach": { [unowned self] output, sink, channelId, messageId, args in

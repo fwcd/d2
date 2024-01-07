@@ -14,12 +14,12 @@ fileprivate struct SpammerProfile {
 /// Automatically detects "mention-spammers" and assigns
 /// them a spammer role (which can be configured using a command).
 public struct SpamHandler: MessageHandler {
-    @AutoSerializing private var config: SpamConfiguration
+    @Binding private var config: SpamConfiguration
     private let dateProvider: () -> Date
     private let lastSpamMessages: ExpiringList<Message>
     private var cautionedSpammers = Set<UserID>()
 
-    public init(config: AutoSerializing<SpamConfiguration>, dateProvider: @escaping () -> Date = Date.init) {
+    public init(config: Binding<SpamConfiguration>, dateProvider: @escaping () -> Date = Date.init) {
         self._config = config
         self.dateProvider = dateProvider
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)

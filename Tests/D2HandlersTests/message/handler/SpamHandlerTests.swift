@@ -2,10 +2,10 @@ import XCTest
 import Utils
 import D2TestUtils
 import D2MessageIO
+import D2Commands
 @testable import D2Handlers
 
 final class SpamHandlerTests: XCTestCase {
-    private var tempDir: TemporaryDirectory!
     private var handler: SpamHandler!
     private var output: TestOutput!
     private var timestamp: Date!
@@ -13,19 +13,14 @@ final class SpamHandlerTests: XCTestCase {
     private var user: User!
 
     override func setUp() {
-        tempDir = TemporaryDirectory(prefix: "d2-spam-handler-tests")
-        try! tempDir.create()
         timestamp = Date()
-        handler = SpamHandler(config: AutoSerializing(wrappedValue: .init(), filePath: "\(tempDir.url.path)/spamConfig.json")) { [unowned self] in
+        @Box var config = SpamConfiguration()
+        handler = SpamHandler(config: $config) { [unowned self] in
             timestamp
         }
         output = TestOutput()
         user = User(id: UserID("0", clientName: output.name), username: "Jochen Zimmermann")
         channelId = ChannelID("0")
-    }
-
-    override func tearDown() {
-        tempDir = nil // deletes it
     }
 
     func testNewUserSpamming() {

@@ -10,10 +10,10 @@ public class ThreadCommand: StringCommand {
         shortDescription: "Configures threads in this channel or the current thread",
         requiredPermissionLevel: .vip
     )
-    @AutoSerializing private var config: ThreadConfiguration
+    @Binding private var config: ThreadConfiguration
     private var subcommands: [String: (CommandOutput, Channel, CommandContext) -> Void] = [:]
 
-    public init(config _config: AutoSerializing<ThreadConfiguration>) {
+    public init(config _config: Binding<ThreadConfiguration>) {
         self._config = _config
 
         subcommands = [

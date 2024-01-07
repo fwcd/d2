@@ -6,9 +6,9 @@ import Utils
 fileprivate let log = Logger(label: "D2Handlers.RoleReactionHandler")
 
 public struct RoleReactionHandler: ReactionHandler {
-    @AutoSerializing private var configuration: RoleReactionsConfiguration
+    @Binding private var configuration: RoleReactionsConfiguration
 
-    public init(configuration: AutoSerializing<RoleReactionsConfiguration>) {
+    public init(configuration: Binding<RoleReactionsConfiguration>) {
         self._configuration = configuration
     }
 

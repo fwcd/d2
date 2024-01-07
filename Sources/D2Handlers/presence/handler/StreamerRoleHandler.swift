@@ -10,9 +10,9 @@ fileprivate let log = Logger(label: "D2Handlers.StreamerRoleHandler")
 //       Discord's Go Live streams.)
 
 public struct StreamerRoleHandler: PresenceHandler {
-    @AutoSerializing private var streamerRoleConfiguration: StreamerRoleConfiguration
+    @Binding private var streamerRoleConfiguration: StreamerRoleConfiguration
 
-    public init(streamerRoleConfiguration: AutoSerializing<StreamerRoleConfiguration>) {
+    public init(streamerRoleConfiguration: Binding<StreamerRoleConfiguration>) {
         self._streamerRoleConfiguration = streamerRoleConfiguration
     }
 

@@ -10,9 +10,9 @@ public class WeatherCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
-    @AutoSerializing private var config: CityConfiguration
+    @Binding private var config: CityConfiguration
 
-    public init(config _config: AutoSerializing<CityConfiguration>) {
+    public init(config _config: Binding<CityConfiguration>) {
         self._config = _config
     }
 
