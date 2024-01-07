@@ -70,7 +70,7 @@ struct D2: ParsableCommand {
         let actualInitialPresence = (config?.setPresenceInitially ?? true) ? initialPresence ?? "\(commandPrefix)help" : nil
         let tokens = try DiskJsonSerializer().readJson(as: PlatformTokens.self, fromFile: "local/platformTokens.json")
 
-        if let config = config {
+        if let config {
             log.info("\(config)")
         }
 

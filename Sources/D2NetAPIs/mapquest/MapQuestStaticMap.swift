@@ -39,11 +39,11 @@ public struct MapQuestStaticMap {
             URLQueryItem(name: "locations", value: pins.map(\.description).joined(separator: "||"))
         ]
 
-        if let center = center {
+        if let center {
             query.append(URLQueryItem(name: "center", value: "\(center.latitude),\(center.longitude)"))
         }
 
-        if let defaultMarker = defaultMarker {
+        if let defaultMarker {
             query.append(URLQueryItem(name: "defaultMarker", value: defaultMarker))
         }
 

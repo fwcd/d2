@@ -460,7 +460,7 @@ public class MessageDatabase: MarkovPredictor {
     public func generateMarkovTransitions(text: String? = nil) throws -> Int {
         var count = 0
 
-        if let text = text {
+        if let text {
             let words = text.split(separator: " ").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             if words.count > markovOrder {
                 for i in 0..<(words.count - markovOrder) {
