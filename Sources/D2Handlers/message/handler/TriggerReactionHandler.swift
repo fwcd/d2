@@ -18,6 +18,25 @@ public struct TriggerReactionHandler: MessageHandler {
         weatherReactions: Bool = true,
         cityConfiguration: AutoSerializing<CityConfiguration>
     ) {
+        self.init(
+            dateSpecificReactions: dateSpecificReactions,
+            weatherReactions: weatherReactions,
+            weatherEmojiProvider: {
+                guard let city = cityConfiguration.wrappedValue.city else { throw ReactionTriggerError.other("No city specified") }
+                return OpenWeatherMapQuery(city: city).perform()
+                    .mapCatching {
+                        guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
+                        return emoji
+                    }
+            }
+        )
+    }
+
+    public init(
+        dateSpecificReactions: Bool = true,
+        weatherReactions: Bool = true,
+        weatherEmojiProvider: @escaping () throws -> Promise<String, any Error>
+    ) {
         self.init(triggers: [
             .init(keywords: ["hello"], emoji: "👋"),
             .init(keywords: ["hmmm"], emoji: "🤔"),
@@ -62,12 +81,7 @@ public struct TriggerReactionHandler: MessageHandler {
                     }
 
                     if weatherReactions {
-                        guard let city = cityConfiguration.wrappedValue.city else { throw ReactionTriggerError.other("No city specified") }
-                        return OpenWeatherMapQuery(city: city).perform()
-                            .mapCatching {
-                                guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
-                                return emoji
-                            }
+                        return try weatherEmojiProvider()
                     }
 
                     throw ReactionTriggerError.other("No good morning/evening reaction configured")
