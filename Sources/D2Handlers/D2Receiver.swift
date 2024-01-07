@@ -81,14 +81,7 @@ public class D2Receiver: Receiver {
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
-            TriggerReactionHandler {
-                guard let city = cityConfiguration.city else { throw ReactionTriggerError.other("No city specified") }
-                return OpenWeatherMapQuery(city: city).perform()
-                    .mapCatching {
-                        guard let emoji = $0.emoji else { throw ReactionTriggerError.other("No weather emoji") }
-                        return emoji
-                    }
-            },
+            TriggerReactionHandler(cityConfiguration: _cityConfiguration),
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
