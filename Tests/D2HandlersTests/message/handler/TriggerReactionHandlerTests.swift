@@ -17,7 +17,12 @@ final class TriggerReactionHandlers: XCTestCase {
 
     private func messageTriggersWeather(_ content: String) -> Bool {
         let emoji = ":test:"
-        let handler = TriggerReactionHandler(dateSpecificReactions: false) {
+        let handler = TriggerReactionHandler {
+            TriggerReactionConfiguration(
+                dateSpecificReactions: false,
+                weatherReactions: true
+            )
+        } weatherEmojiProvider: {
             Promise(emoji)
         }
         let output = TestOutput()

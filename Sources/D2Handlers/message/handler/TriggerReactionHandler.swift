@@ -14,13 +14,11 @@ public struct TriggerReactionHandler: MessageHandler {
     }
 
     public init(
-        dateSpecificReactions: Bool = true,
-        weatherReactions: Bool = true,
+        configuration: AutoSerializing<TriggerReactionConfiguration>,
         cityConfiguration: AutoSerializing<CityConfiguration>
     ) {
         self.init(
-            dateSpecificReactions: dateSpecificReactions,
-            weatherReactions: weatherReactions,
+            configuration: { configuration.wrappedValue },
             weatherEmojiProvider: {
                 guard let city = cityConfiguration.wrappedValue.city else { throw ReactionTriggerError.other("No city specified") }
                 return OpenWeatherMapQuery(city: city).perform()
@@ -33,8 +31,7 @@ public struct TriggerReactionHandler: MessageHandler {
     }
 
     public init(
-        dateSpecificReactions: Bool = true,
-        weatherReactions: Bool = true,
+        configuration: @escaping () -> TriggerReactionConfiguration,
         weatherEmojiProvider: @escaping () throws -> Promise<String, any Error>
     ) {
         self.init(triggers: [
@@ -50,7 +47,7 @@ public struct TriggerReactionHandler: MessageHandler {
                 Promise.catchingThen {
                     guard goodMorningOrEveningPattern.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }
 
-                    if dateSpecificReactions {
+                    if configuration().dateSpecificReactions {
                         let calendar = Calendar.current
                         let todayComponents = calendar.dateComponents([.month, .day], from: Date())
 
@@ -80,7 +77,7 @@ public struct TriggerReactionHandler: MessageHandler {
                         }
                     }
 
-                    if weatherReactions {
+                    if configuration().weatherReactions {
                         return try weatherEmojiProvider()
                     }
 

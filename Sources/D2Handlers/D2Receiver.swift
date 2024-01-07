@@ -68,6 +68,7 @@ public class D2Receiver: Receiver {
         @AutoSerializing(filePath: "local/haikuConfig.json") var haikuConfiguration = HaikuConfiguration()
         @AutoSerializing(filePath: "local/threadConfig.json") var threadConfiguration = ThreadConfiguration()
         @AutoSerializing(filePath: "local/roleReactionsConfig.json") var roleReactionsConfiguration = RoleReactionsConfiguration()
+        @AutoSerializing(filePath: "local/triggerReactionConfiguration.json") var triggerReactionConfiguration = TriggerReactionConfiguration()
         @AutoSerializing(filePath: "local/pronounRoleConfig.json") var pronounRoleConfiguration = PronounRoleConfiguration()
         @AutoSerializing(filePath: "local/cityConfig.json") var cityConfiguration = CityConfiguration()
 
@@ -81,7 +82,7 @@ public class D2Receiver: Receiver {
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),
             MessagePreviewHandler(configuration: _messagePreviewsConfiguration),
-            TriggerReactionHandler(cityConfiguration: _cityConfiguration),
+            TriggerReactionHandler(configuration: _triggerReactionConfiguration, cityConfiguration: _cityConfiguration),
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler(configuration: _haikuConfiguration, inventoryManager: inventoryManager),
