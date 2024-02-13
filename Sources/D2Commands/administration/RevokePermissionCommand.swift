@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let inputPattern = try! LegacyRegex(from: "(?:(?:<\\S+>)|(?:@\\S+))(?:\\s+(?:(?:<\\S+>)|(?:@\\S+)))*\\s*")
+fileprivate let inputPattern = #/(?:(?:<\S+>)|(?:@\S+))(?:\s+(?:(?:<\S+>)|(?:@\S+)))*\s*/#
 
 public class RevokePermissionCommand: StringCommand {
     public let info = CommandInfo(
@@ -18,7 +18,7 @@ public class RevokePermissionCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if inputPattern.matchCount(in: input) > 0 {
+        if input.matches(of: inputPattern).count > 0 {
             var response = ""
             var changedPermissions = false
 

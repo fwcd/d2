@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let inputPattern = try! LegacyRegex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
+fileprivate let inputPattern = #/(?:(?:(?:<\S+>)|(?:@\S+))\s+)+(?<level>.+)/#
 
 public class GrantPermissionCommand: StringCommand {
     public let info = CommandInfo(
@@ -18,8 +18,8 @@ public class GrantPermissionCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let parsedArgs = inputPattern.firstGroups(in: input) {
-            let rawLevel = parsedArgs[1]
+        if let parsedArgs = try? inputPattern.firstMatch(in: input) {
+            let rawLevel = String(parsedArgs.level)
             if let level = PermissionLevel.of(rawLevel) {
                 var response = ""
                 var changedPermissions = false

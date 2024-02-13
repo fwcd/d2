@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let emojiPattern = try! LegacyRegex(from: ":[^:]:")
+fileprivate let emojiPattern = #/:[^:]:/#
 
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case administration
@@ -57,6 +57,6 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
         }
     }
     public var plainDescription: String {
-        emojiPattern.replace(in: description, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+        description.replacing(emojiPattern, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
