@@ -1,7 +1,7 @@
 import D2NetAPIs
 import Utils
 
-fileprivate let wordPattern = try! LegacyRegex(from: "\\w+|\\S+|\\s+")
+fileprivate let wordPattern = #/\w+|\S+|\s+/#
 
 public class ThesaurizeCommand: StringCommand {
     public let info = CommandInfo(
@@ -19,7 +19,7 @@ public class ThesaurizeCommand: StringCommand {
             return
         }
 
-        let words = wordPattern.allGroups(in: input).map { $0[0] }
+        let words = input.matches(of: wordPattern).map { String($0.output) }
         let mappingsPromise: Promise<[String: Set<String>], any Error> = sequence(promises: Set(words)
             .filter { $0.allSatisfy { $0.isLetter } }
             .map { term in { OpenThesaurusQuery(term: term).perform()
