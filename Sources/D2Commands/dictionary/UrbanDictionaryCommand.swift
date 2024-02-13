@@ -3,7 +3,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let linkPattern = try! LegacyRegex(from: "\\[([\\w\\s]+)\\]")
+fileprivate let linkPattern = #/\[(?<term>[\w\s]+)\]/#
 
 public class UrbanDictionaryCommand: StringCommand {
     public let info = CommandInfo(
@@ -52,6 +52,6 @@ public class UrbanDictionaryCommand: StringCommand {
     }
 
     private func markdownOf(formattedText: String) -> String {
-        linkPattern.replace(in: formattedText) { "[\($0[1])](https://www.urbandictionary.com/define.php?term=\($0[1].addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0[1]))" }
+        formattedText.replacing(linkPattern) { "[\($0.term)](https://www.urbandictionary.com/define.php?term=\($0.term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? String($0.term)))" }
     }
 }
