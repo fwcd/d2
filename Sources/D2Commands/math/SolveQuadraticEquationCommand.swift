@@ -34,19 +34,19 @@ public class SolveQuadraticEquationCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        let equation = input.split(separator: "=")
-        guard equation.count == 2 else {
+        let rawEquation = input.split(separator: "=")
+        guard rawEquation.count == 2 else {
             output.append(errorText: "Make sure that your equation has the form `... = ...`")
             return
         }
 
-        let lhs = Dictionary(uniqueKeysWithValues: equation[0].matches(of: monomialPattern)
+        let lhs = Dictionary(uniqueKeysWithValues: rawEquation[0].matches(of: monomialPattern)
             .compactMap { parseMonomial(from: ($0.1.flatMap { $0 }, $0.2, $0.3.flatMap { $0 }, $0.4)) }
             .map { (c, d) in (d, c) }
             .withoutDuplicates { $0.0 })
         log.info("Parsed polynomial \(lhs.map { "(\($0))" }.joined(separator: " + "))")
 
-        guard let rhs = Rational(equation[1].trimmingCharacters(in: .whitespaces)) else {
+        guard let rhs = Rational(rawEquation[1].trimmingCharacters(in: .whitespaces)) else {
             output.append(errorText: "Invalid right-hand side! Make sure that it is a fraction.")
             return
         }
@@ -59,25 +59,19 @@ public class SolveQuadraticEquationCommand: StringCommand {
             return
         }
 
-        let (a, b, c) = (lhs[2] ?? 0, lhs[1] ?? 0, (lhs[0] ?? 0) - rhs)
+        let equation = QuadraticEquation(a: lhs[2] ?? 0, b: lhs[1] ?? 0, c: (lhs[0] ?? 0) - rhs)
 
-        guard a != 0 else {
+        guard equation.a != 0 else {
             output.append(errorText: "This is not a (strictly) quadratic equation!")
             return
         }
 
-        let underTheRoot = (b * b - 4 * a * c).asDouble
+        let solutions = equation.solutions
 
-        guard underTheRoot >= 0 else {
+        guard solutions.count > 0 else {
             output.append(errorText: "The quadratic equation has no solutions!")
             return
         }
-
-        let root = Rational(approximately: underTheRoot.squareRoot())
-        let solutions: Set<Rational> = [
-            -(b + root) / (2 * a),
-            -(b - root) / (2 * a)
-        ]
 
         let formula = "x \\in \\left\\{\(solutions.sorted().map { latexOf(rational: $0) }.joined(separator: ", "))\\right\\}"
 
