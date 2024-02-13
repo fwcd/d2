@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\w+)\\s+([nsh]+)")
+fileprivate let argsPattern = #/(?<word>\w+)\s+(?<clues>[nsh]+)/#
 
 public class SolveWordleCommand: StringCommand {
     public let info = CommandInfo(
@@ -56,12 +56,12 @@ public class SolveWordleCommand: StringCommand {
             unsubscribe(from: channelId, context: context)
             return
         }
-        guard let parsedArgs = argsPattern.firstGroups(in: content), parsedArgs[1].count == parsedArgs[2].count else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: content), parsedArgs.word.count == parsedArgs.clues.count else {
             return
         }
 
-        let word = parsedArgs[1]
-        let clues = WordleBoard.Clues(fromArray: parsedArgs[2].map { WordleBoard.Clue(fromString: String($0))! })
+        let word = String(parsedArgs.word)
+        let clues = WordleBoard.Clues(fromArray: parsedArgs.clues.map { WordleBoard.Clue(fromString: String($0))! })
 
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
