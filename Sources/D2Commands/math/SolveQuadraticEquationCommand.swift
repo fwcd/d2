@@ -31,8 +31,6 @@ public class SolveQuadraticEquationCommand: StringCommand {
             latexRenderer.renderImage(from: formula, to: output).listenOrLogError {
                 self.running = false
             }
-        } catch QuadraticEquationParseError.notAnEquation {
-            output.append(errorText: "Make sure that your equation has the form `... = ...`")
         } catch QuadraticEquationParseError.rhsIsNotAFraction {
             output.append(errorText: "Invalid right-hand side! Make sure that it is a fraction.")
         } catch QuadraticEquationParseError.noCoefficients {
