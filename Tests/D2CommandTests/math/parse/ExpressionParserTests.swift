@@ -4,7 +4,7 @@ import XCTest
 fileprivate let eps = 0.00001
 
 final class ExpressionParserTests: XCTestCase {
-	private func testRPNExpressionParser() throws {
+	func testRPNExpressionParser() throws {
 		let parser = RPNExpressionParser()
 
 		let rawProduct = "3 4 *"
