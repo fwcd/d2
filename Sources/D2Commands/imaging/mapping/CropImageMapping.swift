@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
+fileprivate let argsPattern = #/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/#
 
 public struct CropImageMapping: ImageMapping {
     private let topLeftX: Int
@@ -18,11 +18,11 @@ public struct CropImageMapping: ImageMapping {
     public init(args: String?) throws {
         guard
             let rawBounds = args,
-            let parsedBounds = argsPattern.firstGroups(in: rawBounds)?[1...].compactMap(Int.init) else {
+            let parsedBounds = try? argsPattern.firstMatch(in: rawBounds) else {
             throw CropError.invalidArgs("Syntax: [top left x] [top left y] [bottom right x] [bottom right y]")
         }
 
-        (topLeftX, topLeftY, bottomRightX, bottomRightY) = (parsedBounds[0], parsedBounds[1], parsedBounds[2], parsedBounds[3])
+        (topLeftX, topLeftY, bottomRightX, bottomRightY) = (Int(parsedBounds.0)!, Int(parsedBounds.1)!, Int(parsedBounds.2)!, Int(parsedBounds.3)!)
     }
 
     public func apply(to image: CairoImage) throws -> CairoImage {
