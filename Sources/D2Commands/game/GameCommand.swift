@@ -4,8 +4,8 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.GameCommand")
-fileprivate let flagRegex = try! LegacyRegex(from: "--(\\S+)")
-fileprivate let actionMessageRegex = try! LegacyRegex(from: "^(\\S+)(?:\\s+(.+))?")
+fileprivate let flagRegex = #/--(\S+)/#
+fileprivate let actionMessageRegex = #/^(\S+)(?:\s+(.+))?/#
 
 /// Provides a base layer of functionality for a turn-based games.
 public class GameCommand<G: Game>: Command {
@@ -93,7 +93,7 @@ public class GameCommand<G: Game>: Command {
     }
 
     private func parseFlags(from input: String) -> Set<String> {
-        return Set(flagRegex.allGroups(in: input).map { $0[1] })
+        return Set(input.matches(of: flagRegex).map { String($0.1) })
     }
 
     private func sendHandsAsDMs(fromState state: G.State, to output: any CommandOutput) {
@@ -166,9 +166,9 @@ public class GameCommand<G: Game>: Command {
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         guard let author = context.author.map({ gamePlayer(from: $0, context: context) }) else { return }
 
-        if let actionArgs = actionMessageRegex.firstGroups(in: content), let channel = context.channel, let sink = context.sink {
+        if let actionArgs = try? actionMessageRegex.firstMatch(in: content), let channel = context.channel, let sink = context.sink {
             let channelName = sink.guildForChannel(channel.id)?.channels[channel.id]?.name
-            let continueSubscription = perform(actionArgs[1], withArgs: actionArgs[2], on: channel.id, channelName: channelName, output: output, author: author)
+            let continueSubscription = perform(String(actionArgs.1), withArgs: String(actionArgs.2 ?? ""), on: channel.id, channelName: channelName, output: output, author: author)
             if !continueSubscription {
                 context.unsubscribeFromChannel()
             }
