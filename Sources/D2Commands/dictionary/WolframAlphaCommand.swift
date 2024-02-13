@@ -7,7 +7,7 @@ import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
-fileprivate let flagPattern = try! LegacyRegex(from: "--(\\S+)")
+fileprivate let flagPattern = #/--(?<flag>\S+)/#
 
 public class WolframAlphaCommand: StringCommand {
     public let info = CommandInfo(
@@ -30,8 +30,8 @@ public class WolframAlphaCommand: StringCommand {
         isRunning = true
 
         do {
-            let flags = Set(flagPattern.allGroups(in: input).map { $0[1] })
-            let processedInput = flagPattern.replace(in: input, with: "")
+            let flags = Set(input.matches(of: flagPattern).map { $0.flag })
+            let processedInput = input.replacing(flagPattern, with: "")
 
             if flags.contains("image") {
                 // Performs a "simple" query and outputs a static image
