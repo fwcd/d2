@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(x|y)?\\s*(\\d+)?")
+fileprivate let argsPattern = #/(?<axis>x|y)?\s*(?<replicas>\d+)?/#
 
 public struct TileImageMapping: ImageMapping {
     private let maxWidth: Int = 2000
@@ -17,11 +17,11 @@ public struct TileImageMapping: ImageMapping {
     public init(args: String?) throws {
         guard
             let text = args,
-            let parsed = argsPattern.firstGroups(in: text),
-            let axis = parsed[1].isEmpty ? .x : Axis(rawValue: parsed[1]),
-            let replicas = parsed[2].isEmpty ? 2 : Int(parsed[2]) else {
+            let parsed = try? argsPattern.firstMatch(in: text) else {
             throw TileError.invalidArgs("Syntax: [x|y]? [number of replicas]?")
         }
+        let axis = parsed.axis.flatMap { Axis(rawValue: String($0)) } ?? .x
+        let replicas = parsed.replicas.map { Int($0)! } ?? 2
         self.axis = axis
         self.replicas = replicas
     }
