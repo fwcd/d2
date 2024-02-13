@@ -40,7 +40,7 @@ public class HoogleCommand: StringCommand {
                     url: urlComponents.url,
                     color: 0x8900b3,
                     fields: try Array(searchResults
-                        .grouped(by: {
+                        .groupingPreservingOrder(by: {
                             HoogleResultKey(
                                 item: $0.item,
                                 renderedDoc: try $0.docs
@@ -50,7 +50,7 @@ public class HoogleCommand: StringCommand {
                         }).map { (key, results) in
                             let name = try self.converter.plainTextOf(htmlFragment: key.item).truncated(to: 250, appending: "...")
                             let modules = results
-                                .grouped(by: \.package)
+                                .groupingPreservingOrder(by: \.package)
                                 .map { "\($0.0?.markdown ?? "?") \($0.1.map { $0.module?.markdown ?? "?" }.truncated(to: 4, appending: "...").joined(separator: " "))" }
                                 .truncated(to: 3, appending: "...")
                                 .joined(separator: ", ")
