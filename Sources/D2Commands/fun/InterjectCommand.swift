@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(\\S+)\\s+(.+)")
+fileprivate let argsPattern = #/(\S+)\s+(\S+)\s+(?<type>.+)/#
 
 public class InterjectCommand: StringCommand {
     public let info = CommandInfo(
@@ -15,14 +15,14 @@ public class InterjectCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        let first = parsedArgs[1]
-        let second = parsedArgs[2]
-        let type = parsedArgs[3]
+        let first = parsedArgs.1
+        let second = parsedArgs.2
+        let type = parsedArgs.type
 
         output.append("""
             I'd just like to interject for a moment. What you're referring to as \(second), is in fact, \(first)/\(second), or as I've recently taken to calling it, \(first) + \(second). \(second) is not \(type), but rather another component of a fully functioning \(first) system made useful by \(first) components.
