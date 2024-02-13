@@ -6,7 +6,7 @@ fileprivate let log = Logger(label: "D2Commands.QuadraticEquation+Parsing")
 
 fileprivate let tokenPattern = #/(?<operator>[+\-=])|(?<rational>[\d/\.]+)|(?<power>x(?:\^(?<exponent>\d+))?)/#
 
-// TODO: Factor out general polynomial parser
+// TODO: Factor out general polynomial (equation) parser
 
 private typealias Token = (Substring, operator: Substring?, rational: Substring?, power: Substring?, exponent: Substring?)
 private typealias Monomial = (coefficient: Rational, exponent: Int)
