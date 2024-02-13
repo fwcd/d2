@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsRegex = try! LegacyRegex(from: "(\\S+)\\s+(\\S+)")
+fileprivate let argsRegex = #/(\\S+)\\s+(\\S+)/#
 
 public struct TicTacToeMove: Hashable {
     let row: Int
@@ -12,14 +12,14 @@ public struct TicTacToeMove: Hashable {
     }
 
     public init(fromString str: String) throws {
-        if let parsedArgs = argsRegex.firstGroups(in: str) {
-            if let row = Row(rawValue: parsedArgs[1]), let column = Column(rawValue: parsedArgs[2]) {
+        if let parsedArgs = try? argsRegex.firstMatch(in: str) {
+            if let row = Row(rawValue: String(parsedArgs.1)), let column = Column(rawValue: String(parsedArgs.2)) {
                 self.row = row.index
                 self.column = column.index
-            } else if let row = Row(rawValue: parsedArgs[2]), let column = Column(rawValue: parsedArgs[1]) {
+            } else if let row = Row(rawValue: String(parsedArgs.2)), let column = Column(rawValue: String(parsedArgs.1)) {
                 self.row = row.index
                 self.column = column.index
-            } else if let row = Int(parsedArgs[1]), let column = Int(parsedArgs[2]) {
+            } else if let row = Int(parsedArgs.1), let column = Int(parsedArgs.2) {
                 self.row = row
                 self.column = column
             } else {
