@@ -1,8 +1,8 @@
 import Utils
 
-fileprivate let rawColorPattern = "(?:\(UnoColor.allCases.map { $0.rawValue }.joined(separator: "|")))"
+fileprivate let rawColorPattern = try! Regex("(?:\(UnoColor.allCases.map { $0.rawValue }.joined(separator: "|")))")
 fileprivate let rawLabelPattern = "(?:\(UnoActionLabel.allCases.map { $0.rawValue }.joined(separator: "|")))"
-fileprivate let movePattern = try! LegacyRegex(from: "^(?:(\(rawColorPattern))\\s+)?(\(rawLabelPattern)|[0-9])(?:\\s+(\(rawColorPattern)))?$")
+fileprivate let movePattern = try! Regex("^(?:(\(rawColorPattern))\\s+)?(\(rawLabelPattern)|[0-9])(?:\\s+(\(rawColorPattern)))?$")
 
 public struct UnoMove: Hashable {
     public let card: UnoCard?
@@ -18,10 +18,10 @@ public struct UnoMove: Hashable {
     public init(fromString str: String) throws {
         if str == "draw" {
             self.init(drawingCard: true)
-        } else if let parsed = movePattern.firstGroups(in: str) {
-            let rawColor = parsed[1]
-            let rawLabel = parsed[2]
-            let rawNextColor = parsed[3]
+        } else if let parsed = try? movePattern.firstMatch(in: str) {
+            let rawColor = String(parsed[1].substring ?? "")
+            let rawLabel = String(parsed[2].substring ?? "")
+            let rawNextColor = String(parsed[3].substring ?? "")
             self.init(
                 playing: try UnoCard.from(rawLabelOrNum: rawLabel, rawColor: rawColor.nilIfEmpty),
                 pickingColor: UnoColor(rawValue: rawNextColor)
