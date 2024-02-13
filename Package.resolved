@@ -175,8 +175,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-gif.git",
       "state" : {
-        "revision" : "5e9fb53d45555a16225046b4d76249e443297d9d",
-        "version" : "3.0.0"
+        "revision" : "168a92bad82913212d581581761a4b41814dec6c",
+        "version" : "3.0.1"
       }
     },
     {

@@ -20,7 +20,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-prolog.git", from: "0.1.0"),
         .package(url: "https://github.com/fwcd/swift-utils.git", from: "3.0.0"),
         .package(url: "https://github.com/fwcd/swift-graphics.git", from: "3.0.0"),
-        .package(url: "https://github.com/fwcd/swift-gif.git", from: "3.0.0"),
+        .package(url: "https://github.com/fwcd/swift-gif.git", from: "3.0.1"),
         .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.1.10"),
         .package(url: "https://github.com/fwcd/swift-music-theory.git", from: "0.1.0"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.59.0"),
