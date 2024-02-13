@@ -5,7 +5,7 @@ import Utils
 import D2Script
 
 fileprivate let log = Logger(label: "D2Commands.AddD2ScriptCommand")
-fileprivate let codePattern = try! LegacyRegex(from: "(?:`(?:``(?:\\w*\n)?)?)?([^`]+)`*")
+fileprivate let codePattern = #/(?:`(?:``(?:\w*\n)?)?)?(?<code>[^`]+)`*/#
 
 // TODO: Use code command instead of StringCommand
 
@@ -21,9 +21,9 @@ public class AddD2ScriptCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let code = codePattern.firstGroups(in: input)?[1] {
+        if let code = try? codePattern.firstMatch(in: input)?.code {
             do {
-                let command = try D2ScriptCommand(script: try parser.parse(code))
+                let command = try D2ScriptCommand(script: try parser.parse(String(code)))
                 let name = command.name
                 guard !name.contains(" ") else {
                     output.append(errorText: "Command name '\(name)' may not contain spaces")
