@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.EvaluateExpressionCommand")
-fileprivate let flagsPattern = try! LegacyRegex(from: "--(\\S+)")
+fileprivate let flagsPattern = #/--(\S+)/#
 
 // TODO: Use Arg API, integrate flags into arg API
 
@@ -24,10 +24,10 @@ public class EvaluateExpressionCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        let flags = Set<String>(flagsPattern.allGroups(in: input).map { $0[1] })
+        let flags = Set<String>(input.matches(of: flagsPattern).map { String($0.1) })
 
         do {
-            let ast = try parser.parse(flagsPattern.replace(in: input, with: ""))
+            let ast = try parser.parse(input.replacing(flagsPattern, with: ""))
 
             if flags.contains("ast") {
                 // Render AST only
