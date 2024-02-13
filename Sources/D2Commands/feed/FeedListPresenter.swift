@@ -3,7 +3,7 @@ import FeedKit
 import D2MessageIO
 import Utils
 
-fileprivate let newlinesPattern = try! LegacyRegex(from: "[\\r\\n]+")
+fileprivate let newlinesPattern = #/[\r\n]+/#
 
 /// Presents the n most recent items as a list.
 public struct FeedListPresenter: FeedPresenter {
@@ -30,7 +30,7 @@ public struct FeedListPresenter: FeedPresenter {
                 return """
                     **[\(title)](\(link))**
                     \(try $0.description
-                        .map { newlinesPattern.replace(in: try converter.convert(htmlFragment: $0), with: "\n") }?
+                        .map { try converter.convert(htmlFragment: $0).replacing(newlinesPattern, with: "\n") }?
                         .trimmingCharacters(in: .whitespacesAndNewlines)
                         .truncated(to: 300, appending: "...")
                         ?? "_no description_")
