@@ -17,5 +17,4 @@ discordtoken.*
 userwhitelist.*
 
 local
-.vscode/**
-!*.code-snippets
+.vscode
