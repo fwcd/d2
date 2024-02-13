@@ -4,7 +4,7 @@ fileprivate let alphabetLength: Int = 26
 fileprivate let alphabetRange = 0..<alphabetLength
 fileprivate let alphabetStart = Unicode.Scalar("a").value
 
-fileprivate let argPattern = try! LegacyRegex(from: "(\\d+)\\s+(.+)")
+fileprivate let argPattern = #/(\d+)\s+(.+)/#
 
 public class CaesarCipherCommand: StringCommand {
     public let info = CommandInfo(
@@ -20,17 +20,17 @@ public class CaesarCipherCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        guard let offset = UInt32(parsedArgs[1]), alphabetRange.contains(Int(offset)) else {
+        guard let offset = UInt32(parsedArgs.1), alphabetRange.contains(Int(offset)) else {
             output.append(errorText: "Missing or invalid offset for caesar chiffre!")
             return
         }
 
-        output.append(String(parsedArgs[2].lowercased().map { shift(character: $0, by: offset) }))
+        output.append(String(parsedArgs.2.lowercased().map { shift(character: $0, by: offset) }))
     }
 
     private func shift(character: Character, by offset: UInt32) -> Character {
