@@ -9,7 +9,7 @@ import Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.CampusCommand")
-fileprivate let addressWithCityPattern = try! LegacyRegex(from: ".+,\\s*\\d\\d\\d\\d\\d\\s+\\w+")
+fileprivate let addressWithCityPattern = #/.+,\s*\d\d\d\d\d\s+\w+/#
 
 /// Locates locations on the University of Kiel's campus.
 public class CampusCommand: StringCommand {
@@ -80,7 +80,7 @@ public class CampusCommand: StringCommand {
     private func format(rawAddress: String) -> String {
         var address: String = rawAddress.replacingOccurrences(of: "str.", with: "straße")
 
-        if addressWithCityPattern.matchCount(in: rawAddress) == 0 {
+        if rawAddress.matches(of: addressWithCityPattern).isEmpty {
             address = address.split(separator: ",").first! + ", 24118 Kiel"
         }
 

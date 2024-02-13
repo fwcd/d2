@@ -1,4 +1,5 @@
 import Logging
+import RegexBuilder
 import D2MessageIO
 import D2Permissions
 import Utils
@@ -6,18 +7,28 @@ import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.UnivISCommand")
 
-fileprivate let rawKeyPattern = "(?:\\w+)"
-fileprivate let rawValuePattern = "(?:\\w+|(?:\"[\\w ]+\"))"
-fileprivate let rawCapturingKeyPattern = "(\\w+)"
-fileprivate let rawCapturingValuePattern = "(?:(?:\"(.+?)\")|(\\S+))"
+fileprivate let rawKeyPattern = #/(?:\w+)/#
+fileprivate let rawValuePattern = #/(?:\w+|(?:"[\w ]+"))/#
 
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
-fileprivate let inputPattern = try! LegacyRegex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
+fileprivate let inputPattern = Regex {
+    Capture {
+        #/\w+/#
+    }
+    Capture {
+        OneOrMore {
+            #/\s+/#
+            rawKeyPattern
+            #/\s*=\s*/#
+            rawValuePattern
+        }
+    }
+}
 
 // Matches a single key-value argument. The first group captures the
 // key, the second (or third) group captures the value.
-fileprivate let kvArgPattern = try! LegacyRegex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
+fileprivate let kvArgPattern = #/(?<key>\w+)\s*=\s*(?:(?:"(?<quotedValue>.+?)")|(?<value>\S+))/#
 
 // TODO: Use the new Arg API for this
 
@@ -37,16 +48,16 @@ public class UnivISCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
-            guard let parsedArgs = inputPattern.firstGroups(in: input) else {
+            guard let parsedArgs = try? inputPattern.firstMatch(in: input) else {
                 output.append(errorText: "Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
                 return
             }
-            guard let searchKey = UnivISSearchKey(rawValue: parsedArgs[1]) else {
-                output.append(errorText: "Unrecognized search key `\(parsedArgs[1])`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
+            guard let searchKey = UnivISSearchKey(rawValue: String(parsedArgs.1)) else {
+                output.append(errorText: "Unrecognized search key `\(parsedArgs.1)`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
                 return
             }
 
-            let queryParams = try queryParameterDict(of: kvArgPattern.allGroups(in: input))
+            let queryParams = try queryParameterDict(of: input.matches(of: kvArgPattern).map { (key: $0.key, value: $0.quotedValue ?? $0.value ?? "") })
 
             try UnivISQuery(search: searchKey, params: queryParams).start().listen {
                 do {
@@ -71,15 +82,14 @@ public class UnivISCommand: StringCommand {
         }
     }
 
-    private func queryParameterDict(of parsedKVArgs: [[String]]) throws -> [UnivISSearchParameter: String] {
+    private func queryParameterDict(of parsedKVArgs: [(key: Substring, value: Substring)]) throws -> [UnivISSearchParameter: String] {
         var dict = [UnivISSearchParameter: String]()
 
-        for kvArg in parsedKVArgs {
-            if let searchParameter = UnivISSearchParameter(rawValue: kvArg[1]) {
-                let value = kvArg[2].nilIfEmpty ?? kvArg[3]
-                dict[searchParameter] = value
+        for (key, value) in parsedKVArgs {
+            if let searchParameter = UnivISSearchParameter(rawValue: String(key)) {
+                dict[searchParameter] = String(value)
             } else {
-                throw UnivISCommandError.invalidSearchParameter(kvArg[1])
+                throw UnivISCommandError.invalidSearchParameter(String(key))
             }
         }
 
