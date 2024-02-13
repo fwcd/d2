@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.LatexCommand")
-fileprivate let flagPattern = try! LegacyRegex(from: "--(\\S+)=(\\S+)")
+fileprivate let flagPattern = #/--(\S+)=(\S+)/#
 
 // TODO: Use the Arg API
 
@@ -33,9 +33,9 @@ public class LatexCommand: StringCommand {
         }
         running = true
 
-        let flags = flagPattern.allGroups(in: input).reduce(into: [String: String]()) { $0[$1[1]] = $1[2] }
+        let flags = input.matches(of: flagPattern).reduce(into: [String: String]()) { $0[String($1.1)] = String($1.2) }
         let color = flags["color"] ?? "white"
-        let processedInput = flagPattern.replace(in: input, with: "")
+        let processedInput = input.replacing(flagPattern, with: "")
 
         latexRenderer.renderImage(from: processedInput, to: output, color: color).listenOrLogError {
             self.running = false
