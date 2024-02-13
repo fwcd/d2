@@ -11,10 +11,10 @@ fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
 /// The first capture describes the x-coordinate
 /// and the second capture the y-coordinate of the
 /// position where the transform is applied.
-fileprivate let posPattern = try! LegacyRegex(from: "(-?\\d+)\\s+(-?\\d+)")
+fileprivate let posPattern = #/(-?\d+)\s+(-?\d+)/#
 
 /// Matches a single key-value argument.
-fileprivate let kvPattern = try! LegacyRegex(from: "(\\w+)\\s*=\\s*(\\S+)")
+fileprivate let kvPattern = #/(\w+)\s*=\s*(\S+)/#
 
 fileprivate let virtualEdgesParameter = "virtualedges"
 fileprivate let framesParameter = "frames"
@@ -56,8 +56,8 @@ public class AnimateCommand<A>: Command where A: Animation {
         typingIndicator?.startAsync()
 
         // Parse user-specified args
-        let pos: Vec2<Int>? = posPattern.firstGroups(in: args).map { Vec2<Int>(x: Int($0[1])!, y: Int($0[2])!) }
-        let kvArgs: [String: String] = Dictionary(uniqueKeysWithValues: kvPattern.allGroups(in: args).map { ($0[1], $0[2]) })
+        let pos: Vec2<Int>? = (try? posPattern.firstMatch(in: args)).map { Vec2<Int>(x: Int($0.1)!, y: Int($0.2)!) }
+        let kvArgs: [String: String] = Dictionary(uniqueKeysWithValues: args.matches(of: kvPattern).map { (String($0.1), String($0.2)) })
 
         let frameCount = kvArgs[framesParameter].flatMap(Int.init) ?? defaultFrameCount
 
