@@ -7,7 +7,7 @@ import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
-fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
+fileprivate let flagPattern = try! LegacyRegex(from: "--(\\S+)")
 
 public class WolframAlphaCommand: StringCommand {
     public let info = CommandInfo(

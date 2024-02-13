@@ -3,7 +3,7 @@ import Utils
 
 fileprivate let allFlag = "--all"
 fileprivate let rawMentionPattern = "<[^>]+>"
-fileprivate let subcommandPattern = try! Regex(from: "^(?:\(rawMentionPattern))?\\s*(\\w+)(?:\\s+(.+))?")
+fileprivate let subcommandPattern = try! LegacyRegex(from: "^(?:\(rawMentionPattern))?\\s*(\\w+)(?:\\s+(.+))?")
 
 public class InventoryCommand: Command {
     public private(set) var info = CommandInfo(

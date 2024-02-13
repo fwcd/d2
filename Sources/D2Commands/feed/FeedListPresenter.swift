@@ -3,7 +3,7 @@ import FeedKit
 import D2MessageIO
 import Utils
 
-fileprivate let newlinesPattern = try! Regex(from: "[\\r\\n]+")
+fileprivate let newlinesPattern = try! LegacyRegex(from: "[\\r\\n]+")
 
 /// Presents the n most recent items as a list.
 public struct FeedListPresenter: FeedPresenter {

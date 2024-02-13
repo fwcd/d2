@@ -22,8 +22,8 @@ public class SearchChannelCommand: StringCommand {
 
         do {
             let term = input.lowercased()
-            let parsedPattern = try? Regex(from: term)
-            let pattern = try parsedPattern ?? Regex(from: Regex.escape(term))
+            let parsedPattern = try? LegacyRegex(from: term)
+            let pattern = try parsedPattern ?? LegacyRegex(from: LegacyRegex.escape(term))
             let results = (Array(guild.channels.values) + Array(guild.threads.values))
                 .filter {
                     [$0.name, $0.topic, $0.parentId.flatMap { guild.channels[$0] }.map(\.name)]

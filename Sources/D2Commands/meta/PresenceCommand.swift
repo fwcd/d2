@@ -8,7 +8,7 @@ fileprivate let activityTypes: [String: Presence.Activity.ActivityType] = [
     "listening": .listening
 ]
 fileprivate let availableStatusTypes = "idle|offline|online|dnd"
-fileprivate let argsPattern = try! Regex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(\(availableStatusTypes))\\s+)?(.+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(\(availableStatusTypes))\\s+)?(.+)")
 
 public class PresenceCommand: StringCommand {
     public let info = CommandInfo(

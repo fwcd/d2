@@ -3,7 +3,7 @@ import D2Commands
 import D2MessageIO
 import Utils
 
-fileprivate let mentionPattern = try! Regex(from: "<@.+?>")
+fileprivate let mentionPattern = try! LegacyRegex(from: "<@.+?>")
 
 public struct MentionD2Handler: MessageHandler {
     private let conversator: Conversator

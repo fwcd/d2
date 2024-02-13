@@ -2,7 +2,7 @@ import D2Commands
 import D2MessageIO
 import Utils
 
-fileprivate let countToNPattern = try! Regex(from: "count\\s+to\\s+(\\d+)")
+fileprivate let countToNPattern = try! LegacyRegex(from: "count\\s+to\\s+(\\d+)")
 
 public struct CountToNHandler: MessageHandler {
     public func handle(message: Message, sink: any Sink) -> Bool {

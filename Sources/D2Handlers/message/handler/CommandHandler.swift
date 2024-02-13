@@ -37,7 +37,7 @@ fileprivate struct RunnablePipe: Runnable {
 // The first group matches the command name,
 // the second matches the iteration count and
 // the third the arguments (the rest of the message content)
-fileprivate let commandPattern = try! Regex(from: "(\\w+)(?:\\^(\\d+))?(?:\\s+([\\s\\S]*))?")
+fileprivate let commandPattern = try! LegacyRegex(from: "(\\w+)(?:\\^(\\d+))?(?:\\s+([\\s\\S]*))?")
 
 /// Handles (possibly piped or chained) command invocations.
 public class CommandHandler: MessageHandler {

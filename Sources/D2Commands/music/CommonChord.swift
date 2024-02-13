@@ -12,7 +12,7 @@ fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0
 /// 2. group: quality (lowercased m for 'minor')
 /// 3. group: 'add'
 /// 4. group: number of the interval: (7 for 'dominant seventh')
-fileprivate let chordPattern = try! Regex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
+fileprivate let chordPattern = try! LegacyRegex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
 
 // TODO: Properly conform to Chord once https://github.com/fwcd/swift-music-theory/issues/11 is fixed.
 //       Perhaps even upstream it?

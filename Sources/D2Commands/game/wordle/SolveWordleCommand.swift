@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+([nsh]+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\w+)\\s+([nsh]+)")
 
 public class SolveWordleCommand: StringCommand {
     public let info = CommandInfo(

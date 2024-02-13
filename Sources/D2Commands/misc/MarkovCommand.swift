@@ -2,8 +2,8 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let flagPattern = try! Regex(from: "--(\\S+)")
-fileprivate let pingPattern = try! Regex(from: "<@&?.+?>")
+fileprivate let flagPattern = try! LegacyRegex(from: "--(\\S+)")
+fileprivate let pingPattern = try! LegacyRegex(from: "<@&?.+?>")
 
 // TODO: Use Arg API
 

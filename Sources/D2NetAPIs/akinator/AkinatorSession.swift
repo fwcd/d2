@@ -18,8 +18,8 @@ fileprivate let headers = [
     "Referer": "https://en.akinator.com/game"
 ]
 
-fileprivate let sessionPattern = try! Regex(from: "var uid_ext_session = '([^']*)'\\;\\s*.*var frontaddr = '([^']*)'\\;")
-fileprivate let startGamePattern = try! Regex(from: "^\(jQuerySignature)_\\d+\\((.+)\\)$")
+fileprivate let sessionPattern = try! LegacyRegex(from: "var uid_ext_session = '([^']*)'\\;\\s*.*var frontaddr = '([^']*)'\\;")
+fileprivate let startGamePattern = try! LegacyRegex(from: "^\(jQuerySignature)_\\d+\\((.+)\\)$")
 
 fileprivate let log = Logger(label: "D2NetAPIs.AkinatorSession")
 

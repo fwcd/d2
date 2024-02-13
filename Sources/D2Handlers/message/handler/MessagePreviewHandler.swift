@@ -11,7 +11,7 @@ fileprivate let log = Logger(label: "D2Handlers.MessagePreviewHandler")
 /// - The guild id
 /// - The channel id
 /// - The message id
-fileprivate let messageLinkPattern = try! Regex(from: "https?://discord(?:app)?.com/channels/(\\d+)/(\\d+)/(\\d+)")
+fileprivate let messageLinkPattern = try! LegacyRegex(from: "https?://discord(?:app)?.com/channels/(\\d+)/(\\d+)/(\\d+)")
 
 /// Displays previews of linked messages.
 public struct MessagePreviewHandler: MessageHandler {

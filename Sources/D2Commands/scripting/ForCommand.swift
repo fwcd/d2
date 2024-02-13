@@ -5,7 +5,7 @@ import Utils
 fileprivate let rawRangePattern = "\\d+\\.\\.[\\.<]\\d+"
 
 // Matches the arguments, capturing the range
-fileprivate let inputPattern = try! Regex(from: "^(\(rawRangePattern))")
+fileprivate let inputPattern = try! LegacyRegex(from: "^(\(rawRangePattern))")
 
 public class ForCommand: StringCommand {
     public let info = CommandInfo(

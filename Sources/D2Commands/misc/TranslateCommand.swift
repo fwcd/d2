@@ -2,7 +2,7 @@ import Utils
 import D2MessageIO
 import D2NetAPIs
 
-fileprivate let argPattern = try! Regex(from: "(\\w+)\\s+(\\S.+)")
+fileprivate let argPattern = try! LegacyRegex(from: "(\\w+)\\s+(\\S.+)")
 
 public class TranslateCommand: StringCommand {
     public let info = CommandInfo(

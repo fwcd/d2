@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\d+)\\s+(.+)")
+fileprivate let argPattern = try! LegacyRegex(from: "(?:(\\w+)\\s+)?(\\d+)\\s+(.+)")
 
 public class ChannelMessageCommand: StringCommand {
     public let info = CommandInfo(

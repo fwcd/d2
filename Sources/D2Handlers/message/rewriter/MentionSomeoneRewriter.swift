@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let someonePattern = try! Regex(from: "@someone")
+fileprivate let someonePattern = try! LegacyRegex(from: "@someone")
 
 public struct MentionSomeoneRewriter: MessageRewriter {
     public func rewrite(message: Message, sink: any Sink) -> Message? {

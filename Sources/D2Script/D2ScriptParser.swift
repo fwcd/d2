@@ -6,10 +6,10 @@ fileprivate let operators: [String] = ["=", "+", "-", "*", "/", "^"]
 fileprivate let keywords: [String] = ["command", "if", "else", "for", "while"]
 
 fileprivate let rawKeywordPattern = keywords
-    .map { "(?:\(Regex.escape($0)))" }
+    .map { "(?:\(LegacyRegex.escape($0)))" }
     .joined(separator: "|")
 fileprivate let rawOperatorPattern = operators
-    .map { "(?:\(Regex.escape($0)))" }
+    .map { "(?:\(LegacyRegex.escape($0)))" }
     .joined(separator: "|")
 
 /// Matches a single token.
@@ -24,7 +24,7 @@ fileprivate let rawOperatorPattern = operators
 /// 9.  capture group: a keyword
 /// 10. & 11.   group: a string literal (first part matches the string in quotes, second part matches the content)
 /// 12. capture group: an identifier
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|(,)|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\"([^\"]*)\")|([a-zA-Z]+)")
+fileprivate let tokenPattern = try! LegacyRegex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|(,)|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\"([^\"]*)\")|([a-zA-Z]+)")
 
 public struct D2ScriptParser {
     public init() {}

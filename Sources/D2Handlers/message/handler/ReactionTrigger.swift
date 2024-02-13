@@ -20,8 +20,8 @@ public struct ReactionTrigger {
                 guard Double.random(in: 0..<1) < probability else { throw ReactionTriggerError.notFeelingLucky }
                 guard authorNames.map({ $0.contains(message.author?.username.lowercased() ?? "") }) ?? true else { throw ReactionTriggerError.mismatchingAuthor }
                 guard messageTypes.flatMap({ message.type.map($0.contains) }) ?? true else { throw ReactionTriggerError.mismatchingMessageType }
-                let regex = try! Regex(
-                    from: "\\b(?:\((keywords ?? []).map(Regex.escape).joined(separator: "|")))\\b",
+                let regex = try! LegacyRegex(
+                    from: "\\b(?:\((keywords ?? []).map(LegacyRegex.escape).joined(separator: "|")))\\b",
                     caseSensitive: false
                 )
                 guard regex.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }

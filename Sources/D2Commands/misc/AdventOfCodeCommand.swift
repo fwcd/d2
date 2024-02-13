@@ -6,7 +6,7 @@ import AGGRenderer
 import CairoGraphics
 import Utils
 
-fileprivate let subcommandPattern = try! Regex(from: "([\\w-]+)\\s*(.*)")
+fileprivate let subcommandPattern = try! LegacyRegex(from: "([\\w-]+)\\s*(.*)")
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(

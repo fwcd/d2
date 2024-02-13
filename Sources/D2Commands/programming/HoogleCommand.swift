@@ -5,7 +5,7 @@ import Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.HoogleCommand")
-fileprivate let newlines = try! Regex(from: "\\n+")
+fileprivate let newlines = try! LegacyRegex(from: "\\n+")
 
 fileprivate struct HoogleResultKey: Hashable {
     let item: String

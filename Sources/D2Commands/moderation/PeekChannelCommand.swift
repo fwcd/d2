@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let idPattern = try! Regex(from: "\\d+")
+fileprivate let idPattern = try! LegacyRegex(from: "\\d+")
 
 public class PeekChannelCommand: StringCommand {
     public let info = CommandInfo(

@@ -3,9 +3,9 @@ import Utils
 import D2MessageIO
 import Dispatch
 
-fileprivate let argsPattern = try! Regex(from: "(?:([a-zA-Z]+)\\s*)?(.*)")
-fileprivate let durationPattern = try! Regex(from: "(\\d+)\\s*([a-zA-Z]+)")
-fileprivate let flagPattern = try! Regex(from: "--([a-z]+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(?:([a-zA-Z]+)\\s*)?(.*)")
+fileprivate let durationPattern = try! LegacyRegex(from: "(\\d+)\\s*([a-zA-Z]+)")
+fileprivate let flagPattern = try! LegacyRegex(from: "--([a-z]+)")
 fileprivate let timeUnits: [String: (Int) -> Int] = [
     "d": { $0 * 86400 },
     "h": { $0 * 3600 },

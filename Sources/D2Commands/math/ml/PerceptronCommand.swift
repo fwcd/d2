@@ -6,11 +6,11 @@ import Utils
 ///
 /// 1. group: subcommand name
 /// 2. group: subcommand args
-fileprivate let subcommandPattern = try! Regex(from: "(\\S+)(?:\\s+(.+))?")
-fileprivate let learnPattern = try! Regex(from: "(\\S+)?")
+fileprivate let subcommandPattern = try! LegacyRegex(from: "(\\S+)(?:\\s+(.+))?")
+fileprivate let learnPattern = try! LegacyRegex(from: "(\\S+)?")
 
 /// Matches a data sample of the form ($0, $1).
-fileprivate let dataSamplePattern = try! Regex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\S+)\\s*\\)")
+fileprivate let dataSamplePattern = try! LegacyRegex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\S+)\\s*\\)")
 
 // TODO: Use the Arg API
 

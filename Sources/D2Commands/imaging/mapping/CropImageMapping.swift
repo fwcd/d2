@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
 
 public struct CropImageMapping: ImageMapping {
     private let topLeftX: Int

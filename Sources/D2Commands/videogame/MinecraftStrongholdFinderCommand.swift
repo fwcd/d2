@@ -3,7 +3,7 @@ import Utils
 
 fileprivate let rawFloatPattern = "(?:-?\\d+(?:\\.\\d+)?)"
 fileprivate let rawPointPattern = "(?:\\(\\s*(\(rawFloatPattern))\\s*,\\s*(\(rawFloatPattern))\\s*\\))"
-fileprivate let argsPattern = try! Regex(from: "\(rawPointPattern)\\s+\(rawPointPattern)\\s+\(rawPointPattern)\\s+\(rawPointPattern)")
+fileprivate let argsPattern = try! LegacyRegex(from: "\(rawPointPattern)\\s+\(rawPointPattern)\\s+\(rawPointPattern)\\s+\(rawPointPattern)")
 
 public class MinecraftStrongholdFinderCommand: StringCommand {
     public let info = CommandInfo(

@@ -6,7 +6,7 @@ import MusicTheory
 /// 1. group: letter
 /// 2. group: accidental (optional)
 /// 3. group: octave (optional)
-fileprivate let notePattern = try! Regex(from: "([a-zA-Z])([b#]?)(\\d+)?")
+fileprivate let notePattern = try! LegacyRegex(from: "([a-zA-Z])([b#]?)(\\d+)?")
 
 extension Note {
     // TODO: Move this method upstream

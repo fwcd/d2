@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(-?\\d+)\\s+(.+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(-?\\d+)\\s+(.+)")
 
 public class TransposeChordsCommand: StringCommand {
     public let info = CommandInfo(

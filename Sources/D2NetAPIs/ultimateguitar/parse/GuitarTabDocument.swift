@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let spacesPattern = try! Regex(from: " +")
+fileprivate let spacesPattern = try! LegacyRegex(from: " +")
 
 public struct GuitarTabDocument: Equatable {
     public let sections: [Section]

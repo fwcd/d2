@@ -3,7 +3,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let linkPattern = try! Regex(from: "\\[([\\w\\s]+)\\]")
+fileprivate let linkPattern = try! LegacyRegex(from: "\\[([\\w\\s]+)\\]")
 
 public class UrbanDictionaryCommand: StringCommand {
     public let info = CommandInfo(

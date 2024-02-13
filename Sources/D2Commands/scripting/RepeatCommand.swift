@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\d+)\\s*(.*)\\s*")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\d+)\\s*(.*)\\s*")
 
 public class RepeatCommand: StringCommand {
     public let info = CommandInfo(

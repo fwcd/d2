@@ -175,8 +175,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-gif.git",
       "state" : {
-        "revision" : "a82272eb8a4003e30331756eab5c37c257c07fd5",
-        "version" : "2.1.0"
+        "revision" : "5e9fb53d45555a16225046b4d76249e443297d9d",
+        "version" : "3.0.0"
       }
     },
     {
@@ -184,8 +184,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-graphics.git",
       "state" : {
-        "revision" : "d57c3f5b4deb36009301ae3628bb2400f466c8e4",
-        "version" : "2.1.0"
+        "revision" : "2dec77f29985b95581168ee79e8334c5e706dcee",
+        "version" : "3.0.0"
       }
     },
     {
@@ -301,8 +301,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-utils.git",
       "state" : {
-        "revision" : "6b0fefcc89511fd5e5d6c0afa111a3ca0b61cfae",
-        "version" : "2.2.2"
+        "revision" : "b292686fd4846a7ee97802868aa2f8872c10b0d1",
+        "version" : "3.0.0"
       }
     },
     {

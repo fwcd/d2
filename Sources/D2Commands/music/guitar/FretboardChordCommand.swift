@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.FretboardChordCommand")
-fileprivate let argPattern = try! Regex(from: "(\\w+)(?:\\s+(\\w+))?")
+fileprivate let argPattern = try! LegacyRegex(from: "(\\w+)(?:\\s+(\\w+))?")
 
 public class FretboardChordCommand: StringCommand {
     public let info = CommandInfo(

@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.LatexCommand")
-fileprivate let flagPattern = try! Regex(from: "--(\\S+)=(\\S+)")
+fileprivate let flagPattern = try! LegacyRegex(from: "--(\\S+)=(\\S+)")
 
 // TODO: Use the Arg API
 

@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+(.+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(\\S+)\\s+(.+)")
 
 public class InterjectCommand: StringCommand {
     public let info = CommandInfo(

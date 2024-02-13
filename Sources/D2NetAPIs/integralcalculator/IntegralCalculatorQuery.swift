@@ -4,7 +4,7 @@ import Utils
 import SwiftSoup
 
 fileprivate let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")
-fileprivate let pageVersionPattern = try! Regex(from: "\\bpageVersion\\s*=\\s*(\\d+)\\b")
+fileprivate let pageVersionPattern = try! LegacyRegex(from: "\\bpageVersion\\s*=\\s*(\\d+)\\b")
 
 public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
     private let params: P

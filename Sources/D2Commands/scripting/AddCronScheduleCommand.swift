@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! Regex(from: "([\\*\\s\\d\\-/,]*)\\s+(\\w+)\\s+(.+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "([\\*\\s\\d\\-/,]*)\\s+(\\w+)\\s+(.+)")
 
 public class AddCronScheduleCommand: StringCommand {
     public let info = CommandInfo(

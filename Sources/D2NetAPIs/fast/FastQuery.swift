@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-private let tokenPattern = try! Regex(from: #"token:\s*"([^"]+)""#)
+private let tokenPattern = try! LegacyRegex(from: #"token:\s*"([^"]+)""#)
 
 public struct FastQuery {
     private let rounds: Int

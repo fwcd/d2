@@ -4,7 +4,7 @@ fileprivate let alphabetLength: Int = 26
 fileprivate let alphabetRange = 0..<alphabetLength
 fileprivate let alphabetStart = Unicode.Scalar("a").value
 
-fileprivate let argPattern = try! Regex(from: "(\\d+)\\s+(.+)")
+fileprivate let argPattern = try! LegacyRegex(from: "(\\d+)\\s+(.+)")
 
 public class CaesarCipherCommand: StringCommand {
     public let info = CommandInfo(

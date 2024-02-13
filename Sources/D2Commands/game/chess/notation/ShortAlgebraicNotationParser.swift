@@ -11,9 +11,9 @@ import Utils
 /// 7. group: The promotion piece, if present
 /// 8. group: '+' if the move results in a check, '#' if the move results in a checkmate
 /// 9. group: 'e. p.' if the move is an en-passant
-fileprivate let notationRegex = try! Regex(from: "([A-Z]?)([a-h]?)([1-8])?(x?)([a-h])([1-8])(?:=?([A-Z]))?([\\+#]?)(?:\\s+(e.\\s*p.))?")
-fileprivate let shortCastlingRegex = try! Regex(from: "(?:0-0)|(?:O-O)")
-fileprivate let longCastlingRegex = try! Regex(from: "(?:0-0-0)|(?:O-O-O)")
+fileprivate let notationRegex = try! LegacyRegex(from: "([A-Z]?)([a-h]?)([1-8])?(x?)([a-h])([1-8])(?:=?([A-Z]))?([\\+#]?)(?:\\s+(e.\\s*p.))?")
+fileprivate let shortCastlingRegex = try! LegacyRegex(from: "(?:0-0)|(?:O-O)")
+fileprivate let longCastlingRegex = try! LegacyRegex(from: "(?:0-0-0)|(?:O-O-O)")
 
 struct ShortAlgebraicNotationParser: ChessNotationParser {
     func parse(_ notation: String) -> ChessMove? {

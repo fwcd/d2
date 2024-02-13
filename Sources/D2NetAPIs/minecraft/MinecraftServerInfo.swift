@@ -2,7 +2,7 @@ import Foundation
 import CairoGraphics
 import Utils
 
-fileprivate let pngDataUrlPattern = try! Regex(from: "data:image\\/png;base64,(.*)")
+fileprivate let pngDataUrlPattern = try! LegacyRegex(from: "data:image\\/png;base64,(.*)")
 
 public struct MinecraftServerInfo: Codable {
     public let version: Version

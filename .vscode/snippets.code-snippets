@@ -113,7 +113,7 @@
 		"body": [
 			"import Utils",
 			"",
-			"fileprivate let argsRegex = try! Regex(from: \"$2\")",
+			"fileprivate let argsRegex = try! LegacyRegex(from: \"$2\")",
 			"",
 			"public struct $1Move: Hashable {",
 			"\t$3",

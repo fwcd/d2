@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let emojiPattern = try! Regex(from: ":[^:]:")
+fileprivate let emojiPattern = try! LegacyRegex(from: ":[^:]:")
 
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case administration

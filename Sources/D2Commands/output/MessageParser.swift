@@ -8,12 +8,12 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
 
-fileprivate let urlPattern = try! Regex(from: "<?(\\w+:[^>\\s]+)>?")
+fileprivate let urlPattern = try! LegacyRegex(from: "<?(\\w+:[^>\\s]+)>?")
 
 // The first group matches the language, the second group matches the code
-fileprivate let codePattern = try! Regex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
+fileprivate let codePattern = try! LegacyRegex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
 
-fileprivate let idPattern = try! Regex(from: "\\d+")
+fileprivate let idPattern = try! LegacyRegex(from: "\\d+")
 
 /// Parses Discord messages into rich values.
 public struct MessageParser {

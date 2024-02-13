@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-fileprivate let argsPattern = try! Regex(from: "(x|y)?\\s*(\\d+)?")
+fileprivate let argsPattern = try! LegacyRegex(from: "(x|y)?\\s*(\\d+)?")
 
 public struct TileImageMapping: ImageMapping {
     private let maxWidth: Int = 2000

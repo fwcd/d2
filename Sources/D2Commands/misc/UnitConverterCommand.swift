@@ -3,7 +3,7 @@ import GraphViz
 import CairoGraphics
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
 
 public class UnitConverterCommand: StringCommand {
     public private(set) var info = CommandInfo(

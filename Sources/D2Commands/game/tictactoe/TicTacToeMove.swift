@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsRegex = try! Regex(from: "(\\S+)\\s+(\\S+)")
+fileprivate let argsRegex = try! LegacyRegex(from: "(\\S+)\\s+(\\S+)")
 
 public struct TicTacToeMove: Hashable {
     let row: Int

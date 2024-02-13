@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let spymasterMovePattern = try! Regex(from: "(\\d+)\\s+(\\w+)")
+fileprivate let spymasterMovePattern = try! LegacyRegex(from: "(\\d+)\\s+(\\w+)")
 
 public struct CodenamesGame: Game {
     public typealias State = CodenamesState

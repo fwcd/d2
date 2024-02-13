@@ -1,7 +1,7 @@
 import Utils
 
 fileprivate let rawOperatorPattern = allExpressionOperators
-    .map { "(?:\(Regex.escape($0)))" }
+    .map { "(?:\(LegacyRegex.escape($0)))" }
     .joined(separator: "|")
 
 /// Matches a single token.
@@ -10,7 +10,7 @@ fileprivate let rawOperatorPattern = allExpressionOperators
 /// 3. capture group: a closing parenthesis
 /// 4. capture group: an identifier
 /// 5. capture group: an operator
-fileprivate let tokenPattern = try! Regex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawOperatorPattern))")
+fileprivate let tokenPattern = try! LegacyRegex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawOperatorPattern))")
 
 public struct InfixExpressionParser: ExpressionParser {
     public init() {}

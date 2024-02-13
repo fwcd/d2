@@ -2,7 +2,7 @@ import Logging
 import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.WikitextParser")
-fileprivate let tokenPattern = try! Regex(from: "\\s*(?:([^=\\[\\]\\{\\}\\|]+)|(=+|\\[+|\\]+|\\{+|\\}+|\\|))\\s*")
+fileprivate let tokenPattern = try! LegacyRegex(from: "\\s*(?:([^=\\[\\]\\{\\}\\|]+)|(=+|\\[+|\\]+|\\{+|\\}+|\\|))\\s*")
 
 /// A basic recursive-descent parser for a subset of wikitext.
 public struct WikitextParser {

@@ -28,8 +28,8 @@ extension Guild.Member {
     public var displayName: String { nick ?? user.username }
 }
 
-fileprivate let mentionPattern = try! Regex(from: "<@[&!]+(\\d+)>")
-fileprivate let everyoneMentionPattern = try! Regex(from: "@(everyone|here)")
+fileprivate let mentionPattern = try! LegacyRegex(from: "<@[&!]+(\\d+)>")
+fileprivate let everyoneMentionPattern = try! LegacyRegex(from: "@(everyone|here)")
 
 extension String {
     public func cleaningMentions(with guild: Guild? = nil) -> String {

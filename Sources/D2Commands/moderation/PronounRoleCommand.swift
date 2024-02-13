@@ -5,7 +5,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Commands.PronounRoleCommand")
 fileprivate let resetSubcommand = "reset"
 
-fileprivate let inputPattern = try! Regex(from: "([\\w\\/]+)(?:\\s+(\\d+))?")
+fileprivate let inputPattern = try! LegacyRegex(from: "([\\w\\/]+)(?:\\s+(\\d+))?")
 
 public class PronounRoleCommand: StringCommand {
     public let info = CommandInfo(

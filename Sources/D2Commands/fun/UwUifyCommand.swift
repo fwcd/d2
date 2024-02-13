@@ -1,7 +1,7 @@
 import Utils
 
-fileprivate let wPattern = try! Regex(from: "[rl]", caseSensitive: false)
-fileprivate let punctuationPattern = try! Regex(from: "[!\\.]")
+fileprivate let wPattern = try! LegacyRegex(from: "[rl]", caseSensitive: false)
+fileprivate let punctuationPattern = try! LegacyRegex(from: "[!\\.]")
 
 public class UwUifyCommand: StringCommand {
     public let info = CommandInfo(

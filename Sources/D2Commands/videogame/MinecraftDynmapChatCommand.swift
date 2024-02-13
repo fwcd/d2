@@ -4,7 +4,7 @@ import D2MessageIO
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
-fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(.+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(.+)")
 
 public class MinecraftDynmapChatCommand: StringCommand {
     public let info = CommandInfo(

@@ -1,7 +1,7 @@
 import Utils
 import MusicTheory
 
-fileprivate let argsPattern = try! Regex(from: "(?:(\\w+)\\s+)?(\\w+[b#]?)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(?:(\\w+)\\s+)?(\\w+[b#]?)")
 fileprivate let scales: [String: (Note) -> Scale] = [
     "major": MajorScale.init,
     "minor": MinorScale.init,

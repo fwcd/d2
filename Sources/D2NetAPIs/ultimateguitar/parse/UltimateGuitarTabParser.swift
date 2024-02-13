@@ -6,7 +6,7 @@ import Utils
 /// 1. group: A 'tag' in square parentheses
 /// 2. group: Newlines
 /// 3. group: Anything else
-fileprivate let tokenPattern = try! Regex(from: "(?:\\[(\\/?)([^\\]]+)\\])|([\\r\\n]+)|([^\\r\\n\\[]+)")
+fileprivate let tokenPattern = try! LegacyRegex(from: "(?:\\[(\\/?)([^\\]]+)\\])|([\\r\\n]+)|([^\\r\\n\\[]+)")
 
 /// Parses UG's tab markup.
 public struct UltimateGuitarTabParser {

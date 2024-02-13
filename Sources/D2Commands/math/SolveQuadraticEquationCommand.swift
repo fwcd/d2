@@ -4,7 +4,7 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.SolveQuadraticEquationCommand")
 
 fileprivate let rawNumberPattern = "(?:(?:-\\s*)?[\\d/\\.]+)"
-fileprivate let monomialPattern = try! Regex(from: "(?:(\(rawNumberPattern))?\\s*(x(?:\\^(\\d+))?))|(\(rawNumberPattern))")
+fileprivate let monomialPattern = try! LegacyRegex(from: "(?:(\(rawNumberPattern))?\\s*(x(?:\\^(\\d+))?))|(\(rawNumberPattern))")
 
 public class SolveQuadraticEquationCommand: StringCommand {
     public let info = CommandInfo(

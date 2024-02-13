@@ -1,8 +1,8 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! Regex(from: "(\\w+)\\s+<#(\\d+)>\\s+(\\d+)\\s*(.*)")
-fileprivate let emojiPattern = try! Regex(from: "<a?:(.+):(\\d+)>")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\w+)\\s+<#(\\d+)>\\s+(\\d+)\\s*(.*)")
+fileprivate let emojiPattern = try! LegacyRegex(from: "<a?:(.+):(\\d+)>")
 
 public class RoleReactionsCommand: StringCommand {
     public private(set) var info = CommandInfo(

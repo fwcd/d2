@@ -26,8 +26,8 @@ public class SearchCommand: StringCommand {
         }
 
         do {
-            let parsedPattern = try? Regex(from: term)
-            let pattern = try parsedPattern ?? Regex(from: Regex.escape(term))
+            let parsedPattern = try? LegacyRegex(from: term)
+            let pattern = try parsedPattern ?? LegacyRegex(from: LegacyRegex.escape(term))
             let results = context.registry
                 .commandsWithAliases()
                 .filter {

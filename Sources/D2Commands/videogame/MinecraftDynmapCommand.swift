@@ -3,7 +3,7 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let argsPattern = try! Regex(from: "(\\S+)(?:\\s+(.+))?")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)(?:\\s+(.+))?")
 
 public class MinecraftDynmapCommand: StringCommand {
     public let info = CommandInfo(

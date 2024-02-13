@@ -6,7 +6,7 @@ import IRC
 import Logging
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
-fileprivate let mentionPattern = try! Regex(from: "<@.+?>")
+fileprivate let mentionPattern = try! LegacyRegex(from: "<@.+?>")
 
 struct IRCSink: DefaultSink {
     private let client: IRCClient

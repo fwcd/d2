@@ -13,11 +13,11 @@ fileprivate let rawCapturingValuePattern = "(?:(?:\"(.+?)\")|(\\S+))"
 
 // Matches the arguments of the command. The first group captures the
 // search parameter, the second group the (raw) key-value parameters.
-fileprivate let inputPattern = try! Regex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
+fileprivate let inputPattern = try! LegacyRegex(from: "(\\w+)((?:\\s+\(rawKeyPattern)\\s*=\\s*\(rawValuePattern))+)")
 
 // Matches a single key-value argument. The first group captures the
 // key, the second (or third) group captures the value.
-fileprivate let kvArgPattern = try! Regex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
+fileprivate let kvArgPattern = try! LegacyRegex(from: "\(rawCapturingKeyPattern)\\s*=\\s*\(rawCapturingValuePattern)")
 
 // TODO: Use the new Arg API for this
 

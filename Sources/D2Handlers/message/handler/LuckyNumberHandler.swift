@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let numberPattern = try! Regex(from: "\\d+")
+fileprivate let numberPattern = try! LegacyRegex(from: "\\d+")
 
 public struct LuckyNumberHandler: MessageHandler {
     private let luckyNumbers: Set<Int>

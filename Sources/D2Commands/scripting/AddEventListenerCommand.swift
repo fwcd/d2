@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! Regex(from: "(\\S+)\\s+(\\w+)")
+fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(\\w+)")
 
 public class AddEventListenerCommand: StringCommand {
     public let info = CommandInfo(

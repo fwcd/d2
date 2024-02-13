@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.EvaluateExpressionCommand")
-fileprivate let flagsPattern = try! Regex(from: "--(\\S+)")
+fileprivate let flagsPattern = try! LegacyRegex(from: "--(\\S+)")
 
 // TODO: Use Arg API, integrate flags into arg API
 

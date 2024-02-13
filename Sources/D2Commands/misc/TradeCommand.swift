@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let tradePattern = try! Regex(from: "(\\w+)\\s+(\\w+)")
+fileprivate let tradePattern = try! LegacyRegex(from: "(\\w+)\\s+(\\w+)")
 
 public class TradeCommand: Command {
     public let info = CommandInfo(

@@ -2,7 +2,7 @@ import Foundation
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! Regex(from: "(?:<#(\\d+)>)?\\s*(\\d+)?")
+fileprivate let argsPattern = try! LegacyRegex(from: "(?:<#(\\d+)>)?\\s*(\\d+)?")
 
 public class TLDRCommand: StringCommand {
     public let info = CommandInfo(
