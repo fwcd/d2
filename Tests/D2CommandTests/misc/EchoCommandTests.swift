@@ -3,11 +3,11 @@ import D2TestUtils
 @testable import D2Commands
 
 final class EchoCommandTests: XCTestCase {
-	func testInvocation() throws {
-		let command = EchoCommand()
-		let output = TestOutput()
+    func testInvocation() throws {
+        let command = EchoCommand()
+        let output = TestOutput()
 
-		command.testInvoke(with: .text("demo"), output: output)
-		XCTAssertEqual(output.lastContent, "demo")
-	}
+        command.testInvoke(with: .text("demo"), output: output)
+        XCTAssertEqual(output.lastContent, "demo")
+    }
 }

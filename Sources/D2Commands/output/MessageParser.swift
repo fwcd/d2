@@ -126,9 +126,9 @@ public struct MessageParser {
 
                     asyncTaskCount += 1
                     attachment.download().listen {
-                    	do {
-                    		let data = try $0.get()
-                    		values.append(.lazy(.lazy {
+                        do {
+                            let data = try $0.get()
+                            values.append(.lazy(.lazy {
                                 do {
                                     log.info("Decoding GIF...")
                                     return .gif(try GIF(data: data))
@@ -137,10 +137,10 @@ public struct MessageParser {
                                     return .none
                                 }
                             }))
-                    	} catch {
-                    		log.error("Could not download GIF attachment: \(error)")
-                    	}
-                    	semaphore.signal()
+                        } catch {
+                            log.error("Could not download GIF attachment: \(error)")
+                        }
+                        semaphore.signal()
                     }
                 }
             }
