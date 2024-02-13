@@ -1,10 +1,25 @@
 import Utils
+import RegexBuilder
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.SolveQuadraticEquationCommand")
 
-fileprivate let rawNumberPattern = "(?:(?:-\\s*)?[\\d/\\.]+)"
-fileprivate let monomialPattern = try! LegacyRegex(from: "(?:(\(rawNumberPattern))?\\s*(x(?:\\^(\\d+))?))|(\(rawNumberPattern))")
+fileprivate let rawNumberPattern = #/(?:(?:-\s*)?[\d/\.]+)/#
+fileprivate let monomialPattern = Regex {
+    ChoiceOf {
+        Regex {
+            Optionally {
+                Capture {
+                    rawNumberPattern
+                }
+            }
+            #/\s*(x(?:\^(\d+))?)/#
+        }
+        Capture {
+            rawNumberPattern
+        }
+    }
+}
 
 public class SolveQuadraticEquationCommand: StringCommand {
     public let info = CommandInfo(
@@ -25,8 +40,8 @@ public class SolveQuadraticEquationCommand: StringCommand {
             return
         }
 
-        let lhs = Dictionary(uniqueKeysWithValues: monomialPattern.allGroups(in: String(equation[0]))
-            .compactMap { parseMonomial(from: $0) }
+        let lhs = Dictionary(uniqueKeysWithValues: equation[0].matches(of: monomialPattern)
+            .compactMap { parseMonomial(from: ($0.1.flatMap { $0 }, $0.2, $0.3.flatMap { $0 }, $0.4)) }
             .map { (c, d) in (d, c) }
             .withoutDuplicates { $0.0 })
         log.info("Parsed polynomial \(lhs.map { "(\($0))" }.joined(separator: " + "))")
@@ -72,8 +87,8 @@ public class SolveQuadraticEquationCommand: StringCommand {
         }
     }
 
-    private func parseMonomial(from parsed: [String]) -> (Rational, Int)? {
-        Rational(parsed[1].nilIfEmpty ?? parsed[4].nilIfEmpty ?? "1")
-            .flatMap { coeff in Int(parsed[2].nilIfEmpty.map { _ in parsed[3].nilIfEmpty ?? "1" } ?? "0").map { (coeff, $0) } }
+    private func parseMonomial(from parsed: (Substring?, Substring?, Substring?, Substring?)) -> (Rational, Int)? {
+        Rational(String(parsed.0?.nilIfEmpty ?? parsed.3?.nilIfEmpty ?? "1"))
+            .flatMap { coeff in Int(parsed.1?.nilIfEmpty.map { _ in parsed.2?.nilIfEmpty ?? "1" } ?? "0").map { (coeff, $0) } }
     }
 }
