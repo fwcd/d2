@@ -31,7 +31,7 @@ final class LuckyNumberHandlerTests: XCTestCase {
             channelId: ID("Dummy Channel")
         )
         output.messages.append(message)
-        _ = handler.handle(message: message, from: output)
+        _ = handler.handle(message: message, sink: output)
 
         XCTAssertEqual(output.lastContent, """
             All the numbers in your message added up to 42. Congrats!
