@@ -7,9 +7,9 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.AutoLatexCommand")
 
 /// A simple heuristic for detecting "formulas" in messages. Matches a single character.
-fileprivate let formulaPattern = try! LegacyRegex(from: "[0-9{}\\+\\-*\\/\\[\\]\\\\|]")
+fileprivate let formulaPattern = #/[0-9{}\+\-*\/\[\]\\|]/#
 /// Matches text that should be "escaped" when rendering the message as LaTeX.
-fileprivate let textPattern = try! LegacyRegex(from: "(?<!\\\\)\\b\\s*\\p{L}[\\p{L}\\s]*")
+fileprivate let textPattern = try! LegacyRegex(from: "(?<!\\\\)\\b\\s*\\p{L}[\\p{L}\\s]*") // TODO: Migrate to Swift regex once lookbehind is supported
 
 public class AutoLatexCommand: StringCommand {
     public let info = CommandInfo(
@@ -39,7 +39,7 @@ public class AutoLatexCommand: StringCommand {
             return
         }
 
-        if formulaPattern.matchCount(in: content) > 0 {
+        if !content.matches(of: formulaPattern).isEmpty {
             let formula = escapeText(in: content)
             latexRenderer.renderImage(from: formula, scale: 1.5).listenOrLogError {
                 do {
