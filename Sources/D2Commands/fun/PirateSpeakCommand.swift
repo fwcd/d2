@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let punctuationPattern = try! LegacyRegex(from: "[\\.!\\?]")
+fileprivate let punctuationPattern = #/[\.!\?]/#
 
 public class PirateSpeakCommand: StringCommand {
     public let info = CommandInfo(
@@ -55,7 +55,7 @@ public class PirateSpeakCommand: StringCommand {
             return
         }
 
-        let preprocessed = punctuationPattern.replace(in: input) { "\($0[0])\(interjections.randomElement().filter { _ in Int.random(in: 0..<4) < 3 }.map { " \($0)" } ?? "")" }
+        let preprocessed = input.replacing(punctuationPattern) { "\($0.0)\(interjections.randomElement().filter { _ in Int.random(in: 0..<4) < 3 }.map { " \($0)" } ?? "")" }
         let result = substitutions.reduce(preprocessed) { try! LegacyRegex(from: $1.key, caseSensitive: false).replace(in: $0, with: $1.value, casePreserving: true) }
         output.append(result)
     }
