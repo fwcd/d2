@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let spymasterMovePattern = try! LegacyRegex(from: "(\\d+)\\s+(\\w+)")
+fileprivate let spymasterMovePattern = #/(\d+)\s+(\w+)/#
 
 public struct CodenamesGame: Game {
     public typealias State = CodenamesState
@@ -43,10 +43,10 @@ public struct CodenamesGame: Game {
     private static func parse(move rawMove: String, from role: CodenamesRole) throws -> State.Move {
         switch role {
             case .spymaster(_):
-                guard let parsedMove = spymasterMovePattern.firstGroups(in: rawMove), let wordCount = Int(parsedMove[1]) else {
+                guard let parsedMove = try? spymasterMovePattern.firstMatch(in: rawMove), let wordCount = Int(parsedMove.1) else {
                     throw GameError.invalidMove("Moves of the Spymaster should follow the pattern `[word count] [codeword]`")
                 }
-                return State.Move.codeword(wordCount, parsedMove[2])
+                return State.Move.codeword(wordCount, String(parsedMove.2))
             case .team(_):
                 return State.Move.guess(rawMove.split(separator: " ").map(String.init))
         }
