@@ -68,8 +68,6 @@ extension QuadraticEquation {
         let tokens = raw.matches(of: tokenPattern).map(\.output)
         let (lhs, rhs) = try parseEquation(from: TokenIterator(tokens))
 
-        log.info("Parsed polynomial \(lhs.map { "(\($0))" }.joined(separator: " + "))")
-
         let combined = lhs + rhs.map { (coefficient: -$0.coefficient, exponent: $0.exponent) }
         let grouped = Dictionary(grouping: combined, by: \.exponent).mapValues { $0.map(\.coefficient).reduce(0, +) }
 
