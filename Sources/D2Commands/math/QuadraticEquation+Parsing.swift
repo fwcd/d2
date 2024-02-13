@@ -4,23 +4,28 @@ import RegexBuilder
 
 fileprivate let log = Logger(label: "D2Commands.QuadraticEquation+Parsing")
 
-fileprivate let tokenPattern = #/(?<operator>[+\-=])|(?<rational>(?:\-\s*)?[\d/\.]+)|(?<power>x(?:\^(?<exponent>\d+))?)/#
+fileprivate let tokenPattern = #/(?<operator>[+\-=])|(?<rational>[\d/\.]+)|(?<power>x(?:\^(?<exponent>\d+))?)/#
 
 // TODO: Factor out general polynomial parser
 
 private typealias Token = (Substring, operator: Substring?, rational: Substring?, power: Substring?, exponent: Substring?)
 private typealias Monomial = (coefficient: Rational, exponent: Int)
 
-private func parseRational(from tokens: TokenIterator<Token>) throws -> Rational {
-    guard let token = tokens.peek()?.rational,
-          let rational = Rational(String(token)) else { throw QuadraticEquationParseError.expectedRational(tokens.peek()?.0) }
-    tokens.next()
-    return rational
-}
-
 private func peekOperator(from tokens: TokenIterator<Token>) throws -> String {
     guard let token = tokens.peek()?.operator else { throw QuadraticEquationParseError.expectedOperator(tokens.peek()?.0) }
     return String(token)
+}
+
+private func parseRational(from tokens: TokenIterator<Token>) throws -> Rational {
+    var sign: Rational = 1
+    if (try? peekOperator(from: tokens)) == "-" {
+        sign = -1
+        tokens.next()
+    }
+    guard let token = tokens.peek()?.rational,
+          let rational = Rational(String(token)) else { throw QuadraticEquationParseError.expectedRational(tokens.peek()?.0) }
+    tokens.next()
+    return sign * rational
 }
 
 private func parsePower(from tokens: TokenIterator<Token>) throws -> Int {
@@ -31,21 +36,22 @@ private func parsePower(from tokens: TokenIterator<Token>) throws -> Int {
 }
 
 private func parseMonomial(from tokens: TokenIterator<Token>) throws -> Monomial {
-    let coefficient = (try? parseRational(from: tokens)) ?? 1
-    let exponent = try parsePower(from: tokens)
-    return (coefficient: coefficient, exponent: exponent)
+    let coefficient = try? parseRational(from: tokens)
+    let exponent = try? parsePower(from: tokens)
+    guard coefficient != nil || exponent != nil else { throw QuadraticEquationParseError.expectedMonomial(tokens.peek()?.0) }
+    return (coefficient: coefficient ?? 1, exponent: exponent ?? 0)
 }
 
 private func parsePolynomial(from tokens: TokenIterator<Token>) throws -> [Monomial] {
     var polynomial: [Monomial] = []
-    var factor: Rational = 1
+    var sign: Rational = 1
     while let monomial = try? parseMonomial(from: tokens) {
-        polynomial.append((coefficient: factor * monomial.coefficient, exponent: monomial.exponent))
+        polynomial.append((coefficient: sign * monomial.coefficient, exponent: monomial.exponent))
         let op = try? peekOperator(from: tokens)
         if op == "+" {
-            factor = 1
+            sign = 1
         } else if op == "-" {
-            factor = -1
+            sign = -1
         } else {
             break
         }
