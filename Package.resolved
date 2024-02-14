@@ -63,6 +63,14 @@
       }
     },
     {
+      "identity" : "icalendarkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-calendar/icalendarkit.git",
+      "state" : {
+        "revision" : "389fceafc1132ef284c6215118421bc88f1bfc8c"
+      }
+    },
+    {
       "identity" : "linenoise-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/andybest/linenoise-swift.git",
@@ -364,6 +372,15 @@
       "location" : "https://github.com/wfreitag/syllable-counter-swift.git",
       "state" : {
         "revision" : "029c8568b4d060174284fdedd7473863768a903b"
+      }
+    },
+    {
+      "identity" : "vcomponentkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-calendar/vcomponentkit.git",
+      "state" : {
+        "revision" : "65b7f5066fd62fb83811e66e26ee21a326a015ac",
+        "version" : "1.0.5"
       }
     },
     {
