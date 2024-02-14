@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(\\w+)")
+fileprivate let argsPattern = #/(?<event>\S+)\s+(?<listener>\w+)/#
 
 public class AddEventListenerCommand: StringCommand {
     public let info = CommandInfo(
@@ -21,9 +21,9 @@ public class AddEventListenerCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let parsedArgs = argsPattern.firstGroups(in: input) {
-            let rawEventName = parsedArgs[1]
-            let listenerName = parsedArgs[2]
+        if let parsedArgs = try? argsPattern.firstMatch(in: input) {
+            let rawEventName = String(parsedArgs.event)
+            let listenerName = String(parsedArgs.listener)
 
             guard let event = EventListenerBus.Event(rawValue: rawEventName) else {
                 output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventListenerBus.Event.allCases.map { $0.rawValue })`")
