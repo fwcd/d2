@@ -1,8 +1,6 @@
 import Foundation
 import Utils
 
-fileprivate let mentionPattern = try! LegacyRegex(from: "<@(\\d+)>")
-
 public struct Message: ExpressibleByStringLiteral {
     public var content: String
     public var embeds: [Embed]
