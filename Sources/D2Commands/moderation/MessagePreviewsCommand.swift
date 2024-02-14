@@ -31,10 +31,16 @@ public class MessagePreviewsCommand: StringCommand {
             return
         }
 
-        if let subcommand = subcommands[input] {
-            subcommand(output, guildId)
-        } else {
-            output.append(errorText: "Unrecognized subcommand `\(input)`, try one of these: `\(subcommands.keys.joined(separator: ", "))`")
+        guard !input.isEmpty else {
+            output.append(errorText: "Please specify a subcommand: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            return
         }
+
+        guard let subcommand = subcommands[input] else {
+            output.append(errorText: "Unrecognized subcommand `\(input)`, try one of these: `\(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))`")
+            return
+        }
+
+        subcommand(output, guildId)
     }
 }

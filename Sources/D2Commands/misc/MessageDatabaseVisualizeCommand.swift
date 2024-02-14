@@ -79,8 +79,13 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
             return
         }
 
+        guard !input.isEmpty else {
+            output.append(errorText: "Please specify a subcommand: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            return
+        }
+
         guard let subcommand = subcommands[input] else {
-            output.append(errorText: "Unrecognized subcommand `\(input)`. Try one of these: \(subcommands.map { "`\($0)`" }.joined(separator: ", "))")
+            output.append(errorText: "Unrecognized subcommand `\(input)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
