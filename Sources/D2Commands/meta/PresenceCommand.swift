@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2Permissions
+import RegexBuilder
 import Utils
 
 fileprivate let activityTypes: [String: Presence.Activity.ActivityType] = [
@@ -7,8 +8,26 @@ fileprivate let activityTypes: [String: Presence.Activity.ActivityType] = [
     "streaming": .stream,
     "listening": .listening
 ]
-fileprivate let availableStatusTypes = "idle|offline|online|dnd"
-fileprivate let argsPattern = try! LegacyRegex(from: "(\(activityTypes.keys.joined(separator: "|")))\\s+(?:(\(availableStatusTypes))\\s+)?(.+)")
+fileprivate let availableStatusTypes = ["idle", "offline", "online", "dnd"]
+fileprivate let argsPattern = Regex {
+    Capture {
+        ChoiceOf(nonEmptyComponents: activityTypes.keys)
+    } transform: {
+        activityTypes[String($0)]
+    }
+    #/\s+/#
+    Optionally {
+        Capture {
+            ChoiceOf(nonEmptyComponents: availableStatusTypes)
+        } transform: {
+            Presence.Status(rawValue: String($0))
+        }
+        #/\s+/#
+    }
+    Capture {
+        #/.+/#
+    }
+}
 
 public class PresenceCommand: StringCommand {
     public let info = CommandInfo(
@@ -21,10 +40,10 @@ public class PresenceCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let parsedArgs = argsPattern.firstGroups(in: input) {
-            let activityType = activityTypes[parsedArgs[1]]!
-            let status = parsedArgs[2].nilIfEmpty.flatMap { Presence.Status(rawValue: $0) } ?? .online
-            let customText = parsedArgs[3]
+        if let parsedArgs = try? argsPattern.firstMatch(in: input) {
+            let activityType = parsedArgs.1!
+            let status = parsedArgs.2 ?? .online
+            let customText = String(parsedArgs.3)
 
             guard let sink = context.sink else {
                 output.append(errorText: "No client found")
@@ -33,7 +52,7 @@ public class PresenceCommand: StringCommand {
 
             sink.setPresence(PresenceUpdate(activities: [Presence.Activity(name: customText, type: activityType)], status: status))
         } else {
-            output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes)]? [custom text]")
+            output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes.joined(separator: "|"))]? [custom text]")
         }
     }
 }
