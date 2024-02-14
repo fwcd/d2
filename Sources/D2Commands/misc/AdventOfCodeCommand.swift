@@ -6,7 +6,7 @@ import AGGRenderer
 import CairoGraphics
 import Utils
 
-fileprivate let subcommandPattern = try! LegacyRegex(from: "([\\w-]+)\\s*(.*)")
+fileprivate let subcommandPattern = #/(?<name>[\w-]+)\s*(?<args>.*)/#
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -90,12 +90,12 @@ public class AdventOfCodeCommand: StringCommand {
             }
         } else {
             // Invoke subcommand
-            guard let parsedSubcommand = subcommandPattern.firstGroups(in: input) else {
+            guard let parsedSubcommand = try? subcommandPattern.firstMatch(in: input) else {
                 output.append(errorText: info.helpText!)
                 return
             }
-            let subcommandName = parsedSubcommand[1]
-            let subcommandArgs = parsedSubcommand[2]
+            let subcommandName = String(parsedSubcommand.name)
+            let subcommandArgs = String(parsedSubcommand.args)
             guard let subcommand = subcommands[subcommandName] else {
                 output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
                 return
