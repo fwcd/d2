@@ -5,7 +5,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Commands.PronounRoleCommand")
 fileprivate let resetSubcommand = "reset"
 
-fileprivate let inputPattern = try! LegacyRegex(from: "([\\w\\/]+)(?:\\s+(\\d+))?")
+fileprivate let inputPattern = #/(?<name>[\w\/]+)(?:\s+(?<roleId>\d+))?/#
 
 public class PronounRoleCommand: StringCommand {
     public let info = CommandInfo(
@@ -29,13 +29,12 @@ public class PronounRoleCommand: StringCommand {
             output.append(errorText: "No client available")
             return
         }
-        guard let parsedInput = inputPattern.firstGroups(in: input) else {
+        guard let parsedInput = try? inputPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
-        let name = parsedInput[1]
-        let rawRoleId = parsedInput[2].nilIfEmpty
-        let roleId = rawRoleId.map { RoleID($0, clientName: sink.name) }
+        let name = String(parsedInput.name)
+        let roleId = parsedInput.roleId.map { RoleID(String($0), clientName: sink.name) }
 
         var roles = config.pronounRoles[guild.id] ?? [:]
         roles[name] = roleId
