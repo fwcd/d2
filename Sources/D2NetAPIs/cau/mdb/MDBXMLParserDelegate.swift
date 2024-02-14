@@ -5,7 +5,7 @@ import FoundationXML
 import Utils
 
 // Matches the contents of an HTML paragraph
-fileprivate let htmlParagraphPattern = try! LegacyRegex(from: "(?:<[pP]>)?\\s*([\\s\\S]*)\\s*(?:</[pP]>)")
+fileprivate let htmlParagraphPattern = #/(?:<[pP]>)?\s*([\s\S]*)\s*(?:</[pP]>)/#
 
 class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
     private let then: (Result<[MDBModule], any Error>) -> Void
@@ -76,8 +76,8 @@ class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
                     case "workload": currentModule!.workload = str
                     case "lehrsprache": currentModule!.teachingLanguage = str
                     case "kurzfassung":
-                        if let contents = (htmlParagraphPattern.firstGroups(in: str).flatMap { $0[safely: 1] }) {
-                            currentModule!.summary = contents
+                        if let contents = ((try? htmlParagraphPattern.firstMatch(in: str)).flatMap { $0.1 }) {
+                            currentModule!.summary = String(contents)
                         } else {
                             currentModule!.summary = str
                         }
