@@ -2,7 +2,7 @@ import Utils
 import D2MessageIO
 import D2NetAPIs
 
-fileprivate let argPattern = try! LegacyRegex(from: "(\\w+)\\s+(\\S.+)")
+fileprivate let argPattern = #/(?<targetLanguage>\w+)\s+(?<text>\S.+)/#
 
 public class TranslateCommand: StringCommand {
     public let info = CommandInfo(
@@ -16,12 +16,12 @@ public class TranslateCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
-        let targetLanguage = parsedArgs[1]
-        let text = parsedArgs[2]
+        let targetLanguage = String(parsedArgs.targetLanguage)
+        let text = String(parsedArgs.text)
 
         BingTranslateQuery(targetLanguage: targetLanguage, text: text).perform().listen {
             switch $0 {
