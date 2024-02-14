@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let numberPattern = try! LegacyRegex(from: "\\d+")
+fileprivate let numberPattern = #/\d+/#
 
 public struct LuckyNumberHandler: MessageHandler {
     private let luckyNumbers: Set<Int>
@@ -16,7 +16,7 @@ public struct LuckyNumberHandler: MessageHandler {
 
     public func handle(message: Message, sink: any Sink) -> Bool {
         if let channelId = message.channelId {
-            let numbers = numberPattern.allGroups(in: message.content).compactMap { Int($0[0]) }
+            let numbers = message.content.matches(of: numberPattern).compactMap { Int($0.0) }
             let sum = numbers.reduce(0, +)
             if isLucky(sum) && numbers.count >= minimumNumberCount {
                 sink.sendMessage(
