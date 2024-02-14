@@ -3,6 +3,7 @@ import Utils
 // Source: https://www.sqlite.org/lang_select.html
 
 // TODO: Recursive expressions are not supported, since Foundation's regex engine does not support those
+// TODO: Migrate to regex builders
 fileprivate let literalExpr = "[\\w\\d_-]+|\"[^\"]*\""
 fileprivate let unaryExpr = "(?:\(literalExpr))(?:\\s+is(?:\\s+not)?(?:\\s+null|(?:\(literalExpr))))?"
 fileprivate let binaryExpr = "(?:\(unaryExpr))(?:\\s+(?:==|<|<=|>|>=|<>|like)\\s+(?:\(unaryExpr)))?"
@@ -29,7 +30,7 @@ fileprivate let limitClause = "limit\\s+(\\d+)" // TODO: Fix issue that numbers 
 fileprivate let selectModifier = "distinct|all"
 fileprivate let clauses = [fromClause, whereClause, groupByHavingClause, orderByClause, limitClause].map { "(?:\($0))?" }.joined(separator: "\\s*")
 fileprivate let rawSelectStmt = "^select(?:\\s*(?:\(selectModifier)))?\\s*(?:\(resultColumn))(?:,\\s*(?:\(resultColumn))\\s*)*\\s*(?:\(clauses))$"
-fileprivate let selectStmtPattern = try! LegacyRegex(from: rawSelectStmt)
+fileprivate let selectStmtPattern = try! Regex(rawSelectStmt)
 
 public class MessageDatabaseQueryCommand: StringCommand {
     public let info = CommandInfo(
@@ -46,17 +47,17 @@ public class MessageDatabaseQueryCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsed = selectStmtPattern.firstGroups(in: input.lowercased()) else {
+        guard let parsed = try? selectStmtPattern.firstMatch(in: input.lowercased()) else {
             output.append(errorText: "Please enter a limiting SELECT statement! Note that currently not all SELECT statements are understood. If your query is valid SQL, please file a bug [here](https://github.com/fwcd/d2/issues).")
             return
         }
 
-        guard parsed[0].count == input.count else {
+        guard parsed[0].substring?.count == input.count else {
             output.append(errorText: "Could not parse your entire query. Only recognized: `\(input)`")
             return
         }
 
-        let limit = parsed[safely: 1].flatMap { Int($0) } ?? Int.max
+        let limit = parsed[safely: 1]?.substring.flatMap { Int($0) } ?? Int.max
         guard limit < maxRows else {
             output.append(errorText: "Please query less than \(maxRows) rows!")
             return
