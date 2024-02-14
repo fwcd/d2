@@ -3,9 +3,9 @@ import Utils
 import D2MessageIO
 import Dispatch
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(?:([a-zA-Z]+)\\s*)?(.*)")
-fileprivate let durationPattern = try! LegacyRegex(from: "(\\d+)\\s*([a-zA-Z]+)")
-fileprivate let flagPattern = try! LegacyRegex(from: "--([a-z]+)")
+fileprivate let argsPattern = #/(?:(?<name>[a-zA-Z]+)\s*)?(?<rest>.*)/#
+fileprivate let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
+fileprivate let flagPattern = #/--([a-z]+)/#
 fileprivate let timeUnits: [String: (Int) -> Int] = [
     "d": { $0 * 86400 },
     "h": { $0 * 3600 },
@@ -80,24 +80,24 @@ public class TimerCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
-        print(parsedArgs)
-        let name = parsedArgs[1].nilIfEmpty
+
+        let name = parsedArgs.name.map { String($0) }
 
         if let n = name, let subcommand = subcommands[n] {
             // Invoke the subcommand
 
-            subcommand(parsedArgs[2], output, context)
+            subcommand(String(parsedArgs.rest), output, context)
         } else {
             // Create a new timer
 
-            let rawDurations = parsedArgs[2]
-            let allParsedDurations = durationPattern.allGroups(in: rawDurations)
-            let flags = flagPattern.allGroups(in: input).map { $0[1] }
-            let durations = allParsedDurations.compactMap { timeUnits[timeUnitAliases[$0[2]] ?? $0[2]]?(Int($0[1])!) }
+            let rawDurations = parsedArgs.rest
+            let allParsedDurations = rawDurations.matches(of: durationPattern)
+            let flags = input.matches(of: flagPattern).map { $0.1 }
+            let durations = allParsedDurations.compactMap { timeUnits[timeUnitAliases[String($0.2)] ?? String($0.2)]?(Int($0.1)!) }
 
             guard !durations.isEmpty else {
                 output.append(errorText: info.helpText!)
