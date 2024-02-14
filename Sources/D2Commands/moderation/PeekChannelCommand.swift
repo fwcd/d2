@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let idPattern = try! LegacyRegex(from: "\\d+")
+fileprivate let idPattern = #/\d+/#
 
 public class PeekChannelCommand: StringCommand {
     public let info = CommandInfo(
@@ -23,7 +23,7 @@ public class PeekChannelCommand: StringCommand {
         if input.isEmpty {
             parsedId = context.channel?.id
         } else {
-            parsedId = idPattern.firstGroups(in: input)?.first.map { ChannelID($0, clientName: sink.name) }
+            parsedId = (try? idPattern.firstMatch(in: input))?.first.map { ChannelID(String($0), clientName: sink.name) }
         }
 
         guard let channelId = parsedId else {
