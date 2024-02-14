@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(-?\\d+)\\s+(.+)")
+fileprivate let argsPattern = #/(?<halfSteps>-?\d+)\s+(?<notes>.+)/#
 
 public class TransposeChordsCommand: StringCommand {
     public let info = CommandInfo(
@@ -15,9 +15,9 @@ public class TransposeChordsCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard
-            let parsedArgs = argsPattern.firstGroups(in: input),
-            let halfSteps = Int(parsedArgs[1]),
-            let chords = try? parsedArgs[2].split(separator: " ").map({ try CommonChord(of: String($0)) }) else {
+            let parsedArgs = try? argsPattern.firstMatch(in: input),
+            let halfSteps = Int(parsedArgs.halfSteps),
+            let chords = try? parsedArgs.notes.split(separator: " ").map({ try CommonChord(of: String($0)) }) else {
             output.append(errorText: info.helpText!)
             return
         }
