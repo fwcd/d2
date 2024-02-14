@@ -35,7 +35,7 @@ public class BFInterpretCommand: StringCommand {
         let task = DispatchWorkItem {
             var response: String
 
-            if let program = bfCodePattern.firstGroups(in: input)?[1] {
+            if let program = (try? bfCodePattern.firstMatch(in: input)).map({ String($0.code) }) {
                 do {
                     let output = try interpreter.interpret(program: program)
 
