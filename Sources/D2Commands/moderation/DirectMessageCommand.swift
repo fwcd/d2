@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let inputPattern = try! LegacyRegex(from: "(?:(?:(?:<\\S+>)|(?:@\\S+))\\s+)+(.+)")
+fileprivate let inputPattern = #/(?:(?:(?:<\S+>)|(?:@\S+))\s+)+(.+)/#
 
 // TODO: Use Arg API
 
@@ -20,7 +20,7 @@ public class DirectMessageCommand: Command {
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
         let text = input.asText ?? ""
-        guard let parsedArgs = inputPattern.firstGroups(in: text) else {
+        guard let parsedArgs = try? inputPattern.firstMatch(in: text) else {
             output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")
             return
         }
@@ -29,6 +29,6 @@ public class DirectMessageCommand: Command {
             return
         }
 
-        output.append(parsedArgs[1], to: .dmChannel(mentioned.id))
+        output.append(String(parsedArgs.1), to: .dmChannel(mentioned.id))
     }
 }
