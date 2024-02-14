@@ -2,7 +2,7 @@ import Foundation
 import CairoGraphics
 import Utils
 
-fileprivate let pngDataUrlPattern = try! LegacyRegex(from: "data:image\\/png;base64,(.*)")
+fileprivate let pngDataUrlPattern = #/data:image\/png;base64,(?<base64>.*)/#
 
 public struct MinecraftServerInfo: Codable {
     public let version: Version
@@ -14,8 +14,8 @@ public struct MinecraftServerInfo: Codable {
 
     public var faviconImage: CairoImage? {
         favicon
-            .flatMap { pngDataUrlPattern.firstGroups(in: $0) }
-            .flatMap { Data(base64Encoded: $0[1]) }
+            .flatMap { try? pngDataUrlPattern.firstMatch(in: $0) }
+            .flatMap { Data(base64Encoded: String($0.base64)) }
             .flatMap { try? CairoImage(pngData: $0) }
     }
 
