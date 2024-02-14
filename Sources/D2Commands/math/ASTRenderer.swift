@@ -28,7 +28,7 @@ struct ASTRenderer {
         self.color = color
     }
 
-    func render(ast: ExpressionASTNode) throws -> CairoImage {
+    func render(ast: any ExpressionASTNode) throws -> CairoImage {
         let graphics = try CairoContext(width: width, height: height)
 
         try render(ast, to: graphics, at: Vec2(x: Double(width / 2), y: padding), scaledNodeSpacing: nodeSpacing)
@@ -36,7 +36,7 @@ struct ASTRenderer {
         return try graphics.makeImage()
     }
 
-    private func render(_ node: ExpressionASTNode, to graphics: some GraphicsContext, at position: Vec2<Double>, scaledNodeSpacing: Double) throws {
+    private func render(_ node: any ExpressionASTNode, to graphics: some GraphicsContext, at position: Vec2<Double>, scaledNodeSpacing: Double) throws {
         graphics.draw(text: Text(node.label, withSize: fontSize, at: position, color: color))
 
         let childs = node.childs

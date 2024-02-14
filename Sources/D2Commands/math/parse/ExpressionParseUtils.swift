@@ -10,7 +10,7 @@ let expressionUnaryOperators: [String: UnaryOperatorEntry] = [
     "-": UnaryOperatorEntry(position: .prefixPosition) { NegationNode(value: $0) }
 ]
 
-let expressionConstants: [String: ExpressionASTNode] = [
+let expressionConstants: [String: any ExpressionASTNode] = [
     "e": ConstantNode(value: 2.71828182845904523536),
     "pi": ConstantNode(value: .pi)
 ]

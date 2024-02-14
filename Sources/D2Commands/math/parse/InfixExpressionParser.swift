@@ -22,7 +22,7 @@ fileprivate let tokenPattern = Regex {
 public struct InfixExpressionParser: ExpressionParser {
     public init() {}
 
-    public func parse(_ input: String) throws -> ExpressionASTNode {
+    public func parse(_ input: String) throws -> any ExpressionASTNode {
         return try parseExpression(from: TokenIterator(try tokenize(input)), minPrecedence: 0)
     }
 
@@ -50,7 +50,7 @@ public struct InfixExpressionParser: ExpressionParser {
     // The parser is based on https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing
 
     /// Parses an atom (such as a parenthesized expression or a literal).
-    private func parseAtom(from tokens: TokenIterator<InfixExpressionToken>) throws -> ExpressionASTNode {
+    private func parseAtom(from tokens: TokenIterator<InfixExpressionToken>) throws -> any ExpressionASTNode {
         guard let token = tokens.next() else { throw ExpressionError.unexpectedEnd }
         switch token {
             case .number(let value):
@@ -86,7 +86,7 @@ public struct InfixExpressionParser: ExpressionParser {
     }
 
     /// Use precedence climbing a sequence of tokens as an infix expression.
-    private func parseExpression(from tokens: TokenIterator<InfixExpressionToken>, minPrecedence: Int) throws -> ExpressionASTNode {
+    private func parseExpression(from tokens: TokenIterator<InfixExpressionToken>, minPrecedence: Int) throws -> any ExpressionASTNode {
         var result = try parseAtom(from: tokens)
 
         while case let .operatorSymbol(rawOperator)? = tokens.peek() {

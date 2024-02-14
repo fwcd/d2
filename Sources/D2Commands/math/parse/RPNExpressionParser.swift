@@ -3,13 +3,13 @@ import Utils
 public struct RPNExpressionParser: ExpressionParser {
     public init() {}
 
-    public func parse(_ input: String) throws -> ExpressionASTNode {
+    public func parse(_ input: String) throws -> any ExpressionASTNode {
         let tokens = input.split(separator: " ").map { String($0) }
         return try parseRPNTree(tokens: tokens)
     }
 
-    private func parseRPNTree(tokens: [String]) throws -> ExpressionASTNode {
-        var operandStack = [ExpressionASTNode]()
+    private func parseRPNTree(tokens: [String]) throws -> any ExpressionASTNode {
+        var operandStack = [any ExpressionASTNode]()
 
         for token in tokens {
             if let number = Double(token) {

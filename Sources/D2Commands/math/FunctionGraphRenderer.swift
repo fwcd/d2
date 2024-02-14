@@ -31,7 +31,7 @@ struct FunctionGraphRenderer {
         pixelToFunctionY = AnyBijection(Scaling(by: -1.0 / scale).then(Translation(by: Double(height) / (2 * scale))))
     }
 
-    func render(ast: ExpressionASTNode) throws -> CairoImage {
+    func render(ast: any ExpressionASTNode) throws -> CairoImage {
         let graphics = try CairoContext(width: width, height: height)
 
         render(to: graphics) { try? ast.evaluate(with: [inputVariable: $0]) }
