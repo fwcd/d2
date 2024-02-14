@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argPattern = try! LegacyRegex(from: "(?:(\\w+)\\s+)?(\\d+)\\s+(.+)")
+fileprivate let argPattern = #/(?:(?<platform>\w+)\s+)?(?<channelId>\d+)\s+(?<message>.+)/#
 
 public class ChannelMessageCommand: StringCommand {
     public let info = CommandInfo(
@@ -14,18 +14,18 @@ public class ChannelMessageCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        guard let platform = parsedArgs[1].nilIfEmpty ?? context.sink?.name else {
+        guard let platform = parsedArgs.platform.map({ String($0) }) ?? context.sink?.name else {
             output.append(errorText: "No platform found")
             return
         }
 
-        let rawId = parsedArgs[2]
-        let message = parsedArgs[3]
+        let rawId = String(parsedArgs.channelId)
+        let message = String(parsedArgs.message)
         let id = ChannelID(rawId, clientName: platform)
 
         output.append(message, to: .guildChannel(id))
