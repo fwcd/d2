@@ -37,7 +37,7 @@ fileprivate struct RunnablePipe: Runnable {
 // The first group matches the command name,
 // the second matches the iteration count and
 // the third the arguments (the rest of the message content)
-fileprivate let commandPattern = try! LegacyRegex(from: "(\\w+)(?:\\^(\\d+))?(?:\\s+([\\s\\S]*))?")
+fileprivate let commandPattern = #/(?<name>\w+)(?:\^(?<iterations>\d+))?(?:\s+(?<args>[\s\S]*))?/#
 
 /// Handles (possibly piped or chained) command invocations.
 public class CommandHandler: MessageHandler {
@@ -184,11 +184,12 @@ public class CommandHandler: MessageHandler {
         for rawCommand in rawPipeCommand.splitPreservingQuotes(by: pipeSeparator, omitQuotes: false, omitBackslashes: true) {
             let trimmedCommand = rawCommand.trimmingCharacters(in: .whitespacesAndNewlines)
 
-            if let groups = commandPattern.firstGroups(in: trimmedCommand) {
-                log.info("\(author.displayTag) invoked '\(groups.dropFirst().joined(separator: " "))'")
-                let name = groups[1]
-                let iterationCount = groups[2].nilIfEmpty.flatMap { Int($0) } ?? 1
-                let args = groups[3]
+            if let groups = try? commandPattern.firstMatch(in: trimmedCommand) {
+                let name = String(groups.name)
+                let iterationCount = groups.iterations.flatMap { Int($0) } ?? 1
+                let args = String(groups.args ?? "")
+
+                log.info("\(author.displayTag) invoked '\(name)' with '\(args)' (\(iterationCount) \("time".pluralized(with: iterationCount)))")
 
                 if let command = registry[name] {
                     let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
