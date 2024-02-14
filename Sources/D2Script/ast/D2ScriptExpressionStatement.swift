@@ -7,6 +7,6 @@ public struct D2ScriptExpressionStatement: D2ScriptStatement, Equatable {
     }
 
     public static func ==(lhs: D2ScriptExpressionStatement, rhs: D2ScriptExpressionStatement) -> Bool {
-        return lhs.expression.isEqualTo(rhs.expression)
+        return lhs.expression.isEqual(to: rhs.expression)
     }
 }

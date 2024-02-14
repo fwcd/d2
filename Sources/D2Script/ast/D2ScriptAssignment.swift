@@ -8,6 +8,6 @@ public struct D2ScriptAssignment: D2ScriptStatement, Equatable {
     }
 
     public static func ==(lhs: D2ScriptAssignment, rhs: D2ScriptAssignment) -> Bool {
-        return lhs.label == rhs.label && lhs.expression.isEqualTo(rhs.expression)
+        return lhs.label == rhs.label && lhs.expression.isEqual(to: rhs.expression)
     }
 }

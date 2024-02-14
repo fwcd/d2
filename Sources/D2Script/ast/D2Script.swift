@@ -7,6 +7,6 @@ public struct D2Script: D2ScriptASTNode, Equatable {
     }
 
     public static func ==(lhs: D2Script, rhs: D2Script) -> Bool {
-        return lhs.label == rhs.label && !zip(lhs.topLevelNodes, rhs.topLevelNodes).contains { !$0.isEqualTo($1) }
+        return lhs.label == rhs.label && !zip(lhs.topLevelNodes, rhs.topLevelNodes).contains { !$0.isEqual(to: $1) }
     }
 }

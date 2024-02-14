@@ -89,7 +89,7 @@ final class D2ScriptParserTests: XCTestCase {
             return
         }
         for i in 0..<actual.count {
-            XCTAssert(actual[i].isEqualTo(expected[i]), "Expressions mismatched first at index \(i)")
+            XCTAssert(actual[i].isEqual(to: expected[i]), "Expressions mismatched first at index \(i)")
         }
     }
 

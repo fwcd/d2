@@ -8,6 +8,6 @@ public struct D2ScriptFunctionCall: D2ScriptExpression, Equatable {
     }
 
     public static func ==(lhs: D2ScriptFunctionCall, rhs: D2ScriptFunctionCall) -> Bool {
-        return lhs.functionName == rhs.functionName && !zip(lhs.arguments, rhs.arguments).contains { !$0.isEqualTo($1) }
+        return lhs.functionName == rhs.functionName && !zip(lhs.arguments, rhs.arguments).contains { !$0.isEqual(to: $1) }
     }
 }

@@ -7,6 +7,6 @@ public struct D2ScriptStatementList: D2ScriptASTNode, Equatable {
     }
 
     public static func ==(lhs: D2ScriptStatementList, rhs: D2ScriptStatementList) -> Bool {
-        return !zip(lhs.statements, rhs.statements).contains { !$0.isEqualTo($1) }
+        return !zip(lhs.statements, rhs.statements).contains { !$0.isEqual(to: $1) }
     }
 }
