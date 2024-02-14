@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\d+)\\s+(\\d+)\\s+:?([^:\\s]+):?")
+fileprivate let argsPattern = #/(?<messageId>\d+)\s+(?<channelId>\d+)\s+:?(?<emoji>[^:\s]+):?/#
 
 public class ReactCommand: StringCommand {
     public let info = CommandInfo(
@@ -25,14 +25,14 @@ public class ReactCommand: StringCommand {
             output.append(errorText: "No client available")
             return
         }
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        let messageId = MessageID(parsedArgs[1], clientName: sink.name)
-        let channelId = MessageID(parsedArgs[2], clientName: sink.name)
-        var emojiString = parsedArgs[3]
+        let messageId = MessageID(String(parsedArgs.messageId), clientName: sink.name)
+        let channelId = MessageID(String(parsedArgs.channelId), clientName: sink.name)
+        var emojiString = String(parsedArgs.emoji)
 
         if !emojiString.unicodeScalars.contains(where: \.properties.isEmoji) {
             // Try resolving the emoji via the guilds
