@@ -19,7 +19,7 @@ public class GrepCommand: ArgCommand {
 
     public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) {
         do {
-            let regex = try Regex(input.left.value)
+            let regex = try Regex(input.left.value).ignoresCase()
             var result = ""
 
             for line in input.right.values.map({ $0.value }) {
