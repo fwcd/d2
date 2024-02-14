@@ -7,8 +7,6 @@ fileprivate let log = Logger(label: "D2Permissions.PermissionManager")
 fileprivate let userPermissionsFilePath = "local/userPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
-fileprivate let nameWithTagPattern = try! LegacyRegex(from: "([^#]+)#(\\d+)")
-
 public class PermissionManager: CustomStringConvertible {
     private let storage = DiskJsonSerializer()
     private var adminWhitelist: AdminWhitelist
