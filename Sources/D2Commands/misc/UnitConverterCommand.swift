@@ -3,7 +3,7 @@ import GraphViz
 import CairoGraphics
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(\\S+)\\s+to\\s*(\\S+)")
+fileprivate let argsPattern = #/(?<value>\S+)\s+(?<src>\S+)\s+to\s*(?<dest>\S+)/#
 
 public class UnitConverterCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -277,14 +277,14 @@ public class UnitConverterCommand: StringCommand {
         if let subcommand = subcommands[input] {
             subcommand(output)
         } else {
-            guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+            guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
                 output.append(errorText: info.helpText!)
                 return
             }
 
-            let rawValue = parsedArgs[1]
-            let rawSrcUnit = parsedArgs[2]
-            let rawDestUnit = parsedArgs[3]
+            let rawValue = String(parsedArgs.value)
+            let rawSrcUnit = String(parsedArgs.src)
+            let rawDestUnit = String(parsedArgs.dest)
 
             guard let value = Double(rawValue) else {
                 output.append(errorText: "Not a number: `\(rawValue)`")
