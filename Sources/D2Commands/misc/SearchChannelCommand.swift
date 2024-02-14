@@ -20,39 +20,35 @@ public class SearchChannelCommand: StringCommand {
             return
         }
 
-        do {
-            let term = input.lowercased()
-            let parsedPattern = try? LegacyRegex(from: term)
-            let pattern = try parsedPattern ?? LegacyRegex(from: LegacyRegex.escape(term))
-            let results = (Array(guild.channels.values) + Array(guild.threads.values))
-                .filter {
-                    [$0.name, $0.topic, $0.parentId.flatMap { guild.channels[$0] }.map(\.name)]
-                        .compactMap { $0?.lowercased() }
-                        .contains { pattern.matchCount(in: $0) > 0 }
-                }
-                .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
-                .prefix(5)
+        let term = input.lowercased()
+        let parsedPattern = try? Regex(term)
+        let pattern = parsedPattern ?? Regex(verbatim: term)
+        let results = (Array(guild.channels.values) + Array(guild.threads.values))
+            .filter {
+                [$0.name, $0.topic, $0.parentId.flatMap { guild.channels[$0] }.map(\.name)]
+                    .compactMap { $0?.lowercased() }
+                    .contains { !$0.matches(of: pattern).isEmpty }
+            }
+            .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
+            .prefix(5)
 
-            output.append(Embed(
-                title: ":mag: Found Channels",
-                fields: Dictionary(grouping: results, by: \.type)
-                    .sorted(by: ascendingComparator { [.text, .publicThread, .privateThread, .voice, .category].firstIndex(of: $0.key) ?? Int.max })
-                    .map {
-                        Embed.Field(
-                            name: format(type: $0.key),
-                            value: $0.value
-                                .map { [
-                                    "\($0)",
-                                    $0.topic.filter { !$0.isEmpty }.map { ": \($0)" },
-                                    $0.parentId.flatMap { guild.channels[$0] }.map { " _in \($0.name)_" }
-                                ].compactMap { $0 }.joined() }
-                                .joined(separator: "\n")
-                        )
-                    }
-            ))
-        } catch {
-            output.append(errorText: "Invalid input: `\(input)`")
-        }
+        output.append(Embed(
+            title: ":mag: Found Channels",
+            fields: Dictionary(grouping: results, by: \.type)
+                .sorted(by: ascendingComparator { [.text, .publicThread, .privateThread, .voice, .category].firstIndex(of: $0.key) ?? Int.max })
+                .map {
+                    Embed.Field(
+                        name: format(type: $0.key),
+                        value: $0.value
+                            .map { [
+                                "\($0)",
+                                $0.topic.filter { !$0.isEmpty }.map { ": \($0)" },
+                                $0.parentId.flatMap { guild.channels[$0] }.map { " _in \($0.name)_" }
+                            ].compactMap { $0 }.joined() }
+                            .joined(separator: "\n")
+                    )
+                }
+        ))
     }
 
     private func format(type: Channel.ChannelType) -> String {
