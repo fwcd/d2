@@ -3,7 +3,7 @@ import D2Commands
 import D2MessageIO
 import Utils
 
-fileprivate let mentionPattern = try! LegacyRegex(from: "<@.+?>")
+fileprivate let mentionPattern = #/<@.+?>/#
 
 public struct MentionD2Handler: MessageHandler {
     private let conversator: Conversator
@@ -21,7 +21,7 @@ public struct MentionD2Handler: MessageHandler {
             let guild = message.guild,
             let channelId = message.channelId {
             queue.async {
-                if let answer = try? conversator.answer(input: mentionPattern.replace(in: message.content, with: ""), on: guild.id) {
+                if let answer = try? conversator.answer(input: message.content.replacing(mentionPattern, with: ""), on: guild.id) {
                     sink.sendMessage(Message(content: answer.cleaningMentions(with: guild)), to: channelId)
                 } else {
                     sink.createReaction(for: messageId, on: channelId, emoji: "🤔")
