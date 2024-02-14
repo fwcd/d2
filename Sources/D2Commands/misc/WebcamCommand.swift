@@ -1,11 +1,20 @@
 import Foundation
+import RegexBuilder
 import Utils
 import D2NetAPIs
 import D2MessageIO
 
-fileprivate let argPattern = try! LegacyRegex(from: "(\\w+)\\s*(.*)")
-fileprivate let rawFloatPattern = "-?\\d+(?:\\.\\d+)?"
-fileprivate let coordsWithRadiusPattern = try! LegacyRegex(from: "(\(rawFloatPattern))[\\s,]+(\(rawFloatPattern))(?:\\s+(\(rawFloatPattern)))?")
+fileprivate let argPattern = #/(?<name>\w+)\s*(?<args>.*)/#
+fileprivate let rawFloatPattern = #/-?\d+(?:\.\d+)?/#
+fileprivate let coordsWithRadiusPattern = Regex {
+    Capture { rawFloatPattern }
+    #/[\s,]+/#
+    Capture { rawFloatPattern }
+    Optionally {
+        #/\s+/#
+        Capture { rawFloatPattern }
+    }
+}
 
 public class WebcamCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -18,11 +27,11 @@ public class WebcamCommand: StringCommand {
     public init(maxRadius: Int = 250) {
         subcommands = [
             "near": { /*[unowned self]*/ input, output in
-                guard let parsedCoordsWithRadius = coordsWithRadiusPattern.firstGroups(in: input), let lat = Double(parsedCoordsWithRadius[1]), let lon = Double(parsedCoordsWithRadius[2]) else {
+                guard let parsedCoordsWithRadius = try? coordsWithRadiusPattern.firstMatch(in: input), let lat = Double(parsedCoordsWithRadius.1), let lon = Double(parsedCoordsWithRadius.2) else {
                     output.append(errorText: "Please enter a pair of lat/lon coordinates!")
                     return
                 }
-                guard let radius = (parsedCoordsWithRadius[3].nilIfEmpty ?? "10").flatMap({ Int($0) }) else {
+                guard let radius = (parsedCoordsWithRadius.3 ?? "10").flatMap({ Int($0) }) else {
                     output.append(errorText: "Please enter a valid radius!")
                     return
                 }
@@ -83,16 +92,16 @@ public class WebcamCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        guard let subcommand = subcommands[parsedArgs[1]] else {
-            output.append(errorText: "Could not find subcommand `\(parsedArgs[1])`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+        guard let subcommand = subcommands[String(parsedArgs.name)] else {
+            output.append(errorText: "Could not find subcommand `\(parsedArgs.name)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
-        subcommand(parsedArgs[2], output)
+        subcommand(String(parsedArgs.args), output)
     }
 }
