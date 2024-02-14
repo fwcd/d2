@@ -2,8 +2,8 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let flagPattern = try! LegacyRegex(from: "--(\\S+)")
-fileprivate let pingPattern = try! LegacyRegex(from: "<@&?.+?>")
+fileprivate let flagPattern = #/--(\S+)/#
+fileprivate let pingPattern = #/<@&?.+?>/#
 
 // TODO: Use Arg API
 
@@ -24,8 +24,8 @@ public class MarkovCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        let flags = Set<String>(flagPattern.allGroups(in: input).map { $0[1] })
-        let cleanedInput = flagPattern.replace(in: input, with: "").nilIfEmpty
+        let flags = Set<String>(input.matches(of: flagPattern).map { String($0.1) })
+        let cleanedInput = input.replacing(flagPattern, with: "").nilIfEmpty
 
         do {
             // TODO: Use proper initial distribution without sacrificing performance
