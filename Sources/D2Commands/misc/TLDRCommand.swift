@@ -2,7 +2,7 @@ import Foundation
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(?:<#(\\d+)>)?\\s*(\\d+)?")
+fileprivate let argsPattern = #/(?:<#(?<channelId>\d+)>)?\s*(?<count>\d+)?/#
 
 public class TLDRCommand: StringCommand {
     public let info = CommandInfo(
@@ -33,13 +33,13 @@ public class TLDRCommand: StringCommand {
             output.append(errorText: "No MessageIO client/channel/guild available")
             return
         }
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        let tldrChannelName = parsedArgs[1].nilIfEmpty.map { ID($0, clientName: sink.name) } ?? channelId
-        let messageCount = parsedArgs[2].nilIfEmpty.flatMap(Int.init) ?? 80
+        let tldrChannelName = parsedArgs.channelId.map { ID(String($0), clientName: sink.name) } ?? channelId
+        let messageCount = parsedArgs.count.flatMap { Int($0) } ?? 80
 
         guard messageCount <= maxMessageCount else {
             output.append(errorText: "More than \(maxMessageCount) \("message".pluralized(with: maxMessageCount)) messages are currently not supported")
