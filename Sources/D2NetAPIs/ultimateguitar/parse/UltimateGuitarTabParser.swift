@@ -1,12 +1,7 @@
 import Utils
 
 /// Parses a token in UG's markup.
-///
-/// 1. group: Whether it's a closing 'tag'
-/// 1. group: A 'tag' in square parentheses
-/// 2. group: Newlines
-/// 3. group: Anything else
-fileprivate let tokenPattern = try! LegacyRegex(from: "(?:\\[(\\/?)([^\\]]+)\\])|([\\r\\n]+)|([^\\r\\n\\[]+)")
+fileprivate let tokenPattern = #/(?:\[(?<closing>\/?)(?<tag>[^\]]+)\])|(?<newlines>[\r\n]+)|(?<rest>[^\r\n\[]+)/#
 
 /// Parses UG's tab markup.
 public struct UltimateGuitarTabParser {
@@ -24,14 +19,14 @@ public struct UltimateGuitarTabParser {
     }
 
     func tokenize(tabMarkup: String) -> [Token] {
-        tokenPattern.allGroups(in: tabMarkup).compactMap {
-            let isOpeningTag = $0[1].isEmpty
-            if let tag = $0[2].nilIfEmpty {
-                return isOpeningTag ? Token.tag(tag) : Token.closingTag(tag)
-            } else if !$0[3].isEmpty {
+        tabMarkup.matches(of: tokenPattern).compactMap {
+            let isOpeningTag = $0.closing == nil
+            if let tag = $0.tag {
+                return isOpeningTag ? Token.tag(String(tag)) : Token.closingTag(String(tag))
+            } else if $0.newlines != nil {
                 return Token.newlines
             } else {
-                return Token.content($0[4])
+                return Token.content(String($0.rest ?? ""))
             }
         }
     }
