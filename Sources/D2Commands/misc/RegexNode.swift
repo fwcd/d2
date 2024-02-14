@@ -4,7 +4,7 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.RegexNode")
 fileprivate let regexTokens = ["+", "*", "?", "(", ")", "[", "]", "|"]
 fileprivate let escapedTokens = regexTokens.map { "\\\($0)" }
-fileprivate let regexTokenPattern = try! LegacyRegex(from: "\((escapedTokens + ["[^\(escapedTokens.joined())]+"]).joined(separator: "|"))")
+fileprivate let regexTokenPattern = try! Regex("\((escapedTokens + ["[^\(escapedTokens.joined())]+"]).joined(separator: "|"))")
 
 /// A custom AST representation of a regular expression.
 indirect enum RegexNode: CustomStringConvertible {
@@ -25,7 +25,7 @@ indirect enum RegexNode: CustomStringConvertible {
     }
 
     static func parse(from s: String) throws -> RegexNode? {
-        let tokens = regexTokenPattern.allGroups(in: s).map { $0[0] }
+        let tokens = s.matches(of: regexTokenPattern).map { String($0[0].substring ?? "") }
         return try parseChoice(from: TokenIterator(tokens))
     }
 
