@@ -1,12 +1,12 @@
 import Utils
 
 struct NegationNode: ExpressionASTNode {
-    let value: any ExpressionASTNode
+    let operand: any ExpressionASTNode
     let label: String = "-"
-    var occurringVariables: Set<String> { return value.occurringVariables }
-    var childs: [any ExpressionASTNode] { return [value] }
+    var occurringVariables: Set<String> { return operand.occurringVariables }
+    var childs: [any ExpressionASTNode] { return [operand] }
 
     func evaluate(with feedDict: [String: Double]) throws -> Double {
-        return -(try value.evaluate(with: feedDict))
+        return -(try operand.evaluate(with: feedDict))
     }
 }

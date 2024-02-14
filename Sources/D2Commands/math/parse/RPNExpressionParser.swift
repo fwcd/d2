@@ -24,7 +24,7 @@ public struct RPNExpressionParser: ExpressionParser {
                 let node = PlaceholderNode(name: token)
 
                 if integerVariableNames.contains(token) {
-                    operandStack.append(FloorNode(value: node))
+                    operandStack.append(FloorNode(operand: node))
                 } else {
                     operandStack.append(node)
                 }

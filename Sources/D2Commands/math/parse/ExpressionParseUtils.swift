@@ -7,7 +7,7 @@ let expressionBinaryOperators: [String: BinaryOperatorEntry] = [
 ]
 
 let expressionUnaryOperators: [String: UnaryOperatorEntry] = [
-    "-": UnaryOperatorEntry(position: .prefixPosition) { NegationNode(value: $0) }
+    "-": UnaryOperatorEntry(position: .prefixPosition) { NegationNode(operand: $0) }
 ]
 
 let expressionConstants: [String: any ExpressionASTNode] = [

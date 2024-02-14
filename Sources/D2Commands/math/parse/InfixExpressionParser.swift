@@ -62,7 +62,7 @@ public struct InfixExpressionParser: ExpressionParser {
                     let node = PlaceholderNode(name: name)
 
                     if integerVariableNames.contains(name) {
-                        return FloorNode(value: node)
+                        return FloorNode(operand: node)
                     } else {
                         return node
                     }
