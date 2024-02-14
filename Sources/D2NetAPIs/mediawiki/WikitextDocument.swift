@@ -1,7 +1,5 @@
 import Utils
 
-fileprivate let sectionTitlePattern = try! LegacyRegex(from: "=+\\s*([^=\\s]+)\\s*=+")
-
 public struct WikitextDocument: Equatable {
     public let sections: [Section]
 
