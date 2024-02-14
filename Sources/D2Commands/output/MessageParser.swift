@@ -8,12 +8,12 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
 
-fileprivate let urlPattern = try! LegacyRegex(from: "<?(\\w+:[^>\\s]+)>?")
+fileprivate let urlPattern = #/<?(\w+:[^>\s]+)>?/#
 
 // The first group matches the language, the second group matches the code
-fileprivate let codePattern = try! LegacyRegex(from: "`(?:``(?:(\\w*)\n)?)?([^`]+)`*")
+fileprivate let codePattern = #/`(?:``(?:(?<language>\w*)\n)?)?(?<code>[^`]+)`*/#
 
-fileprivate let idPattern = try! LegacyRegex(from: "\\d+")
+fileprivate let idPattern = #/\d+/#
 
 /// Parses Discord messages into rich values.
 public struct MessageParser {
@@ -39,14 +39,14 @@ public struct MessageParser {
             // Parse message content
             let content = str ?? message?.content ?? ""
 
-            let textualContent = codePattern.replace(in: content, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            let textualContent = content.replacing(codePattern, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
             if !textualContent.isEmpty {
                 values.append(.text(textualContent))
             }
 
-            if let codeGroups = codePattern.firstGroups(in: content) {
-                let language = codeGroups[1].nilIfEmpty
-                let code = codeGroups[2]
+            if let codeGroups = try? codePattern.firstMatch(in: content) {
+                let language = codeGroups.language.map { String($0) }
+                let code = String(codeGroups.code)
                 values.append(.code(code, language: language))
             }
 
@@ -60,8 +60,8 @@ public struct MessageParser {
                 // Note that explicit mentions don't count duplicates
                 mentions += explicitMentions
             } else {
-                mentions += idPattern.allGroups(in: content)
-                    .map { UserID($0[0], clientName: clientName ?? "Dummy") }
+                mentions += content.matches(of: idPattern)
+                    .map { UserID(String($0.0), clientName: clientName ?? "Dummy") }
                     .compactMap { guild?.members[$0]?.user }
 
                 if content.contains("#") {
@@ -81,7 +81,7 @@ public struct MessageParser {
             }
 
             // Append parsed URLs
-            if let urls = urlPattern.allGroups(in: content).compactMap({ URL(string: $0[1]) }).nilIfEmpty {
+            if let urls = content.matches(of: urlPattern).compactMap({ URL(string: String($0.1)) }).nilIfEmpty {
                 values.append(.urls(urls))
             }
 
