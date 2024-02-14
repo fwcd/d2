@@ -15,8 +15,8 @@ fileprivate let inputDateFormatters = [
     makeDateFormatter("dd.MM.yyyy HH:mm"),
     outputDateFormatter
 ]
-fileprivate let subcommandPattern = try! LegacyRegex(from: "(\\w+)\\s*(.*)")
-fileprivate let namedDatePattern = try! LegacyRegex(from: "(\\w+[\\sa-zA-Z]+)\\s+(.+)")
+fileprivate let subcommandPattern = #/(?<name>\w+)\s*(?<args>.*)/#
+fileprivate let namedDatePattern = #/(?<name>\w+[\sa-zA-Z]+)\s+(?<date>.+)/#
 
 public class CountdownCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -37,13 +37,13 @@ public class CountdownCommand: StringCommand {
 
         subcommands = [
             "add": { [unowned self] input, output in
-                guard let parsedInput = namedDatePattern.firstGroups(in: input) else {
+                guard let parsedInput = try? namedDatePattern.firstMatch(in: input) else {
                     output.append(errorText: "Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
                     return
                 }
 
-                let name = parsedInput[1]
-                let rawDate = parsedInput[2]
+                let name = String(parsedInput.name)
+                let rawDate = String(parsedInput.date)
 
                 guard !goals.keys.contains(name) else {
                     output.append(errorText: "A goal with name `\(name)` already exists!")
@@ -72,9 +72,9 @@ public class CountdownCommand: StringCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         if let date = parseDate(from: input) {
             show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
-        } else if let parsedArgs = subcommandPattern.firstGroups(in: input) {
-            let subcommandName = parsedArgs[1]
-            let subcommandArgs = parsedArgs[2]
+        } else if let parsedArgs = try? subcommandPattern.firstMatch(in: input) {
+            let subcommandName = String(parsedArgs.name)
+            let subcommandArgs = String(parsedArgs.args)
 
             guard let subcommand = subcommands[subcommandName] else {
                 output.append(errorText: "Could not find subcommand with name \(subcommandName)")
