@@ -4,7 +4,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let goodMorningOrEveningPattern = try! LegacyRegex(from: "\\bg(?:u+te+n?|oo+d+)\\s+(?:mo+(?:rni+ng|(?:rge+|i+)n)|e+ve+ni+ng|a+be+nd|da+y|ta+g|n(?:a+ch|i+gh)t)\\b", caseSensitive: false)
+fileprivate let goodMorningOrEveningPattern = #/\bg(?:u+te+n?|oo+d+)\s+(?:mo+(?:rni+ng|(?:rge+|i+)n)|e+ve+ni+ng|a+be+nd|da+y|ta+g|n(?:a+ch|i+gh)t)\b/#.ignoresCase()
 
 public struct TriggerReactionHandler: MessageHandler {
     private let triggers: [ReactionTrigger]
@@ -45,7 +45,7 @@ public struct TriggerReactionHandler: MessageHandler {
             .init(probability: 0.0001, emoji: "🛸"),
             .init { message in
                 Promise.catchingThen {
-                    guard goodMorningOrEveningPattern.matchCount(in: message.content) > 0 else { throw ReactionTriggerError.mismatchingKeywords }
+                    guard !message.content.matches(of: goodMorningOrEveningPattern).isEmpty else { throw ReactionTriggerError.mismatchingKeywords }
 
                     if configuration.dateSpecificReactions {
                         let calendar = Calendar.current
