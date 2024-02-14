@@ -4,7 +4,7 @@ import Utils
 import SwiftSoup
 
 fileprivate let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")
-fileprivate let pageVersionPattern = try! LegacyRegex(from: "\\bpageVersion\\s*=\\s*(\\d+)\\b")
+fileprivate let pageVersionPattern = #/\bpageVersion\s*=\s*(?<pageVersion>\d+)\b/#
 
 public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
     private let params: P
@@ -48,6 +48,6 @@ public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
             method: "GET"
         ) }
             .then { $0.fetchUTF8Async() }
-            .mapCatching { try Result.from(pageVersionPattern.firstGroups(in: $0)?[1], errorIfNil: NetApiError.apiError("Could not find page version of integral calculator")).get() }
+            .mapCatching { try Result.from((try? pageVersionPattern.firstMatch(in: $0)).map { String($0.pageVersion) }, errorIfNil: NetApiError.apiError("Could not find page version of integral calculator")).get() }
     }
 }
