@@ -5,7 +5,7 @@ import Utils
 import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.HoogleCommand")
-fileprivate let newlines = try! LegacyRegex(from: "\\n+")
+fileprivate let newlines = #/\n+/#
 
 fileprivate struct HoogleResultKey: Hashable {
     let item: String
@@ -44,7 +44,7 @@ public class HoogleCommand: StringCommand {
                             HoogleResultKey(
                                 item: $0.item,
                                 renderedDoc: try $0.docs
-                                    .map { try self.converter.convert(htmlFragment: newlines.replace(in: $0, with: "<br>")) }
+                                    .map { try self.converter.convert(htmlFragment: $0.replacing(newlines, with: "<br>")) }
                                     ?? "_no docs_"
                             )
                         }).map { (key, results) in
