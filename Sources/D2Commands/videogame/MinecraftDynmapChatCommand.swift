@@ -4,7 +4,7 @@ import D2MessageIO
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)\\s+(.+)")
+fileprivate let argsPattern = #/(?<host>\S+)\s+(?<message>.+)/#
 
 public class MinecraftDynmapChatCommand: StringCommand {
     public let info = CommandInfo(
@@ -24,12 +24,12 @@ public class MinecraftDynmapChatCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
-            guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+            guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
                 output.append("Syntax: \(info.helpText!)")
                 return
             }
-            let host = parsedArgs[1]
-            let message = "[\(context.author?.username ?? "unknown user")] \(parsedArgs[2])"
+            let host = String(parsedArgs.host)
+            let message = "[\(context.author?.username ?? "unknown user")] \(parsedArgs.message)"
 
             log.info("Sending chat message '\(message)' to host '\(host)'")
 
