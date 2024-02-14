@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.FretboardChordCommand")
-fileprivate let argPattern = try! LegacyRegex(from: "(\\w+)(?:\\s+(\\w+))?")
+fileprivate let argPattern = #/(?<chord>\w+)(?:\s+(?<instrument>\w+))?/#
 
 public class FretboardChordCommand: StringCommand {
     public let info = CommandInfo(
@@ -25,12 +25,12 @@ public class FretboardChordCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
-            guard let parsedArgs = argPattern.firstGroups(in: input) else {
+            guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
                 output.append(errorText: info.helpText!)
                 return
             }
-            let rawChord = parsedArgs[1]
-            let rawInstrument = parsedArgs[2].lowercased().nilIfEmpty ?? "guitar"
+            let rawChord = String(parsedArgs.chord)
+            let rawInstrument = String(parsedArgs.instrument?.lowercased() ?? "guitar")
 
             // Parse chord and render image
             let chord = try CommonChord(of: rawChord)
