@@ -6,12 +6,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2Handlers.MessagePreviewHandler")
 
-/// The link pattern capturing in order:
-///
-/// - The guild id
-/// - The channel id
-/// - The message id
-fileprivate let messageLinkPattern = try! LegacyRegex(from: "https?://discord(?:app)?.com/channels/(\\d+)/(\\d+)/(\\d+)")
+fileprivate let messageLinkPattern = #/https?://discord(?:app)?.com/channels/(?<guildId>\d+)/(?<channelId>\d+)/(?<messageId>\d+)/#
 
 /// Displays previews of linked messages.
 public struct MessagePreviewHandler: MessageHandler {
@@ -25,11 +20,11 @@ public struct MessagePreviewHandler: MessageHandler {
         if sink.name == "Discord",
             let guild = message.guild,
             configuration.enabledGuildIds.contains(guild.id),
-            let parsedLink = messageLinkPattern.firstGroups(in: message.content),
+            let parsedLink = try? messageLinkPattern.firstMatch(in: message.content),
             let channelId = message.channelId {
 
-            let previewedChannelId = ID(parsedLink[2], clientName: sink.name)
-            let previewedMessageId = ID(parsedLink[3], clientName: sink.name)
+            let previewedChannelId = ID(String(parsedLink.channelId), clientName: sink.name)
+            let previewedMessageId = ID(String(parsedLink.messageId), clientName: sink.name)
 
             sink.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId)).listenOrLogError { messages in
                 if let message = messages.first,
