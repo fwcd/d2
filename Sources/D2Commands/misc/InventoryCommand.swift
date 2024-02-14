@@ -1,9 +1,21 @@
 import D2MessageIO
+import RegexBuilder
 import Utils
 
 fileprivate let allFlag = "--all"
-fileprivate let rawMentionPattern = "<[^>]+>"
-fileprivate let subcommandPattern = try! LegacyRegex(from: "^(?:\(rawMentionPattern))?\\s*(\\w+)(?:\\s+(.+))?")
+fileprivate let rawMentionPattern = #/<[^>]+>/#
+fileprivate let subcommandPattern = Regex {
+    #/^/#
+    Optionally {
+        rawMentionPattern
+    }
+    #/\s*/#
+    Capture { #/\w+/# }
+    Optionally {
+        #/\s+/#
+        Capture { #/.+/# }
+    }
+}
 
 public class InventoryCommand: Command {
     public private(set) var info = CommandInfo(
@@ -71,8 +83,8 @@ public class InventoryCommand: Command {
 
         let text = input.asText ?? ""
 
-        if let parsedSubcommand = subcommandPattern.firstGroups(in: text), let subcommand = subcommands[parsedSubcommand[1]] {
-            subcommand(user, parsedSubcommand[2], output, context)
+        if let parsedSubcommand = try? subcommandPattern.firstMatch(in: text), let subcommand = subcommands[String(parsedSubcommand.1)] {
+            subcommand(user, String(parsedSubcommand.2 ?? ""), output, context)
         } else {
             let showAll = text.contains(allFlag)
             let inventory = inventoryManager[user]
