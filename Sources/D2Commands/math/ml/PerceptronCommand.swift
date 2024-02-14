@@ -6,11 +6,11 @@ import Utils
 ///
 /// 1. group: subcommand name
 /// 2. group: subcommand args
-fileprivate let subcommandPattern = try! LegacyRegex(from: "(\\S+)(?:\\s+(.+))?")
-fileprivate let learnPattern = try! LegacyRegex(from: "(\\S+)?")
+fileprivate let subcommandPattern = #/(?<name>\S+)(?:\s+(?<args>.+))?/#
+fileprivate let learnPattern = #/(?<rate>\S+)?/#
 
 /// Matches a data sample of the form ($0, $1).
-fileprivate let dataSamplePattern = try! LegacyRegex(from: "\\(\\s*([^,]+)\\s*,\\s*(\\S+)\\s*\\)")
+fileprivate let dataSamplePattern = #/\(\s*([^,]+)\s*,\s*(\S+)\s*\)/#
 
 // TODO: Use the Arg API
 
@@ -47,9 +47,9 @@ public class PerceptronCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let parsedSubcommand = subcommandPattern.firstGroups(in: input) {
-            let cmdName = parsedSubcommand[1]
-            let cmdArgs = parsedSubcommand[2]
+        if let parsedSubcommand = try? subcommandPattern.firstMatch(in: input) {
+            let cmdName = String(parsedSubcommand.name)
+            let cmdArgs = String(parsedSubcommand.args ?? "")
 
             if let subcommand = subcommands[cmdName] {
                 do {
@@ -78,8 +78,8 @@ public class PerceptronCommand: StringCommand {
     }
 
     private func learn(args: String, output: any CommandOutput) throws {
-        if let parsedArgs = learnPattern.firstGroups(in: args) {
-            let learningRate = Double(parsedArgs[1]) ?? 0.1
+        if let parsedArgs = try? learnPattern.firstMatch(in: args) {
+            let learningRate = Double(parsedArgs.rate ?? "") ?? 0.1
 
             try model.learn(rate: learningRate)
             try outputModel(to: output)
@@ -110,7 +110,7 @@ public class PerceptronCommand: StringCommand {
     }
 
     private func addData(args: String, output: any CommandOutput) throws {
-        let samples = dataSamplePattern.allGroups(in: args).compactMap { match in parseDoubles(in: match[1]).nilIfEmpty.flatMap { a in Double(match[2]).map { b in (a, b) } } }
+        let samples = args.matches(of: dataSamplePattern).compactMap { match in parseDoubles(in: String(match.1)).nilIfEmpty.flatMap { a in Double(match.2).map { b in (a, b) } } }
         guard !samples.isEmpty else { throw MLError.invalidFormat("Please specify space-separated data samples of the form: (number number number..., number), for example: (3.4 2.1, 5.3) (0.1 0, -2) in two dimensions") }
 
         try model.feedData(samples)
