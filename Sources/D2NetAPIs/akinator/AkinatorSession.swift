@@ -1,4 +1,5 @@
 import Foundation
+import RegexBuilder
 import Utils
 import Logging
 
@@ -18,8 +19,14 @@ fileprivate let headers = [
     "Referer": "https://en.akinator.com/game"
 ]
 
-fileprivate let sessionPattern = try! LegacyRegex(from: "var uid_ext_session = '([^']*)'\\;\\s*.*var frontaddr = '([^']*)'\\;")
-fileprivate let startGamePattern = try! LegacyRegex(from: "^\(jQuerySignature)_\\d+\\((.+)\\)$")
+fileprivate let sessionPattern = #/var uid_ext_session = '([^']*)'\;\s*.*var frontaddr = '([^']*)'\;/#
+fileprivate let startGamePattern = Regex {
+    #/^/#
+    jQuerySignature
+    #/_\d+\(/#
+    Capture { #/.+/# }
+    #/\)$/#
+}
 
 fileprivate let log = Logger(label: "D2NetAPIs.AkinatorSession")
 
@@ -69,8 +76,8 @@ public struct AkinatorSession {
                 ).fetchUTF8Async().map { ($0, url) }
             }
             .mapCatching { (raw: String, url: URL) in
-                guard let parsed = startGamePattern.firstGroups(in: raw) else { throw AkinatorError.startGamePatternNotFound(raw) }
-                guard let data = parsed[1].data(using: .utf8) else { throw AkinatorError.invalidStartGameString(parsed[1]) }
+                guard let parsed = try? startGamePattern.firstMatch(in: raw) else { throw AkinatorError.startGamePatternNotFound(raw) }
+                guard let data = parsed.1.data(using: .utf8) else { throw AkinatorError.invalidStartGameString(String(parsed.1)) }
                 let response = try JSONDecoder().decode(AkinatorResponse.NewGame.self, from: data)
                 let identification = response.parameters.identification
                 let stepInfo = response.parameters.stepInformation
@@ -116,8 +123,8 @@ public struct AkinatorSession {
         Promise.catching { try HTTPRequest(host: "en.akinator.com", path: "/game", headers: headers) }
             .then { $0.fetchUTF8Async() }
             .mapCatching {
-                guard let parsed = sessionPattern.firstGroups(in: $0) else { throw AkinatorError.sessionPatternNotFound }
-                let key = ApiKey(uidExtSession: parsed[1], frontaddr: parsed[2])
+                guard let parsed = try? sessionPattern.firstMatch(in: $0) else { throw AkinatorError.sessionPatternNotFound }
+                let key = ApiKey(uidExtSession: String(parsed.1), frontaddr: String(parsed.2))
                 log.info("Got \(key)")
                 return key
             }
