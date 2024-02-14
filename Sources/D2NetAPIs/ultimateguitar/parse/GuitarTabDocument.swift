@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let spacesPattern = try! LegacyRegex(from: " +")
+fileprivate let spacesPattern = #/ +/#
 
 public struct GuitarTabDocument: Equatable {
     public let sections: [Section]
@@ -15,7 +15,7 @@ public struct GuitarTabDocument: Equatable {
                 .map { $0.textWithoutChords }
                 .joined()
                 .split(separator: "\n")
-                .map { spacesPattern.replace(in: $0.replacingOccurrences(of: "|", with: " "), with: " ") }
+                .map { $0.replacingOccurrences(of: "|", with: " ").replacing(spacesPattern, with: " ") }
                 .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                 .filter { !$0.isEmpty }
                 .joined(separator: "\n")
