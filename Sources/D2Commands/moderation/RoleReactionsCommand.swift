@@ -1,8 +1,8 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\w+)\\s+<#(\\d+)>\\s+(\\d+)\\s*(.*)")
-fileprivate let emojiPattern = try! LegacyRegex(from: "<a?:(.+):(\\d+)>")
+fileprivate let argsPattern = #/(?<subcommandName>\w+)\s+<#(?<channelId>\d+)>\s+(?<messageId>\d+)\s*(?<subcommandArgs>.*)/#
+fileprivate let emojiPattern = #/<a?:(.+):(\d+)>/#
 
 public class RoleReactionsCommand: StringCommand {
     public private(set) var info = CommandInfo(
@@ -67,7 +67,7 @@ public class RoleReactionsCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
@@ -76,10 +76,10 @@ public class RoleReactionsCommand: StringCommand {
             return
         }
 
-        let subcommandName = parsedArgs[1]
-        let channelId = ID(parsedArgs[2], clientName: sink.name)
-        let messageId = ID(parsedArgs[3], clientName: sink.name)
-        let subcommandArgs = parsedArgs[4]
+        let subcommandName = String(parsedArgs.subcommandName)
+        let channelId = ID(String(parsedArgs.channelId), clientName: sink.name)
+        let messageId = ID(String(parsedArgs.messageId), clientName: sink.name)
+        let subcommandArgs = String(parsedArgs.subcommandArgs)
 
         guard let subcommand = subcommands[subcommandName] else {
             output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
@@ -101,9 +101,9 @@ public class RoleReactionsCommand: StringCommand {
     }
 
     private func parseEmoji(from s: String) -> String {
-        if let parsedEmoji = emojiPattern.firstGroups(in: s) {
+        if let parsedEmoji = try? emojiPattern.firstMatch(in: s) {
             // Custom emoji reactions use a special syntax
-            return "\(parsedEmoji[1]):\(parsedEmoji[2])"
+            return "\(parsedEmoji.1):\(parsedEmoji.2)"
         } else {
             return s
         }
