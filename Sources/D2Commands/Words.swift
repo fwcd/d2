@@ -7,6 +7,6 @@ public struct Words {
     public static let wordlePossible = loadWords(name: "wordlePossible")
 
     private static func loadWords(name: String) -> [String] {
-        (try? String(contentsOfFile: "Resources/words/\(name).txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
+        (try? String(contentsOfFile: "Resources/Words/\(name).txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
     }
 }
