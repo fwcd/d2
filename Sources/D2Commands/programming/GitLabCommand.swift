@@ -5,7 +5,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.GitLabCommand")
-fileprivate let subcommandPattern = try! LegacyRegex(from: "([\\w-]+)\\s*(.*)")
+fileprivate let subcommandPattern = #/(?<name>[\w-]+)\s*(?<arg>.*)/#
 
 public class GitLabCommand: StringCommand {
     public var info = CommandInfo(
@@ -74,9 +74,9 @@ public class GitLabCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        if let parsed = subcommandPattern.firstGroups(in: input) {
-            let subcommandName = parsed[1]
-            let arg = parsed[2]
+        if let parsed = try? subcommandPattern.firstMatch(in: input) {
+            let subcommandName = String(parsed.name)
+            let arg = String(parsed.arg)
             if let subcommand = subcommands[subcommandName] {
                 do {
                     try subcommand(arg, output)
