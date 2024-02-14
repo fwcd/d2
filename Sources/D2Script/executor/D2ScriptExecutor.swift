@@ -3,11 +3,11 @@ public struct D2ScriptExecutor {
 
     public init() {}
 
-    public func run(_ node: D2ScriptASTNode) {
+    public func run(_ node: any D2ScriptASTNode) {
         run(node, storage: topLevelStorage)
     }
 
-    public func run(_ node: D2ScriptASTNode, storage: D2ScriptStorage) {
+    public func run(_ node: any D2ScriptASTNode, storage: D2ScriptStorage) {
         node.accept(D2ScriptStatementRunner(storage: storage))
     }
 
