@@ -25,4 +25,13 @@ final class ExpressionParserTests: XCTestCase {
         XCTAssertEqual(try sumRight.evaluate(), Double.pi, accuracy: eps)
         XCTAssertEqual(try differenceRight.evaluate(), 1.0, accuracy: eps)
     }
+
+    func testInfixExpressionParser() throws {
+        let parser = InfixExpressionParser()
+
+        XCTAssertTrue(try parser.parse("3 * 4").isEqual(to: ProductNode(lhs: ConstantNode(value: 3), rhs: ConstantNode(value: 4))))
+        XCTAssertTrue(try parser.parse("3 + 4").isEqual(to: SumNode(lhs: ConstantNode(value: 3), rhs: ConstantNode(value: 4))))
+        XCTAssertTrue(try parser.parse("4 - 9 * 8").isEqual(to: DifferenceNode(lhs: ConstantNode(value: 4), rhs: ProductNode(lhs: ConstantNode(value: 9), rhs: ConstantNode(value: 8)))))
+        XCTAssertTrue(try parser.parse("(4 - 9) * 8").isEqual(to: ProductNode(lhs: DifferenceNode(lhs: ConstantNode(value: 4), rhs: ConstantNode(value: 9)), rhs: ConstantNode(value: 8))))
+    }
 }
