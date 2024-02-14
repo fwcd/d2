@@ -10,15 +10,6 @@ fileprivate let rawPointPattern = Regex {
     Capture { rawFloatPattern } transform: { Double($0)! }
     #/\s*\)/#
 }
-fileprivate let argsPattern = Regex {
-    Capture { rawPointPattern } transform: { Vec2(x: $0.1, y: $0.2) }
-    #/\s+/#
-    Capture { rawPointPattern } transform: { Vec2(x: $0.1, y: $0.2) }
-    #/\s+/#
-    Capture { rawPointPattern } transform: { Vec2(x: $0.1, y: $0.2) }
-    #/\s+/#
-    Capture { rawPointPattern } transform: { Vec2(x: $0.1, y: $0.2) }
-}
 
 public class MinecraftStrongholdFinderCommand: StringCommand {
     public let info = CommandInfo(
@@ -42,11 +33,12 @@ public class MinecraftStrongholdFinderCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+        let parsedPoints = input.matches(of: rawPointPattern).map { Vec2(x: $0.1, y: $0.2) }
+        guard parsedPoints.count == 4 else {
+            output.append(errorText: "Locating a stronghold requires specifying 4 points (forming 2 lines, respectively)")
             return
         }
-        let intersect = intersection(from1: parsedArgs.1, to1: parsedArgs.2, from2: parsedArgs.3, to2: parsedArgs.4)
+        let intersect = intersection(from1: parsedPoints[0], to1: parsedPoints[1], from2: parsedPoints[2], to2: parsedPoints[3])
         output.append("The stronghold is located at \(String(format: "(%.2f, %.2f)", intersect.x, intersect.y))")
     }
 
