@@ -3,7 +3,7 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\S+)(?:\\s+(.+))?")
+fileprivate let argsPattern = #/(?<host>\S+)(?:\s+(?<playerName>.+))?/#
 
 public class MinecraftDynmapCommand: StringCommand {
     public let info = CommandInfo(
@@ -19,12 +19,12 @@ public class MinecraftDynmapCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
-        let host = parsedArgs[1]
-        let playerName = parsedArgs[2].nilIfEmpty
+        let host = String(parsedArgs.host)
+        let playerName = parsedArgs.playerName.map { String($0) }
         MinecraftDynmapConfigurationQuery(host: host).perform().listen {
             switch $0 {
                 case .success(let config):
