@@ -22,11 +22,11 @@ public class SearchChannelCommand: StringCommand {
 
         let term = input.lowercased()
         let parsedPattern = try? Regex(term)
-        let pattern = parsedPattern ?? Regex(verbatim: term)
+        let pattern = (parsedPattern ?? Regex(verbatim: term)).ignoresCase()
         let results = (Array(guild.channels.values) + Array(guild.threads.values))
             .filter {
                 [$0.name, $0.topic, $0.parentId.flatMap { guild.channels[$0] }.map(\.name)]
-                    .compactMap { $0?.lowercased() }
+                    .compactMap { $0 }
                     .contains { !$0.matches(of: pattern).isEmpty }
             }
             .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })

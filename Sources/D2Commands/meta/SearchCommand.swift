@@ -26,15 +26,13 @@ public class SearchCommand: StringCommand {
         }
 
         let parsedPattern = try? Regex(term)
-        let pattern = parsedPattern ?? Regex(verbatim: term)
+        let pattern = (parsedPattern ?? Regex(verbatim: term)).ignoresCase()
         let results = context.registry
             .commandsWithAliases()
             .filter {
                 let info = $0.command.info
                 let names = [$0.name, info.shortDescription, info.longDescription, "\($0.command.inputValueType) -> \($0.command.outputValueType)"] + $0.aliases
-                return names
-                    .map { $0.lowercased() }
-                    .contains { !$0.matches(of: pattern).isEmpty }
+                return names.contains { !$0.matches(of: pattern).isEmpty }
             }
             .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
             .prefix(5)
