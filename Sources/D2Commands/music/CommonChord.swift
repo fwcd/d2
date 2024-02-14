@@ -1,18 +1,29 @@
 import Utils
+import RegexBuilder
 import MusicTheory
 
 fileprivate let majorSymbols: Set<String> = ["maj", "M"]
 fileprivate let minorSymbols: Set<String> = ["min", "m"]
 
-fileprivate let rawQualityPattern = majorSymbols.union(minorSymbols).map { "\($0)" }.joined(separator: "|")
+fileprivate let rawQualityPattern = ChoiceOf(nonEmptyComponents: majorSymbols.union(minorSymbols).map { "\($0)" })
 
 /// Matches a chord.
-///
-/// 1. group: root note
-/// 2. group: quality (lowercased m for 'minor')
-/// 3. group: 'add'
-/// 4. group: number of the interval: (7 for 'dominant seventh')
-fileprivate let chordPattern = try! LegacyRegex(from: "([a-zA-Z][b#]?)(\(rawQualityPattern))?(add)?(\\d+)?")
+fileprivate let chordPattern = Regex {
+    // 1. group: root note
+    Capture { #/[a-zA-Z][b#]?/# }
+    // 2. group: quality (lowercased m for 'minor')
+    Optionally {
+        Capture { rawQualityPattern }
+    }
+    // 3. group: 'add'
+    Optionally {
+        Capture { "add" }
+    }
+    // 4. group: number of the interval: (7 for 'dominant seventh')
+    Optionally {
+        Capture { #/\d+/# } transform: { Int($0)! }
+    }
+}
 
 // TODO: Properly conform to Chord once https://github.com/fwcd/swift-music-theory/issues/11 is fixed.
 //       Perhaps even upstream it?
@@ -29,11 +40,11 @@ struct CommonChord: Chord, Hashable, CustomStringConvertible {
     var notes: [Note] { noteClasses.map { Note(noteClass: $0, octave: 0) } }
 
     init(of str: String) throws {
-        guard let parsed = chordPattern.firstGroups(in: str) else { throw ChordError.invalidChord(str) }
-        guard let root = try? Note(parsing: parsed[1]).noteClass else { throw ChordError.invalidRootNote(parsed[1]) }
-        let quality = parsed[2]
-        let add = !parsed[3].isEmpty
-        let number = Int(parsed[4])
+        guard let parsed = try? chordPattern.firstMatch(in: str) else { throw ChordError.invalidChord(str) }
+        guard let root = try? Note(parsing: String(parsed.1)).noteClass else { throw ChordError.invalidRootNote(String(parsed.1)) }
+        let quality = String(parsed.2 ?? "")
+        let add = parsed.3 != nil
+        let number = parsed.4
         let isMajor = majorSymbols.contains(quality)
         let isMinor = minorSymbols.contains(quality) // otherwise assume major
         var additionalIntervals: [DiatonicInterval] = []
