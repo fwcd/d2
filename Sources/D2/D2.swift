@@ -26,7 +26,7 @@ struct D2: ParsableCommand {
     var initialPresence: String?
 
     func run() throws {
-        #if DEBUG
+        #if DEBUG && swift(<5.9)
         Backtrace.install()
         #endif
 
