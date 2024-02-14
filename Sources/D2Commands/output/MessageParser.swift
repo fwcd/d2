@@ -9,10 +9,7 @@ import Dispatch
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
 
 fileprivate let urlPattern = #/<?(\w+:[^>\s]+)>?/#
-
-// The first group matches the language, the second group matches the code
 fileprivate let codePattern = #/`(?:``(?:(?<language>\w*)\n)?)?(?<code>[^`]+)`*/#
-
 fileprivate let idPattern = #/\d+/#
 
 /// Parses Discord messages into rich values.
