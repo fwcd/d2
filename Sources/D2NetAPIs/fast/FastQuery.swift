@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-private let tokenPattern = try! LegacyRegex(from: #"token:\s*"([^"]+)""#)
+private let tokenPattern = #/token:\s*"(?<token>[^"]+)"/#
 
 public struct FastQuery {
     private let rounds: Int
@@ -20,8 +20,8 @@ public struct FastQuery {
                 let src = try script.attr("src")
                 return try HTTPRequest(host: "fast.com", path: src).fetchUTF8Async()
             }
-            .thenCatching { raw in
-                guard let parsedToken = tokenPattern.firstGroups(in: raw) else {
+            .thenCatching { (raw: String) in
+                guard let parsedToken = try? tokenPattern.firstMatch(in: raw) else {
                     throw NetApiError.apiError("Could not find fast token")
                 }
                 return try HTTPRequest(
@@ -29,7 +29,7 @@ public struct FastQuery {
                     path: "/netflix/speedtest/v2",
                     query: [
                         "https": "true",
-                        "token": parsedToken[1]
+                        "token": String(parsedToken.token)
                     ]
                 ).fetchJSONAsync(as: FastApiResponse.self)
             }
