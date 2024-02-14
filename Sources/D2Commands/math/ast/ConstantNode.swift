@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-struct ConstantNode: ExpressionASTNode {
+struct ConstantNode: ExpressionASTNode, Equatable {
     let value: Double
     let occurringVariables: Set<String> = []
     var label: String {

@@ -1,7 +1,7 @@
 import Utils
 import Foundation
 
-struct ExponentiationNode: ExpressionASTNode {
+struct ExponentiationNode: ExpressionASTNode, Equatable {
     let lhs: any ExpressionASTNode
     let rhs: any ExpressionASTNode
     let label: String = "^"
@@ -10,5 +10,9 @@ struct ExponentiationNode: ExpressionASTNode {
 
     func evaluate(with feedDict: [String: Double]) throws -> Double {
         return pow(try lhs.evaluate(with: feedDict), try rhs.evaluate(with: feedDict))
+    }
+
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.lhs.isEqual(to: rhs.lhs) && lhs.rhs.isEqual(to: rhs.rhs)
     }
 }

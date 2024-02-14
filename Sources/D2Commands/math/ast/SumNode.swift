@@ -1,6 +1,6 @@
 import Utils
 
-struct SumNode: ExpressionASTNode {
+struct SumNode: ExpressionASTNode, Equatable {
     let lhs: any ExpressionASTNode
     let rhs: any ExpressionASTNode
     let label: String = "+"
@@ -9,5 +9,9 @@ struct SumNode: ExpressionASTNode {
 
     func evaluate(with feedDict: [String: Double]) throws -> Double {
         return (try lhs.evaluate(with: feedDict)) + (try rhs.evaluate(with: feedDict))
+    }
+
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.lhs.isEqual(to: rhs.lhs) && lhs.rhs.isEqual(to: rhs.rhs)
     }
 }

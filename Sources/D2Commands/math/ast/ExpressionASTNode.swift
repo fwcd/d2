@@ -6,6 +6,8 @@ public protocol ExpressionASTNode {
     var infixICNotation: String { get }
 
     func evaluate(with feedDict: [String: Double]) throws -> Double
+
+    func isEqual(to rhs: any ExpressionASTNode) -> Bool
 }
 
 public extension ExpressionASTNode {
@@ -17,5 +19,12 @@ public extension ExpressionASTNode {
 
     func evaluate() throws -> Double {
         return try evaluate(with: [:])
+    }
+}
+
+public extension ExpressionASTNode where Self: Equatable {
+    func isEqual(to rhs: any ExpressionASTNode) -> Bool {
+        guard let other = rhs as? Self else { return false }
+        return self == other
     }
 }

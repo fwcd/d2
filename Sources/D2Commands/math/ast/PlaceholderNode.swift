@@ -1,6 +1,6 @@
 import Utils
 
-struct PlaceholderNode: ExpressionASTNode {
+struct PlaceholderNode: ExpressionASTNode, Equatable {
     let name: String
     let occurringVariables: Set<String>
     var label: String { return name }
