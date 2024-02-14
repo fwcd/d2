@@ -1,7 +1,7 @@
 import Utils
 import MusicTheory
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(?:(\\w+)\\s+)?(\\w+[b#]?)")
+fileprivate let argsPattern = #/(?:(?<scale>\w+)\s+)?(?<key>\w+[b#]?)/#
 fileprivate let scales: [String: (Note) -> Scale] = [
     "major": MajorScale.init,
     "minor": MinorScale.init,
@@ -29,13 +29,13 @@ public class PianoScaleCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
-            guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+            guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
                 output.append(errorText: info.helpText!)
                 return
             }
 
-            let rawScale = parsedArgs[1].nilIfEmpty ?? defaultScale
-            let rawKey = parsedArgs[2].nilIfEmpty ?? "C3"
+            let rawScale = parsedArgs.scale.map { String($0) } ?? defaultScale
+            let rawKey = String(parsedArgs.key)
 
             guard let scale = scales[rawScale] else {
                 output.append(errorText: "Unknown scale `\(rawScale)`. Try one of these: \(scales.keys.map { "`\($0)`" }.joined(separator: ", "))")
