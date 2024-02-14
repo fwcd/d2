@@ -1,16 +1,23 @@
 import Utils
+import RegexBuilder
 
-fileprivate let rawOperatorPattern = allExpressionOperators
-    .map { "(?:\(LegacyRegex.escape($0)))" }
-    .joined(separator: "|")
+fileprivate let rawOperatorPattern = ChoiceOf(nonEmptyComponents: allExpressionOperators)
 
 /// Matches a single token.
-/// 1. capture group: a number
-/// 2. capture group: an opening parenthesis
-/// 3. capture group: a closing parenthesis
-/// 4. capture group: an identifier
-/// 5. capture group: an operator
-fileprivate let tokenPattern = try! LegacyRegex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|([a-zA-Z]+)|(\(rawOperatorPattern))")
+fileprivate let tokenPattern = Regex {
+    ChoiceOf {
+        // A number
+        Capture { #/\d+(?:\.\d+)?/# }
+        // An opening parenthesis
+        Capture { #/\(/# }
+        // A closing parenthesis
+        Capture { #/\)/# }
+        // An identifier
+        Capture { #/[a-zA-Z]+/# }
+        // An operator
+        Capture { rawOperatorPattern }
+    }
+}
 
 public struct InfixExpressionParser: ExpressionParser {
     public init() {}
@@ -21,21 +28,21 @@ public struct InfixExpressionParser: ExpressionParser {
 
     /// Breaks up the input string into tokens that are processed later.
     private func tokenize(_ str: String) throws -> [InfixExpressionToken] {
-        return try tokenPattern.allGroups(in: str)
+        return try str.matches(of: tokenPattern)
             .map {
-                if !$0[1].isEmpty { // Parse number
-                    guard let value = Double($0[1]) else { throw ExpressionError.invalidNumber($0[1]) }
+                if let rawNumber = $0.1 { // Parse number
+                    guard let value = Double(rawNumber) else { throw ExpressionError.invalidNumber(String(rawNumber)) }
                     return .number(value)
-                } else if !$0[2].isEmpty {
+                } else if $0.2 != nil {
                     return .openingParenthesis
-                } else if !$0[3].isEmpty {
+                } else if $0.3 != nil {
                     return .closingParenthesis
-                } else if !$0[4].isEmpty {
-                    return .identifier($0[4])
-                } else if !$0[5].isEmpty {
-                    return .operatorSymbol($0[5])
+                } else if let identifier = $0.4 {
+                    return .identifier(String(identifier))
+                } else if let operatorSymbol = $0.5 {
+                    return .operatorSymbol(String(operatorSymbol))
                 } else {
-                    throw ExpressionError.unrecognizedToken($0[0])
+                    throw ExpressionError.unrecognizedToken(String($0.0))
                 }
             }
     }
