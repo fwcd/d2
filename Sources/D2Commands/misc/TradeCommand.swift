@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let tradePattern = try! LegacyRegex(from: "(\\w+)\\s+(\\w+)")
+fileprivate let tradePattern = #/(?<authorsItem>\w+)\s+(?<othersItem>\w+)/#
 
 public class TradeCommand: Command {
     public let info = CommandInfo(
@@ -46,13 +46,13 @@ public class TradeCommand: Command {
             output.append(errorText: "No channel id available")
             return
         }
-        guard let text = input.asText, let parsedTrade = tradePattern.firstGroups(in: text), let other = input.asMentions?.first else {
+        guard let text = input.asText, let parsedTrade = try? tradePattern.firstMatch(in: text), let other = input.asMentions?.first else {
             output.append(errorText: info.helpText!)
             return
         }
 
-        let authorsRawItem = parsedTrade[1]
-        let othersRawItem = parsedTrade[2]
+        let authorsRawItem = String(parsedTrade.authorsItem)
+        let othersRawItem = String(parsedTrade.othersItem)
         let authorsInventory = inventoryManager[author]
         let othersInventory = inventoryManager[other]
 
