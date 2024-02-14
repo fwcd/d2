@@ -6,7 +6,7 @@ import IRC
 import Logging
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
-fileprivate let mentionPattern = try! LegacyRegex(from: "<@.+?>")
+fileprivate let mentionPattern = #/<@.+?>/#
 
 struct IRCSink: DefaultSink {
     private let client: IRCClient
@@ -39,7 +39,7 @@ struct IRCSink: DefaultSink {
             .emojiUnescapedString
             .truncated(to: 480, appending: "...")
 
-        text = mentionPattern.replace(in: text, with: "@mention")
+        text = text.replacing(mentionPattern, with: "@mention")
 
         guard let channelName = IRCChannelName(channelId.value) else {
             log.warning("Could not convert \(channelId.value) (maybe it is missing a leading '#'?)")
