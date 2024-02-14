@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = try! LegacyRegex(from: "(\\d+)\\s*(.*)\\s*")
+fileprivate let argsPattern = #/(?<count>\d+)\s*(?<base>.*)\s*/#
 
 public class RepeatCommand: StringCommand {
     public let info = CommandInfo(
@@ -19,8 +19,8 @@ public class RepeatCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         guard
-            let parsedArgs = argsPattern.firstGroups(in: input),
-            let count = Int(parsedArgs[1]) else {
+            let parsedArgs = try? argsPattern.firstMatch(in: input),
+            let count = Int(parsedArgs.count) else {
             output.append(errorText: info.helpText!)
             return
         }
@@ -28,7 +28,7 @@ public class RepeatCommand: StringCommand {
             output.append(errorText: "Please enter a count lower than or equal to \(maxCount)")
             return
         }
-        let base = parsedArgs[2]
+        let base = String(parsedArgs.base)
         let result = String(repeating: base, count: count)
         guard result.count <= maxTotalLength else {
             output.append(errorText: "Please make sure that the output string is shorter than (or equal in length to) \(maxTotalLength)")
