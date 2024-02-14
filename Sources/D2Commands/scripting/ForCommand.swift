@@ -2,10 +2,8 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let rawRangePattern = "\\d+\\.\\.[\\.<]\\d+"
-
 // Matches the arguments, capturing the range
-fileprivate let inputPattern = try! LegacyRegex(from: "^(\(rawRangePattern))")
+fileprivate let inputPattern = #/^(?<range>\d+\.\.[\.<]\d+)/#
 
 public class ForCommand: StringCommand {
     public let info = CommandInfo(
@@ -29,12 +27,12 @@ public class ForCommand: StringCommand {
             return
         }
 
-        guard let parsedArgs = inputPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? inputPattern.firstMatch(in: input) else {
             output.append(errorText: "Syntax error: For arguments need to match `[number](...|..<)[number]`")
             return
         }
 
-        let rawRange = parsedArgs[1]
+        let rawRange = String(parsedArgs.output.range)
 
         if let range: LowBoundedIntRange = parseIntRange(from: rawRange) ?? parseClosedIntRange(from: rawRange) {
             if range.count <= maxRangeLength {
