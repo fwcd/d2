@@ -28,19 +28,19 @@ extension Guild.Member {
     public var displayName: String { nick ?? user.username }
 }
 
-fileprivate let mentionPattern = try! LegacyRegex(from: "<@[&!]+(\\d+)>")
-fileprivate let everyoneMentionPattern = try! LegacyRegex(from: "@(everyone|here)")
+fileprivate let mentionPattern = #/<@[&!]+(?<id>\d+)>/#
+fileprivate let everyoneMentionPattern = #/@(?<target>everyone|here)/#
 
 extension String {
     public func cleaningMentions(with guild: Guild? = nil) -> String {
-        let mentionCleaned = mentionPattern.replace(in: self, using: {
+        let mentionCleaned = replacing(mentionPattern) {
             // TODO: This currently assumes Discord IDs
-            let id = ID($0[1], clientName: "Discord")
-            return guild?.members[id]?.displayName ?? guild?.roles[id]?.name ?? $0[1]
-        } )
-        let everyoneCleaned = everyoneMentionPattern.replace(in: mentionCleaned, using: {
-            "@`\($0[1])`"
-        })
+            let id = ID(String($0.id), clientName: "Discord")
+            return guild?.members[id]?.displayName ?? guild?.roles[id]?.name ?? String($0.id)
+        }
+        let everyoneCleaned = mentionCleaned.replacing(everyoneMentionPattern) {
+            "@`\($0.target)`"
+        }
         return everyoneCleaned
     }
 }
