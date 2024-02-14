@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = try! LegacyRegex(from: "([\\*\\s\\d\\-/,]*)\\s+(\\w+)\\s+(.+)")
+fileprivate let argsPattern = #/(?<cron>[\*\s\d\-/,]*)\s+(?<name>\w+)\s+(?<command>.+)/#
 
 public class AddCronScheduleCommand: StringCommand {
     public let info = CommandInfo(
@@ -22,7 +22,7 @@ public class AddCronScheduleCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        guard let parsedArgs = argsPattern.firstGroups(in: input) else {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
             output.append(errorText: info.helpText!)
             return
         }
@@ -31,9 +31,9 @@ public class AddCronScheduleCommand: StringCommand {
             return
         }
 
-        let cron = parsedArgs[1]
-        let name = parsedArgs[2]
-        let command = parsedArgs[3]
+        let cron = String(parsedArgs.cron)
+        let name = String(parsedArgs.name)
+        let command = String(parsedArgs.command)
 
         guard cronManager[name] == nil else {
             output.append(errorText: "Schedule with name `\(name)` already exists, please unregister it first!")
