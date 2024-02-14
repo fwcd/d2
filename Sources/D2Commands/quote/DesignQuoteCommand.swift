@@ -3,7 +3,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let htmlTagPattern = try! LegacyRegex(from: "<[^>]+>")
+fileprivate let htmlTagPattern = #/<[^>]+>/#
 
 public class DesignQuoteCommand: StringCommand {
     public let info = CommandInfo(
@@ -27,7 +27,7 @@ public class DesignQuoteCommand: StringCommand {
 
                 output.append(Embed(
                     title: quote.title.rendered,
-                    description: htmlTagPattern.replace(in: quote.content.rendered, with: "")
+                    description: quote.content.rendered.replacing(htmlTagPattern, with: "")
                         .trimmingCharacters(in: .whitespacesAndNewlines)
                 ))
             } catch {
