@@ -24,9 +24,9 @@ public struct UltimateGuitarTabView: Codable {
     }
 
     public struct Contributor: Codable {
-        public let userid: String?
+        public let userid: Int?
         public let username: String?
-        public let usergroupid: String?
+        public let usergroupid: Int?
         public let iq: Int?
     }
 }
