@@ -66,6 +66,7 @@ public class LyricsCommand: StringCommand {
                         }.chunks(ofLength: 6).enumerated().map { (i, fields) in
                             Embed(
                                 title: "\(self.showChords ? "Chords" : "Lyrics") for `\(tab.songName ?? input)` by `\(tab.artistName ?? "?")` (Part \(i + 1))",
+                                url: url,
                                 fields: Array(fields)
                             )
                         }
