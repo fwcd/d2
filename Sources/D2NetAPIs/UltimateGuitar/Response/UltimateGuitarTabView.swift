@@ -24,9 +24,16 @@ public struct UltimateGuitarTabView: Codable {
     }
 
     public struct Contributor: Codable {
-        public let userid: Int?
+        public enum CodingKeys: String, CodingKey {
+            case userId = "userid"
+            case username
+            case userGroupId = "usergroupid"
+            case iq
+        }
+
+        public let userId: Int?
         public let username: String?
-        public let usergroupid: Int?
+        public let userGroupId: Int?
         public let iq: Int?
     }
 }
