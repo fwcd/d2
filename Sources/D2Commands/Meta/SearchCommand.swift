@@ -34,7 +34,7 @@ public class SearchCommand: StringCommand {
                 let names = [$0.name, info.shortDescription, info.longDescription, "\($0.command.inputValueType) -> \($0.command.outputValueType)"] + $0.aliases
                 return names.contains { !$0.matches(of: pattern).isEmpty }
             }
-            .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
+            .sorted(by: ascendingComparator { ([$0.name] + $0.aliases).map { $0.levenshteinDistance(to: input) }.min()! })
             .prefix(5)
 
         output.append(Embed(
