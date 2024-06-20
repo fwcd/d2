@@ -4,15 +4,17 @@ import Utils
 fileprivate let argsPattern = #/(?<messageId>\d+)\s+(?<channelId>\d+)\s+:?(?<emoji>[^:\s]+):?/#
 
 public class ReactCommand: StringCommand {
-    public let info = CommandInfo(
+    public private(set) var info = CommandInfo(
         category: .moderation,
-        shortDescription: "Reacts to a message",
         helpText: "Syntax: [message id] [channel id] [emoji name]",
         requiredPermissionLevel: .admin
     )
     private let timer: RepeatingTimer?
 
     public init(temporary: Bool = false) {
+        info.shortDescription = "Reacts to a message\(temporary ? " temporarily" : "")"
+        info.longDescription = info.shortDescription
+
         if temporary {
             timer = RepeatingTimer(interval: .seconds(5))
         } else {
