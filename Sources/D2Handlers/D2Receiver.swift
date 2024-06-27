@@ -87,6 +87,7 @@ public class D2Receiver: Receiver {
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler($configuration: $haikuConfiguration, inventoryManager: inventoryManager),
             LuckyNumberHandler(luckyNumbers: [69, 42, 1337], acceptPowerOfTenMultiples: true, minimumNumberCount: 2),
+            FactorialHandler(),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
         reactionHandlers = [
