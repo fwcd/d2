@@ -15,7 +15,7 @@ import Backtrace
 #endif
 
 @main
-struct D2: ParsableCommand {
+struct D2: AsyncParsableCommand {
     @Option(name: .shortAndLong, help: "The logging level")
     var logLevel: Logger.Level?
 
@@ -25,7 +25,7 @@ struct D2: ParsableCommand {
     @Option(name: .shortAndLong, help: "The initial activity message")
     var initialPresence: String?
 
-    func run() throws {
+    func run() async throws {
         #if DEBUG && swift(<5.9)
         Backtrace.install()
         #endif
@@ -41,12 +41,12 @@ struct D2: ParsableCommand {
         let logOutput = LogOutput()
 
         if printToStdout {
-            logOutput.registerAsync {
+            await logOutput.register {
                 print($0)
             }
         }
 
-        logOutput.registerAsync {
+        await logOutput.register {
             logBuffer.push($0)
         }
 
@@ -136,7 +136,7 @@ struct D2: ParsableCommand {
 
         // Register channel log output if needed
         if let logChannel = config?.log?.channel {
-            logOutput.registerAsync {
+            await logOutput.register {
                 combinedSink.sendMessage($0, to: logChannel)
             }
         }
