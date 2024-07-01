@@ -1,4 +1,5 @@
 {
+  "originHash" : "13ecf8e781c2ea0ba72b532a2ace2308548ab4795cb77145eff96ab9e48effa1",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -130,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser.git",
       "state" : {
-        "revision" : "9564d61b08a5335ae0a36f789a7d71493eacadfc",
-        "version" : "0.3.2"
+        "revision" : "0fbc8848e389af3bb55c182bc19ca9d5dc2f255b",
+        "version" : "1.4.0"
       }
     },
     {
@@ -184,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-gif.git",
       "state" : {
-        "revision" : "0257a56fdab50ae0e661e5ece226d8215cbe28f4",
-        "version" : "3.0.2"
+        "revision" : "7b194cddaac97cc90d8fb192e0db6cfc99f11bf6",
+        "version" : "3.1.0"
       }
     },
     {
@@ -385,5 +386,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

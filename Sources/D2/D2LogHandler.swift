@@ -31,7 +31,9 @@ public struct D2LogHandler: LogHandler {
         let mergedMetadata = self.metadata.merging(metadata ?? [:], uniquingKeysWith: { _, newKey in newKey })
         let output = "\(timestamp(using: mergedMetadata)) [\(level)] \(label): \(message)"
 
-        logOutput.publishAsync(output)
+        Task {
+            await logOutput.publish(output)
+        }
     }
 
     private func timestamp(using metadata: Logger.Metadata?) -> String {
