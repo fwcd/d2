@@ -1,0 +1,25 @@
+name: Update Images
+
+on:
+  workflow_run:
+    workflows:
+    - Docker
+    branches:
+    - main
+    types:
+    - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: (github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch') && github.repository == 'fwcd/d2' && github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v3
+    - name: Trigger images update
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.IMAGES_GITHUB_PAT }}
+        repository: pesca-dev/d2-images
+        event-type: d2-update-trigger
+        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
