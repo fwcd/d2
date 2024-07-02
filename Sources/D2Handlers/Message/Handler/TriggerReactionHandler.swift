@@ -87,11 +87,12 @@ public struct TriggerReactionHandler: MessageHandler {
     public func handle(message: Message, sink: any Sink) async -> Bool {
         if let messageId = message.id, let channelId = message.channelId {
             for trigger in triggers {
-                do {
-                    let emoji = try await trigger.emoji(message)
-                    try await sink.createReaction(for: messageId, on: channelId, emoji: emoji)
-                } catch {
-                    log.warning("Could not create triggered reaction on message \(messageId) in channel \(channelId): \(error)")
+                if let emoji = try? await trigger.emoji(message) {
+                    do {
+                        try await sink.createReaction(for: messageId, on: channelId, emoji: emoji)
+                    } catch {
+                        log.warning("Could not create triggered \(emoji) reaction on message \(messageId) in channel \(channelId): \(error)")
+                    }
                 }
             }
         }
