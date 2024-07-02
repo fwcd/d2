@@ -591,7 +591,8 @@ public class D2Receiver: Receiver {
             }
 
             // Only fire on unhandled messages
-            if m.author?.id != sink.me?.id, let value = await MessageParser().parse(message: m, clientName: sink.name, guild: m.guild).getOrLogError() {
+            if m.author?.id != sink.me?.id {
+                let value = await MessageParser().parse(message: m, clientName: sink.name, guild: m.guild)
                 eventListenerBus.fire(event: .createMessage, with: value, context: CommandContext(
                     sink: sink,
                     registry: self.registry,
@@ -636,8 +637,11 @@ public class D2Receiver: Receiver {
     }
 
     public func on(updateMessage message: Message, sink: any Sink) {
-        MessageParser().parse(message: message, clientName: sink.name, guild: message.guild).listenOrLogError {
-            self.eventListenerBus.fire(event: .updateMessage, with: $0, context: CommandContext(
+        // TODO: Make on(updateMessage:) itself (and the other methods)
+        // async in the protocol and remove this explicit Task.
+        Task {
+            let value = await MessageParser().parse(message: message, clientName: sink.name, guild: message.guild)
+            self.eventListenerBus.fire(event: .updateMessage, with: value, context: CommandContext(
                 sink: sink,
                 registry: self.registry,
                 message: message,

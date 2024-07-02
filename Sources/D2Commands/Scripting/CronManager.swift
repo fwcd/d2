@@ -54,19 +54,18 @@ public class CronManager {
             return
         }
 
-        if let input = await msgParser.parse(commandArgs).getOrLogError() {
-            let context = CommandContext(
-                sink: sink,
-                registry: registry,
-                message: Message(content: "", channelId: schedule.channelId),
-                commandPrefix: commandPrefix,
-                hostInfo: hostInfo,
-                subscriptions: SubscriptionSet(), // TODO: Support subscriptions?
-                eventLoopGroup: eventLoopGroup
-            )
-            let output = MessageIOOutput(context: context)
-            await command.invoke(with: input, output: output, context: context)
-        }
+        let input = await msgParser.parse(commandArgs)
+        let context = CommandContext(
+            sink: sink,
+            registry: registry,
+            message: Message(content: "", channelId: schedule.channelId),
+            commandPrefix: commandPrefix,
+            hostInfo: hostInfo,
+            subscriptions: SubscriptionSet(), // TODO: Support subscriptions?
+            eventLoopGroup: eventLoopGroup
+        )
+        let output = MessageIOOutput(context: context)
+        await command.invoke(with: input, output: output, context: context)
     }
 
     private func sync() {

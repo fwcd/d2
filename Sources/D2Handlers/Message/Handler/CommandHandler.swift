@@ -157,18 +157,18 @@ public class CommandHandler: MessageHandler {
                         self.currentlyRunningCommands += 1
                         log.debug("Currently running \(self.currentlyRunningCommands) commands")
 
-                        if let input = await self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild).getOrLogError() {
-                            // Execute the pipe
-                            let runner = RunnablePipe(pipeSource: pipeSource, input: input)
-                            await runner.run()
+                        let input = await self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild)
 
-                            // Store the pipe for potential re-execution
-                            if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
-                                self.mostRecentPipeRunner = (runner, minPermissionLevel)
-                            }
+                        // Execute the pipe
+                        let runner = RunnablePipe(pipeSource: pipeSource, input: input)
+                        await runner.run()
 
-                            self.currentlyRunningCommands -= 1
+                        // Store the pipe for potential re-execution
+                        if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
+                            self.mostRecentPipeRunner = (runner, minPermissionLevel)
                         }
+
+                        self.currentlyRunningCommands -= 1
                     }
                 }
             }

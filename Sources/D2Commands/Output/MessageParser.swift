@@ -29,103 +29,97 @@ public struct MessageParser {
         message: Message? = nil,
         clientName: String? = nil,
         guild: Guild? = nil
-    ) -> Promise<RichValue, any Error> {
-        Promise { then in
-            var values: [RichValue] = []
+    ) async -> RichValue {
+        var values: [RichValue] = []
 
-            // Parse message content
-            let content = str ?? message?.content ?? ""
+        // Parse message content
+        let content = str ?? message?.content ?? ""
 
-            let textualContent = content.replacing(codePattern, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-            if !textualContent.isEmpty {
-                values.append(.text(textualContent))
+        let textualContent = content.replacing(codePattern, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+        if !textualContent.isEmpty {
+            values.append(.text(textualContent))
+        }
+
+        if let codeGroups = try? codePattern.firstMatch(in: content) {
+            let language = codeGroups.language.map { String($0) }
+            let code = String(codeGroups.code)
+            values.append(.code(code, language: language))
+        }
+
+        // Append embeds
+        values += message?.embeds.map { .embed($0) } ?? []
+
+        // Append (explicit and implicit) mentions
+        var mentions = [User]()
+
+        if useExplicitMentions, let explicitMentions = message?.mentions.nilIfEmpty {
+            // Note that explicit mentions don't count duplicates
+            mentions += explicitMentions
+        } else {
+            mentions += content.matches(of: idPattern)
+                .map { UserID(String($0.0), clientName: clientName ?? "Dummy") }
+                .compactMap { guild?.members[$0]?.user }
+
+            if content.contains("#") {
+                mentions += guild?.members
+                    .map { $0.1.user }
+                    .filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
             }
+        }
 
-            if let codeGroups = try? codePattern.firstMatch(in: content) {
-                let language = codeGroups.language.map { String($0) }
-                let code = String(codeGroups.code)
-                values.append(.code(code, language: language))
-            }
+        if !mentions.isEmpty {
+            values.append(.mentions(mentions))
+        }
 
-            // Append embeds
-            values += message?.embeds.map { .embed($0) } ?? []
+        // Append role mentions
+        if let roleMentions = message?.mentionRoles.nilIfEmpty {
+            values.append(.roleMentions(roleMentions))
+        }
 
-            // Append (explicit and implicit) mentions
-            var mentions = [User]()
+        // Append parsed URLs
+        if let urls = content.matches(of: urlPattern).compactMap({ URL(string: String($0.1)) }).nilIfEmpty {
+            values.append(.urls(urls))
+        }
 
-            if useExplicitMentions, let explicitMentions = message?.mentions.nilIfEmpty {
-                // Note that explicit mentions don't count duplicates
-                mentions += explicitMentions
-            } else {
-                mentions += content.matches(of: idPattern)
-                    .map { UserID(String($0.0), clientName: clientName ?? "Dummy") }
-                    .compactMap { guild?.members[$0]?.user }
+        // Parse nd-arrays
+        if let ndArrays = ndArrayParser.parseMultiple(content).nilIfEmpty {
+            values.append(.ndArrays(ndArrays))
+        }
 
-                if content.contains("#") {
-                    mentions += guild?.members
-                        .map { $0.1.user }
-                        .filter { content.contains("\($0.username)#\($0.discriminator)") } ?? []
-                }
-            }
+        // Fetch attachments
+        if let attachments = message?.attachments.nilIfEmpty {
+            values.append(.attachments(attachments))
+        }
 
-            if !mentions.isEmpty {
-                values.append(.mentions(mentions))
-            }
-
-            // Append role mentions
-            if let roleMentions = message?.mentionRoles.nilIfEmpty {
-                values.append(.roleMentions(roleMentions))
-            }
-
-            // Append parsed URLs
-            if let urls = content.matches(of: urlPattern).compactMap({ URL(string: String($0.1)) }).nilIfEmpty {
-                values.append(.urls(urls))
-            }
-
-            // Parse nd-arrays
-            if let ndArrays = ndArrayParser.parseMultiple(content).nilIfEmpty {
-                values.append(.ndArrays(ndArrays))
-            }
-
-            // Fetch attachments
-            if let attachments = message?.attachments.nilIfEmpty {
-                values.append(.attachments(attachments))
-            }
-
-            // Download image attachments
-            var asyncTaskCount = 0
-            let semaphore = DispatchSemaphore(value: 0)
-
+        // Download image attachments
+        values += await withTaskGroup(of: RichValue.self) { group in
             for attachment in message?.attachments ?? [] {
                 let fileName = attachment.filename.lowercased()
 
                 if fileName.hasSuffix(".png") {
                     // Download PNG attachment
-                    asyncTaskCount += 1
-                    attachment.download().listen {
+                    group.addTask {
                         do {
-                            let data = try $0.get()
-                            values.append(.lazy(.lazy {
+                            let data = try await attachment.download().get()
+                            return .lazy(.lazy {
                                 do {
                                     return .image(try CairoImage(pngData: data))
                                 } catch {
                                     log.error("Could not decode PNG: \(error)")
                                     return .none
                                 }
-                            }))
+                            })
                         } catch {
                             log.error("Could not download PNG attachment: \(error)")
+                            return .none
                         }
-                        semaphore.signal()
                     }
                 } else if fileName.hasSuffix(".gif") {
                     // Download GIF attachment
-
-                    asyncTaskCount += 1
-                    attachment.download().listen {
+                    group.addTask {
                         do {
-                            let data = try $0.get()
-                            values.append(.lazy(.lazy {
+                            let data = try await attachment.download().get()
+                            return .lazy(.lazy {
                                 do {
                                     log.info("Decoding GIF...")
                                     return .gif(try GIF(data: data))
@@ -133,25 +127,25 @@ public struct MessageParser {
                                     log.error("Could not parse GIF: \(error)")
                                     return .none
                                 }
-                            }))
+                            })
                         } catch {
                             log.error("Could not download GIF attachment: \(error)")
+                            return .none
                         }
-                        semaphore.signal()
                     }
                 }
             }
 
-            DispatchQueue.global(qos: .userInitiated).async {
-                // Return first once all asynchronous
-                // tasks have been completed
-                for _ in 0..<asyncTaskCount {
-                    semaphore.wait()
-                }
-
-                log.debug("Parsed input: \(values)")
-                then(.success(RichValue.of(values: values)))
+            // Collect downloaded attachments
+            var attachmentValues: [RichValue] = []
+            for await value in group {
+                attachmentValues.append(value)
             }
+
+            return attachmentValues
         }
+
+        log.debug("Parsed input: \(values)")
+        return RichValue.of(values: values)
     }
 }

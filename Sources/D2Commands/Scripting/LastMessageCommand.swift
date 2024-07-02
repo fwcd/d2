@@ -20,16 +20,16 @@ public class LastMessageCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
-        context.sink?.getMessages(for: context.channel!.id, limit: 2)
-            .then { Promise(Result.from($0[safely: 1], errorIfNil: LastMessageError.noLastMessage)) }
-            .then { MessageParser().parse(message: $0, clientName: context.sink?.name, guild: context.guild) }
-            .listen {
-                do {
-                    output.append(try $0.get())
-                } catch {
-                    output.append(error, errorText: "Could not find last message.")
-                }
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let messages = try await context.sink?.getMessages(for: context.channel!.id, limit: 2).get()
+            guard let message = messages?[safely: 1] else {
+                throw LastMessageError.noLastMessage
+            }
+            let value = await MessageParser().parse(message: message, clientName: context.sink?.name, guild: context.guild)
+            output.append(value)
+        } catch {
+            output.append(error, errorText: "Could not find last message.")
         }
     }
 }
