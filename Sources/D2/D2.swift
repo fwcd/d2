@@ -150,8 +150,9 @@ struct D2: AsyncParsableCommand {
             }
         }
 
-        // Block the thread
-        log.info("Blocking the main thread")
-        dispatchMain()
+        // Keep the program running
+        while !Task.isCancelled {
+            try await Task.sleep(for: .seconds(1_000_000))
+        }
     }
 }
