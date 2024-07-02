@@ -9,7 +9,7 @@ public class GeocodeCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .geoCoordinates
-    private let geocoder = MapQuestGeocoder()
+    private let geocoder = NominatimGeocoder()
 
     public init() {}
 

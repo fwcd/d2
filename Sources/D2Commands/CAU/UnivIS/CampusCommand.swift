@@ -20,7 +20,7 @@ public class CampusCommand: StringCommand {
         presented: true,
         requiredPermissionLevel: .basic
     )
-    let geocoder = MapQuestGeocoder()
+    let geocoder = NominatimGeocoder()
 
     public init() {}
 
