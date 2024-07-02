@@ -15,27 +15,24 @@ public class XkcdCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        let comicPromise: Promise<XkcdComic, any Error>
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let comic: XkcdComic
 
-        if input == "random" {
-            comicPromise = XkcdQuery().fetchRandom()
-        } else {
-            comicPromise = XkcdQuery().fetch(comicId: Int(input))
-        }
-
-        comicPromise.listen {
-            do {
-                let comic = try $0.get()
-                output.append(Embed(
-                    title: "xkcd #\(comic.num): \(comic.title ?? "no title")",
-                    url: URL(string: "https://xkcd.com/\(comic.num)")!,
-                    image: comic.img.flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
-                    footer: comic.alt.map { Embed.Footer(text: $0) }
-                ))
-            } catch {
-                output.append(error, errorText: "An error occurred while fetching the comic")
+            if input == "random" {
+                comic = try await XkcdQuery().fetchRandom()
+            } else {
+                comic = try await XkcdQuery().fetch(comicId: Int(input))
             }
+
+            output.append(Embed(
+                title: "xkcd #\(comic.num): \(comic.title ?? "no title")",
+                url: URL(string: "https://xkcd.com/\(comic.num)")!,
+                image: comic.img.flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
+                footer: comic.alt.map { Embed.Footer(text: $0) }
+            ))
+        } catch {
+            output.append(error, errorText: "An error occurred while fetching the comic")
         }
     }
 }
