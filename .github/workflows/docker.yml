@@ -7,6 +7,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+# TODO: Add multi-runner build for x86_64/arm64 multiarch images once GitHub
+# provides official arm64 Linux runners for open-source.
+# See https://github.com/fwcd/d2/issues/154
+
 jobs:
   build-image:
     runs-on: ubuntu-latest
@@ -33,7 +37,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        platforms: linux/amd64,linux/arm64/v8
+        platforms: linux/amd64
         network: host
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
