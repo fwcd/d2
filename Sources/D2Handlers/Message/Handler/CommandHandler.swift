@@ -59,8 +59,6 @@ public class CommandHandler: MessageHandler {
     @Synchronized private var currentlyRunningCommands = 0
     @Synchronized @Box private var mostRecentPipeRunner: (any AsyncRunnable, PermissionLevel)?
 
-    private let commandQueue = DispatchQueue(label: "CommandHandler", attributes: [.concurrent])
-
     public init(
         commandPrefix: String,
         hostInfo: HostInfo,
@@ -151,25 +149,22 @@ public class CommandHandler: MessageHandler {
 
                 guard let pipeSource = pipe.first else { continue }
 
-                commandQueue.async {
-                    // TODO: Remove commandQueue and make CommandHandler an actor instead?
-                    Task {
-                        self.currentlyRunningCommands += 1
-                        log.debug("Currently running \(self.currentlyRunningCommands) commands")
+                Task {
+                    self.currentlyRunningCommands += 1
+                    log.debug("Currently running \(self.currentlyRunningCommands) commands")
 
-                        let input = await self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild)
+                    let input = await self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild)
 
-                        // Execute the pipe
-                        let runner = RunnablePipe(pipeSource: pipeSource, input: input)
-                        await runner.run()
+                    // Execute the pipe
+                    let runner = RunnablePipe(pipeSource: pipeSource, input: input)
+                    await runner.run()
 
-                        // Store the pipe for potential re-execution
-                        if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
-                            self.mostRecentPipeRunner = (runner, minPermissionLevel)
-                        }
-
-                        self.currentlyRunningCommands -= 1
+                    // Store the pipe for potential re-execution
+                    if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
+                        self.mostRecentPipeRunner = (runner, minPermissionLevel)
                     }
+
+                    self.currentlyRunningCommands -= 1
                 }
             }
         }
