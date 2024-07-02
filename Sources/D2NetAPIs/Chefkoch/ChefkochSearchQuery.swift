@@ -37,8 +37,8 @@ public struct ChefkochSearchQuery {
         case dailyShuffle = 8
     }
 
-    public func perform() -> Promise<ChefkochSearchResults, any Error> {
-        Promise.catching { try HTTPRequest(
+    public func perform() async throws -> ChefkochSearchResults {
+        let request = try HTTPRequest(
             host: "api.chefkoch.de",
             path: "/v2/recipes",
             query: [
@@ -50,7 +50,7 @@ public struct ChefkochSearchQuery {
                 "minimumRating": String(minimumRating),
                 "maximumTime": String(maximumTime)
             ]
-        ) }
-            .then { $0.fetchJSONAsync(as: ChefkochSearchResults.self) }
+        )
+        return try await request.fetchJSON(as: ChefkochSearchResults.self)
     }
 }

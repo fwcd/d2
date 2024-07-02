@@ -18,54 +18,47 @@ public class RecipeCommand: StringCommand {
         case noResults
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
             output.append(errorText: "Please enter something to search for!")
             return
         }
 
-        ChefkochSearchQuery(query: input, limit: 1)
-            .perform()
-            .thenCatching {
-                guard let recipe = $0.results.first?.recipe else { throw RecipeError.noResults }
-                return ChefkochRecipeQuery(id: recipe.id).perform()
+        do {
+            let searchResults = try await ChefkochSearchQuery(query: input, limit: 1).perform()
+            guard let searchRecipe = searchResults.results.first?.recipe else { throw RecipeError.noResults }
+
+            let recipe = try await ChefkochRecipeQuery(id: searchRecipe.id).perform()
+
+            var thumbnailUrl: URL?
+            if let imageId = recipe.previewImageId {
+                let image = try await ChefkochImageQuery(recipeId: recipe.id, imageId: imageId).perform()
+                thumbnailUrl = image.thumbnailUrl
             }
-            .then { (recipe: ChefkochRecipe) -> Promise<(ChefkochRecipe, URL?), any Error> in
-                if let imageId = recipe.previewImageId {
-                    return ChefkochImageQuery(recipeId: recipe.id, imageId: imageId)
-                        .perform()
-                        .map { (recipe, $0.thumbnailUrl) }
-                } else {
-                    return Promise(.success((recipe, nil)))
-                }
-            }
-            .listen {
-                do {
-                    let (recipe, thumbnailUrl) = try $0.get()
-                    output.append(Embed(
-                        title: ":taco: \(recipe.title)",
-                        url: recipe.siteUrl.flatMap(URL.init(string:)),
-                        thumbnail: thumbnailUrl.map(Embed.Thumbnail.init),
-                        footer: Embed.Footer(text: String(format: "Rating: %.2f stars, %d votes", recipe.rating?.rating ?? 0, recipe.rating?.numVotes ?? 0)),
-                        fields: [
-                            Embed.Field(name: "Ingredients", value: recipe.ingredientGroups.map(self.format(ingredientGroups:))?.nilIfEmpty ?? "_none_", inline: true),
-                            Embed.Field(name: "Time", value: [
-                                "Cooking": recipe.cookingTime.map(self.format(time:)),
-                                "Resting": recipe.restingTime.map(self.format(time:)),
-                                "Total": recipe.totalTime.map(self.format(time:)),
-                            ].compactMap { (k, v) in v.map { "\(k): \($0)" } }.joined(separator: "\n").nilIfEmpty ?? "_none_", inline: true),
-                        ] + (recipe.instructions?
-                            .truncated(to: 4000, appending: "...")
-                            .chunks(ofLength: 800)
-                            .filter { !$0.isEmpty }
-                            .enumerated()
-                            .map { (i, chunk) in Embed.Field(name: "Instructions (part \(i + 1))", value: String(chunk), inline: false) }
-                            ?? [])
-                    ))
-                } catch {
-                    output.append(error, errorText: "Could not find/fetch recipe")
-                }
-            }
+
+            output.append(Embed(
+                title: ":taco: \(recipe.title)",
+                url: recipe.siteUrl.flatMap(URL.init(string:)),
+                thumbnail: thumbnailUrl.map(Embed.Thumbnail.init),
+                footer: Embed.Footer(text: String(format: "Rating: %.2f stars, %d votes", recipe.rating?.rating ?? 0, recipe.rating?.numVotes ?? 0)),
+                fields: [
+                    Embed.Field(name: "Ingredients", value: recipe.ingredientGroups.map(self.format(ingredientGroups:))?.nilIfEmpty ?? "_none_", inline: true),
+                    Embed.Field(name: "Time", value: [
+                        "Cooking": recipe.cookingTime.map(self.format(time:)),
+                        "Resting": recipe.restingTime.map(self.format(time:)),
+                        "Total": recipe.totalTime.map(self.format(time:)),
+                    ].compactMap { (k, v) in v.map { "\(k): \($0)" } }.joined(separator: "\n").nilIfEmpty ?? "_none_", inline: true),
+                ] + (recipe.instructions?
+                    .truncated(to: 4000, appending: "...")
+                    .chunks(ofLength: 800)
+                    .filter { !$0.isEmpty }
+                    .enumerated()
+                    .map { (i, chunk) in Embed.Field(name: "Instructions (part \(i + 1))", value: String(chunk), inline: false) }
+                    ?? [])
+            ))
+        } catch {
+            output.append(error, errorText: "Could not find/fetch recipe")
+        }
     }
 
     private func format(time: Double) -> String {
