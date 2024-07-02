@@ -190,6 +190,15 @@ public class GameCommand<G: Game>: Command {
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true
 
+        // TODO: Ideally we would like to write
+        //
+        //     defer { await output.flush() }
+        //
+        // to ensure that both all outputs are flushed and that they are
+        // available after e.g. the test awaited them. Unfortunately,
+        // Swift does not allow asynchronous defer blocks, so we have to
+        // manually guard scope exits.
+
         do {
             let params = ActionParameters(
                 args: args,
@@ -204,12 +213,14 @@ public class GameCommand<G: Game>: Command {
                 || game.isRealTime
                 || state.rolesOf(player: author).contains(state.currentRole) else {
                 await output.append(errorText: "It is not your turn, `\(author.username)`")
+                await output.flush()
                 return true
             }
 
             if actionResult.cancelsMatch {
                 matches[channelID] = nil
                 await output.append("Cancelled match: \(state.playersDescription)")
+                await output.flush()
                 return false
             }
 
@@ -258,6 +269,8 @@ public class GameCommand<G: Game>: Command {
         } catch {
             await output.append(error, errorText: "Error while performing move")
         }
+
+        await output.flush()
 
         return continueSubscription
     }
