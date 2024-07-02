@@ -40,7 +40,7 @@ public class CronManager {
         }
     }
 
-    private func run(schedule: CronTab.Schedule) {
+    private func run(schedule: CronTab.Schedule) async {
         let parsedCommand = schedule.command
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .split(separator: " ", maxSplits: 2, omittingEmptySubsequences: false)
@@ -54,7 +54,7 @@ public class CronManager {
             return
         }
 
-        msgParser.parse(commandArgs).listenOrLogError { [self] input in
+        if let input = await msgParser.parse(commandArgs).getOrLogError() {
             let context = CommandContext(
                 sink: sink,
                 registry: registry,
@@ -65,7 +65,7 @@ public class CronManager {
                 eventLoopGroup: eventLoopGroup
             )
             let output = MessageIOOutput(context: context)
-            command.invoke(with: input, output: output, context: context)
+            await command.invoke(with: input, output: output, context: context)
         }
     }
 
@@ -84,7 +84,9 @@ public class CronManager {
             let schedule = new[name]!
             do {
                 try scheduler.addSchedule(name: name, cron: schedule.cron) {
-                    self.run(schedule: schedule)
+                    Task {
+                        await self.run(schedule: schedule)
+                    }
                 }
                 liveCronTab.schedules[name] = schedule
             } catch {

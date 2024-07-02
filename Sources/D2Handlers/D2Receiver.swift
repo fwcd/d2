@@ -61,7 +61,7 @@ public class D2Receiver: Receiver {
         permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
 
-        @Synchronized @Box var mostRecentPipeRunner: (Runnable, PermissionLevel)? = nil
+        @Synchronized @Box var mostRecentPipeRunner: (any AsyncRunnable, PermissionLevel)? = nil
         @AutoSerializing(filePath: "local/spamConfig.json") var spamConfiguration = SpamConfiguration()
         @AutoSerializing(filePath: "local/streamerRoleConfig.json") var streamerRoleConfiguration = StreamerRoleConfiguration()
         @AutoSerializing(filePath: "local/messagePreviewsConfig.json") var messagePreviewsConfiguration = MessagePreviewsConfiguration()
@@ -570,27 +570,29 @@ public class D2Receiver: Receiver {
     }
 
     public func on(createMessage message: Message, sink: any Sink) {
-        var m = message
+        // TODO: Make on(createMessage:) itself (and the other methods) async in
+        // the protocol and remove this explicit Task.
+        Task {
+            var m = message
 
-        for rewriter in messageRewriters {
-            if let rewrite = rewriter.rewrite(message: m, sink: sink) {
-                m = rewrite
+            for rewriter in messageRewriters {
+                if let rewrite = await rewriter.rewrite(message: m, sink: sink) {
+                    m = rewrite
+                }
             }
-        }
 
-        for i in messageHandlers.indices {
-            if messageHandlers[i].handleRaw(message: message, sink: sink) {
-                return
+            for i in messageHandlers.indices {
+                if await messageHandlers[i].handleRaw(message: message, sink: sink) {
+                    return
+                }
+                if await messageHandlers[i].handle(message: m, sink: sink) {
+                    return
+                }
             }
-            if messageHandlers[i].handle(message: m, sink: sink) {
-                return
-            }
-        }
 
-        // Only fire on unhandled messages
-        if m.author?.id != sink.me?.id {
-            MessageParser().parse(message: m, clientName: sink.name, guild: m.guild).listenOrLogError {
-                self.eventListenerBus.fire(event: .createMessage, with: $0, context: CommandContext(
+            // Only fire on unhandled messages
+            if m.author?.id != sink.me?.id, let value = await MessageParser().parse(message: m, clientName: sink.name, guild: m.guild).getOrLogError() {
+                eventListenerBus.fire(event: .createMessage, with: value, context: CommandContext(
                     sink: sink,
                     registry: self.registry,
                     message: m,
@@ -604,9 +606,13 @@ public class D2Receiver: Receiver {
     }
 
     public func on(createInteraction interaction: Interaction, sink: any Sink) {
-        for i in interactionHandlers.indices {
-            if interactionHandlers[i].handle(interaction: interaction, sink: sink) {
-                return
+        // TODO: Make on(createInteraction:) itself (and the other methods)
+        // async in the protocol and remove this explicit Task.
+        Task {
+            for i in interactionHandlers.indices {
+                if await interactionHandlers[i].handle(interaction: interaction, sink: sink) {
+                    return
+                }
             }
         }
     }
