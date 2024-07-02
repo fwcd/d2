@@ -13,27 +13,25 @@ public class ThesaurizeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
             output.append(errorText: "Please enter some text!")
             return
         }
 
-        let words = input.matches(of: wordPattern).map { String($0.output) }
-        let mappingsPromise: Promise<[String: Set<String>], any Error> = sequence(promises: Set(words)
-            .filter { $0.allSatisfy { $0.isLetter } }
-            .map { term in { OpenThesaurusQuery(term: term).perform()
-                .map { (term, self.pickSynonyms(for: term, from: $0)) } } })
-            .map { Dictionary(uniqueKeysWithValues: $0) }
+        do {
+            let words = input.matches(of: wordPattern).map { String($0.output) }
+            var mappings: [String: Set<String>] = [:]
 
-        mappingsPromise.listen {
-            do {
-                let mappings = try $0.get()
-                let newWords = words.map { mappings[$0]?.randomElement() ?? $0 }
-                output.append(newWords.joined())
-            } catch {
-                output.append(error, errorText: "Could not fetch thesaurus mappings")
+            for word in Set(words) where word.allSatisfy(\.isLetter) {
+                let results = try await OpenThesaurusQuery(term: word).perform()
+                mappings[word] = pickSynonyms(for: word, from: results)
             }
+
+            let newWords = words.map { mappings[$0]?.randomElement() ?? $0 }
+            output.append(newWords.joined())
+        } catch {
+            output.append(error, errorText: "Could not fetch thesaurus mappings")
         }
     }
 
