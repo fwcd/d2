@@ -13,7 +13,7 @@ public class EchoCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(input)
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(input)
     }
 }

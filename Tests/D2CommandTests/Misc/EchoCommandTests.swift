@@ -4,8 +4,6 @@ import D2TestUtils
 
 final class EchoCommandTests: XCTestCase {
     func testInvocation() async throws {
-        return // FIXME: Re-enable this test once Sink etc. are async, otherwise the awaits might not actually await
-
         let command = EchoCommand()
         let output = TestOutput()
 
