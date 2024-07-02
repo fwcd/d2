@@ -23,57 +23,57 @@ final class SpamHandlerTests: XCTestCase {
         channelId = ChannelID("0")
     }
 
-    func testNewUserSpamming() {
+    func testNewUserSpamming() async throws {
         join(daysAgo: 0.2)
 
         XCTAssert(!isWarned())
         XCTAssert(!isPenalized())
 
-        spam(after: 0.5)
+        try await spam(after: 0.5)
 
         XCTAssert(isWarned())
         XCTAssert(!isPenalized())
 
-        spam(after: 0.5)
+        try await spam(after: 0.5)
 
         XCTAssert(isWarned())
         XCTAssert(isPenalized())
     }
 
-    func testOlderUserSpamming() {
+    func testOlderUserSpamming() async throws {
         join(daysAgo: 32)
 
-        spam() // This one should be expired by the time the second one is sent
-        spam(after: 200)
-        spam()
-        spam()
-        spam()
+        try await spam() // This one should be expired by the time the second one is sent
+        try await spam(after: 200)
+        try await spam()
+        try await spam()
+        try await spam()
 
         XCTAssert(!isWarned())
         XCTAssert(!isPenalized())
 
-        spam()
+        try await spam()
 
         XCTAssert(isWarned())
         XCTAssert(!isPenalized())
     }
 
-    func testEvenOlderUserSpamming() {
+    func testEvenOlderUserSpamming() async throws {
         join(daysAgo: 365)
 
         for _ in 0..<6 {
-            spam()
+            try await spam()
         }
 
         XCTAssert(!isWarned())
         XCTAssert(!isPenalized())
 
-        spam()
+        try await spam()
 
         XCTAssert(isWarned())
         XCTAssert(!isPenalized())
 
-        spam()
+        try await spam()
 
         XCTAssert(isWarned())
         XCTAssert(isPenalized())
@@ -87,9 +87,9 @@ final class SpamHandlerTests: XCTestCase {
         output.guilds!.append(guild)
     }
 
-    private func spam(after interval: TimeInterval = 0) {
+    private func spam(after interval: TimeInterval = 0) async throws {
         timestamp += interval
-        let _ = handler.handle(message: Message(content: "@everyone", author: user, channelId: channelId, mentionEveryone: true, timestamp: timestamp), sink: output)
+        let _ = try await handler.handle(message: Message(content: "@everyone", author: user, channelId: channelId, mentionEveryone: true, timestamp: timestamp), sink: output)
     }
 
     private func isWarned() -> Bool {

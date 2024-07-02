@@ -5,17 +5,21 @@ import D2TestUtils
 @testable import D2Handlers
 
 final class TriggerReactionHandlers: XCTestCase {
-    func testGoodMorningReaction() {
-        XCTAssertFalse(messageTriggersWeather("good mornin"))
-        XCTAssertFalse(messageTriggersWeather("Moin"))
-        XCTAssert(messageTriggersWeather("good morning"))
-        XCTAssert(messageTriggersWeather("guten moin"))
-        XCTAssert(messageTriggersWeather("Guten Morgen"))
-        XCTAssert(messageTriggersWeather("Guten   mooorgen"))
-        XCTAssert(messageTriggersWeather("Guten Morgen, guten Morgen, guten Morgen, Sonnenschein!"))
+    func testGoodMorningReaction() async {
+        assert(!(await messageTriggersWeather("good mornin")))
+        assert(!(await messageTriggersWeather("Moin")))
+        assert(await messageTriggersWeather("good morning"))
+        assert(await messageTriggersWeather("guten moin"))
+        assert(await messageTriggersWeather("Guten Morgen"))
+        assert(await messageTriggersWeather("Guten   mooorgen"))
+        assert(await messageTriggersWeather("Guten Morgen, guten Morgen, guten Morgen, Sonnenschein!"))
     }
 
-    private func messageTriggersWeather(_ content: String) -> Bool {
+    private func assert(_ condition: Bool, line: UInt = #line) {
+        XCTAssert(condition, line: line)
+    }
+
+    private func messageTriggersWeather(_ content: String) async -> Bool {
         let emoji = ":test:"
         let handler = TriggerReactionHandler($configuration: .constant(
             TriggerReactionConfiguration(
@@ -23,7 +27,7 @@ final class TriggerReactionHandlers: XCTestCase {
                 weatherReactions: true
             )
         )) {
-            Promise(emoji)
+            emoji
         }
         let output = TestOutput()
         let message = Message(
@@ -32,7 +36,7 @@ final class TriggerReactionHandlers: XCTestCase {
             id: ID("Dummy Message")
         )
         output.messages.append(message)
-        _ = handler.handle(message: message, sink: output)
+        _ = await handler.handle(message: message, sink: output)
         return output.lastReactions.contains { $0.emoji.name == emoji }
     }
 }
