@@ -24,45 +24,37 @@ public class CampusCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        Promise.catching { try UnivISQuery(search: .rooms, params: [.name: input]) }
-            .then { $0.start() }
-            .thenCatching { (queryOutput: UnivISOutputNode) throws -> Promise<RichValue, any Error> in
-                // Successfully received and parsed UnivIS query output
-                guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
-                    throw CampusCommandError.noRoomFound
-                }
-                guard let rawAddress = room.address else {
-                    throw CampusCommandError.roomHasNoAddress("\(room)")
-                }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let query = try UnivISQuery(search: .rooms, params: [.name: input])
+            let queryOutput = try await query.start().get()
 
-                let address = self.format(rawAddress: rawAddress)
+            // Successfully received and parsed UnivIS query output
+            guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
+                throw CampusCommandError.noRoomFound
+            }
+            guard let rawAddress = room.address else {
+                throw CampusCommandError.roomHasNoAddress("\(room)")
+            }
 
-                return self.geocoder.geocode(location: address)
-                    .thenCatching { coords in
-                        try MapQuestStaticMap(
-                            center: coords,
-                            pins: [.init(coords: coords)]
-                        ).download()
-                    }
-                    .map {
-                        RichValue.compound([
-                            .files([Message.FileUpload(data: $0, filename: "campus.jpg", mimeType: "image/jpeg")]),
-                            .embed(Embed(
-                                title: address,
-                                url: self.googleMapsURLFor(address: address)
-                            ))
-                        ])
-                    }
-            }
-            .listen {
-                do {
-                    let value = try $0.get()
-                    output.append(value)
-                } catch {
-                    output.append(error, errorText: "Could not create static map: `\(error)`")
-                }
-            }
+            let address = self.format(rawAddress: rawAddress)
+            let coords = try await geocoder.geocode(location: address).get()
+
+            let mapData = try await MapQuestStaticMap(
+                center: coords,
+                pins: [.init(coords: coords)]
+            ).download().get()
+
+            output.append(.compound([
+                .files([Message.FileUpload(data: mapData, filename: "campus.jpg", mimeType: "image/jpeg")]),
+                .embed(Embed(
+                    title: address,
+                    url: self.googleMapsURLFor(address: address)
+                ))
+            ]))
+        } catch {
+            output.append(error, errorText: "Could not create static map: `\(error)`")
+        }
     }
 
     private func findBestMatchFor(name: String, in output: UnivISOutputNode) -> UnivISRoom? {
