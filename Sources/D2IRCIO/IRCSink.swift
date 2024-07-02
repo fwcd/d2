@@ -30,7 +30,7 @@ struct IRCSink: DefaultSink {
             .joined(separator: ", ")
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, any Error> {
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) throws -> D2MessageIO.Message? {
         log.debug("Sending message '\(message.content)'")
 
         var text = [message.content, message.embed.map(flatten(embed:))]
@@ -43,11 +43,11 @@ struct IRCSink: DefaultSink {
 
         guard let channelName = IRCChannelName(channelId.value) else {
             log.warning("Could not convert \(channelId.value) (maybe it is missing a leading '#'?)")
-            return Promise(.failure(IRCSinkError.invalidChannelName(channelId.value)))
+            throw IRCSinkError.invalidChannelName(channelId.value)
         }
 
         client.send(.PRIVMSG([.channel(channelName)], text))
 
-        return Promise(.success(message))
+        return message
     }
 }

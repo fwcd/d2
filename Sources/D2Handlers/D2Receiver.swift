@@ -460,113 +460,131 @@ public class D2Receiver: Receiver {
     }
 
     public func on(receiveReady: [String: Any], sink: any Sink) {
-        let guildCount = sink.guilds?.count ?? 0
-        log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
+        // TODO: Make on(receiveReady:) itself (and the other methods) async in
+        // the protocol and remove this explicit Task.
+        Task {
+            let guildCount = sink.guilds?.count ?? 0
+            log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
-        if let presence = initialPresence {
-            sink.setPresence(PresenceUpdate(activities: [Presence.Activity(name: presence, type: .listening)], status: .online))
-        }
-
-        eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
-
-        do {
-            try messageDB.setupTables(sink: sink)
-        } catch {
-            log.warning("Could not setup message database: \(error)")
-        }
-
-        do {
-            try partyGameDB.setupTables()
-        } catch {
-            log.warning("Could not setup party game database: \(error)")
-        }
-
-        if useMIOCommands {
-            // Register the commands e.g. using Discord's slash-command API
-            // providing basic auto-completion for registered commands.
-            var registeredCount = 0
-            let groupedCommands = Dictionary(grouping: registry.commandsWithAliases(), by: \.command.info.category)
-
-            for (category, cmds) in groupedCommands where category.rawValue.count >= 3 {
-                let shownCmds = cmds
-                    .sorted(by: ascendingComparator { $0.command.info.requiredPermissionLevel.rawValue })
-                    .filter { $0.command.info.presented }
-                    .prefix(10)
-
-                let options = shownCmds
-                    .map {
-                        MIOCommand.Option(
-                            type: .subCommand,
-                            name: ([$0.name] + $0.aliases).first { (3..<32).contains($0.count) } ?? $0.name.truncated(to: 28, appending: "..."),
-                            description: $0.command.info.shortDescription,
-                            options: $0.command.inputValueType == .text
-                                ? [.init(
-                                    type: .string,
-                                    name: "input",
-                                    description: $0.command.info.helpText?.split(separator: "\n").map(String.init).first
-                                        ?? "Arguments to pass to the command",
-                                    isRequired: false
-                                )]
-                                : []
-                        )
-                    }
-
-                if let guildId = mioCommandGuildId {
-                    // Only register MIO commands on guild, if specified
-                    // (useful for development)
-                    sink.createMIOCommand(
-                        on: guildId,
-                        name: category.rawValue,
-                        description: category.plainDescription,
-                        options: options
-                    )
-                } else {
-                    // Register MIO commands globally
-                    sink.createMIOCommand(
-                        name: category.rawValue,
-                        description: category.plainDescription,
-                        options: options
-                    )
+            if let presence = initialPresence {
+                do {
+                    try await sink.setPresence(PresenceUpdate(activities: [Presence.Activity(name: presence, type: .listening)], status: .online))
+                } catch {
+                    log.warning("Could not set presence: \(error)")
                 }
-                registeredCount += 1
             }
 
-            log.info("Registered \(registeredCount) \("command".pluralized(with: registeredCount)) as MIO commands")
-        } else {
-            log.info("Skipping initializion of MIO commands")
+            eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
+
+            do {
+                try messageDB.setupTables(sink: sink)
+            } catch {
+                log.warning("Could not setup message database: \(error)")
+            }
+
+            do {
+                try partyGameDB.setupTables()
+            } catch {
+                log.warning("Could not setup party game database: \(error)")
+            }
+
+            if useMIOCommands {
+                // Register the commands e.g. using Discord's slash-command API
+                // providing basic auto-completion for registered commands.
+                var registeredCount = 0
+                let groupedCommands = Dictionary(grouping: registry.commandsWithAliases(), by: \.command.info.category)
+
+                for (category, cmds) in groupedCommands where category.rawValue.count >= 3 {
+                    let shownCmds = cmds
+                        .sorted(by: ascendingComparator { $0.command.info.requiredPermissionLevel.rawValue })
+                        .filter { $0.command.info.presented }
+                        .prefix(10)
+
+                    let options = shownCmds
+                        .map {
+                            MIOCommand.Option(
+                                type: .subCommand,
+                                name: ([$0.name] + $0.aliases).first { (3..<32).contains($0.count) } ?? $0.name.truncated(to: 28, appending: "..."),
+                                description: $0.command.info.shortDescription,
+                                options: $0.command.inputValueType == .text
+                                    ? [.init(
+                                        type: .string,
+                                        name: "input",
+                                        description: $0.command.info.helpText?.split(separator: "\n").map(String.init).first
+                                            ?? "Arguments to pass to the command",
+                                        isRequired: false
+                                    )]
+                                    : []
+                            )
+                        }
+
+                    do {
+                        if let guildId = mioCommandGuildId {
+                            // Only register MIO commands on guild, if specified
+                            // (useful for development)
+                            try await sink.createMIOCommand(
+                                on: guildId,
+                                name: category.rawValue,
+                                description: category.plainDescription,
+                                options: options
+                            )
+                        } else {
+                            // Register MIO commands globally
+                            try await sink.createMIOCommand(
+                                name: category.rawValue,
+                                description: category.plainDescription,
+                                options: options
+                            )
+                        }
+                    } catch {
+                        log.warning("Could not create MIO commands: \(error)")
+                    }
+                    registeredCount += 1
+                }
+
+                log.info("Registered \(registeredCount) \("command".pluralized(with: registeredCount)) as MIO commands")
+            } else {
+                log.info("Skipping initializion of MIO commands")
+            }
         }
     }
 
     public func on(receivePresenceUpdate presence: Presence, sink: any Sink) {
-        for (_, entry) in registry {
-            if case let .command(command) = entry {
-                command.onReceivedUpdated(presence: presence)
+        // TODO: Remove Task once on(receivePresenceUpdate:) is async
+        Task {
+            for (_, entry) in registry {
+                if case let .command(command) = entry {
+                    command.onReceivedUpdated(presence: presence)
+                }
             }
-        }
 
-        for i in presenceHandlers.indices {
-            presenceHandlers[i].handle(presenceUpdate: presence, sink: sink)
-        }
+            for i in presenceHandlers.indices {
+                await presenceHandlers[i].handle(presenceUpdate: presence, sink: sink)
+            }
 
-        // TODO: Pass full presence?
-        eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.activities.first.map { RichValue.text($0.name) } ?? .none)
+            // TODO: Pass full presence?
+            eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.activities.first.map { RichValue.text($0.name) } ?? .none)
+        }
     }
 
     public func on(createGuild guild: Guild, sink: any Sink) {
-        do {
-            log.info("Inserting guild '\(guild.name)' into message database...")
-            try messageDB.insert(guild: guild)
-        } catch {
-            log.warning("Could not insert guild into message database: \(error)")
-        }
-
-        for (_, presence) in guild.presences {
-            for i in presenceHandlers.indices {
-                presenceHandlers[i].handle(presenceUpdate: presence, sink: sink)
+        // TODO: Remove Task once on(createGuild:) is async
+        Task {
+            do {
+                log.info("Inserting guild '\(guild.name)' into message database...")
+                try messageDB.insert(guild: guild)
+            } catch {
+                log.warning("Could not insert guild into message database: \(error)")
             }
-        }
 
-        eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
+            for (_, presence) in guild.presences {
+                for i in presenceHandlers.indices {
+                    await presenceHandlers[i].handle(presenceUpdate: presence, sink: sink)
+                }
+            }
+
+            eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
+        }
     }
 
     public func on(createMessage message: Message, sink: any Sink) {
@@ -619,20 +637,32 @@ public class D2Receiver: Receiver {
     }
 
     public func on(addReaction reaction: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
-        for i in reactionHandlers.indices {
-            reactionHandlers[i].handle(createdReaction: reaction, to: messageId, on: channelId, by: userId, sink: sink)
+        // TODO: Make on(addReaction:) itself (and the other methods)
+        // async in the protocol and remove this explicit Task.
+        Task {
+            for i in reactionHandlers.indices {
+                await reactionHandlers[i].handle(createdReaction: reaction, to: messageId, on: channelId, by: userId, sink: sink)
+            }
         }
     }
 
     public func on(removeReaction reaction: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
-        for i in reactionHandlers.indices {
-            reactionHandlers[i].handle(deletedReaction: reaction, from: messageId, on: channelId, by: userId, sink: sink)
+        // TODO: Make on(removeReaction:) itself (and the other methods)
+        // async in the protocol and remove this explicit Task.
+        Task {
+            for i in reactionHandlers.indices {
+                await reactionHandlers[i].handle(deletedReaction: reaction, from: messageId, on: channelId, by: userId, sink: sink)
+            }
         }
     }
 
     public func on(removeAllReactionsFrom messageId: MessageID, on channelId: ChannelID, sink: any Sink) {
-        for i in reactionHandlers.indices {
-            reactionHandlers[i].handle(deletedAllReactionsFrom: messageId, on: channelId, sink: sink)
+        // TODO: Make on(removeAllReactionsFrom:) itself (and the other methods)
+        // async in the protocol and remove this explicit Task.
+        Task {
+            for i in reactionHandlers.indices {
+                await reactionHandlers[i].handle(deletedAllReactionsFrom: messageId, on: channelId, sink: sink)
+            }
         }
     }
 

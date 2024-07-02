@@ -12,7 +12,11 @@ public class TriggerTypingCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
-        context.channel?.triggerTyping()
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
+        do {
+            try await context.channel?.triggerTyping()
+        } catch {
+            await output.append(error, errorText: "Could not trigger typing indicator")
+        }
     }
 }

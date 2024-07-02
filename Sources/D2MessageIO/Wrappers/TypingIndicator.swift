@@ -20,7 +20,9 @@ public class TypingIndicator {
 
     private func repeatedlyTriggerTypingInBackground() {
         guard running else { return }
-        channel.triggerTyping()
+        Task {
+            _ = try? await channel.triggerTyping()
+        }
 
         let timeout = DispatchTime.now() + .seconds(9)
         queue.asyncAfter(deadline: timeout) {

@@ -37,6 +37,15 @@ public class CombinedSink: Sink {
         }
     }
 
+    private func withSink<T>(of id: ID, _ action: (any Sink) async throws -> T?) async rethrows -> T? {
+        if let sink = sinks[id.clientName] {
+            return try await action(sink)
+        } else {
+            log.warning("Could not find sink with name `\(id.clientName)`. This is a bug and might result in unhandled callbacks.")
+            return nil
+        }
+    }
+
     public func guild(for guildId: GuildID) -> Guild? {
         withSink(of: guildId) { $0.guild(for: guildId) }
     }
@@ -45,9 +54,9 @@ public class CombinedSink: Sink {
         withSink(of: channelId) { $0.channel(for: channelId) }
     }
 
-    public func setPresence(_ presence: PresenceUpdate) {
+    public func setPresence(_ presence: PresenceUpdate) async throws {
         for sink in sinks.values {
-            sink.setPresence(presence)
+            try await sink.setPresence(presence)
         }
     }
 
@@ -63,115 +72,127 @@ public class CombinedSink: Sink {
         withSink(of: userId) { $0.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension) }
     }
 
-    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, any Error> {
-        withSink(of: roleId) { $0.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason) } ?? Promise(.success(false))
+    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
+        try await withSink(of: roleId) { try await $0.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason) } ?? false
     }
 
-    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, any Error> {
-        withSink(of: roleId) { $0.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason) } ?? Promise(.success(false))
+    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
+        try await withSink(of: roleId) { try await $0.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason) } ?? false
     }
 
-    public func createDM(with userId: UserID) -> Promise<ChannelID?, any Error> {
-        withSink(of: userId) { $0.createDM(with: userId) } ?? Promise(.success(nil))
+    public func createDM(with userId: UserID) async throws -> ChannelID? {
+        try await withSink(of: userId) { try await $0.createDM(with: userId) }
     }
 
-    public func sendMessage(_ message: Message, to channelId: ChannelID) -> Promise<Message?, any Error> {
-        withSink(of: channelId) {
+    public func sendMessage(_ message: Message, to channelId: ChannelID) async throws -> Message? {
+        try await withSink(of: channelId) {
             log.info("Sending '\(message.content.truncated(to: 10, appending: "..."))' to \($0.name) channel \(channelId)")
-            return $0.sendMessage(message, to: channelId)
-        } ?? Promise(.success(nil))
+            return try await $0.sendMessage(message, to: channelId)
+        }
     }
 
-    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Promise<Message?, any Error> {
-        withSink(of: channelId) { $0.editMessage(id, on: channelId, content: content) } ?? Promise(.success(nil))
+    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> Message? {
+        try await withSink(of: channelId) { try await $0.editMessage(id, on: channelId, content: content) }
     }
 
-    public func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.deleteMessage(id, on: channelId) } ?? Promise(.success(false))
+    public func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.deleteMessage(id, on: channelId) } ?? false
     }
 
-    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.bulkDeleteMessages(ids, on: channelId) } ?? Promise(.success(false))
+    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.bulkDeleteMessages(ids, on: channelId) } ?? false
     }
 
-    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[Message], any Error> {
-        withSink(of: channelId) { $0.getMessages(for: channelId, limit: limit, selection: selection) } ?? Promise(.success([]))
+    public func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) async throws -> [Message] {
+        try await withSink(of: channelId) { try await $0.getMessages(for: channelId, limit: limit, selection: selection) } ?? []
     }
 
-    public func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<Channel?, any Error> {
-        withSink(of: channelId) { $0.modifyChannel(channelId, with: modification) } ?? Promise(.success(nil))
+    public func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) async throws -> Channel? {
+        try await withSink(of: channelId) { try await $0.modifyChannel(channelId, with: modification) }
     }
 
-    public func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.isGuildTextChannel(channelId) } ?? Promise(.success(false))
+    public func isGuildTextChannel(_ channelId: ChannelID) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.isGuildTextChannel(channelId) } ?? false
     }
 
-    public func isDMTextChannel(_ channelId: ChannelID) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.isDMTextChannel(channelId) } ?? Promise(.success(false))
+    public func isDMTextChannel(_ channelId: ChannelID) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.isDMTextChannel(channelId) } ?? false
     }
 
-    public func triggerTyping(on channelId: ChannelID) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.triggerTyping(on: channelId) } ?? Promise(.success(false))
+    public func triggerTyping(on channelId: ChannelID) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.triggerTyping(on: channelId) } ?? false
     }
 
-    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, any Error> {
-        withSink(of: channelId) { $0.createReaction(for: messageId, on: channelId, emoji: emoji) } ?? Promise(.success(nil))
+    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Message? {
+        try await withSink(of: channelId) { try await $0.createReaction(for: messageId, on: channelId, emoji: emoji) }
     }
 
-    public func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji) } ?? Promise(.success(false))
+    public func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji) } ?? false
     }
 
-    public func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) -> Promise<Bool, any Error> {
-        withSink(of: channelId) { $0.deleteUserReaction(for: messageId, on: channelId, emoji: emoji, by: userId) } ?? Promise(.success(false))
+    public func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws -> Bool {
+        try await withSink(of: channelId) { try await $0.deleteUserReaction(for: messageId, on: channelId, emoji: emoji, by: userId) } ?? false
     }
 
-    public func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<Emoji?, any Error> {
-        withSink(of: guildId) { $0.createEmoji(on: guildId, name: name, image: image, roles: roles) } ?? Promise(.success(nil))
+    public func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) async throws -> Emoji? {
+        try await withSink(of: guildId) { try await $0.createEmoji(on: guildId, name: name, image: image, roles: roles) }
     }
 
-    public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, any Error> {
-        withSink(of: guildId) { $0.deleteEmoji(from: guildId, emojiId: emojiId) } ?? Promise(.success(false))
+    public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws -> Bool {
+        try await withSink(of: guildId) { try await $0.deleteEmoji(from: guildId, emojiId: emojiId) } ?? false
     }
 
-    public func getMIOCommands() -> Promise<[MIOCommand], any Error> {
-        guard let sink = mioCommandSink else { return Promise(.failure(SinkError.noMIOCommandSink)) }
-        return sink.getMIOCommands()
+    public func getMIOCommands() async throws -> [MIOCommand] {
+        guard let sink = mioCommandSink else { throw SinkError.noMIOCommandSink }
+        return try await sink.getMIOCommands()
     }
 
-    public func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        guard let sink = mioCommandSink else { return Promise(.failure(SinkError.noMIOCommandSink)) }
-        return sink.createMIOCommand(name: name, description: description, options: options)
+    public func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
+        guard let sink = mioCommandSink else { throw SinkError.noMIOCommandSink }
+        return try await sink.createMIOCommand(name: name, description: description, options: options)
     }
 
-    public func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        guard let sink = mioCommandSink else { return Promise(.failure(SinkError.noMIOCommandSink)) }
-        return sink.editMIOCommand(commandId, name: name, description: description, options: options)
+    public func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
+        guard let sink = mioCommandSink else { throw SinkError.noMIOCommandSink }
+        return try await sink.editMIOCommand(commandId, name: name, description: description, options: options)
     }
 
-    public func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, any Error> {
-        guard let sink = mioCommandSink else { return Promise(.failure(SinkError.noMIOCommandSink)) }
-        return sink.deleteMIOCommand(commandId)
+    public func deleteMIOCommand(_ commandId: MIOCommandID) async throws -> Bool {
+        guard let sink = mioCommandSink else { throw SinkError.noMIOCommandSink }
+        return try await sink.deleteMIOCommand(commandId)
     }
 
-    public func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], any Error> {
-        withSink(of: guildId) { $0.getMIOCommands(on: guildId) } ?? Promise(.failure(SinkError.noMIOCommandSink))
+    public func getMIOCommands(on guildId: GuildID) async throws -> [MIOCommand] {
+        guard let commands = try await withSink(of: guildId, { try await $0.getMIOCommands(on: guildId) }) else {
+            throw SinkError.noMIOCommandSink
+        }
+        return commands
     }
 
-    public func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        withSink(of: guildId) { $0.createMIOCommand(on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(SinkError.noMIOCommandSink))
+    public func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
+        guard let command = try await withSink(of: guildId, { try await $0.createMIOCommand(on: guildId, name: name, description: description, options: options) }) else {
+            throw SinkError.noMIOCommandSink
+        }
+        return command
     }
 
-    public func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
-        withSink(of: guildId) { $0.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options) } ?? Promise(.failure(SinkError.noMIOCommandSink))
+    public func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
+        guard let command = try await withSink(of: guildId, { try await $0.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options) }) else {
+            throw SinkError.noMIOCommandSink
+        }
+        return command
     }
 
-    public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, any Error> {
-        withSink(of: guildId) { $0.deleteMIOCommand(commandId, on: guildId) } ?? Promise(.failure(SinkError.noMIOCommandSink))
+    public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws -> Bool {
+        guard try await withSink(of: guildId, { try await $0.deleteMIOCommand(commandId, on: guildId) }) != nil else {
+            throw SinkError.noMIOCommandSink
+        }
+        return true
     }
 
-    public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, any Error> {
-        guard let sink = mioCommandSink else { return Promise(.failure(SinkError.noMIOCommandSink)) }
-        return sink.createInteractionResponse(for: interactionId, token: token, response: response)
+    public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws -> Bool {
+        guard let sink = mioCommandSink else { throw SinkError.noMIOCommandSink }
+        return try await sink.createInteractionResponse(for: interactionId, token: token, response: response)
     }
 }

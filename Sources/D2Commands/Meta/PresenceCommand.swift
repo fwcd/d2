@@ -39,20 +39,24 @@ public class PresenceCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let parsedArgs = try? argsPattern.firstMatch(in: input) {
             let activityType = parsedArgs.1!
             let status = parsedArgs.2 ?? .online
             let customText = String(parsedArgs.3)
 
             guard let sink = context.sink else {
-                output.append(errorText: "No client found")
+                await output.append(errorText: "No client found")
                 return
             }
 
-            sink.setPresence(PresenceUpdate(activities: [Presence.Activity(name: customText, type: activityType)], status: status))
+            do {
+                try await sink.setPresence(PresenceUpdate(activities: [Presence.Activity(name: customText, type: activityType)], status: status))
+            } catch {
+                await output.append(error, errorText: "Could not set presence")
+            }
         } else {
-            output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes.joined(separator: "|"))]? [custom text]")
+            await output.append(errorText: "Syntax: [\(activityTypes.keys.joined(separator: "|"))] [\(availableStatusTypes.joined(separator: "|"))]? [custom text]")
         }
     }
 }

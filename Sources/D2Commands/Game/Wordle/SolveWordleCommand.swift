@@ -66,7 +66,10 @@ public class SolveWordleCommand: StringCommand {
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
 
-        context.channel?.triggerTyping()
+        // TODO: Remove once we asyncify onSubscriptionMessage
+        Task {
+            _ = try? await context.channel?.triggerTyping()
+        }
 
         let possibleSolutions = board.possibleSolutions
         let embed: Embed

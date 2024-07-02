@@ -24,11 +24,11 @@ public class PollCommand: StringCommand {
         self.interpolatables = interpolatables
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let components = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
 
         guard components.count >= 1 else {
-            output.append(errorText: "Syntax: [poll text] [zero or more vote options...]")
+            await output.append(errorText: "Syntax: [poll text] [zero or more vote options...]")
             return
         }
 
@@ -36,15 +36,15 @@ public class PollCommand: StringCommand {
             let options = try expand(options: components.dropFirst())
 
             guard options.count < 10 else {
-                output.append(errorText: "Too many options!")
+                await output.append(errorText: "Too many options!")
                 return
             }
             guard let sink = context.sink else {
-                output.append(errorText: "Missing client")
+                await output.append(errorText: "Missing client")
                 return
             }
             guard let channelId = context.channel?.id else {
-                output.append(errorText: "Missing channel id")
+                await output.append(errorText: "Missing channel id")
                 return
             }
 
@@ -61,17 +61,16 @@ public class PollCommand: StringCommand {
                 reactions = range.compactMap { numberEmojiOf(digit: $0) }
             }
 
-            sink.sendMessage(Message(embed: embed), to: channelId).listenOrLogError { sentMessage in
-                if let nextMessageId = sentMessage?.id {
-                    for reaction in reactions {
-                        sink.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
-                    }
+            let sentMessage = try await sink.sendMessage(Message(embed: embed), to: channelId)
+            if let nextMessageId = sentMessage?.id {
+                for reaction in reactions {
+                    try await sink.createReaction(for: nextMessageId, on: channelId, emoji: reaction)
                 }
             }
         } catch ExpansionError.noInterpolatableFound {
-            output.append(errorText: "Could not find an interpolatable value before `...`! Try e.g. a weekday.")
+            await output.append(errorText: "Could not find an interpolatable value before `...`! Try e.g. a weekday.")
         } catch {
-            output.append(error, errorText: "Could not create poll")
+            await output.append(error, errorText: "Could not create poll")
         }
     }
 

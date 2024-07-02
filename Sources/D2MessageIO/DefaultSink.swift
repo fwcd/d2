@@ -42,133 +42,133 @@ public extension DefaultSink {
         nil
     }
 
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, any Error> {
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) -> Promise<Bool, any Error> {
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func createDM(with userId: UserID) -> Promise<ChannelID?, any Error> {
+    func createDM(with userId: UserID) async throws -> ChannelID? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, any Error> {
+    func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) async throws -> D2MessageIO.Message? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) -> Promise<D2MessageIO.Message?, any Error> {
+    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> D2MessageIO.Message? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID) -> Promise<Bool, any Error> {
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) -> Promise<Bool, any Error> {
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) -> Promise<[D2MessageIO.Message], any Error> {
+    func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) async throws -> [D2MessageIO.Message] {
         // TODO
-        Promise(.success([]))
+        []
     }
 
-    func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) -> Promise<D2MessageIO.Channel?, any Error> {
+    func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) async throws -> D2MessageIO.Channel? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func isGuildTextChannel(_ channelId: ChannelID) -> Promise<Bool, any Error> {
+    func isGuildTextChannel(_ channelId: ChannelID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func isDMTextChannel(_ channelId: ChannelID) -> Promise<Bool, any Error> {
+    func isDMTextChannel(_ channelId: ChannelID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func triggerTyping(on channelId: ChannelID) -> Promise<Bool, any Error> {
+    func triggerTyping(on channelId: ChannelID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<D2MessageIO.Message?, any Error> {
+    func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> D2MessageIO.Message? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Bool, any Error> {
+    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) -> Promise<Bool, any Error> {
+    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) -> Promise<D2MessageIO.Emoji?, any Error> {
+    func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) async throws -> D2MessageIO.Emoji? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) -> Promise<Bool, any Error> {
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func getMIOCommands() -> Promise<[MIOCommand], any Error> {
+    func getMIOCommands() async throws -> [MIOCommand] {
         // TODO
-        Promise(.success([]))
+        []
     }
 
-    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
+    func createMIOCommand(name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
+    func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func deleteMIOCommand(_ commandId: MIOCommandID) -> Promise<Bool, any Error> {
+    func deleteMIOCommand(_ commandId: MIOCommandID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func getMIOCommands(on guildId: GuildID) -> Promise<[MIOCommand], any Error> {
+    func getMIOCommands(on guildId: GuildID) async throws -> [MIOCommand] {
         // TODO
-        Promise(.success([]))
+        []
     }
 
-    func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
+    func createMIOCommand(on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) -> Promise<MIOCommand?, any Error> {
+    func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand? {
         // TODO
-        Promise(.success(nil))
+        nil
     }
 
-    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) -> Promise<Bool, any Error> {
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 
-    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) -> Promise<Bool, any Error> {
+    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws -> Bool {
         // TODO
-        Promise(.success(false))
+        false
     }
 }

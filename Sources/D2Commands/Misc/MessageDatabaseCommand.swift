@@ -13,78 +13,74 @@ public class MessageDatabaseCommand: StringCommand {
     )
     public let outputValueType: RichValueType = .table
     private let messageDB: MessageDatabase
-    private var subcommands: [String: (CommandOutput, CommandContext) throws -> Void] = [:]
+    private var subcommands: [String: (any CommandOutput, CommandContext) async throws -> Void] = [:]
 
     public init(messageDB: MessageDatabase) {
         self.messageDB = messageDB
 
         subcommands = [
-            "generateMarkovTransitions": { [unowned self] output, _ throws in
+            "generateMarkovTransitions": { [unowned self] output, _ async throws in
                 let count = try self.messageDB.generateMarkovTransitions()
-                output.append("Successfully generated/updated \(count) \("transition".pluralized(with: count))")
+                await output.append("Successfully generated/updated \(count) \("transition".pluralized(with: count))")
             },
             "debugRebuild": { [unowned self] output, context in
                 guard let sink = context.sink, let guildId = context.guild?.id else {
-                    output.append(errorText: "Debug-rebuilding the message database requires a client and a guild")
+                    await output.append(errorText: "Debug-rebuilding the message database requires a client and a guild")
                     return
                 }
-                output.append("Debug-rebuilding database...")
-                self.messageDB.rebuildMessages(with: sink, from: guildId, debugMode: true) {
-                    output.append("Querying channel `\($0)`...")
-                }.listen {
-                    do {
-                        try $0.get()
-                        output.append("Done debug-rebuilding database!")
-                    } catch {
-                        output.append(error, errorText: "Error while debug-rebuilding database: \(error)")
+                await output.append("Debug-rebuilding database...")
+                do {
+                    try await self.messageDB.rebuildMessages(with: sink, from: guildId, debugMode: true) {
+                        await output.append("Querying channel `\($0)`...")
                     }
+                    await output.append("Done debug-rebuilding database!")
+                } catch {
+                    await output.append(error, errorText: "Error while debug-rebuilding database: \(error)")
                 }
             },
             "rebuild": { [unowned self] output, context in
                 guard let sink = context.sink, let guildId = context.guild?.id else {
-                    output.append(errorText: "Rebuilding the message database requires a client and a guild")
+                    await output.append(errorText: "Rebuilding the message database requires a client and a guild")
                     return
                 }
-                output.append("Rebuilding database...")
-                self.messageDB.rebuildMessages(with: sink, from: guildId) {
-                    log.info("Querying channel `\($0)`...")
-                }.listen {
-                    do {
-                        try $0.get()
-                        output.append("Done rebuilding database!")
-                    } catch {
-                        output.append(error, errorText: "Error while rebuilding database: \(error)")
+                await output.append("Rebuilding database...")
+                do {
+                    try await self.messageDB.rebuildMessages(with: sink, from: guildId) {
+                        log.info("Querying channel `\($0)`...")
                     }
+                    await output.append("Done rebuilding database!")
+                } catch {
+                    await output.append(error, errorText: "Error while rebuilding database: \(error)")
                 }
             },
-            "track": { [unowned self] output, context throws in
+            "track": { [unowned self] output, context async throws in
                 guard let guild = context.guild else { return }
                 try self.messageDB.setTracked(true, guildId: guild.id)
-                output.append("Successfully started to track messages in `\(guild.name)`")
+                await output.append("Successfully started to track messages in `\(guild.name)`")
             },
-            "untrack": { [unowned self] output, context throws in
+            "untrack": { [unowned self] output, context async throws in
                 guard let guild = context.guild else { return }
                 try self.messageDB.setTracked(false, guildId: guild.id)
-                output.append("Successfully stopped to track messages in `\(guild.name)`")
+                await output.append("Successfully stopped to track messages in `\(guild.name)`")
             }
         ]
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             if let subcommand = subcommands[input] {
-                try subcommand(output, context)
+                try await subcommand(output, context)
             } else {
                 guard !input.isEmpty else {
-                    output.append(errorText: "Please enter an SQL statement or one of these subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+                    await output.append(errorText: "Please enter an SQL statement or one of these subcommands: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
                     return
                 }
 
                 let result = try messageDB.prepare(input).map { $0.map { $0.map { "\($0)" } ?? "?" } }
-                output.append(.table(result))
+                await output.append(.table(result))
             }
         } catch {
-            output.append(error, errorText: "Could not perform command")
+            await output.append(error, errorText: "Could not perform command")
         }
     }
 }

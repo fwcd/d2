@@ -5,5 +5,5 @@ import D2MessageIO
 public protocol PresenceHandler {
     /// Handles a single presence update. Is invoked
     /// for each presence after connecting.
-    mutating func handle(presenceUpdate presence: Presence, sink: any Sink)
+    mutating func handle(presenceUpdate presence: Presence, sink: any Sink) async
 }

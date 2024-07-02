@@ -10,33 +10,36 @@ public class RickrollCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let messageId = context.message.id, let channelId = context.message.channelId else {
-            output.append(errorText: "No message/channel id available")
+            await output.append(errorText: "No message/channel id available")
             return
         }
         guard let sink = context.sink else {
-            output.append(errorText: "No client available")
+            await output.append(errorText: "No client available")
             return
         }
         guard let mentions = input.asMentions else {
-            output.append(errorText: "Mention someone to start!")
+            await output.append(errorText: "Mention someone to start!")
             return
         }
 
         let keepMessage = input.asText?.contains("--keep") ?? false
 
         if keepMessage {
-            rickroll(output: output, mentions: mentions)
+            await rickroll(output: output, mentions: mentions)
         } else {
-            sink.deleteMessage(messageId, on: channelId).listenOrLogError { _ in
-                self.rickroll(output: output, mentions: mentions)
+            do {
+                try await sink.deleteMessage(messageId, on: channelId)
+                await rickroll(output: output, mentions: mentions)
+            } catch {
+                await output.append(error, errorText: "Could not delete message")
             }
         }
     }
 
-    private func rickroll(output: any CommandOutput, mentions: [User]) {
+    private func rickroll(output: any CommandOutput, mentions: [User]) async {
         let what = ["cool video", "meme compilation", "awesome remix", "great song", "tutorial", "nice trailer", "movie"].randomElement()!
-        output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " and ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
+        await output.append("Hey, \(mentions.map { "<@\($0.id)>" }.joined(separator: " and ")), check out this \(what): <https://www.youtube.com/watch?v=dQw4w9WgXcQ>")
     }
 }

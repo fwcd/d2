@@ -2,12 +2,12 @@ import Utils
 import Foundation
 
 extension InteractiveTextChannel {
-    public func send(_ message: String) {
-        send(Message(content: message))
+    public func send(_ message: String) async throws {
+        try await send(Message(content: message))
     }
 
-    public func send(embed: Embed) {
-        send(Message(embed: embed))
+    public func send(embed: Embed) async throws {
+        try await send(Message(embed: embed))
     }
 }
 

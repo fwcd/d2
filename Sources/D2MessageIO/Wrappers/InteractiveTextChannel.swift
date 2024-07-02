@@ -12,12 +12,12 @@ public struct InteractiveTextChannel {
     }
 
     @discardableResult
-    public func send(_ message: Message) -> Promise<Message?, any Error> {
-        sink.sendMessage(message, to: id)
+    public func send(_ message: Message) async throws -> Message? {
+        try await sink.sendMessage(message, to: id)
     }
 
     @discardableResult
-    public func triggerTyping() -> Promise<Bool, any Error> {
-        sink.triggerTyping(on: id)
+    public func triggerTyping() async throws -> Bool {
+        try await sink.triggerTyping(on: id)
     }
 }

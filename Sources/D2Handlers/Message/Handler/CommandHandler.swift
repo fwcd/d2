@@ -96,7 +96,7 @@ public class CommandHandler: MessageHandler {
             return false
         }
         guard currentlyRunningCommands < maxConcurrentlyRunningCommands || unconditionallyAllowedCommands.contains(where: { message.content.starts(with: "\(commandPrefix)\($0)") }) else {
-            sink.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
+            _ = try? await sink.sendMessage("Too many concurrent command invocations, please wait for one to finish!", to: channelId)
             log.notice("Command invocation not processed, since max concurrent operation count was reached")
             return false
         }
@@ -105,9 +105,9 @@ public class CommandHandler: MessageHandler {
 
         // Precedence: Chain < Pipe
         for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
-            if let pipe = constructPipe(rawPipeCommand: rawPipeCommand, message: message, sink: sink) {
+            if let pipe = await constructPipe(rawPipeCommand: rawPipeCommand, message: message, sink: sink) {
                 guard permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
-                    sink.sendMessage("Your pipe is too long.", to: channelId)
+                    _ = try? await sink.sendMessage("Your pipe is too long.", to: channelId)
                     log.notice("Too long pipe")
                     return true
                 }
@@ -117,7 +117,7 @@ public class CommandHandler: MessageHandler {
                 for component in pipe {
                     if let availability = component.command.info.platformAvailability {
                         guard availability.contains(platform) else {
-                            sink.sendMessage("Sorry, the command `\(component.name)` is unavailable on your platform (`\(platform)`). It is supported on: \(availability.map { "`\($0)`" }.joined(separator: ", "))", to: channelId)
+                            _ = try? await sink.sendMessage("Sorry, the command `\(component.name)` is unavailable on your platform (`\(platform)`). It is supported on: \(availability.map { "`\($0)`" }.joined(separator: ", "))", to: channelId)
                             log.notice("\(component.name) is unavailable on \(platform)")
                             return true
                         }
@@ -172,7 +172,7 @@ public class CommandHandler: MessageHandler {
         return true
     }
 
-    private func constructPipe(rawPipeCommand: String, message: Message, sink: any Sink) -> [PipeComponent]? {
+    private func constructPipe(rawPipeCommand: String, message: Message, sink: any Sink) async -> [PipeComponent]? {
         guard let channelId = message.channelId, let author = message.author else { return nil }
         let isBot = author.bot
         var pipe = [PipeComponent]()
@@ -211,7 +211,7 @@ public class CommandHandler: MessageHandler {
                         }
                     } else {
                         log.notice("Rejected '\(name)' by \(author.displayTag) due to insufficient permissions")
-                        sink.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
+                        _ = try? await sink.sendMessage("Sorry, you are not permitted to execute `\(name)`.", to: channelId)
                         return nil
                     }
 
@@ -220,7 +220,7 @@ public class CommandHandler: MessageHandler {
                     log.notice("Did not recognize command '\(name)'")
                     if !isBot {
                         let alternative = registry.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
-                        sink.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
+                        _ = try? await sink.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
                     }
                     return nil
                 }

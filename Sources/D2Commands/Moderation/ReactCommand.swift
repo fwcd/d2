@@ -9,26 +9,26 @@ public class ReactCommand: StringCommand {
         helpText: "Syntax: [message id] [channel id] [emoji name]",
         requiredPermissionLevel: .admin
     )
-    private let timer: RepeatingTimer?
+    private let temporarySeconds: Double?
 
     public init(temporary: Bool = false) {
         info.shortDescription = "Reacts to a message\(temporary ? " temporarily" : "")"
         info.longDescription = info.shortDescription
 
         if temporary {
-            timer = RepeatingTimer(interval: .seconds(5))
+            temporarySeconds = 5
         } else {
-            timer = nil
+            temporarySeconds = nil
         }
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
-            output.append(errorText: "No client available")
+            await output.append(errorText: "No client available")
             return
         }
         guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
@@ -41,16 +41,26 @@ public class ReactCommand: StringCommand {
             let potentialMatches = (sink.guilds ?? [])
                 .flatMap { $0.emojis.values.filter { $0.name == emojiString } }
             guard let emoji = potentialMatches.first else {
-                output.append(errorText: "Could not find match for emoji \(emojiString)")
+                await output.append(errorText: "Could not find match for emoji \(emojiString)")
                 return
             }
             emojiString = emoji.compactDescription
         }
 
-        sink.createReaction(for: messageId, on: channelId, emoji: emojiString)
+        do {
+            try await sink.createReaction(for: messageId, on: channelId, emoji: emojiString)
+        } catch {
+            await output.append(error, errorText: "Could not create reaction")
+            return
+        }
 
-        timer?.schedule(beginImmediately: false) { (_, _) in
-            sink.deleteOwnReaction(for: messageId, on: channelId, emoji: emojiString)
+        if let temporarySeconds {
+            do {
+                try await Task.sleep(for: .seconds(temporarySeconds))
+                try await sink.deleteOwnReaction(for: messageId, on: channelId, emoji: emojiString)
+            } catch {
+                await output.append(error, errorText: "Could not delete reaction")
+            }
         }
     }
 }

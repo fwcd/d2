@@ -39,69 +39,67 @@ public class PatCommand: Command {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let user = input.asMentions?.first else {
-            output.append(errorText: "Please mention someone!")
+            await output.append(errorText: "Please mention someone!")
             return
         }
         guard let author = context.author else {
-            output.append(errorText: "No author")
+            await output.append(errorText: "No author")
             return
         }
         guard let avatarUrl = context.sink?.avatarUrlForUser(user.id, with: user.avatar, size: 128, preferredExtension: "png") else {
-            output.append(errorText: "Could not fetch avatar URL")
+            await output.append(errorText: "Could not fetch avatar URL")
             return
         }
 
-        context.channel?.triggerTyping()
+        _ = try? await context.channel?.triggerTyping()
 
-        Promise(.success(HTTPRequest(url: avatarUrl)))
-            .then { $0.runAsync() }
-            .listen {
-                do {
-                    let data = try $0.get()
-                    guard !data.isEmpty else {
-                        output.append(errorText: "No avatar available")
-                        return
+        do {
+            let request = HTTPRequest(url: avatarUrl)
+            let data = try await request.run()
+
+            guard !data.isEmpty else {
+                await output.append(errorText: "No avatar available")
+                return
+            }
+
+            let patHand = try CairoImage(pngFilePath: "Resources/Fun/patHand.png")
+            let avatarImage = try CairoImage(pngData: data)
+            let width = avatarImage.width
+            let height = avatarImage.height
+            let radiusSquared = (width * height) / 4
+            var gif = GIF(quantizingImage: avatarImage)
+
+            // Cut out round avatar
+            for y in 0..<height {
+                for x in 0..<width {
+                    let cx = x - (width / 2)
+                    let cy = y - (height / 2)
+                    if (cx * cx) + (cy * cy) > radiusSquared {
+                        avatarImage[y, x] = .transparent
                     }
-
-                    let patHand = try CairoImage(pngFilePath: "Resources/Fun/patHand.png")
-                    let avatarImage = try CairoImage(pngData: data)
-                    let width = avatarImage.width
-                    let height = avatarImage.height
-                    let radiusSquared = (width * height) / 4
-                    var gif = GIF(quantizingImage: avatarImage)
-
-                    // Cut out round avatar
-                    for y in 0..<height {
-                        for x in 0..<width {
-                            let cx = x - (width / 2)
-                            let cy = y - (height / 2)
-                            if (cx * cx) + (cy * cy) > radiusSquared {
-                                avatarImage[y, x] = .transparent
-                            }
-                        }
-                    }
-
-                    // Render the animation
-                    for i in 0..<self.frameCount {
-                        let frame = try CairoImage(width: width, height: height)
-                        let percent = Double(i) / Double(self.frameCount)
-                        let graphics = CairoContext(image: frame)
-
-                        graphics.draw(image: avatarImage)
-                        graphics.draw(image: patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
-
-                        gif.frames.append(.init(image: frame, delayTime: self.delayTime))
-                    }
-
-                    output.append(.gif(gif))
-
-                    // Place the pat in the recipient's inventory
-                    self.inventoryManager[user].append(item: .init(id: "pat-\(author.username)", name: "Pat by \(author.username)"), to: "Pats")
-                } catch {
-                    output.append(errorText: "The avatar could not be fetched \(error)")
                 }
             }
+
+            // Render the animation
+            for i in 0..<self.frameCount {
+                let frame = try CairoImage(width: width, height: height)
+                let percent = Double(i) / Double(self.frameCount)
+                let graphics = CairoContext(image: frame)
+
+                graphics.draw(image: avatarImage)
+                graphics.draw(image: patHand, at: self.patOffset + Vec2(y: self.patScale * (1 - abs(pow(2 * percent - 1, Double(self.patPower))))))
+
+                gif.frames.append(.init(image: frame, delayTime: self.delayTime))
+            }
+
+            await output.append(.gif(gif))
+
+            // Place the pat in the recipient's inventory
+            self.inventoryManager[user].append(item: .init(id: "pat-\(author.username)", name: "Pat by \(author.username)"), to: "Pats")
+        } catch {
+            await output.append(errorText: "The avatar could not be fetched \(error)")
+        }
     }
 }

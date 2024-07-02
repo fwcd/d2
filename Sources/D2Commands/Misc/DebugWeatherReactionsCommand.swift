@@ -12,17 +12,17 @@ public class DebugWeatherReactionsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
-            output.append(errorText: "No client available")
+            await output.append(errorText: "No client available")
             return
         }
         guard let messageId = context.message.id else {
-            output.append(errorText: "No message id available")
+            await output.append(errorText: "No message id available")
             return
         }
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "No channel id available")
+            await output.append(errorText: "No channel id available")
             return
         }
 
@@ -42,12 +42,16 @@ public class DebugWeatherReactionsCommand: StringCommand {
             (main: "mist", description: ""),
         ]
 
-        for weather in weathers {
-            if let emoji = OpenWeatherMapWeather.Weather.emojiFor(main: weather.main, description: weather.description) {
-                sink.createReaction(for: messageId, on: channelId, emoji: emoji)
-            } else {
-                log.warning("Weather \(weather) has no emoji representation")
+        do {
+            for weather in weathers {
+                if let emoji = OpenWeatherMapWeather.Weather.emojiFor(main: weather.main, description: weather.description) {
+                    try await sink.createReaction(for: messageId, on: channelId, emoji: emoji)
+                } else {
+                    log.warning("Weather \(weather) has no emoji representation")
+                }
             }
+        } catch {
+            await output.append(error, errorText: "Could not create weather reactions")
         }
     }
 }

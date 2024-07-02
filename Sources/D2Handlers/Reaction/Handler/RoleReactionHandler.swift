@@ -12,7 +12,7 @@ public struct RoleReactionHandler: ReactionHandler {
         self._configuration = _configuration
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {
         if
             let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
             let guild = sink.guildForChannel(channelId),
@@ -20,12 +20,16 @@ public struct RoleReactionHandler: ReactionHandler {
             let member = guild.members[userId],
             !member.user.bot,
             !member.roleIds.contains(roleId) {
-            log.info("Adding role \(role.name) upong reaction to \(member.displayName)")
-            sink.addGuildMemberRole(roleId, to: userId, on: guild.id, reason: "Reaction")
+            log.info("Adding role \(role.name) upon reaction to \(member.displayName)")
+            do {
+                try await sink.addGuildMemberRole(roleId, to: userId, on: guild.id, reason: "Reaction")
+            } catch {
+                log.warning("Could not add role \(role.name) upon reaction to \(member.displayName)")
+            }
         }
     }
 
-    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
+    public func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {
         if
             let roleId = configuration.roleMessages[messageId]?[emoji.compactDescription],
             let guild = sink.guildForChannel(channelId),
@@ -33,8 +37,12 @@ public struct RoleReactionHandler: ReactionHandler {
             let member = guild.members[userId],
             !member.user.bot,
             member.roleIds.contains(roleId) {
-            log.info("Removing role \(role.name) upong reaction from \(member.displayName)")
-            sink.removeGuildMemberRole(roleId, from: userId, on: guild.id, reason: "Reaction")
+            log.info("Removing role \(role.name) upon reaction from \(member.displayName)")
+            do {
+                try await sink.removeGuildMemberRole(roleId, from: userId, on: guild.id, reason: "Reaction")
+            } catch {
+                log.warning("Could not remove role \(role.name) upon reaction from \(member.displayName)")
+            }
         }
     }
 }
