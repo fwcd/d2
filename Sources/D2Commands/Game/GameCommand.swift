@@ -44,28 +44,28 @@ public class GameCommand<G: Game>: Command {
             """
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         let text = input.asText ?? ""
         if let subcommand = subcommands[text] {
             do {
                 try subcommand(output)
             } catch {
-                output.append(error, errorText: "Error while running subcommand: \(error)")
+                await output.append(error, errorText: "Error while running subcommand: \(error)")
             }
             return
         }
 
         guard let channel = context.channel else {
-            output.append(errorText: "No channel to play on.")
+            await output.append(errorText: "No channel to play on.")
             return
         }
 
         guard let mentions = input.asMentions, mentions.count >= 1 || game.permitsSinglePlayer else {
-            output.append(errorText: "Mention one or more users to play against.")
+            await output.append(errorText: "Mention one or more users to play against.")
             return
         }
         guard let author = context.author else {
-            output.append(errorText: "Message has no author.")
+            await output.append(errorText: "Message has no author.")
             return
         }
 
@@ -74,11 +74,11 @@ public class GameCommand<G: Game>: Command {
 
         // TODO: Support computer vs. computer matches without spamming the channel
         guard players.count(forWhich: \.isAutomatic) <= 1 else {
-            output.append(errorText: "Matches with multiple automatic players are currently not supported!")
+            await output.append(errorText: "Matches with multiple automatic players are currently not supported!")
             return
         }
 
-        startMatch(between: players, on: channel.id, output: output, flags: flags)
+        await startMatch(between: players, on: channel.id, output: output, flags: flags)
         context.subscribeToChannel()
     }
 
@@ -96,25 +96,25 @@ public class GameCommand<G: Game>: Command {
         return Set(input.matches(of: flagRegex).map { String($0.1) })
     }
 
-    private func sendHandsAsDMs(fromState state: G.State, to output: any CommandOutput) {
+    private func sendHandsAsDMs(fromState state: G.State, to output: any CommandOutput) async {
         let currentPlayers = state.playersOf(role: state.currentRole)
 
         if game.onlySendHandToCurrentRole && !game.isRealTime && !currentPlayers.isEmpty {
             if let hand = state.hands[state.currentRole] {
                 for player in currentPlayers {
-                    output.append(hand.asRichValue, to: .dmChannel(player.id))
+                    await output.append(hand.asRichValue, to: .dmChannel(player.id))
                 }
             }
         } else {
             for (role, hand) in state.hands {
                 for player in state.playersOf(role: role) {
-                    output.append(hand.asRichValue, to: .dmChannel(player.id))
+                    await output.append(hand.asRichValue, to: .dmChannel(player.id))
                 }
             }
         }
     }
 
-    func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: any CommandOutput, flags: Set<String> = []) {
+    func startMatch(between players: [GamePlayer], on channelID: ChannelID, output: any CommandOutput, flags: Set<String> = []) async {
         do {
             var additionalMsg: RichValue = .none
             if let previousMatch = matches[channelID] {
@@ -137,7 +137,7 @@ public class GameCommand<G: Game>: Command {
                 }
             }
 
-            output.append(.compound([
+            await output.append(.compound([
                 encodedBoard,
                 additionalMsg,
                 .embed(Embed(
@@ -151,11 +151,11 @@ public class GameCommand<G: Game>: Command {
                     ]
                 ))
             ]))
-            sendHandsAsDMs(fromState: state, to: output)
+            await sendHandsAsDMs(fromState: state, to: output)
         } catch let GameError.invalidPlayerCount(reason) {
-            output.append(errorText: "Invalid player count: \(reason)")
+            await output.append(errorText: "Invalid player count: \(reason)")
         } catch {
-            output.append(error, errorText: "Could not create match")
+            await output.append(error, errorText: "Could not create match")
         }
     }
 
@@ -167,10 +167,13 @@ public class GameCommand<G: Game>: Command {
         guard let author = context.author.map({ gamePlayer(from: $0, context: context) }) else { return }
 
         if let actionArgs = try? actionMessageRegex.firstMatch(in: content), let channel = context.channel, let sink = context.sink {
-            let channelName = sink.guildForChannel(channel.id)?.channels[channel.id]?.name
-            let continueSubscription = perform(String(actionArgs.1), withArgs: String(actionArgs.2 ?? ""), on: channel.id, channelName: channelName, output: output, author: author)
-            if !continueSubscription {
-                context.unsubscribeFromChannel()
+            // TODO: Remove once onSubscriptionMessage is async
+            Task {
+                let channelName = sink.guildForChannel(channel.id)?.channels[channel.id]?.name
+                let continueSubscription = await perform(String(actionArgs.1), withArgs: String(actionArgs.2 ?? ""), on: channel.id, channelName: channelName, output: output, author: author)
+                if !continueSubscription {
+                    context.unsubscribeFromChannel()
+                }
             }
         }
     }
@@ -182,7 +185,7 @@ public class GameCommand<G: Game>: Command {
     /// Performs a game action if present, otherwise does nothing. Returns whether to continue the subscription.
     /// Automatically performs subsequent computer moves as needed.
     @discardableResult
-    func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, channelName: String? = nil, output: any CommandOutput, author: GamePlayer) -> Bool {
+    func perform(_ actionKey: String, withArgs args: String, on channelID: ChannelID, channelName: String? = nil, output: any CommandOutput, author: GamePlayer) async -> Bool {
         guard let state = matches[channelID], (author.isUser || game.apiActions.contains(actionKey) || defaultApiActions.contains(actionKey)) else { return true }
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true
@@ -200,13 +203,13 @@ public class GameCommand<G: Game>: Command {
             guard !actionResult.onlyCurrentPlayer
                 || game.isRealTime
                 || state.rolesOf(player: author).contains(state.currentRole) else {
-                output.append(errorText: "It is not your turn, `\(author.username)`")
+                await output.append(errorText: "It is not your turn, `\(author.username)`")
                 return true
             }
 
             if actionResult.cancelsMatch {
                 matches[channelID] = nil
-                output.append("Cancelled match: \(state.playersDescription)")
+                await output.append("Cancelled match: \(state.playersDescription)")
                 return false
             }
 
@@ -214,7 +217,7 @@ public class GameCommand<G: Game>: Command {
                 try performAutomaticMoves(on: &next)
 
                 // Output user's hands
-                sendHandsAsDMs(fromState: next, to: output)
+                await sendHandsAsDMs(fromState: next, to: output)
 
                 let gameOver = next.isGameOver
 
@@ -229,31 +232,31 @@ public class GameCommand<G: Game>: Command {
 
                 if !silent || !continueSubscription {
                     // Output next board
-                    output.append(render(state: next, additionalText: actionResult.text, additionalFiles: actionResult.files))
+                    await output.append(render(state: next, additionalText: actionResult.text, additionalFiles: actionResult.files))
                 }
 
                 if gameOver, let finalAction = try game.finalAction.flatMap({ try game.actions[$0]?(ActionParameters(state: next, player: author, channelName: channelName)) }) {
-                    output.append(.files(finalAction.files))
+                    await output.append(.files(finalAction.files))
                 }
             } else {
                 if let text = actionResult.text {
-                    output.append(text)
+                    await output.append(text)
                 }
 
                 if !actionResult.files.isEmpty {
-                    output.append(.files(actionResult.files))
+                    await output.append(.files(actionResult.files))
                 }
             }
         } catch GameError.invalidMove(let msg) {
-            output.append(errorText: "Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
+            await output.append(errorText: "Invalid move by \(describe(role: state.currentRole, in: state)): \(msg)")
         } catch GameError.ambiguousMove(let msg) {
-            output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+            await output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
         } catch GameError.incompleteMove(let msg) {
-            output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
+            await output.append(errorText: "Ambiguous move by \(describe(role: state.currentRole, in: state)): \(msg)")
         } catch GameError.moveOutOfBounds(let msg) {
-            output.append(errorText: "Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
+            await output.append(errorText: "Move by \(describe(role: state.currentRole, in: state)) out of bounds: \(msg)")
         } catch {
-            output.append(error, errorText: "Error while performing move")
+            await output.append(error, errorText: "Error while performing move")
         }
 
         return continueSubscription
