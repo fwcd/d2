@@ -11,22 +11,20 @@ public class ExamCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
-        CAUCSExamsQuery().perform().listen { [self] in
-            do {
-                let exams = try $0.get()
-                if !input.isEmpty {
-                    if let exam = bestMatch(for: input, in: exams) {
-                        output.append(embed(of: exam))
-                    } else {
-                        output.append(errorText: "Could not find a matching exam")
-                    }
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
+        do {
+            let exams = try await CAUCSExamsQuery().perform()
+            if !input.isEmpty {
+                if let exam = bestMatch(for: input, in: exams) {
+                    output.append(embed(of: exam))
                 } else {
-                    output.append(embed(of: exams))
+                    output.append(errorText: "Could not find a matching exam")
                 }
-            } catch {
-                output.append(error, errorText: "Could not query CAU CS exams")
+            } else {
+                output.append(embed(of: exams))
             }
+        } catch {
+            output.append(error, errorText: "Could not query CAU CS exams")
         }
     }
 
