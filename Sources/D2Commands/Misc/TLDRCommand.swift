@@ -28,13 +28,13 @@ public class TLDRCommand: StringCommand {
         self.maxSentenceCount = maxSentenceCount
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink, let channelId = context.channel?.id else {
-            output.append(errorText: "No MessageIO client/channel/guild available")
+            await output.append(errorText: "No MessageIO client/channel/guild available")
             return
         }
         guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
@@ -42,22 +42,25 @@ public class TLDRCommand: StringCommand {
         let messageCount = parsedArgs.count.flatMap { Int($0) } ?? 80
 
         guard messageCount <= maxMessageCount else {
-            output.append(errorText: "More than \(maxMessageCount) \("message".pluralized(with: maxMessageCount)) messages are currently not supported")
+            await output.append(errorText: "More than \(maxMessageCount) \("message".pluralized(with: maxMessageCount)) messages are currently not supported")
             return
         }
 
         // TODO: Support more messages using message db
 
-        sink.getMessages(for: tldrChannelName, limit: messageCount).listenOrLogError { messages in
+        do {
+            let messages = try await sink.getMessages(for: tldrChannelName, limit: messageCount)
             let sentences = messages
                 .sorted(by: ascendingComparator { $0.timestamp ?? .distantPast })
                 .flatMap { $0.content.split(separator: ".").map(String.init) }
             let summary = self.summarize(sentences: sentences, summarySentenceCount: min(self.maxSentenceCount, messageCount / 2))
 
-            output.append(Embed(
+            await output.append(Embed(
                 title: "TL;DR of the last \(messageCount) \("message".pluralized(with: messageCount))",
                 description: summary.joined(separator: " [...] ").nilIfEmpty
             ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch messages")
         }
     }
 

@@ -11,33 +11,27 @@ public class CreateEmojiCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink, let guild = context.guild else {
-            output.append(errorText: "Please make sure that a client and a guild exists!")
+            await output.append(errorText: "Please make sure that a client and a guild exists!")
             return
         }
         guard let name = input.asText, !name.isEmpty else {
-            output.append(errorText: "Please enter a name for the emoji!")
+            await output.append(errorText: "Please enter a name for the emoji!")
             return
         }
 
         guard let encoded = try? ((input.asImage?.pngEncoded()).map { "data:image/png;base64,\($0.base64EncodedString())" }
                                 ?? (input.asGif?.encoded()).map { "data:image/gif;base64,\($0.base64EncodedString())" }) else {
-            output.append(errorText: "Please input an image or a GIF!")
+            await output.append(errorText: "Please input an image or a GIF!")
             return
         }
 
-        sink.createEmoji(on: guild.id, name: name, image: encoded)
-            .listen {
-                do {
-                    guard let emoji = try $0.get() else {
-                        output.append(errorText: "No emoji created!")
-                        return
-                    }
-                    output.append("Created emoji \(emoji)!")
-                } catch {
-                    output.append(error, errorText: "Could not create emoji")
-                }
-            }
+        do {
+            let emoji = try await sink.createEmoji(on: guild.id, name: name, image: encoded)
+            await output.append("Created emoji \(emoji)!")
+        } catch {
+            await output.append(error, errorText: "Could not create emoji")
+        }
     }
 }

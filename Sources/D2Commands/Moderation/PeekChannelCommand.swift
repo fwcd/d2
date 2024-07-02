@@ -12,9 +12,9 @@ public class PeekChannelCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
-            output.append(errorText: "No client available!")
+            await output.append(errorText: "No client available!")
             return
         }
 
@@ -27,24 +27,22 @@ public class PeekChannelCommand: StringCommand {
         }
 
         guard let channelId = parsedId else {
-            output.append(errorText: "Could not parse ID")
+            await output.append(errorText: "Could not parse ID")
             return
         }
 
-        sink.getMessages(for: channelId, limit: 20).listen {
-            do {
-                let messages = try $0.get()
-                output.append(Embed(
-                    title: ":roll_of_paper: Most Recent Messages",
-                    description: messages
-                        .compactMap { m in m.timestamp.map { ($0, m) } }
-                        .sorted(by: ascendingComparator(comparing: \.0))
-                        .map { "[\($0.0)] `\($0.1.author?.username ?? "<unnamed>")`: \($0.1.content.truncated(to: 100, appending: "..."))" }
-                        .joined(separator: "\n")
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch channel's messages")
-            }
+        do {
+            let messages = try await sink.getMessages(for: channelId, limit: 20)
+            await output.append(Embed(
+                title: ":roll_of_paper: Most Recent Messages",
+                description: messages
+                    .compactMap { m in m.timestamp.map { ($0, m) } }
+                    .sorted(by: ascendingComparator(comparing: \.0))
+                    .map { "[\($0.0)] `\($0.1.author?.username ?? "<unnamed>")`: \($0.1.content.truncated(to: 100, appending: "..."))" }
+                    .joined(separator: "\n")
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch channel's messages")
         }
     }
 }

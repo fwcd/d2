@@ -1,7 +1,9 @@
 import Utils
+import Logging
 import D2MessageIO
 
 fileprivate let numberPattern = #/\d+/#
+fileprivate let log = Logger(label: "D2Handlers.LuckyNumberHandler")
 
 public struct LuckyNumberHandler: MessageHandler {
     private let luckyNumbers: Set<Int>
@@ -14,20 +16,24 @@ public struct LuckyNumberHandler: MessageHandler {
         self.minimumNumberCount = minimumNumberCount
     }
 
-    public func handle(message: Message, sink: any Sink) -> Bool {
+    public func handle(message: Message, sink: any Sink) async -> Bool {
         if let channelId = message.channelId {
             let numbers = message.content.matches(of: numberPattern).compactMap { Int($0.0) }
             let sum = numbers.reduce(0, +)
             if isLucky(sum) && numbers.count >= minimumNumberCount {
-                sink.sendMessage(
-                    """
-                    All the numbers in your message added up to \(sum). Congrats!
-                    ```
-                    \(numbers.map { "\($0)" }.reduce1 { "\($0) + \($1)" } ?? "_empty sum_") = \(sum)
-                    ```
-                    """,
-                    to: channelId
-                )
+                do {
+                    try await sink.sendMessage(
+                        """
+                        All the numbers in your message added up to \(sum). Congrats!
+                        ```
+                        \(numbers.map { "\($0)" }.reduce1 { "\($0) + \($1)" } ?? "_empty sum_") = \(sum)
+                        ```
+                        """,
+                        to: channelId
+                    )
+                } catch {
+                    log.warning("Could not send lucky number message: \(error)")
+                }
             }
         }
         return false

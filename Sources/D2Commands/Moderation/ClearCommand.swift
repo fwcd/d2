@@ -15,7 +15,7 @@ public class ClearCommand: StringCommand {
     )
     private let minDeletableCount: Int
     private let maxDeletableCount: Int
-    private let finalConfirmationDeletionTimer: RepeatingTimer
+    private let finalConfirmationDeletionSeconds: Double
     private var preparedDeletions: [ChannelID: [Deletion]] = [:]
     private var finallyConfirmed: Set<ChannelID> = []
 
@@ -24,34 +24,35 @@ public class ClearCommand: StringCommand {
         let isIntended: Bool // Whether this was NOT a confirmational message during the deletion process
     }
 
-    public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80, finalConfirmationDeletionSeconds: Int = 2) {
+    public init(minDeletableCount: Int = 1, maxDeletableCount: Int = 80, finalConfirmationDeletionSeconds: Double = 2) {
         self.minDeletableCount = minDeletableCount
         self.maxDeletableCount = maxDeletableCount
-        finalConfirmationDeletionTimer = RepeatingTimer(interval: .seconds(finalConfirmationDeletionSeconds))
+        self.finalConfirmationDeletionSeconds = finalConfirmationDeletionSeconds
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
-            output.append(errorText: "No MessageIO client available")
+            await output.append(errorText: "No MessageIO client available")
             return
         }
         guard let n = Int(input), n >= minDeletableCount, n <= maxDeletableCount else {
-            output.append(errorText: "Please enter a number (of messages to be deleted) between \(minDeletableCount) and \(maxDeletableCount)!")
+            await output.append(errorText: "Please enter a number (of messages to be deleted) between \(minDeletableCount) and \(maxDeletableCount)!")
             return
         }
         guard let channelId = context.message.channelId else {
-            output.append(errorText: "Message has no channel ID")
+            await output.append(errorText: "Message has no channel ID")
             return
         }
 
-        sink.getMessages(for: channelId, limit: n + 1).listenOrLogError { messages in
+        do {
+            let messages = try await sink.getMessages(for: channelId, limit: n + 1)
             let deletions = messages.map { Deletion(message: $0, isIntended: $0.id != context.message.id) }
             let intended = deletions.filter { $0.isIntended }.map { $0.message }
 
             self.preparedDeletions[channelId] = deletions
             let grouped = Dictionary(grouping: intended, by: { $0.author?.username ?? "<unnamed>" })
 
-            output.append(Embed(
+            await output.append(Embed(
                 title: ":warning: You are about to DELETE \(intended.count) \("message".pluralized(with: intended.count))",
                 description: """
                     \(grouped.map { "\($0.1.count) \("message".pluralized(with: $0.1.count)) by \($0.0)" }.joined(separator: "\n").nilIfEmpty ?? "_none_")
@@ -59,44 +60,45 @@ public class ClearCommand: StringCommand {
                     Are you sure? Enter `\(confirmationString)` to confirm (any other message will cancel).
                     """
             ))
+            context.subscribeToChannel()
+        } catch {
+            await output.append(error, errorText: "Could not get messages")
         }
-        context.subscribeToChannel()
     }
 
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
         if let sink = context.sink, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
-            let intendedDeletionCount = deletions.filter { $0.isIntended }.count
-            let confirmationDeletionCount = deletions.count - intendedDeletionCount
-            preparedDeletions[channel.id] = nil
+            // TODO: Remove once onSubscriptionMessage is async
+            Task {
+                let intendedDeletionCount = deletions.filter { $0.isIntended }.count
+                let confirmationDeletionCount = deletions.count - intendedDeletionCount
+                preparedDeletions[channel.id] = nil
 
-            if content == confirmationString {
-                log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
-                if deletions.count == 1, let messageId = deletions.first?.message.id {
-                    sink.deleteMessage(messageId, on: channel.id).listenOrLogError { success in
-                        if success {
+                if content == confirmationString {
+                    log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
+                    if deletions.count == 1, let messageId = deletions.first?.message.id {
+                        if (try? await sink.deleteMessage(messageId, on: channel.id)) ?? false {
                             self.finallyConfirmed.insert(channel.id)
-                            output.append(":wastebasket: Deleted message")
+                            await output.append(":wastebasket: Deleted message")
                         } else {
-                            output.append(errorText: "Could not delete message")
+                            await output.append(errorText: "Could not delete message")
+                        }
+                    } else {
+                        let messageIds = deletions.compactMap { $0.message.id }
+                        guard !messageIds.isEmpty else {
+                            await output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
+                            return
+                        }
+                        if (try? await sink.bulkDeleteMessages(messageIds, on: channel.id)) ?? false {
+                            self.finallyConfirmed.insert(channel.id)
+                            await output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
+                        } else {
+                            await output.append(errorText: "Could not delete messages")
                         }
                     }
                 } else {
-                    let messageIds = deletions.compactMap { $0.message.id }
-                    guard !messageIds.isEmpty else {
-                        output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
-                        return
-                    }
-                    sink.bulkDeleteMessages(messageIds, on: channel.id).listenOrLogError { success in
-                        if success {
-                            self.finallyConfirmed.insert(channel.id)
-                            output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
-                        } else {
-                            output.append(errorText: "Could not delete messages")
-                        }
-                    }
+                    await output.append(":x: Cancelling deletion")
                 }
-            } else {
-                output.append(":x: Cancelling deletion")
             }
         }
 
@@ -120,8 +122,13 @@ public class ClearCommand: StringCommand {
             }
 
             // Automatically delete the final confirmation message after some time
-            finalConfirmationDeletionTimer.schedule(beginImmediately: false) { _, _ in
-                sink.deleteMessage(messageId, on: channelId)
+            Task {
+                do {
+                    try await Task.sleep(for: .seconds(finalConfirmationDeletionSeconds))
+                    try await sink.deleteMessage(messageId, on: channelId)
+                } catch {
+                    log.warning("Could not delete final confirmation message: \(error)")
+                }
             }
         }
     }

@@ -16,7 +16,7 @@ public struct MessagePreviewHandler: MessageHandler {
         self._configuration = _configuration
     }
 
-    public func handle(message: Message, sink: any Sink) -> Bool {
+    public func handle(message: Message, sink: any Sink) async -> Bool {
         if sink.name == "Discord",
             let guild = message.guild,
             configuration.enabledGuildIds.contains(guild.id),
@@ -26,21 +26,28 @@ public struct MessagePreviewHandler: MessageHandler {
             let previewedChannelId = ID(String(parsedLink.channelId), clientName: sink.name)
             let previewedMessageId = ID(String(parsedLink.messageId), clientName: sink.name)
 
-            sink.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId)).listenOrLogError { messages in
+            do {
+                let messages = try await sink.getMessages(for: previewedChannelId, limit: 1, selection: .around(previewedMessageId))
                 if let message = messages.first,
                     let author = message.author,
                     let member = guild.members[author.id] {
-                    sink.sendMessage(Message(embed: Embed(
-                        title: message.content.truncated(to: 200, appending: "..."),
-                        author: Embed.Author(
-                            name: member.displayName,
-                            iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\(author.id)/\(author.avatar).png?size=64")
-                        ),
-                        image: (message.attachments.first?.url).map(Embed.Image.init(url:))
-                    )), to: channelId)
+                    do {
+                        try await sink.sendMessage(Message(embed: Embed(
+                            title: message.content.truncated(to: 200, appending: "..."),
+                            author: Embed.Author(
+                                name: member.displayName,
+                                iconUrl: URL(string: "https://cdn.discordapp.com/avatars/\(author.id)/\(author.avatar).png?size=64")
+                            ),
+                            image: (message.attachments.first?.url).map(Embed.Image.init(url:))
+                        )), to: channelId)
+                    } catch {
+                        log.warning("Could not send message preview: \(error)")
+                    }
                 } else {
                     log.warning("Could not generate preview for message with ID \(message.id.map { "\($0)" } ?? "?")")
                 }
+            } catch {
+                log.warning("Could not fetch message for preview: \(error)")
             }
         }
 

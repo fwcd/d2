@@ -3,19 +3,23 @@ import Dispatch
 /// A simple pub/sub facility for publishing log messages.
 actor LogOutput {
     private var isSilenced: Bool = false
-    private var consumers: [(String) -> Void] = []
+    private var consumers: [(String) async -> Void] = []
 
     /// Registers a consumer for log messages.
-    func register(_ consumer: @escaping (String) -> Void) {
+    func register(_ consumer: @escaping (String) async -> Void) {
         consumers.append(consumer)
     }
 
     /// Publishes a log message.
-    func publish(_ message: String) {
+    func publish(_ message: String) async {
         guard !isSilenced else { return }
         isSilenced = true
-        for consumer in consumers {
-            consumer(message)
+        await withDiscardingTaskGroup { group in
+            for consumer in consumers {
+                group.addTask {
+                    await consumer(message)
+                }
+            }
         }
         isSilenced = false
     }

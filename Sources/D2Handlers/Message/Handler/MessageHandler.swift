@@ -20,7 +20,7 @@ public protocol MessageHandler {
 }
 
 public extension MessageHandler {
-    func handle(message: Message, sink: any Sink) -> Bool { false }
+    func handle(message: Message, sink: any Sink) async -> Bool { false }
 
-    func handleRaw(message: Message, sink: any Sink) -> Bool { false }
+    func handleRaw(message: Message, sink: any Sink) async -> Bool { false }
 }

@@ -1,3 +1,7 @@
+import Logging
+
+private let log = Logger(label: "D2Commands.BufferedOutput")
+
 /// A buffered output that accumulates RichValues and first outputs once
 /// flushed (or deinited, in which case it happens automatically).
 public class BufferedOutput: CommandOutput {
@@ -17,16 +21,23 @@ public class BufferedOutput: CommandOutput {
         inner.update(context: context)
     }
 
-    public func flush() {
+    public func flush() async {
         if !buffer.isEmpty {
             for (channel, values) in buffer {
-                inner.append(.compound(values), to: channel)
+                await inner.append(.compound(values), to: channel)
             }
             buffer = [:]
         }
     }
 
     deinit {
-        flush()
+        if !buffer.isEmpty {
+            log.warning("BufferedOutput contained \(buffer.count) \("value".pluralized(with: buffer.count)) at deinitialization, which will now be flushed automatically. This may sometimes lead to unexpected behavior, since the outputs may be appended asynchronously/out-of-order. It is recommended to .flush() and await explicitly.")
+
+            for (channel, values) in buffer {
+                inner.append(.compound(values), to: channel)
+            }
+            buffer = [:]
+        }
     }
 }

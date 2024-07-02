@@ -190,6 +190,18 @@ public class GameCommand<G: Game>: Command {
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true
 
+        // TODO: The interaction between BufferedOutput and async/await is not
+        // ideal here. Ideally, we would like to perform an (awaited) flush in
+        // the deinitializer, but Swift does not seem to provide a way to do
+        // that. The next best solution would be something like this:
+        //
+        //     defer { await output.flush() }
+        //
+        // ...to ensure that both all outputs are flushed after the method
+        // exits, which is mostly important for tests. Unfortunately, Swift
+        // does not allow asynchronous defer blocks, so we have to manually
+        // guard scope exits.
+
         do {
             let params = ActionParameters(
                 args: args,
@@ -204,12 +216,14 @@ public class GameCommand<G: Game>: Command {
                 || game.isRealTime
                 || state.rolesOf(player: author).contains(state.currentRole) else {
                 await output.append(errorText: "It is not your turn, `\(author.username)`")
+                await output.flush()
                 return true
             }
 
             if actionResult.cancelsMatch {
                 matches[channelID] = nil
                 await output.append("Cancelled match: \(state.playersDescription)")
+                await output.flush()
                 return false
             }
 
@@ -258,6 +272,8 @@ public class GameCommand<G: Game>: Command {
         } catch {
             await output.append(error, errorText: "Error while performing move")
         }
+
+        await output.flush()
 
         return continueSubscription
     }

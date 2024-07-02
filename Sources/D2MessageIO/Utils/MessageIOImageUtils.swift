@@ -3,12 +3,12 @@ import CairoGraphics
 import GIF
 
 extension InteractiveTextChannel {
-    public func send(image: CairoImage) throws {
-        send(try Message(fromImage: image))
+    public func send(image: CairoImage) async throws {
+        try await send(Message(fromImage: image))
     }
 
-    public func send(gif: GIF) throws {
-        send(try Message(fromGif: gif))
+    public func send(gif: GIF) async throws {
+        try await send(Message(fromGif: gif))
     }
 }
 

@@ -62,16 +62,22 @@ public class PronounsCommand: StringCommand {
             return
         }
 
-        let pronounRoles = [RoleID: String](uniqueKeysWithValues: config.pronounRoles[guild.id]?.map { ($0.value, $0.key) } ?? [])
-        for otherRoleId in pronounRoles.keys where otherRoleId != roleId {
-            sink.removeGuildMemberRole(otherRoleId, from: user.id, on: guild.id, reason: "Pronoun role switched")
-        }
-
-        let roleName = pronounRoles[roleId] ?? "?"
-        sink.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role added").listen {
-            output.append("Switched your pronoun role to \(roleName)!")
-            if case .success(false) = $0 {
-                log.warning("Could not add pronoun role \(roleName) (\(roleId)) to \(user.username) (\(user.id))")
+        // TODO: Remove once onSubscriptionInteraction is async
+        Task {
+            do {
+                let pronounRoles = [RoleID: String](uniqueKeysWithValues: self.config.pronounRoles[guild.id]?.map { ($0.value, $0.key) } ?? [])
+                for otherRoleId in pronounRoles.keys where otherRoleId != roleId {
+                    try await sink.removeGuildMemberRole(otherRoleId, from: user.id, on: guild.id, reason: "Pronoun role switched")
+                }
+                let roleName = pronounRoles[roleId] ?? "?"
+                do {
+                    try await sink.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role added")
+                    await output.append("Switched your pronoun role to \(roleName)!")
+                } catch {
+                    log.error("Could not add pronoun role \(roleName) (\(roleId)) to \(user.username) (\(user.id))")
+                }
+            } catch {
+                log.error("Could not remove pronoun roles: \(error)")
             }
         }
     }

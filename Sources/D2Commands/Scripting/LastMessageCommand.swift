@@ -22,7 +22,7 @@ public class LastMessageCommand: Command {
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         do {
-            let messages = try await context.sink?.getMessages(for: context.channel!.id, limit: 2).get()
+            let messages = try await context.sink?.getMessages(for: context.channel!.id, limit: 2)
             guard let message = messages?[safely: 1] else {
                 throw LastMessageError.noLastMessage
             }

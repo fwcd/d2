@@ -70,12 +70,12 @@ extension TestOutput: DefaultSink {
         guilds?.first { $0.channels.keys.contains(channelId) }
     }
 
-    public func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> Promise<D2MessageIO.Message?, any Error> {
+    public func sendMessage(_ message: D2MessageIO.Message, to channelId: ChannelID) -> D2MessageIO.Message? {
         append(message: message)
-        return Promise(.success(message))
+        return message
     }
 
-    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Promise<Message?, Error> {
+    public func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) -> Message? {
         for i in messages.indices where messages[i].id == messageId {
             var reactions = Dictionary(grouping: messages[i].reactions, by: \.emoji.description)
             // TODO: Add proper conversion from emoji string to Emoji structure
@@ -90,6 +90,6 @@ extension TestOutput: DefaultSink {
             messages[i].reactions = reactions.values.flatMap { $0 }
             return .init(messages[i])
         }
-        return .init(nil)
+        return nil
     }
 }

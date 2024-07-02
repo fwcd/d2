@@ -1,7 +1,9 @@
 import Utils
+import Logging
 import D2MessageIO
 
 fileprivate let factorialPattern = #/\b(?<operand>\d+)!\b/#
+fileprivate let log = Logger(label: "D2Handlers.FactorialHandler")
 
 public struct FactorialHandler: MessageHandler {
     private let operandRange: Range<Int>
@@ -10,7 +12,7 @@ public struct FactorialHandler: MessageHandler {
         self.operandRange = operandRange
     }
 
-    public func handle(message: Message, sink: any Sink) -> Bool {
+    public func handle(message: Message, sink: any Sink) async -> Bool {
         if let channelId = message.channelId,
            let author = message.author,
            !author.bot {
@@ -20,7 +22,11 @@ public struct FactorialHandler: MessageHandler {
                let operand = Int(match.operand),
                operandRange.contains(operand) {
                 let result = factorial(operand)
-                sink.sendMessage("\(operand)! = \(result.isLessThanOrEqualTo(Double(Int.max)) ? String(Int(result)) : String(result))", to: channelId)
+                do {
+                    try await sink.sendMessage("\(operand)! = \(result.isLessThanOrEqualTo(Double(Int.max)) ? String(Int(result)) : String(result))", to: channelId)
+                } catch {
+                    log.warning("Could not send factorial message: \(error)")
+                }
             }
         }
         return false

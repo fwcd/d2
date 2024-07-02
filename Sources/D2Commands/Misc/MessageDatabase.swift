@@ -161,54 +161,41 @@ public class MessageDatabase: MarkovPredictor {
         try db.prepare(sql, values)
     }
 
-    private func insertMessages(with sink: any Sink, from id: ChannelID, selection: MessageSelection? = nil) -> Promise<MessageID?, any Error> {
-        sink.getMessages(for: id, limit: sink.messageFetchLimit ?? 20, selection: selection)
-            .mapCatching { messages -> MessageID? in
-                guard !messages.isEmpty else { return nil }
+    @discardableResult
+    private func insertMessages(with sink: any Sink, from id: ChannelID, selection: MessageSelection? = nil) async throws -> MessageID? {
+        let messages = try await sink.getMessages(for: id, limit: sink.messageFetchLimit ?? 20, selection: selection)
+        guard !messages.isEmpty else { return nil }
 
-                try self.db.transaction {
-                    for message in messages {
-                        try self.insertDirectly(message: message)
-                    }
-                }
+        try self.db.transaction {
+            for message in messages {
+                try insertDirectly(message: message)
+            }
+        }
 
-                return messages
-                    .filter { $0.id != nil }
-                    .min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture })?
-                    .id
-            }
-            .then {
-                if let msgId = $0 {
-                    log.info("Fetching messages before \(msgId)")
-                    return self.insertMessages(with: sink, from: id, selection: .before(msgId))
-                } else {
-                    return Promise(.success(nil))
-                }
-            }
+        if let msgId = messages.filter({ $0.id != nil }).min(by: ascendingComparator { $0.timestamp ?? Date.distantFuture })?.id {
+            log.info("Fetching messages before \(msgId)")
+            return try await insertMessages(with: sink, from: id, selection: .before(msgId))
+        } else {
+            return nil
+        }
     }
 
-    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) -> Void)? = nil) -> Promise<Void, any Error> {
-        guard let guild = sink.guild(for: id) else { return Promise(.failure(MessageDatabaseError.invalidID("\(id)"))) }
+    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) async -> Void)? = nil) async throws {
+        guard let guild = sink.guild(for: id) else { throw MessageDatabaseError.invalidID("\(id)") }
 
-        do {
-            log.notice("Rebuilding messages in database...")
-            try db.run(messages.delete())
+        log.notice("Rebuilding messages in database...")
+        try db.run(messages.delete())
 
-            let guildChannels = debugMode ? guild.channels.prefix(10).compactMap { $0 } : Array(guild.channels)
-            let promises: [Promise<Void, any Error>] = guildChannels.map { ch in
-                sink.isGuildTextChannel(ch.key).then {
-                    if $0 {
-                        log.info("Fetching messages from channel \(ch.value.name)")
-                        progressListener?(ch.value.name)
-                        return self.insertMessages(with: sink, from: ch.key).void()
-                    } else {
-                        return Promise(.success(()))
-                    }
+        let guildChannels = debugMode ? guild.channels.prefix(10).compactMap { $0 } : Array(guild.channels)
+
+        try await withThrowingDiscardingTaskGroup { group in
+            for ch in guildChannels {
+                if try await sink.isGuildTextChannel(ch.key) {
+                    log.info("Fetching messages from channel \(ch.value.name)")
+                    await progressListener?(ch.value.name)
+                    try await self.insertMessages(with: sink, from: ch.key)
                 }
             }
-            return all(promises: promises).void()
-        } catch {
-            return Promise(.failure(error))
         }
     }
 

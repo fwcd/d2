@@ -9,15 +9,13 @@ public class SpeedtestCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        context.channel?.triggerTyping()
-        FastQuery().perform().listen {
-            do {
-                let speed = try $0.get()
-                output.append(String(format: "The network speed is %.2f Mbit/s", speed.megabitsPerSecond))
-            } catch {
-                output.append(error, errorText: "Could not fetch network speed")
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        _ = try? await context.channel?.triggerTyping()
+        do {
+            let speed = try await FastQuery().perform().get()
+            await output.append(String(format: "The network speed is %.2f Mbit/s", speed.megabitsPerSecond))
+        } catch {
+            await output.append(error, errorText: "Could not fetch network speed")
         }
     }
 }

@@ -16,7 +16,7 @@ public struct StreamerRoleHandler: PresenceHandler {
         self._streamerRoleConfiguration = _streamerRoleConfiguration
     }
 
-    public func handle(presenceUpdate presence: Presence, sink: any Sink) {
+    public func handle(presenceUpdate presence: Presence, sink: any Sink) async {
         log.trace("Presence activities: \(presence.activities)")
         guard let guildId = presence.guildId else { return }
         if
@@ -24,19 +24,22 @@ public struct StreamerRoleHandler: PresenceHandler {
             let guild = sink.guild(for: guildId),
             let member = guild.members[presence.user.id] {
             if presence.activities.contains(where: { $0.type == .stream }) {
-                if !member.roleIds.contains(roleId) {
-                    log.info("Adding streamer role to \(member.displayName)")
-                    sink.addGuildMemberRole(roleId, to: presence.user.id, on: guildId, reason: "Streaming").listenOrLogError { success in
-                        if !success {
-                            log.warning("Adding streamer role to \(member.displayName) failed")
-                        }
-                    }
-                } else {
+                guard !member.roleIds.contains(roleId) else {
                     log.debug("Not adding streamer role, \(member.displayName) already has it!")
+                    return
+                }
+
+                log.info("Adding streamer role to \(member.displayName)")
+                guard (try? await sink.addGuildMemberRole(roleId, to: presence.user.id, on: guildId, reason: "Streaming")) ?? false else {
+                    log.warning("Adding streamer role to \(member.displayName) failed")
+                    return
                 }
             } else if member.roleIds.contains(roleId) {
                 log.info("Removing streamer role from \(member.displayName)")
-                sink.removeGuildMemberRole(roleId, from: presence.user.id, on: guildId, reason: "No longer streaming")
+                guard (try? await sink.removeGuildMemberRole(roleId, from: presence.user.id, on: guildId, reason: "No longer streaming")) ?? false else {
+                    log.warning("Removing streamer role from \(member.displayName) failed")
+                    return
+                }
             } else {
                 log.debug("Not removing streamer role from \(member.displayName).")
             }

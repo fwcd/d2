@@ -22,7 +22,7 @@ final class LuckyNumberHandlerTests: XCTestCase {
         XCTAssertTrue(handler.isLucky(420))
     }
 
-    func testMessageTrigger() {
+    func testMessageTrigger() async {
         let handler = LuckyNumberHandler(luckyNumbers: [42])
         let output = TestOutput()
 
@@ -31,7 +31,7 @@ final class LuckyNumberHandlerTests: XCTestCase {
             channelId: ID("Dummy Channel")
         )
         output.messages.append(message)
-        _ = handler.handle(message: message, sink: output)
+        _ = await handler.handle(message: message, sink: output)
 
         XCTAssertEqual(output.lastContent, """
             All the numbers in your message added up to 42. Congrats!

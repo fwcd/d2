@@ -36,7 +36,10 @@ public class WouldYouRatherCommand: StringCommand {
 
     public func onSuccessfullySent(context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
-        context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiA)
-        context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiB)
+        // TODO: Remove once onSuccessfullySent is async
+        Task {
+            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiA)
+            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiB)
+        }
     }
 }

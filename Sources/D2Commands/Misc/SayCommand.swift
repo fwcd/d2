@@ -10,7 +10,11 @@ public class SayCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        context.channel?.send(Message(content: input, tts: true))
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            try await context.channel?.send(Message(content: input, tts: true))
+        } catch {
+            await output.append(error, errorText: "Could not say anything")
+        }
     }
 }

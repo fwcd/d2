@@ -110,16 +110,22 @@ public class DiscordinderCommand: StringCommand {
         }
         let candidatePresence = guild.presences[candidateId]
 
-        sink.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, sink: sink)), to: channelId).listenOrLogError { sentMessage in
-            guard let messageId = sentMessage?.id else { return }
+        // TODO: Asyncify everything
+        Task {
+            do {
+                let sentMessage = try await sink.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, sink: sink)), to: channelId)
+                guard let messageId = sentMessage?.id else { return }
 
-            context.subscribeToChannel()
-            self.accept(matchBetween: authorId, and: candidateId, on: guild)
-            self.activeMatches[messageId] = (channelId, candidateId)
+                context.subscribeToChannel()
+                self.accept(matchBetween: authorId, and: candidateId, on: guild)
+                self.activeMatches[messageId] = (channelId, candidateId)
 
-            let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
-            for reaction in reactions {
-                sink.createReaction(for: messageId, on: channelId, emoji: reaction)
+                let reactions = [rejectEmoji, ignoreEmoji, acceptEmoji]
+                for reaction in reactions {
+                    try await sink.createReaction(for: messageId, on: channelId, emoji: reaction)
+                }
+            } catch {
+                await output.append(error, errorText: "Could not present next candidate")
             }
         }
 

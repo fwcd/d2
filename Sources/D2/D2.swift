@@ -137,7 +137,11 @@ struct D2: AsyncParsableCommand {
         // Register channel log output if needed
         if let logChannel = config?.log?.channel {
             await logOutput.register {
-                combinedSink.sendMessage($0, to: logChannel)
+                do {
+                    try await combinedSink.sendMessage($0, to: logChannel)
+                } catch {
+                    log.warning("Could not log to channel: \(error)")
+                }
             }
         }
 

@@ -20,20 +20,20 @@ public class AddEventListenerCommand: StringCommand {
         self.eventListenerBus = eventListenerBus
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let parsedArgs = try? argsPattern.firstMatch(in: input) {
             let rawEventName = String(parsedArgs.event)
             let listenerName = String(parsedArgs.listener)
 
             guard let event = EventListenerBus.Event(rawValue: rawEventName) else {
-                output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventListenerBus.Event.allCases.map { $0.rawValue })`")
+                await output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventListenerBus.Event.allCases.map { $0.rawValue })`")
                 return
             }
 
             eventListenerBus.addListener(name: listenerName, for: event, output: output)
-            context.channel?.send(Message(content: "Added event listener!"))
+            _ = try? await context.channel?.send(Message(content: "Added event listener!"))
         } else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
         }
     }
 }

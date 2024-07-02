@@ -7,24 +7,22 @@ public class RemoveAllMIOCommandsCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
-            output.append(errorText: "No client present")
+            await output.append(errorText: "No client present")
             return
         }
 
-        sink.getMIOCommands().listen {
-            do {
-                let mioCommands = try $0.get()
+        do {
+            let mioCommands = try await sink.getMIOCommands()
 
-                for mioCommand in mioCommands {
-                    sink.deleteMIOCommand(mioCommand.id)
-                }
-
-                output.append("Deleted \(mioCommands.count) MIO commands")
-            } catch {
-                output.append(error, errorText: "Could not fetch MIO commands")
+            for mioCommand in mioCommands {
+                try await sink.deleteMIOCommand(mioCommand.id)
             }
+
+            await output.append("Deleted \(mioCommands.count) MIO commands")
+        } catch {
+            await output.append(error, errorText: "Could not delete MIO commands")
         }
     }
 }

@@ -9,13 +9,13 @@ public class PetitionCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter something!")
+            await output.append(errorText: "Please enter something!")
             return
         }
 
-        output.append(Embed(
+        await output.append(Embed(
             title: "Petition",
             description: input
         ))
@@ -24,6 +24,9 @@ public class PetitionCommand: StringCommand {
     public func onSuccessfullySent(context: CommandContext) {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
 
-        context.sink?.createReaction(for: messageId, on: channelId, emoji: "✍️")
+        // TODO: Remove once onSuccessfullySent is async
+        Task {
+            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: "✍️")
+        }
     }
 }

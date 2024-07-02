@@ -52,7 +52,7 @@ public class MessageIOOutput: CommandOutput {
             for message in messages {
                 group.addTask {
                     do {
-                        return try await self.send(message: message, with: sink, to: channel).get()
+                        return try await self.send(message: message, with: sink, to: channel)
                     } catch {
                         log.error("Could not send \(message) to \(channel): \(error)")
                         return nil
@@ -71,23 +71,21 @@ public class MessageIOOutput: CommandOutput {
         }
     }
 
-    private func send(message: Message, with sink: any Sink, to channel: OutputChannel) -> Promise<Message?, any Error> {
+    private func send(message: Message, with sink: any Sink, to channel: OutputChannel) async throws -> Message? {
         switch channel {
             case .guildChannel(let id):
-                return sink.sendMessage(message, to: id)
+                return try await sink.sendMessage(message, to: id)
             case .dmChannel(let id):
-                return sink.createDM(with: id)
-                    .thenCatching { channelId in
-                        guard let id = channelId else {
-                            throw MessageIOOutputError.couldNotSendDM
-                        }
-                        return sink.sendMessage(message, to: id)
-                    }
+                let channelId = try await sink.createDM(with: id)
+                guard let id = channelId else {
+                    throw MessageIOOutputError.couldNotSendDM
+                }
+                return try await sink.sendMessage(message, to: id)
             case .defaultChannel:
                 if let textChannelId = self.context.channel?.id {
-                    return sink.sendMessage(message, to: textChannelId)
+                    return try await sink.sendMessage(message, to: textChannelId)
                 } else {
-                    return Promise(.failure(MessageIOOutputError.noDefaultChannelAvailable))
+                    throw MessageIOOutputError.noDefaultChannelAvailable
                 }
         }
     }
