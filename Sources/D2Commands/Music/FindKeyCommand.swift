@@ -12,10 +12,10 @@ public class FindKeyCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty,
               let notes = try? input.split(separator: " ").map({ try Note(parsing: String($0)) }) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
@@ -26,6 +26,6 @@ public class FindKeyCommand: StringCommand {
                 MinorScale(key: Note(noteClass: key, octave: 0)),
             ] }
             .filter { noteClasses.isSubset(of: $0.notes.map(\.noteClass)) }
-        output.append("Possible keys: \(scales.map(\.abbreviatedClassName).joined(separator: " "))")
+        await output.append("Possible keys: \(scales.map(\.abbreviatedClassName).joined(separator: " "))")
     }
 }
