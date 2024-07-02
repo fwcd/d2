@@ -61,7 +61,7 @@ public class D2Receiver: Receiver {
         permissionManager = PermissionManager()
         let inventoryManager = InventoryManager()
 
-        @Synchronized @Box var mostRecentPipeRunner: (Runnable, PermissionLevel)? = nil
+        @Synchronized @Box var mostRecentPipeRunner: (any AsyncRunnable, PermissionLevel)? = nil
         @AutoSerializing(filePath: "local/spamConfig.json") var spamConfiguration = SpamConfiguration()
         @AutoSerializing(filePath: "local/streamerRoleConfig.json") var streamerRoleConfiguration = StreamerRoleConfiguration()
         @AutoSerializing(filePath: "local/messagePreviewsConfig.json") var messagePreviewsConfiguration = MessagePreviewsConfiguration()
@@ -606,9 +606,13 @@ public class D2Receiver: Receiver {
     }
 
     public func on(createInteraction interaction: Interaction, sink: any Sink) {
-        for i in interactionHandlers.indices {
-            if interactionHandlers[i].handle(interaction: interaction, sink: sink) {
-                return
+        // TODO: Make on(createInteraction:) itself (and the other methods)
+        // async in the protocol and remove this explicit Task.
+        Task {
+            for i in interactionHandlers.indices {
+                if await interactionHandlers[i].handle(interaction: interaction, sink: sink) {
+                    return
+                }
             }
         }
     }

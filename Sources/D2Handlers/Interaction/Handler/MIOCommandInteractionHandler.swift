@@ -16,7 +16,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(interaction: Interaction, sink: any Sink) -> Bool {
+    public func handle(interaction: Interaction, sink: any Sink) async -> Bool {
         guard
             interaction.type == .mioCommand,
             let data = interaction.data,
@@ -54,7 +54,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
             return true
         }
 
-        command.invoke(with: input, output: output, context: context)
+        await command.invoke(with: input, output: output, context: context)
         return true
     }
 }

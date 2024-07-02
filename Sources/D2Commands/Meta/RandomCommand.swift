@@ -12,7 +12,7 @@ public class RandomCommand: Command {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let author = context.author else {
             output.append(errorText: "No author is present!")
             return
@@ -22,6 +22,6 @@ public class RandomCommand: Command {
             output.append(errorText: "No (permitted) commands found!")
             return
         }
-        command.invoke(with: input, output: output, context: context)
+        await command.invoke(with: input, output: output, context: context)
     }
 }

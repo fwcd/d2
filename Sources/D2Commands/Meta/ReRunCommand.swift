@@ -9,14 +9,14 @@ public class ReRunCommand: VoidCommand {
         shouldOverwriteMostRecentPipeRunner: false
     )
     private let permissionManager: PermissionManager
-    @Synchronized @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
+    @Synchronized @Box private var mostRecentPipeRunner: (any AsyncRunnable, PermissionLevel)?
 
-    public init(permissionManager: PermissionManager, mostRecentPipeRunner: Synchronized<Box<(Runnable, PermissionLevel)?>>) {
+    public init(permissionManager: PermissionManager, mostRecentPipeRunner: Synchronized<Box<(any AsyncRunnable, PermissionLevel)?>>) {
         self.permissionManager = permissionManager
         self._mostRecentPipeRunner = mostRecentPipeRunner
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         guard let (pipeRunner, minPermissionLevel) = mostRecentPipeRunner else {
             output.append(errorText: "No commands have been executed yet!")
             return
@@ -30,6 +30,6 @@ public class ReRunCommand: VoidCommand {
             return
         }
 
-        pipeRunner.run()
+        await pipeRunner.run()
     }
 }

@@ -25,12 +25,12 @@ fileprivate class PipeComponent {
     }
 }
 
-fileprivate struct RunnablePipe: Runnable {
+fileprivate struct RunnablePipe: AsyncRunnable {
     let pipeSource: PipeComponent
     let input: RichValue
 
-    func run() {
-        pipeSource.command.invoke(with: input, output: pipeSource.output!, context: pipeSource.context)
+    func run() async {
+        await pipeSource.command.invoke(with: input, output: pipeSource.output!, context: pipeSource.context)
     }
 }
 
@@ -57,7 +57,7 @@ public class CommandHandler: MessageHandler {
     private let unconditionallyAllowedCommands: Set<String>
 
     @Synchronized private var currentlyRunningCommands = 0
-    @Synchronized @Box private var mostRecentPipeRunner: (Runnable, PermissionLevel)?
+    @Synchronized @Box private var mostRecentPipeRunner: (any AsyncRunnable, PermissionLevel)?
 
     private let commandQueue = DispatchQueue(label: "CommandHandler", attributes: [.concurrent])
 
@@ -68,7 +68,7 @@ public class CommandHandler: MessageHandler {
         permissionManager: PermissionManager,
         subscriptionManager: SubscriptionManager,
         eventLoopGroup: any EventLoopGroup,
-        mostRecentPipeRunner: Synchronized<Box<(Runnable, PermissionLevel)?>>,
+        mostRecentPipeRunner: Synchronized<Box<(any AsyncRunnable, PermissionLevel)?>>,
         maxPipeLengthForUsers: Int = 7,
         maxConcurrentlyRunningCommands: Int = 4,
         unconditionallyAllowedCommands: Set<String> = ["quit"],
@@ -89,7 +89,7 @@ public class CommandHandler: MessageHandler {
         self.pipeSeparator = pipeSeparator
     }
 
-    public func handle(message: Message, sink: any Sink) -> Bool {
+    public func handle(message: Message, sink: any Sink) async -> Bool {
         guard message.content.starts(with: commandPrefix),
             !message.dm || (message.author.map { permissionManager.user($0, hasPermission: .vip) } ?? false),
             let channelId = message.channelId else { return false }
@@ -152,20 +152,23 @@ public class CommandHandler: MessageHandler {
                 guard let pipeSource = pipe.first else { continue }
 
                 commandQueue.async {
-                    self.currentlyRunningCommands += 1
-                    log.debug("Currently running \(self.currentlyRunningCommands) commands")
+                    // TODO: Remove commandQueue and make CommandHandler an actor instead?
+                    Task {
+                        self.currentlyRunningCommands += 1
+                        log.debug("Currently running \(self.currentlyRunningCommands) commands")
 
-                    self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild).listenOrLogError { input in
-                        // Execute the pipe
-                        let runner = RunnablePipe(pipeSource: pipeSource, input: input)
-                        runner.run()
+                        if let input = await self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild).getOrLogError() {
+                            // Execute the pipe
+                            let runner = RunnablePipe(pipeSource: pipeSource, input: input)
+                            await runner.run()
 
-                        // Store the pipe for potential re-execution
-                        if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
-                            self.mostRecentPipeRunner = (runner, minPermissionLevel)
+                            // Store the pipe for potential re-execution
+                            if pipe.allSatisfy({ $0.command.info.shouldOverwriteMostRecentPipeRunner }), let minPermissionLevel = pipe.map(\.command.info.requiredPermissionLevel).max() {
+                                self.mostRecentPipeRunner = (runner, minPermissionLevel)
+                            }
+
+                            self.currentlyRunningCommands -= 1
                         }
-
-                        self.currentlyRunningCommands -= 1
                     }
                 }
             }

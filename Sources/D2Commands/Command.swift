@@ -16,7 +16,7 @@ public protocol Command: AnyObject {
     ///
     /// Command invocations are inherently effectful and often asynchronous. This means
     /// that the passed output may be invoked on any thread, zero or (arbitrary) more times.
-    func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext)
+    func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async
 
     /// Notifies the command that a message sent via CommandOutput has been
     /// successfully transmitted.
