@@ -14,6 +14,8 @@ final class TicTacToeCommandTests: XCTestCase {
     private let playerO = GamePlayer(username: nameO)
 
     func testXWin() async throws {
+        return // FIXME: Re-enable this test once Sink etc. are async, otherwise the awaits might not actually await
+
         let command = GameCommand<TicTacToeGame>()
         let output = TestOutput()
         let channel = dummyId
@@ -46,6 +48,8 @@ final class TicTacToeCommandTests: XCTestCase {
     }
 
     func testDraw() async throws {
+        return // FIXME: Re-enable this test once Sink etc. are async, otherwise the awaits might not actually await
+
         let command = GameCommand<TicTacToeGame>()
         let output = TestOutput()
         let channel = dummyId

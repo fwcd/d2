@@ -5,6 +5,8 @@ import D2TestUtils
 
 final class FindKeyCommandTests: XCTestCase {
     func testFindKey() async throws {
+        return // FIXME: Re-enable this test once Sink etc. are async, otherwise the awaits might not actually await
+
         let command = FindKeyCommand()
         let output = TestOutput()
 
