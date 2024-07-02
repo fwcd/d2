@@ -190,14 +190,17 @@ public class GameCommand<G: Game>: Command {
         let output = BufferedOutput(output)
         var continueSubscription: Bool = true
 
-        // TODO: Ideally we would like to write
+        // TODO: The interaction between BufferedOutput and async/await is not
+        // ideal here. Ideally, we would like to perform an (awaited) flush in
+        // the deinitializer, but Swift does not seem to provide a way to do
+        // that. The next best solution would be something like this:
         //
         //     defer { await output.flush() }
         //
-        // to ensure that both all outputs are flushed and that they are
-        // available after e.g. the test awaited them. Unfortunately,
-        // Swift does not allow asynchronous defer blocks, so we have to
-        // manually guard scope exits.
+        // ...to ensure that both all outputs are flushed after the method
+        // exits, which is mostly important for tests. Unfortunately, Swift
+        // does not allow asynchronous defer blocks, so we have to manually
+        // guard scope exits.
 
         do {
             let params = ActionParameters(
