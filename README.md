@@ -20,8 +20,8 @@ General-purpose assistant for Discord and IRC with more than 340 commands, inclu
 
 To build and run D2 locally, make sure to have the following installed:
 
-- Linux or macOS 10.15+
-- Swift 5.8+
+- Linux or macOS
+- Swift 5.10+
 - Node.js and npm (for LaTeX rendering)
 
 On Ubuntu, run

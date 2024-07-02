@@ -1,33 +1,16 @@
-# FIXME: There are still issues with 5.9, see https://github.com/apple/swift-sdk-generator/issues/12#issuecomment-1777670789
-ARG SWIFTVERSION=5.8.1
+ARG SWIFTVERSION=5.10
 ARG UBUNTUDISTRO=jammy
 
-FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS sysroot
-
-WORKDIR /opt/d2
-
-# Install build dependencies into target sysroot
-COPY Scripts/install-build-dependencies-apt Scripts/
-RUN Scripts/install-build-dependencies-apt && rm -rf /var/lib/apt/lists/*
-
-FROM --platform=$BUILDPLATFORM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS builder
+FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO} AS builder
 
 ARG SWIFTVERSION
 ARG UBUNTUDISTRO
-ARG BUILDARCH
-ARG TARGETARCH
-
-ARG TARGETSYSROOT=/usr/local/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
 
 WORKDIR /opt/d2
 
-# Copy target sysroot into builder
-# TODO: Only copy stuff that we need for compilation (/usr/lib, /usr/include etc.)
-COPY --from=sysroot / ${TARGETSYSROOT}
-
-# Install (cross-)GCC and patch some paths
-COPY Scripts/prepare-docker-buildroot Scripts/standard-arch-name Scripts/
-RUN Scripts/prepare-docker-buildroot
+# Install dependencies
+COPY Scripts/install-build-dependencies-apt Scripts/
+RUN Scripts/install-build-dependencies-apt
 
 # (Cross-)compile D2
 COPY Sources Sources
@@ -38,11 +21,6 @@ RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
 
-ARG TARGETARCH
-ARG UBUNTUDISTRO
-
-ARG TARGETSYSROOT=/usr/local/${TARGETARCH}-ubuntu-${UBUNTUDISTRO}
-
 # Install Curl, add-apt-repository and node package repository
 RUN apt-get update && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
@@ -50,10 +28,6 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # Install native dependencies
 COPY Scripts/install-runtime-dependencies-apt Scripts/
 RUN Scripts/install-runtime-dependencies-apt && rm -rf /var/lib/apt/lists/*
-
-# Link 'sysroot' to / to make sure D2 can find the Swift stdlibs
-# (the runpath within the D2 executable still points to its /usr/lib/swift)
-RUN ln -s / ${TARGETSYSROOT}
 
 WORKDIR /opt/d2
 
