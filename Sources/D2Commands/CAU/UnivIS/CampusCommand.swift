@@ -38,7 +38,7 @@ public class CampusCommand: StringCommand {
             }
 
             let address = self.format(rawAddress: rawAddress)
-            let coords = try await geocoder.geocode(location: address).get()
+            let coords = try await geocoder.geocode(location: address)
 
             let mapData = try await MapQuestStaticMap(
                 center: coords,

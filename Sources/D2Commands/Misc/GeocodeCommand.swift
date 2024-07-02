@@ -13,18 +13,17 @@ public class GeocodeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
             output.append(errorText: "Please enter an address!")
             return
         }
 
-        geocoder.geocode(location: input).listen {
-            do {
-                try output.append(.geoCoordinates($0.get()))
-            } catch {
-                output.append(error, errorText: "Could not geocode address")
-            }
+        do {
+            let coords = try await geocoder.geocode(location: input)
+            output.append(.geoCoordinates(coords))
+        } catch {
+            output.append(error, errorText: "Could not geocode address")
         }
     }
 }
