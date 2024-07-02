@@ -18,7 +18,7 @@ public class MessageIOInteractionOutput: CommandOutput {
         self.context = context
     }
 
-    public func append(_ value: RichValue, to channel: OutputChannel) {
+    public func append(_ value: RichValue, to channel: OutputChannel) async {
         guard let sink = context.sink else {
             log.warning("Cannot append to MessageIO without a client!")
             return
@@ -28,15 +28,12 @@ public class MessageIOInteractionOutput: CommandOutput {
             log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
         }
 
-        // TODO: Remove this task once append is async
-        Task {
-            // TODO: Split/limit?
-            do {
-                let message = try await messageWriter.write(value: value)
-                _ = try await self.send(message: message, with: sink, to: channel).get()
-            } catch {
-                log.error("Interaction output failed: \(error)")
-            }
+        // TODO: Split/limit?
+        do {
+            let message = try await messageWriter.write(value: value)
+            _ = try await self.send(message: message, with: sink, to: channel).get()
+        } catch {
+            log.error("Interaction output failed: \(error)")
         }
     }
 

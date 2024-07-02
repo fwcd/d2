@@ -25,44 +25,42 @@ public class MensaCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please specify a mensa: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
+            await output.append(errorText: "Please specify a mensa: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
             return
         }
         guard let canteenId = cauMensaIds[input.lowercased()] else {
-            output.append(errorText: "Unknown mensa `\(input)`, try one of these: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
+            await output.append(errorText: "Unknown mensa `\(input)`, try one of these: \(cauMensaIds.keys.sorted().joined(separator: ", "))")
             return
         }
 
         let client = MensaClient(eventLoopGroup: context.eventLoopGroup)
 
-        Task {
+        do {
+            let canteen = try await client.canteen(for: canteenId)
             do {
-                let canteen = try await client.canteen(for: canteenId)
-                do {
-                    let meals = try await client.meals(for: canteenId)
-                    let mealsByCategory = [String?: [Meal]](grouping: meals, by: \.category)
-                        .map { (key: $0.key ?? "No title", value: $0.value) }
-                        .sorted(by: ascendingComparator(comparing: \.key))
-                    output.append(Embed(
-                        title: ":fork_knife_plate: Today's menu for \(canteen.name)",
-                        fields: mealsByCategory.compactMap { (category, meals) -> Embed.Field? in
-                            guard !meals.isEmpty else { return nil }
-                            return Embed.Field(
-                                name: "**+++ \(category) +++**",
-                                value: self.format(meals: meals.sorted(by: ascendingComparator(comparing: \.name)))
-                            )
-                        }
-                    ))
-                } catch MensaError.notFound {
-                    output.append(Embed(
-                        title: ":fork_knife_plate: No menu for \(canteen.name) today"
-                    ))
-                }
-            } catch {
-                output.append(error, errorText: "An error occurred while requesting the menu")
+                let meals = try await client.meals(for: canteenId)
+                let mealsByCategory = [String?: [Meal]](grouping: meals, by: \.category)
+                    .map { (key: $0.key ?? "No title", value: $0.value) }
+                    .sorted(by: ascendingComparator(comparing: \.key))
+                await output.append(Embed(
+                    title: ":fork_knife_plate: Today's menu for \(canteen.name)",
+                    fields: mealsByCategory.compactMap { (category, meals) -> Embed.Field? in
+                        guard !meals.isEmpty else { return nil }
+                        return Embed.Field(
+                            name: "**+++ \(category) +++**",
+                            value: self.format(meals: meals.sorted(by: ascendingComparator(comparing: \.name)))
+                        )
+                    }
+                ))
+            } catch MensaError.notFound {
+                await output.append(Embed(
+                    title: ":fork_knife_plate: No menu for \(canteen.name) today"
+                ))
             }
+        } catch {
+            await output.append(error, errorText: "An error occurred while requesting the menu")
         }
     }
 

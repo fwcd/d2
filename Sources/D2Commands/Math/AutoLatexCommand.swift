@@ -45,7 +45,7 @@ public class AutoLatexCommand: StringCommand {
             Task {
                 do {
                     let image = try await latexRenderer.renderImage(from: formula, scale: 1.5)
-                    try output.append(image)
+                    try await output.append(image)
                 } catch {
                     log.error("\(error)")
                 }

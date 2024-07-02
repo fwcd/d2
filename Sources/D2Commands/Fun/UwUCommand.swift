@@ -17,7 +17,7 @@ public class UwUCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !running else {
-            output.append(errorText: "Please wait for the first render to finish!")
+            await output.append(errorText: "Please wait for the first render to finish!")
             return
         }
         running = true

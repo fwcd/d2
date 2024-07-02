@@ -25,14 +25,14 @@ public class XkcdCommand: StringCommand {
                 comic = try await XkcdQuery().fetch(comicId: Int(input))
             }
 
-            output.append(Embed(
+            await output.append(Embed(
                 title: "xkcd #\(comic.num): \(comic.title ?? "no title")",
                 url: URL(string: "https://xkcd.com/\(comic.num)")!,
                 image: comic.img.flatMap(URL.init(string:)).map(Embed.Image.init(url:)),
                 footer: comic.alt.map { Embed.Footer(text: $0) }
             ))
         } catch {
-            output.append(error, errorText: "An error occurred while fetching the comic")
+            await output.append(error, errorText: "An error occurred while fetching the comic")
         }
     }
 }

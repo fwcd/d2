@@ -16,15 +16,15 @@ public class ExamCommand: StringCommand {
             let exams = try await CAUCSExamsQuery().perform()
             if !input.isEmpty {
                 if let exam = bestMatch(for: input, in: exams) {
-                    output.append(embed(of: exam))
+                    await output.append(embed(of: exam))
                 } else {
-                    output.append(errorText: "Could not find a matching exam")
+                    await output.append(errorText: "Could not find a matching exam")
                 }
             } else {
-                output.append(embed(of: exams))
+                await output.append(embed(of: exams))
             }
         } catch {
-            output.append(error, errorText: "Could not query CAU CS exams")
+            await output.append(error, errorText: "Could not query CAU CS exams")
         }
     }
 

@@ -42,15 +42,15 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
         let output = MessageIOInteractionOutput(interaction: interaction, context: context)
 
         guard let author = interaction.member?.user else {
-            output.append(errorText: "The interaction must have an author!")
+            await output.append(errorText: "The interaction must have an author!")
             return true
         }
         guard let command = registry[invocation.name] else {
-            output.append(errorText: "Unknown command name `\(invocation.name)`")
+            await output.append(errorText: "Unknown command name `\(invocation.name)`")
             return true
         }
         guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
-            output.append(errorText: "Insufficient permissions, sorry. :(")
+            await output.append(errorText: "Insufficient permissions, sorry. :(")
             return true
         }
 

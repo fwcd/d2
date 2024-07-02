@@ -45,7 +45,7 @@ public class CampusCommand: StringCommand {
                 pins: [.init(coords: coords)]
             ).download().get()
 
-            output.append(.compound([
+            await output.append(.compound([
                 .files([Message.FileUpload(data: mapData, filename: "campus.jpg", mimeType: "image/jpeg")]),
                 .embed(Embed(
                     title: address,
@@ -53,7 +53,7 @@ public class CampusCommand: StringCommand {
                 ))
             ]))
         } catch {
-            output.append(error, errorText: "Could not create static map: `\(error)`")
+            await output.append(error, errorText: "Could not create static map: `\(error)`")
         }
     }
 

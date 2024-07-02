@@ -27,9 +27,9 @@ public class LastMessageCommand: Command {
                 throw LastMessageError.noLastMessage
             }
             let value = await MessageParser().parse(message: message, clientName: context.sink?.name, guild: context.guild)
-            output.append(value)
+            await output.append(value)
         } catch {
-            output.append(error, errorText: "Could not find last message.")
+            await output.append(error, errorText: "Could not find last message.")
         }
     }
 }

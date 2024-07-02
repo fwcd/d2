@@ -20,7 +20,7 @@ public class MessageIOOutput: CommandOutput {
         self.onSent = onSent
     }
 
-    public func append(_ value: RichValue, to channel: OutputChannel) {
+    public func append(_ value: RichValue, to channel: OutputChannel) async {
         guard let sink = context.sink else {
             log.warning("Cannot append to MessageIO without a client!")
             return
@@ -30,47 +30,44 @@ public class MessageIOOutput: CommandOutput {
             log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
         }
 
-        // TODO: Make CommandOutput.append async
-        Task {
-            var messages: [Message]
-            do {
-                let baseMessage = try await messageWriter.write(value: value)
-                messages = self.splitUp(message: baseMessage)
-                if messages.count > maxSplitFragments {
-                    log.warning("Splitting up message resulted in \(messages.count) fragments, truncating to \(maxSplitFragments) messages...")
-                    messages = Array(messages.prefix(5))
-                }
-            } catch {
-                log.error("Error while encoding message: \(error)")
-                messages = [Message(content: """
-                    An error occurred while encoding the message:
-                    ```
-                    \(error)
-                    ```
-                    """)]
+        var messages: [Message]
+        do {
+            let baseMessage = try await messageWriter.write(value: value)
+            messages = self.splitUp(message: baseMessage)
+            if messages.count > maxSplitFragments {
+                log.warning("Splitting up message resulted in \(messages.count) fragments, truncating to \(maxSplitFragments) messages...")
+                messages = Array(messages.prefix(5))
             }
+        } catch {
+            log.error("Error while encoding message: \(error)")
+            messages = [Message(content: """
+                An error occurred while encoding the message:
+                ```
+                \(error)
+                ```
+                """)]
+        }
 
-            await withTaskGroup(of: Message?.self) { group in
-                for message in messages {
-                    group.addTask {
-                        do {
-                            return try await self.send(message: message, with: sink, to: channel).get()
-                        } catch {
-                            log.error("Could not send \(message) to \(channel): \(error)")
-                            return nil
-                        }
+        await withTaskGroup(of: Message?.self) { group in
+            for message in messages {
+                group.addTask {
+                    do {
+                        return try await self.send(message: message, with: sink, to: channel).get()
+                    } catch {
+                        log.error("Could not send \(message) to \(channel): \(error)")
+                        return nil
                     }
                 }
-
-                var sentMessages: [Message] = []
-                for await sentMessage in group {
-                    if let sentMessage {
-                        sentMessages.append(sentMessage)
-                    }
-                }
-
-                onSent?(sentMessages)
             }
+
+            var sentMessages: [Message] = []
+            for await sentMessage in group {
+                if let sentMessage {
+                    sentMessages.append(sentMessage)
+                }
+            }
+
+            onSent?(sentMessages)
         }
     }
 

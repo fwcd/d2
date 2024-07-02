@@ -20,7 +20,7 @@ public class RecipeCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter something to search for!")
+            await output.append(errorText: "Please enter something to search for!")
             return
         }
 
@@ -36,7 +36,7 @@ public class RecipeCommand: StringCommand {
                 thumbnailUrl = image.thumbnailUrl
             }
 
-            output.append(Embed(
+            await output.append(Embed(
                 title: ":taco: \(recipe.title)",
                 url: recipe.siteUrl.flatMap(URL.init(string:)),
                 thumbnail: thumbnailUrl.map(Embed.Thumbnail.init),
@@ -57,7 +57,7 @@ public class RecipeCommand: StringCommand {
                     ?? [])
             ))
         } catch {
-            output.append(error, errorText: "Could not find/fetch recipe")
+            await output.append(error, errorText: "Could not find/fetch recipe")
         }
     }
 

@@ -14,13 +14,13 @@ public class ThesaurusCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter some text!")
+            await output.append(errorText: "Please enter some text!")
             return
         }
 
         do {
             let results = try await OpenThesaurusQuery(term: input).perform()
-            output.append(Embed(
+            await output.append(Embed(
                 title: ":book: Synonym sets from OpenThesaurus",
                 description: results.synsets
                     .compactMap { self.markFirst(from: $0.terms.map(\.term)).joined(separator: ", ").nilIfEmpty }
@@ -28,7 +28,7 @@ public class ThesaurusCommand: StringCommand {
                     .nilIfEmpty ?? "_none :(_"
             ))
         } catch {
-            output.append(error, errorText: "Could not perform thesaurus query")
+            await output.append(error, errorText: "Could not perform thesaurus query")
         }
     }
 

@@ -24,11 +24,11 @@ public class LatexCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !running else {
-            output.append(errorText: "Wait for the first LaTeX command to finish")
+            await output.append(errorText: "Wait for the first LaTeX command to finish")
             return
         }
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter a formula to render!")
+            await output.append(errorText: "Please enter a formula to render!")
             return
         }
         running = true

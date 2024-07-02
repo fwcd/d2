@@ -8,9 +8,9 @@ public class IndicatingOutput: CommandOutput {
         self.next = next
     }
 
-    public func append(_ value: RichValue, to channel: OutputChannel) {
+    public func append(_ value: RichValue, to channel: OutputChannel) async {
         used = true
-        next?.append(value, to: channel)
+        await next?.append(value, to: channel)
     }
 
     public func update(context: CommandContext) {

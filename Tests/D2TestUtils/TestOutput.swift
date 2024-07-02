@@ -49,10 +49,9 @@ public class TestOutput {
 }
 
 extension TestOutput: CommandOutput {
-    public func append(_ value: RichValue, to channel: OutputChannel) {
-        messageWriter.write(value: value).listen { [self] in
-            _messages.append(try! $0.get())
-        }
+    public func append(_ value: RichValue, to channel: OutputChannel) async {
+        let message = try! await messageWriter.write(value: value)
+        _messages.append(message)
     }
 
     public func update(context: CommandContext) {

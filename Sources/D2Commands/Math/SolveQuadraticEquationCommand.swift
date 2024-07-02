@@ -21,7 +21,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
             let solutions = equation.solutions
 
             guard solutions.count > 0 else {
-                output.append(errorText: "The quadratic equation has no solutions!")
+                await output.append(errorText: "The quadratic equation has no solutions!")
                 return
             }
 
@@ -31,13 +31,13 @@ public class SolveQuadraticEquationCommand: StringCommand {
             await latexRenderer.renderImage(from: formula, to: output)
             running = false
         } catch QuadraticEquationParseError.rhsIsNotAFraction {
-            output.append(errorText: "Invalid right-hand side! Make sure that it is a fraction.")
+            await output.append(errorText: "Invalid right-hand side! Make sure that it is a fraction.")
         } catch QuadraticEquationParseError.noCoefficients {
-            output.append(errorText: "Your polynomial has no coefficients")
+            await output.append(errorText: "Your polynomial has no coefficients")
         } catch QuadraticEquationParseError.degreeGreaterThan2 {
-            output.append(errorText: "Your polynomial should not have a degree greater than 2!")
+            await output.append(errorText: "Your polynomial should not have a degree greater than 2!")
         } catch {
-            output.append(error, errorText: "Could not parse quadratic equation")
+            await output.append(error, errorText: "Could not parse quadratic equation")
         }
     }
 }

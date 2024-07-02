@@ -14,12 +14,12 @@ public class RandomCommand: Command {
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let author = context.author else {
-            output.append(errorText: "No author is present!")
+            await output.append(errorText: "No author is present!")
             return
         }
         let commands = context.registry.compactMap { $0.1.asCommand }.filter { permissionManager.user(author, hasPermission: $0.info.requiredPermissionLevel) }
         guard let command = commands.randomElement() else {
-            output.append(errorText: "No (permitted) commands found!")
+            await output.append(errorText: "No (permitted) commands found!")
             return
         }
         await command.invoke(with: input, output: output, context: context)

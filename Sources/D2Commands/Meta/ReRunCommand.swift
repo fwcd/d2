@@ -18,15 +18,15 @@ public class ReRunCommand: VoidCommand {
 
     public func invoke(output: any CommandOutput, context: CommandContext) async {
         guard let (pipeRunner, minPermissionLevel) = mostRecentPipeRunner else {
-            output.append(errorText: "No commands have been executed yet!")
+            await output.append(errorText: "No commands have been executed yet!")
             return
         }
         guard let author = context.author else {
-            output.append(errorText: "No author available")
+            await output.append(errorText: "No author available")
             return
         }
         guard permissionManager[author] >= minPermissionLevel else {
-            output.append(errorText: "You do not have sufficient permissions to run this command pipe!")
+            await output.append(errorText: "You do not have sufficient permissions to run this command pipe!")
             return
         }
 

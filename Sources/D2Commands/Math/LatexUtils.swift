@@ -7,11 +7,11 @@ extension LatexRenderer {
     func renderImage(from input: String, to output: any CommandOutput, color: String = "white", scale: Double = 2) async {
         do {
             let image = try await renderImage(from: input, color: color, scale: scale)
-            try output.append(image)
+            try await output.append(image)
         } catch let LatexError.pdfError(pdfLog) {
-            output.append(errorText: "A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
+            await output.append(errorText: "A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
         } catch {
-            output.append(error, errorText: "An asynchronous LaTeX error occurred")
+            await output.append(error, errorText: "An asynchronous LaTeX error occurred")
         }
     }
 }

@@ -15,7 +15,7 @@ public class ThesaurizeCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter some text!")
+            await output.append(errorText: "Please enter some text!")
             return
         }
 
@@ -29,9 +29,9 @@ public class ThesaurizeCommand: StringCommand {
             }
 
             let newWords = words.map { mappings[$0]?.randomElement() ?? $0 }
-            output.append(newWords.joined())
+            await output.append(newWords.joined())
         } catch {
-            output.append(error, errorText: "Could not fetch thesaurus mappings")
+            await output.append(error, errorText: "Could not fetch thesaurus mappings")
         }
     }
 
