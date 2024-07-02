@@ -6,8 +6,8 @@ extension Command {
         with input: RichValue = .none,
         output: any CommandOutput,
         context: CommandContext = CommandContext(sink: nil, registry: CommandRegistry(), message: Message(content: ""), commandPrefix: "", subscriptions: SubscriptionSet())
-    ) {
-        invoke(with: input, output: output, context: context)
+    ) async {
+        await invoke(with: input, output: output, context: context)
     }
 
     public func testSubscriptionMessage(
