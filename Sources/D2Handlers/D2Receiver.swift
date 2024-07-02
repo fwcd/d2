@@ -570,27 +570,29 @@ public class D2Receiver: Receiver {
     }
 
     public func on(createMessage message: Message, sink: any Sink) {
-        var m = message
+        // TODO: Make on(createMessage:) itself (and the other methods) async in
+        // the protocol and remove this explicit Task.
+        Task {
+            var m = message
 
-        for rewriter in messageRewriters {
-            if let rewrite = rewriter.rewrite(message: m, sink: sink) {
-                m = rewrite
+            for rewriter in messageRewriters {
+                if let rewrite = await rewriter.rewrite(message: m, sink: sink) {
+                    m = rewrite
+                }
             }
-        }
 
-        for i in messageHandlers.indices {
-            if messageHandlers[i].handleRaw(message: message, sink: sink) {
-                return
+            for i in messageHandlers.indices {
+                if await messageHandlers[i].handleRaw(message: message, sink: sink) {
+                    return
+                }
+                if await messageHandlers[i].handle(message: m, sink: sink) {
+                    return
+                }
             }
-            if messageHandlers[i].handle(message: m, sink: sink) {
-                return
-            }
-        }
 
-        // Only fire on unhandled messages
-        if m.author?.id != sink.me?.id {
-            MessageParser().parse(message: m, clientName: sink.name, guild: m.guild).listenOrLogError {
-                self.eventListenerBus.fire(event: .createMessage, with: $0, context: CommandContext(
+            // Only fire on unhandled messages
+            if m.author?.id != sink.me?.id, let value = await MessageParser().parse(message: m, clientName: sink.name, guild: m.guild).getOrLogError() {
+                eventListenerBus.fire(event: .createMessage, with: value, context: CommandContext(
                     sink: sink,
                     registry: self.registry,
                     message: m,
