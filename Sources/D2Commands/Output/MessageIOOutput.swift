@@ -30,29 +30,48 @@ public class MessageIOOutput: CommandOutput {
             log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
         }
 
-        messageWriter.write(value: value)
-            .mapResult { (r: Result<Message, any Error>) -> Result<[Message], any Error> in
-                var messages: [Message]
-                do {
-                    messages = self.splitUp(message: try r.get())
-                    if messages.count > maxSplitFragments {
-                        log.warning("Splitting up message resulted in \(messages.count) fragments, truncating to \(maxSplitFragments) messages...")
-                        messages = Array(messages.prefix(5))
-                    }
-                } catch {
-                    log.error("Error while encoding message: \(error)")
-                    messages = [Message(content: """
-                        An error occurred while encoding the message:
-                        ```
-                        \(error)
-                        ```
-                        """)]
+        // TODO: Make CommandOutput.append async
+        Task {
+            var messages: [Message]
+            do {
+                let baseMessage = try await messageWriter.write(value: value)
+                messages = self.splitUp(message: baseMessage)
+                if messages.count > maxSplitFragments {
+                    log.warning("Splitting up message resulted in \(messages.count) fragments, truncating to \(maxSplitFragments) messages...")
+                    messages = Array(messages.prefix(5))
                 }
-                return .success(messages)
+            } catch {
+                log.error("Error while encoding message: \(error)")
+                messages = [Message(content: """
+                    An error occurred while encoding the message:
+                    ```
+                    \(error)
+                    ```
+                    """)]
             }
-            .then { sequence(promises: $0.map { m in { self.send(message: m, with: sink, to: channel) } }) }
-            .map { $0.compactMap { $0 } }
-            .listenOrLogError { self.onSent?($0) }
+
+            await withTaskGroup(of: Message?.self) { group in
+                for message in messages {
+                    group.addTask {
+                        do {
+                            return try await self.send(message: message, with: sink, to: channel).get()
+                        } catch {
+                            log.error("Could not send \(message) to \(channel): \(error)")
+                            return nil
+                        }
+                    }
+                }
+
+                var sentMessages: [Message] = []
+                for await sentMessage in group {
+                    if let sentMessage {
+                        sentMessages.append(sentMessage)
+                    }
+                }
+
+                onSent?(sentMessages)
+            }
+        }
     }
 
     private func send(message: Message, with sink: any Sink, to channel: OutputChannel) -> Promise<Message?, any Error> {

@@ -28,10 +28,16 @@ public class MessageIOInteractionOutput: CommandOutput {
             log.warning("\(error.map { "\($0): " } ?? "")\(errorText)")
         }
 
-        // TODO: Split/limit?
-        messageWriter.write(value: value)
-            .then { self.send(message: $0, with: sink, to: channel) }
-            .listenOrLogError { _ in }
+        // TODO: Remove this task once append is async
+        Task {
+            // TODO: Split/limit?
+            do {
+                let message = try await messageWriter.write(value: value)
+                _ = try await self.send(message: message, with: sink, to: channel).get()
+            } catch {
+                log.error("Interaction output failed: \(error)")
+            }
+        }
     }
 
     private func send(message: Message, with sink: any Sink, to channel: OutputChannel) -> Promise<Bool, any Error> {

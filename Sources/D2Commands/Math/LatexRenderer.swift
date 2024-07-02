@@ -9,13 +9,12 @@ fileprivate let latexPrefix = "latex"
 class LatexRenderer {
     private let node = NodePackage(name: "latex-renderer")
 
-    func renderImage(from formula: String, color: String = "white", scale: Double = 2) -> Promise<CairoImage, any Error> {
-        renderPNG(from: formula, color: color, scale: scale)
-            .mapCatching { try CairoImage(pngData: $0) }
+    func renderImage(from formula: String, color: String = "white", scale: Double = 2) async throws -> CairoImage {
+        try await CairoImage(pngData: renderPNG(from: formula, color: color, scale: scale))
     }
 
-    private func renderPNG(from formula: String, color: String, scale: Double) -> Promise<Data, any Error> {
+    private func renderPNG(from formula: String, color: String, scale: Double) async throws -> Data {
         log.debug("Invoking latex-renderer")
-        return node.start(withArgs: [formula, "--color", color, "--scale", String(scale)])
+        return try await node.start(withArgs: [formula, "--color", color, "--scale", String(scale)]).get()
     }
 }

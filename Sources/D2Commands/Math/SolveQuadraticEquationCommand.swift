@@ -15,7 +15,7 @@ public class SolveQuadraticEquationCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let equation = try QuadraticEquation(parsing: input)
             let solutions = equation.solutions
@@ -28,9 +28,8 @@ public class SolveQuadraticEquationCommand: StringCommand {
             let formula = "x \\in \\left\\{\(solutions.sorted().map { latexOf(rational: $0) }.joined(separator: ", "))\\right\\}"
 
             running = true
-            latexRenderer.renderImage(from: formula, to: output).listenOrLogError {
-                self.running = false
-            }
+            await latexRenderer.renderImage(from: formula, to: output)
+            running = false
         } catch QuadraticEquationParseError.rhsIsNotAFraction {
             output.append(errorText: "Invalid right-hand side! Make sure that it is a fraction.")
         } catch QuadraticEquationParseError.noCoefficients {

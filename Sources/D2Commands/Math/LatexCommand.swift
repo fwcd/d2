@@ -22,7 +22,7 @@ public class LatexCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !running else {
             output.append(errorText: "Wait for the first LaTeX command to finish")
             return
@@ -37,8 +37,7 @@ public class LatexCommand: StringCommand {
         let color = flags["color"] ?? "white"
         let processedInput = input.replacing(flagPattern, with: "")
 
-        latexRenderer.renderImage(from: processedInput, to: output, color: color).listenOrLogError {
-            self.running = false
-        }
+        await latexRenderer.renderImage(from: processedInput, to: output, color: color)
+        running = false
     }
 }

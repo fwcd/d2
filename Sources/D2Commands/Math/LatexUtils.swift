@@ -4,18 +4,15 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.LatexUtils")
 
 extension LatexRenderer {
-    @discardableResult
-    func renderImage(from input: String, to output: any CommandOutput, color: String = "white", scale: Double = 2) -> Promise<Void, any Error> {
-        renderImage(from: input, color: color, scale: scale).peekListen {
-            // Render output
-            do {
-                try output.append($0.get())
-            } catch let LatexError.pdfError(pdfLog) {
-                output.append(errorText: "A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
-            } catch {
-                output.append(error, errorText: "An asynchronous LaTeX error occurred")
-            }
-        }.swallow()
+    func renderImage(from input: String, to output: any CommandOutput, color: String = "white", scale: Double = 2) async {
+        do {
+            let image = try await renderImage(from: input, color: color, scale: scale)
+            try output.append(image)
+        } catch let LatexError.pdfError(pdfLog) {
+            output.append(errorText: "A LaTeX PDF error occurred:\n```\n\(extractLatexError(from: pdfLog))\n```")
+        } catch {
+            output.append(error, errorText: "An asynchronous LaTeX error occurred")
+        }
     }
 }
 

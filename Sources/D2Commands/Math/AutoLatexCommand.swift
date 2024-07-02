@@ -41,9 +41,11 @@ public class AutoLatexCommand: StringCommand {
 
         if !content.matches(of: formulaPattern).isEmpty {
             let formula = escapeText(in: content)
-            latexRenderer.renderImage(from: formula, scale: 1.5).listenOrLogError {
+            // TODO: Remove this once onSubscriptionMessage is async
+            Task {
                 do {
-                    try output.append($0)
+                    let image = try await latexRenderer.renderImage(from: formula, scale: 1.5)
+                    try output.append(image)
                 } catch {
                     log.error("\(error)")
                 }

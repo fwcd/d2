@@ -10,67 +10,79 @@ public struct MessageWriter {
 
     public init() {}
 
-    public func write(value: RichValue) -> Promise<Message, any Error> {
+    public func write(value: RichValue) async throws -> Message {
         switch value {
             case .none:
-                return Promise(Message(content: ""))
+                return Message(content: "")
             case let .text(txt):
                 if txt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    return Promise(.failure(MessageWriterError.emptyMessage))
+                    throw MessageWriterError.emptyMessage
                 }
-                return Promise(Message(content: txt))
+                return Message(content: txt)
             case let .mentions(users):
-                return Promise(Message(content: users.map { "<@\($0.id)>" }.joined(separator: " ")))
+                return Message(content: users.map { "<@\($0.id)>" }.joined(separator: " "))
             case let .roleMentions(roles):
-                return Promise(Message(content: roles.map { "<@\($0)>" }.joined(separator: " ")))
+                return Message(content: roles.map { "<@\($0)>" }.joined(separator: " "))
             case let .image(img):
-                return Promise.catching { try Message(fromImage: img) }
+                return try Message(fromImage: img)
             case let .table(rows):
-                return Promise(Message(content: """
+                return Message(content: """
                     ```
                     \(rows.map { "(\($0.joined(separator: ", ")))" }.joined(separator: "\n"))
                     ```
-                    """))
+                    """)
             case let .urls(urls):
-                return Promise(Message(content: urls.map(\.absoluteString).joined(separator: " ")))
+                return Message(content: urls.map(\.absoluteString).joined(separator: " "))
             case let .gif(gif):
-                return Promise.catching { try Message(fromGif: gif) }
+                return try Message(fromGif: gif)
             case let .component(component):
-                return Promise(Message(components: [.actionRow(.init(components: [component]))]))
+                return Message(components: [.actionRow(.init(components: [component]))])
             case let .domNode(node):
-                return Promise.catching { .code(try node.outerHtml(), language: "html") }.then(write(value:))
+                return try await write(value: .code(try node.outerHtml(), language: "html"))
             case let .code(code, language: lang):
-                return Promise(Message(content: """
+                return Message(content: """
                     ```\(lang ?? "")
                     \(code)
                     ```
-                    """))
+                    """)
             case let .embed(embed):
-                return Promise(Message(embed: embed))
+                return Message(embed: embed)
             case let .geoCoordinates(geo):
-                return Promise(Message(content: "Latitude: \(geo.latitude), Longitude: \(geo.longitude)"))
+                return Message(content: "Latitude: \(geo.latitude), Longitude: \(geo.longitude)")
             case let .ndArrays(ndArrays):
                 if ndArrays.contains(where: { !$0.isScalar }) {
-                    return latexRenderer.renderImage(from: latexOf(ndArrays: ndArrays))
-                        .mapCatching { try Message(fromImage: $0) }
+                    let image = try await latexRenderer.renderImage(from: latexOf(ndArrays: ndArrays))
+                    return try Message(fromImage: image)
                 } else {
-                    return Promise(Message(content: ndArrays.map { "\($0)" }.joined(separator: ", ")))
+                    return Message(content: ndArrays.map { "\($0)" }.joined(separator: ", "))
                 }
             case let .error(error, errorText: text):
-                return Promise(Message(embed: Embed(
+                return Message(embed: Embed(
                     description: ":warning: \(error.map { "\(type(of: $0)): " } ?? "")\(text)",
                     footer: Embed.Footer(text: "Check the logs for more details!")
-                )))
+                ))
             case let .files(files):
-                return Promise(Message(files: files))
+                return Message(files: files)
             case .attachments(_):
                 // TODO: Download attachments and re-attach them as fileuploads
-                return write(value: .error(nil, errorText: "Cannot write attachments yet!"))
+                return try await write(value: .error(nil, errorText: "Cannot write attachments yet!"))
             case let .lazy(wrapper):
-                return write(value: wrapper.wrappedValue)
+                return try await write(value: wrapper.wrappedValue)
             case let .compound(components):
-                return all(promises: components.map { write(value: $0) }).map { encoded in
+                return try await withThrowingTaskGroup(of: Message.self) { group in
+                    for component in components {
+                        group.addTask {
+                            try await write(value: component)
+                        }
+                    }
+
+                    var encoded: [Message] = []
+                    for try await message in group {
+                        encoded.append(message)
+                    }
+
                     let childComponents = encoded.flatMap { $0.components.flatMap(\.primitiveChildren) }
+
                     return Message(
                         content: encoded.compactMap(\.content.nilIfEmpty).joined(separator: "\n"),
                         embeds: encoded.flatMap(\.embeds),
