@@ -9,6 +9,19 @@ public struct AdventOfCodeLeaderboardQuery {
     private static var cachedTimestamp: Date? = nil
     private static let cacheRefreshDelay: TimeInterval = 15 * 60
 
+    @globalActor
+    private actor Cache: GlobalActor {
+        static let refreshDelay: TimeInterval = 15 * 60
+        static let shared = Cache()
+        private(set) var timestamp: Date? = nil
+        private(set) var board: AdventOfCodeLeaderboard? = nil
+
+        func update(board: AdventOfCodeLeaderboard) {
+            self.board = board
+            timestamp = Date()
+        }
+    }
+
     public let event: String
     public let ownerId: Int
 
@@ -17,31 +30,26 @@ public struct AdventOfCodeLeaderboardQuery {
         self.ownerId = ownerId
     }
 
-    public func perform() -> Promise<AdventOfCodeLeaderboard, any Error> {
-        if let ts = Self.cachedTimestamp, -ts.timeIntervalSinceNow <= Self.cacheRefreshDelay, let board = Self.cachedBoard {
+    public func perform() async throws -> AdventOfCodeLeaderboard {
+        if let ts = await Cache.shared.timestamp, -ts.timeIntervalSinceNow <= Cache.refreshDelay, let board = await Cache.shared.board {
             log.info("Using cached AoC leaderboard")
 
-            return Promise(.success(board))
+            return board
         } else {
             log.info("Refreshing AoC leaderboard cache...")
 
             guard let key = storedNetApiKeys?.adventOfCode?[event] else {
-                return Promise(.failure(NetApiError.missingApiKey("for Advent of Code \(event)")))
+                throw NetApiError.missingApiKey("for Advent of Code \(event)")
             }
 
-            return Promise
-                .catching { try HTTPRequest(
-                    host: "adventofcode.com",
-                    path: "/\(event)/leaderboard/private/view/\(ownerId).json",
-                    headers: ["Cookie": "session=\(key)"]
-                ) }
-                .then { $0.fetchJSONAsync(as: AdventOfCodeLeaderboard.self) }
-                .peekListen {
-                    if case let .success(board) = $0 {
-                        Self.cachedBoard = board
-                        Self.cachedTimestamp = Date()
-                    }
-                }
+            let request = try HTTPRequest(
+                host: "adventofcode.com",
+                path: "/\(event)/leaderboard/private/view/\(ownerId).json",
+                headers: ["Cookie": "session=\(key)"]
+            )
+            let board = try await request.fetchJSON(as: AdventOfCodeLeaderboard.self)
+            await Cache.shared.update(board: board)
+            return board
         }
     }
 }

@@ -16,7 +16,7 @@ public class AdventOfCodeCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     @AutoSerializing(filePath: "local/adventOfCodeConfig.json") private var configuration: AdventOfCodeConfiguration = .init()
-    private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
+    private var subcommands: [String: (String, CommandOutput) async -> Void] = [:]
 
     private var dateRange: Range<Date> {
         var components = DateComponents()
@@ -41,22 +41,22 @@ public class AdventOfCodeCommand: StringCommand {
         subcommands = [
             "set-leaderboard": { [unowned self] args, output in
                 guard let id = Int(args) else {
-                    output.append(errorText: "Please specify a leaderboard id!")
+                    await output.append(errorText: "Please specify a leaderboard id!")
                     return
                 }
 
                 configuration.leaderboardOwnerId = id
-                output.append("Successfully set leaderboard to owner id `\(id)`!")
+                await output.append("Successfully set leaderboard to owner id `\(id)`!")
             },
             "unset-leaderboard": { [unowned self] _, output in
                 configuration.leaderboardOwnerId = nil
-                output.append("Successfully unset leaderboard!")
+                await output.append("Successfully unset leaderboard!")
             },
             "times": { [unowned self] _, output in
                 // Present best times per day
 
-                withLeaderboard(output: output) { board in
-                    output.append(.compound([
+                await withLeaderboard(output: output) { board in
+                    await output.append(.compound([
                         (try? self.presentTimesGraph(board: board)).map { .image($0) },
                         try .embed(self.presentTimesEmbed(board: board))
                     ].compactMap { $0 }))
@@ -65,8 +65,8 @@ public class AdventOfCodeCommand: StringCommand {
             "participation": { [unowned self] _, output in
                 // Present participation numbers per day
 
-                withLeaderboard(output: output) { board in
-                    try output.append(self.presentParticipationGraph(board: board))
+                await withLeaderboard(output: output) { board in
+                    try await output.append(self.presentParticipationGraph(board: board))
                 }
             }
         ]
@@ -78,12 +78,12 @@ public class AdventOfCodeCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if input.isEmpty {
             // Present leaderboard
 
-            withLeaderboard(output: output) { board in
-                output.append(.compound([
+            await withLeaderboard(output: output) { board in
+                await output.append(.compound([
                     (try? self.presentStarGraph(board: board)).map { .image($0) },
                     try .embed(self.presentScoreEmbed(board: board))
                 ].compactMap { $0 }))
@@ -91,30 +91,29 @@ public class AdventOfCodeCommand: StringCommand {
         } else {
             // Invoke subcommand
             guard let parsedSubcommand = try? subcommandPattern.firstMatch(in: input) else {
-                output.append(errorText: info.helpText!)
+                await output.append(errorText: info.helpText!)
                 return
             }
             let subcommandName = String(parsedSubcommand.name)
             let subcommandArgs = String(parsedSubcommand.args)
             guard let subcommand = subcommands[subcommandName] else {
-                output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+                await output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
                 return
             }
-            subcommand(subcommandArgs, output)
+            await subcommand(subcommandArgs, output)
         }
     }
 
-    private func withLeaderboard(output: any CommandOutput, _ action: @escaping (AdventOfCodeLeaderboard) throws -> Void) {
+    private func withLeaderboard(output: any CommandOutput, _ action: @escaping (AdventOfCodeLeaderboard) async throws -> Void) async {
         guard let ownerId = configuration.leaderboardOwnerId else {
-            output.append(errorText: "Please set a leaderboard before querying it!")
+            await output.append(errorText: "Please set a leaderboard before querying it!")
             return
         }
-        AdventOfCodeLeaderboardQuery(event: event, ownerId: ownerId).perform().listen {
-            do {
-                try action($0.get())
-            } catch {
-                output.append(error, errorText: "Could not query/process leaderboard.")
-            }
+        do {
+            let board = try await AdventOfCodeLeaderboardQuery(event: event, ownerId: ownerId).perform()
+            try await action(board)
+        } catch {
+            await output.append(error, errorText: "Could not query/process leaderboard.")
         }
     }
 
