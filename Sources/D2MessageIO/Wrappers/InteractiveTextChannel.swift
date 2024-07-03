@@ -16,8 +16,7 @@ public struct InteractiveTextChannel {
         try await sink.sendMessage(message, to: id)
     }
 
-    @discardableResult
-    public func triggerTyping() async throws -> Bool {
+    public func triggerTyping() async throws {
         try await sink.triggerTyping(on: id)
     }
 }

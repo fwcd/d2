@@ -75,11 +75,12 @@ public class ClearCommand: StringCommand {
             if content == confirmationString {
                 log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
                 if deletions.count == 1, let messageId = deletions.first?.message.id {
-                    if (try? await sink.deleteMessage(messageId, on: channel.id)) ?? false {
+                    do {
+                        try await sink.deleteMessage(messageId, on: channel.id)
                         self.finallyConfirmed.insert(channel.id)
                         await output.append(":wastebasket: Deleted message")
-                    } else {
-                        await output.append(errorText: "Could not delete message")
+                    } catch {
+                        await output.append(error, errorText: "Could not delete message")
                     }
                 } else {
                     let messageIds = deletions.compactMap { $0.message.id }
@@ -87,11 +88,12 @@ public class ClearCommand: StringCommand {
                         await output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
                         return
                     }
-                    if (try? await sink.bulkDeleteMessages(messageIds, on: channel.id)) ?? false {
+                    do {
+                        try await sink.bulkDeleteMessages(messageIds, on: channel.id)
                         self.finallyConfirmed.insert(channel.id)
                         await output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
-                    } else {
-                        await output.append(errorText: "Could not delete messages")
+                    } catch {
+                        await output.append(error, errorText: "Could not delete messages")
                     }
                 }
             } else {

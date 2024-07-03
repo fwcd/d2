@@ -23,11 +23,9 @@ public protocol Sink {
 
     func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL?
 
-    @discardableResult
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws
 
-    @discardableResult
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws
 
     @discardableResult
     func createDM(with userId: UserID) async throws -> ChannelID?
@@ -38,11 +36,9 @@ public protocol Sink {
     @discardableResult
     func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> Message?
 
-    @discardableResult
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws -> Bool
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws
 
-    @discardableResult
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws -> Bool
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws
 
     @discardableResult
     func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) async throws -> [Message]
@@ -50,29 +46,23 @@ public protocol Sink {
     @discardableResult
     func modifyChannel(_ channelId: ChannelID, with modification: ChannelModification) async throws -> Channel?
 
-    @discardableResult
     func isGuildTextChannel(_ channelId: ChannelID) async throws -> Bool
 
-    @discardableResult
     func isDMTextChannel(_ channelId: ChannelID) async throws -> Bool
 
-    @discardableResult
-    func triggerTyping(on channelId: ChannelID) async throws -> Bool
+    func triggerTyping(on channelId: ChannelID) async throws
 
     @discardableResult
     func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Message?
 
-    @discardableResult
-    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Bool
+    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws
 
-    @discardableResult
-    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws -> Bool
+    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws
 
     @discardableResult
     func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) async throws -> Emoji?
 
-    @discardableResult
-    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws -> Bool
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws
 
     @discardableResult
     func getMIOCommands() async throws -> [MIOCommand]
@@ -83,8 +73,7 @@ public protocol Sink {
     @discardableResult
     func editMIOCommand(_ commandId: MIOCommandID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand?
 
-    @discardableResult
-    func deleteMIOCommand(_ commandId: MIOCommandID) async throws -> Bool
+    func deleteMIOCommand(_ commandId: MIOCommandID) async throws
 
     @discardableResult
     func getMIOCommands(on guildId: GuildID) async throws -> [MIOCommand]
@@ -95,11 +84,9 @@ public protocol Sink {
     @discardableResult
     func editMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID, name: String, description: String, options: [MIOCommand.Option]?) async throws -> MIOCommand?
 
-    @discardableResult
-    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws -> Bool
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws
 
-    @discardableResult
-    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws -> Bool
+    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws
 }
 
 public extension Sink {

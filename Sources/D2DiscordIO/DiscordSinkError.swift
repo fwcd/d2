@@ -4,5 +4,7 @@ import FoundationNetworking
 #endif
 
 public enum DiscordSinkError: Error {
-    case invalidResponse(HTTPURLResponse?)
+    case unsuccessful(String, response: HTTPURLResponse?)
+    case httpError(String, status: Int)
+    case noResponse(String)
 }

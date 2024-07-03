@@ -30,15 +30,17 @@ public struct StreamerRoleHandler: PresenceHandler {
                 }
 
                 log.info("Adding streamer role to \(member.displayName)")
-                guard (try? await sink.addGuildMemberRole(roleId, to: presence.user.id, on: guildId, reason: "Streaming")) ?? false else {
-                    log.warning("Adding streamer role to \(member.displayName) failed")
-                    return
+                do {
+                    try await sink.addGuildMemberRole(roleId, to: presence.user.id, on: guildId, reason: "Streaming")
+                } catch {
+                    log.warning("Adding streamer role to \(member.displayName) failed: \(error)")
                 }
             } else if member.roleIds.contains(roleId) {
                 log.info("Removing streamer role from \(member.displayName)")
-                guard (try? await sink.removeGuildMemberRole(roleId, from: presence.user.id, on: guildId, reason: "No longer streaming")) ?? false else {
-                    log.warning("Removing streamer role from \(member.displayName) failed")
-                    return
+                do {
+                    try await sink.removeGuildMemberRole(roleId, from: presence.user.id, on: guildId, reason: "No longer streaming")
+                } catch {
+                    log.warning("Removing streamer role from \(member.displayName) failed: \(error)")
                 }
             } else {
                 log.debug("Not removing streamer role from \(member.displayName).")

@@ -24,10 +24,11 @@ public class DeleteEmojiCommand: StringCommand {
             return
         }
 
-        if (try? await sink.deleteEmoji(from: guild.id, emojiId: emojiId)) ?? false {
+        do {
+            try await sink.deleteEmoji(from: guild.id, emojiId: emojiId)
             await output.append("Successfully deleted emoji!")
-        } else {
-            await output.append(errorText: "Could not delete emoji")
+        } catch {
+            await output.append(error, errorText: "Could not delete emoji")
         }
     }
 }
