@@ -7,12 +7,12 @@ public class PickRandomCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let value = input.split(separator: " ").randomElement().map(String.init) else {
-            output.append(errorText: "Please enter space-separated values, e.g. `heads tails`.")
+            await output.append(errorText: "Please enter space-separated values, e.g. `heads tails`.")
             return
         }
 
-        output.append(value)
+        await output.append(value)
     }
 }
