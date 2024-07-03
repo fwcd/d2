@@ -29,7 +29,7 @@ public class GiphyCommand: StringCommand {
                 let data = try await gif.download()
                 await output.append(.gif(try GIF(data: data)))
             } else {
-                await output.append(.urls([try gif.url]))
+                await output.append(.urls([gif.url]))
             }
         } catch {
             await output.append(error, errorText: "Could not query/download GIF")
