@@ -3,8 +3,8 @@ import Utils
 public struct ComplimentrQuery {
     public init() {}
 
-    public func perform() -> Promise<Compliment, any Error> {
-        Promise.catching { try HTTPRequest(host: "complimentr.com", path: "/api") }
-            .then { $0.fetchJSONAsync(as: Compliment.self) }
+    public func perform() async throws -> Compliment {
+        let request = try HTTPRequest(host: "complimentr.com", path: "/api")
+        return try await request.fetchJSON(as: Compliment.self)
     }
 }
