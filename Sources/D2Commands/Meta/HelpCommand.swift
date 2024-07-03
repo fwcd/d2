@@ -19,23 +19,23 @@ public class HelpCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let authorLevel = context.author.map { permissionManager[simulated: $0] ?? permissionManager[$0] } ?? PermissionLevel.basic
         if input.isEmpty {
             if Int.random(in: 0..<1000) == 0 {
-                output.append("https://www.youtube.com/watch?v=2Q_ZzBGPdqE") // easter egg
+                await output.append("https://www.youtube.com/watch?v=2Q_ZzBGPdqE") // easter egg
             } else {
-                output.append(generalHelpEmbed(at: authorLevel, context: context))
+                await output.append(generalHelpEmbed(at: authorLevel, context: context))
             }
         } else {
             if let category = CommandCategory(rawValue: input) {
-                output.append(categoryHelpEmbed(for: category, at: authorLevel, context: context))
+                await output.append(categoryHelpEmbed(for: category, at: authorLevel, context: context))
             } else if let command = context.registry[input] {
-                output.append(commandHelpEmbed(for: input, command: command))
+                await output.append(commandHelpEmbed(for: input, command: command))
             } else {
                 let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.map(\.key)
                 let alternative = cmdsAndCategories.min(by: ascendingComparator { $0.levenshteinDistance(to: input) }) ?? "?"
-                output.append(Embed(
+                await output.append(Embed(
                     title: ":warning: Did not recognize command or category `\(input)`",
                     description: "Did you mean `\(alternative)`?"
                 ))
