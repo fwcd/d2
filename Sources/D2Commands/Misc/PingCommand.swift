@@ -17,7 +17,7 @@ public class PingCommand: Command {
         self.response = response
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         let deltaMs = (context.message.timestamp?.timeIntervalSinceNow).map { $0 * -1000.0 }
         let instanceName = context.hostInfo?.instanceName ?? "unknown"
         let message = [
@@ -26,6 +26,6 @@ public class PingCommand: Command {
             "(instance: \(instanceName))"
         ].compactMap { $0 }.joined(separator: " ")
 
-        output.append(message)
+        await output.append(message)
     }
 }
