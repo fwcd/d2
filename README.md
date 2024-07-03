@@ -183,7 +183,7 @@ At a basic level, the `Command` protocol consists of a single method named `invo
 protocol Command: AnyObject {
     ...
 
-    func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext)
+    func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async
 
     ...
 }
@@ -213,9 +213,9 @@ class PipeOutput: CommandOutput {
         self.next = next
     }
 
-    func append(_ value: RichValue) {
+    func append(_ value: RichValue) async {
         let nextInput = args.isEmpty ? value : (.text(args) + value)
-        sink.invoke(with: nextInput, output: next ?? PrintOutput(), context: context)
+        await sink.invoke(with: nextInput, output: next ?? PrintOutput(), context: context)
     }
 }
 ```
@@ -224,7 +224,7 @@ Often the `Command` protocol is too low-level to be adopted directly, since the 
 
 ```swift
 protocol StringCommand: Command {
-    func invoke(with input: String, output: any CommandOutput, context: CommandContext)
+    func invoke(with input: String, output: any CommandOutput, context: CommandContext) async
 }
 ```
 
@@ -236,7 +236,7 @@ protocol ArgCommand: Command {
 
     var argPattern: Args { get }
 
-    func invoke(with input: [Args], output: any CommandOutput, context: CommandContext)
+    func invoke(with input: [Args], output: any CommandOutput, context: CommandContext) async
 }
 ```
 
