@@ -7,8 +7,8 @@ public struct CocktailDBSearchQuery {
         self.term = term
     }
 
-    public func perform() -> Promise<CocktailDBResults, any Error> {
-        Promise.catching { try HTTPRequest(host: "www.thecocktaildb.com", path: "/api/json/v1/1/search.php", query: ["s": term]) }
-            .then { $0.fetchJSONAsync(as: CocktailDBResults.self) }
+    public func perform() async throws -> CocktailDBResults {
+        let request = try HTTPRequest(host: "www.thecocktaildb.com", path: "/api/json/v1/1/search.php", query: ["s": term])
+        return try await request.fetchJSON(as: CocktailDBResults.self)
     }
 }
