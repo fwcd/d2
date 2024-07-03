@@ -15,16 +15,14 @@ public struct RandomWordGeneratorNhieQuery {
 
     public init() {}
 
-    public func perform() -> Promise<[NeverHaveIEverStatement], any Error> {
-        Promise.catching { try HTTPRequest(host: "randomwordgenerator.com", path: "/json/question-never-have-i-ever.json") }
-            .then { $0.fetchJSONAsync(as: Response.self) }
-            .map {
-                $0.data.flatMap { (category, statements) in statements.map {
-                    NeverHaveIEverStatement(
-                        statement: $0.question,
-                        category: category
-                    )
-                } }
-            }
+    public func perform() async throws -> [NeverHaveIEverStatement] {
+        let request = try HTTPRequest(host: "randomwordgenerator.com", path: "/json/question-never-have-i-ever.json")
+        let response = try await request.fetchJSON(as: Response.self)
+        return response.data.flatMap { (category, statements) in statements.map {
+            NeverHaveIEverStatement(
+                statement: $0.question,
+                category: category
+            )
+        } }
     }
 }

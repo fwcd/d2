@@ -67,64 +67,58 @@ public class PartyGameDatabase {
         )
     }
 
-    public func rebuild() -> Promise<Void, any Error> {
-        sequence(promises: [rebuildWyrQuestions, rebuildNhieStatements]).void()
+    public func rebuild() async throws {
+        try await rebuildWyrQuestions()
+        try await rebuildNhieStatements()
     }
 
-    private func rebuildWyrQuestions() -> Promise<Void, any Error> {
-        fetchWyrQuestions()
-            .then { questions in
-                Promise.catching {
-                    try self.db.transaction {
-                        for q in questions {
-                            try self.db.run(wyrQuestions.insert(or: .ignore,
-                                title <- q.title,
-                                firstChoice <- q.firstChoice,
-                                secondChoice <- q.secondChoice,
-                                explanation <- q.explanation
-                            ))
-                        }
-                    }
-                }
+    private func rebuildWyrQuestions() async throws {
+        let questions = try await fetchWyrQuestions()
+        try self.db.transaction {
+            for q in questions {
+                try self.db.run(wyrQuestions.insert(or: .ignore,
+                    title <- q.title,
+                    firstChoice <- q.firstChoice,
+                    secondChoice <- q.secondChoice,
+                    explanation <- q.explanation
+                ))
             }
+        }
     }
 
-    private func rebuildNhieStatements() -> Promise<Void, any Error> {
-        fetchNhieStatements()
-            .then { statements in
-                Promise.catching {
-                    try self.db.transaction {
-                        for s in statements {
-                            try self.db.run(nhieStatements.insert(or: .ignore,
-                                statement <- s.statement,
-                                category <- s.category
-                            ))
-                        }
-                    }
-                }
+    private func rebuildNhieStatements() async throws {
+        let statements = try await fetchNhieStatements()
+        try self.db.transaction {
+            for s in statements {
+                try self.db.run(nhieStatements.insert(or: .ignore,
+                    statement <- s.statement,
+                    category <- s.category
+                ))
             }
+        }
     }
 
-    private func fetchWyrQuestions() -> Promise<[WouldYouRatherQuestion], any Error> {
-        sequence(promises: [fetchRRRatherQuestions, fetchEitherIOQuestions]).map { $0.flatMap { $0 } }
+    private func fetchWyrQuestions() async throws -> [WouldYouRatherQuestion] {
+        return try await fetchRRRatherQuestions() + fetchEitherIOQuestions()
     }
 
-    private func fetchEitherIOQuestions() -> Promise<[WouldYouRatherQuestion], any Error> {
-        sequence(promises: "abcdefghijklmnopqrstuvwxyz".map { c in
-            { EitherIOQuery(term: String(c), maxOffset: 1500).perform() }
-        }).map { $0.flatMap { $0 } }
+    private func fetchEitherIOQuestions() async throws -> [WouldYouRatherQuestion] {
+        var questions: [WouldYouRatherQuestion] = []
+        for c in "abcdefghijklmnopqrstuvwxyz" {
+            questions += try await EitherIOQuery(term: String(c), maxOffset: 1500).perform()
+        }
+        return questions
     }
 
-    private func fetchRRRatherQuestions() -> Promise<[WouldYouRatherQuestion], any Error> {
-        sequence(promises: ["conversation-starters", "school", "dating"].map { category in
-            { RRRatherQuery(category: category).perform() }
-        }).map { $0.flatMap { $0 } }
+    private func fetchRRRatherQuestions() async throws -> [WouldYouRatherQuestion] {
+        var questions: [WouldYouRatherQuestion] = []
+        for category in ["conversation-starters", "school", "dating"] {
+            questions += try await RRRatherQuery(category: category).perform()
+        }
+        return questions
     }
 
-    private func fetchNhieStatements() -> Promise<[NeverHaveIEverStatement], any Error> {
-        sequence(promises: [
-            { NNNEverQuery(maxPages: 40).perform() },
-            { RandomWordGeneratorNhieQuery().perform() },
-        ]).map { $0.flatMap { $0 } }
+    private func fetchNhieStatements() async throws -> [NeverHaveIEverStatement] {
+        return try await NNNEverQuery(maxPages: 40).perform() + RandomWordGeneratorNhieQuery().perform()
     }
 }
