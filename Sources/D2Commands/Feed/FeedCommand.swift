@@ -19,22 +19,20 @@ public class FeedCommand<P>: VoidCommand where P: FeedPresenter {
         self.presenter = presenter
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
-        let parser = FeedParser(URL: url)
-
-        Promise { then in parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: then) }
-            .listen {
-                do {
-                    let feed = try $0.get()
-                    guard let embed = try self.presenter.present(feed: feed) else {
-                        output.append(errorText: "Could not present feed")
-                        return
-                    }
-
-                    output.append(embed)
-                } catch {
-                    output.append(error, errorText: "Could not fetch feed!")
-                }
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
+        do {
+            let parser = FeedParser(URL: url)
+            let feed = try await withCheckedThrowingContinuation { continuation in
+                parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: continuation.resume(with:))
             }
+            guard let embed = try self.presenter.present(feed: feed) else {
+                await output.append(errorText: "Could not present feed")
+                return
+            }
+
+            await output.append(embed)
+        } catch {
+            await output.append(error, errorText: "Could not fetch feed!")
+        }
     }
 }
