@@ -15,14 +15,14 @@ public struct SubscriptionReactionHandler: ReactionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) {
+    public func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {
         guard
             let guild = sink.guildForChannel(channelId),
             let member = guild.members[userId] else { return }
         // TODO: Query the actual message that the user reacted to here
         let message = Message(content: "Dummy", channelId: channelId, id: messageId)
         let user = member.user
-        manager.notifySubscriptions(on: channelId, isBot: user.bot) {
+        await manager.notifySubscriptions(on: channelId, isBot: user.bot) {
             let context = CommandContext(
                 sink: sink,
                 registry: registry,
@@ -31,7 +31,7 @@ public struct SubscriptionReactionHandler: ReactionHandler {
                 subscriptions: $1,
                 eventLoopGroup: eventLoopGroup
             )
-            registry[$0]?.onSubscriptionReaction(emoji: emoji, by: user, output: MessageIOOutput(context: context), context: context)
+            await registry[$0]?.onSubscriptionReaction(emoji: emoji, by: user, output: MessageIOOutput(context: context), context: context)
         }
     }
 }

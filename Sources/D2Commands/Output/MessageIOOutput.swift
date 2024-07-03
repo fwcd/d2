@@ -13,9 +13,9 @@ fileprivate let maxSplitFragments = 4
 public class MessageIOOutput: CommandOutput {
     private var context: CommandContext
     private let messageWriter = MessageWriter()
-    private let onSent: (([Message]) -> Void)?
+    private let onSent: (([Message]) async -> Void)?
 
-    public init(context: CommandContext, onSent: (([Message]) -> Void)? = nil) {
+    public init(context: CommandContext, onSent: (([Message]) async -> Void)? = nil) {
         self.context = context
         self.onSent = onSent
     }
@@ -67,7 +67,7 @@ public class MessageIOOutput: CommandOutput {
                 }
             }
 
-            onSent?(sentMessages)
+            await onSent?(sentMessages)
         }
     }
 

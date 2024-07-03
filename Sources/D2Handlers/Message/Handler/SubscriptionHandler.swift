@@ -21,13 +21,13 @@ public struct SubscriptionHandler: MessageHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(message: Message, sink: any Sink) -> Bool {
+    public func handle(message: Message, sink: any Sink) async -> Bool {
         guard !manager.isEmpty, let channelId = message.channelId else { return false }
 
         let isBot = message.author?.bot ?? false
         var handled = false
 
-        manager.notifySubscriptions(on: channelId, isBot: isBot) { name, subs in
+        await manager.notifySubscriptions(on: channelId, isBot: isBot) { name, subs in
             let context = CommandContext(
                 sink: sink,
                 registry: registry,
@@ -40,7 +40,7 @@ public struct SubscriptionHandler: MessageHandler {
             let command = registry[name]
             let output = MessageIOOutput(context: context) { sentMessages in
                 for sent in sentMessages {
-                    command?.onSuccessfullySent(context: CommandContext(
+                    await command?.onSuccessfullySent(context: CommandContext(
                         sink: sink,
                         registry: registry,
                         message: sent,
@@ -51,7 +51,7 @@ public struct SubscriptionHandler: MessageHandler {
                     ))
                 }
             }
-            command?.onSubscriptionMessage(with: message.content, output: output, context: context)
+            await command?.onSubscriptionMessage(with: message.content, output: output, context: context)
             handled = true
         }
 

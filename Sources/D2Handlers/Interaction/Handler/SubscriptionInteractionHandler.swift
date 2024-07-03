@@ -17,7 +17,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
         self.eventLoopGroup = eventLoopGroup
     }
 
-    public func handle(interaction: Interaction, sink: any Sink) -> Bool {
+    public func handle(interaction: Interaction, sink: any Sink) async -> Bool {
         guard
             interaction.type == .messageComponent,
             let customId = interaction.data?.customId,
@@ -25,7 +25,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
             let member = interaction.member else { return false }
         let message = interaction.message ?? Message(content: "Dummy", channelId: channelId, id: MessageID("", clientName: sink.name))
         let user = member.user
-        manager.notifySubscriptions(on: channelId, isBot: user.bot) {
+        await manager.notifySubscriptions(on: channelId, isBot: user.bot) {
             let context = CommandContext(
                 sink: sink,
                 registry: registry,
@@ -36,7 +36,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
                 eventLoopGroup: eventLoopGroup
             )
             let output = MessageIOInteractionOutput(interaction: interaction, context: context)
-            registry[$0]?.onSubscriptionInteraction(with: customId, by: user, output: output, context: context)
+            await registry[$0]?.onSubscriptionInteraction(with: customId, by: user, output: output, context: context)
         }
         return true
     }
