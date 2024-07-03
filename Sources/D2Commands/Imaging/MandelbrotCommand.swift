@@ -17,7 +17,7 @@ public class MandelbrotCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let width = 400
             let height = 300
@@ -35,11 +35,12 @@ public class MandelbrotCommand: StringCommand {
                     let c = 0.01 * Complex(Double(x - (width / 2)), i: Double(y - (height / 2)))
                     image[y, x] = color(at: c, paletteHash: paletteHash)
                 }
+                await Task.yield()
             }
 
-            try output.append(image)
+            try await output.append(image)
         } catch {
-            output.append(error, errorText: "Could not create image")
+            await output.append(error, errorText: "Could not create image")
         }
     }
 
