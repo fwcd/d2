@@ -33,25 +33,25 @@ public struct UnivISQuery {
         self.url = url
     }
 
-    public func start() -> Promise<UnivISOutputNode, any Error> {
-        Promise { then in
+    public func start() async throws -> UnivISOutputNode {
+        try await withCheckedThrowingContinuation { continuation in
             log.info("Querying \(url)")
 
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard error == nil else {
-                    then(.failure(NetApiError.httpError(error!)))
+                    continuation.resume(throwing: NetApiError.httpError(error!))
                     return
                 }
                 guard let data = data else {
-                    then(.failure(NetApiError.missingData))
+                    continuation.resume(throwing: NetApiError.missingData)
                     return
                 }
 
                 log.debug("Got \(String(data: data, encoding: .utf8) ?? "nil")")
 
-                let delegate = UnivISXMLParserDelegate(then: then)
+                let delegate = UnivISXMLParserDelegate(then: continuation.resume(with:))
                 let parser = XMLParser(data: data)
 
                 parser.delegate = delegate

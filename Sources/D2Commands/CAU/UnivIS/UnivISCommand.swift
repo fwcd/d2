@@ -46,39 +46,37 @@ public class UnivISCommand: StringCommand {
         self.maxResponseEntries = maxResponseEntries
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let parsedArgs = try? inputPattern.firstMatch(in: input) else {
-                output.append(errorText: "Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
+                await output.append(errorText: "Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
                 return
             }
             guard let searchKey = UnivISSearchKey(rawValue: String(parsedArgs.1)) else {
-                output.append(errorText: "Unrecognized search key `\(parsedArgs.1)`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
+                await output.append(errorText: "Unrecognized search key `\(parsedArgs.1)`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
                 return
             }
 
             let queryParams = try queryParameterDict(of: input.matches(of: kvArgPattern).map { (key: $0.key, value: $0.quotedValue ?? $0.value ?? "") })
 
-            try UnivISQuery(search: searchKey, params: queryParams).start().listen {
-                do {
-                    let result = try $0.get()
-                    let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
-                    let embed = Embed(
-                        title: "UnivIS query result",
-                        fields: Array(responseGroups
-                            .map { Embed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
-                            .prefix(self.maxResponseEntries))
-                    )
+            do {
+                let result = try await UnivISQuery(search: searchKey, params: queryParams).start()
+                let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
+                let embed = Embed(
+                    title: "UnivIS query result",
+                    fields: Array(responseGroups
+                        .map { Embed.Field(name: $0.key, value: $0.value.map { $0.shortDescription }.joined(separator: "\n")) }
+                        .prefix(self.maxResponseEntries))
+                )
 
-                    output.append(embed)
-                } catch {
-                    output.append(error, errorText: "UnivIS query error.")
-                }
+                await output.append(embed)
+            } catch {
+                await output.append(error, errorText: "UnivIS query error.")
             }
         } catch UnivISCommandError.invalidSearchParameter(let paramName) {
-            output.append(errorText: "Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
+            await output.append(errorText: "Invalid search parameter `\(paramName)`. Try one of:\n```\n\(UnivISSearchParameter.allCases.map { $0.rawValue })\n```")
         } catch {
-            output.append(error)
+            await output.append(error)
         }
     }
 
