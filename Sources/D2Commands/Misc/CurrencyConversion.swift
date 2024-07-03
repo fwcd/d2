@@ -1,5 +1,8 @@
 import Utils
+import Logging
 import D2NetAPIs
+
+private let log = Logger(label: "D2Commands.CurrencyConversion")
 
 public struct CurrencyConversion: AsyncBijection {
     private static var exchangeRates = AsyncLazyExpiring(in: 240.0 /* seconds */) {
@@ -10,7 +13,18 @@ public struct CurrencyConversion: AsyncBijection {
     private let dest: String
     private var exchangeRate: Double {
         get async {
-            await ((try? Self.exchangeRates.wrappedValue.rates[dest]) ?? 1) / ((try? Self.exchangeRates.wrappedValue.rates[source]) ?? 1)
+            do {
+                guard let destRate = try await Self.exchangeRates.wrappedValue.rates[dest] else {
+                    throw CurrencyConversionError.missingRate(dest)
+                }
+                guard let sourceRate = try await Self.exchangeRates.wrappedValue.rates[source] else {
+                    throw CurrencyConversionError.missingRate(source)
+                }
+                return destRate / sourceRate
+            } catch {
+                log.warning("Could not fetch exchange rates: \(error)")
+                return .nan
+            }
         }
     }
 
