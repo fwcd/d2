@@ -32,7 +32,7 @@ public class PortalCommand: StringCommand {
         requiredPermissionLevel: .basic,
         subscriptionsUserOnly: false
     )
-    private var subcommands: [String: (CommandOutput, CommandContext) -> Void] = [:]
+    private var subcommands: [String: (CommandOutput, CommandContext) async -> Void] = [:]
     private var portals: [Portal] = []
     private var halfOpenPortal: Portal? = nil
 
@@ -40,17 +40,17 @@ public class PortalCommand: StringCommand {
         subcommands = [
             "open": { [unowned self] output, context in
                 guard self.currentPortal(context: context) == nil else {
-                    output.append(errorText: "You are already connected to a portal!")
+                    await output.append(errorText: "You are already connected to a portal!")
                     return
                 }
                 if self.halfOpenPortal == nil {
-                    self.openNewPortal(output: output, context: context)
+                    await self.openNewPortal(output: output, context: context)
                 } else {
-                    self.connectPortal(output: output, context: context)
+                    await self.connectPortal(output: output, context: context)
                 }
             },
             "close": { output, context in
-                self.closePortal(output: output, context: context)
+                await self.closePortal(output: output, context: context)
             }
         ]
         info.helpText = """
@@ -61,15 +61,15 @@ public class PortalCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let subcommand = subcommands[input] else {
-            output.append(errorText: "Unknown subcommand `\(input)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            await output.append(errorText: "Unknown subcommand `\(input)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
-        subcommand(output, context)
+        await subcommand(output, context)
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id else {
             log.warning("No channel id available, despite being subscribed!")
             return
@@ -79,7 +79,7 @@ public class PortalCommand: StringCommand {
             return
         }
         guard let otherChannelId = portal.other(channelId) else { return } // Do nothing if portal is only partially connected
-        output.append(.text("**\(context.author?.username ?? "Unknown user"):** \(content)"), to: .guildChannel(otherChannelId))
+        await output.append(.text("**\(context.author?.username ?? "Unknown user"):** \(content)"), to: .guildChannel(otherChannelId))
     }
 
     private func endpointName(context: CommandContext) -> String {
@@ -93,7 +93,7 @@ public class PortalCommand: StringCommand {
         return portals.first(where: { $0.origin == channelId || $0.target == channelId })
     }
 
-    private func openNewPortal(output: any CommandOutput, context: CommandContext) {
+    private func openNewPortal(output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id else {
             log.warning("Tried to open new portal without a channel being present.")
             return
@@ -102,10 +102,10 @@ public class PortalCommand: StringCommand {
         halfOpenPortal = Portal(origin: channelId, originName: endpointName(context: context))
         context.subscribeToChannel()
 
-        output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
+        await output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
     }
 
-    private func connectPortal(output: any CommandOutput, context: CommandContext) {
+    private func connectPortal(output: any CommandOutput, context: CommandContext) async {
         guard var portal = halfOpenPortal else {
             log.warning("Tried to connect portal without having a half-open portal. This is likely a bug.")
             return
@@ -113,7 +113,7 @@ public class PortalCommand: StringCommand {
         halfOpenPortal = nil
 
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "Cannot open a portal without a channel.")
+            await output.append(errorText: "Cannot open a portal without a channel.")
             return
         }
 
@@ -122,21 +122,21 @@ public class PortalCommand: StringCommand {
         self.portals.append(portal)
         context.subscribeToChannel()
 
-        output.append(":dizzy: You are now connected to `\(portal.originName)`")
-        output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .guildChannel(portal.origin))
+        await output.append(":dizzy: You are now connected to `\(portal.originName)`")
+        await output.append(":dizzy: You are now connected to `\(portal.targetName!)`", to: .guildChannel(portal.origin))
 }
 
-    private func closePortal(output: any CommandOutput, context: CommandContext) {
+    private func closePortal(output: any CommandOutput, context: CommandContext) async {
         let channelId = context.channel?.id
         let closeMessage = ":comet: Closed portal."
 
         for (i, portal) in portals.enumerated().reversed() where portal.origin == channelId || portal.target == channelId {
             context.subscriptions.unsubscribe(from: portal.origin)
-            output.append(closeMessage, to: .guildChannel(portal.origin))
+            await output.append(closeMessage, to: .guildChannel(portal.origin))
 
             if let target = portal.target {
                 context.subscriptions.unsubscribe(from: target)
-                output.append(closeMessage, to: .guildChannel(target))
+                await output.append(closeMessage, to: .guildChannel(target))
             }
             portals.remove(at: i)
         }
