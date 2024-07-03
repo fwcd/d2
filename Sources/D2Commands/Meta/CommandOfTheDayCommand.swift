@@ -14,7 +14,7 @@ public class CommandOfTheDayCommand: VoidCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         let calendar = Calendar(identifier: .gregorian)
         var hasher = Hasher()
         hasher.combine(calendar.dateComponents([.year, .month, .day], from: Date()))
@@ -23,7 +23,7 @@ public class CommandOfTheDayCommand: VoidCommand {
             .filter { (_, c) in c.info.requiredPermissionLevel == .basic }
         let (name, command) = commandEntries[abs(hasher.finalize()) % commandEntries.count]
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":medal: The Command of the Day: `\(commandPrefix)\(name)`",
             description: command.info.longDescription,
             footer: Embed.Footer(text: "\(command.inputValueType) -> \(command.outputValueType)")
