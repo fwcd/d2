@@ -11,10 +11,10 @@ public class ColorCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let hexCode = UInt32(input, radix: 16) else {
-                output.append(errorText: "Please enter a hex code as argument!")
+                await output.append(errorText: "Please enter a hex code as argument!")
                 return
             }
             let isRGB = ((hexCode >> 24) & 0xFF) == 0
@@ -24,9 +24,9 @@ public class ColorCommand: StringCommand {
             let image = try CairoImage(width: width, height: height)
             let graphics = CairoContext(image: image)
             graphics.draw(rect: Rectangle(fromX: 0, y: 0, width: Double(width), height: Double(height), color: color, isFilled: true))
-            try output.append(image)
+            try await output.append(image)
         } catch {
-            output.append(error, errorText: "Could not create image")
+            await output.append(error, errorText: "Could not create image")
         }
     }
 }
