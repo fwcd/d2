@@ -94,29 +94,30 @@ public struct AkinatorSession {
         )
     }
 
-    public func answer(with answer: AkinatorAnswer) -> Promise<AkinatorQuestion, any Error> {
-        Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/answer", query: [
+    public func answer(with answer: AkinatorAnswer) async throws -> AkinatorQuestion {
+        let request = try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/answer", query: [
             "session": session,
             "signature": signature,
             "step": "\(step)",
             "answer": "\(answer.value)"
-        ], headers: headers) }
-            .then { $0.fetchJSONAsync(as: AkinatorResponse.StepInformation.self) }
-            .mapCatching {
-                guard let step = Int($0.parameters.step) else { throw AkinatorError.invalidStep($0.parameters.step) }
-                self.step = step
-                return try $0.parameters.asQuestion()
-            }
+        ], headers: headers)
+
+        let stepInfo = try await request.fetchJSON(as: AkinatorResponse.StepInformation.self)
+        guard let step = Int(stepInfo.parameters.step) else { throw AkinatorError.invalidStep(stepInfo.parameters.step) }
+        self.step = step
+
+        return try stepInfo.parameters.asQuestion()
     }
 
-    public func guess() -> Promise<[AkinatorGuess], any Error> {
-        Promise.catching { try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/list", query: [
+    public func guess() async throws -> [AkinatorGuess] {
+        let request = try HTTPRequest(host: serverUrl.host!, port: serverUrl.port, path: "\(serverUrl.path)/list", query: [
             "session": session,
             "signature": signature,
             "step": "\(step)"
-        ], headers: headers) }
-            .then { $0.fetchJSONAsync(as: AkinatorResponse.Guess.self) }
-            .mapCatching { try $0.parameters.characters.map { try $0.asGuess() } }
+        ], headers: headers)
+
+        let guess = try await request.fetchJSON(as: AkinatorResponse.Guess.self)
+        return try guess.parameters.characters.map { try $0.asGuess() }
     }
 
     private static func getApiKey() async throws -> ApiKey {

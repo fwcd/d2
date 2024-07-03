@@ -61,26 +61,25 @@ public class AkinatorCommand: StringCommand {
             return
         }
 
-        session.answer(with: answer).listen {
+        // TODO: Remove once onSubscriptionMessage is async
+        Task {
             do {
-                let question = try $0.get()
+                let question = try await session.answer(with: answer)
                 if question.progression > progressionThreshold {
-                    session.guess().listen {
-                        do {
-                            guard let guess = try $0.get().first else { throw AkinatorError.noGuesses }
-                            output.append(self.embed(of: guess))
-                        } catch {
-                            output.append(error, errorText: "Error while guessing")
-                        }
-
-                        self.sessions[channelId] = nil
-                        context.unsubscribeFromChannel()
+                    do {
+                        guard let guess = try await session.guess().first else { throw AkinatorError.noGuesses }
+                        await output.append(self.embed(of: guess))
+                    } catch {
+                        await output.append(error, errorText: "Error while guessing")
                     }
+
+                    self.sessions[channelId] = nil
+                    context.unsubscribeFromChannel()
                 } else {
-                    output.append(self.embed(of: question))
+                    await output.append(self.embed(of: question))
                 }
             } catch {
-                output.append(error, errorText: "Error while answering")
+                await output.append(error, errorText: "Error while answering")
             }
         }
     }
