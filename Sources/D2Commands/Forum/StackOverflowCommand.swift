@@ -18,34 +18,29 @@ public class StackOverflowCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
-            try StackOverflowQuery(input: input).perform().listen {
-                do {
-                    guard let answer = try $0.get().items?.first else {
-                        output.append(errorText: "No answers found")
-                        return
-                    }
-                    output.append(Embed(
-                        title: "StackOverflow Answer",
-                        description: answer.bodyMarkdown,
-                        author: answer.owner.map { Embed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
-                        color: 0xffad0a
-                    ))
-                } catch NetApiError.noResults(let msg) {
-                    output.append(errorText: msg)
-                    log.warning("NetApiError while querying StackOverflow: \(msg)")
-                } catch NetworkError.ioError(let err) {
-                    output.append(err, errorText: "An IO error while querying StackOverflow")
-                } catch NetworkError.jsonDecodingError(let data) {
-                    output.append(errorText: "Could not decode data as JSON")
-                    log.warning("Could not decode data from StackOverflow request as JSON: \(data)")
-                } catch {
-                    output.append(error, errorText: "An asynchronous error occurred while querying StackOverflow")
-                }
+            let results = try await StackOverflowQuery(input: input).perform()
+            guard let answer = results.items?.first else {
+                await output.append(errorText: "No answers found")
+                return
             }
+            await output.append(Embed(
+                title: "StackOverflow Answer",
+                description: answer.bodyMarkdown,
+                author: answer.owner.map { Embed.Author(name: $0.displayName ?? "Unnamed user", iconUrl: $0.profileImage.flatMap { URL(string: $0) }) },
+                color: 0xffad0a
+            ))
+        } catch NetApiError.noResults(let msg) {
+            await output.append(errorText: msg)
+            log.warning("NetApiError while querying StackOverflow: \(msg)")
+        } catch NetworkError.ioError(let err) {
+            await output.append(err, errorText: "An IO error while querying StackOverflow")
+        } catch NetworkError.jsonDecodingError(let data) {
+            await output.append(errorText: "Could not decode data as JSON")
+            log.warning("Could not decode data from StackOverflow request as JSON: \(data)")
         } catch {
-            output.append(error, errorText: "A synchronous error occurred while querying StackOverflow")
+            await output.append(error, errorText: "An error occurred while querying StackOverflow")
         }
     }
 }
