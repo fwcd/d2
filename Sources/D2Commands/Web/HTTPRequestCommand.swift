@@ -17,17 +17,17 @@ public class HTTPRequestCommand: Command {
         self.method = method
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let url = (input.asUrls?.first).flatMap({ URLComponents(url: $0, resolvingAgainstBaseURL: false) }) else {
-            output.append(errorText: "Please enter a valid URL!")
+            await output.append(errorText: "Please enter a valid URL!")
             return
         }
         guard let scheme = url.scheme else {
-            output.append(errorText: "Your URL misses a scheme")
+            await output.append(errorText: "Your URL misses a scheme")
             return
         }
         guard let host = url.host else {
-            output.append(errorText: "Your URL misses a host")
+            await output.append(errorText: "Your URL misses a host")
             return
         }
         let port = url.port
@@ -35,23 +35,20 @@ public class HTTPRequestCommand: Command {
         let query = Dictionary(uniqueKeysWithValues: url.queryItems?.map { ($0.name, $0.value ?? "") } ?? [])
         let body = (input.asText?.split(separator: " ")[safely: 1]).map(String.init)
 
-        Promise.catching { try HTTPRequest(
-            scheme: scheme,
-            host: host,
-            port: port,
-            path: path,
-            method: method,
-            query: query,
-            body: body
-        ) }
-            .then { $0.fetchUTF8Async() }
-            .listen {
-                do {
-                    let response = try $0.get().truncated(to: 1500, appending: "...")
-                    output.append(.code(response, language: nil))
-                } catch {
-                    output.append(error, errorText: "Error while performing request")
-                }
-            }
+        do {
+            let request = try HTTPRequest(
+                scheme: scheme,
+                host: host,
+                port: port,
+                path: path,
+                method: method,
+                query: query,
+                body: body
+            )
+            let response = try await request.fetchUTF8().truncated(to: 1500, appending: "...")
+            await output.append(.code(response, language: nil))
+        } catch {
+            await output.append(error, errorText: "Error while constructing or performing request")
+        }
     }
 }
