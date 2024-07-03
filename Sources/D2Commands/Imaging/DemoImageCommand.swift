@@ -18,7 +18,7 @@ public class DemoImageCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         do {
             let image = try CairoImage(width: 200, height: 200)
             let graphics = CairoContext(image: image)
@@ -33,9 +33,9 @@ public class DemoImageCommand: VoidCommand {
             graphics.draw(ellipse: Ellipse(centerX: 150, y: 80, radiusX: 40, y: 60, color: .magenta, isFilled: false))
             graphics.draw(ellipse: Ellipse(centerX: 120, y: 50, radius: 40, color: .green))
 
-            try output.append(image)
+            try await output.append(image)
         } catch {
-            output.append(error, errorText: "An error occurred while encoding/sending the image")
+            await output.append(error, errorText: "An error occurred while encoding/sending the image")
         }
     }
 }
