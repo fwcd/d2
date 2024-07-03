@@ -18,37 +18,35 @@ public class AkinatorCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "Not in a channel!")
+            await output.append(errorText: "Not in a channel!")
             return
         }
 
         if input == "cancel" {
             guard sessions.keys.contains(channelId) else {
-                output.append(errorText: "There is no session running on this channel!")
+                await output.append(errorText: "There is no session running on this channel!")
                 return
             }
 
             context.unsubscribeFromChannel()
             sessions[channelId] = nil
-            output.append("Successfully cancelled game!")
+            await output.append("Successfully cancelled game!")
         } else {
             guard !sessions.keys.contains(channelId) else {
-                output.append(errorText: "There is already a session running in this channel!")
+                await output.append(errorText: "There is already a session running in this channel!")
                 return
             }
 
-            AkinatorSession.create().listen {
-                do {
-                    let (session, question) = try $0.get()
-                    output.append(self.embed(of: question))
+            do {
+                let (session, question) = try await AkinatorSession.create()
+                await output.append(self.embed(of: question))
 
-                    self.sessions[channelId] = session
-                    context.subscribeToChannel()
-                } catch {
-                    output.append(error, errorText: "Could not create Akinator session")
-                }
+                self.sessions[channelId] = session
+                context.subscribeToChannel()
+            } catch {
+                await output.append(error, errorText: "Could not create Akinator session")
             }
         }
 

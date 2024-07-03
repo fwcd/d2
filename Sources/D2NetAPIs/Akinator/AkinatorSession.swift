@@ -48,50 +48,50 @@ public struct AkinatorSession {
         let frontaddr: String
     }
 
-    public static func create() -> Promise<(AkinatorSession, AkinatorQuestion), any Error> {
+    public static func create() async throws -> (AkinatorSession, AkinatorQuestion) {
         let time = Int64(Date().timeIntervalSince1970 * 1000) + 1
-        return AkinatorServersQuery().perform()
-            .thenCatching {
-                guard let url = $0.parameters.instance.first?.urlBaseWs else { throw AkinatorError.noServersFound }
-                return getApiKey().map { ($0, url) }
-            }
-            .thenCatching { (key: ApiKey, url: URL) in
-                try HTTPRequest(
-                    host: "en.akinator.com",
-                    path: "/new_session",
-                    query: [
-                        "callback": "\(jQuerySignature)_\(time)",
-                        "urlApiWs": "\(url)",
-                        "player": "website-desktop",
-                        "partner": "1",
-                        "uid_ext_session": key.uidExtSession,
-                        "frontaddr": key.frontaddr,
-                        "childMod": "",
-                        "constraint": "ETAT<>'AV'",
-                        "soft_constraint": "",
-                        "question_filter": "",
-                        "_": "\(time + 1)"
-                    ],
-                    headers: headers
-                ).fetchUTF8Async().map { ($0, url) }
-            }
-            .mapCatching { (raw: String, url: URL) in
-                guard let parsed = try? startGamePattern.firstMatch(in: raw) else { throw AkinatorError.startGamePatternNotFound(raw) }
-                guard let data = parsed.1.data(using: .utf8) else { throw AkinatorError.invalidStartGameString(String(parsed.1)) }
-                let response = try JSONDecoder().decode(AkinatorResponse.NewGame.self, from: data)
-                let identification = response.parameters.identification
-                let stepInfo = response.parameters.stepInformation
-                guard let step = Int(stepInfo.step) else { throw AkinatorError.invalidStep(stepInfo.step) }
-                return (
-                    AkinatorSession(
-                        session: identification.session,
-                        signature: identification.signature,
-                        serverUrl: url,
-                        step: step
-                    ),
-                    try stepInfo.asQuestion()
-                )
-            }
+
+        // Query servers
+        let servers = try await AkinatorServersQuery().perform()
+        guard let url = servers.parameters.instance.first?.urlBaseWs else { throw AkinatorError.noServersFound }
+        let key = try await getApiKey()
+
+        // Create session
+        let sessionRequest = try HTTPRequest(
+            host: "en.akinator.com",
+            path: "/new_session",
+            query: [
+                "callback": "\(jQuerySignature)_\(time)",
+                "urlApiWs": "\(url)",
+                "player": "website-desktop",
+                "partner": "1",
+                "uid_ext_session": key.uidExtSession,
+                "frontaddr": key.frontaddr,
+                "childMod": "",
+                "constraint": "ETAT<>'AV'",
+                "soft_constraint": "",
+                "question_filter": "",
+                "_": "\(time + 1)"
+            ],
+            headers: headers
+        )
+        let raw = try await sessionRequest.fetchUTF8()
+        guard let parsed = try? startGamePattern.firstMatch(in: raw) else { throw AkinatorError.startGamePatternNotFound(raw) }
+        guard let data = parsed.1.data(using: .utf8) else { throw AkinatorError.invalidStartGameString(String(parsed.1)) }
+        let response = try JSONDecoder().decode(AkinatorResponse.NewGame.self, from: data)
+        let identification = response.parameters.identification
+        let stepInfo = response.parameters.stepInformation
+        guard let step = Int(stepInfo.step) else { throw AkinatorError.invalidStep(stepInfo.step) }
+
+        return (
+            AkinatorSession(
+                session: identification.session,
+                signature: identification.signature,
+                serverUrl: url,
+                step: step
+            ),
+            try stepInfo.asQuestion()
+        )
     }
 
     public func answer(with answer: AkinatorAnswer) -> Promise<AkinatorQuestion, any Error> {
@@ -119,14 +119,12 @@ public struct AkinatorSession {
             .mapCatching { try $0.parameters.characters.map { try $0.asGuess() } }
     }
 
-    private static func getApiKey() -> Promise<ApiKey, any Error> {
-        Promise.catching { try HTTPRequest(host: "en.akinator.com", path: "/game", headers: headers) }
-            .then { $0.fetchUTF8Async() }
-            .mapCatching {
-                guard let parsed = try? sessionPattern.firstMatch(in: $0) else { throw AkinatorError.sessionPatternNotFound }
-                let key = ApiKey(uidExtSession: String(parsed.1), frontaddr: String(parsed.2))
-                log.info("Got \(key)")
-                return key
-            }
+    private static func getApiKey() async throws -> ApiKey {
+        let request = try HTTPRequest(host: "en.akinator.com", path: "/game", headers: headers)
+        let response = try await request.fetchUTF8()
+        guard let parsed = try? sessionPattern.firstMatch(in: response) else { throw AkinatorError.sessionPatternNotFound }
+        let key = ApiKey(uidExtSession: String(parsed.1), frontaddr: String(parsed.2))
+        log.info("Got \(key)")
+        return key
     }
 }
