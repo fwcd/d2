@@ -7,8 +7,8 @@ public struct AgifyQuery {
         self.name = name
     }
 
-    public func perform() -> Promise<AgeEstimate, any Error> {
-        Promise.catching { try HTTPRequest(host: "api.agify.io", path: "/", query: ["name": name]) }
-            .then { $0.fetchJSONAsync(as: AgeEstimate.self) }
+    public func perform() async throws -> AgeEstimate {
+        let request = try HTTPRequest(host: "api.agify.io", path: "/", query: ["name": name])
+        return try await request.fetchJSON(as: AgeEstimate.self)
     }
 }

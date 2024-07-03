@@ -12,21 +12,19 @@ public class AgifyCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter a name!")
+            await output.append(errorText: "Please enter a name!")
             return
         }
 
-        AgifyQuery(name: input).perform().listen {
-            do {
-                let estimate = try $0.get()
-                output.append(Embed(
-                    title: "Age Estimate: \(estimate.age) \("year".pluralized(with: estimate.age))"
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch estimate")
-            }
+        do {
+            let estimate = try await AgifyQuery(name: input).perform()
+            await output.append(Embed(
+                title: "Age Estimate: \(estimate.age) \("year".pluralized(with: estimate.age))"
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch estimate")
         }
     }
 }
