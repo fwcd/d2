@@ -25,7 +25,7 @@ public struct WolframAlphaSimpleQuery {
         self.url = url
     }
 
-    public func start() async throws -> Data {
+    public func perform() async throws -> Data {
         try await HTTPRequest(url: url).run()
     }
 }

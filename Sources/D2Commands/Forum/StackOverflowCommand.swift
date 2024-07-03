@@ -20,7 +20,7 @@ public class StackOverflowCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
         do {
-            try StackOverflowQuery(input: input).start().listen {
+            try StackOverflowQuery(input: input).perform().listen {
                 do {
                     guard let answer = try $0.get().items?.first else {
                         output.append(errorText: "No answers found")

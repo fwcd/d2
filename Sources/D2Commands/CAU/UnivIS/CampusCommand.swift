@@ -27,7 +27,7 @@ public class CampusCommand: StringCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let query = try UnivISQuery(search: .rooms, params: [.name: input])
-            let queryOutput = try await query.start()
+            let queryOutput = try await query.perform()
 
             // Successfully received and parsed UnivIS query output
             guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {

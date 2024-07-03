@@ -29,7 +29,7 @@ public struct MDBQuery {
         self.url = url
     }
 
-    public func start() async throws -> [MDBModule] {
+    public func perform() async throws -> [MDBModule] {
         try await withCheckedThrowingContinuation { continuation in
             log.info("Querying \(url)")
 

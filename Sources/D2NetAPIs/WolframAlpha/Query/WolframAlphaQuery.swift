@@ -34,12 +34,12 @@ public struct WolframAlphaQuery {
     }
 
     /// Starts a query and returns the data.
-    public func start() async throws -> Data {
+    public func performRaw() async throws -> Data {
         try await HTTPRequest(url: url).run()
     }
 
-    public func startAndParse() async throws -> WolframAlphaOutput {
-        let data = try await start()
+    public func performParsed() async throws -> WolframAlphaOutput {
+        let data = try await performRaw()
         return try await withCheckedThrowingContinuation { continuation in
             let parser = XMLParser(data: data)
             let delegate = WolframAlphaParserDelegate(then: continuation.resume(with:))

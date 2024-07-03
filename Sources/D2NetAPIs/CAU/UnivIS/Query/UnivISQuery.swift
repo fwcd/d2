@@ -33,7 +33,7 @@ public struct UnivISQuery {
         self.url = url
     }
 
-    public func start() async throws -> UnivISOutputNode {
+    public func perform() async throws -> UnivISOutputNode {
         try await withCheckedThrowingContinuation { continuation in
             log.info("Querying \(url)")
 

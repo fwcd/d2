@@ -65,7 +65,7 @@ public class UnivISCommand: StringCommand {
             let queryParams = try queryParameterDict(of: input.matches(of: kvArgPattern).map { (key: $0.key, value: $0.quotedValue ?? $0.value ?? "") })
 
             do {
-                let result = try await UnivISQuery(search: searchKey, params: queryParams).start()
+                let result = try await UnivISQuery(search: searchKey, params: queryParams).perform()
                 let responseGroups = Dictionary(grouping: result.childs, by: { $0.nodeType })
                 let embed = Embed(
                     title: "UnivIS query result",

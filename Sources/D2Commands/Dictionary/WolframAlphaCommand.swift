@@ -48,7 +48,7 @@ public class WolframAlphaCommand: StringCommand {
     private func performSimpleQuery(input: String, output: any CommandOutput) async throws {
         let query = try WolframAlphaQuery(input: input, endpoint: .simpleQuery)
         do {
-            let data = try await query.start()
+            let data = try await query.performRaw()
             await output.append(.files([Message.FileUpload(data: data, filename: "wolframalpha.png", mimeType: "image/png")]))
         } catch {
             await output.append(error, errorText: "An error occurred while querying WolframAlpha.")
@@ -59,7 +59,7 @@ public class WolframAlphaCommand: StringCommand {
     private func performFullQuery(input: String, output: any CommandOutput, showSteps: Bool = false) async throws {
         let query = try WolframAlphaQuery(input: input, endpoint: .fullQuery, showSteps: showSteps)
         do {
-            let result = try await query.startAndParse()
+            let result = try await query.performParsed()
             let images = result.pods.flatMap { pod in pod.subpods.compactMap { self.extractImageURL(from: $0) } }
             let plot = result.pods.filter { $0.title?.lowercased().contains("plot") ?? false }.first?.subpods.first.flatMap { self.extractImageURL(from: $0) }
 

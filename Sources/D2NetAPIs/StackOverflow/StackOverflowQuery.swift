@@ -15,7 +15,7 @@ public struct StackOverflowQuery {
         self.apiVersion = apiVersion
     }
 
-    public func start() -> Promise<StackOverflowResults<StackOverflowAnswer>, any Error> {
+    public func perform() -> Promise<StackOverflowResults<StackOverflowAnswer>, any Error> {
         Promise.catching { try HTTPRequest(host: host, path: "/\(apiVersion)/search", query: [
             "order": "desc",
             "sort": "relevance",

@@ -20,7 +20,7 @@ public class MDBCommand: StringCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let query = try MDBQuery(moduleCode: input.nilIfEmpty)
-            let result = try await query.start()
+            let result = try await query.perform()
             if let module = result.first {
                 let converter = DocumentToMarkdownConverter()
                 let embed = try Embed(
