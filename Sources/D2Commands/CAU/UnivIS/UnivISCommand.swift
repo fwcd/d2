@@ -37,6 +37,11 @@ public class UnivISCommand: StringCommand {
         category: .cau,
         shortDescription: "Queries the UnivIS",
         longDescription: "Queries the lecture database 'UnivIS' from the CAU",
+        helpText: """
+            Syntax: `[search key] [searchparameter=value]*`
+
+            For example: `lectures name=qcomp`
+            """,
         presented: true,
         requiredPermissionLevel: .basic
     )
