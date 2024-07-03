@@ -20,9 +20,9 @@ public class ComposeMemeCommand: Command {
         self.alphaThreshold = alphaThreshold
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let image = input.asImage else {
-            output.append(errorText: "Please input an image!")
+            await output.append(errorText: "Please input an image!")
             return
         }
 
@@ -32,12 +32,12 @@ public class ComposeMemeCommand: Command {
             do {
                 let (topLeft, bottomRight) = findBoundingBox(in: template) { $0.alpha < alphaThreshold }
                 let composition = try composeImage(from: template, with: image, between: topLeft, and: bottomRight)
-                try output.append(composition)
+                try await output.append(composition)
             } catch {
-                output.append(error, errorText: "Could not compose image!")
+                await output.append(error, errorText: "Could not compose image!")
             }
         } catch {
-            output.append(error, errorText: "Could not get meme template. Please make sure that `\(memeTemplatesFilePath)` exists and contains suitable templates.")
+            await output.append(error, errorText: "Could not get meme template. Please make sure that `\(memeTemplatesFilePath)` exists and contains suitable templates.")
         }
     }
 
