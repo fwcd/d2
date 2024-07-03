@@ -4,33 +4,34 @@ import Utils
 
 fileprivate let log = Logger(label: "D2MessageIO.TypingIndicator")
 
-public class TypingIndicator {
+public actor TypingIndicator {
     private let channel: InteractiveTextChannel
-    private let queue = DispatchQueue(label: "TypingIndicator", qos: .background)
-    @Synchronized private var running: Bool = false
+    private var typingTask: Task<Void, any Error>? = nil
 
     public init(on channel: InteractiveTextChannel) {
         self.channel = channel
     }
 
-    public func startAsync() {
-        running = true
-        repeatedlyTriggerTypingInBackground()
+    public func start() async {
+        await stop()
+        typingTask = Task {
+            while !Task.isCancelled {
+                do {
+                    try await channel.triggerTyping()
+                    try await Task.sleep(for: .seconds(9))
+                } catch _ as CancellationError {
+                    break
+                } catch {
+                    log.warning("Could not trigger typing indicator: \(error)")
+                    break
+                }
+            }
+        }
     }
 
-    private func repeatedlyTriggerTypingInBackground() {
-        guard running else { return }
-        Task {
-            _ = try? await channel.triggerTyping()
-        }
-
-        let timeout = DispatchTime.now() + .seconds(9)
-        queue.asyncAfter(deadline: timeout) {
-            self.repeatedlyTriggerTypingInBackground()
-        }
-    }
-
-    public func stop() {
-        running = false
+    public func stop() async {
+        typingTask?.cancel()
+        _ = try? await typingTask?.value
+        typingTask = nil
     }
 }

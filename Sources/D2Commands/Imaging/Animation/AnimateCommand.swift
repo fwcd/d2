@@ -50,10 +50,10 @@ public class AnimateCommand<A>: Command where A: Animation {
         self.delayTime = delayTime
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         let args = input.asText ?? ""
         let typingIndicator = context.channel.map { TypingIndicator(on: $0) }
-        typingIndicator?.startAsync()
+        await typingIndicator?.start()
 
         // Parse user-specified args
         let pos: Vec2<Int>? = (try? posPattern.firstMatch(in: args)).map { Vec2<Int>(x: Int($0.1)!, y: Int($0.2)!) }
@@ -62,7 +62,7 @@ public class AnimateCommand<A>: Command where A: Animation {
         let frameCount = kvArgs[framesParameter].flatMap(Int.init) ?? defaultFrameCount
 
         guard frameCount <= maxFrameCount else {
-            output.append(errorText: "Please specify less than \(maxFrameCount) frames!")
+            await output.append(errorText: "Please specify less than \(maxFrameCount) frames!")
             return
         }
 
@@ -72,7 +72,7 @@ public class AnimateCommand<A>: Command where A: Animation {
                 .filter({ (k, _) in k != framesParameter })
                 .sequenceMap({ (k, v) in A.Key(rawValue: k).map { ($0, v) } })
                 .map(Dictionary.init(uniqueKeysWithValues:)) else {
-                output.append(errorText: "Invalid keys. Try using only these: \(kvParameters.map { "`\($0)`" }.joined(separator: ", "))")
+                await output.append(errorText: "Invalid keys. Try using only these: \(kvParameters.map { "`\($0)`" }.joined(separator: ", "))")
                 return
             }
 
@@ -95,29 +95,34 @@ public class AnimateCommand<A>: Command where A: Animation {
                     log.debug("Rendering frame \(i)")
                     try animation.renderFrame(from: image, to: frame, percent: percent)
                     gif.frames.append(.init(image: frame, delayTime: delayTime))
+
+                    await Task.yield()
                 }
 
-                output.append(.gif(gif))
+                await output.append(.gif(gif))
             } else if let sourceGif = input.asGif {
                 var gif = sourceGif
                 let frameCount = sourceGif.frames.count
 
-                gif.frames = try sourceGif.frames.enumerated().map { (i, f) in
+                gif.frames = []
+                for (i, f) in sourceGif.frames.enumerated() {
                     let frame = try CairoImage(width: f.image.width, height: f.image.height)
                     let percent = Double(i) / Double(frameCount)
 
                     try animation.renderFrame(from: f.image, to: frame, percent: percent)
-                    return .init(image: frame, delayTime: f.delayTime)
+                    gif.frames.append(.init(image: frame, delayTime: f.delayTime))
+
+                    await Task.yield()
                 }
 
-                output.append(.gif(gif))
+                await output.append(.gif(gif))
             } else {
-                output.append(errorText: "No image passed to AnimateCommand")
+                await output.append(errorText: "No image passed to AnimateCommand")
             }
         } catch {
-            output.append(error, errorText: "Error while generating animation")
+            await output.append(error, errorText: "Error while generating animation")
         }
 
-        typingIndicator?.stop()
+        await typingIndicator?.stop()
     }
 }
