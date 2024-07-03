@@ -14,8 +14,8 @@ public class AboutCommand: VoidCommand {
         self.commandPrefix = commandPrefix
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
-        output.append(Embed(
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
+        await output.append(Embed(
             title: "D2",
             description: """
                 **I am a versatile assistant that can perform a wide range of more or less useful tasks.**
