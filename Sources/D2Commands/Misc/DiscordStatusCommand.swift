@@ -11,21 +11,19 @@ public class DiscordStatusCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        DiscordStatusQuery().perform().listen {
-            do {
-                let status = try $0.get()
-                output.append(Embed(
-                    title: ":traffic_light: Discord Status",
-                    description: (status.components ?? [])
-                        .map { "**\($0.name)**: \(self.indicatorOf(status: $0.status))" }
-                        .joined(separator: "\n")
-                        .nilIfEmpty
-                        ?? "_none_"
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch Discord status")
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let status = try await DiscordStatusQuery().perform()
+            await output.append(Embed(
+                title: ":traffic_light: Discord Status",
+                description: (status.components ?? [])
+                    .map { "**\($0.name)**: \(self.indicatorOf(status: $0.status))" }
+                    .joined(separator: "\n")
+                    .nilIfEmpty
+                    ?? "_none_"
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch Discord status")
         }
     }
 
