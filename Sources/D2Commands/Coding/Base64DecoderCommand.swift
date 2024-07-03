@@ -11,22 +11,22 @@ public class Base64DecoderCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let data = Data(base64Encoded: input) else {
-            output.append(errorText: "Could not decode data as Base64")
+            await output.append(errorText: "Could not decode data as Base64")
             return
         }
 
         if let image = try? CairoImage(pngData: data) {
             do {
-                try output.append(image)
+                try await output.append(image)
             } catch {
-                output.append(errorText: "Could not send image")
+                await output.append(errorText: "Could not send image")
             }
         } else if let text = String(data: data, encoding: .utf8) {
-            output.append(text)
+            await output.append(text)
         } else {
-            output.append(errorText: "Data is neither a png image nor utf8-encoded text!")
+            await output.append(errorText: "Data is neither a png image nor utf8-encoded text!")
         }
     }
 }
