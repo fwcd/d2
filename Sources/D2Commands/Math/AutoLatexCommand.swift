@@ -33,22 +33,19 @@ public class AutoLatexCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         if content == "cancel autolatex" {
-            output.append("This syntax has been deprecated, please use `\(context.commandPrefix)autolatex cancel` to cancel.")
+            await output.append("This syntax has been deprecated, please use `\(context.commandPrefix)autolatex cancel` to cancel.")
             return
         }
 
         if !content.matches(of: formulaPattern).isEmpty {
             let formula = escapeText(in: content)
-            // TODO: Remove this once onSubscriptionMessage is async
-            Task {
-                do {
-                    let image = try await latexRenderer.renderImage(from: formula, scale: 1.5)
-                    try await output.append(image)
-                } catch {
-                    log.error("\(error)")
-                }
+            do {
+                let image = try await latexRenderer.renderImage(from: formula, scale: 1.5)
+                try await output.append(image)
+            } catch {
+                log.error("\(error)")
             }
         }
     }

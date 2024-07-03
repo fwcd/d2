@@ -52,7 +52,7 @@ public class AkinatorCommand: StringCommand {
 
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id, let session = sessions[channelId] else {
             context.unsubscribeFromChannel()
             return
@@ -61,26 +61,23 @@ public class AkinatorCommand: StringCommand {
             return
         }
 
-        // TODO: Remove once onSubscriptionMessage is async
-        Task {
-            do {
-                let question = try await session.answer(with: answer)
-                if question.progression > progressionThreshold {
-                    do {
-                        guard let guess = try await session.guess().first else { throw AkinatorError.noGuesses }
-                        await output.append(self.embed(of: guess))
-                    } catch {
-                        await output.append(error, errorText: "Error while guessing")
-                    }
-
-                    self.sessions[channelId] = nil
-                    context.unsubscribeFromChannel()
-                } else {
-                    await output.append(self.embed(of: question))
+        do {
+            let question = try await session.answer(with: answer)
+            if question.progression > progressionThreshold {
+                do {
+                    guard let guess = try await session.guess().first else { throw AkinatorError.noGuesses }
+                    await output.append(embed(of: guess))
+                } catch {
+                    await output.append(error, errorText: "Error while guessing")
                 }
-            } catch {
-                await output.append(error, errorText: "Error while answering")
+
+                sessions[channelId] = nil
+                context.unsubscribeFromChannel()
+            } else {
+                await output.append(embed(of: question))
             }
+        } catch {
+            await output.append(error, errorText: "Error while answering")
         }
     }
 

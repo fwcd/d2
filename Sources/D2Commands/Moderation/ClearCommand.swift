@@ -66,46 +66,43 @@ public class ClearCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         if let sink = context.sink, let channel = context.channel, let deletions = preparedDeletions[channel.id].map({ $0 + [Deletion(message: context.message, isIntended: false)] }) {
-            // TODO: Remove once onSubscriptionMessage is async
-            Task {
-                let intendedDeletionCount = deletions.filter { $0.isIntended }.count
-                let confirmationDeletionCount = deletions.count - intendedDeletionCount
-                preparedDeletions[channel.id] = nil
+            let intendedDeletionCount = deletions.filter { $0.isIntended }.count
+            let confirmationDeletionCount = deletions.count - intendedDeletionCount
+            preparedDeletions[channel.id] = nil
 
-                if content == confirmationString {
-                    log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
-                    if deletions.count == 1, let messageId = deletions.first?.message.id {
-                        if (try? await sink.deleteMessage(messageId, on: channel.id)) ?? false {
-                            self.finallyConfirmed.insert(channel.id)
-                            await output.append(":wastebasket: Deleted message")
-                        } else {
-                            await output.append(errorText: "Could not delete message")
-                        }
+            if content == confirmationString {
+                log.notice("Deleting \(intendedDeletionCount) \("message".pluralized(with: intendedDeletionCount)) and \(confirmationDeletionCount) \("confirmation".pluralized(with: confirmationDeletionCount))")
+                if deletions.count == 1, let messageId = deletions.first?.message.id {
+                    if (try? await sink.deleteMessage(messageId, on: channel.id)) ?? false {
+                        self.finallyConfirmed.insert(channel.id)
+                        await output.append(":wastebasket: Deleted message")
                     } else {
-                        let messageIds = deletions.compactMap { $0.message.id }
-                        guard !messageIds.isEmpty else {
-                            await output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
-                            return
-                        }
-                        if (try? await sink.bulkDeleteMessages(messageIds, on: channel.id)) ?? false {
-                            self.finallyConfirmed.insert(channel.id)
-                            await output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
-                        } else {
-                            await output.append(errorText: "Could not delete messages")
-                        }
+                        await output.append(errorText: "Could not delete message")
                     }
                 } else {
-                    await output.append(":x: Cancelling deletion")
+                    let messageIds = deletions.compactMap { $0.message.id }
+                    guard !messageIds.isEmpty else {
+                        await output.append(errorText: "No messages to be deleted have an ID, this is most likely a bug.")
+                        return
+                    }
+                    if (try? await sink.bulkDeleteMessages(messageIds, on: channel.id)) ?? false {
+                        self.finallyConfirmed.insert(channel.id)
+                        await output.append(":wastebasket: Deleted \(intendedDeletionCount) messages (+ some confirmations)")
+                    } else {
+                        await output.append(errorText: "Could not delete messages")
+                    }
                 }
+            } else {
+                await output.append(":x: Cancelling deletion")
             }
         }
 
         context.unsubscribeFromChannel()
     }
 
-    public func onSuccessfullySent(context: CommandContext) {
+    public func onSuccessfullySent(context: CommandContext) async {
         let message = context.message
         log.debug("Successfully sent \(message)")
         guard let channelId = message.channelId else {
@@ -122,13 +119,11 @@ public class ClearCommand: StringCommand {
             }
 
             // Automatically delete the final confirmation message after some time
-            Task {
-                do {
-                    try await Task.sleep(for: .seconds(finalConfirmationDeletionSeconds))
-                    try await sink.deleteMessage(messageId, on: channelId)
-                } catch {
-                    log.warning("Could not delete final confirmation message: \(error)")
-                }
+            do {
+                try await Task.sleep(for: .seconds(finalConfirmationDeletionSeconds))
+                try await sink.deleteMessage(messageId, on: channelId)
+            } catch {
+                log.warning("Could not delete final confirmation message: \(error)")
             }
         }
     }
