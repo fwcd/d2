@@ -15,14 +15,14 @@ public class GraphVizCommand: StringCommand {
         info.longDescription = info.shortDescription
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        Renderer(layout: layout).render(dot: input, to: .png) {
-            do {
-                let data = try $0.get()
-                try output.append(try CairoImage(pngData: data))
-            } catch {
-                output.append(error, errorText: "Could not render graph")
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let data = try await withCheckedThrowingContinuation { continuation in
+                Renderer(layout: layout).render(dot: input, to: .png, completion: continuation.resume(with:))
             }
+            try await output.append(try CairoImage(pngData: data))
+        } catch {
+            await output.append(error, errorText: "Could not render graph")
         }
     }
 }
