@@ -40,11 +40,11 @@ public struct OverlaySink: Sink {
         inner.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension)
     }
 
-    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
+    public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws {
         try await inner.addGuildMemberRole(roleId, to: userId, on: guildId, reason: reason)
     }
 
-    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
+    public func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws {
         try await inner.removeGuildMemberRole(roleId, from: userId, on: guildId, reason: reason)
     }
 
@@ -60,11 +60,11 @@ public struct OverlaySink: Sink {
         try await inner.editMessage(id, on: channelId, content: content)
     }
 
-    public func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws -> Bool {
+    public func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws {
         try await inner.deleteMessage(id, on: channelId)
     }
 
-    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws -> Bool {
+    public func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws {
         try await inner.bulkDeleteMessages(ids, on: channelId)
     }
 
@@ -84,7 +84,7 @@ public struct OverlaySink: Sink {
         try await inner.isDMTextChannel(channelId)
     }
 
-    public func triggerTyping(on channelId: ChannelID) async throws -> Bool {
+    public func triggerTyping(on channelId: ChannelID) async throws {
         try await inner.triggerTyping(on: channelId)
     }
 
@@ -92,11 +92,11 @@ public struct OverlaySink: Sink {
         try await inner.createReaction(for: messageId, on: channelId, emoji: emoji)
     }
 
-    public func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Bool {
+    public func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws {
         try await inner.deleteOwnReaction(for: messageId, on: channelId, emoji: emoji)
     }
 
-    public func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws -> Bool {
+    public func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws {
         try await inner.deleteUserReaction(for: messageId, on: channelId, emoji: emoji, by: userId)
     }
 
@@ -104,7 +104,7 @@ public struct OverlaySink: Sink {
         try await inner.createEmoji(on: guildId, name: name, image: image, roles: roles)
     }
 
-    public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws -> Bool {
+    public func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws {
         try await inner.deleteEmoji(from: guildId, emojiId: emojiId)
     }
 
@@ -120,7 +120,7 @@ public struct OverlaySink: Sink {
         try await inner.editMIOCommand(commandId, name: name, description: description, options: options)
     }
 
-    public func deleteMIOCommand(_ commandId: MIOCommandID) async throws -> Bool {
+    public func deleteMIOCommand(_ commandId: MIOCommandID) async throws {
         try await inner.deleteMIOCommand(commandId)
     }
 
@@ -136,11 +136,11 @@ public struct OverlaySink: Sink {
         try await inner.editMIOCommand(commandId, on: guildId, name: name, description: description, options: options)
     }
 
-    public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws -> Bool {
+    public func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws {
         try await inner.deleteMIOCommand(commandId, on: guildId)
     }
 
-    public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws -> Bool {
+    public func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws {
         try await inner.createInteractionResponse(for: interactionId, token: token, response: response)
     }
 }

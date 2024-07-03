@@ -74,17 +74,19 @@ public struct SpamHandler: MessageHandler {
     }
 
     private func add(role: RoleID, to user: UserID, on guild: Guild, sink: any Sink) async throws {
-        guard (try? await sink.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming")) ?? false else {
+        do {
+            try await sink.addGuildMemberRole(role, to: user, on: guild.id, reason: "Spamming")
+        } catch {
             log.warning("Could not add role \(role) to spammer \(user)")
-            return
         }
     }
 
     private func remove(roles: [RoleID], from user: UserID, on guild: Guild, sink: any Sink) async throws {
         for role in roles {
-            guard (try? await sink.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming")) ?? false else {
-                log.warning("Could not remove role \(role) from spammer \(user)")
-                return
+            do {
+                try await sink.removeGuildMemberRole(role, from: user, on: guild.id, reason: "Spamming")
+            } catch {
+                log.warning("Could not remove role \(role) from spammer \(user): \(error)")
             }
         }
     }

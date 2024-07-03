@@ -28,13 +28,11 @@ public class NeverHaveIEverCommand: StringCommand {
         }
     }
 
-    public func onSuccessfullySent(context: CommandContext) {
+    public func onSuccessfullySent(context: CommandContext) async {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
 
-        Task {
-            for emoji in ["🍹", "❌"] {
-                _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emoji)
-            }
+        for emoji in ["🍹", "❌"] {
+            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emoji)
         }
     }
 }

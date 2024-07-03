@@ -43,12 +43,12 @@ public class SolveWordleCommand: StringCommand {
         context.subscriptions.unsubscribe(from: channelId)
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id else {
             return
         }
         if content == "cancel" {
-            output.append("Cancelled wordle solver on this channel")
+            await output.append("Cancelled wordle solver on this channel")
             unsubscribe(from: channelId, context: context)
             return
         }
@@ -66,7 +66,6 @@ public class SolveWordleCommand: StringCommand {
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
 
-        // TODO: Remove once we asyncify onSubscriptionMessage
         Task {
             _ = try? await context.channel?.triggerTyping()
         }
@@ -104,7 +103,7 @@ public class SolveWordleCommand: StringCommand {
             )
         }
 
-        output.append(.compound([
+        await output.append(.compound([
             board.asRichValue,
             .embed(embed)
         ]))

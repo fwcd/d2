@@ -42,14 +42,12 @@ public extension DefaultSink {
         nil
     }
 
-    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
+    func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws {
         // TODO
-        false
     }
 
-    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws -> Bool {
+    func removeGuildMemberRole(_ roleId: RoleID, from userId: UserID, on guildId: GuildID, reason: String?) async throws {
         // TODO
-        false
     }
 
     func createDM(with userId: UserID) async throws -> ChannelID? {
@@ -67,14 +65,12 @@ public extension DefaultSink {
         nil
     }
 
-    func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws -> Bool {
+    func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws {
         // TODO
-        false
     }
 
-    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws -> Bool {
+    func bulkDeleteMessages(_ ids: [MessageID], on channelId: ChannelID) async throws {
         // TODO
-        false
     }
 
     func getMessages(for channelId: ChannelID, limit: Int, selection: MessageSelection?) async throws -> [D2MessageIO.Message] {
@@ -97,9 +93,8 @@ public extension DefaultSink {
         false
     }
 
-    func triggerTyping(on channelId: ChannelID) async throws -> Bool {
+    func triggerTyping(on channelId: ChannelID) async throws {
         // TODO
-        false
     }
 
     func createReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> D2MessageIO.Message? {
@@ -107,14 +102,12 @@ public extension DefaultSink {
         nil
     }
 
-    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws -> Bool {
+    func deleteOwnReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String) async throws {
         // TODO
-        false
     }
 
-    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws -> Bool {
+    func deleteUserReaction(for messageId: MessageID, on channelId: ChannelID, emoji: String, by userId: UserID) async throws {
         // TODO
-        false
     }
 
     func createEmoji(on guildId: GuildID, name: String, image: String, roles: [RoleID]) async throws -> D2MessageIO.Emoji? {
@@ -122,9 +115,8 @@ public extension DefaultSink {
         nil
     }
 
-    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws -> Bool {
+    func deleteEmoji(from guildId: GuildID, emojiId: EmojiID) async throws {
         // TODO
-        false
     }
 
     func getMIOCommands() async throws -> [MIOCommand] {
@@ -142,9 +134,8 @@ public extension DefaultSink {
         nil
     }
 
-    func deleteMIOCommand(_ commandId: MIOCommandID) async throws -> Bool {
+    func deleteMIOCommand(_ commandId: MIOCommandID) async throws {
         // TODO
-        false
     }
 
     func getMIOCommands(on guildId: GuildID) async throws -> [MIOCommand] {
@@ -162,13 +153,11 @@ public extension DefaultSink {
         nil
     }
 
-    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws -> Bool {
+    func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: GuildID) async throws {
         // TODO
-        false
     }
 
-    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws -> Bool {
+    func createInteractionResponse(for interactionId: InteractionID, token: String, response: InteractionResponse) async throws {
         // TODO
-        false
     }
 }

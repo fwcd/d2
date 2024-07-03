@@ -129,7 +129,7 @@ public class CommandHandler: MessageHandler {
                     let sinkCommand = pipeSink.command
                     pipeSink.output = MessageIOOutput(context: pipeSink.context) { sentMessages in
                         for sent in sentMessages {
-                            sinkCommand.onSuccessfullySent(context: CommandContext(
+                            await sinkCommand.onSuccessfullySent(context: CommandContext(
                                 sink: sink,
                                 registry: self.registry,
                                 message: sent,

@@ -44,41 +44,38 @@ public class PronounsCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionInteraction(with customId: String, by user: User, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionInteraction(with customId: String, by user: User, output: any CommandOutput, context: CommandContext) async {
         guard customId.hasPrefix(customIdPrefix) else { return }
         let encodedId = customId.dropFirst(customIdPrefix.count)
         guard let encodedIdData = encodedId.data(using: .utf8),
               let roleId = try? JSONDecoder().decode(RoleID.self, from: encodedIdData) else {
             log.error("Invalid pronoun role id: \(encodedId)")
-            output.append(errorText: "Could not add pronouns role due to invalid role id")
+            await output.append(errorText: "Could not add pronouns role due to invalid role id")
             return
         }
         guard let sink = context.sink else {
-            output.append(errorText: "Could not add pronouns role due to missing client")
+            await output.append(errorText: "Could not add pronouns role due to missing client")
             return
         }
         guard let guild = context.guild else {
-            output.append(errorText: "Could not add pronouns role due to missing guild")
+            await output.append(errorText: "Could not add pronouns role due to missing guild")
             return
         }
 
-        // TODO: Remove once onSubscriptionInteraction is async
-        Task {
-            do {
-                let pronounRoles = [RoleID: String](uniqueKeysWithValues: self.config.pronounRoles[guild.id]?.map { ($0.value, $0.key) } ?? [])
-                for otherRoleId in pronounRoles.keys where otherRoleId != roleId {
-                    try await sink.removeGuildMemberRole(otherRoleId, from: user.id, on: guild.id, reason: "Pronoun role switched")
-                }
-                let roleName = pronounRoles[roleId] ?? "?"
-                do {
-                    try await sink.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role added")
-                    await output.append("Switched your pronoun role to \(roleName)!")
-                } catch {
-                    log.error("Could not add pronoun role \(roleName) (\(roleId)) to \(user.username) (\(user.id))")
-                }
-            } catch {
-                log.error("Could not remove pronoun roles: \(error)")
+        do {
+            let pronounRoles = [RoleID: String](uniqueKeysWithValues: self.config.pronounRoles[guild.id]?.map { ($0.value, $0.key) } ?? [])
+            for otherRoleId in pronounRoles.keys where otherRoleId != roleId {
+                try await sink.removeGuildMemberRole(otherRoleId, from: user.id, on: guild.id, reason: "Pronoun role switched")
             }
+            let roleName = pronounRoles[roleId] ?? "?"
+            do {
+                try await sink.addGuildMemberRole(roleId, to: user.id, on: guild.id, reason: "Pronoun role added")
+                await output.append("Switched your pronoun role to \(roleName)!")
+            } catch {
+                log.error("Could not add pronoun role \(roleName) (\(roleId)) to \(user.username) (\(user.id))")
+            }
+        } catch {
+            log.error("Could not remove pronoun roles: \(error)")
         }
     }
 }

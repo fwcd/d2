@@ -21,12 +21,9 @@ public class PetitionCommand: StringCommand {
         ))
     }
 
-    public func onSuccessfullySent(context: CommandContext) {
+    public func onSuccessfullySent(context: CommandContext) async {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
 
-        // TODO: Remove once onSuccessfullySent is async
-        Task {
-            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: "✍️")
-        }
+        _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: "✍️")
     }
 }

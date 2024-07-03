@@ -25,11 +25,11 @@ public class SubscriptionManager {
         subscriptionSets[commandName]?.contains(channel) ?? false
     }
 
-    public func notifySubscriptions(on channel: ChannelID, isBot: Bool, action: (String, SubscriptionSet) -> Void) {
+    public func notifySubscriptions(on channel: ChannelID, isBot: Bool, action: (String, SubscriptionSet) async -> Void) async {
         for (commandName, subscriptionSet) in subscriptionSets {
             let allowed = !isBot || !(registry[commandName]?.info.subscriptionsUserOnly ?? true)
             if allowed && subscriptionSet.contains(channel) {
-                action(commandName, subscriptionSet)
+                await action(commandName, subscriptionSet)
             }
         }
     }

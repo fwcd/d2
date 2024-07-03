@@ -554,7 +554,7 @@ public class D2Receiver: Receiver {
         Task {
             for (_, entry) in registry {
                 if case let .command(command) = entry {
-                    command.onReceivedUpdated(presence: presence)
+                    await command.onReceivedUpdated(presence: presence)
                 }
             }
 

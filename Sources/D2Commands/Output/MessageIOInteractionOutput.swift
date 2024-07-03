@@ -31,13 +31,13 @@ public class MessageIOInteractionOutput: CommandOutput {
         // TODO: Split/limit?
         do {
             let message = try await messageWriter.write(value: value)
-            _ = try await self.send(message: message, with: sink, to: channel)
+            try await self.send(message: message, with: sink, to: channel)
         } catch {
             log.error("Interaction output failed: \(error)")
         }
     }
 
-    private func send(message: Message, with sink: any Sink, to channel: OutputChannel) async throws -> Bool {
+    private func send(message: Message, with sink: any Sink, to channel: OutputChannel) async throws {
         switch channel {
             case .defaultChannel:
                 guard let token = interaction.token else {

@@ -22,30 +22,30 @@ public class DiscordinderCommand: StringCommand {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if input == cancelSubcommand {
             guard context.isSubscribed else {
-                output.append(errorText: "No session is running on this channel!")
+                await output.append(errorText: "No session is running on this channel!")
                 return
             }
 
             cancelSession(context: context)
-            output.append(":x: Cancelled Discordinder session on this channel!")
+            await output.append(":x: Cancelled Discordinder session on this channel!")
         } else {
             guard let authorId = context.author?.id else {
-                output.append(errorText: "Author has no user ID")
+                await output.append(errorText: "Author has no user ID")
                 return
             }
             guard !context.isSubscribed else {
-                output.append(errorText: "There is already an active session on this channel!")
+                await output.append(errorText: "There is already an active session on this channel!")
                 return
             }
 
-            presentNextCandidate(for: authorId, output: output, context: context)
+            await presentNextCandidate(for: authorId, output: output, context: context)
         }
     }
 
-    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext) async {
         guard
             let guild = context.guild,
             let messageId = context.message.id,
@@ -57,7 +57,7 @@ public class DiscordinderCommand: StringCommand {
             case acceptEmoji:
                 let state = accept(matchBetween: user.id, and: candidateId, on: guild)
                 if state == .accepted {
-                    output.append(":partying_face: It's a match!")
+                    await output.append(":partying_face: It's a match!")
                     cancelSession(context: context)
                     return
                 }
@@ -68,24 +68,24 @@ public class DiscordinderCommand: StringCommand {
         }
 
         activeMatches[messageId] = nil
-        let success = presentNextCandidate(for: user.id, output: output, context: context)
+        let success = await presentNextCandidate(for: user.id, output: output, context: context)
         if !success {
             context.unsubscribeFromChannel()
         }
     }
 
     @discardableResult
-    private func presentNextCandidate(for authorId: UserID, output: any CommandOutput, context: CommandContext) -> Bool {
+    private func presentNextCandidate(for authorId: UserID, output: any CommandOutput, context: CommandContext) async -> Bool {
         guard let guild = context.guild else {
-            output.append(errorText: "Not on a guild!")
+            await output.append(errorText: "Not on a guild!")
             return false
         }
         guard let sink = context.sink else {
-            output.append(errorText: "No client")
+            await output.append(errorText: "No client")
             return false
         }
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "No channel ID")
+            await output.append(errorText: "No channel ID")
             return false
         }
 
@@ -101,21 +101,18 @@ public class DiscordinderCommand: StringCommand {
         nonCandidateIds.insert(authorId)
 
         guard let candidateId = waitingForAcceptor.randomElement() ?? guild.members.filter({ !nonCandidateIds.contains($0.0) && !$0.1.user.bot }).randomElement()?.0 else {
-            output.append(errorText: "Sorry, no candidates are left!")
+            await output.append(errorText: "Sorry, no candidates are left!")
             return false
         }
         guard let candidate = guild.members[candidateId] else {
-            output.append(errorText: "Could not find candidate")
+            await output.append(errorText: "Could not find candidate")
             return false
         }
         let candidatePresence = guild.presences[candidateId]
 
-        // TODO: Asyncify everything
-        Task {
-            do {
-                let sentMessage = try await sink.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, sink: sink)), to: channelId)
-                guard let messageId = sentMessage?.id else { return }
-
+        do {
+            let sentMessage = try await sink.sendMessage(Message(embed: embedOf(member: candidate, presence: candidatePresence, sink: sink)), to: channelId)
+            if let messageId = sentMessage?.id {
                 context.subscribeToChannel()
                 self.accept(matchBetween: authorId, and: candidateId, on: guild)
                 self.activeMatches[messageId] = (channelId, candidateId)
@@ -124,9 +121,11 @@ public class DiscordinderCommand: StringCommand {
                 for reaction in reactions {
                     try await sink.createReaction(for: messageId, on: channelId, emoji: reaction)
                 }
-            } catch {
-                await output.append(error, errorText: "Could not present next candidate")
+            } else {
+                await output.append(errorText: "Sent message has no id")
             }
+        } catch {
+            await output.append(error, errorText: "Could not send message/create reaction for next candidate")
         }
 
         return true
