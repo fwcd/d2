@@ -10,8 +10,8 @@ public class InstanceCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         let instanceName = context.hostInfo?.instanceName ?? "unknown"
-        output.append(instanceName)
+        await output.append(instanceName)
     }
 }
