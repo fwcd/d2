@@ -14,25 +14,23 @@ public class UploadCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let filePath = input.asText else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
         guard let attachment = input.asAttachments?.first else {
-            output.append(errorText: "Please attach a file to upload!")
+            await output.append(errorText: "Please attach a file to upload!")
             return
         }
 
-        attachment.download().listen {
-            do {
-                let data = try $0.get()
-                let url = URL(fileURLWithPath: filePath)
-                try data.write(to: url)
-                output.append("Successfully wrote \(attachment.size) \("byte".pluralized(with: attachment.size))!")
-            } catch {
-                output.append(error, errorText: "Could not download attachment")
-            }
+        do {
+            let data = try await attachment.download()
+            let url = URL(fileURLWithPath: filePath)
+            try data.write(to: url)
+            await output.append("Successfully wrote \(attachment.size) \("byte".pluralized(with: attachment.size))!")
+        } catch {
+            await output.append(error, errorText: "Could not download attachment")
         }
     }
 }

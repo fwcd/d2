@@ -15,39 +15,24 @@ public class GiphyCommand: StringCommand {
         self.downloadGifs = downloadGifs
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter something to search for!")
+            await output.append(errorText: "Please enter something to search for!")
             return
         }
 
-        let gifPromise = GiphySearchQuery(term: input)
-            .perform()
-            .mapCatching { (results: GiphyResults) -> GiphyResults.GIF in
-                guard let gif = results.data.first else { throw GiphyError.noGIFsFound }
-                return gif
-            }
+        do {
+            let results = try await GiphySearchQuery(term: input).perform().get()
+            guard let gif = results.data.first else { throw GiphyError.noGIFsFound }
 
-        if downloadGifs {
-            gifPromise
-                .then { $0.download() }
-                .mapCatching { try GIF(data: $0) }
-                .listen {
-                    do {
-                        output.append(.gif(try $0.get()))
-                    } catch {
-                        output.append(error, errorText: "Could not query/download GIF")
-                    }
-                }
-        } else {
-            gifPromise
-                .listen {
-                    do {
-                        output.append(.urls([try $0.get().url]))
-                    } catch {
-                        output.append(error, errorText: "Could not query GIF")
-                    }
-                }
+            if downloadGifs {
+                let data = try await gif.download()
+                await output.append(.gif(try GIF(data: data)))
+            } else {
+                await output.append(.urls([try gif.url]))
+            }
+        } catch {
+            await output.append(error, errorText: "Could not query/download GIF")
         }
     }
 

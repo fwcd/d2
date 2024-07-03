@@ -100,7 +100,7 @@ public struct MessageParser {
                     // Download PNG attachment
                     group.addTask {
                         do {
-                            let data = try await attachment.download().get()
+                            let data = try await attachment.download()
                             return .lazy(.lazy {
                                 do {
                                     return .image(try CairoImage(pngData: data))
@@ -118,7 +118,7 @@ public struct MessageParser {
                     // Download GIF attachment
                     group.addTask {
                         do {
-                            let data = try await attachment.download().get()
+                            let data = try await attachment.download()
                             return .lazy(.lazy {
                                 do {
                                     log.info("Decoding GIF...")

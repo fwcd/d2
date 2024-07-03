@@ -43,7 +43,7 @@ public class CampusCommand: StringCommand {
             let mapData = try await MapQuestStaticMap(
                 center: coords,
                 pins: [.init(coords: coords)]
-            ).download().get()
+            ).download()
 
             await output.append(.compound([
                 .files([Message.FileUpload(data: mapData, filename: "campus.jpg", mimeType: "image/jpeg")]),

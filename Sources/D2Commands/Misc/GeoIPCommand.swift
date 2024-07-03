@@ -12,40 +12,37 @@ public class GeoIPCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter an ip or hostname!")
+            await output.append(errorText: "Please enter an ip or hostname!")
             return
         }
 
-        FreeGeoIPQuery(host: input).perform().listen {
-            do {
-                let data = try $0.get()
-                let mapPromise = data.coords.flatMap {
-                    (try? MapQuestStaticMap(center: $0, pins: [.init(coords: $0)], zoom: 2))?
-                        .download()
-                        .map { Message.FileUpload(data: $0, filename: "map.jpg", mimeType: "image/jpeg") }
-                } ?? Promise(.success(nil))
-
-                mapPromise.listen {
-                    let map = try? $0.get()
-                    output.append(.compound([
-                        .files([map].compactMap { $0 }),
-                        .embed(Embed(
-                            title: "GeoIP info for `\(data.ip)`",
-                            fields: [
-                                ("Country", data.countryName),
-                                ("Region", data.regionName),
-                                ("City", data.city),
-                                ("Zip Code", data.zipCode),
-                                ("Time Zone", data.timeZone)
-                            ].compactMap { (k, v) in (v?.nilIfEmpty).map { Embed.Field(name: k, value: $0, inline: true) } }
-                        ))
-                    ]))
-                }
-            } catch {
-                output.append(error, errorText: "Could not query FreeGeoIP")
+        do {
+            let data = try await FreeGeoIPQuery(host: input).perform().get()
+            guard let coords = data.coords else {
+                await output.append(errorText: "Did not find a location")
+                return
             }
+
+            let mapData = try await MapQuestStaticMap(center: coords, pins: [.init(coords: coords)], zoom: 2).download()
+            let mapFileUpload = Message.FileUpload(data: mapData, filename: "map.jpg", mimeType: "image/jpeg")
+
+            await output.append(.compound([
+                .files([mapFileUpload].compactMap { $0 }),
+                .embed(Embed(
+                    title: "GeoIP info for `\(data.ip)`",
+                    fields: [
+                        ("Country", data.countryName),
+                        ("Region", data.regionName),
+                        ("City", data.city),
+                        ("Zip Code", data.zipCode),
+                        ("Time Zone", data.timeZone)
+                    ].compactMap { (k, v) in (v?.nilIfEmpty).map { Embed.Field(name: k, value: $0, inline: true) } }
+                ))
+            ]))
+        } catch {
+            await output.append(error, errorText: "Could not query FreeGeoIP")
         }
     }
 }
