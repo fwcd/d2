@@ -10,19 +10,17 @@ public class EpicFreeGamesCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        EpicFreeGamesQuery().perform().listen {
-            do {
-                let games = try $0.get().data.catalog.searchStore.elements
-                output.append(Embed(
-                    title: "Free Games in the Epic Store",
-                    fields: games
-                        .prefix(5)
-                        .map { Embed.Field(name: $0.title, value: self.format(game: $0) ?? "_no info_") }
-                ))
-            } catch {
-                output.append(error, errorText: "Could not query games")
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let games = try await EpicFreeGamesQuery().perform().data.catalog.searchStore.elements
+            await output.append(Embed(
+                title: "Free Games in the Epic Store",
+                fields: games
+                    .prefix(5)
+                    .map { Embed.Field(name: $0.title, value: self.format(game: $0) ?? "_no info_") }
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not query games")
         }
     }
 
