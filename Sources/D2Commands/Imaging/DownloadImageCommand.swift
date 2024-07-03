@@ -24,7 +24,7 @@ public class DownloadImageCommand: Command {
             let values = try await withThrowingTaskGroup(of: CairoImage.self) { group in
                 for url in urls {
                     group.addTask {
-                        try await HTTPRequest(url: url).fetchPNGAsync().get()
+                        try await HTTPRequest(url: url).fetchPNG()
                     }
                 }
 
