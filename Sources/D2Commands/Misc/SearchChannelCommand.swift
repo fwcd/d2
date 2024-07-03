@@ -10,13 +10,13 @@ public class SearchChannelCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Not on a guild!")
+            await output.append(errorText: "Not on a guild!")
             return
         }
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter something to search for!")
+            await output.append(errorText: "Please enter something to search for!")
             return
         }
 
@@ -32,7 +32,7 @@ public class SearchChannelCommand: StringCommand {
             .sorted(by: ascendingComparator { $0.name.levenshteinDistance(to: input) })
             .prefix(5)
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":mag: Found Channels",
             fields: Dictionary(grouping: results, by: \.type)
                 .sorted(by: ascendingComparator { [.text, .publicThread, .privateThread, .voice, .category].firstIndex(of: $0.key) ?? Int.max })
