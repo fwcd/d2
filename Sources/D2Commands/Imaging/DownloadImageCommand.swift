@@ -10,22 +10,33 @@ public class DownloadImageCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let urls = input.asUrls else {
-            output.append(errorText: "Not a URL")
+            await output.append(errorText: "Not a URL")
             return
         }
         guard urls.allSatisfy({ $0.path.hasSuffix(".png") }) else {
-            output.append(errorText: "Only PNG images are currently supported")
+            await output.append(errorText: "Only PNG images are currently supported")
             return
         }
 
-        sequence(promises: urls.map { url in { HTTPRequest(url: url).fetchPNGAsync() } }).listen {
-            do {
-                try output.append(.compound($0.get().map { RichValue.image($0) }))
-            } catch {
-                output.append(error, errorText: "Could not download image(s)")
+        do {
+            let values = try await withThrowingTaskGroup(of: CairoImage.self) { group in
+                for url in urls {
+                    group.addTask {
+                        try await HTTPRequest(url: url).fetchPNGAsync().get()
+                    }
+                }
+
+                var values: [RichValue] = []
+                for try await image in group {
+                    values.append(.image(image))
+                }
+                return values
             }
+            await output.append(.compound(values))
+        } catch {
+            await output.append(error, errorText: "Could not download image(s)")
         }
     }
 }
