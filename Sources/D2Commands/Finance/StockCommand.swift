@@ -15,9 +15,9 @@ public class StockCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please mention a stock name!")
+            await output.append(errorText: "Please mention a stock name!")
             return
         }
 
@@ -28,33 +28,31 @@ public class StockCommand: StringCommand {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
 
-        YahooFinanceQuery(stock: name, from: start, to: end).perform().listen {
-            do {
-                let values = try $0.get()
-                guard !values.isEmpty else {
-                    output.append(errorText: "No values found!")
-                    return
-                }
-
-                let image = try self.presentStock(name: name, values: values)
-                let rising = values.first.flatMap { f in values.last.map { l in f.close <= l.close } } ?? true
-                let emoji = rising ? ":chart_with_upwards_trend:" : ":chart_with_downwards_trend:"
-
-                output.append(.compound([
-                    .image(image),
-                    .embed(Embed(
-                        title: "\(emoji) \(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))",
-                        url: URL(string: "https://de.finance.yahoo.com/quote/\(name)/history"),
-                        fields: [
-                            values.first.map { self.presentDay(label: "\(days) \("day".pluralized(with: days)) ago", value: $0) },
-                            values[safely: values.count - 2].map { self.presentDay(label: "Yesterday", value: $0) },
-                            values.last.map { self.presentDay(label: "Today", value: $0) },
-                        ].compactMap { $0 }
-                    ))
-                ]))
-            } catch {
-                output.append(error, errorText: "Could not query/present stock")
+        do {
+            let values = try await YahooFinanceQuery(stock: name, from: start, to: end).perform()
+            guard !values.isEmpty else {
+                await output.append(errorText: "No values found!")
+                return
             }
+
+            let image = try self.presentStock(name: name, values: values)
+            let rising = values.first.flatMap { f in values.last.map { l in f.close <= l.close } } ?? true
+            let emoji = rising ? ":chart_with_upwards_trend:" : ":chart_with_downwards_trend:"
+
+            await output.append(.compound([
+                .image(image),
+                .embed(Embed(
+                    title: "\(emoji) \(name) over the last \(days) \("day".pluralized(with: days)) (\(formatter.string(from: start)) - \(formatter.string(from: end)))",
+                    url: URL(string: "https://de.finance.yahoo.com/quote/\(name)/history"),
+                    fields: [
+                        values.first.map { self.presentDay(label: "\(days) \("day".pluralized(with: days)) ago", value: $0) },
+                        values[safely: values.count - 2].map { self.presentDay(label: "Yesterday", value: $0) },
+                        values.last.map { self.presentDay(label: "Today", value: $0) },
+                    ].compactMap { $0 }
+                ))
+            ]))
+        } catch {
+            await output.append(error, errorText: "Could not query/present stock")
         }
     }
 

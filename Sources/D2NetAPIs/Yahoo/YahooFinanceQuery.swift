@@ -13,18 +13,18 @@ public struct YahooFinanceQuery {
         self.end = end
     }
 
-    public func perform() -> Promise<[YahooFinanceStockDataPoint], any Error> {
-        Promise.catching { try HTTPRequest(host: "query1.finance.yahoo.com", path: "/v7/finance/download/\(stock)", query: [
+    public func perform() async throws -> [YahooFinanceStockDataPoint] {
+        let request = try HTTPRequest(host: "query1.finance.yahoo.com", path: "/v7/finance/download/\(stock)", query: [
             "period1": String(Int(start.timeIntervalSince1970)),
             "period2": String(Int(end.timeIntervalSince1970)),
             "interval": "1d",
             "events": "history",
             "includeAdjustedClose": "true"
-        ]) }
-            .then { $0.runAsync() }
-            .mapCatching { try CSVDecoder {
-                $0.encoding = .utf8
-                $0.headerStrategy = .firstLine
-            }.decode([YahooFinanceStockDataPoint].self, from: $0) }
+        ])
+        let data = try await request.run()
+        return try CSVDecoder {
+            $0.encoding = .utf8
+            $0.headerStrategy = .firstLine
+        }.decode([YahooFinanceStockDataPoint].self, from: data)
     }
 }
