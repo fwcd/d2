@@ -99,7 +99,8 @@ public class PartyGameDatabase {
     }
 
     private func fetchWyrQuestions() async throws -> [WouldYouRatherQuestion] {
-        return try await fetchRRRatherQuestions() + fetchEitherIOQuestions()
+        // TODO: We have disabled either.io here because the server seems to be down
+        return try await fetchRRRatherQuestions()
     }
 
     private func fetchEitherIOQuestions() async throws -> [WouldYouRatherQuestion] {
