@@ -15,16 +15,16 @@ public class RegexGenerateCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let ast = try RegexNode.parse(from: input) else {
-                output.append(errorText: "Please enter a regex!")
+                await output.append(errorText: "Please enter a regex!")
                 return
             }
             log.info("Parsed regex \(ast)")
-            output.append(try generateWord(from: ast))
+            await output.append(try generateWord(from: ast))
         } catch {
-            output.append(error, errorText: "Could not parse regex!")
+            await output.append(error, errorText: "Could not parse regex!")
         }
     }
 
