@@ -8,17 +8,17 @@ public class RandomUserCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Not on a guild!")
+            await output.append(errorText: "Not on a guild!")
             return
         }
         guard let userId = guild.members.keys.randomElement(),
               let member = guild.members[userId] else {
-            output.append(errorText: "No user found on the guild!")
+            await output.append(errorText: "No user found on the guild!")
             return
         }
 
-        output.append(.mentions([member.user]))
+        await output.append(.mentions([member.user]))
     }
 }
