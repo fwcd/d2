@@ -17,7 +17,7 @@ public class GrepCommand: ArgCommand {
 
     public init() {}
 
-    public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) async {
         do {
             let regex = try Regex(input.left.value).ignoresCase()
             var result = ""
@@ -29,12 +29,12 @@ public class GrepCommand: ArgCommand {
             }
 
             if result.isEmpty {
-                output.append(errorText: "Grep result is empty!")
+                await output.append(errorText: "Grep result is empty!")
             } else {
-                output.append(result)
+                await output.append(result)
             }
         } catch {
-            output.append(error, errorText: "Regex syntax error: \(error)")
+            await output.append(error, errorText: "Regex syntax error: \(error)")
         }
     }
 }
