@@ -10,9 +10,9 @@ public class RoboHashCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter a phrase!")
+            await output.append(errorText: "Please enter a phrase!")
             return
         }
 
@@ -22,11 +22,11 @@ public class RoboHashCommand: StringCommand {
         urlComponents.path = "/\(input)"
 
         guard let url = urlComponents.url else {
-            output.append(errorText: "Could not generate URL. Make sure not to include invalid characters!")
+            await output.append(errorText: "Could not generate URL. Make sure not to include invalid characters!")
             return
         }
 
-        output.append(Embed(
+        await output.append(Embed(
             title: "Generated Robot",
             image: Embed.Image(url: url)
         ))
