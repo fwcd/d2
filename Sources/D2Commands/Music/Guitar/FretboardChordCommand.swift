@@ -23,10 +23,10 @@ public class FretboardChordCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-                output.append(errorText: info.helpText!)
+                await output.append(errorText: info.helpText!)
                 return
             }
             let rawChord = String(parsedArgs.chord)
@@ -35,13 +35,13 @@ public class FretboardChordCommand: StringCommand {
             // Parse chord and render image
             let chord = try CommonChord(of: rawChord)
             guard let fretboard = fretboards[rawInstrument] else {
-                output.append(errorText: "Unknown instrument `\(rawInstrument)`, try one of these: `\(fretboards.keys.joined(separator: ", "))`")
+                await output.append(errorText: "Unknown instrument `\(rawInstrument)`, try one of these: `\(fretboards.keys.joined(separator: ", "))`")
                 return
             }
 
             let image = try FretboardChordRenderer(fretboard: fretboard).render(chord: chord)
 
-            output.append(.compound([
+            await output.append(.compound([
                 .embed(Embed(
                     title: "\(rawInstrument.withFirstUppercased) Chord \(rawChord)",
                     description: "This was the closest match for \(chord)"
@@ -49,19 +49,19 @@ public class FretboardChordCommand: StringCommand {
                 .files([Message.FileUpload(data: try image.pngEncoded(), filename: "chord.png", mimeType: "image/png")])
             ]))
         } catch ChordError.invalidChord(let chord) {
-            output.append(errorText: "Invalid chord: `\(chord)`")
+            await output.append(errorText: "Invalid chord: `\(chord)`")
         } catch ChordError.invalidRootNote(let root) {
-            output.append(errorText: "Invalid root note: `\(root)`")
+            await output.append(errorText: "Invalid root note: `\(root)`")
         } catch ChordError.notOnFretboard(let chord) {
-            output.append(errorText: "Could not find chord on guitar fretboard: `\(chord)`")
+            await output.append(errorText: "Could not find chord on guitar fretboard: `\(chord)`")
         } catch NoteError.invalidNote(let note) {
-            output.append(errorText: "Invalid note: `\(note)`")
+            await output.append(errorText: "Invalid note: `\(note)`")
         } catch NoteError.notInTwelveToneOctave(let note) {
-            output.append(errorText: "Not in the standard twelve-tone octave: `\(note)`")
+            await output.append(errorText: "Not in the standard twelve-tone octave: `\(note)`")
         } catch NoteError.invalidNoteLetter(let noteLetter) {
-            output.append(errorText: "Invalid note letter: `\(noteLetter)`")
+            await output.append(errorText: "Invalid note letter: `\(noteLetter)`")
         } catch {
-            output.append(error, errorText: "An error occurred while creating chord")
+            await output.append(error, errorText: "An error occurred while creating chord")
         }
     }
 }
