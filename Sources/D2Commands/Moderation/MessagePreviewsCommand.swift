@@ -9,38 +9,38 @@ public class MessagePreviewsCommand: StringCommand {
         requiredPermissionLevel: .vip
     )
     @Binding private var configuration: MessagePreviewsConfiguration
-    private var subcommands: [String: (CommandOutput, GuildID) -> Void] = [:]
+    private var subcommands: [String: (CommandOutput, GuildID) async -> Void] = [:]
 
     public init(@Binding configuration: MessagePreviewsConfiguration) {
         self._configuration = _configuration
         subcommands = [
             "enable": { [unowned self] output, guildId in
                 self.configuration.enabledGuildIds.insert(guildId)
-                output.append("Successfully enabled message previews on this guild!")
+                await output.append("Successfully enabled message previews on this guild!")
             },
             "disable": { [unowned self] output, guildId in
                 self.configuration.enabledGuildIds.remove(guildId)
-                output.append("Successfully disabled message previews from this guild!")
+                await output.append("Successfully disabled message previews from this guild!")
             }
         ]
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guildId = context.guild?.id else {
-            output.append(errorText: "Not on a guild")
+            await output.append(errorText: "Not on a guild")
             return
         }
 
         guard !input.isEmpty else {
-            output.append(errorText: "Please specify a subcommand: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            await output.append(errorText: "Please specify a subcommand: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
         guard let subcommand = subcommands[input] else {
-            output.append(errorText: "Unrecognized subcommand `\(input)`, try one of these: `\(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))`")
+            await output.append(errorText: "Unrecognized subcommand `\(input)`, try one of these: `\(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))`")
             return
         }
 
-        subcommand(output, guildId)
+        await subcommand(output, guildId)
     }
 }
