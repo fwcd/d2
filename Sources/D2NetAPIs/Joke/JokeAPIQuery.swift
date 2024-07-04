@@ -9,19 +9,16 @@ public struct JokeAPIQuery {
         self.type = type
     }
 
-    public func perform() -> Promise<Joke, any Error> {
+    public func perform() async throws -> Joke {
         let categoryEndpoint = categories.nilIfEmpty?.map(\.rawValue).joined(separator: ",") ?? "Any"
-        return Promise
-            .catching {
-                try HTTPRequest(
-                    host: "v2.jokeapi.dev",
-                    path: "/joke/\(categoryEndpoint)",
-                    query: [
-                        // Exclude inappropriate jokes
-                        "blacklistFlags": "racist,sexist"
-                    ]
-                )
-            }
-            .then { $0.fetchJSONAsync(as: Joke.self) }
+        let request = try HTTPRequest(
+            host: "v2.jokeapi.dev",
+            path: "/joke/\(categoryEndpoint)",
+            query: [
+                // Exclude inappropriate jokes
+                "blacklistFlags": "racist,sexist"
+            ]
+        )
+        return try await request.fetchJSON(as: Joke.self)
     }
 }
