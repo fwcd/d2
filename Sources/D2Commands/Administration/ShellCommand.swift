@@ -10,12 +10,12 @@ public class ShellCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let out = try Shell().utf8Sync(for: input, useBash: true)?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty ?? "no output"
-            output.append(.code(out, language: nil))
+            await output.append(.code(out, language: nil))
         } catch {
-            output.append(error, errorText: "Could not invoke command")
+            await output.append(error, errorText: "Could not invoke command")
         }
     }
 }
