@@ -35,7 +35,7 @@ public class FilterImageCommand<F: ImageFilter>: Command {
             var pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
 
             for filterMatrix in F.init(size: size).matrices {
-                pixels = convolve(pixels: pixels, with: filterMatrix)
+                pixels = await convolve(pixels: pixels, with: filterMatrix)
             }
 
             let result = try CairoImage(width: width, height: height)

@@ -38,7 +38,7 @@ public class FilterImageDirectlyCommand: Command {
             let width = image.width
             let height = image.height
             let pixels = (0..<height).map { y in (0..<width).map { x in image[y, x] } }
-            let resultPixels = convolve(pixels: pixels, with: matrix.map(\.asDouble))
+            let resultPixels = await convolve(pixels: pixels, with: matrix.map(\.asDouble))
 
             let result = try CairoImage(width: width, height: height)
 

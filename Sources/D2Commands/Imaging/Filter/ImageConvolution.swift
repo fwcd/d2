@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) -> [[Color]] {
+func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) async -> [[Color]] {
     let height = pixels.count
     let width = pixels[0].count
     let halfMatrixWidth = filterMatrix.width / 2
@@ -40,6 +40,8 @@ func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) -> [[Color]]
                 alpha: max(pixels[y][x].alpha, clampToByte(value.alpha))
             ))
         }
+
+        await Task.yield()
 
         result.append(row)
     }
