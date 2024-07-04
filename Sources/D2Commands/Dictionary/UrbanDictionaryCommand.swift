@@ -17,23 +17,21 @@ public class UrbanDictionaryCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter a term!")
+            await output.append(errorText: "Please enter a term!")
             return
         }
 
-        UrbanDictionaryQuery(term: input).perform().listen {
-            switch $0 {
-                case .success(let results):
-                    if let entry = results.list.first {
-                        output.append(self.embedOf(entry: entry))
-                    } else {
-                        output.append(errorText: "No results found.")
-                    }
-                case .failure(let error):
-                    output.append(error, errorText: "An error occurred while creating the UrbanDictionary query")
+        do {
+            let results = try await UrbanDictionaryQuery(term: input).perform()
+            if let entry = results.list.first {
+                await output.append(self.embedOf(entry: entry))
+            } else {
+                await output.append(errorText: "No results found.")
             }
+        } catch {
+            await output.append(error, errorText: "An error occurred while creating the UrbanDictionary query")
         }
     }
 
