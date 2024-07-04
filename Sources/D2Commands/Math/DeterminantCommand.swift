@@ -14,16 +14,16 @@ public class DeterminantCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
-            output.append(errorText: "Please input a matrix")
+            await output.append(errorText: "Please input a matrix")
             return
         }
         guard matrix.isSquare else {
-            output.append(errorText: "The determinant is only defined for square matrices")
+            await output.append(errorText: "The determinant is only defined for square matrices")
             return
         }
 
-        output.append(.ndArrays([NDArray(matrix.determinant!)]))
+        await output.append(.ndArrays([NDArray(matrix.determinant!)]))
     }
 }
