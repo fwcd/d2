@@ -11,13 +11,13 @@ public class GuildsCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         guard let guilds = context.sink?.guilds else {
-            output.append(errorText: "Could not fetch guilds")
+            await output.append(errorText: "Could not fetch guilds")
             return
         }
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":accordion: Guilds",
             fields: guilds.sorted(by: descendingComparator { $0.members.count }).map { guild in
                 Embed.Field(
