@@ -19,7 +19,7 @@ public class GeoIPCommand: StringCommand {
         }
 
         do {
-            let data = try await FreeGeoIPQuery(host: input).perform().get()
+            let data = try await FreeGeoIPQuery(host: input).perform()
             guard let coords = data.coords else {
                 await output.append(errorText: "Did not find a location")
                 return

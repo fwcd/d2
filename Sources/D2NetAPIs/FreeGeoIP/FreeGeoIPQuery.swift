@@ -8,8 +8,8 @@ public struct FreeGeoIPQuery {
         self.host = host.replacingOccurrences(of: "/", with: "")
     }
 
-    public func perform() -> Promise<FreeGeoIP, any Error> {
-        Promise.catching { try HTTPRequest(host: "freegeoip.app", path: "/json/\(host)") }
-            .then { $0.fetchJSONAsync(as: FreeGeoIP.self) }
+    public func perform() async throws -> FreeGeoIP {
+        let request = try HTTPRequest(host: "freegeoip.app", path: "/json/\(host)")
+        return try await request.fetchJSON(as: FreeGeoIP.self)
     }
 }
