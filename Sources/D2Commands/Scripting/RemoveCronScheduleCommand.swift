@@ -18,12 +18,12 @@ public class RemoveCronScheduleCommand: StringCommand {
         self.cronManager = cronManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard cronManager[input] != nil else {
-            output.append(errorText: "No schedule with `\(input)` registered!")
+            await output.append(errorText: "No schedule with `\(input)` registered!")
             return
         }
         cronManager[input] = nil
-        output.append("Removed schedule `\(input)`")
+        await output.append("Removed schedule `\(input)`")
     }
 }
