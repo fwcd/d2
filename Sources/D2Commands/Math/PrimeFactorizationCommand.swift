@@ -12,15 +12,15 @@ public class PrimeFactorizationCommand: StringCommand {
         self.upperLimit = upperLimit
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let input = UInt64(input), input >= 1 else {
-            output.append(errorText: "Only positive integers >= 1 can be prime-factorized!")
+            await output.append(errorText: "Only positive integers >= 1 can be prime-factorized!")
             return
         }
         guard input <= upperLimit else {
-            output.append(errorText: "Your number should be <= \(upperLimit)!")
+            await output.append(errorText: "Your number should be <= \(upperLimit)!")
             return
         }
-        output.append(primeFactorization(input).sorted().map { "\($0)" }.joined(separator: " * "))
+        await output.append(primeFactorization(input).sorted().map { "\($0)" }.joined(separator: " * "))
     }
 }
