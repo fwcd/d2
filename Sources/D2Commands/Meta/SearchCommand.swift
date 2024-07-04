@@ -18,10 +18,10 @@ public class SearchCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let term = input.lowercased()
         guard !term.isEmpty else {
-            output.append(errorText: "Please enter a search term!")
+            await output.append(errorText: "Please enter a search term!")
             return
         }
 
@@ -37,7 +37,7 @@ public class SearchCommand: StringCommand {
             .sorted(by: ascendingComparator { ([$0.name] + $0.aliases).map { $0.levenshteinDistance(to: input) }.min()! })
             .prefix(5)
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":mag: Found Commands",
             fields: results.map { Embed.Field(
                 name: "`\(commandPrefix)\($0.name)`\($0.aliases.nilIfEmpty.map { " (aka. \($0.map { "`\($0)`" }.joined(separator: ", ")))" } ?? "")",
