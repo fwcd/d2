@@ -10,20 +10,20 @@ public class ThreadsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "No channel id available.")
+            await output.append(errorText: "No channel id available.")
             return
         }
         guard let guild = context.guild else {
-            output.append(errorText: "No guild available.")
+            await output.append(errorText: "No guild available.")
             return
         }
         let threads = guild.threads.values
             .filter { $0.parentId == channelId }
             .sorted(by: ascendingComparator(comparing: \.position))
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":thread: Active Threads",
             description: threads.map { "<#\($0.id)>" }.joined(separator: "\n")
         ))
