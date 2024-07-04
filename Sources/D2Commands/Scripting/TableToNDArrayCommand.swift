@@ -11,17 +11,17 @@ public class TableToNDArrayCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let table = input.asTable else {
-            output.append(errorText: "Please input a table for conversion!")
+            await output.append(errorText: "Please input a table for conversion!")
             return
         }
         do {
-            output.append(.ndArrays([
+            await output.append(.ndArrays([
                 try .init(table.map { row in row.compactMap { Rational($0)?.reduced() } })
             ]))
         } catch {
-            output.append(error, errorText: "Could not create ND array")
+            await output.append(error, errorText: "Could not create ND array")
         }
     }
 }
