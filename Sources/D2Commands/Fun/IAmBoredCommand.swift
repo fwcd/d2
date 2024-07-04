@@ -24,14 +24,14 @@ public class IAmBoredCommand: VoidCommand {
         self.templates = templates
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         guard let verb = verbs.randomElement(),
             let thing = things.randomElement(),
             let method = methods.randomElement(),
             let template = templates.randomElement() else {
-            output.append(errorText: "No verb/thing/method/template available!")
+            await output.append(errorText: "No verb/thing/method/template available!")
             return
         }
-        output.append(template.applyAsTemplate(to: [verb, thing, method]))
+        await output.append(template.applyAsTemplate(to: [verb, thing, method]))
     }
 }
