@@ -16,15 +16,15 @@ public class NeverHaveIEverCommand: StringCommand {
         self.partyGameDB = partyGameDB
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let nhie = try partyGameDB.randomNhieStatement(category: input.nilIfEmpty)
-            output.append(Embed(
+            await output.append(Embed(
                 description: "**\(nhie.statement)**",
                 footer: nhie.category.map { Embed.Footer(text: "Category: \($0)") }
             ))
         } catch {
-            output.append(error, errorText: "Could not fetch statement")
+            await output.append(error, errorText: "Could not fetch statement")
         }
     }
 
