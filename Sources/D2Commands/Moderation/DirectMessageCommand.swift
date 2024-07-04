@@ -18,17 +18,17 @@ public class DirectMessageCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         let text = input.asText ?? ""
         guard let parsedArgs = try? inputPattern.firstMatch(in: text) else {
-            output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")
+            await output.append(errorText: "Syntax error: `\(input)` should have format `[mentioned user] [message]`")
             return
         }
         guard let mentioned = input.asMentions?.first else {
-            output.append(errorText: "Did not mention anyone")
+            await output.append(errorText: "Did not mention anyone")
             return
         }
 
-        output.append(String(parsedArgs.1), to: .dmChannel(mentioned.id))
+        await output.append(String(parsedArgs.1), to: .dmChannel(mentioned.id))
     }
 }
