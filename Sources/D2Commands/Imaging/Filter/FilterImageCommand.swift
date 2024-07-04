@@ -13,19 +13,19 @@ public class FilterImageCommand<F: ImageFilter>: Command {
         self.maxSize = maxSize
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let image = input.asImage else {
-            output.append(errorText: "Not an image")
+            await output.append(errorText: "Not an image")
             return
         }
 
         guard let size = input.asText.map(Int.init) ?? 5 else {
-            output.append(errorText: "Please provide an integer for specifying the filter size!")
+            await output.append(errorText: "Please provide an integer for specifying the filter size!")
             return
         }
 
         guard size <= maxSize else {
-            output.append(errorText: "Please use a filter size smaller or equal to \(maxSize)!")
+            await output.append(errorText: "Please use a filter size smaller or equal to \(maxSize)!")
             return
         }
 
@@ -46,9 +46,9 @@ public class FilterImageCommand<F: ImageFilter>: Command {
                 }
             }
 
-            try output.append(result)
+            try await output.append(result)
         } catch {
-            output.append(error, errorText: "Error while processing image")
+            await output.append(error, errorText: "Error while processing image")
         }
     }
 }
