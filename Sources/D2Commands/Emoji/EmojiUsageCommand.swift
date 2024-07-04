@@ -16,17 +16,17 @@ public class EmojiUsageCommand: StringCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let guild = context.guild else {
-                output.append(errorText: "Not on a guild!")
+                await output.append(errorText: "Not on a guild!")
                 return
             }
 
             let date30DaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date())
             let countPerField = 8
 
-            output.append(Embed(
+            await output.append(Embed(
                 title: "Emoji Usage in Messages and Reactions",
                 fields: try [("all time", nil), ("last 30 days", date30DaysAgo)]
                     .map { ($0.0, process(emojis: try messageDB.queryMostUsedEmojis(on: guild.id, minTimestamp: $0.1), on: guild)) }
@@ -36,7 +36,7 @@ public class EmojiUsageCommand: StringCommand {
                     ] }
             ))
         } catch {
-            output.append(error, errorText: "Could not lookup most used emojis")
+            await output.append(error, errorText: "Could not lookup most used emojis")
         }
     }
 
