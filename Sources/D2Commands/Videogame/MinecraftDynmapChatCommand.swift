@@ -22,10 +22,10 @@ public class MinecraftDynmapChatCommand: StringCommand {
         let message: String
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-                output.append("Syntax: \(info.helpText!)")
+                await output.append("Syntax: \(info.helpText!)")
                 return
             }
             let host = String(parsedArgs.host)
@@ -35,17 +35,17 @@ public class MinecraftDynmapChatCommand: StringCommand {
 
             let jsonData = try JSONEncoder().encode(SendMessageRequest(name: "", message: message))
             guard let json = String(data: jsonData, encoding: .utf8) else {
-                output.append(errorText: "Could not encode JSON")
+                await output.append(errorText: "Could not encode JSON")
                 return
             }
-            let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/sendmessage", method: "POST", body: json)
-            request.runAsync().listen {
-                if case let .failure(error) = $0 {
-                    output.append(error, errorText: "An error occurred while sending the message")
-                }
+            do {
+                let request = try HTTPRequest(scheme: "http", host: host, port: 8123, path: "/up/sendmessage", method: "POST", body: json)
+                try await request.run()
+            } catch {
+                await output.append(error, errorText: "An error occurred while sending the message")
             }
         } catch {
-            output.append(error, errorText: "Could not create request")
+            await output.append(error, errorText: "Could not create request")
         }
     }
 }
