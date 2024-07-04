@@ -13,8 +13,8 @@ public class RemoveEventListenerCommand: StringCommand {
         self.eventListenerBus = eventListenerBus
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         eventListenerBus.removeListener(name: input)
-        output.append("Removed listener (if present)!")
+        await output.append("Removed listener (if present)!")
     }
 }
