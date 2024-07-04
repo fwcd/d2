@@ -13,13 +13,13 @@ public class WatchCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         if let mention = input.asMentions?.first {
             let member = context.guild?.members[mention.id]
-            output.append(self.urlWith(id: member?.nick ?? ""))
+            await output.append(self.urlWith(id: member?.nick ?? ""))
         } else {
             let id = input.asText ?? ""
-            output.append(urlWith(id: id))
+            await output.append(urlWith(id: id))
         }
     }
 
