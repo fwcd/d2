@@ -15,8 +15,8 @@ public class UptimeCommand: StringCommand {
         self.startDate = startDate
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
         let time = -startDate.timeIntervalSinceNow
-        output.append("D2 has been running for \(time.displayString)")
+        await output.append("D2 has been running for \(time.displayString)")
     }
 }
