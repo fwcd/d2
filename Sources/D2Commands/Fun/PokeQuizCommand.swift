@@ -18,29 +18,26 @@ public class PokeQuizCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        PokedexQuery().perform()
-            .map { $0.results[Int.random(in: 0..<$0.results.count)] }
-            .then { PokemonQuery(url: $0.url).perform() }
-            .listen {
-                do {
-                    let pokemon = try $0.get()
-                    guard let channelId = context.channel?.id else {
-                        output.append(errorText: "No channel ID available.")
-                        return
-                    }
-
-                    output.append(Embed(
-                        title: "Which Pokémon is this?",
-                        image: pokemon.sprites?.url.map(Embed.Image.init(url:))
-                    ))
-
-                    self.quizzes[channelId] = Quiz(pokemon: pokemon, player: context.author?.id)
-                    context.subscribeToChannel()
-                } catch {
-                    output.append(error, errorText: "Could not fetch Pokédex.")
-                }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let dex = try await PokedexQuery().perform()
+            let stub = dex.results.randomElement()!
+            let pokemon = try await PokemonQuery(url: stub.url).perform()
+            guard let channelId = context.channel?.id else {
+                await output.append(errorText: "No channel ID available.")
+                return
             }
+
+            await output.append(Embed(
+                title: "Which Pokémon is this?",
+                image: pokemon.sprites?.url.map(Embed.Image.init(url:))
+            ))
+
+            self.quizzes[channelId] = Quiz(pokemon: pokemon, player: context.author?.id)
+            context.subscribeToChannel()
+        } catch {
+            await output.append(error, errorText: "Could not fetch Pokédex.")
+        }
     }
 
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {

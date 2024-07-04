@@ -19,23 +19,20 @@ public class PokemonCommand: StringCommand {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        PokedexQuery().perform()
-            .map { $0.results[Int.random(in: 0..<$0.results.count)] }
-            .then { PokemonQuery(url: $0.url).perform() }
-            .listen {
-                do {
-                    let pokemon = try $0.get()
-                    let author = context.author?.username ?? "You"
-                    output.append(Embed(
-                        title: "**\(author)**, you've caught a **\(pokemon.name)**",
-                        image: (pokemon.sprites?.url).map(Embed.Image.init(url:))
-                    ))
-                    self.addToInventory(pokemon: pokemon, context: context)
-                } catch {
-                    output.append(error, errorText: "Could not fetch Pokémon.")
-                }
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let dex = try await PokedexQuery().perform()
+            let stub = dex.results.randomElement()!
+            let pokemon = try await PokemonQuery(url: stub.url).perform()
+            let author = context.author?.username ?? "You"
+            await output.append(Embed(
+                title: "**\(author)**, you've caught a **\(pokemon.name)**",
+                image: (pokemon.sprites?.url).map(Embed.Image.init(url:))
+            ))
+            self.addToInventory(pokemon: pokemon, context: context)
+        } catch {
+            await output.append(error, errorText: "Could not fetch Pokémon.")
+        }
     }
 
     private func addToInventory(pokemon: Pokemon, context: CommandContext) {

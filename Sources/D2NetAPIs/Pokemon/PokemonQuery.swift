@@ -8,7 +8,7 @@ public struct PokemonQuery {
         self.url = url
     }
 
-    public func perform() -> Promise<Pokemon, any Error> {
-        HTTPRequest(url: url).fetchJSONAsync(as: Pokemon.self)
+    public func perform() async throws -> Pokemon {
+        try await HTTPRequest(url: url).fetchJSON(as: Pokemon.self)
     }
 }
