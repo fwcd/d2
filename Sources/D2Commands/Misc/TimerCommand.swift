@@ -23,6 +23,7 @@ fileprivate struct NamedTimer {
     let name: String?
     let guildId: GuildID?
     let task: Task<Void, Never>
+    let duration: Int
     let elapseDate: Date
 
     var remainingTime: TimeInterval { elapseDate.timeIntervalSinceNow }
@@ -49,7 +50,7 @@ public class TimerCommand: StringCommand {
                     description: self.timers.values
                         .filter { $0.guildId == context.guild?.id }
                         .sorted(by: ascendingComparator { $0.remainingTime })
-                        .map { "`\($0.name ?? "<unnamed>")` elapses in \($0.remainingTime.displayString)" }
+                        .map { "\($0.duration)s timer\($0.name.map { "`\($0)`" } ?? "") elapses in \($0.remainingTime.displayString)" }
                         .joined(separator: "\n")
                 ))
             },
@@ -122,7 +123,7 @@ public class TimerCommand: StringCommand {
                     } else {
                         mention = authorId.map { "<@\($0)>" } ?? ""
                     }
-                    await output.append("\(mention), the timer\(name.map { " `\($0)`" } ?? "") has elapsed!")
+                    await output.append("\(mention), your \(duration)s timer\(name.map { " `\($0)`" } ?? "") has elapsed!")
                     self.timers[timerId] = nil
                 } catch _ as CancellationError {
                     // Do nothing
@@ -130,7 +131,13 @@ public class TimerCommand: StringCommand {
                     await output.append(error, errorText: "Error while running timer")
                 }
             }
-            timers[timerId] = NamedTimer(name: name, guildId: guildId, task: task, elapseDate: Date() + TimeInterval(duration))
+            timers[timerId] = NamedTimer(
+                name: name,
+                guildId: guildId,
+                task: task,
+                duration: duration,
+                elapseDate: Date() + TimeInterval(duration)
+            )
             await output.append("Created a timer\(name.map { " named `\($0)`" } ?? "") that runs for \(duration) \("second".pluralized(with: duration))!")
         }
     }
