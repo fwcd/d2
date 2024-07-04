@@ -14,9 +14,9 @@ public class InterjectCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
@@ -24,7 +24,7 @@ public class InterjectCommand: StringCommand {
         let second = parsedArgs.2
         let type = parsedArgs.type
 
-        output.append("""
+        await output.append("""
             I'd just like to interject for a moment. What you're referring to as \(second), is in fact, \(first)/\(second), or as I've recently taken to calling it, \(first) + \(second). \(second) is not \(type), but rather another component of a fully functioning \(first) system made useful by \(first) components.
 
             Many users run a modified version of the \(first) system every day, without realizing it. Through a peculiar turn of events, the version of \(first) which is widely used today is often called "\(second)", and many of its users are not aware that it is basically the \(first) system, developed by the \(first) project.
