@@ -9,11 +9,11 @@ public class EmbedFieldsCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let embed = input.asEmbed else {
-            output.append(errorText: "Please input an embed!")
+            await output.append(errorText: "Please input an embed!")
             return
         }
-        output.append(.table(embed.fields.map { [$0.name, $0.value] }))
+        await output.append(.table(embed.fields.map { [$0.name, $0.value] }))
     }
 }
