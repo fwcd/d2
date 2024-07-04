@@ -14,6 +14,6 @@ public class QuitCommand: VoidCommand {
 
     public func invoke(output: any CommandOutput, context: CommandContext) async {
         await output.append(":small_red_triangle_down: Quitting D2")
-        exit(0)
+        raise(SIGINT)
     }
 }
