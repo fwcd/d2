@@ -7,7 +7,7 @@ public class YoCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
-        output.append("Yo!")
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
+        await output.append("Yo!")
     }
 }
