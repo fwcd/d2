@@ -8,7 +8,7 @@ public class HaikusCommand: StringCommand {
         requiredPermissionLevel: .admin
     )
     @Binding private var configuration: HaikuConfiguration
-    private var subcommands: [String: (CommandOutput, ChannelID) -> Void] = [:]
+    private var subcommands: [String: (CommandOutput, ChannelID) async -> Void] = [:]
 
     public init(@Binding configuration: HaikuConfiguration) {
         self._configuration = _configuration
@@ -16,25 +16,25 @@ public class HaikusCommand: StringCommand {
         subcommands = [
             "enable": { [unowned self] output, channelId in
                 self.configuration.enabledChannelIds.insert(channelId)
-                output.append("Enabled Haikus on this channel")
+                await output.append("Enabled Haikus on this channel")
             },
             "disable": { [unowned self] output, channelId in
                 self.configuration.enabledChannelIds.remove(channelId)
-                output.append("Disabled Haikus on this channel")
+                await output.append("Disabled Haikus on this channel")
             }
         ]
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let subcommand = subcommands[input] else {
-            output.append(errorText: "Unrecognized subcommand, try one of these: `\(subcommands.keys.joined(separator: ", "))`")
+            await output.append(errorText: "Unrecognized subcommand, try one of these: `\(subcommands.keys.joined(separator: ", "))`")
             return
         }
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "Not in a channel")
+            await output.append(errorText: "Not in a channel")
             return
         }
 
-        subcommand(output, channelId)
+        await subcommand(output, channelId)
     }
 }
