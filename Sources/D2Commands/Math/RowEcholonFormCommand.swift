@@ -9,16 +9,16 @@ public class RowEcholonFormCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
-            output.append(errorText: "Please input a matrix")
+            await output.append(errorText: "Please input a matrix")
             return
         }
         guard let rowEcholon = matrix.rowEcholonForm else {
-            output.append(errorText: "The given matrix cannot be converted into row-echolon-form")
+            await output.append(errorText: "The given matrix cannot be converted into row-echolon-form")
             return
         }
 
-        output.append(.ndArrays([rowEcholon.asNDArray]))
+        await output.append(.ndArrays([rowEcholon.asNDArray]))
     }
 }
