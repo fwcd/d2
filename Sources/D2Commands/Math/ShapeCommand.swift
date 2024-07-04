@@ -8,12 +8,12 @@ public class ShapeCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let ndArrays = input.asNDArrays else {
-            output.append(errorText: "Please input nd-arrays to fetch the shape(s)!")
+            await output.append(errorText: "Please input nd-arrays to fetch the shape(s)!")
             return
         }
 
-        output.append(.compound(ndArrays.map { .text("\($0.shape)") }))
+        await output.append(.compound(ndArrays.map { .text("\($0.shape)") }))
     }
 }
