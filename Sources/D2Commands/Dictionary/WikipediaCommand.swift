@@ -15,19 +15,17 @@ public class WikipediaCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        WikipediaPageQuery(pageName: input).perform().listen {
-            switch $0 {
-                case .success(let page):
-                    output.append(Embed(
-                        title: page.displayTitle ?? page.title ?? "No title",
-                        description: (page.extract?.prefix(1000)).map { String($0) },
-                        thumbnail: (page.thumbnail?.source).flatMap { URL(string: $0) }.map { Embed.Thumbnail(url: $0) },
-                        footer: page.description.map { Embed.Footer(text: $0) }
-                    ))
-                case .failure(let error):
-                    output.append(error, errorText: "An error occurred while querying the Wikipedia")
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let page = try await WikipediaPageQuery(pageName: input).perform()
+            await output.append(Embed(
+                title: page.displayTitle ?? page.title ?? "No title",
+                description: (page.extract?.prefix(1000)).map { String($0) },
+                thumbnail: (page.thumbnail?.source).flatMap { URL(string: $0) }.map { Embed.Thumbnail(url: $0) },
+                footer: page.description.map { Embed.Footer(text: $0) }
+            ))
+        } catch {
+            await output.append(error, errorText: "An error occurred while querying the Wikipedia")
         }
     }
 }

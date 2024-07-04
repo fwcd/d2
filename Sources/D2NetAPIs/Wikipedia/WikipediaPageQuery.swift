@@ -10,11 +10,11 @@ public struct WikipediaPageQuery {
             .replacingOccurrences(of: " ", with: "_")
     }
 
-    public func perform() -> Promise<WikipediaPage, any Error> {
-        Promise.catching { try HTTPRequest(
+    public func perform() async throws -> WikipediaPage {
+        let request = try HTTPRequest(
             host: "en.wikipedia.org",
             path: "/api/rest_v1/page/summary/\(page)"
-        ) }
-            .then { $0.fetchJSONAsync(as: WikipediaPage.self) }
+        )
+        return try await request.fetchJSON(as: WikipediaPage.self)
     }
 }
