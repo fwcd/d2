@@ -13,20 +13,20 @@ public class ZeroMatrixCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let size = input.asText.flatMap({ Int($0) }) else {
-            output.append(errorText: "Please specify a single integer as size!")
+            await output.append(errorText: "Please specify a single integer as size!")
             return
         }
         guard size <= sizeLimit else {
-            output.append(errorText: "Please use a smaller size!")
+            await output.append(errorText: "Please use a smaller size!")
             return
         }
         guard size >= 0 else {
-            output.append(errorText: "Please use a non-negative size!")
+            await output.append(errorText: "Please use a non-negative size!")
             return
         }
 
-        output.append(.ndArrays([Matrix.zero(width: size, height: size).asNDArray]))
+        await output.append(.ndArrays([Matrix.zero(width: size, height: size).asNDArray]))
     }
 }
