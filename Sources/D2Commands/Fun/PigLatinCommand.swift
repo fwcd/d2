@@ -13,8 +13,8 @@ public class PigLatinCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(pigLatinOf(input))
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(pigLatinOf(input))
     }
 
     private func pigLatinOf(_ str: String) -> String {
