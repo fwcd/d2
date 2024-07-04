@@ -14,20 +14,20 @@ public class InverseMatrixCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
-            output.append(errorText: "Please input a matrix")
+            await output.append(errorText: "Please input a matrix")
             return
         }
         guard matrix.isSquare else {
-            output.append(errorText: "The inverse is only defined for square matrices")
+            await output.append(errorText: "The inverse is only defined for square matrices")
             return
         }
         guard let inverse = matrix.inverse else {
-            output.append(errorText: "The given matrix has no inverse")
+            await output.append(errorText: "The given matrix has no inverse")
             return
         }
 
-        output.append(.ndArrays([inverse.asNDArray]))
+        await output.append(.ndArrays([inverse.asNDArray]))
     }
 }
