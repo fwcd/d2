@@ -10,7 +10,7 @@ public class CleanMentionsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(input.cleaningMentions(with: context.guild))
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(input.cleaningMentions(with: context.guild))
     }
 }
