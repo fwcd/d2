@@ -29,16 +29,16 @@ public class DiceRollCommand: StringCommand {
         self.fancy = fancy
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let result = Int.random(in: range)
 
         if fancy {
-            output.append(Embed(
+            await output.append(Embed(
                 title: "Result: \(result)",
                 description: diceFaces[result].map { $0.map { $0.map { $0 ? ":white_square_button:" : ":white_large_square:" }.joined() }.joined(separator: "\n") }
             ))
         } else {
-            output.append("\(result)")
+            await output.append("\(result)")
         }
     }
 }
