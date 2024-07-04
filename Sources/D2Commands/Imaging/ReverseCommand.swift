@@ -12,13 +12,13 @@ public class ReverseCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         if let gif = input.asGif {
             var reversed = gif
             reversed.frames = gif.frames.reversed()
-            output.append(.gif(reversed))
+            await output.append(.gif(reversed))
         } else {
-            output.append(errorText: "ReverseCommand needs a GIF as input")
+            await output.append(errorText: "ReverseCommand needs a GIF as input")
         }
     }
 }
