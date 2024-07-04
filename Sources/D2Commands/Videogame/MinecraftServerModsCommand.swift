@@ -14,13 +14,13 @@ public class MinecraftServerModsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             if let (host, port) = parseHostPort(from: input) {
                 let serverInfo = try MinecraftServerPing(host: host, port: port ?? 25565, timeoutMs: 1000).perform()
                 let modList = serverInfo.forgeData?.mods?.map { "\($0)" } ?? serverInfo.modinfo?.modList?.map { "\($0)" } ?? [String]()
 
-                output.append(Embed(
+                await output.append(Embed(
                     title: "Minecraft Server Mods at `\(host)\(port.map { ":\($0)" } ?? "")`",
                     description: modList
                         .joined(separator: "\n")
@@ -29,7 +29,7 @@ public class MinecraftServerModsCommand: StringCommand {
                 ))
             }
         } catch {
-            output.append(error, errorText: "Could not ping server")
+            await output.append(error, errorText: "Could not ping server")
         }
     }
 }
