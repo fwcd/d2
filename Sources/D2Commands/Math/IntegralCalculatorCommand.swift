@@ -31,7 +31,7 @@ public class IntegralCalculatorCommand: StringCommand {
                     expression: parsedInput.infixICNotation,
                     expressionCanonical: parsedInput.prefixFunctionNotation,
                     intVar: integrationVariable
-                )).perform().get()
+                )).perform()
 
                 let stepsLatex = result.steps
                     .map { $0.replacingOccurrences(of: "$", with: "") }
