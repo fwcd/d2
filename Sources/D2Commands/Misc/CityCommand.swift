@@ -13,13 +13,13 @@ public class CityCommand: StringCommand {
         self._config = _config
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
         if input.isEmpty {
-            output.append("The configured city is `\(config.city ?? "nil")`")
+            await output.append("The configured city is `\(config.city ?? "nil")`")
         } else {
             // TODO: Add option to reset the city to nil?
             config.city = input
-            output.append("Successfully set city to `\(input)`")
+            await output.append("Successfully set city to `\(input)`")
         }
     }
 }
