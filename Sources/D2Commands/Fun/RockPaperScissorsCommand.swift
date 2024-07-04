@@ -40,17 +40,17 @@ public class RockPaperScissorsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let yourChoice = RockPaperScissors(from: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
         let myChoice = RockPaperScissors.allCases.randomElement()!
         switch yourChoice.beats(myChoice) {
-            case true?: output.append("Yay, your \(yourChoice.emoji) beat my choice of \(myChoice.emoji)!")
-            case false?: output.append("Sorry, my \(myChoice.emoji) beat your \(yourChoice.emoji). Maybe next time!")
-            case nil: output.append("Draw!")
+            case true?: await output.append("Yay, your \(yourChoice.emoji) beat my choice of \(myChoice.emoji)!")
+            case false?: await output.append("Sorry, my \(myChoice.emoji) beat your \(yourChoice.emoji). Maybe next time!")
+            case nil: await output.append("Draw!")
         }
     }
 }
