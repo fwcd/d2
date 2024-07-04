@@ -338,7 +338,6 @@ public class D2Receiver: Receiver {
         registry["cookie"] = CookieCommand(inventoryManager: inventoryManager)
         registry["stock", aka: ["stocks", "shares"]] = StockCommand()
         registry["designquote", aka: ["quoteondesign"]] = DesignQuoteCommand()
-        registry["kanyewestquote", aka: ["kanyequote"]] = KanyeWestQuoteCommand()
         registry["taylorswiftquote", aka: ["taylorquote"]] = TaylorSwiftQuoteCommand()
         registry["messagedb"] = MessageDatabaseCommand(messageDB: messageDB)
         registry["messagedbquery"] = MessageDatabaseQueryCommand(messageDB: messageDB)
