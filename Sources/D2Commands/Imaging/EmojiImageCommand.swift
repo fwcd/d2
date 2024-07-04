@@ -36,13 +36,8 @@ public class EmojiImageCommand: StringCommand {
                 host: "cdn.discordapp.com",
                 path: "/emojis/\(emoji.id!).png"
             )
-            let data = try await request.run()
-            guard !data.isEmpty else {
-                await output.append(errorText: "No emoji image available")
-                return
-            }
-
-            await output.append(.image(try CairoImage(pngData: data)))
+            let image = try await request.fetchPNG()
+            await output.append(.image(image))
         } catch {
             await output.append(error, errorText: "Could not fetch emoji image")
         }
