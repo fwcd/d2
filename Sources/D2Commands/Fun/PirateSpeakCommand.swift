@@ -48,14 +48,14 @@ public class PirateSpeakCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter some text!")
+            await output.append(errorText: "Please enter some text!")
             return
         }
 
         let preprocessed = input.replacing(punctuationPattern) { "\($0.0)\(interjections.randomElement().filter { _ in Int.random(in: 0..<4) < 3 }.map { " \($0)" } ?? "")" }
         let result = substitutions.reduce(preprocessed) { $0.replacing($1.pattern, with: $1.substitution) }
-        output.append(result)
+        await output.append(result)
     }
 }
