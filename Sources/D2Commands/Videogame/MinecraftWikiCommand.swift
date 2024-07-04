@@ -14,31 +14,29 @@ public class MinecraftWikiCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        MediaWikiParseQuery(host: "minecraft.gamepedia.com", path: "/api.php", page: input, prop: "wikitext").perform().listen {
-            do {
-                let wikitextParse = try $0.get().parse
-                guard let raw = wikitextParse.wikitext else {
-                    output.append(errorText: "No wikitext got")
-                    return
-                }
-                let doc = try WikitextParser().parse(raw: raw)
-                output.append(Embed(
-                    title: wikitextParse.title,
-                    description: doc.sections.first.map { self.markdown(from: $0.content) }?.truncated(to: 1000, appending: "...").nilIfEmpty ?? "_no description_",
-                    url: wikitextParse.title.flatMap(self.wikiLink(page:)),
-                    thumbnail: self.image(from: doc).map(Embed.Thumbnail.init(url:)),
-                    color: 0x542900,
-                    fields: Array(doc.sections[1...].prefix(5).map {
-                        Embed.Field(
-                            name: $0.title ?? "Section",
-                            value: self.markdown(from: $0.content).truncated(to: 1000, appending: "...").nilIfEmpty ?? "_no text_"
-                        )
-                    })
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch/parse wikitext from Minecraft wiki")
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let wikitextParse = try await MediaWikiParseQuery(host: "minecraft.gamepedia.com", path: "/api.php", page: input, prop: "wikitext").perform().parse
+            guard let raw = wikitextParse.wikitext else {
+                await output.append(errorText: "No wikitext got")
+                return
             }
+            let doc = try WikitextParser().parse(raw: raw)
+            await output.append(Embed(
+                title: wikitextParse.title,
+                description: doc.sections.first.map { self.markdown(from: $0.content) }?.truncated(to: 1000, appending: "...").nilIfEmpty ?? "_no description_",
+                url: wikitextParse.title.flatMap(self.wikiLink(page:)),
+                thumbnail: self.image(from: doc).map(Embed.Thumbnail.init(url:)),
+                color: 0x542900,
+                fields: Array(doc.sections[1...].prefix(5).map {
+                    Embed.Field(
+                        name: $0.title ?? "Section",
+                        value: self.markdown(from: $0.content).truncated(to: 1000, appending: "...").nilIfEmpty ?? "_no text_"
+                    )
+                })
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch/parse wikitext from Minecraft wiki")
         }
     }
 

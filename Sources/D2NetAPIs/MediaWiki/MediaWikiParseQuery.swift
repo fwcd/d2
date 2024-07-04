@@ -15,7 +15,7 @@ public struct MediaWikiParseQuery {
         self.section = section
     }
 
-    public func perform() -> Promise<MediaWikiParse, any Error> {
+    public func perform() async throws -> MediaWikiParse {
         var query = [
             "action": "parse",
             "page": page,
@@ -28,7 +28,7 @@ public struct MediaWikiParseQuery {
             query["section"] = s
         }
 
-        return Promise.catching { try HTTPRequest(host: host, path: path, query: query) }
-            .then { $0.fetchJSONAsync(as: MediaWikiParse.self) }
+        let request = try HTTPRequest(host: host, path: path, query: query)
+        return try await request.fetchJSON(as: MediaWikiParse.self)
     }
 }
