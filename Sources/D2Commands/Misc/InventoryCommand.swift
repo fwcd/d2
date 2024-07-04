@@ -25,22 +25,22 @@ public class InventoryCommand: Command {
         requiredPermissionLevel: .basic
     )
     private let inventoryManager: InventoryManager
-    private var subcommands: [String: (User, String, CommandOutput, CommandContext) -> Void] = [:]
+    private var subcommands: [String: (User, String, CommandOutput, CommandContext) async -> Void] = [:]
 
     public init(inventoryManager: InventoryManager) {
         self.inventoryManager = inventoryManager
         subcommands = [
             "clear": { user, input, output, context in
                 guard let author = context.author else {
-                    output.append(errorText: "No author available")
+                    await output.append(errorText: "No author available")
                     return
                 }
                 guard author.id == user.id else {
-                    output.append(errorText: "You can only clear your own inventory categories!")
+                    await output.append(errorText: "You can only clear your own inventory categories!")
                     return
                 }
                 guard !input.isEmpty else {
-                    output.append(errorText: "Please name a category!")
+                    await output.append(errorText: "Please name a category!")
                     return
                 }
 
@@ -48,11 +48,11 @@ public class InventoryCommand: Command {
                 inventory.clear(category: input)
                 inventoryManager[user.id] = inventory
 
-                output.append("Successfully cleared the category `\(input)`!")
+                await output.append("Successfully cleared the category `\(input)`!")
             },
             "show": { user, input, output, context in
                 guard !input.isEmpty else {
-                    output.append(errorText: "Please name a category!")
+                    await output.append(errorText: "Please name a category!")
                     return
                 }
 
@@ -60,7 +60,7 @@ public class InventoryCommand: Command {
                 let category = input.withFirstUppercased // Category names are capitalized by convention
                 let items = inventory.items[category] ?? []
 
-                output.append(Embed(
+                await output.append(Embed(
                     title: "Inventory for `\(user.username)` - \(category)",
                     fields: items
                         .filter { !$0.hidden }
@@ -75,21 +75,21 @@ public class InventoryCommand: Command {
             """
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let user = input.asMentions?.first ?? context.author else {
-            output.append(errorText: "Mention someone or enter a subcommand to get started!")
+            await output.append(errorText: "Mention someone or enter a subcommand to get started!")
             return
         }
 
         let text = input.asText ?? ""
 
         if let parsedSubcommand = try? subcommandPattern.firstMatch(in: text), let subcommand = subcommands[String(parsedSubcommand.1)] {
-            subcommand(user, String(parsedSubcommand.2 ?? ""), output, context)
+            await subcommand(user, String(parsedSubcommand.2 ?? ""), output, context)
         } else {
             let showAll = text.contains(allFlag)
             let inventory = inventoryManager[user]
 
-            output.append(Embed(
+            await output.append(Embed(
                 title: "Inventory for `\(user.username)`",
                 fields: inventory.items.map {
                     Embed.Field(name: $0.key, value: Dictionary(grouping: $0.value, by: { $0.name })
