@@ -32,14 +32,14 @@ public class MinecraftStrongholdFinderCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let parsedPoints = input.matches(of: rawPointPattern).map { Vec2(x: $0.1, y: $0.2) }
         guard parsedPoints.count == 4 else {
-            output.append(errorText: "Locating a stronghold requires specifying 4 points (forming 2 lines, respectively)")
+            await output.append(errorText: "Locating a stronghold requires specifying 4 points (forming 2 lines, respectively)")
             return
         }
         let intersect = intersection(from1: parsedPoints[0], to1: parsedPoints[1], from2: parsedPoints[2], to2: parsedPoints[3])
-        output.append("The stronghold is located at \(String(format: "(%.2f, %.2f)", intersect.x, intersect.y))")
+        await output.append("The stronghold is located at \(String(format: "(%.2f, %.2f)", intersect.x, intersect.y))")
     }
 
     /// Computes the intersection point of two 2D-lines.
