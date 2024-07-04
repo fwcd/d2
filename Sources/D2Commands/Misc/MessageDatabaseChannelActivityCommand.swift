@@ -13,13 +13,13 @@ public class MessageDatabaseChannelActivityCommand: StringCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter a channel name!")
+            await output.append(errorText: "Please enter a channel name!")
             return
         }
         guard let guildId = context.guild?.id else {
-            output.append(errorText: "Not on a guild")
+            await output.append(errorText: "Not on a guild")
             return
         }
 
@@ -35,9 +35,9 @@ public class MessageDatabaseChannelActivityCommand: StringCommand {
             let result = try messageDB.prepare(sql, String(guildId), input)
                 .map { $0.map { $0.flatMap { Rational("\($0)") } ?? 0 } }
             let matrix = Matrix(result)
-            output.append(.ndArrays([matrix.asNDArray]))
+            await output.append(.ndArrays([matrix.asNDArray]))
         } catch {
-            output.append(error, errorText: "Could not query message database")
+            await output.append(error, errorText: "Could not query message database")
         }
     }
 }
