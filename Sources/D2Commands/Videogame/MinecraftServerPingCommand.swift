@@ -19,14 +19,14 @@ public class MinecraftServerPingCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             if let (host, port) = parseHostPort(from: input) {
                 let serverInfo = try MinecraftServerPing(host: host, port: port ?? 25565, timeoutMs: 1000).perform()
                 let modCount = serverInfo.forgeData?.mods?.count ?? serverInfo.modinfo?.modList?.count
                 let faviconImage = serverInfo.faviconImage
 
-                output.append(.compound([
+                await output.append(.compound([
                     .embed(Embed(
                         title: "Minecraft Server at `\(host)\(port.map { ":\($0)" } ?? "")`",
                         description: "\(serverInfo.description)",
@@ -44,10 +44,10 @@ public class MinecraftServerPingCommand: StringCommand {
                     ].compactMap { $0 })
                 ]))
             } else {
-                output.append(errorText: "Could not parse host/port, please specify it using the following format: `localhost:25565`")
+                await output.append(errorText: "Could not parse host/port, please specify it using the following format: `localhost:25565`")
             }
         } catch {
-            output.append(error, errorText: "Could not ping server")
+            await output.append(error, errorText: "Could not ping server")
         }
     }
 }
