@@ -23,7 +23,7 @@ public class EvaluateExpressionCommand: StringCommand {
         )
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let flags = Set<String>(input.matches(of: flagsPattern).map { String($0.1) })
 
         do {
@@ -31,27 +31,27 @@ public class EvaluateExpressionCommand: StringCommand {
 
             if flags.contains("ast") {
                 // Render AST only
-                try output.append(try ASTRenderer().render(ast: ast), name: "ast.png")
+                try await output.append(try ASTRenderer().render(ast: ast), name: "ast.png")
             } else {
                 // Evaluate and print result/graph
                 let variables = ast.occurringVariables
 
                 if variables.isEmpty {
-                    output.append(String(try ast.evaluate()))
+                    await output.append(String(try ast.evaluate()))
                 } else if variables.count == 1 {
-                    try output.append(try FunctionGraphRenderer(input: variables.first!).render(ast: ast), name: "functionGraph.png")
+                    try await output.append(try FunctionGraphRenderer(input: variables.first!).render(ast: ast), name: "functionGraph.png")
                 } else {
-                    output.append(errorText: "Too many unknown variables: `\(variables)`")
+                    await output.append(errorText: "Too many unknown variables: `\(variables)`")
                 }
             }
         } catch ExpressionError.invalidOperator(let op) {
-            output.append(errorText: "Found invalid operator: `\(op)`")
+            await output.append(errorText: "Found invalid operator: `\(op)`")
         } catch ExpressionError.tooFewOperands(let op) {
-            output.append(errorText: "Operator `\(op)` has too few operands")
+            await output.append(errorText: "Operator `\(op)` has too few operands")
         } catch ExpressionError.emptyResult {
-            output.append(errorText: "The expression yielded no result")
+            await output.append(errorText: "The expression yielded no result")
         } catch {
-            output.append(error, errorText: "Error while parsing/evaluating expression")
+            await output.append(error, errorText: "Error while parsing/evaluating expression")
         }
     }
 }
