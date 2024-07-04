@@ -10,50 +10,41 @@ public struct FastQuery {
         self.rounds = rounds
     }
 
-    public func perform() -> Promise<FastNetworkSpeed, any Error> {
-        Promise.catching { try HTTPRequest(scheme: "https", host: "fast.com", path: "/") }
-            .then { $0.fetchHTMLAsync() }
-            .thenCatching { document in
-                guard let script = try document.getElementsByTag("script").last() else {
-                    throw NetApiError.apiError("Could not find script on fast homepage")
-                }
-                let src = try script.attr("src")
-                return try HTTPRequest(host: "fast.com", path: src).fetchUTF8Async()
-            }
-            .thenCatching { (raw: String) in
-                guard let parsedToken = try? tokenPattern.firstMatch(in: raw) else {
-                    throw NetApiError.apiError("Could not find fast token")
-                }
-                return try HTTPRequest(
-                    host: "api.fast.com",
-                    path: "/netflix/speedtest/v2",
-                    query: [
-                        "https": "true",
-                        "token": String(parsedToken.token)
-                    ]
-                ).fetchJSONAsync(as: FastApiResponse.self)
-            }
-            .thenCatching { (response: FastApiResponse) in
-                guard let url = response.targets.first?.url else {
-                    throw NetApiError.apiError("No target found")
-                }
-                return measureSpeed(url: url, remainingRounds: rounds)
-            }
+    public func perform() async throws -> FastNetworkSpeed {
+        let request = try HTTPRequest(scheme: "https", host: "fast.com", path: "/")
+        let document = try await request.fetchHTML()
+        guard let script = try document.getElementsByTag("script").last() else {
+            throw NetApiError.apiError("Could not find script on fast homepage")
+        }
+        let src = try script.attr("src")
+        let raw = try await HTTPRequest(host: "fast.com", path: src).fetchUTF8()
+        guard let parsedToken = try? tokenPattern.firstMatch(in: raw) else {
+            throw NetApiError.apiError("Could not find fast token")
+        }
+        let response = try await HTTPRequest(
+            host: "api.fast.com",
+            path: "/netflix/speedtest/v2",
+            query: [
+                "https": "true",
+                "token": String(parsedToken.token)
+            ]
+        ).fetchJSON(as: FastApiResponse.self)
+        guard let url = response.targets.first?.url else {
+            throw NetApiError.apiError("No target found")
+        }
+        return try await measureSpeed(url: url, remainingRounds: rounds)
     }
 
-    private func measureSpeed(url: URL, remainingRounds: Int) -> Promise<FastNetworkSpeed, any Error> {
+    private func measureSpeed(url: URL, remainingRounds: Int) async throws -> FastNetworkSpeed {
         if remainingRounds == 0 {
-            return Promise(FastNetworkSpeed(megabits: 0, seconds: 0))
+            return FastNetworkSpeed(megabits: 0, seconds: 0)
         }
         let request = HTTPRequest(url: url)
         let startTime = Date()
-        return request.runAsync()
-            .then { data in
-                let seconds = -startTime.timeIntervalSinceNow
-                let megabits = Double(data.count) / 125_000.0
-                let speed = FastNetworkSpeed(megabits: megabits, seconds: seconds)
-                return measureSpeed(url: url, remainingRounds: remainingRounds - 1)
-                    .map { speed + $0 }
-            }
+        let data = try await request.run()
+        let seconds = -startTime.timeIntervalSinceNow
+        let megabits = Double(data.count) / 125_000.0
+        let speed = FastNetworkSpeed(megabits: megabits, seconds: seconds)
+        return try await speed + measureSpeed(url: url, remainingRounds: remainingRounds - 1)
         }
 }
