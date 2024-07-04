@@ -9,7 +9,7 @@ public class MorseEncoderCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(morseEncode(input))
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(morseEncode(input))
     }
 }
