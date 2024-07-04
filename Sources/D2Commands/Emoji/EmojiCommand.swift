@@ -10,17 +10,17 @@ public class EmojiCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Not in a guild!")
+            await output.append(errorText: "Not in a guild!")
             return
         }
         let formatted = input.split(separator: " ").map { formatEmoji(name: String($0), in: guild) }.joined()
         guard !formatted.isEmpty else {
-            output.append(errorText: "Please enter one or more emoji names!")
+            await output.append(errorText: "Please enter one or more emoji names!")
             return
         }
-        output.append(formatted)
+        await output.append(formatted)
     }
 
     private func formatEmoji(name: String, in guild: Guild) -> String {
