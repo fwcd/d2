@@ -20,9 +20,9 @@ public class PlotCommand<P>: Command where P: SeriesPlot {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard var columns = input.asNDArrays?.first?.asMatrix?.columns.map({ $0.map(\.asDouble) }), [1, 2].contains(columns.count) else {
-            output.append(errorText: "Can only plot 1- or 2-column tables!")
+            await output.append(errorText: "Can only plot 1- or 2-column tables!")
             return
         }
 
@@ -32,7 +32,7 @@ public class PlotCommand<P>: Command where P: SeriesPlot {
         }
 
         guard columns[0].count > 1 else {
-            output.append(errorText: "2 or more data points are needed!")
+            await output.append(errorText: "2 or more data points are needed!")
             return
         }
 
@@ -42,10 +42,10 @@ public class PlotCommand<P>: Command where P: SeriesPlot {
         plot.drawGraph(renderer: renderer)
 
         guard let data = Data(base64Encoded: renderer.base64Png()), let image = try? CairoImage(pngData: data) else {
-            output.append(errorText: "Could not render to valid PNG!")
+            await output.append(errorText: "Could not render to valid PNG!")
             return
         }
 
-        output.append(.image(image))
+        await output.append(.image(image))
     }
 }
