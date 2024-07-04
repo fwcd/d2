@@ -37,17 +37,17 @@ public class TradeCommand: Command {
         self.inventoryManager = inventoryManager
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let author = context.author else {
-            output.append(errorText: "No author available")
+            await output.append(errorText: "No author available")
             return
         }
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "No channel id available")
+            await output.append(errorText: "No channel id available")
             return
         }
         guard let text = input.asText, let parsedTrade = try? tradePattern.firstMatch(in: text), let other = input.asMentions?.first else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
@@ -57,11 +57,11 @@ public class TradeCommand: Command {
         let othersInventory = inventoryManager[other]
 
         guard let (authorsCategory, authorsItem) = authorsInventory.first(where: { $0.1.name.lowercased() == authorsRawItem.lowercased() }) else {
-            output.append(errorText: "Could not find `\(authorsRawItem)` in your inventory!")
+            await output.append(errorText: "Could not find `\(authorsRawItem)` in your inventory!")
             return
         }
         guard let (othersCategory, othersItem) = othersInventory.first(where: { $0.1.name.lowercased() == othersRawItem.lowercased() }) else {
-            output.append(errorText: "Could not find `\(othersRawItem)` in \(other.username)'s inventory!")
+            await output.append(errorText: "Could not find `\(othersRawItem)` in \(other.username)'s inventory!")
             return
         }
 
@@ -73,7 +73,7 @@ public class TradeCommand: Command {
 
         // TODO: Multi-item trades
 
-        output.append(Embed(
+        await output.append(Embed(
             title: "\(other.username), \(author.username) offers you the following trade:",
             description: """
                 1x \(authorsItem) (\(authorsCategory)) for you
@@ -85,16 +85,16 @@ public class TradeCommand: Command {
         context.subscribeToChannel()
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id,
             let author = context.author,
             let trade = trades[channelId],
             trade.other.userId == author.id else { return }
         if content.lowercased() == "yes" {
             trade.perform(with: inventoryManager)
-            output.append(":white_check_mark: Successfully performed trade")
+            await output.append(":white_check_mark: Successfully performed trade")
         } else {
-            output.append(":x: Declined trade")
+            await output.append(":x: Declined trade")
         }
         context.unsubscribeFromChannel()
     }
