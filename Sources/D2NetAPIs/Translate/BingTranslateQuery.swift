@@ -15,14 +15,12 @@ public struct BingTranslateQuery {
         self.text = text
     }
 
-    public func perform() -> Promise<[BingTranslateResult], any Error> {
-        .catchingThen {
-            let request = try HTTPRequest(scheme: "https", host: "www.bing.com", path: "/ttranslatev3", method: "POST", query: [
-                "fromLang": sourceLanguage ?? "auto-detect",
-                "to": targetLanguage,
-                "text": text
-            ])
-            return request.fetchJSONAsync(as: [BingTranslateResult].self)
-        }
+    public func perform() async throws -> [BingTranslateResult] {
+        let request = try HTTPRequest(scheme: "https", host: "www.bing.com", path: "/ttranslatev3", method: "POST", query: [
+            "fromLang": sourceLanguage ?? "auto-detect",
+            "to": targetLanguage,
+            "text": text
+        ])
+        return try await request.fetchJSON(as: [BingTranslateResult].self)
     }
 }
