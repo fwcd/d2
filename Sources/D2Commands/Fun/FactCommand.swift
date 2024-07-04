@@ -10,14 +10,12 @@ public class FactCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
-        RandomFactQuery(language: "en").perform().listen {
-            do {
-                let fact = try $0.get()
-                output.append(fact.text)
-            } catch {
-                output.append(error, errorText: "Could not fetch fact")
-            }
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
+        do {
+            let fact = try await RandomFactQuery(language: "en").perform()
+            await output.append(fact.text)
+        } catch {
+            await output.append(error, errorText: "Could not fetch fact")
         }
     }
 }
