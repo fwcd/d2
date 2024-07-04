@@ -13,9 +13,9 @@ public class EmojisCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Not on a guild")
+            await output.append(errorText: "Not on a guild")
             return
         }
 
@@ -41,7 +41,7 @@ public class EmojisCommand: StringCommand {
 
         orderedGroups.sort(by: comparator)
 
-        output.append(Embed(
+        await output.append(Embed(
             title: "Emojis",
             fields: orderedGroups
                 .reduce([(String, Set<Emoji>)]()) {
