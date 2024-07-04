@@ -26,7 +26,7 @@ public class CountdownCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
     public let outputValueType: RichValueType = .embed
-    private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
+    private var subcommands: [String: (String, CommandOutput) async -> Void] = [:]
 
     @AutoSerializing(filePath: "local/countdownGoals.json") private var userGoals: [String: FixedCountdownGoal] = [:]
     private var builtInGoals: [String: CountdownGoal]
@@ -38,7 +38,7 @@ public class CountdownCommand: StringCommand {
         subcommands = [
             "add": { [unowned self] input, output in
                 guard let parsedInput = try? namedDatePattern.firstMatch(in: input) else {
-                    output.append(errorText: "Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
+                    await output.append(errorText: "Please use the format: [name] [dd.MM.yyyy] [HH:mm]?")
                     return
                 }
 
@@ -46,11 +46,11 @@ public class CountdownCommand: StringCommand {
                 let rawDate = String(parsedInput.date)
 
                 guard !goals.keys.contains(name) else {
-                    output.append(errorText: "A goal with name `\(name)` already exists!")
+                    await output.append(errorText: "A goal with name `\(name)` already exists!")
                     return
                 }
                 guard let date = self.parseDate(from: rawDate) else {
-                    output.append(errorText: "Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
+                    await output.append(errorText: "Could not parse date. Please use one of these formats: `\(inputDateFormatters.compactMap { $0.dateFormat })`")
                     return
                 }
 
@@ -60,16 +60,16 @@ public class CountdownCommand: StringCommand {
             },
             "remove": { [unowned self] input, output in
                 if let goal = self.userGoals.removeValue(forKey: input) {
-                    output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
+                    await output.append(":x: Removed goal `\(input)` (on: \(outputDateFormatter.string(from: goal.date)))")
                 } else {
-                    output.append(errorText: ":question: No user-defined goal named `\(input)` is currently running")
+                    await output.append(errorText: ":question: No user-defined goal named `\(input)` is currently running")
                 }
             }
         ]
         info.helpText = makeHelpText()
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let date = parseDate(from: input) {
             show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
         } else if let parsedArgs = try? subcommandPattern.firstMatch(in: input) {
@@ -77,11 +77,11 @@ public class CountdownCommand: StringCommand {
             let subcommandArgs = String(parsedArgs.args)
 
             guard let subcommand = subcommands[subcommandName] else {
-                output.append(errorText: "Could not find subcommand with name \(subcommandName)")
+                await output.append(errorText: "Could not find subcommand with name \(subcommandName)")
                 return
             }
 
-            subcommand(subcommandArgs, output)
+            await subcommand(subcommandArgs, output)
         } else {
             removeCompletedGoals() // Clean up
             showRunningGoals(to: output)
