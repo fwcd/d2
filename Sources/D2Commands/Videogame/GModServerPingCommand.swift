@@ -13,9 +13,9 @@ public class GModServerPingCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let (host, customPort) = parseHostPort(from: input) else {
-            output.append(info.helpText!)
+            await output.append(info.helpText!)
             return
         }
         let port = customPort ?? 27015
@@ -38,7 +38,7 @@ public class GModServerPingCommand: StringCommand {
                 port: port,
                 timeoutMs: 1000
             ).perform() }
-            output.append(Embed(
+            await output.append(Embed(
                 title: "\(info.name) server: \(info.game)",
                 footer: Embed.Footer(text: "Protocol Version \(info.protocolVersion)"),
                 fields: [
@@ -57,7 +57,7 @@ public class GModServerPingCommand: StringCommand {
                 ]
             ))
         } catch {
-            output.append(error, errorText: "Could not ping GMod server")
+            await output.append(error, errorText: "Could not ping GMod server")
         }
     }
 }
