@@ -7,8 +7,8 @@ public class FizzBuzzCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append((1...100).map {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append((1...100).map {
             var s = [String]()
             if $0 % 3 == 0 {
                 s.append("fizz")
