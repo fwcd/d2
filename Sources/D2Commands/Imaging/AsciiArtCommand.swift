@@ -23,9 +23,9 @@ public class AsciiArtCommand: Command {
         self.widthScaleFactor = widthScaleFactor
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let image = input.asImage else {
-            output.append(errorText: "Please attach an image!")
+            await output.append(errorText: "Please attach an image!")
             return
         }
 
@@ -38,7 +38,7 @@ public class AsciiArtCommand: Command {
                 .map { x in asciiShade(of: image[(y * imageHeight) / height, (x * imageWidth) / width]) }
                 .joined() }
             .joined(separator: "\n")
-        output.append(.code(asciiArt, language: nil))
+        await output.append(.code(asciiArt, language: nil))
     }
 
     private func asciiShade(of color: Color) -> String {
