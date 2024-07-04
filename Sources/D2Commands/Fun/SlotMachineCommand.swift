@@ -16,10 +16,10 @@ public class SlotMachineCommand: StringCommand {
         self.values = values
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let outcome = (0..<slotCount).map { _ in values.randomElement()! }
         let isWin = Set(outcome).count == 1
-        output.append(Embed(
+        await output.append(Embed(
             title: ":slot_machine: Slot Machine",
             description: [
                 outcome.joined(separator: "|"),
