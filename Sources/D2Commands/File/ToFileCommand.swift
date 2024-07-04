@@ -17,26 +17,26 @@ public class ToFileCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         if case let .compound(values) = input {
             guard let name = values.first else {
-                output.append(errorText: "Missing file name")
+                await output.append(errorText: "Missing file name")
                 return
             }
 
             guard let content = values[safely: 1] else {
-                output.append(errorText: "Missing content (try piping some value into this invocation)")
+                await output.append(errorText: "Missing content (try piping some value into this invocation)")
                 return
             }
 
             guard let data = (content.asText ?? content.asCode ?? "").data(using: .utf8) else {
-                output.append(errorText: "Could not encode file data as UTF-8")
+                await output.append(errorText: "Could not encode file data as UTF-8")
                 return
             }
 
-            output.append(.files([Message.FileUpload(data: data, filename: name.asText ?? "", mimeType: "text/plain")]))
+            await output.append(.files([Message.FileUpload(data: data, filename: name.asText ?? "", mimeType: "text/plain")]))
         } else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
         }
     }
 }
