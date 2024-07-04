@@ -9,21 +9,21 @@ public class Base64EncoderCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let data = try input.asImage?.pngEncoded() ?? input.asText?.data(using: .utf8), !data.isEmpty else {
-                output.append(errorText: "Please append some text or an image to encode!")
+                await output.append(errorText: "Please append some text or an image to encode!")
                 return
             }
 
             let encoded = data.base64EncodedString()
             guard encoded.count < 4000 else {
-                output.append(errorText: "Your encoded data is too long!")
+                await output.append(errorText: "Your encoded data is too long!")
                 return
             }
-            output.append(encoded)
+            await output.append(encoded)
         } catch {
-            output.append(error, errorText: "Something went wrong while Base64-encoding")
+            await output.append(error, errorText: "Something went wrong while Base64-encoding")
         }
     }
 }
