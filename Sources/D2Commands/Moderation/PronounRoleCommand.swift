@@ -20,17 +20,17 @@ public class PronounRoleCommand: StringCommand {
         self._config = _config
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "No guild available")
+            await output.append(errorText: "No guild available")
             return
         }
         guard let sink = context.sink else {
-            output.append(errorText: "No client available")
+            await output.append(errorText: "No client available")
             return
         }
         guard let parsedInput = try? inputPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
         let name = String(parsedInput.name)
@@ -40,7 +40,7 @@ public class PronounRoleCommand: StringCommand {
         roles[name] = roleId
         config.pronounRoles[guild.id] = roles
 
-        output.append(":white_check_mark: Successfully updated the pronoun role for '\(name)' to \(roleId.map { "\($0)" } ?? "nil")")
+        await output.append(":white_check_mark: Successfully updated the pronoun role for '\(name)' to \(roleId.map { "\($0)" } ?? "nil")")
     }
 }
 
