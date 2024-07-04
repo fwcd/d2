@@ -9,15 +9,15 @@ public class EmbedFooterCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let embed = input.asEmbed else {
-            output.append(errorText: "Please input an embed!")
+            await output.append(errorText: "Please input an embed!")
             return
         }
         guard let footerText = embed.footer?.text else {
-            output.append(errorText: "The embed has no description!")
+            await output.append(errorText: "The embed has no description!")
             return
         }
-        output.append(footerText)
+        await output.append(footerText)
     }
 }
