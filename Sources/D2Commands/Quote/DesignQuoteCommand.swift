@@ -16,23 +16,21 @@ public class DesignQuoteCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        QuotesOnDesignQuery().perform().listen {
-            do {
-                let quotes = try $0.get()
-                guard let quote = quotes.randomElement() else {
-                    output.append(errorText: "No quotes found")
-                    return
-                }
-
-                output.append(Embed(
-                    title: quote.title.rendered,
-                    description: quote.content.rendered.replacing(htmlTagPattern, with: "")
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch quote")
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let quotes = try await QuotesOnDesignQuery().perform()
+            guard let quote = quotes.randomElement() else {
+                await output.append(errorText: "No quotes found")
+                return
             }
+
+            await output.append(Embed(
+                title: quote.title.rendered,
+                description: quote.content.rendered.replacing(htmlTagPattern, with: "")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch quote")
         }
     }
 }
