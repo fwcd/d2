@@ -10,14 +10,14 @@ public class WhatsUpCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "No guild available")
+            await output.append(errorText: "No guild available")
             return
         }
         let memberActivities = guild.presences
             .flatMap { (id, p) in guild.members[id].map { m in p.activities.map { (m, $0) } } ?? [] }
-        output.append(Embed(
+        await output.append(Embed(
             title: ":circus_tent: Currently Active",
             fields: [
                 embedFieldsOf(title: ":satellite: Streaming", for: .stream, amongst: memberActivities),
