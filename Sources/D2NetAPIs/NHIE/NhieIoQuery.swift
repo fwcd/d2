@@ -3,8 +3,8 @@ import Utils
 public struct NhieIoQuery {
     public init() {}
 
-    public func perform() -> Promise<NeverHaveIEverStatement, any Error> {
-        Promise.catching { try HTTPRequest(host: "api.nhie.io", path: "/v1/statements/random") }
-            .then { $0.fetchJSONAsync(as: NeverHaveIEverStatement.self) }
+    public func perform() async throws -> NeverHaveIEverStatement {
+        let request = try HTTPRequest(host: "api.nhie.io", path: "/v1/statements/random")
+        return try await request.fetchJSON(as: NeverHaveIEverStatement.self)
     }
 }
