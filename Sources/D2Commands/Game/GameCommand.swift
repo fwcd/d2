@@ -23,7 +23,7 @@ public class GameCommand<G: Game>: Command {
         "help": { game, _ in ActionResult(text: game.helpText, onlyCurrentPlayer: false) }
     ]
     private let defaultApiActions: Set<String> = ["cancel"]
-    private var subcommands: [String: (CommandOutput) throws -> Void] = [:]
+    private var subcommands: [String: (CommandOutput) async throws -> Void] = [:]
 
     private var matches: [ChannelID: G.State] = [:]
     private var apiEnabled: Bool = false
@@ -32,7 +32,7 @@ public class GameCommand<G: Game>: Command {
     public init() {
         game = G.init()
         subcommands = [
-            "matches": { [unowned self] in self.matches(output: $0) }
+            "matches": { [unowned self] in await self.matches(output: $0) }
         ]
         info.shortDescription = "Plays \(game.name) against someone"
         info.longDescription = "Lets you create and play \(game.name) matches"
@@ -48,7 +48,7 @@ public class GameCommand<G: Game>: Command {
         let text = input.asText ?? ""
         if let subcommand = subcommands[text] {
             do {
-                try subcommand(output)
+                try await subcommand(output)
             } catch {
                 await output.append(error, errorText: "Error while running subcommand: \(error)")
             }
@@ -82,8 +82,8 @@ public class GameCommand<G: Game>: Command {
         context.subscribeToChannel()
     }
 
-    private func matches(output: any CommandOutput) {
-        output.append(.embed(Embed(
+    private func matches(output: any CommandOutput) async {
+        await output.append(.embed(Embed(
             title: ":video_game: Running \(game.name) matches",
             description: matches
                 .map { "\($0.key): \($0.value.playersDescription)" }
