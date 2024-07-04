@@ -13,14 +13,14 @@ public class ChannelMessageCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
         guard let platform = parsedArgs.platform.map({ String($0) }) ?? context.sink?.name else {
-            output.append(errorText: "No platform found")
+            await output.append(errorText: "No platform found")
             return
         }
 
@@ -28,6 +28,6 @@ public class ChannelMessageCommand: StringCommand {
         let message = String(parsedArgs.message)
         let id = ChannelID(rawId, clientName: platform)
 
-        output.append(message, to: .guildChannel(id))
+        await output.append(message, to: .guildChannel(id))
     }
 }
