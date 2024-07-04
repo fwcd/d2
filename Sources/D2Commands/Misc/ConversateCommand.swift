@@ -16,23 +16,23 @@ public class ConversateCommand: StringCommand {
         self.conversator = conversator
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         context.subscribeToChannel()
-        output.append("Subscribed to this channel. Type anything to talk to me.")
+        await output.append("Subscribed to this channel. Type anything to talk to me.")
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard context.author?.id != context.sink?.me?.id, let guildId = context.guild?.id else { return }
         if content == "stop" {
             context.unsubscribeFromChannel()
-            output.append("Unsubscribed from this channel.")
+            await output.append("Unsubscribed from this channel.")
         } else {
             do {
                 if let answer = try conversator.answer(input: content, on: guildId) {
-                    output.append(answer.cleaningMentions(with: context.guild))
+                    await output.append(answer.cleaningMentions(with: context.guild))
                 }
             } catch {
-                output.append(error, errorText: "Could not provide answer")
+                await output.append(error, errorText: "Could not provide answer")
             }
         }
     }
