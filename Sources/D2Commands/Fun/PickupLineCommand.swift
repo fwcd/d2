@@ -10,15 +10,13 @@ public class PickupLineCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let queries: [PickupLineQuery] = [PebblePickupQuery(), PickupLineGenQuery()]
-        queries.randomElement()!.perform().listen {
-            do {
-                let line = try $0.get()
-                output.append(line.tweet)
-            } catch {
-                output.append(error, errorText: "Could not fetch pickup line")
-            }
+        do {
+            let line = try await queries.randomElement()!.perform()
+            await output.append(line.tweet)
+        } catch {
+            await output.append(error, errorText: "Could not fetch pickup line")
         }
     }
 }

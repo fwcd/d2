@@ -3,12 +3,10 @@ import Utils
 public struct PickupLineGenQuery: PickupLineQuery {
     public init() {}
 
-    public func perform() -> Promise<PickupLine, any Error> {
-        Promise.catching { try HTTPRequest(scheme: "http", host: "www.pickuplinegen.com", path: "/") }
-            .then { $0.fetchHTMLAsync() }
-            .mapCatching { doc in
-                guard let content = try doc.getElementById("content")?.text() else { throw PickupLineGenError.missingContent(doc) }
-                return PickupLine(tweet: content)
-            }
+    public func perform() async throws -> PickupLine {
+        let request = try HTTPRequest(scheme: "http", host: "www.pickuplinegen.com", path: "/")
+        let document = try await request.fetchHTML()
+        guard let content = try document.getElementById("content")?.text() else { throw PickupLineGenError.missingContent(document) }
+        return PickupLine(tweet: content)
     }
 }
