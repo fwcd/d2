@@ -9,7 +9,7 @@ public class ReverseInputCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
-        output.append(.of(values: Array(input.values.reversed())))
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
+        await output.append(.of(values: Array(input.values.reversed())))
     }
 }
