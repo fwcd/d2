@@ -1,7 +1,6 @@
 import Foundation
 import Utils
 import D2MessageIO
-import Dispatch
 
 fileprivate let argsPattern = #/(?:(?<name>[a-zA-Z]+)\s*)?(?<rest>.*)/#
 fileprivate let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
@@ -23,7 +22,7 @@ fileprivate let timeUnitAliases: [String: String] = [
 fileprivate struct NamedTimer {
     let name: String?
     let guildId: GuildID?
-    let timer: DispatchSourceTimer
+    let task: Task<Void, Never>
     let elapseDate: Date
 
     var remainingTime: TimeInterval { elapseDate.timeIntervalSinceNow }
@@ -59,6 +58,7 @@ public class TimerCommand: StringCommand {
                     await output.append(errorText: "No timer named `\(input)`!")
                     return
                 }
+                timer.task.cancel()
                 self.timers[id] = nil
                 await output.append("Successfully cancelled timer `\(timer.name ?? "<unnamed>")`!")
             }
@@ -111,24 +111,27 @@ public class TimerCommand: StringCommand {
             let timerId = nextTimerId
             nextTimerId += 1
 
-            let timer = DispatchSource.makeTimerSource()
-            timer.schedule(deadline: .now() + .seconds(duration))
-            timer.setEventHandler {
-                let mention: String
-                if flags.contains("everyone") {
-                    mention = "@everyone"
-                } else if flags.contains("here") {
-                    mention = "@here"
-                } else {
-                    mention = authorId.map { "<@\($0)>" } ?? ""
+            let task = Task {
+                do {
+                    try await Task.sleep(for: .seconds(duration))
+                    let mention: String
+                    if flags.contains("everyone") {
+                        mention = "@everyone"
+                    } else if flags.contains("here") {
+                        mention = "@here"
+                    } else {
+                        mention = authorId.map { "<@\($0)>" } ?? ""
+                    }
+                    await output.append("\(mention), the timer\(name.map { " `\($0)`" } ?? "") has elapsed!")
+                    self.timers[timerId] = nil
+                } catch _ as CancellationError {
+                    // Do nothing
+                } catch {
+                    await output.append(error, errorText: "Error while running timer")
                 }
-                output.append("\(mention), the timer\(name.map { " `\($0)`" } ?? "") has elapsed!")
-                self.timers[timerId] = nil
             }
-            timers[timerId] = NamedTimer(name: name, guildId: guildId, timer: timer, elapseDate: Date() + TimeInterval(duration))
-
+            timers[timerId] = NamedTimer(name: name, guildId: guildId, task: task, elapseDate: Date() + TimeInterval(duration))
             await output.append("Created a timer\(name.map { " named `\($0)`" } ?? "") that runs for \(duration) \("second".pluralized(with: duration))!")
-            timer.resume()
         }
     }
 }
