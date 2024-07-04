@@ -18,43 +18,39 @@ public class MinecraftDynmapCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
         let host = String(parsedArgs.host)
         let playerName = parsedArgs.playerName.map { String($0) }
-        MinecraftDynmapConfigurationQuery(host: host).perform().listen {
-            switch $0 {
-                case .success(let config):
-                    let worldName = config.defaultworld ?? "world"
-                    MinecraftDynmapWorldQuery(host: host, world: worldName).perform().listen {
-                        switch $0 {
-                            case .success(let world):
-                                if let name = playerName, let map = config.worlds?.first(where: { $0.name == worldName })?.maps?.first {
-                                    if let player = world.players?.first(where: { $0.name == name }) {
-                                        output.append(Embed(
-                                            title: "Minecraft Player `\(name)`",
-                                            description: self.describe(player: player),
-                                            image: URL(string: "http://\(host):8123/\(self.tilePath(for: player, on: map))").map { Embed.Image(url: $0) }
-                                        ))
-                                    } else {
-                                        output.append(errorText: "Could not find player `\(name)` on server")
-                                    }
-                                } else {
-                                    output.append(Embed(
-                                        title: "Minecraft Server Dynmap",
-                                        fields: world.players?.map { Embed.Field(name: $0.name ?? "Unnamed player", value: self.describe(player: $0)) } ?? []
-                                    ))
-                                }
-                            case .failure(let error):
-                                output.append(error, errorText: "World query failed")
-                        }
+        do {
+            let config = try await MinecraftDynmapConfigurationQuery(host: host).perform()
+            let worldName = config.defaultworld ?? "world"
+            do {
+                let world = try await MinecraftDynmapWorldQuery(host: host, world: worldName).perform()
+                if let name = playerName, let map = config.worlds?.first(where: { $0.name == worldName })?.maps?.first {
+                    if let player = world.players?.first(where: { $0.name == name }) {
+                        await output.append(Embed(
+                            title: "Minecraft Player `\(name)`",
+                            description: self.describe(player: player),
+                            image: URL(string: "http://\(host):8123/\(self.tilePath(for: player, on: map))").map { Embed.Image(url: $0) }
+                        ))
+                    } else {
+                        await output.append(errorText: "Could not find player `\(name)` on server")
                     }
-                case .failure(let error):
-                    output.append(error, errorText: "Configuration query failed")
+                } else {
+                    await output.append(Embed(
+                        title: "Minecraft Server Dynmap",
+                        fields: world.players?.map { Embed.Field(name: $0.name ?? "Unnamed player", value: self.describe(player: $0)) } ?? []
+                    ))
+                }
+            } catch {
+                await output.append(error, errorText: "World query failed")
             }
+        } catch {
+            await output.append(error, errorText: "Configuration query failed")
         }
     }
 
