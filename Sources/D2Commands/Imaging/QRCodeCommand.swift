@@ -14,7 +14,7 @@ public class QRCodeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let qr = try QRCode.encode(text: input, ecl: .medium)
             let scale = 4
@@ -38,9 +38,9 @@ public class QRCodeCommand: StringCommand {
                 }
             }
 
-            try output.append(image)
+            try await output.append(image)
         } catch {
-            output.append(error, errorText: "An error occurred while converting the QR code SVG to an image")
+            await output.append(error, errorText: "An error occurred while converting the QR code SVG to an image")
         }
     }
 }
