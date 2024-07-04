@@ -13,17 +13,15 @@ public class TruthOrDareCommand: StringCommand {
         self.type = type
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let category = TruthOrDareQuery.Category(rawValue: input) ?? TruthOrDareQuery.Category.allCases.randomElement()!
         let type = self.type ?? TruthOrDareQuery.TDType.allCases.randomElement()!
 
-        TruthOrDareQuery(category: category, type: type).perform().listen {
-            do {
-                let tod = try $0.get()
-                output.append(tod.text)
-            } catch {
-                output.append(error, errorText: "Could not fetch truth/dare")
-            }
+        do {
+            let tod = try await TruthOrDareQuery(category: category, type: type).perform()
+            await output.append(tod.text)
+        } catch {
+            await output.append(error, errorText: "Could not fetch truth/dare")
         }
     }
 }

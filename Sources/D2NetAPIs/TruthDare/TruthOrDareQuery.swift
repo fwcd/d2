@@ -19,11 +19,11 @@ public struct TruthOrDareQuery {
         case dare
     }
 
-    public func perform() -> Promise<TruthOrDare, any Error> {
-        Promise.catching { try HTTPRequest(host: "randommer.io", path: "/truth-dare-generator", method: "POST", query: [
+    public func perform() async throws -> TruthOrDare {
+        let request = try HTTPRequest(host: "randommer.io", path: "/truth-dare-generator", method: "POST", query: [
             "category": category.rawValue,
             "type": type.rawValue
-        ]) }
-            .then { $0.fetchJSONAsync(as: TruthOrDare.self) }
+        ])
+        return try await request.fetchJSON(as: TruthOrDare.self)
     }
 }
