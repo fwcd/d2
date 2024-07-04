@@ -137,14 +137,14 @@ public class EnterprisifyCommand: StringCommand {
         self.iterations = iterations
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         var result = input.withFirstUppercased
 
         for _ in 0..<iterations {
             result = enterprisify(name: result)
         }
 
-        output.append(result)
+        await output.append(result)
     }
 
     private func enterprisify(name: String) -> String {
