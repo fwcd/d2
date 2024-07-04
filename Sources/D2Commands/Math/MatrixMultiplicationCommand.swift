@@ -16,9 +16,9 @@ public class MatrixMultiplicationCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let factors = allNonNil(input.asNDArrays?.map { $0.asMatrix } ?? [nil]) else {
-            output.append(errorText: "Please specify the input in the form of matrices, e.g. `((1, 2), (3, 4)) ((1, 1), (1, 1))`")
+            await output.append(errorText: "Please specify the input in the form of matrices, e.g. `((1, 2), (3, 4)) ((1, 1), (1, 1))`")
             return
         }
 
@@ -38,14 +38,14 @@ public class MatrixMultiplicationCommand: Command {
             }
 
             guard let product = current else {
-                output.append(errorText: "Empty product")
+                await output.append(errorText: "Empty product")
                 return
             }
 
             log.debug("Computed matrix product \(product)")
-            output.append(.ndArrays([product.asNDArray]))
+            await output.append(.ndArrays([product.asNDArray]))
         } catch {
-            output.append(error, errorText: "\(error)")
+            await output.append(error, errorText: "\(error)")
         }
     }
 }
