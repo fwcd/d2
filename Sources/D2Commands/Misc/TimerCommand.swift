@@ -36,7 +36,7 @@ public class TimerCommand: StringCommand {
         presented: true,
         requiredPermissionLevel: .vip
     )
-    private var subcommands: [String: (String, CommandOutput, CommandContext) -> Void] = [:]
+    private var subcommands: [String: (String, CommandOutput, CommandContext) async -> Void] = [:]
     private var timers: [Int: NamedTimer] = [:]
     private var nextTimerId: Int = 0
 
@@ -45,7 +45,7 @@ public class TimerCommand: StringCommand {
 
         subcommands = [
             "list": { [unowned self] input, output, context in
-                output.append(Embed(
+                await output.append(Embed(
                     title: ":timer: Running Timers",
                     description: self.timers.values
                         .filter { $0.guildId == context.guild?.id }
@@ -56,11 +56,11 @@ public class TimerCommand: StringCommand {
             },
             "cancel": { [unowned self] input, output, context in
                 guard let (id, timer) = self.timers.first(where: { $0.value.name == input }) else {
-                    output.append(errorText: "No timer named `\(input)`!")
+                    await output.append(errorText: "No timer named `\(input)`!")
                     return
                 }
                 self.timers[id] = nil
-                output.append("Successfully cancelled timer `\(timer.name ?? "<unnamed>")`!")
+                await output.append("Successfully cancelled timer `\(timer.name ?? "<unnamed>")`!")
             }
         ]
         info.helpText = """
@@ -79,9 +79,9 @@ public class TimerCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
@@ -90,7 +90,7 @@ public class TimerCommand: StringCommand {
         if let n = name, let subcommand = subcommands[n] {
             // Invoke the subcommand
 
-            subcommand(String(parsedArgs.rest), output, context)
+            await subcommand(String(parsedArgs.rest), output, context)
         } else {
             // Create a new timer
 
@@ -100,7 +100,7 @@ public class TimerCommand: StringCommand {
             let durations = allParsedDurations.compactMap { timeUnits[timeUnitAliases[String($0.2)] ?? String($0.2)]?(Int($0.1)!) }
 
             guard !durations.isEmpty else {
-                output.append(errorText: info.helpText!)
+                await output.append(errorText: info.helpText!)
                 return
             }
 
@@ -127,7 +127,7 @@ public class TimerCommand: StringCommand {
             }
             timers[timerId] = NamedTimer(name: name, guildId: guildId, timer: timer, elapseDate: Date() + TimeInterval(duration))
 
-            output.append("Created a timer\(name.map { " named `\($0)`" } ?? "") that runs for \(duration) \("second".pluralized(with: duration))!")
+            await output.append("Created a timer\(name.map { " named `\($0)`" } ?? "") that runs for \(duration) \("second".pluralized(with: duration))!")
             timer.resume()
         }
     }
