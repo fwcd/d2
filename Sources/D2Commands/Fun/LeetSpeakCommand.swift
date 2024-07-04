@@ -18,7 +18,7 @@ public class LeetSpeakCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(String(input.map { substitutions[Character($0.uppercased())] ?? $0 }))
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(String(input.map { substitutions[Character($0.uppercased())] ?? $0 }))
     }
 }
