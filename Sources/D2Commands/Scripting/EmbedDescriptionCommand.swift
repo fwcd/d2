@@ -9,15 +9,15 @@ public class EmbedDescriptionCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let embed = input.asEmbed else {
-            output.append(errorText: "Please input an embed!")
+            await output.append(errorText: "Please input an embed!")
             return
         }
         guard let description = embed.description else {
-            output.append(errorText: "The embed has no description!")
+            await output.append(errorText: "The embed has no description!")
             return
         }
-        output.append(description)
+        await output.append(description)
     }
 }
