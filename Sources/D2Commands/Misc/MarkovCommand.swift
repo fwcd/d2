@@ -23,7 +23,7 @@ public class MarkovCommand: StringCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let flags = Set<String>(input.matches(of: flagPattern).map { String($0.1) })
         let cleanedInput = input.replacing(flagPattern, with: "").nilIfEmpty
 
@@ -44,9 +44,9 @@ public class MarkovCommand: StringCommand {
                 formattedResult = formattedResult.cleaningMentions(with: context.guild)
             }
 
-            output.append(formattedResult)
+            await output.append(formattedResult)
         } catch {
-            output.append(error, errorText: "Could not generate Markov text")
+            await output.append(error, errorText: "Could not generate Markov text")
         }
     }
 }
