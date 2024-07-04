@@ -11,8 +11,8 @@ public class IssueReportCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(Embed(
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(Embed(
             title: "Click here to create a new issue on GitHub",
             url: URL(string: "https://github.com/fwcd/d2/issues/new")!
         ))
