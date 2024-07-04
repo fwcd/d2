@@ -12,10 +12,10 @@ public class UwUifyCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let transformed = input
             .replacing(wPattern, with: "w")
             .replacing(punctuationPattern) { "\($0.0) \(["UwU", "OwO", ">w<", "oωo", ".ω."].randomElement()!)." }
-        output.append(transformed)
+        await output.append(transformed)
     }
 }
