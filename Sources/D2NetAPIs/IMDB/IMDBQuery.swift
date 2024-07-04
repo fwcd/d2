@@ -16,8 +16,8 @@ public struct IMDBQuery {
         self.query = query
     }
 
-    public func perform() -> Promise<IMDBResults, any Error> {
-        Promise.catching { try HTTPRequest(host: "v2.sg.media-imdb.com", path: "/suggestion/\(formattedQuery.first!)/\(formattedQuery).json") }
-            .then { $0.fetchJSONAsync(as: IMDBResults.self) }
+    public func perform() async throws -> IMDBResults {
+        let request =  try HTTPRequest(host: "v2.sg.media-imdb.com", path: "/suggestion/\(formattedQuery.first!)/\(formattedQuery).json")
+        return try await request.fetchJSON(as: IMDBResults.self)
     }
 }

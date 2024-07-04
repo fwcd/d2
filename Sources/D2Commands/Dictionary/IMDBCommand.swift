@@ -11,28 +11,26 @@ public class IMDBCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter a query!")
+            await output.append(errorText: "Please enter a query!")
             return
         }
 
-        IMDBQuery(query: input).perform().listen {
-            do {
-                let results = try $0.get()
-                let entries = results.entries
+        do {
+            let results = try await IMDBQuery(query: input).perform()
+            let entries = results.entries
 
-                output.append(Embed(
-                    title: ":film_frames: IMDB Results",
-                    thumbnail: (entries.first?.info?.imageUrl).map(Embed.Thumbnail.init(url:)),
-                    color: 0xf7c936,
-                    fields: entries
-                        .prefix(5)
-                        .map { self.embedFieldOf(entry: $0) }
-                ))
-            } catch {
-                output.append(error, errorText: "Could not query IMDB")
-            }
+            await output.append(Embed(
+                title: ":film_frames: IMDB Results",
+                thumbnail: (entries.first?.info?.imageUrl).map(Embed.Thumbnail.init(url:)),
+                color: 0xf7c936,
+                fields: entries
+                    .prefix(5)
+                    .map { self.embedFieldOf(entry: $0) }
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not query IMDB")
         }
     }
 
