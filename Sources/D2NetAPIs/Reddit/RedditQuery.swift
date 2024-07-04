@@ -9,14 +9,12 @@ public struct RedditQuery {
         self.maxResults = maxResults
     }
 
-    public func perform() -> Promise<RedditThing<RedditListing<RedditLink>>, any Error> {
-        .catchingThen {
-            try HTTPRequest(
-                host: "www.reddit.com",
-                path: "/r/\(subreddit)/top.json",
-                query: ["limit": String(maxResults)],
-                headers: ["User-Agent": "swift:d2:v1.0"]
-            ).fetchJSONAsync(as: RedditThing<RedditListing<RedditLink>>.self)
-        }
+    public func perform() async throws -> RedditThing<RedditListing<RedditLink>> {
+        try await HTTPRequest(
+            host: "www.reddit.com",
+            path: "/r/\(subreddit)/top.json",
+            query: ["limit": String(maxResults)],
+            headers: ["User-Agent": "swift:d2:v1.0"]
+        ).fetchJSON(as: RedditThing<RedditListing<RedditLink>>.self)
     }
 }

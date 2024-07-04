@@ -19,20 +19,19 @@ public class RedditCommand<P>: StringCommand where P: RedditPresenter {
         self.presenter = presenter
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Enter a subreddit to get started!")
+            await output.append(errorText: "Enter a subreddit to get started!")
             return
         }
 
-        RedditQuery(subreddit: input, maxResults: 5).perform().listen {
-            do {
-                let links = try $0.get().data.children?.map(\.data) ?? []
-                let embed = try self.presenter.present(links: links)
-                output.append(embed)
-            } catch {
-                output.append(errorText: "Reddit search failed")
-            }
+        do {
+            let thing = try await RedditQuery(subreddit: input, maxResults: 5).perform()
+            let links = thing.data.children?.map(\.data) ?? []
+            let embed = try self.presenter.present(links: links)
+            await output.append(embed)
+        } catch {
+            await output.append(errorText: "Reddit search failed")
         }
     }
 
