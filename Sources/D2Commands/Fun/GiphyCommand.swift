@@ -22,7 +22,7 @@ public class GiphyCommand: StringCommand {
         }
 
         do {
-            let results = try await GiphySearchQuery(term: input).perform().get()
+            let results = try await GiphySearchQuery(term: input).perform()
             guard let gif = results.data.first else { throw GiphyError.noGIFsFound }
 
             if downloadGifs {
