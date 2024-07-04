@@ -10,22 +10,20 @@ public class BeerCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        PunkAPIQuery().perform().listen {
-            do {
-                guard let beer = try $0.get().randomElement() else {
-                    output.append(errorText: "No results found")
-                    return
-                }
-                output.append(Embed(
-                    title: ":beer: \(beer.name)",
-                    description: beer.description,
-                    thumbnail: beer.imageUrl.map(Embed.Thumbnail.init(url:)),
-                    footer: beer.tagline.map(Embed.Footer.init(text:))
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch beer")
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            guard let beer = try await PunkAPIQuery().perform().randomElement() else {
+                await output.append(errorText: "No results found")
+                return
             }
+            await output.append(Embed(
+                title: ":beer: \(beer.name)",
+                description: beer.description,
+                thumbnail: beer.imageUrl.map(Embed.Thumbnail.init(url:)),
+                footer: beer.tagline.map(Embed.Footer.init(text:))
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch beer")
         }
     }
 }

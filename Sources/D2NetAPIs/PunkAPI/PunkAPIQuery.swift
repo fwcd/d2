@@ -3,8 +3,8 @@ import Utils
 public struct PunkAPIQuery {
     public init() {}
 
-    public func perform() -> Promise<[PunkAPIBeer], any Error> {
-        Promise.catching { try HTTPRequest(host: "api.punkapi.com", path: "/v2/beers") }
-            .then { $0.fetchJSONAsync(as: [PunkAPIBeer].self) }
+    public func perform() async throws -> [PunkAPIBeer] {
+        let request = try HTTPRequest(host: "api.punkapi.com", path: "/v2/beers")
+        return try await request.fetchJSON(as: [PunkAPIBeer].self)
     }
 }
