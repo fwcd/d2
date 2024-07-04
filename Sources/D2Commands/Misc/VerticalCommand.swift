@@ -11,7 +11,7 @@ public class VerticalCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(input.reduce("") { "\($0)\n\($1)" })
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(input.reduce("") { "\($0)\n\($1)" })
     }
 }
