@@ -13,15 +13,15 @@ public class TransposeChordsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard
             let parsedArgs = try? argsPattern.firstMatch(in: input),
             let halfSteps = Int(parsedArgs.halfSteps),
             let chords = try? parsedArgs.notes.split(separator: " ").map({ try CommonChord(of: String($0)) }) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
-        output.append(chords.compactMap { $0.advanced(by: halfSteps) }.map(String.init(describing:)).joined(separator: " "))
+        await output.append(chords.compactMap { $0.advanced(by: halfSteps) }.map(String.init(describing:)).joined(separator: " "))
     }
 }
