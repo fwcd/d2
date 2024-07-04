@@ -56,7 +56,7 @@ public class CountdownCommand: StringCommand {
 
                 let goal = FixedCountdownGoal(date: date)
                 self.userGoals[name] = goal
-                self.show(name, as: goal, to: output)
+                await self.show(name, as: goal, to: output)
             },
             "remove": { [unowned self] input, output in
                 if let goal = self.userGoals.removeValue(forKey: input) {
@@ -71,7 +71,7 @@ public class CountdownCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let date = parseDate(from: input) {
-            show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
+            await show("Anonymous Event", as: FixedCountdownGoal(date: date), to: output)
         } else if let parsedArgs = try? subcommandPattern.firstMatch(in: input) {
             let subcommandName = String(parsedArgs.name)
             let subcommandArgs = String(parsedArgs.args)
@@ -84,7 +84,7 @@ public class CountdownCommand: StringCommand {
             await subcommand(subcommandArgs, output)
         } else {
             removeCompletedGoals() // Clean up
-            showRunningGoals(to: output)
+            await showRunningGoals(to: output)
         }
     }
 
@@ -92,16 +92,16 @@ public class CountdownCommand: StringCommand {
         return inputDateFormatters.compactMap { $0.date(from: input) }.first
     }
 
-    private func show(_ name: String, as goal: CountdownGoal, to output: any CommandOutput) {
-        output.append(.embed(Embed(
+    private func show(_ name: String, as goal: CountdownGoal, to output: any CommandOutput) async {
+        await output.append(.embed(Embed(
             title: ":hourglass: \(name) Countdown",
             description: "The next \(name) will take place in **\(describeRemainingTimeUntil(goal: goal))**",
             footer: Embed.Footer(text: outputDateFormatter.string(from: goal.date))
         )))
     }
 
-    private func showRunningGoals(to output: any CommandOutput) {
-        output.append(.embed(Embed(
+    private func showRunningGoals(to output: any CommandOutput) async {
+        await output.append(.embed(Embed(
             title: ":hourglass: Running Countdowns",
             fields: goals.map { Embed.Field(name: $0.key, value: "will take place in **\(describeRemainingTimeUntil(goal: $0.value))** (on \(outputDateFormatter.string(from: $0.value.date)))") }
         )))
