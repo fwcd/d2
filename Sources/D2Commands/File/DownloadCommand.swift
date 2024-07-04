@@ -14,18 +14,18 @@ public class DownloadCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let filePath = input.asText else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
         do {
             let url = URL(fileURLWithPath: filePath)
             let data = try Data(contentsOf: url)
-            output.append(.files([Message.FileUpload(data: data, filename: url.lastPathComponent, mimeType: "application/octet-stream")]))
+            await output.append(.files([Message.FileUpload(data: data, filename: url.lastPathComponent, mimeType: "application/octet-stream")]))
         } catch {
-            output.append(error, errorText: "Could not download file")
+            await output.append(error, errorText: "Could not download file")
         }
     }
 }
