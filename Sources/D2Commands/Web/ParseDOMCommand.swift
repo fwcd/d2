@@ -9,11 +9,11 @@ public class ParseDOMCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
-            output.append(.domNode(try SwiftSoup.parse(input)))
+            await output.append(.domNode(try SwiftSoup.parse(input)))
         } catch {
-            output.append(error, errorText: "Could not parse DOM")
+            await output.append(error, errorText: "Could not parse DOM")
         }
     }
 }
