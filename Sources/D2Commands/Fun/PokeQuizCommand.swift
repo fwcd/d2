@@ -40,7 +40,7 @@ public class PokeQuizCommand: StringCommand {
         }
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id,
             let quiz = quizzes[channelId],
             quiz.player == context.author?.id else { return }
@@ -49,11 +49,11 @@ public class PokeQuizCommand: StringCommand {
         let distance = content.levenshteinDistance(to: name, caseSensitive: false)
 
         if distance == 0 {
-            output.append(":partying_face: Hooray, you guessed correctly!")
+            await output.append(":partying_face: Hooray, you guessed correctly!")
         } else if distance < 2 {
-            output.append(":ok_hand: You were close, the correct answer was `\(name)`.")
+            await output.append(":ok_hand: You were close, the correct answer was `\(name)`.")
         } else {
-            output.append(":shrug: Your guess was \(distance) \("character".pluralized(with: distance)) away from the correct name `\(name)`.")
+            await output.append(":shrug: Your guess was \(distance) \("character".pluralized(with: distance)) away from the correct name `\(name)`.")
         }
 
         quizzes[channelId] = nil
