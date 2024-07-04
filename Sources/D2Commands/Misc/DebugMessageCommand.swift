@@ -7,9 +7,9 @@ public class DebugMessageCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         var message = context.message
         message.guild = nil
-        output.append(.code("\(message)", language: "swift"))
+        await output.append(.code("\(message)", language: "swift"))
     }
 }
