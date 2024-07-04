@@ -27,10 +27,10 @@ public class PianoScaleCommand: StringCommand {
         self.defaultScale = defaultScale
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-                output.append(errorText: info.helpText!)
+                await output.append(errorText: info.helpText!)
                 return
             }
 
@@ -38,19 +38,19 @@ public class PianoScaleCommand: StringCommand {
             let rawKey = String(parsedArgs.key)
 
             guard let scale = scales[rawScale] else {
-                output.append(errorText: "Unknown scale `\(rawScale)`. Try one of these: \(scales.keys.map { "`\($0)`" }.joined(separator: ", "))")
+                await output.append(errorText: "Unknown scale `\(rawScale)`. Try one of these: \(scales.keys.map { "`\($0)`" }.joined(separator: ", "))")
                 return
             }
             guard let key = try? Note(parsing: rawKey) else {
-                output.append(errorText: "Could not parse key `\(rawKey)` as a note. Try something like e.g. `C3`.")
+                await output.append(errorText: "Could not parse key `\(rawKey)` as a note. Try something like e.g. `C3`.")
                 return
             }
 
             let c = try Note(parsing: "C3")
             let image = try PianoRenderer(lowerBound: c, upperBound: c + .octave + .octave).render(scale: scale(key))
-            try output.append(image)
+            try await output.append(image)
         } catch {
-            output.append(error, errorText: "Could not render scale.")
+            await output.append(error, errorText: "Could not render scale.")
         }
     }
 }
