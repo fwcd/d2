@@ -13,10 +13,8 @@ public struct FortuneCookieQuery {
         self.limit = limit
     }
 
-    public func perform() -> Promise<[FortuneCookie], any Error> {
-        Promise.catchingThen {
-            let request = try HTTPRequest(host: "fortunecookieapi.herokuapp.com", path: "/v1/cookie")
-            return request.fetchJSONAsync(as: [FortuneCookie].self)
-        }
+    public func perform() async throws -> [FortuneCookie] {
+        let request = try HTTPRequest(host: "fortunecookieapi.herokuapp.com", path: "/v1/cookie")
+        return try await request.fetchJSON(as: [FortuneCookie].self)
     }
 }
