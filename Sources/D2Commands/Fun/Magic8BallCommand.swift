@@ -54,7 +54,7 @@ public class Magic8BallCommand: StringCommand {
         self.answers = answers
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         var hasher = Hasher()
         hasher.combine(normalize(input: input))
         let decisions = Decision.allCases.sorted()
@@ -63,7 +63,7 @@ public class Magic8BallCommand: StringCommand {
         let answer = Double.random(in: 0..<1) < 0.95
             ? answers[decision]?.randomElement() ?? "I am not sure about that!"
             : "Concentrate and ask again!"
-        output.append(Embed(
+        await output.append(Embed(
             description: ":8ball: **\(answer)**"
         ))
     }
