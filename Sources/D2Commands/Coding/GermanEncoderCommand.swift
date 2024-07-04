@@ -10,15 +10,15 @@ public class GermanEncoderCommand: StringCommand {
         self.maxLength = maxLength
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard input.count <= maxLength else {
-            output.append(errorText: "Please input a text of length <= \(maxLength)!")
+            await output.append(errorText: "Please input a text of length <= \(maxLength)!")
             return
         }
         guard let data = input.data(using: .utf8) else {
-            output.append(errorText: "Could not encode input as UTF-8")
+            await output.append(errorText: "Could not encode input as UTF-8")
             return
         }
-        output.append(germanEncode(data))
+        await output.append(germanEncode(data))
     }
 }
