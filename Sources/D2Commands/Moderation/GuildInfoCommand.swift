@@ -18,13 +18,13 @@ public class GuildInfoCommand: VoidCommand {
         self.messageDB = messageDB
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
+            await output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
             return
         }
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":chart_with_upwards_trend: Guild Info for `\(guild.name)`",
             thumbnail: context.sink?.name == "Discord"
                 ? guild.icon.flatMap { URL(string: "https://cdn.discordapp.com/icons/\(guild.id)/\($0).png").map(Embed.Thumbnail.init(url:)) }
