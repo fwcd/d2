@@ -11,15 +11,15 @@ public class ColumnCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let table = input.asTable else {
-            output.append(errorText: "Please input a table!")
+            await output.append(errorText: "Please input a table!")
             return
         }
         guard let raw = input.asText, let n = Int(raw) else {
-            output.append(errorText: "Please input a number!")
+            await output.append(errorText: "Please input a number!")
             return
         }
-        output.append(.table(table.compactMap { $0[safely: n].map { [$0] } ?? [] }))
+        await output.append(.table(table.compactMap { $0[safely: n].map { [$0] } ?? [] }))
     }
 }
