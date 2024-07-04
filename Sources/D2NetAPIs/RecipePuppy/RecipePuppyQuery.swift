@@ -16,7 +16,7 @@ public struct RecipePuppyQuery {
     }
 
     public func perform() async throws -> RecipePuppyResponse {
-        try HTTPRequest(
+        let request = try HTTPRequest(
             scheme: "http",
             host: "www.recipepuppy.com",
             path: "/api",
