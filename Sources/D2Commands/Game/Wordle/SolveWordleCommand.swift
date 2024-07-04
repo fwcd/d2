@@ -14,13 +14,13 @@ public class SolveWordleCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "Not on a channel")
+            await output.append(errorText: "Not on a channel")
             return
         }
 
-        output.append("""
+        await output.append("""
             Submit your guesses as messages with the syntax: [word] [clues]
 
             where clues is a string of ```
