@@ -10,7 +10,7 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
         shortDescription: "Visualizes a statistic using the message database",
         requiredPermissionLevel: .vip
     )
-    private let subcommands: [String: (CommandOutput, GuildID) -> Void]
+    private let subcommands: [String: (CommandOutput, GuildID) async -> Void]
 
     public init(messageDB: MessageDatabase) {
         subcommands = [
@@ -53,16 +53,16 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
                         graph.append(edge)
                     }
 
-                    graph.render(using: .fdp, to: .png) {
-                        do {
-                            let data = try $0.get()
-                            try output.append(CairoImage(pngData: data))
-                        } catch {
-                            output.append(error, errorText: "Could not render people-in-channels graph.")
+                    do {
+                        let data = try await withCheckedThrowingContinuation { continuation in
+                            graph.render(using: .fdp, to: .png, completion: continuation.resume(with:))
                         }
+                        try await output.append(CairoImage(pngData: data))
+                    } catch {
+                        await output.append(error, errorText: "Could not render people-in-channels graph.")
                     }
                 } catch {
-                    output.append(error, errorText: "Could not query people-in-channels statistic.")
+                    await output.append(error, errorText: "Could not query people-in-channels statistic.")
                 }
             }
         ]
@@ -73,22 +73,22 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guildId = context.guild?.id else {
-            output.append(errorText: "Not on a guild!")
+            await output.append(errorText: "Not on a guild!")
             return
         }
 
         guard !input.isEmpty else {
-            output.append(errorText: "Please specify a subcommand: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            await output.append(errorText: "Please specify a subcommand: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
         guard let subcommand = subcommands[input] else {
-            output.append(errorText: "Unrecognized subcommand `\(input)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            await output.append(errorText: "Unrecognized subcommand `\(input)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
-        subcommand(output, guildId)
+        await subcommand(output, guildId)
     }
 }
