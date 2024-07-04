@@ -12,7 +12,7 @@ public class SysInfoCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let cpuUsage = SysInfo.CPU
         let memoryUsage = SysInfo.Memory
 
@@ -20,7 +20,7 @@ public class SysInfoCommand: StringCommand {
         let totalMemory = memoryUsage["MemTotal"] // in MB
         let usedMemory = memoryUsage["MemAvailable"].flatMap { a in totalMemory.map { $0 - a } } // in MB
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":clock1: System Information",
             fields: [
                 Embed.Field(name: "CPU Usage", value: cpuUsage
