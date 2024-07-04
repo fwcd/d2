@@ -18,7 +18,7 @@ public enum D2ScriptValue: Hashable, D2ScriptExpression, CustomStringConvertible
         }
     }
 
-    public func accept<V: D2ScriptASTVisitor>(_ visitor: V) -> V.VisitResult {
-        return visitor.visit(value: self)
+    public func accept<V: D2ScriptASTVisitor>(_ visitor: V) async -> V.VisitResult {
+        return await visitor.visit(value: self)
     }
 }

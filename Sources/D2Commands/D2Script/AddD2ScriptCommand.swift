@@ -23,7 +23,7 @@ public class AddD2ScriptCommand: StringCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let code = try? codePattern.firstMatch(in: input)?.code {
             do {
-                let command = try D2ScriptCommand(script: try parser.parse(String(code)))
+                let command = try await D2ScriptCommand(script: try parser.parse(String(code)))
                 let name = command.name
                 guard !name.contains(" ") else {
                     await output.append(errorText: "Command name '\(name)' may not contain spaces")

@@ -2,7 +2,6 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-import Dispatch
 import Logging
 import D2MessageIO
 import Utils
@@ -16,13 +15,12 @@ public class D2ScriptCommand: StringCommand {
     public let name: String
     private let script: D2Script
     private var running = false
-    private var semaphore = DispatchSemaphore(value: 0)
 
-    public init(script: D2Script) throws {
+    public init(script: D2Script) async throws {
         self.script = script
 
         let executor = D2ScriptExecutor()
-        executor.run(script)
+        await executor.run(script)
 
         let commandNames = executor.topLevelStorage.commandNames
         guard let name = commandNames.first else { throw D2ScriptCommandError.noCommandDefined("Script defines no 'command { ... }' blocks") }
@@ -37,20 +35,20 @@ public class D2ScriptCommand: StringCommand {
         )
     }
 
-    private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: any CommandOutput) {
+    private func addBuiltInFunctions(storage: D2ScriptStorage, input: String, output: any CommandOutput) async {
         // Output to Discord
         storage[function: "output"] = {
             guard let value = $0.first else {
-                output.append(errorText: "output(...) received no arguments")
+                await output.append(errorText: "output(...) received no arguments")
                 return nil
             }
             switch value {
                 case let .string(str)?:
-                    output.append(str)
+                    await output.append(str)
                 case let .number(num)?:
-                    output.append(String(num))
+                    await output.append(String(num))
                 default:
-                    output.append(String(describing: value))
+                    await output.append(String(describing: value))
             }
             return nil
         }
@@ -64,61 +62,48 @@ public class D2ScriptCommand: StringCommand {
         // Perform a synchronous GET request
         storage[function: "httpGet"] = {
             guard case let .string(rawUrl)?? = $0.first else {
-                output.append(errorText: "httpGet(...) received no arguments")
+                await output.append(errorText: "httpGet(...) received no arguments")
                 return nil
             }
             guard let url = URL(string: rawUrl) else {
-                output.append(errorText: "Invalid URL: \(rawUrl)")
+                await output.append(errorText: "Invalid URL: \(rawUrl)")
                 return nil
             }
 
-            var result: String? = nil
-
-            URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard error == nil else {
-                    output.append(error!, errorText: "An error occurred while performing the HTTP request")
-                    self.semaphore.signal()
-                    return
-                }
-                guard let str = data.flatMap({ String(data: $0, encoding: .utf8) })?.truncated(to: 1000) else {
-                    output.append(errorText: "Could not fetch data as UTF-8 string")
-                    self.semaphore.signal()
-                    return
-                }
-                result = str
-                self.semaphore.signal()
-            }.resume()
-
-            self.semaphore.wait()
-            return result.map { .string($0) }
+            do {
+                let request = HTTPRequest(url: url)
+                return .string(try await request.fetchUTF8().truncated(to: 1000))
+            } catch {
+                await output.append(error, errorText: "Could not perform HTTP request")
+                return nil
+            }
         }
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !running else {
-            output.append(errorText: "This command is already running, wait for it to finish")
+            await output.append(errorText: "This command is already running, wait for it to finish")
             return
         }
 
         running = true
 
         let executor = D2ScriptExecutor()
-        executor.run(script)
-        addBuiltInFunctions(storage: executor.topLevelStorage, input: input, output: output)
+        await executor.run(script)
+        await addBuiltInFunctions(storage: executor.topLevelStorage, input: input, output: output)
 
-        let queue = DispatchQueue(label: "D2Script command \(name)")
-        let task = DispatchWorkItem {
-            executor.call(command: self.name)
+        let task = Task {
+            await executor.call(command: self.name)
         }
 
-        let timeout = DispatchTime.now() + .seconds(15)
-        queue.async(execute: task)
-
-        DispatchQueue.global(qos: .utility).async {
-            _ = task.wait(timeout: timeout)
-            self.semaphore.signal()
-            self.semaphore = DispatchSemaphore(value: 0)
-            self.running = false
+        do {
+            try await Task.sleep(for: .seconds(15))
+        } catch {
+            log.warning("Could not sleep while executing D2Script: \(error)")
         }
+
+        task.cancel()
+        _ = await task.value
+        running = false
     }
 }

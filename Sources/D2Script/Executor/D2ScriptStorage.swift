@@ -1,5 +1,5 @@
 public class D2ScriptStorage {
-    public typealias D2ScriptFunction = ([D2ScriptValue?]) -> D2ScriptValue?
+    public typealias D2ScriptFunction = ([D2ScriptValue?]) async -> D2ScriptValue?
 
     public let name: String
     private let parent: D2ScriptStorage?

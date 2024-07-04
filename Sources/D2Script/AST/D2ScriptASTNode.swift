@@ -1,7 +1,7 @@
 public protocol D2ScriptASTNode {
     var label: String { get }
 
-    func accept<V: D2ScriptASTVisitor>(_ visitor: V) -> V.VisitResult
+    func accept<V: D2ScriptASTVisitor>(_ visitor: V) async -> V.VisitResult
 
     func isEqual(to node: any D2ScriptASTNode) -> Bool
 }

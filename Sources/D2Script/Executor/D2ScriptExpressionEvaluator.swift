@@ -17,8 +17,11 @@ struct D2ScriptExpressionEvaluator: D2ScriptASTVisitor {
         return storage[identifierExpression.name]
     }
 
-    func visit(functionCall: D2ScriptFunctionCall) -> D2ScriptValue? {
-        let evaluatedArgs = functionCall.arguments.map { $0.accept(self) }
-        return storage[function: functionCall.functionName]?(evaluatedArgs)
+    func visit(functionCall: D2ScriptFunctionCall) async -> D2ScriptValue? {
+        var evaluatedArgs: [D2ScriptValue?] = []
+        for arg in functionCall.arguments {
+            evaluatedArgs.append(await arg.accept(self))
+        }
+        return await storage[function: functionCall.functionName]?(evaluatedArgs)
     }
 }
