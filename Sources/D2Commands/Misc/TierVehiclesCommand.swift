@@ -23,7 +23,7 @@ public class TierVehiclesCommand: Command {
         let radius = 300 // meters
 
         do {
-            let vehicles = try await TierVehiclesQuery(coords: coords, radius: radius).perform().get().data
+            let vehicles = try await TierVehiclesQuery(coords: coords, radius: radius).perform().data
             let map = try MapQuestStaticMap(
                 pins: vehicles
                     .enumerated()

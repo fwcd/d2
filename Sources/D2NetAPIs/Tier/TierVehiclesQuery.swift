@@ -9,19 +9,15 @@ public struct TierVehiclesQuery {
         self.radius = radius
     }
 
-    public func perform() -> Promise<TierVehicleResults, any Error> {
-        Promise
-            .catching { () -> String in
-                guard let key = storedNetApiKeys?.tier else { throw NetApiError.missingApiKey("tier") }
-                return key
-            }
-            .mapCatching { try HTTPRequest(
-                host: "platform.tier-services.io",
-                path: "/v1/vehicle",
-                query: ["lat": String(coords.latitude), "lng": String(coords.longitude), "radius": String(radius)],
-                headers: ["X-Api-Key": $0]
-            ) }
-            .then { $0.fetchJSONAsync(as: TierVehicleResults.self) }
+    public func perform() async throws -> TierVehicleResults {
+        guard let key = storedNetApiKeys?.tier else { throw NetApiError.missingApiKey("tier") }
+        let request = try HTTPRequest(
+            host: "platform.tier-services.io",
+            path: "/v1/vehicle",
+            query: ["lat": String(coords.latitude), "lng": String(coords.longitude), "radius": String(radius)],
+            headers: ["X-Api-Key": key]
+        )
+        return try await request.fetchJSON(as: TierVehicleResults.self)
 
     }
 }
