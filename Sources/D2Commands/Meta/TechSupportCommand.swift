@@ -13,11 +13,11 @@ public class TechSupportCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "No guild available")
+            await output.append(errorText: "No guild available")
             return
         }
-        output.append(.mentions(Array(permissionManager.admins(in: guild))))
+        await output.append(.mentions(Array(permissionManager.admins(in: guild))))
     }
 }
