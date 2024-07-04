@@ -7,8 +7,8 @@ public struct UniversitiesQuery {
         self.name = name
     }
 
-    public func perform() -> Promise<[University], any Error> {
-        Promise.catching { try HTTPRequest(scheme: "http", host: "universities.hipolabs.com", path: "/search", query: ["name": name]) }
-            .then { $0.fetchJSONAsync(as: [University].self) }
+    public func perform() async throws -> [University] {
+        let request = try HTTPRequest(scheme: "http", host: "universities.hipolabs.com", path: "/search", query: ["name": name])
+        return try await request.fetchJSON(as: [University].self)
     }
 }
