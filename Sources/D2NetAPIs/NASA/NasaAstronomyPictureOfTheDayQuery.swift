@@ -14,17 +14,15 @@ public struct NasaAstronomyPictureOfTheDayQuery {
         self.date = date
     }
 
-    public func perform() -> Promise<NasaAstronomyPictureOfTheDay, any Error> {
-        Promise.catching {
-            try HTTPRequest(
-                host: "api.nasa.gov",
-                path: "/planetary/apod",
-                query: [
-                    "date": date.map(dateFormatter.string(from:)),
-                    "api_key": storedNetApiKeys?.nasa ?? "DEMO_KEY",
-                ].compactMapValues { $0 }
-            )
-        }
-        .then { $0.fetchJSONAsync(as: NasaAstronomyPictureOfTheDay.self) }
+    public func perform() async throws -> NasaAstronomyPictureOfTheDay {
+        let request = try HTTPRequest(
+            host: "api.nasa.gov",
+            path: "/planetary/apod",
+            query: [
+                "date": date.map(dateFormatter.string(from:)),
+                "api_key": storedNetApiKeys?.nasa ?? "DEMO_KEY",
+            ].compactMapValues { $0 }
+        )
+        return try await request.fetchJSON(as: NasaAstronomyPictureOfTheDay.self)
     }
 }
