@@ -15,7 +15,7 @@ public class ShowPermissionsCommand: Command {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
-        output.append(.code("\(permissionManager)", language: nil))
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
+        await output.append(.code("\(permissionManager)", language: nil))
     }
 }
