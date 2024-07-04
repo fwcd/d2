@@ -2,7 +2,6 @@ import D2MessageIO
 import Logging
 import D2Permissions
 import Utils
-import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.BFCommand")
 
@@ -21,18 +20,16 @@ public class BFInterpretCommand: StringCommand {
         self.maxExecutionSeconds = maxExecutionSeconds
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !running else {
-            output.append(errorText: "Whoa, not so fast. Wait for the program to finish!")
+            await output.append(errorText: "Whoa, not so fast. Wait for the program to finish!")
             return
         }
 
         running = true
 
-        let queue = DispatchQueue(label: "BF runner")
-        var interpreter = BFInterpreter()
-
-        let task = DispatchWorkItem {
+        let task = Task {
+            var interpreter = BFInterpreter()
             var response: String
 
             if let program = (try? bfCodePattern.firstMatch(in: input)).map({ String($0.code) }) {
@@ -60,20 +57,22 @@ public class BFInterpretCommand: StringCommand {
                 response = "Syntax error"
             }
 
-            if interpreter.cancelled {
+            if Task.isCancelled {
                 log.debug("Cancelled BF task finished running")
-                output.append(errorText: "Your program took longer than \(self.maxExecutionSeconds) seconds. The output was:\n\(response)")
+                await output.append(errorText: "Your program took longer than \(self.maxExecutionSeconds) seconds. The output was:\n\(response)")
             } else {
                 log.debug("BF task finished running")
-                output.append(response)
+                await output.append(response)
             }
-        }
-        queue.async(execute: task)
 
-        let timeout = DispatchTime.now() + .seconds(maxExecutionSeconds)
-        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: timeout) {
-            interpreter.cancel()
-            self.running = false
+            running = false
+        }
+
+        do {
+            try await Task.sleep(for: .seconds(maxExecutionSeconds))
+            task.cancel()
+        } catch {
+            await output.append(error, errorText: "Error while sleeping")
         }
     }
 }

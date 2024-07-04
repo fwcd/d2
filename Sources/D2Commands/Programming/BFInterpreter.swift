@@ -4,14 +4,13 @@ fileprivate let maxStringLength = 700
 struct BFInterpreter {
     private var ptr: Int32 = 0
     private var memory = [Int32]()
-    private(set) var cancelled = false
 
     /// Runs a BF program.
     mutating func interpret(program: String) throws -> BFOutput {
         var i: String.Index = program.startIndex // The character index in the program
         var output: String = ""
 
-        while i >= program.startIndex && i < program.endIndex && !cancelled {
+        while i >= program.startIndex && i < program.endIndex && !Task.isCancelled {
             var c = program[i] // The character at the current index
             switch c {
                 case ">": forward()
@@ -30,7 +29,7 @@ struct BFInterpreter {
                     if try current() == 0 {
                         // Seek to the closing parenthesis
                         var stack = 0
-                        while stack >= 0 && !cancelled {
+                        while stack >= 0 && !Task.isCancelled {
                             i = program.index(after: i)
 
                             if i >= program.endIndex {
@@ -51,7 +50,7 @@ struct BFInterpreter {
                     if try current() != 0 {
                         // Seek to the last index BEFORE the closing parenthesis
                         var stack = 0
-                        while stack >= 0 && !cancelled {
+                        while stack >= 0 && !Task.isCancelled {
                             i = program.index(before: i)
 
                             if i < program.startIndex {
@@ -76,11 +75,6 @@ struct BFInterpreter {
         }
 
         return BFOutput(content: output, tooLong: false)
-    }
-
-    /// Requests cancellation.
-    mutating func cancel() {
-        cancelled = true
     }
 
     /// Increments the pointer.
