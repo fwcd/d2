@@ -48,15 +48,15 @@ public class LightningCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let channelId = context.channel?.id, let timestamp = context.timestamp else { return }
 
-        output.append(":zap: Type `\(thunderKeywords[0])` immediately after hearing thunder! Type `\(stopKeyword)` to stop.")
+        await output.append(":zap: Type `\(thunderKeywords[0])` immediately after hearing thunder! Type `\(stopKeyword)` to stop.")
         context.subscribeToChannel()
         lightnings[channelId] = Lightning(timestamp: timestamp)
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         if thunderKeywords.contains(content) {
             addThunder(from: context)
         } else if stopKeyword == content {
@@ -64,7 +64,7 @@ public class LightningCommand: StringCommand {
 
             if let channelId = context.channel?.id, let lightning = lightnings.removeValue(forKey: channelId) {
                 let observations = lightning.observations
-                output.append(Embed(
+                await output.append(Embed(
                     title: ":zap: Lightning Summary",
                     description: observations.map {
                         String(format: "`%@` was **%.2fm** away from the strike", $0.user.username, $0.distanceMeters)
