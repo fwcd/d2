@@ -53,17 +53,17 @@ public class CookieCommand: Command {
         self.templates = templates
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let author = context.author else {
-            output.append(errorText: "No author available!")
+            await output.append(errorText: "No author available!")
             return
         }
         guard let mention = input.asMentions?.first else {
-            output.append(errorText: "Mention someone to get started!")
+            await output.append(errorText: "Mention someone to get started!")
             return
         }
         guard let template = templates.randomElement(), let cookie = cookies.randomElement() else {
-            output.append(errorText: "No template/cookie available!")
+            await output.append(errorText: "No template/cookie available!")
             return
         }
 
@@ -71,6 +71,6 @@ public class CookieCommand: Command {
         inventory.append(item: Inventory.Item(fromCookie: cookie), to: inventoryCategory)
         inventoryManager[author.id] = inventory
 
-        output.append(":\(cookie.emoji): \(template.applyAsTemplate(to: [mention.username, cookie.name]))")
+        await output.append(":\(cookie.emoji): \(template.applyAsTemplate(to: [mention.username, cookie.name]))")
     }
 }
