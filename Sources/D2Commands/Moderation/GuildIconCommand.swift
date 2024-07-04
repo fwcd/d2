@@ -12,28 +12,25 @@ public class GuildIconCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Not on a guild!")
+            await output.append(errorText: "Not on a guild!")
             return
         }
         guard let icon = guild.icon else {
-            output.append(errorText: "Guild has no icon")
+            await output.append(errorText: "Guild has no icon")
             return
         }
 
         // TODO: GIF icons
         // TODO: Move guild icon URL logic into message clients, similar to how
         //       this is handled with user avatars.
-        Promise.catching { try HTTPRequest(host: "cdn.discordapp.com", path: "/icons/\(guild.id)/\(icon).png") }
-            .then { $0.runAsync() }
-            .mapCatching { try CairoImage(pngData: $0) }
-            .listen {
-                do {
-                    try output.append($0.get())
-                } catch {
-                    output.append(error, errorText: "Could not fetch guild icon.")
-                }
-            }
+        do {
+            let request = try HTTPRequest(host: "cdn.discordapp.com", path: "/icons/\(guild.id)/\(icon).png")
+            let image = try await request.fetchPNG()
+            try await output.append(image)
+        } catch {
+            await output.append(error, errorText: "Could not fetch guild icon.")
+        }
     }
 }
