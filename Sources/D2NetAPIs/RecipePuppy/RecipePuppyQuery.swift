@@ -15,16 +15,14 @@ public struct RecipePuppyQuery {
         self.page = page
     }
 
-    public func perform() -> Promise<RecipePuppyResponse, any Error> {
-        Promise.catching {
-            try HTTPRequest(
-                scheme: "http",
-                host: "www.recipepuppy.com",
-                path: "/api",
-                query: ["q": term, "p": String(page)]
-                    .merging(ingredients.map { ["i": $0.joined(separator: ",")] } ?? [:], uniquingKeysWith: { k, _ in k })
-            )
-        }
-            .then { $0.fetchJSONAsync(as: RecipePuppyResponse.self) }
+    public func perform() async throws -> RecipePuppyResponse {
+        try HTTPRequest(
+            scheme: "http",
+            host: "www.recipepuppy.com",
+            path: "/api",
+            query: ["q": term, "p": String(page)]
+                .merging(ingredients.map { ["i": $0.joined(separator: ",")] } ?? [:], uniquingKeysWith: { k, _ in k })
+        )
+        return try await request.fetchJSON(as: RecipePuppyResponse.self)
     }
 }
