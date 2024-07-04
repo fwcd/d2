@@ -1,4 +1,5 @@
 import Logging
+import Utils
 import D2MessageIO
 import D2Permissions
 import Foundation
@@ -21,47 +22,34 @@ public class SourceFileCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let command = context.registry[input] else {
-            output.append(errorText: "Unknown command `\(input)`")
+            await output.append(errorText: "Unknown command `\(input)`")
             return
         }
         guard let relativeFilePath = command.info.sourceFile.components(separatedBy: "Sources/").last else {
-            output.append(errorText: "Could not locate source file for command `\(input)`")
+            await output.append(errorText: "Could not locate source file for command `\(input)`")
             return
         }
 
         let relativeRepoPath = "Sources/\(relativeFilePath)"
         guard let url = URL(string: "\(repositoryUrl)/\(relativeRepoPath)"),
             let rawURL = URL(string: "\(rawRepositoryUrl)/\(relativeRepoPath)") else {
-            output.append(errorText: "Could not create URLs for command `\(input)`")
+            await output.append(errorText: "Could not create URLs for command `\(input)`")
             return
         }
 
-        // TODO: Use HTTPRequest from Utils
+        do {
+            let request = HTTPRequest(url: rawURL)
+            let code = try await request.fetchUTF8().prefix(512)
 
-        var request = URLRequest(url: rawURL)
-        request.httpMethod = "GET"
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard error == nil else {
-                log.warning("\(error!)")
-                output.append(errorText: "Error while querying source file URL")
-                return
-            }
-            guard let data = data else {
-                output.append(errorText: "Missing data after querying source file URL")
-                return
-            }
-            guard let code = String(data: data, encoding: .utf8)?.prefix(512) else {
-                output.append(errorText: "Could not decode code as UTF-8")
-                return
-            }
-
-            output.append(Embed(
+            await output.append(Embed(
                 title: relativeFilePath.split(separator: "/").last.map { String($0) } ?? "?",
                 description: "```swift\n\(code)\n```",
                 url: url
             ))
-        }.resume()
+        } catch {
+            await output.append(error, errorText: "Could not query source file")
+        }
     }
 }
