@@ -12,19 +12,17 @@ public class ChuckNorrisJokeCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let args = input.split(separator: " ")
-        IcndbJokeQuery(firstName: args[safely: 0].map { String($0) }, lastName: args[safely: 1].map { String($0) }).perform().listen {
-            switch $0 {
-                case .success(let result):
-                    guard let value = result.value else {
-                        output.append(errorText: "Got invalid response from API")
-                        return
-                    }
-                    output.append(value.joke)
-                case .failure(let error):
-                    output.append(error, errorText: "Could not fetch joke")
+        do {
+            let result = try await IcndbJokeQuery(firstName: args[safely: 0].map { String($0) }, lastName: args[safely: 1].map { String($0) }).perform()
+            guard let value = result.value else {
+                await output.append(errorText: "Got invalid response from API")
+                return
             }
+            await output.append(value.joke)
+        } catch {
+            await output.append(error, errorText: "Could not fetch joke")
         }
     }
 }

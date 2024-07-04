@@ -11,10 +11,8 @@ public struct IcndbJokeQuery {
         params["lastName"] = lastName
     }
 
-    public func perform() -> Promise<IcndbResult, any Error> {
-        Promise.catchingThen {
-            let request = try HTTPRequest(host: "api.icndb.com", path: "/jokes/random", query: params)
-            return request.fetchJSONAsync(as: IcndbResult.self)
-        }
+    public func perform() async throws -> IcndbResult {
+        let request = try HTTPRequest(host: "api.icndb.com", path: "/jokes/random", query: params)
+        return try await request.fetchJSON(as: IcndbResult.self)
     }
 }
