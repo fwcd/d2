@@ -8,8 +8,8 @@ public class CoinFlipCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let result = Bool.random()
-        output.append(result ? "Heads!" : "Tails!")
+        return await output.append(result ? "Heads!" : "Tails!")
     }
 }
