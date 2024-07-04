@@ -18,23 +18,23 @@ public class SpammerRoleCommand: StringCommand {
         self._spamConfiguration = _spamConfiguration
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else { return }
         let mentions = context.message.mentionRoles
 
         guard mentions.count <= 1 else {
-            output.append(errorText: "Too many roles, please only mention one!")
+            await output.append(errorText: "Too many roles, please only mention one!")
             return
         }
 
         if let role = mentions.first {
             spamConfiguration.spammerRoles[guild.id] = role
-            output.append(":white_check_mark: Successfully updated the spammer role")
+            await output.append(":white_check_mark: Successfully updated the spammer role")
         } else if input == resetSubcommand {
             spamConfiguration.spammerRoles[guild.id] = nil
-            output.append(":white_check_mark: Successfully reset the spammer role")
+            await output.append(":white_check_mark: Successfully reset the spammer role")
         } else {
-            output.append("The current spammer role is `\(spamConfiguration.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
+            await output.append("The current spammer role is `\(spamConfiguration.spammerRoles[guild.id].flatMap { guild.roles[$0]?.name } ?? "nil")`")
         }
     }
 }
