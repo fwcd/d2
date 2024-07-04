@@ -17,17 +17,17 @@ public class LoveCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let (first, second) = extractMentions(input: input, context: context) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
         guard let firstId = Int(first.id.value), let secondId = Int(second.id.value) else {
-            output.append(errorText: "Numerical IDs needed!")
+            await output.append(errorText: "Numerical IDs needed!")
             return
         }
         guard first.id != second.id else {
-            output.append(errorText: "Please specify two different persons!")
+            await output.append(errorText: "Please specify two different persons!")
             return
         }
 
@@ -41,7 +41,7 @@ public class LoveCommand: Command {
         let chance = components.map { $0.weight * $0.value }.reduce(0, +) / components.map(\.weight).reduce(0, +)
 
         log.debug("Components: \(components)")
-        output.append(":heart: There is a \(Int(chance * 100))% chance of love between <@\(first.id)> and <@\(second.id)>")
+        await output.append(":heart: There is a \(Int(chance * 100))% chance of love between <@\(first.id)> and <@\(second.id)>")
     }
 
     private func extractMentions(input: RichValue, context: CommandContext) -> (User, User)? {
