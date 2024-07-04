@@ -10,9 +10,9 @@ public class GuildChannelsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
-            output.append(errorText: "No client available!")
+            await output.append(errorText: "No client available!")
             return
         }
 
@@ -21,7 +21,7 @@ public class GuildChannelsCommand: StringCommand {
 
         if input.isEmpty {
             guard let guild = context.guild else {
-                output.append(errorText: "Not on a guild!")
+                await output.append(errorText: "Not on a guild!")
                 return
             }
             guildId = guild.id
@@ -32,7 +32,7 @@ public class GuildChannelsCommand: StringCommand {
         }
 
         guard let guild = sink.guild(for: guildId) else {
-            output.append(errorText: "No guild with this id found!")
+            await output.append(errorText: "No guild with this id found!")
             return
         }
 
@@ -48,7 +48,7 @@ public class GuildChannelsCommand: StringCommand {
             }
         }
 
-        output.append(Embed(
+        await output.append(Embed(
             title: ":accordion: Channels on `\(guild.name)`",
             fields: categories
                 .sorted(by: ascendingComparator(comparing: \.value.0))
