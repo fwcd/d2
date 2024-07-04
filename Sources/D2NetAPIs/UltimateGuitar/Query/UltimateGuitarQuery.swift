@@ -12,18 +12,16 @@ public struct UltimateGuitarQuery<T> where T: Codable {
         self.query = query
     }
 
-    public func perform() -> Promise<UltimateGuitarResponse<T>, any Error> {
-        Promise.catching { try HTTPRequest(host: host, path: path, query: query) }
-            .then { $0.fetchHTMLAsync() }
-            .mapCatching { doc in
-                guard let store = try doc.getElementsByClass("js-store").array().first else {
-                    throw UltimateGuitarError.noStoreOnPage
-                }
-                guard let data = try store.attr("data-content").data(using: .utf8) else {
-                    throw UltimateGuitarError.invalidlyEncodedStore
-                }
-                let decoded = try JSONDecoder().decode(UltimateGuitarResponse<T>.self, from: data)
-                return decoded
-            }
+    public func perform() async throws -> UltimateGuitarResponse<T> {
+        let request = try HTTPRequest(host: host, path: path, query: query)
+        let document = try await request.fetchHTML()
+        guard let store = try document.getElementsByClass("js-store").array().first else {
+            throw UltimateGuitarError.noStoreOnPage
+        }
+        guard let data = try store.attr("data-content").data(using: .utf8) else {
+            throw UltimateGuitarError.invalidlyEncodedStore
+        }
+        let decoded = try JSONDecoder().decode(UltimateGuitarResponse<T>.self, from: data)
+        return decoded
     }
 }
