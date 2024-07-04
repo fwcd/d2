@@ -14,19 +14,19 @@ public class OrthogonalizeCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
-            output.append(errorText: "Please input a matrix")
+            await output.append(errorText: "Please input a matrix")
             return
         }
         guard matrix.isSquare else {
-            output.append(errorText: "Orthogonalization is only defined for square matrices")
+            await output.append(errorText: "Orthogonalization is only defined for square matrices")
             return
         }
 
         let columns = matrix.columnVectors
         guard let first = columns.first else {
-            output.append(errorText: "Your matrix does not contain a single column")
+            await output.append(errorText: "Your matrix does not contain a single column")
             return
         }
 
@@ -40,6 +40,6 @@ public class OrthogonalizeCommand: Command {
         // Normalize the vectors
         orthos = orthos.map { $0 / Rational(approximately: $0.magnitude) }
 
-        output.append(.ndArrays([Matrix(orthos.map { $0.values }).transpose.asNDArray]))
+        await output.append(.ndArrays([Matrix(orthos.map { $0.values }).transpose.asNDArray]))
     }
 }
