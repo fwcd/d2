@@ -14,7 +14,7 @@ public class BFToCCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let bfProgram = (try? bfCodePattern.firstMatch(in: input)).map({ String($0.code) }) {
             var outputCode = ""
             var last: String? = nil
@@ -52,10 +52,10 @@ public class BFToCCommand: StringCommand {
 
             if let lengthLimit = output.messageLengthLimit {
                 for chunk in outputC.split(by: lengthLimit) {
-                    output.append(.code(chunk, language: "c"))
+                    await output.append(.code(chunk, language: "c"))
                 }
             } else {
-                output.append(.code(outputC, language: "c"))
+                await output.append(.code(outputC, language: "c"))
             }
         }
     }
