@@ -19,9 +19,9 @@ public class ToGifCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let image = input.asImage else {
-            output.append(errorText: "Input does not have an image")
+            await output.append(errorText: "Input does not have an image")
             return
         }
         let quantizer = input.asText.flatMap { quantizers[$0]?(image) } ?? OctreeQuantization(fromImage: image)
@@ -30,6 +30,6 @@ public class ToGifCommand: Command {
         var gif = GIF(width: width, height: height, globalQuantization: quantizer)
 
         gif.frames.append(.init(image: image, delayTime: 0))
-        output.append(.gif(gif))
+        await output.append(.gif(gif))
     }
 }
