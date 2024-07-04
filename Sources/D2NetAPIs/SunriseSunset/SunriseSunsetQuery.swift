@@ -7,8 +7,8 @@ public struct SunriseSunsetQuery {
         self.coords = coords
     }
 
-    public func perform() -> Promise<SunriseSunsetResults, any Error> {
-        Promise.catching { try HTTPRequest(host: "api.sunrise-sunset.org", path: "/json", query: ["lat": String(coords.latitude), "lng": String(coords.longitude)]) }
-            .then { $0.fetchJSONAsync(as: SunriseSunsetResults.self) }
+    public func perform() async throws -> SunriseSunsetResults {
+        let request = try HTTPRequest(host: "api.sunrise-sunset.org", path: "/json", query: ["lat": String(coords.latitude), "lng": String(coords.longitude)])
+        return try await request.fetchJSON(as: SunriseSunsetResults.self)
     }
 }
