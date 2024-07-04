@@ -470,7 +470,7 @@ public class D2Receiver: Receiver {
             }
         }
 
-        eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
+        await eventListenerBus.fire(event: .receiveReady, with: .none) // TODO: Pass data?
 
         do {
             try messageDB.setupTables(sink: sink)
@@ -557,7 +557,7 @@ public class D2Receiver: Receiver {
         }
 
         // TODO: Pass full presence?
-        eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.activities.first.map { RichValue.text($0.name) } ?? .none)
+        await eventListenerBus.fire(event: .receivePresenceUpdate, with: presence.activities.first.map { RichValue.text($0.name) } ?? .none)
     }
 
     public func on(createGuild guild: Guild, sink: any Sink) async {
@@ -574,7 +574,7 @@ public class D2Receiver: Receiver {
             }
         }
 
-        eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
+        await eventListenerBus.fire(event: .createGuild, with: .none) // TODO: Provide guild ID?
     }
 
     public func on(createMessage message: Message, sink: any Sink) async {
@@ -598,7 +598,7 @@ public class D2Receiver: Receiver {
         // Only fire on unhandled messages
         if m.author?.id != sink.me?.id {
             let value = await MessageParser().parse(message: m, clientName: sink.name, guild: m.guild)
-            eventListenerBus.fire(event: .createMessage, with: value, context: CommandContext(
+            await eventListenerBus.fire(event: .createMessage, with: value, context: CommandContext(
                 sink: sink,
                 registry: self.registry,
                 message: m,
@@ -638,7 +638,7 @@ public class D2Receiver: Receiver {
 
     public func on(updateMessage message: Message, sink: any Sink) async {
         let value = await MessageParser().parse(message: message, clientName: sink.name, guild: message.guild)
-        self.eventListenerBus.fire(event: .updateMessage, with: value, context: CommandContext(
+        await self.eventListenerBus.fire(event: .updateMessage, with: value, context: CommandContext(
             sink: sink,
             registry: self.registry,
             message: message,
@@ -658,7 +658,7 @@ public class D2Receiver: Receiver {
             channelHandlers[i].handle(channelCreate: channel, sink: sink)
         }
 
-        eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
+        await eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
     }
 
     public func on(deleteChannel channel: Channel, sink: any Sink) async {
@@ -666,7 +666,7 @@ public class D2Receiver: Receiver {
             channelHandlers[i].handle(channelDelete: channel, sink: sink)
         }
 
-        eventListenerBus.fire(event: .deleteChannel, with: .none) // TODO: Pass channel ID?
+        await eventListenerBus.fire(event: .deleteChannel, with: .none) // TODO: Pass channel ID?
     }
 
     public func on(updateChannel channel: Channel, sink: any Sink) async {
@@ -674,7 +674,7 @@ public class D2Receiver: Receiver {
             channelHandlers[i].handle(channelUpdate: channel, sink: sink)
         }
 
-        eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
+        await eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
     }
 
     public func on(createThread thread: Channel, sink: any Sink) async {
@@ -696,7 +696,7 @@ public class D2Receiver: Receiver {
     }
 
     public func on(deleteGuild guild: Guild, sink: any Sink) async {
-        eventListenerBus.fire(event: .deleteGuild, with: .none) // TODO: Pass guild ID?
+        await eventListenerBus.fire(event: .deleteGuild, with: .none) // TODO: Pass guild ID?
     }
 
     public func on(updateGuild guild: Guild, sink: any Sink) async {
@@ -707,7 +707,7 @@ public class D2Receiver: Receiver {
             log.warning("Could not update guild in message database: \(error)")
         }
 
-        eventListenerBus.fire(event: .updateGuild, with: .none) // TODO: Pass guild ID?
+        await eventListenerBus.fire(event: .updateGuild, with: .none) // TODO: Pass guild ID?
     }
 
     public func on(addGuildMember member: Guild.Member, sink: any Sink) async {
@@ -720,11 +720,11 @@ public class D2Receiver: Receiver {
             log.warning("Could not insert member into message database: \(error)")
         }
 
-        eventListenerBus.fire(event: .addGuildMember, with: .mentions([member.user]))
+        await eventListenerBus.fire(event: .addGuildMember, with: .mentions([member.user]))
     }
 
     public func on(removeGuildMember member: Guild.Member, sink: any Sink) async {
-        eventListenerBus.fire(event: .removeGuildMember, with: .mentions([member.user]))
+        await eventListenerBus.fire(event: .removeGuildMember, with: .mentions([member.user]))
     }
 
     public func on(updateGuildMember member: Guild.Member, sink: any Sink) async {
@@ -737,7 +737,7 @@ public class D2Receiver: Receiver {
             log.warning("Could not update member in message database: \(error)")
         }
 
-        eventListenerBus.fire(event: .updateGuildMember, with: .mentions([member.user]))
+        await eventListenerBus.fire(event: .updateGuildMember, with: .mentions([member.user]))
     }
 
     public func on(createRole role: Role, on guild: Guild, sink: any Sink) async {
@@ -748,11 +748,11 @@ public class D2Receiver: Receiver {
             log.warning("Could not insert role into message database: \(error)")
         }
 
-        eventListenerBus.fire(event: .createRole, with: .none) // TODO: Pass role ID/role mention?
+        await eventListenerBus.fire(event: .createRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
     public func on(deleteRole role: Role, from guild: Guild, sink: any Sink) async {
-        eventListenerBus.fire(event: .deleteRole, with: .none) // TODO: Pass role ID/role mention?
+        await eventListenerBus.fire(event: .deleteRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
     public func on(updateRole role: Role, on guild: Guild, sink: any Sink) async {
@@ -763,19 +763,19 @@ public class D2Receiver: Receiver {
             log.warning("Could not update role in message database: \(error)")
         }
 
-        eventListenerBus.fire(event: .updateRole, with: .none) // TODO: Pass role ID/role mention?
+        await eventListenerBus.fire(event: .updateRole, with: .none) // TODO: Pass role ID/role mention?
     }
 
     public func on(connect connected: Bool, sink: any Sink) async {
-        eventListenerBus.fire(event: .connect, with: .none) // TODO: Pass 'connected'?
+        await eventListenerBus.fire(event: .connect, with: .none) // TODO: Pass 'connected'?
     }
 
     public func on(receiveVoiceStateUpdate state: VoiceState, sink: any Sink) async {
-        eventListenerBus.fire(event: .receiveVoiceStateUpdate, with: .none) // TODO: Pass state?
+        await eventListenerBus.fire(event: .receiveVoiceStateUpdate, with: .none) // TODO: Pass state?
     }
 
     public func on(handleGuildMemberChunk chunk: [UserID: Guild.Member], for guild: Guild, sink: any Sink) async {
-        eventListenerBus.fire(event: .handleGuildMemberChunk, with: .none) // TODO: Pass state?
+        await eventListenerBus.fire(event: .handleGuildMemberChunk, with: .none) // TODO: Pass state?
     }
 
     public func on(updateEmojis emojis: [EmojiID: Emoji], on guild: Guild, sink: any Sink) async {
@@ -788,6 +788,6 @@ public class D2Receiver: Receiver {
             log.warning("Could not update emojis in message database: \(error)")
         }
 
-        eventListenerBus.fire(event: .updateEmojis, with: .none) // TODO: Pass emojis, possibly by creating a RichValue.emoji variant
+        await eventListenerBus.fire(event: .updateEmojis, with: .none) // TODO: Pass emojis, possibly by creating a RichValue.emoji variant
     }
 }

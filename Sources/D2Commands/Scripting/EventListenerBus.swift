@@ -32,12 +32,12 @@ public class EventListenerBus {
         case updateEmojis
     }
 
-    public func fire(event: Event, with input: RichValue, context: CommandContext? = nil) {
+    public func fire(event: Event, with input: RichValue, context: CommandContext? = nil) async {
         for listener in listeners[event] ?? [] {
             if let c = context {
                 listener.output.update(context: c)
             }
-            listener.output.append(input)
+            await listener.output.append(input)
         }
     }
 

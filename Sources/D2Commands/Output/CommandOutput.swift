@@ -53,42 +53,4 @@ public extension CommandOutput {
                 await append(error, errorText: errorText, to: channel)
         }
     }
-
-    // TODO: Remove these synchronous wrappers eventually?
-
-    func append(_ value: RichValue, to channel: OutputChannel) {
-        Task { await append(value, to: channel) }
-    }
-
-    func append(_ value: RichValue) {
-        Task { await append(value) }
-    }
-
-    func append(_ str: String, to channel: OutputChannel = .defaultChannel) {
-        Task { await append(str, to: channel) }
-    }
-
-    func append(_ embed: Embed, to channel: OutputChannel = .defaultChannel) {
-        Task { await append(embed, to: channel) }
-    }
-
-    func append(_ image: CairoImage, name: String? = nil, to channel: OutputChannel = .defaultChannel) {
-        Task { try await append(image, name: name, to: channel) }
-    }
-
-    func append(_ files: [Message.FileUpload], to channel: OutputChannel = .defaultChannel) {
-        Task { await append(files, to: channel) }
-    }
-
-    func append(errorText: String, to channel: OutputChannel = .defaultChannel) {
-        Task { await append(errorText: errorText, to: channel) }
-    }
-
-    func append(_ error: any Error, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
-        Task { await append(error, errorText: errorText, to: channel) }
-    }
-
-    func append(_ result: Result<RichValue, any Error>, errorText: String = "An error occurred in \(#file)", to channel: OutputChannel = .defaultChannel) {
-        Task { await append(result, errorText: errorText, to: channel) }
-    }
 }
