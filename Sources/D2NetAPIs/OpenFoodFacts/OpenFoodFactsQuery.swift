@@ -7,8 +7,8 @@ public struct OpenFoodFactsQuery {
         self.code = code
     }
 
-    public func perform() -> Promise<OpenFoodFactsResult, any Error> {
-        Promise.catching { try HTTPRequest(host: "world.openfoodfacts.org", path: "/api/v0/product/\(code).json") }
-            .then { $0.fetchJSONAsync(as: OpenFoodFactsResult.self) }
+    public func perform() async throws -> OpenFoodFactsResult {
+        let request = try HTTPRequest(host: "world.openfoodfacts.org", path: "/api/v0/product/\(code).json")
+        return try await request.fetchJSON(as: OpenFoodFactsResult.self)
     }
 }

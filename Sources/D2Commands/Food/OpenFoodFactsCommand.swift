@@ -10,26 +10,24 @@ public class OpenFoodFactsCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard !input.isEmpty else {
-            output.append(errorText: "Please enter the EAN (barcode number) of some product!")
+            await output.append(errorText: "Please enter the EAN (barcode number) of some product!")
             return
         }
 
-        OpenFoodFactsQuery(code: input).perform().listen {
-            do {
-                let product = try $0.get().product
-                output.append(Embed(
-                    title: [product.genericName ?? product.genericNameEn ?? product.genericNameDe, product.productNameEnImported].compactMap { $0 }.joined(separator: ": ").nilIfEmpty ?? "Untitled product",
-                    thumbnail: product.imageThumbUrl.map(Embed.Thumbnail.init(url:)),
-                    footer: product.creator?.nilIfEmpty.map { Embed.Footer(text: "creator: \($0)") },
-                    fields: [
-                        Embed.Field(name: "Ingredients", value: (product.ingredientsTextWithAllergensEn ?? product.ingredientsTextEn)?.nilIfEmpty ?? "_none_")
-                    ]
-                ))
-            } catch {
-                output.append(error, errorText: "Could not query OpenFoodFacts database")
-            }
+        do {
+            let product = try await OpenFoodFactsQuery(code: input).perform().product
+            await output.append(Embed(
+                title: [product.genericName ?? product.genericNameEn ?? product.genericNameDe, product.productNameEnImported].compactMap { $0 }.joined(separator: ": ").nilIfEmpty ?? "Untitled product",
+                thumbnail: product.imageThumbUrl.map(Embed.Thumbnail.init(url:)),
+                footer: product.creator?.nilIfEmpty.map { Embed.Footer(text: "creator: \($0)") },
+                fields: [
+                    Embed.Field(name: "Ingredients", value: (product.ingredientsTextWithAllergensEn ?? product.ingredientsTextEn)?.nilIfEmpty ?? "_none_")
+                ]
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not query OpenFoodFacts database")
         }
     }
 }
