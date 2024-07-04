@@ -19,18 +19,18 @@ public class CaesarCipherCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
         guard let offset = UInt32(parsedArgs.1), alphabetRange.contains(Int(offset)) else {
-            output.append(errorText: "Missing or invalid offset for caesar chiffre!")
+            await output.append(errorText: "Missing or invalid offset for caesar chiffre!")
             return
         }
 
-        output.append(String(parsedArgs.2.lowercased().map { shift(character: $0, by: offset) }))
+        await output.append(String(parsedArgs.2.lowercased().map { shift(character: $0, by: offset) }))
     }
 
     private func shift(character: Character, by offset: UInt32) -> Character {
