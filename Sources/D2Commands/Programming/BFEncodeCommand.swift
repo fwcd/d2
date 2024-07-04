@@ -17,15 +17,15 @@ public class BFEncodeCommand: StringCommand {
         self.maxStringLength = maxStringLength
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard input.count <= maxStringLength || output.messageLengthLimit == nil else {
-            output.append(errorText: "Your string needs to be shorter than \(maxStringLength) characters!")
+            await output.append(errorText: "Your string needs to be shorter than \(maxStringLength) characters!")
             return
         }
 
         let encodedChars = input.map { encode($0) ?? "" }
         let encoded = encodedChars.reduce("") { "\($0)>\($1)" } + String(repeating: "<", count: max(0, encodedChars.count - 1))
-        output.append(.code(encoded, language: nil))
+        await output.append(.code(encoded, language: nil))
     }
 
     private func encode(_ character: Character) -> String? {
