@@ -15,7 +15,7 @@ public class InfoMessageCommand: VoidCommand {
         self.text = text
     }
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
-        output.append(":information_source: \(text)")
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
+        await output.append(":information_source: \(text)")
     }
 }
