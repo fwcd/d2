@@ -21,13 +21,13 @@ public class AddCronScheduleCommand: StringCommand {
         self.cronManager = cronManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
         guard let channelId = context.channel?.id else {
-            output.append(errorText: "No channel id")
+            await output.append(errorText: "No channel id")
             return
         }
 
@@ -36,7 +36,7 @@ public class AddCronScheduleCommand: StringCommand {
         let command = String(parsedArgs.command)
 
         guard cronManager[name] == nil else {
-            output.append(errorText: "Schedule with name `\(name)` already exists, please unregister it first!")
+            await output.append(errorText: "Schedule with name `\(name)` already exists, please unregister it first!")
             return
         }
 
@@ -45,6 +45,6 @@ public class AddCronScheduleCommand: StringCommand {
             command: command,
             channelId: channelId
         )
-        output.append("Added schedule `\(name)`!")
+        await output.append("Added schedule `\(name)`!")
     }
 }
