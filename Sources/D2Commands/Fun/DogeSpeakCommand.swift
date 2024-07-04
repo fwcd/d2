@@ -10,8 +10,8 @@ public class DogeSpeakCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        output.append(dogeSpeak(of: input))
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        await output.append(dogeSpeak(of: input))
     }
 
     private func dogeSpeak(of str: String) -> String {
