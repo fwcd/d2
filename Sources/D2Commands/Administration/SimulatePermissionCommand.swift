@@ -15,28 +15,28 @@ public class SimulatePermissionCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let author = context.author else {
-            output.append(errorText: "No author present")
+            await output.append(errorText: "No author present")
             return
         }
 
         if input == cancelSubcommand {
             guard permissionManager[simulated: author] != nil else {
-                output.append(errorText: "No simulation was running for you.")
+                await output.append(errorText: "No simulation was running for you.")
                 return
             }
 
             permissionManager[simulated: author] = nil
-            output.append("Successfully stopped simulating the level")
+            await output.append("Successfully stopped simulating the level")
         } else {
             guard let level = PermissionLevel.of(input) else {
-                output.append(errorText: "Not a valid permission level: \(input)")
+                await output.append(errorText: "Not a valid permission level: \(input)")
                 return
             }
 
             permissionManager[simulated: author] = level
-            output.append("Simulating permission level `\(input)` for you. Invoke this command with `\(cancelSubcommand)` to exit the simulation.")
+            await output.append("Simulating permission level `\(input)` for you. Invoke this command with `\(cancelSubcommand)` to exit the simulation.")
         }
     }
 }
