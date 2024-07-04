@@ -17,7 +17,7 @@ public class RevokePermissionCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if input.matches(of: inputPattern).count > 0 {
             var response = ""
             var changedPermissions = false
@@ -29,13 +29,13 @@ public class RevokePermissionCommand: StringCommand {
             }
 
             if changedPermissions {
-                output.append(response)
+                await output.append(response)
                 permissionManager.writeToDisk()
             } else {
-                output.append("Did not change any permissions.")
+                await output.append("Did not change any permissions.")
             }
         } else {
-            output.append(errorText: "Syntax error: The arguments need to match `[@user or role]*`")
+            await output.append(errorText: "Syntax error: The arguments need to match `[@user or role]*`")
         }
     }
 }
