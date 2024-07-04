@@ -18,10 +18,10 @@ public class WouldYouRatherCommand: StringCommand {
         self.partyGameDB = partyGameDB
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let wyr = try partyGameDB.randomWyrQuestion()
-            output.append(Embed(
+            await output.append(Embed(
                 title: wyr.title,
                 description: """
                     \(self.emojiA) \(wyr.firstChoice)
@@ -30,16 +30,13 @@ public class WouldYouRatherCommand: StringCommand {
                 color: 0x440080
             ))
         } catch {
-            output.append(error, errorText: "Could not fetch question.")
+            await output.append(error, errorText: "Could not fetch question.")
         }
     }
 
-    public func onSuccessfullySent(context: CommandContext) {
+    public func onSuccessfullySent(context: CommandContext) async {
         guard let messageId = context.message.id, let channelId = context.message.channelId else { return }
-        // TODO: Remove once onSuccessfullySent is async
-        Task {
-            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiA)
-            _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiB)
-        }
+        _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiA)
+        _ = try? await context.sink?.createReaction(for: messageId, on: channelId, emoji: emojiB)
     }
 }
