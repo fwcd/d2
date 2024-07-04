@@ -17,23 +17,23 @@ public class RepeatCommand: StringCommand {
         self.maxTotalLength = maxTotalLength
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard
             let parsedArgs = try? argsPattern.firstMatch(in: input),
             let count = Int(parsedArgs.count) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
         guard count <= maxCount else {
-            output.append(errorText: "Please enter a count lower than or equal to \(maxCount)")
+            await output.append(errorText: "Please enter a count lower than or equal to \(maxCount)")
             return
         }
         let base = String(parsedArgs.base)
         let result = String(repeating: base, count: count)
         guard result.count <= maxTotalLength else {
-            output.append(errorText: "Please make sure that the output string is shorter than (or equal in length to) \(maxTotalLength)")
+            await output.append(errorText: "Please make sure that the output string is shorter than (or equal in length to) \(maxTotalLength)")
             return
         }
-        output.append(result)
+        await output.append(result)
     }
 }
