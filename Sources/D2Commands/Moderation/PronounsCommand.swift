@@ -18,17 +18,17 @@ public class PronounsCommand: StringCommand {
         self._config = _config
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard
             let guildId = context.guild?.id,
             let pronounRoles = config.pronounRoles[guildId],
             !pronounRoles.isEmpty else {
-            output.append(errorText: "No pronoun mappings for this guild available!")
+            await output.append(errorText: "No pronoun mappings for this guild available!")
             return
         }
 
         do {
-            try output.append(.compound([.text("Please pick your pronouns:")] + pronounRoles.sorted(by: descendingComparator(comparing: \.key)).map { (name, roleId) in
+            try await output.append(.compound([.text("Please pick your pronouns:")] + pronounRoles.sorted(by: descendingComparator(comparing: \.key)).map { (name, roleId) in
                 let encodedIdData = try JSONEncoder().encode(roleId)
                 guard let encodedId = String(data: encodedIdData, encoding: .utf8) else {
                     throw EncodeError.couldNotEncode("Could not encoded pronoun role id (\(roleId))")
@@ -40,7 +40,7 @@ public class PronounsCommand: StringCommand {
             }))
             context.subscribeToChannel()
         } catch {
-            output.append(error, errorText: "Could not create pronoun picker message")
+            await output.append(error, errorText: "Could not create pronoun picker message")
         }
     }
 
