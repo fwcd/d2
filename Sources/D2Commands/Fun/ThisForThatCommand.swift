@@ -9,14 +9,12 @@ public class ThisForThatCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        ThisForThatQuery().perform().listen {
-            do {
-                let tft = try $0.get()
-                output.append("**\(tft.this)** for **\(tft.that)**")
-            } catch {
-                output.append(error, errorText: "Could not fetch this for that")
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let tft = try await ThisForThatQuery().perform()
+            await output.append("**\(tft.this)** for **\(tft.that)**")
+        } catch {
+            await output.append(error, errorText: "Could not fetch this for that")
         }
     }
 }
