@@ -10,15 +10,14 @@ public class TaylorSwiftQuoteCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
-        TaylorRestQuery().perform().listen {
-            do {
-                output.append(Embed(
-                    description: "**\(try $0.get().quote)**"
-                ))
-            } catch {
-                output.append(error, errorText: "Could not fetch quote")
-            }
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        do {
+            let quote = try await TaylorRestQuery().perform().quote
+            await output.append(Embed(
+                description: "**\(quote)**"
+            ))
+        } catch {
+            await output.append(error, errorText: "Could not fetch quote")
         }
     }
 }
