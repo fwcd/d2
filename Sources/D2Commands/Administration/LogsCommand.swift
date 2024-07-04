@@ -18,12 +18,12 @@ public class LogsCommand: StringCommand {
         self.logBuffer = logBuffer
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let lineCount = Int(input) ?? defaultLineCount
         let logs = logBuffer
             .suffix(lineCount)
             .map { $0.replacingOccurrences(of: "```", with: "") }
             .joined(separator: "\n")
-        output.append(.code(logs, language: nil))
+        await output.append(.code(logs, language: nil))
     }
 }
