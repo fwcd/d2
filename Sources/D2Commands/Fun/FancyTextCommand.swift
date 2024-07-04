@@ -30,9 +30,9 @@ public class FancyTextCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let fancyAlphabet = fancyAlphabets.randomElement()!
         let fancyText = String(input.map { baseAlphabet.firstIndex(of: $0).flatMap { fancyAlphabet[safely: $0] } ?? $0 })
-        output.append(fancyText)
+        await output.append(fancyText)
     }
 }
