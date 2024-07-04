@@ -21,16 +21,16 @@ public class AvatarUrlCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let user = input.asMentions?.first else {
-            output.append(errorText: "Mention someone to begin!")
+            await output.append(errorText: "Mention someone to begin!")
             return
         }
         guard let avatarUrl = context.sink?.avatarUrlForUser(user.id, with: user.avatar) else {
-            output.append(errorText: "Could not fetch avatar URL")
+            await output.append(errorText: "Could not fetch avatar URL")
             return
         }
 
-        output.append(.urls([avatarUrl]))
+        await output.append(.urls([avatarUrl]))
     }
 }
