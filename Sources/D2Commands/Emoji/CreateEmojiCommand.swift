@@ -28,7 +28,10 @@ public class CreateEmojiCommand: Command {
         }
 
         do {
-            let emoji = try await sink.createEmoji(on: guild.id, name: name, image: encoded)
+            guard let emoji = try await sink.createEmoji(on: guild.id, name: name, image: encoded) else {
+                await output.append(errorText: "Could not create emoji")
+                return
+            }
             await output.append("Created emoji \(emoji)!")
         } catch {
             await output.append(error, errorText: "Could not create emoji")
