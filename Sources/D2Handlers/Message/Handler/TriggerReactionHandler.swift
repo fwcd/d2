@@ -23,7 +23,7 @@ public struct TriggerReactionHandler: MessageHandler {
             $configuration: $configuration,
             weatherEmojiProvider: {
                 guard let city = cityConfiguration.city else { throw ReactionTriggerError.other("No city specified") }
-                guard let emoji = try await OpenWeatherMapQuery(city: city).perform().get().emoji else { throw ReactionTriggerError.other("No weather emoji") }
+                guard let emoji = try await OpenWeatherMapQuery(city: city).perform().emoji else { throw ReactionTriggerError.other("No weather emoji") }
                 return emoji
             }
         )

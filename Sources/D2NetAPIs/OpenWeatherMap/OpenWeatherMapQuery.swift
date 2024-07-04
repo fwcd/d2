@@ -9,13 +9,11 @@ public struct OpenWeatherMapQuery {
         self.units = units
     }
 
-    public func perform() -> Promise<OpenWeatherMapWeather, any Error> {
-        Promise.catchingThen {
-            guard let token = storedNetApiKeys?.openweathermap else {
-                throw NetApiError.missingApiKey("Missing OpenWeatherMap API key")
-            }
-            let request = try HTTPRequest(host: "api.openweathermap.org", path: "/data/2.5/weather", query: ["q": city, "appid": token, "units": units])
-            return request.fetchJSONAsync(as: OpenWeatherMapWeather.self)
+    public func perform() async throws -> OpenWeatherMapWeather {
+        guard let token = storedNetApiKeys?.openweathermap else {
+            throw NetApiError.missingApiKey("Missing OpenWeatherMap API key")
         }
+        let request = try HTTPRequest(host: "api.openweathermap.org", path: "/data/2.5/weather", query: ["q": city, "appid": token, "units": units])
+        return try await request.fetchJSON(as: OpenWeatherMapWeather.self)
     }
 }
