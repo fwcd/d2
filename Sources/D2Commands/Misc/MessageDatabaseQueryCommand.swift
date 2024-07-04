@@ -46,20 +46,20 @@ public class MessageDatabaseQueryCommand: StringCommand {
         self.maxRows = maxRows
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsed = try? selectStmtPattern.firstMatch(in: input.lowercased()) else {
-            output.append(errorText: "Please enter a limiting SELECT statement! Note that currently not all SELECT statements are understood. If your query is valid SQL, please file a bug [here](https://github.com/fwcd/d2/issues).")
+            await output.append(errorText: "Please enter a limiting SELECT statement! Note that currently not all SELECT statements are understood. If your query is valid SQL, please file a bug [here](https://github.com/fwcd/d2/issues).")
             return
         }
 
         guard parsed[0].substring?.count == input.count else {
-            output.append(errorText: "Could not parse your entire query. Only recognized: `\(input)`")
+            await output.append(errorText: "Could not parse your entire query. Only recognized: `\(input)`")
             return
         }
 
         let limit = parsed[safely: 1]?.substring.flatMap { Int($0) } ?? Int.max
         guard limit < maxRows else {
-            output.append(errorText: "Please query less than \(maxRows) rows!")
+            await output.append(errorText: "Please query less than \(maxRows) rows!")
             return
         }
 
@@ -67,9 +67,9 @@ public class MessageDatabaseQueryCommand: StringCommand {
             let result = try messageDB.prepare(input)
                 .map { "(\($0.map { $0.map { "\($0)" } ?? "nil" }.joined(separator: ", ")))".nilIfEmpty ?? "no results" }
                 .joined(separator: "\n")
-            output.append(.code(result, language: nil))
+            await output.append(.code(result, language: nil))
         } catch {
-            output.append(error, errorText: "Could not perform query")
+            await output.append(error, errorText: "Could not perform query")
         }
     }
 }
