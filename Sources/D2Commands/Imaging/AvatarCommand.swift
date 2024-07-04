@@ -25,33 +25,29 @@ public class AvatarCommand: Command {
         self.preferredExtension = preferredExtension
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let user = input.asMentions?.first else {
-            output.append(errorText: "Mention someone to begin!")
+            await output.append(errorText: "Mention someone to begin!")
             return
         }
         guard let avatarUrl = context.sink?.avatarUrlForUser(user.id, with: user.avatar, preferredExtension: preferredExtension) else {
-            output.append(errorText: "Could not fetch avatar URL")
+            await output.append(errorText: "Could not fetch avatar URL")
             return
         }
 
-        Promise(.success(HTTPRequest(url: avatarUrl)))
-            .then { $0.runAsync() }
-            .listen {
-                do {
-                    let data = try $0.get()
-                    if data.isEmpty {
-                        output.append(errorText: "No avatar available")
-                    } else if avatarUrl.path.hasSuffix(".png") {
-                        output.append(.image(try CairoImage(pngData: data)))
-                    } else if avatarUrl.path.hasSuffix(".gif") {
-                        output.append(.gif(try GIF(data: data)))
-                    } else {
-                        output.append(errorText: "Unsupported image format in avatar URL: \(avatarUrl). Most likely this is a bug, since inferred image formats should be handled exhaustively in AvatarCommand.")
-                    }
-                } catch {
-                    output.append(errorText: "The avatar could not be fetched \(error)")
-                }
+        do {
+            let data = try await HTTPRequest(url: avatarUrl).run()
+            if data.isEmpty {
+                await output.append(errorText: "No avatar available")
+            } else if avatarUrl.path.hasSuffix(".png") {
+                await output.append(.image(try CairoImage(pngData: data)))
+            } else if avatarUrl.path.hasSuffix(".gif") {
+                await output.append(.gif(try GIF(data: data)))
+            } else {
+                await output.append(errorText: "Unsupported image format in avatar URL: \(avatarUrl). Most likely this is a bug, since inferred image formats should be handled exhaustively in AvatarCommand.")
             }
+        } catch {
+            await output.append(errorText: "The avatar could not be fetched \(error)")
+        }
     }
 }
