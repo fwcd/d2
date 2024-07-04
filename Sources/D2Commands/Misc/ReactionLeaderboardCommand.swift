@@ -28,15 +28,15 @@ public class ReactionLeaderboardCommand: Command {
         info.longDescription = "Fetches the number of \(name) reactions per user"
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let guild = context.guild else {
-                output.append(errorText: "No guild available")
+                await output.append(errorText: "No guild available")
                 return
             }
             let users: [User] = input.asMentions ?? guild.members.map { $0.1.user }
             let emojiId = try messageDB.emojiIds(for: emojiName).first
-            output.append(Embed(
+            await output.append(Embed(
                 title: "\(emojiId.map { "<:\(emojiName):\($0)> " } ?? emojiName)\(title)",
                 description: try users
                     .map { (useReactor
@@ -50,7 +50,7 @@ public class ReactionLeaderboardCommand: Command {
                     .nilIfEmpty
             ))
         } catch {
-            output.append(error, errorText: "Something went wrong while querying the message db")
+            await output.append(error, errorText: "Something went wrong while querying the message db")
         }
     }
 }
