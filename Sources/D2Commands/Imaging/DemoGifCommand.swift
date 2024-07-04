@@ -18,7 +18,7 @@ public class DemoGifCommand: VoidCommand {
 
     public init() {}
 
-    public func invoke(output: any CommandOutput, context: CommandContext) {
+    public func invoke(output: any CommandOutput, context: CommandContext) async {
         do {
             let width = 200
             let height = 200
@@ -37,11 +37,13 @@ public class DemoGifCommand: VoidCommand {
                 graphics.draw(rect: Rectangle(fromX: 10, y: 10, width: 100, height: 100, rotation: Double(angleIndex) * angle, color: .blue))
 
                 gif.frames.append(.init(image: image, delayTime: 100))
+
+                await Task.yield()
             }
 
-            output.append(.gif(gif))
+            await output.append(.gif(gif))
         } catch {
-            output.append(error, errorText: "An error occurred while encoding/sending the image")
+            await output.append(error, errorText: "An error occurred while encoding/sending the image")
         }
     }
 }
