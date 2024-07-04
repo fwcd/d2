@@ -12,19 +12,19 @@ public class StreamerRoleCommand: Command {
         self._streamerRoleConfiguration = _streamerRoleConfiguration
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append(errorText: "Not on a guild")
+            await output.append(errorText: "Not on a guild")
             return
         }
 
         if let role = input.asRoleMentions?.first {
             streamerRoleConfiguration.streamerRoles[guild.id] = role
-            output.append("Successfully set the Twitch streamer role!")
+            await output.append("Successfully set the Twitch streamer role!")
         } else {
             let roleId = streamerRoleConfiguration.streamerRoles[guild.id]
             let roleName = roleId.flatMap { guild.roles[$0] }?.name ?? "none"
-            output.append("The Twitch streamer role on this guild is currently `\(roleName)`")
+            await output.append("The Twitch streamer role on this guild is currently `\(roleName)`")
         }
     }
 }
