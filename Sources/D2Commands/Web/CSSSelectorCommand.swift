@@ -9,20 +9,20 @@ public class CSSSelectorCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         do {
             guard let node = input.asDomNode else {
-                output.append(errorText: "Please provide a DOM node to perform the selector on!")
+                await output.append(errorText: "Please provide a DOM node to perform the selector on!")
                 return
             }
             guard let selector = input.asText else {
-                output.append(errorText: "Please provide a CSS selector!")
+                await output.append(errorText: "Please provide a CSS selector!")
                 return
             }
             let selection: [RichValue] = try node.select(selector).array().map { .domNode($0) }
-            output.append(.compound(selection))
+            await output.append(.compound(selection))
         } catch {
-            output.append(error, errorText: "Could not perform CSS selector")
+            await output.append(error, errorText: "Could not perform CSS selector")
         }
     }
 }
