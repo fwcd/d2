@@ -12,13 +12,13 @@ public class PingPongCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         if let gif = input.asGif {
             var pingPonged = gif
             pingPonged.frames += pingPonged.frames.reversed()
-            output.append(.gif(pingPonged))
+            await output.append(.gif(pingPonged))
         } else {
-            output.append(errorText: "PingPongCommand needs a GIF as input")
+            await output.append(errorText: "PingPongCommand needs a GIF as input")
         }
     }
 }
