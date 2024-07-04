@@ -23,19 +23,19 @@ public class BinaryOperationCommand<T: LosslessStringConvertible>: ArgCommand {
         )
     }
 
-    public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: Args, output: any CommandOutput, context: CommandContext) async {
         let rawLHS = input.left.value
         let rawRHS = input.right.value
 
         guard let lhs = T.init(rawLHS) else {
-            output.append(errorText: "Left-hand side `\(rawLHS)` could not be parsed")
+            await output.append(errorText: "Left-hand side `\(rawLHS)` could not be parsed")
             return
         }
         guard let rhs = T.init(rawRHS) else {
-            output.append(errorText: "Right-hand side `\(rawRHS)` could not be parsed")
+            await output.append(errorText: "Right-hand side `\(rawRHS)` could not be parsed")
             return
         }
 
-        output.append(String(operation(lhs, rhs)))
+        await output.append(String(operation(lhs, rhs)))
     }
 }
