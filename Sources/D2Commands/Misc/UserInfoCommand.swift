@@ -15,17 +15,17 @@ public class UserInfoCommand: Command {
 
     public init() {}
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let guild = context.guild else {
-            output.append("Not on a guild.")
+            await output.append("Not on a guild.")
             return
         }
         guard let user = input.asMentions?.first ?? context.author else {
-            output.append("Please mention someone!")
+            await output.append("Please mention someone!")
             return
         }
         guard let member = guild.members[user.id] else {
-            output.append("Not a guild member.")
+            await output.append("Not a guild member.")
             return
         }
         let presence = guild.presences[user.id]
@@ -33,7 +33,7 @@ public class UserInfoCommand: Command {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
 
-        output.append(Embed(
+        await output.append(Embed(
             title: "\(user.username)#\(user.discriminator)",
             thumbnail: context.sink?.name == "Discord"
                 ? URL(string: "https://cdn.discordapp.com/avatars/\(user.id)/\(user.avatar).png?size=128").map { Embed.Thumbnail(url: $0) }
