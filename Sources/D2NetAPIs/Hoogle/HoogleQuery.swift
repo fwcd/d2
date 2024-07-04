@@ -9,13 +9,13 @@ public struct HoogleQuery {
         self.count = count
     }
 
-    public func perform() -> Promise<[HoogleResult], any Error> {
-        Promise.catching { try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
+    public func perform() async throws -> [HoogleResult] {
+        let request = try HTTPRequest(host: "hoogle.haskell.org", path: "/", query: [
             "mode": "json",
             "hoogle": term,
             "start": "1",
             "count": "\(count)"
-        ]) }
-            .then { $0.fetchJSONAsync(as: [HoogleResult].self) }
+        ])
+        return try await request.fetchJSON(as: [HoogleResult].self)
     }
 }
