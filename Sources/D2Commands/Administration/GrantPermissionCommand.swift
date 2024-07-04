@@ -17,7 +17,7 @@ public class GrantPermissionCommand: StringCommand {
         self.permissionManager = permissionManager
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if let parsedArgs = try? inputPattern.firstMatch(in: input) {
             let rawLevel = String(parsedArgs.level)
             if let level = PermissionLevel.of(rawLevel) {
@@ -31,16 +31,16 @@ public class GrantPermissionCommand: StringCommand {
                 }
 
                 if changedPermissions {
-                    output.append(response)
+                    await output.append(response)
                     permissionManager.writeToDisk()
                 } else {
-                    output.append("Did not change any permissions.")
+                    await output.append("Did not change any permissions.")
                 }
             } else {
-                output.append(errorText: "Unknown permission level `\(rawLevel)`")
+                await output.append(errorText: "Unknown permission level `\(rawLevel)`")
             }
         } else {
-            output.append(errorText: "Syntax error: The arguments need to match `[@user or role]* [permission level]`")
+            await output.append(errorText: "Syntax error: The arguments need to match `[@user or role]* [permission level]`")
         }
     }
 }
