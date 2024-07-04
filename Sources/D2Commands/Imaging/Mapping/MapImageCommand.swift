@@ -16,13 +16,13 @@ public class MapImageCommand<M>: Command where M: ImageMapping {
         info.longDescription = description
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         do {
             let args = input.asText
             let mapping = try M.init(args: args)
 
             if let img = input.asImage {
-                try output.append(.image(mapping.apply(to: img)))
+                try await output.append(.image(mapping.apply(to: img)))
             } else if let gif = input.asGif {
                 let mappedImages = try gif.frames.map { try mapping.apply(to: $0.image) }
                 let width = mappedImages.map(\.width).max() ?? 1
@@ -33,13 +33,13 @@ public class MapImageCommand<M>: Command where M: ImageMapping {
                     newGif.frames.append(.init(image: mappedImage, delayTime: frame.delayTime))
                 }
 
-                output.append(.gif(newGif))
+                await output.append(.gif(newGif))
             } else {
-                output.append(errorText: "Please input either an image or a GIF!")
+                await output.append(errorText: "Please input either an image or a GIF!")
             }
 
         } catch {
-            output.append(error, errorText: "An error occurred while performing the image mapping: \(error)")
+            await output.append(error, errorText: "An error occurred while performing the image mapping: \(error)")
         }
     }
 }
