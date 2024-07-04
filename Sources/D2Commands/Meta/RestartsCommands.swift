@@ -16,13 +16,13 @@ public class RestartsCommand: StringCommand {
         restarts.append(Restart(instanceName: hostInfo.instanceName))
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
 
         // TODO: Display time deltas (i.e. how long each instance was running)
 
-        output.append(.table(restarts.map {
+        await output.append(.table(restarts.map {
             [dateFormatter.string(from: $0.timestamp), $0.instanceName ?? "?"]
         }))
     }
