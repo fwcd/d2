@@ -22,39 +22,37 @@ public class WebcamCommand: StringCommand {
         shortDescription: "Displays webcams from all around the world",
         requiredPermissionLevel: .basic
     )
-    private var subcommands: [String: (String, CommandOutput) -> Void] = [:]
+    private var subcommands: [String: (String, CommandOutput) async -> Void] = [:]
 
     public init(maxRadius: Int = 250) {
         subcommands = [
             "near": { /*[unowned self]*/ input, output in
                 guard let parsedCoordsWithRadius = try? coordsWithRadiusPattern.firstMatch(in: input), let lat = Double(parsedCoordsWithRadius.1), let lon = Double(parsedCoordsWithRadius.2) else {
-                    output.append(errorText: "Please enter a pair of lat/lon coordinates!")
+                    await output.append(errorText: "Please enter a pair of lat/lon coordinates!")
                     return
                 }
                 guard let radius = (parsedCoordsWithRadius.3 ?? "10").flatMap({ Int($0) }) else {
-                    output.append(errorText: "Please enter a valid radius!")
+                    await output.append(errorText: "Please enter a valid radius!")
                     return
                 }
                 guard radius < maxRadius else {
-                    output.append(errorText: "Please enter a radius < \(maxRadius)!")
+                    await output.append(errorText: "Please enter a radius < \(maxRadius)!")
                     return
                 }
-                WindyWebcamNearbyQuery(latitude: lat, longitude: lon, radius: radius).perform().listen {
-                    do {
-                        guard let webcams = try $0.get().result?.webcams else {
-                            output.append(errorText: "Did not find any webcams")
-                            return
-                        }
-                        output.append(Embed(
-                            title: ":camera: Webcams in a radius of \(radius) km around \(lat), \(lon)",
-                            description: webcams
-                                .map { "**\($0.title)**: \($0.status) - id: \($0.id)" }
-                                .joined(separator: "\n")
-                                .truncated(to: 1800, appending: "...")
-                        ))
-                    } catch {
-                        output.append(error, errorText: "Could not query nearby webcams")
+                do {
+                    guard let webcams = try await WindyWebcamNearbyQuery(latitude: lat, longitude: lon, radius: radius).perform().result?.webcams else {
+                        await output.append(errorText: "Did not find any webcams")
+                        return
                     }
+                    await output.append(Embed(
+                        title: ":camera: Webcams in a radius of \(radius) km around \(lat), \(lon)",
+                        description: webcams
+                            .map { "**\($0.title)**: \($0.status) - id: \($0.id)" }
+                            .joined(separator: "\n")
+                            .truncated(to: 1800, appending: "...")
+                    ))
+                } catch {
+                    await output.append(error, errorText: "Could not query nearby webcams")
                 }
             },
             "show": { /*[unowned self]*/ input, output in
@@ -91,17 +89,17 @@ public class WebcamCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-            output.append(errorText: info.helpText!)
+            await output.append(errorText: info.helpText!)
             return
         }
 
         guard let subcommand = subcommands[String(parsedArgs.name)] else {
-            output.append(errorText: "Could not find subcommand `\(parsedArgs.name)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
+            await output.append(errorText: "Could not find subcommand `\(parsedArgs.name)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
-        subcommand(String(parsedArgs.args), output)
+        await subcommand(String(parsedArgs.args), output)
     }
 }
