@@ -14,12 +14,12 @@ public class TransposeCommand: Command {
         self.sizeLimit = sizeLimit
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
-            output.append(errorText: "Please input a matrix")
+            await output.append(errorText: "Please input a matrix")
             return
         }
 
-        output.append(.ndArrays([matrix.transpose.asNDArray]))
+        await output.append(.ndArrays([matrix.transpose.asNDArray]))
     }
 }
