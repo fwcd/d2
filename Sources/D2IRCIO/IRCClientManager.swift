@@ -86,7 +86,9 @@ public class IRCClientManager: IRCClientDelegate {
             channelId: ID(channelName.stringValue, clientName: name)
         )
 
-        receiver.on(createMessage: m, sink: overlaySink(with: ircClient))
+        Task {
+            await receiver.on(createMessage: m, sink: overlaySink(with: ircClient))
+        }
     }
 
     private func overlaySink(with ircClient: IRCClient) -> Sink {
