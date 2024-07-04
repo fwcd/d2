@@ -20,17 +20,17 @@ public class FilterImageDirectlyCommand: Command {
         self.maxFilterHeight = maxFilterHeight
     }
 
-    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) {
+    public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         guard let image = input.asImage else {
-            output.append(errorText: "Please provide an image!")
+            await output.append(errorText: "Please provide an image!")
             return
         }
         guard let matrix = input.asNDArrays?.first?.asMatrix else {
-            output.append(errorText: "Please enter a matrix to be applied to the image!")
+            await output.append(errorText: "Please enter a matrix to be applied to the image!")
             return
         }
         guard matrix.width <= maxFilterWidth && matrix.height <= maxFilterHeight else {
-            output.append(errorText: "Please make sure that your filter is of size <= (\(maxFilterWidth), \(maxFilterHeight))!")
+            await output.append(errorText: "Please make sure that your filter is of size <= (\(maxFilterWidth), \(maxFilterHeight))!")
             return
         }
 
@@ -48,9 +48,9 @@ public class FilterImageDirectlyCommand: Command {
                 }
             }
 
-            try output.append(result)
+            try await output.append(result)
         } catch {
-            output.append(error, errorText: "Error while processing image")
+            await output.append(error, errorText: "Error while processing image")
         }
     }
 }
