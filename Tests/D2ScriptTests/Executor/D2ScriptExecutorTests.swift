@@ -14,7 +14,7 @@ final class D2ScriptExecutorTests: XCTestCase {
 
         var output = [[D2ScriptValue?]]()
         executor.topLevelStorage[function: "testPrint"] = {
-            await output.append($0)
+            output.append($0)
             return nil
         }
         XCTAssert(executor.topLevelStorage.commandNames.isEmpty)
