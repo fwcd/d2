@@ -53,8 +53,6 @@ public class PatCommand: Command {
             return
         }
 
-        _ = try? await context.channel?.triggerTyping()
-
         do {
             let request = HTTPRequest(url: avatarUrl)
             let data = try await request.run()

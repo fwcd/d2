@@ -155,6 +155,8 @@ public class CommandHandler: MessageHandler {
 
                     let input = await self.msgParser.parse(pipeSource.args, message: message, clientName: sink.name, guild: pipeSource.context.guild)
 
+                    try await sink.triggerTyping(on: channelId)
+
                     // Execute the pipe
                     let runner = RunnablePipe(pipeSource: pipeSource, input: input)
                     await runner.run()

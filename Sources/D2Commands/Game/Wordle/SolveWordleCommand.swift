@@ -66,8 +66,6 @@ public class SolveWordleCommand: StringCommand {
         board.guesses.append(WordleBoard.Guess(word: word, clues: clues))
         boards[channelId] = board
 
-        _ = try? await context.channel?.triggerTyping()
-
         let possibleSolutions = board.possibleSolutions
         let embed: Embed
 
