@@ -3,7 +3,7 @@ import RegexBuilder
 import Utils
 
 fileprivate let rawFloatPattern = #/(?:-?\d+(?:\.\d+)?)/#
-fileprivate let rawPointPattern = Regex {
+fileprivate let pointPattern = Regex {
     #/\(\s*/#
     Capture { rawFloatPattern } transform: { Double($0)! }
     #/\s*,\s*/#
@@ -33,7 +33,7 @@ public class MinecraftStrongholdFinderCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        let parsedPoints = input.matches(of: rawPointPattern).map { Vec2(x: $0.1, y: $0.2) }
+        let parsedPoints = input.matches(of: pointPattern).map { Vec2(x: $0.1, y: $0.2) }
         guard parsedPoints.count == 4 else {
             await output.append(errorText: "Locating a stronghold requires specifying 4 points (forming 2 lines, respectively)")
             return
