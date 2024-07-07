@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let rawColorPattern = try! Regex("(?:\(UnoColor.allCases.map { $0.rawValue }.joined(separator: "|")))")
+fileprivate let rawColorPattern = "(?:\(UnoColor.allCases.map { $0.rawValue }.joined(separator: "|")))"
 fileprivate let rawLabelPattern = "(?:\(UnoActionLabel.allCases.map { $0.rawValue }.joined(separator: "|")))"
 fileprivate let movePattern = try! Regex("^(?:(\(rawColorPattern))\\s+)?(\(rawLabelPattern)|[0-9])(?:\\s+(\(rawColorPattern)))?$")
 
@@ -27,6 +27,8 @@ public struct UnoMove: Hashable {
                 pickingColor: UnoColor(rawValue: rawNextColor)
             )
         } else {
+            print(movePattern)
+            print(str)
             throw GameError.invalidMove("Your move `\(str)` is invalid, try `[card color]? [card label] [next color]?`")
         }
     }
