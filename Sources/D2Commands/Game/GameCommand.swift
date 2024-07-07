@@ -99,16 +99,22 @@ public class GameCommand<G: Game>: Command {
     private func sendHandsAsDMs(fromState state: G.State, to output: any CommandOutput) async {
         let currentPlayers = state.playersOf(role: state.currentRole)
 
-        if game.onlySendHandToCurrentRole && !game.isRealTime && !currentPlayers.isEmpty {
-            if let hand = state.hands[state.currentRole] {
-                for player in currentPlayers {
-                    await output.append(hand.asRichValue, to: .dmChannel(player.id))
+        await withDiscardingTaskGroup { group in
+            if game.onlySendHandToCurrentRole && !game.isRealTime && !currentPlayers.isEmpty {
+                if let hand = state.hands[state.currentRole] {
+                    for player in currentPlayers {
+                        group.addTask {
+                            await output.append(hand.asRichValue, to: .dmChannel(player.id))
+                        }
+                    }
                 }
-            }
-        } else {
-            for (role, hand) in state.hands {
-                for player in state.playersOf(role: role) {
-                    await output.append(hand.asRichValue, to: .dmChannel(player.id))
+            } else {
+                for (role, hand) in state.hands {
+                    for player in state.playersOf(role: role) {
+                        group.addTask {
+                            await output.append(hand.asRichValue, to: .dmChannel(player.id))
+                        }
+                    }
                 }
             }
         }
