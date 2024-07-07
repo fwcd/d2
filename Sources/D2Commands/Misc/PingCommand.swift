@@ -1,4 +1,5 @@
 import Foundation
+import D2MessageIO
 import D2Permissions
 
 public class PingCommand: Command {
@@ -19,13 +20,10 @@ public class PingCommand: Command {
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
         let deltaMs = (context.message.timestamp?.timeIntervalSinceNow).map { $0 * -1000.0 }
-        let instanceName = context.hostInfo?.instanceName ?? "unknown"
-        let message = [
-            response,
-            deltaMs.map { "in \(String(format: "%.2f", $0)) ms" },
-            "(instance: \(instanceName))"
-        ].compactMap { $0 }.joined(separator: " ")
 
-        await output.append(message)
+        await output.append(Embed(
+            title: "Pong in \(deltaMs.map { String(format: "%.2f", $0) } ?? "?") ms",
+            footer: "Instance: \(context.hostInfo?.instanceName ?? "unknown")"
+        ))
     }
 }
