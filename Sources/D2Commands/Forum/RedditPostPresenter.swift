@@ -19,7 +19,7 @@ public struct RedditPostPresenter: RedditPresenter {
                 .flatMap(URL.init(string:))
                 .filter(self.refersToImage(url:))
                 .map(Embed.Image.init(url:)),
-            footer: Embed.Footer(text: "\(link.ups ?? 0) upvotes")
+            footer: "\(link.ups ?? 0) upvotes"
         )
     }
 

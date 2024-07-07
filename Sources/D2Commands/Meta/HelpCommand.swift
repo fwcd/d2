@@ -47,7 +47,7 @@ public class HelpCommand: StringCommand {
         let commands = context.registry.commandsWithAliases()
         return Embed(
             title: ":question: Available Commands",
-            footer: Embed.Footer(text: "Hint: You can use \(commandPrefix)search to find the command you need!"),
+            footer: "Hint: You can use \(commandPrefix)search to find the command you need!",
             fields: CommandCategory.allCases
                 .compactMap { category in
                     guard let categoryCommands = commands
@@ -83,7 +83,7 @@ public class HelpCommand: StringCommand {
             }
         return Embed(
             title: "\(category) | Available Commands",
-            footer: Embed.Footer(text: "Hint: You can use \(commandPrefix)help [commandname] to get help for an individual command!"),
+            footer: "Hint: You can use \(commandPrefix)help [commandname] to get help for an individual command!",
             fields: helpFields
         )
     }
@@ -95,7 +95,7 @@ public class HelpCommand: StringCommand {
                 command.info.longDescription,
                 command.info.helpText,
             ].compactMap { $0 }.joined(separator: "\n\n"),
-            footer: Embed.Footer(text: "\(command.info.category.plainDescription) - \(command.info.requiredPermissionLevel)")
+            footer: "\(command.info.category.plainDescription) - \(command.info.requiredPermissionLevel)"
         )
     }
 }

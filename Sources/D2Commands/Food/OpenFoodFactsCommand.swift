@@ -21,7 +21,7 @@ public class OpenFoodFactsCommand: StringCommand {
             await output.append(Embed(
                 title: [product.genericName ?? product.genericNameEn ?? product.genericNameDe, product.productNameEnImported].compactMap { $0 }.joined(separator: ": ").nilIfEmpty ?? "Untitled product",
                 thumbnail: product.imageThumbUrl.map(Embed.Thumbnail.init(url:)),
-                footer: product.creator?.nilIfEmpty.map { Embed.Footer(text: "creator: \($0)") },
+                footer: product.creator?.nilIfEmpty.map { "creator: \($0)" },
                 fields: [
                     Embed.Field(name: "Ingredients", value: (product.ingredientsTextWithAllergensEn ?? product.ingredientsTextEn)?.nilIfEmpty ?? "_none_")
                 ]

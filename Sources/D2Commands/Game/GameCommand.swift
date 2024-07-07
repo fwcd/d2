@@ -149,7 +149,7 @@ public class GameCommand<G: Game>: Command {
                 .embed(Embed(
                     title: "New match: \(state.playersDescription)",
                     color: game.themeColor.map { Int($0.rgb) },
-                    footer: Embed.Footer(text: "Type 'help' for details!"),
+                    footer: "Type 'help' for details!",
                     fields: [
                         Embed.Field(name: "Game actions", value: listFormat(game.actions.keys), inline: true),
                         Embed.Field(name: "General actions", value: listFormat(defaultActions.keys), inline: true),

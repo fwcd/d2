@@ -92,7 +92,7 @@ public class AkinatorCommand: StringCommand {
         Embed(
             title: ":genie: Akinator Question",
             description: question.text,
-            footer: Embed.Footer(text: "Step: \(question.step), progress: \(Int(question.progression))%")
+            footer: "Step: \(question.step), progress: \(Int(question.progression))%"
         )
     }
 }

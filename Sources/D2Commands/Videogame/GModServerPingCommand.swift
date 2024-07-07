@@ -40,7 +40,7 @@ public class GModServerPingCommand: StringCommand {
             ).perform() }
             await output.append(Embed(
                 title: "\(info.name) server: \(info.game)",
-                footer: Embed.Footer(text: "Protocol Version \(info.protocolVersion)"),
+                footer: "Protocol Version \(info.protocolVersion)",
                 fields: [
                     Embed.Field(name: "Map", value: info.map),
                     Embed.Field(name: "Players", value: """

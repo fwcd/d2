@@ -27,7 +27,7 @@ public class WeatherCommand: StringCommand {
             await output.append(Embed(
                 title: "\(weather.emoji ?? ":question:") The weather for \(weather.name ?? input)",
                 description: weather.weather?.map { "\($0.description) (\($0.main))" }.joined(separator: ", ").nilIfEmpty,
-                footer: weather.coord.map { Embed.Footer(text: "Latitude: \($0.lat) - longitude: \($0.lon)") },
+                footer: weather.coord.map { "Latitude: \($0.lat) - longitude: \($0.lon)" },
                 fields: [
                     weather.main.map { Embed.Field(name: ":thermometer: Main", value: """
                         **Temperature:** \($0.temp.map { "\($0)" } ?? "?")°C\($0.feelsLike.map { " (feels like \($0)°C)" } ?? "")

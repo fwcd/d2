@@ -26,7 +26,7 @@ public class CommandOfTheDayCommand: VoidCommand {
         await output.append(Embed(
             title: ":medal: The Command of the Day: `\(commandPrefix)\(name)`",
             description: command.info.longDescription,
-            footer: Embed.Footer(text: "\(command.inputValueType) -> \(command.outputValueType)")
+            footer: "\(command.inputValueType) -> \(command.outputValueType)"
         ))
     }
 }

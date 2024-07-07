@@ -59,7 +59,7 @@ public struct MessageWriter {
             case let .error(error, errorText: text):
                 return Message(embed: Embed(
                     description: ":warning: \(error.map { "\(type(of: $0)): " } ?? "")\(text)",
-                    footer: Embed.Footer(text: "Check the logs for more details!")
+                    footer: "Check the logs for more details!"
                 ))
             case let .files(files):
                 return Message(files: files)

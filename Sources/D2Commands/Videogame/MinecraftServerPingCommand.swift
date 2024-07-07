@@ -31,7 +31,7 @@ public class MinecraftServerPingCommand: StringCommand {
                         title: "Minecraft Server at `\(host)\(port.map { ":\($0)" } ?? "")`",
                         description: "\(serverInfo.description)",
                         thumbnail: URL(string: "attachment://favicon.png").filter { _ in faviconImage != nil }.map { Embed.Thumbnail(url: $0) },
-                        footer: modCount.map { _ in Embed.Footer(text: "Use \(context.commandPrefix)mcmods to get a detailed mod list") },
+                        footer: modCount.map { _ in "Use \(context.commandPrefix)mcmods to get a detailed mod list" },
                         fields: [
                             Embed.Field(name: "Online", value: "\(serverInfo.players.online) of \(serverInfo.players.max)"),
                             Embed.Field(name: "Players", value: serverInfo.players.sample?.map { $0.name }.joined(separator: "\n").nilIfEmpty ?? "_no information_"),

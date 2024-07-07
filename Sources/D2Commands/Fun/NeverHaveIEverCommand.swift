@@ -21,7 +21,7 @@ public class NeverHaveIEverCommand: StringCommand {
             let nhie = try partyGameDB.randomNhieStatement(category: input.nilIfEmpty)
             await output.append(Embed(
                 description: "**\(nhie.statement)**",
-                footer: nhie.category.map { Embed.Footer(text: "Category: \($0)") }
+                footer: nhie.category.map { "Category: \($0)" }
             ))
         } catch {
             await output.append(error, errorText: "Could not fetch statement")
