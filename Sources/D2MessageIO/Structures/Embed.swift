@@ -64,11 +64,15 @@ public struct Embed: Codable {
         }
     }
 
-    public struct Footer: Codable {
+    public struct Footer: Codable, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
         public let text: String?
 
         public init(text: String? = nil) {
             self.text = text
+        }
+
+        public init(stringLiteral value: String) {
+            self.init(text: value)
         }
     }
 
