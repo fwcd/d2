@@ -27,8 +27,6 @@ public struct UnoMove: Hashable {
                 pickingColor: UnoColor(rawValue: rawNextColor)
             )
         } else {
-            print(movePattern)
-            print(str)
             throw GameError.invalidMove("Your move `\(str)` is invalid, try `[card color]? [card label] [next color]?`")
         }
     }
