@@ -1,30 +1,28 @@
 import Utils
+import RegexBuilder
 import Logging
 
 fileprivate let log = Logger(label: "D2Script.D2ScriptParser")
 fileprivate let operators: [String] = ["=", "+", "-", "*", "/", "^"]
 fileprivate let keywords: [String] = ["command", "if", "else", "for", "while"]
 
-fileprivate let rawKeywordPattern = keywords
-    .map { "(?:\(LegacyRegex.escape($0)))" }
-    .joined(separator: "|")
-fileprivate let rawOperatorPattern = operators
-    .map { "(?:\(LegacyRegex.escape($0)))" }
-    .joined(separator: "|")
+fileprivate let rawKeywordPattern = ChoiceOf(nonEmptyComponents: keywords)
+fileprivate let rawOperatorPattern = ChoiceOf(nonEmptyComponents: operators)
 
 /// Matches a single token.
-/// 1.  capture group: a number literal
-/// 2.  capture group: an opening parenthesis
-/// 3.  capture group: a closing parenthesis
-/// 4.  capture group: an opening curly bracket
-/// 5.  capture group: a closing curly bracket
-/// 6.  capture group: a comma
-/// 7.  capture group: a line break
-/// 8.  capture group: an operator
-/// 9.  capture group: a keyword
-/// 10. & 11.   group: a string literal (first part matches the string in quotes, second part matches the content)
-/// 12. capture group: an identifier
-fileprivate let tokenPattern = try! LegacyRegex(from: "(\\d+(?:\\.\\d+)?)|(\\()|(\\))|(\\{)|(\\})|(,)|([\\r\\n]+)|(\(rawOperatorPattern))|(\(rawKeywordPattern))|(\"([^\"]*)\")|([a-zA-Z]+)")
+fileprivate let tokenPattern = Regex {
+    Capture { #/\d+(?:\.\d+)?/# }  // number literal
+    Capture { #/\(/# }             // opening parenthesis
+    Capture { #/\)/# }             // closing parenthesis
+    Capture { #/\{/# }             // opening curly bracket
+    Capture { #/\}/# }             // closing curly bracket
+    Capture { #/,/# }              // comma
+    Capture { #/[\r\n]+/# }        // line break
+    Capture { rawOperatorPattern } // operator
+    Capture { rawKeywordPattern }  // keyword
+    Capture { #/"([^"]*)"/# }      // string literal (first capture matches the string in quotes, second capture matches the content)
+    Capture { #/[a-zA-Z]+/# }      // identifier
+}
 
 public struct D2ScriptParser {
     public init() {}
@@ -39,28 +37,28 @@ public struct D2ScriptParser {
                 if let numberLiteral = $0[1].nilIfEmpty {
                     guard let value = Double(numberLiteral) else { throw D2ScriptError.numberFormatError(numberLiteral) }
                     return .numberLiteral(value)
-                } else if !$0[2].isEmpty {
+                } else if $0.2 != nil {
                     return .leftParenthesis
-                } else if !$0[3].isEmpty {
+                } else if $0.3 != nil {
                     return .rightParenthesis
-                } else if !$0[4].isEmpty {
+                } else if $0.4 != nil {
                     return .leftCurlyBracket
-                } else if !$0[5].isEmpty {
+                } else if $0.5 != nil {
                     return .rightCurlyBracket
-                } else if !$0[6].isEmpty {
+                } else if $0.6 != nil {
                     return .comma
-                } else if !$0[7].isEmpty {
+                } else if $0.7 != nil {
                     return .linebreak
-                } else if let rawOperator = $0[8].nilIfEmpty {
-                    return .anyOperator(rawOperator)
-                } else if let keyword = $0[9].nilIfEmpty {
-                    return .keyword(keyword)
-                } else if !$0[10].isEmpty {
-                    return .stringLiteral($0[11])
-                } else if let identifier = $0[12].nilIfEmpty {
-                    return .identifier(identifier)
+                } else if let rawOperator = $0.8 {
+                    return .anyOperator(String(rawOperator))
+                } else if let keyword = $0.9 {
+                    return .keyword(String(keyword))
+                } else if $0.10 != nil {
+                    return .stringLiteral(String($0.11))
+                } else if let identifier = $0.12 {
+                    return .identifier(String(identifier))
                 } else {
-                    throw D2ScriptError.unrecognizedToken($0[0])
+                    throw D2ScriptError.unrecognizedToken(String($0.0))
                 }
             }
     }
