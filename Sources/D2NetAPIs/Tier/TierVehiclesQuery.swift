@@ -1,10 +1,11 @@
+import Geodesy
 import Utils
 
 public struct TierVehiclesQuery {
-    public let coords: GeoCoordinates
+    public let coords: Coordinates
     public let radius: Int
 
-    public init(coords: GeoCoordinates, radius: Int = 100) {
+    public init(coords: Coordinates, radius: Int = 100) {
         self.coords = coords
         self.radius = radius
     }
@@ -14,7 +15,7 @@ public struct TierVehiclesQuery {
         let request = try HTTPRequest(
             host: "platform.tier-services.io",
             path: "/v1/vehicle",
-            query: ["lat": String(coords.latitude), "lng": String(coords.longitude), "radius": String(radius)],
+            query: ["lat": String(coords.latitude.totalDegrees), "lng": String(coords.longitude.totalDegrees), "radius": String(radius)],
             headers: ["X-Api-Key": key]
         )
         return try await request.fetchJSON(as: TierVehicleResults.self)

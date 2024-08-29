@@ -1,4 +1,5 @@
 import Foundation
+import Geodesy
 import D2MessageIO
 import CairoGraphics
 import Utils
@@ -18,7 +19,7 @@ public enum RichValue: Addable {
     case domNode(Element)
     case code(String, language: String?)
     case embed(Embed?)
-    case geoCoordinates(GeoCoordinates)
+    case geoCoordinates(Coordinates)
     case mentions([User])
     case roleMentions([RoleID])
     case ndArrays([NDArray<Rational>])
@@ -55,7 +56,7 @@ public enum RichValue: Addable {
     public var asGif: GIF? {
         extract { if case let .gif(gif) = $0 { return gif } else { return nil } }.first
     }
-    public var asGeoCoordinates: GeoCoordinates? {
+    public var asGeoCoordinates: Coordinates? {
         extract { if case let .geoCoordinates(geoCoordinates) = $0 { return geoCoordinates } else { return nil } }.first
     }
     public var asUrls: [URL]? {

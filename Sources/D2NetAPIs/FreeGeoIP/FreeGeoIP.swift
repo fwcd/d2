@@ -1,3 +1,4 @@
+import Geodesy
 import Utils
 
 public struct FreeGeoIP: Codable {
@@ -27,7 +28,7 @@ public struct FreeGeoIP: Codable {
     public let longitude: Double?
     public let metroCode: Int?
 
-    public var coords: GeoCoordinates? {
-        latitude.flatMap { lat in longitude.map { lon in GeoCoordinates(latitude: lat, longitude: lon) } }
+    public var coords: Coordinates? {
+        latitude.flatMap { lat in longitude.map { lon in .init(latitude: lat, longitude: lon) } }
     }
 }

@@ -1,10 +1,11 @@
 import Foundation
+import Geodesy
 import Utils
 
 public struct MapQuestGeocoder {
     public init() {}
 
-    public func geocode(location: String) async throws -> GeoCoordinates {
+    public func geocode(location: String) async throws -> Coordinates {
         let encodedLocation = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
         guard let mapQuestKey = storedNetApiKeys?.mapQuest else {
             throw NetApiError.missingApiKey("No API key for MapQuest found")
@@ -18,6 +19,6 @@ public struct MapQuestGeocoder {
         guard let latLng = geocoding.results.first?.locations.first?.latLng else {
             throw NetApiError.jsonParseError(String(describing: geocoding), "Could not locate results -> locations -> latLng")
         }
-        return GeoCoordinates(latitude: latLng.lat, longitude: latLng.lng)
+        return Coordinates(latitude: latLng.lat, longitude: latLng.lng)
     }
 }

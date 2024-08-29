@@ -1,5 +1,5 @@
 {
-  "originHash" : "3ad44ea5a6d80f2600a50f555cc616c21bcf2d4f26383ddd3648dfc7b30f570b",
+  "originHash" : "2d5c461e9325e5b4475e63c2b9d553d39b9348e68ae49c61b901e5d1bf2672b7",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -181,12 +181,21 @@
       }
     },
     {
+      "identity" : "swift-geodesy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-geodesy.git",
+      "state" : {
+        "revision" : "771f2fdbbbe00e8aae686ef945ac820f6d1aa79e",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swift-gif",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-gif.git",
       "state" : {
-        "revision" : "7b194cddaac97cc90d8fb192e0db6cfc99f11bf6",
-        "version" : "3.1.0"
+        "revision" : "31287229e596989f527105fe082672f6fb64fe4d",
+        "version" : "4.0.0"
       }
     },
     {
@@ -194,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-graphics.git",
       "state" : {
-        "revision" : "1b9fe64163977170d46fc22a418fe56e26cc9c10",
-        "version" : "3.0.2"
+        "revision" : "bb63a812bc5410af7f07cdc636371d55cc3e2aeb",
+        "version" : "4.0.0"
       }
     },
     {
@@ -338,8 +347,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-utils.git",
       "state" : {
-        "revision" : "a173ba3c19013d8cf3e46e9776f0c1d007538267",
-        "version" : "3.0.18"
+        "revision" : "12e4cb20ae4c4d4339c670bbf4ab72e8c3981fcc",
+        "version" : "4.0.0"
       }
     },
     {

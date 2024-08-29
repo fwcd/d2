@@ -1,10 +1,11 @@
 import Foundation
+import Geodesy
 import Utils
 
 public struct NominatimGeocoder {
     public init() {}
 
-    public func geocode(location: String) async throws -> GeoCoordinates {
+    public func geocode(location: String) async throws -> Coordinates {
         let request = try HTTPRequest(
             scheme: "https",
             host: "nominatim.openstreetmap.org",

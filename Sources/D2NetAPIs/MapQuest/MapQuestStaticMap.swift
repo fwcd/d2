@@ -1,23 +1,24 @@
 import Foundation
+import Geodesy
 import Utils
 
 public struct MapQuestStaticMap {
     public let url: URL
 
     public struct Pin: CustomStringConvertible {
-        public let coords: GeoCoordinates
+        public let coords: Coordinates
         public let marker: String?
 
         public var description: String { ["\(coords.latitude),\(coords.longitude)", marker].compactMap { $0 }.joined(separator: "|") }
 
-        public init(coords: GeoCoordinates, marker: String? = nil) {
+        public init(coords: Coordinates, marker: String? = nil) {
             self.coords = coords
             self.marker = marker
         }
     }
 
     public init(
-        center: GeoCoordinates? = nil,
+        center: Coordinates? = nil,
         pins: [Pin] = [],
         width: Int = 300,
         height: Int = 300,

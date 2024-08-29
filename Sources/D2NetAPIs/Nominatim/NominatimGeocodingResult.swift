@@ -1,3 +1,4 @@
+import Geodesy
 import Utils
 
 struct NominatimGeocodingResult: Codable {
@@ -33,7 +34,7 @@ struct NominatimGeocodingResult: Codable {
     var displayName: String?
     var boundingBox: [String]?
 
-    var geoCoordinates: GeoCoordinates? {
+    var geoCoordinates: Coordinates? {
         guard let lat = lat.flatMap(Double.init),
               let lon = lon.flatMap(Double.init) else { return nil }
         return .init(

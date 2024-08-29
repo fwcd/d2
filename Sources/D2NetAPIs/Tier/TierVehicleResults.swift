@@ -1,4 +1,5 @@
 import Utils
+import Geodesy
 
 public struct TierVehicleResults: Codable {
     public let data: [Vehicle]
@@ -25,7 +26,7 @@ public struct TierVehicleResults: Codable {
             public let hasHelmetBox: Bool?
             public let hasHelmet: Bool?
 
-            public var coords: GeoCoordinates { GeoCoordinates(latitude: lat, longitude: lng) }
+            public var coords: Coordinates { Coordinates(latitude: lat, longitude: lng) }
         }
     }
 }
