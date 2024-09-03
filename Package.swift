@@ -29,7 +29,8 @@ let package = Package(
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.3.3"),
         .package(url: "https://github.com/safx/Emoji-Swift.git", revision: "b3a49f4a9fbee3c7320591dbc7263c192244063e"),
         .package(url: "https://github.com/PerfectlySoft/Perfect-SysInfo.git", from: "3.0.0"),
-        .package(url: "https://github.com/KarthikRIyer/swiftplot.git", revision: "36f46087d36de0375d6245e767b33b3efcb7dc30"),
+        // https://github.com/KarthikRIyer/swiftplot/pull/138
+        .package(url: "https://github.com/KarthikRIyer/swiftplot.git", revision: "9549e4597d1c090a6f58859545868d4750b5d6c4"),
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", from: "0.4.1"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", from: "0.13.3"),
         .package(url: "https://github.com/NozeIO/swift-nio-irc-client.git", from: "0.7.2"),
