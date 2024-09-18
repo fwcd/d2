@@ -1,5 +1,6 @@
 {
     "name": "latex-renderer",
+    "private": true,
     "version": "0.0.1",
     "description": "Renders LaTeX input as PNG",
     "main": "src/index.js",
