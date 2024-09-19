@@ -17,8 +17,8 @@ public actor LlmChatConversator: Conversator {
         var message: String
     }
 
-    public init() {
-        session = NodePackage(name: "llm-chat-client").startJsonSession()
+    public init() throws {
+        session = try NodePackage(name: "llm-chat-client").startJsonSession()
     }
 
     public func answer(input: String, on guildId: GuildID) async throws -> String? {

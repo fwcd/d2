@@ -15,9 +15,18 @@ extension FileHandle {
                 while !isEOF {
                     do {
                         // Read a chunk of data from the file
-                        let chunkSize = 4096
+                        // FIXME: Read an actual chunk instead of a single byte
+                        // Unfortunately, `read(upToCount:)` seems to block
+                        // until it has read `chunkSize` bytes or reaches EOF,
+                        // whichever comes first. This is not what we want, we
+                        // would rather want it to read the available/ready data
+                        // without blocking and then perhaps strategically block
+                        // afterwards (note that even `availableData` seems to
+                        // block).
+                        let chunkSize = 1
                         let chunk = try self.read(upToCount: chunkSize) ?? Data()
                         if chunk.isEmpty {
+                            print("Read \(String(data: chunk, encoding: .utf8)!)")
                             isEOF = true
                             // If there's remaining data in the buffer, yield it as the last line
                             if !buffer.isEmpty {

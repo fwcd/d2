@@ -19,12 +19,14 @@ struct NodePackage {
     }
 
     /// Invokes `npm start` and return a wrapper for communicating via newline-delimited JSON messages.
-    func startJsonSession(_ args: [String] = []) -> JsonSession {
-        let (_, process) = Shell().newProcess("npm", in: directoryURL, args: npmArgs + args)
+    func startJsonSession(_ args: [String] = []) throws -> JsonSession {
+        let shell = Shell()
+        let (_, process) = shell.newProcess("npm", in: directoryURL, args: npmArgs + args)
         let stdout = Pipe()
         let stdin = Pipe()
         process.standardOutput = stdout
         process.standardInput = stdin
+        try shell.execute(process: process)
         return JsonSession(process: process, stdin: stdin, stdout: stdout)
     }
 

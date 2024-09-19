@@ -10,12 +10,12 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
         subscribesToNextMessages: true,
         userOnly: false
     )
-    private let makeConversator: () -> C
+    private let makeConversator: () throws -> C
     private let maxWords = 60
 
     private var conversators: [ChannelID: C] = [:]
 
-    public init(_ makeConversator: @escaping () -> C) {
+    public init(_ makeConversator: @escaping () throws -> C) {
         self.makeConversator = makeConversator
     }
 
@@ -24,9 +24,13 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
             await output.append(errorText: "No channel id available")
             return
         }
-        context.subscribeToChannel()
-        conversators[channelId] = makeConversator()
-        await output.append("Subscribed to this channel. Type anything to talk to me.")
+        do {
+            conversators[channelId] = try makeConversator()
+            context.subscribeToChannel()
+            await output.append("Subscribed to this channel. Type anything to talk to me.")
+        } catch {
+            await output.append(error, errorText: "Could not create conversator")
+        }
     }
 
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
@@ -35,8 +39,8 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
               let channelId = context.channel?.id,
               let conversator = conversators[channelId] else { return }
         if content == "stop" {
-            context.unsubscribeFromChannel()
             conversators[channelId] = nil
+            context.unsubscribeFromChannel()
             await output.append("Unsubscribed from this channel.")
         } else {
             do {
