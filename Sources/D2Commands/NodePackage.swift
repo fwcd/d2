@@ -11,7 +11,7 @@ public struct NodePackage {
     }
 
     /// Invokes `npm start` with the given arguments.
-    public func start(withArgs args: [String]) async throws -> Data {
+    public func run(_ args: [String]) async throws -> Data {
         try await Shell().output(for: "npm", in: directoryURL, args: ["run", "--silent", "start", "--"] + args).get()
     }
 }
