@@ -37,7 +37,7 @@ struct NodePackage {
         private let process: Process
 
         private let stdinFileHandle: FileHandle
-        private var stdoutLines: AsyncLineSequence<FileHandle.AsyncBytes>.AsyncIterator
+        private var stdoutLines: AsyncThrowingStream<String, any Error>.AsyncIterator
 
         private let encoder = JSONEncoder()
         private let decoder = JSONDecoder()
@@ -46,7 +46,7 @@ struct NodePackage {
             self.process = process
 
             stdinFileHandle = stdin.fileHandleForWriting
-            stdoutLines = stdout.fileHandleForReading.bytes.lines.makeAsyncIterator()
+            stdoutLines = stdout.fileHandleForReading.asyncLines().makeAsyncIterator()
         }
 
         /// Writes a single JSON line to the process's stdin.
