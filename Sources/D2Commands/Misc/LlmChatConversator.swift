@@ -6,9 +6,15 @@ fileprivate let log = Logger(label: "D2Commands.LlmChatConversator")
 
 public actor LlmChatConversator: Conversator {
     private let session: NodePackage.JsonSession
+    private let systemPrompt: String
     private var isAnswering = false
 
     private struct Request: Codable {
+        enum CodingKeys: String, CodingKey {
+            case message
+            case systemMessage = "system_message"
+        }
+
         var message: String
         var systemMessage: String? = nil
     }
@@ -17,8 +23,14 @@ public actor LlmChatConversator: Conversator {
         var message: String
     }
 
-    public init() throws {
+    public init(
+        systemPrompt: String = """
+            You are a language model operating in the context of a virtual
+            assistant named D2. Provide brief, friendly and useful answers.
+            """
+    ) throws {
         session = try NodePackage(name: "llm-chat-client").startJsonSession()
+        self.systemPrompt = systemPrompt
     }
 
     public func answer(input: String, on guildId: GuildID) async throws -> String? {
@@ -32,7 +44,7 @@ public actor LlmChatConversator: Conversator {
         defer { isAnswering = false }
 
         log.info("Answering '\(input)' via LLM...")
-        let request = Request(message: input)
+        let request = Request(message: input, systemMessage: systemPrompt)
         try session.send(request)
 
         let response = try await session.receive(Response.self)
