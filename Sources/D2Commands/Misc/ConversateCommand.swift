@@ -1,6 +1,6 @@
 import Utils
 
-public class ConversateCommand: StringCommand {
+public class ConversateCommand<C>: StringCommand where C: Conversator {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Uses a Markov chain to 'conversate' with the user",
@@ -9,10 +9,10 @@ public class ConversateCommand: StringCommand {
         subscribesToNextMessages: true,
         userOnly: false
     )
-    private let conversator: Conversator
+    private let conversator: C
     private let maxWords = 60
 
-    public init(conversator: Conversator) {
+    public init(conversator: C) {
         self.conversator = conversator
     }
 
