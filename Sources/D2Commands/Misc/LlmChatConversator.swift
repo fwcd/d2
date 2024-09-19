@@ -1,5 +1,8 @@
+import Logging
 import Utils
 import D2MessageIO
+
+fileprivate let log = Logger(label: "D2Commands.LlmChatConversator")
 
 public actor LlmChatConversator: Conversator {
     private let session: NodePackage.JsonSession
@@ -25,8 +28,13 @@ public actor LlmChatConversator: Conversator {
         isAnswering = true
         defer { isAnswering = false }
 
-        try session.send(Request(message: input))
+        let request = Request(message: input)
+        log.info("Sending \(request)...")
+        try session.send(request)
+
         let response = try await session.receive(Response.self)
+        log.info("Got \(response)")
+
         return response.message
     }
 }
