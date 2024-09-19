@@ -6,7 +6,7 @@ private let stopCommand = "stop"
 public class ConversateCommand<C>: StringCommand where C: Conversator {
     public let info = CommandInfo(
         category: .misc,
-        shortDescription: "Uses a Markov chain to 'conversate' with the user",
+        shortDescription: "Uses some fancy magic to chat with the user",
         helpText: "Invoke without argument, then send any message. Type 'stop' to stop the bot from replying.",
         requiredPermissionLevel: .basic,
         subscribesToNextMessages: true,
