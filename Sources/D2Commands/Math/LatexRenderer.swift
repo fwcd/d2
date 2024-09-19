@@ -15,6 +15,6 @@ class LatexRenderer {
 
     private func renderPNG(from formula: String, color: String, scale: Double) async throws -> Data {
         log.debug("Invoking latex-renderer")
-        return try await node.start(withArgs: [formula, "--color", color, "--scale", String(scale)]).get()
+        return try await node.start(withArgs: [formula, "--color", color, "--scale", String(scale)])
     }
 }
