@@ -24,17 +24,21 @@ public actor LlmChatConversator: Conversator {
     public func answer(input: String, on guildId: GuildID) async throws -> String? {
         // Since actors are reentrant, we need to guard against interleaving answer
         // requests. Our solution is to simply make them return `nil`.
-        guard !isAnswering else { return nil }
+        guard !isAnswering else {
+            log.warning("Ignoring '\(input)' since the LLM has not responded yet...")
+            return nil
+        }
         isAnswering = true
         defer { isAnswering = false }
 
+        log.info("Answering '\(input)' via LLM...")
         let request = Request(message: input)
-        log.info("Sending \(request)...")
         try session.send(request)
 
         let response = try await session.receive(Response.self)
-        log.info("Got \(response)")
+        let answer = response.message
+        log.info("Got \(answer)")
 
-        return response.message
+        return answer
     }
 }
