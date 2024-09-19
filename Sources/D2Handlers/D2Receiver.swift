@@ -352,6 +352,7 @@ public class D2Receiver: Receiver {
         registry["downloadimage", aka: ["downloadimg", "di"]] = DownloadImageCommand()
         registry["markov"] = MarkovCommand(messageDB: messageDB)
         registry["conversate"] = ConversateCommand(conversator: FollowUpConversator(messageDB: messageDB))
+        registry["chat"] = ConversateCommand(conversator: LlmChatConversator())
         registry["emoji", aka: ["emote"]] = EmojiCommand()
         registry["emojis"] = EmojisCommand()
         registry["emojiusage"] = EmojiUsageCommand(messageDB: messageDB)
