@@ -40,7 +40,7 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
             await output.append("Unsubscribed from this channel.")
         } else {
             do {
-                if let answer = try conversator.answer(input: content, on: guildId) {
+                if let answer = try await conversator.answer(input: content, on: guildId) {
                     await output.append(answer.cleaningMentions(with: context.guild))
                 }
             } catch {

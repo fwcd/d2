@@ -1,3 +1,4 @@
+import Dispatch
 import Utils
 import D2MessageIO
 
@@ -8,23 +9,40 @@ public struct FollowUpConversator: Conversator {
         self.messageDB = messageDB
     }
 
-    public func answer(input: String, on guildId: GuildID) throws -> String? {
-        guard let last = input
-            .split(separator: " ")
-            .last
-            .map({ String($0) })?.nilIfEmpty else { return nil }
-        let followUps = try messageDB.followUps(to: last, on: guildId)
+    public func answer(input: String, on guildId: GuildID) async throws -> String? {
+        try await withCheckedThrowingContinuation { continuation in
+            // Per https://stackoverflow.com/a/69573708 we use GCD to asyncify our slow synchronous work
+            DispatchQueue.global().async {
+                guard let last = input
+                    .split(separator: " ")
+                    .last
+                    .map({ String($0) })?.nilIfEmpty else {
+                    continuation.resume(returning: nil)
+                    return
+                }
 
-        if !followUps.isEmpty {
-            let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, input)) }
-            guard let distribution = CustomDiscreteDistribution(normalizing: candidates) else { return nil }
-            let sample = distribution.sample()
-            if !sample.isEmpty {
-                return sample
+                do {
+                    let followUps = try messageDB.followUps(to: last, on: guildId)
+
+                    if !followUps.isEmpty {
+                        let candidates = followUps.map { ($0.1, matchingSuffixLength($0.0, input)) }
+                        guard let distribution = CustomDiscreteDistribution(normalizing: candidates) else {
+                            continuation.resume(returning: nil)
+                            return
+                        }
+                        let sample = distribution.sample()
+                        if !sample.isEmpty {
+                            continuation.resume(returning: sample)
+                            return
+                        }
+                    }
+
+                    continuation.resume(returning: nil)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
         }
-
-        return nil
     }
 
     private func matchingSuffixLength(_ lhs: String, _ rhs: String) -> Int {
