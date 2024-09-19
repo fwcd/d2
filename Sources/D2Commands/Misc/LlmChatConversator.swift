@@ -25,8 +25,9 @@ public actor LlmChatConversator: Conversator {
 
     public init(
         systemPrompt: String = """
-            You are a language model operating in the context of a virtual
-            assistant named D2. Provide brief, friendly and useful answers.
+            You are a language model operating in the context of a Discord bot,
+            a virtual assistant named "D2". Provide brief, friendly and useful
+            answers.
             """
     ) throws {
         session = try NodePackage(name: "llm-chat-client").startJsonSession()
