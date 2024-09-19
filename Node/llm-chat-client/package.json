@@ -1,0 +1,17 @@
+{
+    "name": "llm-chat-client",
+    "private": true,
+    "type": "module",
+    "version": "0.0.1",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "@gradio/client": "^1.5.2"
+    }
+}
