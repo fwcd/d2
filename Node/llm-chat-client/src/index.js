@@ -22,6 +22,7 @@ import * as readline from "node:readline";
 //     interface Response {
 //         message: string;
 //     }
+//
 
 const client = await Client.connect("d2-assistant/chat");
 
