@@ -1,6 +1,8 @@
 import D2MessageIO
 import Utils
 
+private let stopCommand = "stop"
+
 public class ConversateCommand<C>: StringCommand where C: Conversator {
     public let info = CommandInfo(
         category: .misc,
@@ -27,7 +29,7 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
         do {
             conversators[channelId] = try makeConversator()
             context.subscribeToChannel()
-            await output.append("Subscribed to this channel. Type anything to talk to me.")
+            await output.append("Subscribed to this channel. Type anything to talk to me, or `\(stopCommand)` to end the conversation.")
         } catch {
             await output.append(error, errorText: "Could not create conversator")
         }
@@ -38,7 +40,7 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
               let guildId = context.guild?.id,
               let channelId = context.channel?.id,
               let conversator = conversators[channelId] else { return }
-        if content == "stop" {
+        if content == stopCommand {
             conversators[channelId] = nil
             context.unsubscribeFromChannel()
             await output.append("Unsubscribed from this channel.")
