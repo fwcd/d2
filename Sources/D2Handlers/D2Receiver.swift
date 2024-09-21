@@ -86,7 +86,7 @@ public class D2Receiver: Receiver {
             CountToNHandler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler($configuration: $haikuConfiguration, inventoryManager: inventoryManager),
-            LuckyNumberHandler(luckyNumbers: [42, 69, 404, 420, 666, 911, 1337, 1984, 42069, 69420, 80085], minimumNumberCount: 2),
+            LuckyNumberHandler(luckyNumbers: [42, 69, 404, 420, 666, 911, 1337, 1984, 42069, 69420, 80085, 8675309], minimumNumberCount: 2),
             FactorialHandler(),
             MessageDatabaseHandler(messageDB: messageDB) // Below other handlers so as to not pick up on commands
         ]
