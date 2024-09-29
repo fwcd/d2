@@ -5,6 +5,7 @@ import Foundation
 import FoundationNetworking
 #endif
 import Logging
+import StaticMap
 import Utils
 import D2NetAPIs
 
@@ -40,10 +41,11 @@ public class CampusCommand: StringCommand {
             let address = self.format(rawAddress: rawAddress)
             let coords = try await geocoder.geocode(location: address)
 
-            let mapData = try await MapQuestStaticMap(
-                center: coords,
-                pins: [.init(coords: coords)]
-            ).download()
+            let mapData = try await StaticMap(
+                center: coords
+                // TODO: Add pins once we add support for annotations
+                // pins: [.init(coords: coords)]
+            ).render().pngEncoded()
 
             await output.append(.compound([
                 .files([Message.FileUpload(data: mapData, filename: "campus.jpg", mimeType: "image/jpeg")]),
