@@ -1,5 +1,5 @@
 {
-  "originHash" : "2683a7b1651a77cb26316dbb6fb8400629bc077d50065e7969b8371df528f918",
+  "originHash" : "6cbca0510b4833ba7b7d30a16c43834e52128d1df25cb0ea67ad857ff1925cdc",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-static-map.git",
       "state" : {
-        "revision" : "5db8bd3ca59b06e73bcee854d8ee3507c0c27ca7",
-        "version" : "0.1.0"
+        "revision" : "159a3c99aae7c1721d74a3520bb4ecc92f21ede1",
+        "version" : "0.2.0"
       }
     },
     {
