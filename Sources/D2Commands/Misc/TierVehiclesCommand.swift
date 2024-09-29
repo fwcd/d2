@@ -26,6 +26,12 @@ public class TierVehiclesCommand: Command {
 
         do {
             let vehicles = try await TierVehiclesQuery(coords: coords, radius: radius).perform().data
+
+            guard !vehicles.isEmpty else {
+                await output.append(errorText: "No vehicles found")
+                return
+            }
+
             let activeColor = Color(rgb: 0x498f00)
             let inactiveColor = Color.gray
             let map = StaticMap(
