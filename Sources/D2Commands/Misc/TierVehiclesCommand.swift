@@ -26,8 +26,8 @@ public class TierVehiclesCommand: Command {
 
         do {
             let vehicles = try await TierVehiclesQuery(coords: coords, radius: radius).perform().data
-            let activeColor = Color(rgb: 0xdcffb8)
-            let inactiveColor = Color(rgb: 0xffe7b8)
+            let activeColor = Color(rgb: 0x498f00)
+            let inactiveColor = Color.gray
             let map = StaticMap(
                 annotations: vehicles
                     .enumerated()
