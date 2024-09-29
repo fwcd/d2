@@ -1,5 +1,6 @@
 import D2MessageIO
 import D2NetAPIs
+import StaticMap
 import Utils
 
 public class GeoIPCommand: StringCommand {
@@ -25,7 +26,11 @@ public class GeoIPCommand: StringCommand {
                 return
             }
 
-            let mapData = try await MapQuestStaticMap(center: coords, pins: [.init(coords: coords)], zoom: 2).download()
+            let mapData = try await StaticMap(
+                zoom: 2,
+                center: coords,
+                annotations: [.pin(coords: coords)]
+            ).render().pngEncoded()
             let mapFileUpload = Message.FileUpload(data: mapData, filename: "map.jpg", mimeType: "image/jpeg")
 
             await output.append(.compound([
