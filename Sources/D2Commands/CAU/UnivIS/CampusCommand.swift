@@ -41,13 +41,8 @@ public class CampusCommand: StringCommand {
             let address = self.format(rawAddress: rawAddress)
             let coords = try await geocoder.geocode(location: address)
 
-            let mapData = try await StaticMap(
-                center: coords,
-                annotations: [.pin(coords: coords)]
-            ).render().pngEncoded()
-
             await output.append(.compound([
-                .files([Message.FileUpload(data: mapData, filename: "campus.png", mimeType: "image/png")]),
+                .geoCoordinates(coords),
                 .embed(Embed(
                     title: address,
                     url: self.googleMapsURLFor(address: address)

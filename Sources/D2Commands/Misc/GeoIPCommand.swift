@@ -26,15 +26,8 @@ public class GeoIPCommand: StringCommand {
                 return
             }
 
-            let mapData = try await StaticMap(
-                zoom: 2,
-                center: coords,
-                annotations: [.pin(coords: coords)]
-            ).render().pngEncoded()
-            let mapFileUpload = Message.FileUpload(data: mapData, filename: "map.png", mimeType: "image/png")
-
             await output.append(.compound([
-                .files([mapFileUpload].compactMap { $0 }),
+                .geoCoordinates(coords),
                 .embed(Embed(
                     title: "GeoIP info for `\(data.ip)`",
                     fields: [
