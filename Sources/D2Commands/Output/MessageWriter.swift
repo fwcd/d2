@@ -1,4 +1,5 @@
 import Logging
+import StaticMap
 import D2MessageIO
 import Utils
 
@@ -47,8 +48,15 @@ public struct MessageWriter {
                     """)
             case let .embed(embed):
                 return Message(embed: embed)
-            case let .geoCoordinates(geo):
-                return Message(content: "Latitude: \(geo.latitude), Longitude: \(geo.longitude)")
+            case let .geoCoordinates(coords):
+                let mapImage = try await StaticMap(
+                    center: coords,
+                    annotations: [.pin(coords: coords)]
+                ).render()
+                return try await write(value: .compound([
+                    .image(mapImage),
+                    .text("\(coords)"),
+                ]))
             case let .ndArrays(ndArrays):
                 if ndArrays.contains(where: { !$0.isScalar }) {
                     let image = try await latexRenderer.renderImage(from: latexOf(ndArrays: ndArrays))

@@ -1,5 +1,7 @@
 import D2MessageIO
 import D2NetAPIs
+import Graphics
+import StaticMap
 import Utils
 
 public class TierVehiclesCommand: Command {
@@ -24,23 +26,26 @@ public class TierVehiclesCommand: Command {
 
         do {
             let vehicles = try await TierVehiclesQuery(coords: coords, radius: radius).perform().data
-            let map = try MapQuestStaticMap(
-                pins: vehicles
+
+            guard !vehicles.isEmpty else {
+                await output.append(errorText: "No vehicles found")
+                return
+            }
+
+            let activeColor = Color(rgb: 0x498f00)
+            let inactiveColor = Color.gray
+            let map = StaticMap(
+                annotations: vehicles
                     .enumerated()
-                    .map { (i, vehicle) in .init(
-                        coords: vehicle.attributes.coords,
-                        marker: [
-                            "flag", // type
-                            "sm", // size
-                            "000000", // bg color
-                            vehicle.attributes.state == "ACTIVE" ? "dcffb8" : "ffe7b8", // fg color
-                            "\(i + 1)\(vehicle.attributes.batteryLevel.map { ":\($0)%25" } ?? "")" // text
-                        ].joined(separator: "-")
-                    ) }
+                    .map { (i, vehicle) in
+                        .pin(coords: vehicle.attributes.coords)
+                            .color(vehicle.attributes.state == "ACTIVE" ? activeColor : inactiveColor)
+                            .label("\(i + 1)\(vehicle.attributes.batteryLevel.map { ":\($0)%25" } ?? "")")
+                    }
             )
-            let mapImageData = try await map.download()
+            let mapImageData = try await map.render().pngEncoded()
             await output.append(.compound([
-                .files([Message.FileUpload(data: mapImageData, filename: "vehicles.jpg", mimeType: "image/jpeg")]),
+                .files([Message.FileUpload(data: mapImageData, filename: "vehicles.png", mimeType: "image/png")]),
                 .embed(Embed(
                     title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
                     fields: vehicles

@@ -5,6 +5,7 @@ import Foundation
 import FoundationNetworking
 #endif
 import Logging
+import StaticMap
 import Utils
 import D2NetAPIs
 
@@ -40,13 +41,8 @@ public class CampusCommand: StringCommand {
             let address = self.format(rawAddress: rawAddress)
             let coords = try await geocoder.geocode(location: address)
 
-            let mapData = try await MapQuestStaticMap(
-                center: coords,
-                pins: [.init(coords: coords)]
-            ).download()
-
             await output.append(.compound([
-                .files([Message.FileUpload(data: mapData, filename: "campus.jpg", mimeType: "image/jpeg")]),
+                .geoCoordinates(coords),
                 .embed(Embed(
                     title: address,
                     url: self.googleMapsURLFor(address: address)

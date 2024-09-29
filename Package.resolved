@@ -1,5 +1,5 @@
 {
-  "originHash" : "2683a7b1651a77cb26316dbb6fb8400629bc077d50065e7969b8371df528f918",
+  "originHash" : "298a5f5d129e175f5d056f8d810c5bbdc2cac3cc3a064f8c7625959d26b84966",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-graphics.git",
       "state" : {
-        "revision" : "bb63a812bc5410af7f07cdc636371d55cc3e2aeb",
-        "version" : "4.0.0"
+        "revision" : "d761f1856b3e6f9472d4d06db9bce9106f0650ca",
+        "version" : "4.0.3"
       }
     },
     {
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-static-map.git",
       "state" : {
-        "revision" : "5db8bd3ca59b06e73bcee854d8ee3507c0c27ca7",
-        "version" : "0.1.0"
+        "revision" : "e0020edc8d8b812cd5b90e793c1aef0244f2c6b3",
+        "version" : "0.5.0"
       }
     },
     {
