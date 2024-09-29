@@ -31,7 +31,7 @@ public class GeoIPCommand: StringCommand {
                 center: coords,
                 annotations: [.pin(coords: coords)]
             ).render().pngEncoded()
-            let mapFileUpload = Message.FileUpload(data: mapData, filename: "map.jpg", mimeType: "image/jpeg")
+            let mapFileUpload = Message.FileUpload(data: mapData, filename: "map.png", mimeType: "image/png")
 
             await output.append(.compound([
                 .files([mapFileUpload].compactMap { $0 }),

@@ -39,7 +39,7 @@ public class TierVehiclesCommand: Command {
             )
             let mapImageData = try await map.render().pngEncoded()
             await output.append(.compound([
-                .files([Message.FileUpload(data: mapImageData, filename: "vehicles.jpg", mimeType: "image/jpeg")]),
+                .files([Message.FileUpload(data: mapImageData, filename: "vehicles.png", mimeType: "image/png")]),
                 .embed(Embed(
                     title: ":scooter: Tier Vehicles in a Radius of \(radius)m around \(coords.latitude), \(coords.longitude)",
                     fields: vehicles

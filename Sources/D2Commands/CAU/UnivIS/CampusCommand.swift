@@ -47,7 +47,7 @@ public class CampusCommand: StringCommand {
             ).render().pngEncoded()
 
             await output.append(.compound([
-                .files([Message.FileUpload(data: mapData, filename: "campus.jpg", mimeType: "image/jpeg")]),
+                .files([Message.FileUpload(data: mapData, filename: "campus.png", mimeType: "image/png")]),
                 .embed(Embed(
                     title: address,
                     url: self.googleMapsURLFor(address: address)
