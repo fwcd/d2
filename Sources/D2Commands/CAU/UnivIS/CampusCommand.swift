@@ -42,9 +42,8 @@ public class CampusCommand: StringCommand {
             let coords = try await geocoder.geocode(location: address)
 
             let mapData = try await StaticMap(
-                center: coords
-                // TODO: Add pins once we add support for annotations
-                // pins: [.init(coords: coords)]
+                center: coords,
+                annotations: [.pin(coords: coords)]
             ).render().pngEncoded()
 
             await output.append(.compound([
