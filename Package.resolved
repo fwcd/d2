@@ -1,5 +1,5 @@
 {
-  "originHash" : "c887848cc797b0a9b57db72a5bb3ece883fcea48b83f42e79ac9bde25bf2cfb4",
+  "originHash" : "2683a7b1651a77cb26316dbb6fb8400629bc077d50065e7969b8371df528f918",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-geodesy.git",
       "state" : {
-        "revision" : "771f2fdbbbe00e8aae686ef945ac820f6d1aa79e",
-        "version" : "0.1.0"
+        "revision" : "1eae39a90ff057da486681d4a194d13b0139fa08",
+        "version" : "0.2.8"
       }
     },
     {
@@ -221,8 +221,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "e97a6fcb1ab07462881ac165fdbb37f067e205d5",
-        "version" : "1.5.4"
+        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
+        "version" : "1.6.1"
       }
     },
     {
@@ -334,6 +334,15 @@
       }
     },
     {
+      "identity" : "swift-static-map",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fwcd/swift-static-map.git",
+      "state" : {
+        "revision" : "5db8bd3ca59b06e73bcee854d8ee3507c0c27ca7",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swift-system",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system.git",
@@ -347,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-utils.git",
       "state" : {
-        "revision" : "06329e9e75fd34cc8a326b36db58e6316c451d61",
-        "version" : "4.0.1"
+        "revision" : "e10838eeb33ffb9ae17ac73e0b62a9baa3782d0c",
+        "version" : "4.1.2"
       }
     },
     {
@@ -364,8 +373,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "f83c097597094a04124eb6e0d1e894d24129af87",
-        "version" : "2.7.0"
+        "revision" : "3c2c7e1e72b8abd96eafbae80323c5c1e5317437",
+        "version" : "2.7.5"
       }
     },
     {
