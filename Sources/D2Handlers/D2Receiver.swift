@@ -616,6 +616,20 @@ public class D2Receiver: Receiver {
     public func on(createInteraction interaction: Interaction, sink: any Sink) async {
         for i in interactionHandlers.indices {
             if await interactionHandlers[i].handle(interaction: interaction, sink: sink) {
+                // TODO: Perhaps it would be better to let the interaction
+                // handler return a response here, so they wouldn't e.g. have to
+                // edit the message separately
+                do {
+                    if let token = interaction.token {
+                        try await sink.createInteractionResponse(
+                            for: interaction.id,
+                            token: token,
+                            response: .init(type: .acknowledge)
+                        )
+                    }
+                } catch {
+                    log.warning("Creating interaction response failed: \(error)")
+                }
                 return
             }
         }

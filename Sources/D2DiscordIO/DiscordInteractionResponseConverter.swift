@@ -7,11 +7,13 @@ extension InteractionResponse: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordInteractionResponse {
         DiscordInteractionResponse(
             type: type.usingDiscordAPI,
-            data: DiscordInteractionApplicationCommandCallbackData(
-                tts: data?.tts,
-                content: data?.content,
-                embeds: data?.embeds.usingDiscordAPI
-            )
+            data: data.map {
+                .init(
+                    tts: $0.tts,
+                    content: $0.content,
+                    embeds: $0.embeds.usingDiscordAPI
+                )
+            }
         )
     }
 }
