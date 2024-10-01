@@ -14,7 +14,7 @@ public enum RichValue: Addable {
     case image(CairoImage)
     case table([[String]])
     case gif(GIF)
-    case component(Message.Component)
+    case components([Message.Component])
     case urls([URL])
     case domNode(Element)
     case code(String, language: String?)
@@ -86,7 +86,7 @@ public enum RichValue: Addable {
             case .image: .image
             case .table: .table
             case .gif: .gif
-            case .component: .component
+            case .components: .components
             case .urls: .urls
             case .domNode: .domNode
             case .code: .code

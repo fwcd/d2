@@ -4,7 +4,7 @@ public enum RichValueType: CustomStringConvertible, Hashable {
     case image
     case table
     case gif
-    case component
+    case components
     case domNode
     case urls
     case code
@@ -28,7 +28,7 @@ public enum RichValueType: CustomStringConvertible, Hashable {
             case .image: "image"
             case .table: "table"
             case .gif: "gif"
-            case .component: "component"
+            case .components: "components"
             case .domNode: "domNode"
             case .urls: "urls"
             case .code: "code"

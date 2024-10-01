@@ -33,10 +33,10 @@ public class PronounsCommand: StringCommand {
                 guard let encodedId = String(data: encodedIdData, encoding: .utf8) else {
                     throw EncodeError.couldNotEncode("Could not encoded pronoun role id (\(roleId))")
                 }
-                return RichValue.component(.button(.init(
+                return RichValue.components([.button(.init(
                     customId: "\(customIdPrefix)\(encodedId)",
                     label: name
-                )))
+                ))])
             }))
             context.subscribeToChannel()
         } catch {

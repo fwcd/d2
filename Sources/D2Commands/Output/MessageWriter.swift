@@ -36,8 +36,8 @@ public struct MessageWriter {
                 return Message(content: urls.map(\.absoluteString).joined(separator: " "))
             case let .gif(gif):
                 return try Message(fromGif: gif)
-            case let .component(component):
-                return Message(components: [component])
+            case let .components(components):
+                return Message(components: components)
             case let .domNode(node):
                 return try await write(value: .code(try node.outerHtml(), language: "html"))
             case let .code(code, language: lang):
@@ -96,9 +96,7 @@ public struct MessageWriter {
                         embeds: encoded.flatMap(\.embeds),
                         files: encoded.flatMap(\.files),
                         tts: false,
-                        components: childComponents.isEmpty ? [] : [.actionRow(.init(
-                            components: childComponents
-                        ))]
+                        components: childComponents
                     )
                 }
         }
