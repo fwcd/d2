@@ -12,36 +12,8 @@ public class BuzzwordPhraseCommand: StringCommand {
 
     public let outputValueType: RichValueType = .text
 
-    public struct Corpus {
-        var nouns: [String]
-        var nounSuffixes: [String]
-        var adjectives: [String]
-        var compoundPrefixes: [String]
-        var compoundSuffixes: [String]
-
-        public init(
-            nouns: [String],
-            nounSuffixes: [String],
-            adjectives: [String],
-            compoundPrefixes: [String],
-            compoundSuffixes: [String]
-        ) {
-            assert(!nouns.isEmpty)
-            assert(!nounSuffixes.isEmpty)
-            assert(!adjectives.isEmpty)
-            assert(!compoundPrefixes.isEmpty)
-            assert(!compoundSuffixes.isEmpty)
-
-            self.nouns = nouns
-            self.nounSuffixes = nounSuffixes
-            self.adjectives = adjectives
-            self.compoundPrefixes = compoundPrefixes
-            self.compoundSuffixes = compoundSuffixes
-        }
-    }
-
     private struct Generator {
-        var corpus: Corpus
+        var corpus: BuzzwordCorpus
 
         private enum GenerationError: Error {
             case noMoreNouns
@@ -117,142 +89,9 @@ public class BuzzwordPhraseCommand: StringCommand {
         }
     }
 
-    private let corpus: Corpus
+    private let corpus: BuzzwordCorpus
 
-    public init(
-        corpus: Corpus = .init(
-            nouns: [
-                "AI",
-                "AR",
-                "automation",
-                "architecture",
-                "big data",
-                "business",
-                "blockchain",
-                "catalyst",
-                "computing",
-                "crypto",
-                "content",
-                "convergence",
-                "cloud",
-                "deployment",
-                "e-business",
-                "e-commerce",
-                "expertise",
-                "infrastructure",
-                "IT",
-                "IoT",
-                "metrics",
-                "transformation",
-                "thought leader",
-                "paradigm",
-                "roadmap",
-                "security",
-                "scrum",
-                "single pane of glass",
-                "software",
-                "solution",
-                "synergy",
-                "game",
-                "web",
-                "VR",
-            ],
-            nounSuffixes: [
-                "as-a-service",
-                "shift",
-            ],
-            adjectives: [
-                "24/7",
-                "agile",
-                "B2B",
-                "B2C",
-                "best-of-breed",
-                "corporate",
-                "digital",
-                "holistic",
-                "global",
-                "real-time",
-                "seamless",
-                "disruptive",
-                "distributed",
-                "diverse",
-                "dynamic",
-                "on-demand",
-                "immersive",
-                "rapid",
-                "end-to-end",
-                "cutting-edge",
-                "cost-effective",
-                "error-free",
-                "state of the art",
-                "next-generation",
-                "low-risk",
-                "plug-and-play",
-                "proactive",
-                "serverless",
-                "high-level",
-                "high-tech",
-                "high-yield",
-                "battle-tested",
-                "low-code",
-                "no-code",
-                "zero-trust",
-                "full-stack",
-                "turnkey",
-            ],
-            compoundPrefixes: [
-                "charged",
-                "client",
-                "cross",
-                "cyber",
-                "data",
-                "inter",
-                "future",
-                "hyper",
-                "sales",
-                "super",
-                "market",
-                "goal",
-                "quantum",
-                "team",
-                "user",
-                "world",
-            ],
-            compoundSuffixes: [
-                "accelerated",
-                "adaptive",
-                "added",
-                "based",
-                "building",
-                "centered",
-                "compatible",
-                "compliant",
-                "converged",
-                "class",
-                "distributed",
-                "grade",
-                "elastic",
-                "embedded",
-                "empowered",
-                "enabled",
-                "engineered",
-                "focused",
-                "leveling",
-                "integrated",
-                "powered",
-                "proof",
-                "ready",
-                "scale",
-                "strategic",
-                "infused",
-                "driven",
-                "changing",
-                "connected",
-                "oriented",
-                "tailored",
-            ]
-        )
-    ) {
+    public init(corpus: BuzzwordCorpus = .standard) {
         self.corpus = corpus
     }
 
