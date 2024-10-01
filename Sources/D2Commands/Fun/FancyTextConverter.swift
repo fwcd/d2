@@ -46,8 +46,8 @@ struct FancyTextConverter {
     }
 
     func convert(_ s: String, from sourceAlphabet: Alphabet = .base, to targetAlphabet: Alphabet) -> String {
-        let rawSourceAlphabet = sourceAlphabet.rawAlphabet
-        let rawTargetAlphabet = targetAlphabet.rawAlphabet
+        let rawSourceAlphabet = Array(sourceAlphabet.rawAlphabet)
+        let rawTargetAlphabet = Array(targetAlphabet.rawAlphabet)
         return String(s.map { rawSourceAlphabet.firstIndex(of: $0).flatMap { rawTargetAlphabet[safely: $0] } ?? $0 })
     }
 }
