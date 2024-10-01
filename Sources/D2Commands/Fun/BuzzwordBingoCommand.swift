@@ -21,6 +21,10 @@ public class BuzzwordBingoCommand: StringCommand {
         struct Field {
             let word: String
             var isChecked = false
+
+            mutating func toggleChecked() {
+                isChecked = !isChecked
+            }
         }
     }
 
@@ -59,7 +63,7 @@ public class BuzzwordBingoCommand: StringCommand {
             return
         }
 
-        board.fields[i][j].isChecked = true
+        board.fields[i][j].toggleChecked()
         boards[channelId] = board
 
         do {
