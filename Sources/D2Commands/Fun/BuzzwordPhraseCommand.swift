@@ -105,6 +105,7 @@ public class BuzzwordPhraseCommand: StringCommand {
                 "state of the art",
                 "next-generation",
                 "low-risk",
+                "high-tech",
                 "high-yield",
             ],
             compoundPrefixes: [
