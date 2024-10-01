@@ -287,6 +287,7 @@ public class D2Receiver: Receiver {
         registry["autolatex"] = AutoLatexCommand()
         registry["enterprisify"] = EnterprisifyCommand()
         registry["buzzwordphrase", aka: ["buzzword", "buzzwords", "buzzphrase", "buzz"]] = BuzzwordPhraseCommand()
+        registry["buzzwordbingo", aka: ["buzzbingo"]] = BuzzwordBingoCommand()
         registry["hoogle"] = HoogleCommand()
         registry["prolog"] = PrologCommand()
         registry["morseencode", aka: ["morse", "morsify"]] = MorseEncoderCommand()
