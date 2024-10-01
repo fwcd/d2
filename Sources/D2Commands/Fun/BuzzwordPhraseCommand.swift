@@ -1,9 +1,12 @@
 import Utils
 
+fileprivate let argsPattern = #/(?:(?<adjectives>\d+)(?:\s+(?<nouns>\d+))?)?/#
+
 public class BuzzwordPhraseCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Generates a random buzzword phrase",
+        helpText: "Syntax: [adjective count] [noun count]",
         requiredPermissionLevel: .basic
     )
 
@@ -34,8 +37,8 @@ public class BuzzwordPhraseCommand: StringCommand {
     private struct Generator {
         var corpus: Corpus
 
-        mutating func phrase() -> String {
-            "\(adjective()) \(noun()) \(noun())"
+        mutating func phrase(adjectives: Int = 1, nouns: Int = 2) -> String {
+            ((0..<adjectives).map { _ in adjective() } + (0..<nouns).map { _ in noun() }).joined(separator: " ")
         }
 
         private mutating func noun() -> String {
@@ -144,8 +147,17 @@ public class BuzzwordPhraseCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
+            await output.append(errorText: info.helpText!)
+            return
+        }
+
+        let adjectives = parsedArgs.output.adjectives.flatMap { Int($0) } ?? 1
+        let nouns = parsedArgs.output.nouns.flatMap { Int($0) } ?? 2
+
         var generator = Generator(corpus: corpus)
-        let phrase = generator.phrase()
+        let phrase = generator.phrase(adjectives: adjectives, nouns: nouns)
+
         await output.append(phrase)
     }
 }
