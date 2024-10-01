@@ -4,5 +4,8 @@ a6e4eead0fc8669093bb360112b627639ab4b17f
 # Capitalize all directories
 5bc6caae95d75a1b99627f51397a7cda3ca3c3eb
 
+# Format code using eclint
+d2986250f73b5d78844d5dc0d8c871d4f4fd63fa
+
 # Remove trailing whitespace everywhere
 9fa4ed1b205423cdbba38cdf09a2952cc15dd634
