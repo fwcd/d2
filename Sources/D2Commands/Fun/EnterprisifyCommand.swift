@@ -3,7 +3,7 @@ import Utils
 public class EnterprisifyCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
-        shortDescription: "Enterprisifies your class names!",
+        shortDescription: "Enterprisifies your Java class names!",
         requiredPermissionLevel: .basic
     )
     private let prefixes: [String]
