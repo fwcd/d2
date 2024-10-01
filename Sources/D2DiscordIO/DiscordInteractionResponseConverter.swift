@@ -19,11 +19,11 @@ extension InteractionResponse: DiscordAPIConvertible {
 extension InteractionResponse.ResponseType: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordInteractionResponseType {
         switch self {
-            case .pong: return .pong
-            case .acknowledge: return .acknowledge
-            case .channelMessage: return .channelMessage
-            case .channelMessageWithSource: return .channelMessageWithSource
-            case .ackWithSource: return .ackWithSource
+            case .pong: .pong
+            case .acknowledge: .acknowledge
+            case .channelMessage: .channelMessage
+            case .channelMessageWithSource: .channelMessageWithSource
+            case .ackWithSource: .ackWithSource
         }
     }
 }

@@ -31,11 +31,11 @@ public struct WordleBoard: RichValueConvertible {
             return zip(zip(word, clues), solution).allSatisfy {
                 let (guessedLetter, clue) = $0.0
                 let actualLetter = $0.1
-                switch clue {
-                case .unknown: return true
-                case .nowhere: return !solutionSet.contains(guessedLetter)
-                case .somewhere: return guessedLetter != actualLetter && solutionSet.contains(guessedLetter)
-                case .here: return guessedLetter == actualLetter
+                return switch clue {
+                case .unknown: true
+                case .nowhere: !solutionSet.contains(guessedLetter)
+                case .somewhere: guessedLetter != actualLetter && solutionSet.contains(guessedLetter)
+                case .here: guessedLetter == actualLetter
                 }
             }
         }
@@ -95,19 +95,19 @@ public struct WordleBoard: RichValueConvertible {
 
         public var asEmoji: String {
             switch self {
-            case .unknown: return ":black_large_square:"
-            case .nowhere: return ":white_large_square:"
-            case .somewhere: return ":yellow_square:"
-            case .here: return ":green_square:"
+            case .unknown: ":black_large_square:"
+            case .nowhere: ":white_large_square:"
+            case .somewhere: ":yellow_square:"
+            case .here: ":green_square:"
             }
         }
 
         public var abbreviated: String {
             switch self {
-            case .unknown: return "u"
-            case .nowhere: return "n"
-            case .somewhere: return "s"
-            case .here: return "h"
+            case .unknown: "u"
+            case .nowhere: "n"
+            case .somewhere: "s"
+            case .here: "h"
             }
         }
 

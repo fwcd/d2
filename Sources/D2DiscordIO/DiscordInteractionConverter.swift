@@ -22,10 +22,10 @@ extension DiscordInteraction {
 extension DiscordInteractionType: MessageIOConvertible {
     public var usingMessageIO: Interaction.InteractionType? {
         switch self {
-            case .ping: return .ping
-            case .applicationCommand: return .mioCommand
-            case .messageComponent: return .messageComponent
-            default: return nil
+            case .ping: .ping
+            case .applicationCommand: .mioCommand
+            case .messageComponent: .messageComponent
+            default: nil
         }
     }
 }

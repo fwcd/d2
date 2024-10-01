@@ -7,12 +7,12 @@ public enum PermissionLevel: Int, Codable, Comparable {
 
     public static func of(_ str: String) -> PermissionLevel? {
         switch str {
-            case "admin": return .admin
-            case "dev": return .dev
-            case "vip": return .vip
-            case "mod": return .mod
-            case "basic": return .basic
-            default: return nil
+            case "admin": .admin
+            case "dev": .dev
+            case "vip": .vip
+            case "mod": .mod
+            case "basic": .basic
+            default: nil
         }
     }
 

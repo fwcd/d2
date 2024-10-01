@@ -29,12 +29,12 @@ public class DiscordStatusCommand: StringCommand {
 
     private func indicatorOf(status: String) -> String {
         switch status {
-            case "operational": return ":green_circle: Operational"
-            case "under_maintenance": return ":yellow_circle: Under maintainance"
-            case "degraded_performance": return ":yellow_circle: Degraded performance"
-            case "partial_outage": return ":yellow_circle: Partial outage"
-            case "major_outage": return ":red_circle: Major outage"
-            default: return ":white_circle: Unknown"
+            case "operational": ":green_circle: Operational"
+            case "under_maintenance": ":yellow_circle: Under maintainance"
+            case "degraded_performance": ":yellow_circle: Degraded performance"
+            case "partial_outage": ":yellow_circle: Partial outage"
+            case "major_outage": ":red_circle: Major outage"
+            default: ":white_circle: Unknown"
         }
     }
 }

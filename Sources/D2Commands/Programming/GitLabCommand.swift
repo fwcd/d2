@@ -112,12 +112,12 @@ public class GitLabCommand: StringCommand {
 
     private func emojiOf(status: String?) -> String {
         switch status {
-            case "success"?: return ":white_check_mark:"
-            case "failed"?: return ":x:"
-            case "running"?: return ":man_running:"
-            case "pending"?: return ":hourglass:"
-            case "cancelled"?: return ":no_entry_sign:"
-            default: return ":question:"
+            case "success"?: ":white_check_mark:"
+            case "failed"?: ":x:"
+            case "running"?: ":man_running:"
+            case "pending"?: ":hourglass:"
+            case "cancelled"?: ":no_entry_sign:"
+            default: ":question:"
         }
     }
 

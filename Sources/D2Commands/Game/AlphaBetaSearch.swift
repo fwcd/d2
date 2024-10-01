@@ -16,9 +16,9 @@ public struct AlphaBetaSearch<State>: GameIntelligence where State: GameState & 
             // well for games where the entire game tree can feasibly
             // be explored (e.g. in tic-tac-toe).
             switch $0.winner {
-                case $0.currentRole?: return 1
-                case nil: return 0
-                default: return -1
+                case $0.currentRole?: 1
+                case nil: 0
+                default: -1
             }
         }
     ) {

@@ -123,9 +123,9 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
 
     private func parseBool(from str: String) -> Bool? {
         switch str.lowercased() {
-            case "true": return true
-            case "false": return false
-            default: return nil
+            case "true": true
+            case "false": false
+            default: nil
         }
     }
 }

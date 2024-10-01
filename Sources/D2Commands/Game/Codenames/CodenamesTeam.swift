@@ -4,15 +4,15 @@ public enum CodenamesTeam: Hashable, CaseIterable, RichValueConvertible {
 
     public var asRichValue: RichValue {
         switch self {
-            case .red: return .text(":red_square:")
-            case .blue: return .text(":blue_square:")
+            case .red: .text(":red_square:")
+            case .blue: .text(":blue_square:")
         }
     }
 
     public var opponent: CodenamesTeam {
         switch self {
-            case .red: return .blue
-            case .blue: return .red
+            case .red: .blue
+            case .blue: .red
         }
     }
 }

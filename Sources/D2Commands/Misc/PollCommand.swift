@@ -105,33 +105,33 @@ public class PollCommand: StringCommand {
 
     private func numberEmojiStringOf(digit: Int) -> String? {
         switch digit {
-            case 0: return "zero"
-            case 1: return "one"
-            case 2: return "two"
-            case 3: return "three"
-            case 4: return "four"
-            case 5: return "five"
-            case 6: return "six"
-            case 7: return "seven"
-            case 8: return "eight"
-            case 9: return "nine"
-            default: return nil
+            case 0: "zero"
+            case 1: "one"
+            case 2: "two"
+            case 3: "three"
+            case 4: "four"
+            case 5: "five"
+            case 6: "six"
+            case 7: "seven"
+            case 8: "eight"
+            case 9: "nine"
+            default: nil
         }
     }
 
     private func numberEmojiOf(digit: Int) -> String? {
         switch digit {
-            case 0: return "0⃣"
-            case 1: return "1⃣"
-            case 2: return "2⃣"
-            case 3: return "3⃣"
-            case 4: return "4⃣"
-            case 5: return "5⃣"
-            case 6: return "6⃣"
-            case 7: return "7⃣"
-            case 8: return "8⃣"
-            case 9: return "9⃣"
-            default: return nil
+            case 0: "0⃣"
+            case 1: "1⃣"
+            case 2: "2⃣"
+            case 3: "3⃣"
+            case 4: "4⃣"
+            case 5: "5⃣"
+            case 6: "6⃣"
+            case 7: "7⃣"
+            case 8: "8⃣"
+            case 9: "9⃣"
+            default: nil
         }
     }
 }

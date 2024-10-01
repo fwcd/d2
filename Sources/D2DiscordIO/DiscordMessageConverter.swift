@@ -25,9 +25,9 @@ extension Message.FileUpload: DiscordAPIConvertible {
 extension Message.Component: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordMessageComponent {
         switch self {
-            case .button(let button): return button.usingDiscordAPI
-            case .selectMenu(let menu): return menu.usingDiscordAPI
-            case .actionRow(let row): return row.usingDiscordAPI
+            case .button(let button): button.usingDiscordAPI
+            case .selectMenu(let menu): menu.usingDiscordAPI
+            case .actionRow(let row): row.usingDiscordAPI
         }
     }
 }
@@ -67,11 +67,11 @@ extension Message.Component.ActionRow: DiscordAPIConvertible {
 extension Message.Component.Button.Style: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordMessageComponentButtonStyle {
         switch self {
-            case .primary: return .primary
-            case .secondary: return .secondary
-            case .success: return .success
-            case .danger: return .danger
-            case .link: return .link
+            case .primary: .primary
+            case .secondary: .secondary
+            case .success: .success
+            case .danger: .danger
+            case .link: .link
         }
     }
 }
@@ -143,11 +143,11 @@ extension DiscordMessage.Activity: MessageIOConvertible {
 extension DiscordMessage.Activity.ActivityType: MessageIOConvertible {
     public var usingMessageIO: Message.Activity.ActivityType {
         switch self {
-            case .join: return .join
-            case .spectate: return .spectate
-            case .listen: return .listen
-            case .joinRequest: return .joinRequest
-            default: return .init(rawValue: rawValue)
+            case .join: .join
+            case .spectate: .spectate
+            case .listen: .listen
+            case .joinRequest: .joinRequest
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -177,23 +177,23 @@ extension DiscordReaction: MessageIOConvertible {
 extension DiscordMessageType: MessageIOConvertible {
     public var usingMessageIO: Message.MessageType {
         switch self {
-            case .`default`: return .`default`
-            case .recipientAdd: return .recipientAdd
-            case .recipientRemove: return .recipientRemove
-            case .call: return .call
-            case .channelNameChange: return .channelNameChange
-            case .channelIconChange: return .channelIconChange
-            case .channelPinnedMessage: return .channelPinnedMessage
-            case .guildMemberJoin: return .guildMemberJoin
-            case .userPremiumGuildSubscription: return .userPremiumGuildSubscription
-            case .userPremiumGuildSubscriptionTier1: return .userPremiumGuildSubscriptionTier1
-            case .userPremiumGuildSubscriptionTier2: return .userPremiumGuildSubscriptionTier2
-            case .userPremiumGuildSubscriptionTier3: return .userPremiumGuildSubscriptionTier3
-            case .channelFollowAdd: return .channelFollowAdd
-            case .guildDiscoveryDisqualified: return .guildDiscoveryDisqualified
-            case .guildDiscoveryRequalified: return .guildDiscoveryRequalified
-            case .reply: return .reply
-            default: return .init(rawValue: rawValue)
+            case .`default`: .`default`
+            case .recipientAdd: .recipientAdd
+            case .recipientRemove: .recipientRemove
+            case .call: .call
+            case .channelNameChange: .channelNameChange
+            case .channelIconChange: .channelIconChange
+            case .channelPinnedMessage: .channelPinnedMessage
+            case .guildMemberJoin: .guildMemberJoin
+            case .userPremiumGuildSubscription: .userPremiumGuildSubscription
+            case .userPremiumGuildSubscriptionTier1: .userPremiumGuildSubscriptionTier1
+            case .userPremiumGuildSubscriptionTier2: .userPremiumGuildSubscriptionTier2
+            case .userPremiumGuildSubscriptionTier3: .userPremiumGuildSubscriptionTier3
+            case .channelFollowAdd: .channelFollowAdd
+            case .guildDiscoveryDisqualified: .guildDiscoveryDisqualified
+            case .guildDiscoveryRequalified: .guildDiscoveryRequalified
+            case .reply: .reply
+            default: .init(rawValue: rawValue)
         }
     }
 }

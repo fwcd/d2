@@ -12,8 +12,8 @@ public struct SpinTransform: ImageTransform {
 
         var sign: Int {
             switch self {
-                case .clockwise: return -1
-                case .counterclockwise: return 1
+                case .clockwise: -1
+                case .counterclockwise: 1
             }
         }
     }

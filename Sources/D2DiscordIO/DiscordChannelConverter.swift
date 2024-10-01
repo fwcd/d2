@@ -22,18 +22,18 @@ extension DiscordChannel: MessageIOConvertible {
 extension DiscordChannelType: MessageIOConvertible {
     public var usingMessageIO: Channel.ChannelType {
         switch self {
-            case .text: return .text
-            case .dm: return .dm
-            case .voice: return .voice
-            case .groupDM: return .groupDM
-            case .category: return .category
-            case .news: return .news
-            case .store: return .store
-            case .newsThread: return .newsThread
-            case .publicThread: return .publicThread
-            case .privateThread: return .privateThread
-            case .stageVoice: return .stageVoice
-            default: return .init(rawValue: rawValue)
+            case .text: .text
+            case .dm: .dm
+            case .voice: .voice
+            case .groupDM: .groupDM
+            case .category: .category
+            case .news: .news
+            case .store: .store
+            case .newsThread: .newsThread
+            case .publicThread: .publicThread
+            case .privateThread: .privateThread
+            case .stageVoice: .stageVoice
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -50,9 +50,9 @@ extension DiscordPermissionOverwrite: MessageIOConvertible {
 extension DiscordPermissionOverwriteType: MessageIOConvertible {
     public var usingMessageIO: Channel.PermissionOverwrite.PermissionOverwriteType {
         switch self {
-            case .role: return .role
-            case .member: return .member
-            default: return .init(rawValue: rawValue)
+            case .role: .role
+            case .member: .member
+            default: .init(rawValue: rawValue)
         }
     }
 }

@@ -37,9 +37,9 @@ public struct TicTacToeMove: Hashable {
 
         var index: Int {
             switch self {
-                case .top: return 0
-                case .center: return 1
-                case .bottom: return 2
+                case .top: 0
+                case .center: 1
+                case .bottom: 2
             }
         }
     }
@@ -51,9 +51,9 @@ public struct TicTacToeMove: Hashable {
 
         var index: Int {
             switch self {
-                case .left: return 0
-                case .center: return 1
-                case .right: return 2
+                case .left: 0
+                case .center: 1
+                case .right: 2
             }
         }
     }

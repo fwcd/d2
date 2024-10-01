@@ -10,15 +10,15 @@ public enum UnoCard: Hashable {
 
     public var color: UnoColor? {
         switch self {
-            case let .number(_, color): return color
-            case let .action(_, color): return color
+            case let .number(_, color): color
+            case let .action(_, color): color
         }
     }
 
     public var label: UnoActionLabel? {
         switch self {
-            case let .action(label, _): return label
-            default: return nil
+            case let .action(label, _): label
+            default: nil
         }
     }
 
@@ -49,9 +49,9 @@ public enum UnoCard: Hashable {
 
     private func numberOrLabel(matches other: UnoCard) -> Bool {
         switch (self, other) {
-            case let (.number(n, _), .number(m, _)): return n == m
-            case let (.action(a, _), .action(b, _)): return a == b
-            default: return false
+            case let (.number(n, _), .number(m, _)): n == m
+            case let (.action(a, _), .action(b, _)): a == b
+            default: false
         }
     }
 

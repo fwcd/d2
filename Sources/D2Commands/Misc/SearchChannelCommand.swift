@@ -53,12 +53,12 @@ public class SearchChannelCommand: StringCommand {
 
     private func format(type: Channel.ChannelType) -> String {
         switch type {
-            case .text: return "Text channels"
-            case .voice: return "Voice channels"
-            case .category: return "Categories"
-            case .publicThread: return "Public threads"
-            case .privateThread: return "Private threads"
-            default: return "Other channels"
+            case .text: "Text channels"
+            case .voice: "Voice channels"
+            case .category: "Categories"
+            case .publicThread: "Public threads"
+            case .privateThread: "Private threads"
+            default: "Other channels"
         }
     }
 }

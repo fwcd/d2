@@ -38,8 +38,8 @@ public struct ChessMove: Hashable, CustomStringConvertible {
     }
     public var algebraicNotation: String {
         switch castlingType {
-            case .short?: return "O-O"
-            case .long?: return "O-O-O"
+            case .short?: "O-O"
+            case .long?: "O-O-O"
             default: break
         }
 
@@ -53,8 +53,8 @@ public struct ChessMove: Hashable, CustomStringConvertible {
             promotionPieceType.flatMap(createPiece).flatMap(\.notationLetters.first).map { "=\($0)" },
             checkType.map {
                 switch $0 {
-                    case .check: return "+"
-                    case .checkmate: return "#"
+                    case .check: "+"
+                    case .checkmate: "#"
                 }
             },
             isEnPassant ? "e. p." : ""

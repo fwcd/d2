@@ -17,8 +17,8 @@ public struct FeedListPresenter: FeedPresenter {
     public func present(feed: Feed) throws -> Embed? {
         // TODO: Atom, ...
         switch feed {
-            case .rss(let rss): return try present(rss: rss)
-            default: return nil
+            case .rss(let rss): try present(rss: rss)
+            default: nil
         }
     }
 

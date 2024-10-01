@@ -9,8 +9,8 @@ public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible {
 
     public var asRichValue: RichValue {
         switch self {
-            case .team(let team): return team.asRichValue
-            case .spymaster(let team): return .compound([.text(":detective:"), team.asRichValue])
+            case .team(let team): team.asRichValue
+            case .spymaster(let team): .compound([.text(":detective:"), team.asRichValue])
         }
     }
 
@@ -20,15 +20,15 @@ public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible {
 
     public var team: CodenamesTeam {
         switch self {
-            case .team(let team): return team
-            case .spymaster(let team): return team
+            case .team(let team): team
+            case .spymaster(let team): team
         }
     }
 
     var opponent: CodenamesRole {
         switch self {
-            case .team(let team): return .team(team.opponent)
-            case .spymaster(let team): return .spymaster(team.opponent)
+            case .team(let team): .team(team.opponent)
+            case .spymaster(let team): .spymaster(team.opponent)
         }
     }
 }

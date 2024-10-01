@@ -16,16 +16,16 @@ public class CommandRegistry: Sequence {
 
         var asCommand: (any Command)? {
             switch self {
-                case .command(let cmd): return cmd
-                default: return nil
+                case .command(let cmd): cmd
+                default: nil
             }
         }
     }
 
     private func resolve(_ name: String) -> String {
         switch entries[name] {
-            case .alias(let a)?: return resolve(a)
-            default: return name
+            case .alias(let a)?: resolve(a)
+            default: name
         }
     }
 

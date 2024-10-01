@@ -7,26 +7,26 @@ public enum UnoActionLabel: String, Hashable, CaseIterable {
 
     public var resourcePngPath: String {
         switch self {
-            case .skip: return "Resources/Uno/skip.png"
-            case .reverse: return "Resources/Uno/reverse.png"
-            case .drawTwo: return "Resources/Uno/drawTwo.png"
-            case .wild: return "Resources/Uno/wild.png"
-            case .wildDrawFour: return "Resources/Uno/wildDrawFour.png"
+            case .skip: "Resources/Uno/skip.png"
+            case .reverse: "Resources/Uno/reverse.png"
+            case .drawTwo: "Resources/Uno/drawTwo.png"
+            case .wild: "Resources/Uno/wild.png"
+            case .wildDrawFour: "Resources/Uno/wildDrawFour.png"
         }
     }
 
     public var drawCardCount: Int {
         switch self {
-            case .drawTwo: return 2
-            case .wildDrawFour: return 4
-            default: return 0
+            case .drawTwo: 2
+            case .wildDrawFour: 4
+            default: 0
         }
     }
 
     public var skipDistance: Int {
         switch self {
-            case .skip: return 1
-            default: return 0
+            case .skip: 1
+            default: 0
         }
     }
 

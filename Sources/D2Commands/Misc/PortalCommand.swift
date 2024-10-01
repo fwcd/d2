@@ -17,9 +17,9 @@ fileprivate struct Portal {
 
     func other(_ channelId: ChannelID) -> ChannelID? {
         switch channelId {
-            case origin: return target
-            case target: return origin
-            default: return nil
+            case origin: target
+            case target: origin
+            default: nil
         }
     }
 }

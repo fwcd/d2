@@ -6,15 +6,15 @@ public enum ChessRole: String, Hashable, CaseIterable, Codable, RichValueConvert
 
     public var asRichValue: RichValue {
         switch self {
-            case .white: return .text(":white_circle:")
-            case .black: return .text(":black_circle:")
+            case .white: .text(":white_circle:")
+            case .black: .text(":black_circle:")
         }
     }
 
     var opponent: ChessRole {
         switch self {
-            case .white: return .black
-            case .black: return .white
+            case .white: .black
+            case .black: .white
         }
     }
 }

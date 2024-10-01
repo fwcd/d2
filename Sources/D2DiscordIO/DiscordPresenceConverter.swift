@@ -46,11 +46,11 @@ extension DiscordActivityAssets: MessageIOConvertible {
 extension DiscordPresenceStatus: MessageIOConvertible {
     public var usingMessageIO: Presence.Status {
         switch self {
-            case .idle: return .idle
-            case .offline: return .offline
-            case .online: return .online
-            case .doNotDisturb: return .doNotDisturb
-            default: return .init(rawValue: rawValue)
+            case .idle: .idle
+            case .offline: .offline
+            case .online: .online
+            case .doNotDisturb: .doNotDisturb
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -76,11 +76,11 @@ extension DiscordActivityTimestamps: MessageIOConvertible {
 extension DiscordActivityType: MessageIOConvertible {
     public var usingMessageIO: Presence.Activity.ActivityType {
         switch self {
-            case .game: return .game
-            case .stream: return .stream
-            case .listening: return .listening
-            case .watching: return .watching
-            default: return .init(rawValue: rawValue)
+            case .game: .game
+            case .stream: .stream
+            case .listening: .listening
+            case .watching: .watching
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -100,11 +100,11 @@ extension PresenceUpdate: DiscordAPIConvertible {
 extension Presence.Status: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordPresenceStatus {
         switch self {
-            case .idle: return .idle
-            case .offline: return .offline
-            case .online: return .online
-            case .doNotDisturb: return .doNotDisturb
-            default: return .init(rawValue: rawValue)
+            case .idle: .idle
+            case .offline: .offline
+            case .online: .online
+            case .doNotDisturb: .doNotDisturb
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -118,10 +118,10 @@ extension Presence.Activity: DiscordAPIConvertible {
 extension Presence.Activity.ActivityType: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordActivityType {
         switch self {
-            case .game: return .game
-            case .stream: return .stream
-            case .listening: return .listening
-            default: return .init(rawValue: rawValue)
+            case .game: .game
+            case .stream: .stream
+            case .listening: .listening
+            default: .init(rawValue: rawValue)
         }
     }
 }

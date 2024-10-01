@@ -46,10 +46,10 @@ public class LoveCommand: Command {
 
     private func extractMentions(input: RichValue, context: CommandContext) -> (User, User)? {
         guard let mentions = input.asMentions else { return nil }
-        switch mentions.count {
-            case 1: return context.author.map { ($0, mentions[0]) }
-            case 2: return (mentions[0], mentions[1])
-            default: return nil
+        return switch mentions.count {
+            case 1: context.author.map { ($0, mentions[0]) }
+            case 2: (mentions[0], mentions[1])
+            default: nil
         }
     }
 }

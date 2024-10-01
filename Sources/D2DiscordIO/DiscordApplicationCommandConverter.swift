@@ -20,15 +20,15 @@ extension MIOCommand.Option: DiscordAPIConvertible {
 extension MIOCommand.Option.OptionType: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordApplicationCommandOptionType {
         switch self {
-            case .subCommand: return .subCommand
-            case .subCommandGroup: return .subCommandGroup
-            case .string: return .string
-            case .integer: return .integer
-            case .boolean: return .boolean
-            case .user: return .user
-            case .channel: return .channel
-            case .role: return .role
-            default: return .init(rawValue: rawValue)
+            case .subCommand: .subCommand
+            case .subCommandGroup: .subCommandGroup
+            case .string: .string
+            case .integer: .integer
+            case .boolean: .boolean
+            case .user: .user
+            case .channel: .channel
+            case .role: .role
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -45,8 +45,8 @@ extension MIOCommand.Option.Choice: DiscordAPIConvertible {
 extension MIOCommand.Option.Choice.Value: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordApplicationCommandOptionChoiceValue {
         switch self {
-            case .string(let s): return .string(s)
-            case .int(let i): return .int(i)
+            case .string(let s): .string(s)
+            case .int(let i): .int(i)
         }
     }
 }
@@ -82,15 +82,15 @@ extension DiscordApplicationCommandOption: MessageIOConvertible {
 extension DiscordApplicationCommandOptionType: MessageIOConvertible {
     public var usingMessageIO: MIOCommand.Option.OptionType {
         switch self {
-            case .subCommand: return .subCommand
-            case .subCommandGroup: return .subCommandGroup
-            case .string: return .string
-            case .integer: return .integer
-            case .boolean: return .boolean
-            case .user: return .user
-            case .channel: return .channel
-            case .role: return .role
-            default: return .init(rawValue: rawValue)
+            case .subCommand: .subCommand
+            case .subCommandGroup: .subCommandGroup
+            case .string: .string
+            case .integer: .integer
+            case .boolean: .boolean
+            case .user: .user
+            case .channel: .channel
+            case .role: .role
+            default: .init(rawValue: rawValue)
         }
     }
 }
@@ -107,8 +107,8 @@ extension DiscordApplicationCommandOptionChoice: MessageIOConvertible {
 extension DiscordApplicationCommandOptionChoiceValue: MessageIOConvertible {
     public var usingMessageIO: MIOCommand.Option.Choice.Value {
         switch self {
-            case .string(let s): return .string(s)
-            case .int(let i): return .int(i)
+            case .string(let s): .string(s)
+            case .int(let i): .int(i)
         }
     }
 }

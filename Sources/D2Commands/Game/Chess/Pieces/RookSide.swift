@@ -4,8 +4,8 @@ enum RookSide: CaseIterable {
 
     var asCastlingType: CastlingType {
         switch self {
-            case .kingside: return .short
-            case .queenside: return .long
+            case .kingside: .short
+            case .queenside: .long
         }
     }
 }

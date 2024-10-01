@@ -30,9 +30,9 @@ struct DiscordinderMatch {
 
         var accepted: MatchState {
             switch self {
-                case .waitingForCreation: return .waitingForInitiator
-                case .waitingForInitiator: return .waitingForAcceptor
-                default: return .accepted
+                case .waitingForCreation: .waitingForInitiator
+                case .waitingForInitiator: .waitingForAcceptor
+                default: .accepted
             }
         }
         var rejected: MatchState { .rejected }

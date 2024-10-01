@@ -16,9 +16,9 @@ public struct Channel: CustomStringConvertible {
 
     public var description: String {
         switch type {
-            case .voice: return ":speaker: \(name)"
-            case .category: return ":paperclip: \(name)"
-            default: return "<#\(id)>"
+            case .voice: ":speaker: \(name)"
+            case .category: ":paperclip: \(name)"
+            default: "<#\(id)>"
         }
     }
 

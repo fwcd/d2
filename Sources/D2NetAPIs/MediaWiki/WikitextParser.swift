@@ -13,9 +13,9 @@ public struct WikitextParser {
 
         var description: String {
             switch self {
-                case .text(let s): return "<\(s)>"
-                case .symbol(let s): return "s<\(s)>"
-                case .unknown: return "?"
+                case .text(let s): "<\(s)>"
+                case .symbol(let s): "s<\(s)>"
+                case .unknown: "?"
             }
         }
     }

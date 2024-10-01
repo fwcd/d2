@@ -11,12 +11,12 @@ public enum AkinatorAnswer: String, CaseIterable {
 
     public var value: Int {
         switch self {
-            case .unknown: return -1
-            case .yes: return 0
-            case .no: return 1
-            case .dontKnow: return 2
-            case .probably: return 3
-            case .probablyNot: return 4
+            case .unknown: -1
+            case .yes: 0
+            case .no: 1
+            case .dontKnow: 2
+            case .probably: 3
+            case .probablyNot: 4
         }
     }
 }

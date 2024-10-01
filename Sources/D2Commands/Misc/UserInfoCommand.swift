@@ -63,20 +63,20 @@ public class UserInfoCommand: Command {
 
     private func stringOf(status: Presence.Status) -> String {
         switch status {
-            case .idle: return ":yellow_circle: Idle"
-            case .online: return ":green_circle: Online"
-            case .offline: return ":white_circle: Offline"
-            case .doNotDisturb: return ":red_circle: Do not disturb"
-            default: return ":question: Status \(status.rawValue)"
+            case .idle: ":yellow_circle: Idle"
+            case .online: ":green_circle: Online"
+            case .offline: ":white_circle: Offline"
+            case .doNotDisturb: ":red_circle: Do not disturb"
+            default: ":question: Status \(status.rawValue)"
         }
     }
 
     private func stringOf(activityType: Presence.Activity.ActivityType) -> String {
         switch activityType {
-            case .game: return ":video_game: Playing"
-            case .listening: return ":musical_note: Listening"
-            case .stream: return ":movie_camera: Streaming"
-            default: return ":question: Activity type \(activityType.rawValue)"
+            case .game: ":video_game: Playing"
+            case .listening: ":musical_note: Listening"
+            case .stream: ":movie_camera: Streaming"
+            default: ":question: Activity type \(activityType.rawValue)"
         }
     }
 }

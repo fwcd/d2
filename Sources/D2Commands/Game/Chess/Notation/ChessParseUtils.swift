@@ -2,9 +2,9 @@ fileprivate let files: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
 func parseRaw(checkType: String) -> CheckType? {
     switch checkType {
-        case "+": return .check
-        case "#": return .checkmate
-        default: return nil
+        case "+": .check
+        case "#": .checkmate
+        default: nil
     }
 }
 

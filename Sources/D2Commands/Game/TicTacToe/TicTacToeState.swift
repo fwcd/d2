@@ -42,9 +42,9 @@ public struct TicTacToeState: GameState, FinitePossibleMoves {
 
     public func playersOf(role: Role) -> [GamePlayer] {
         switch role {
-            case .x: return [playerX]
-            case .o: return [playerO]
-            default: return []
+            case .x: [playerX]
+            case .o: [playerO]
+            default: []
         }
     }
 

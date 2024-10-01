@@ -30,10 +30,10 @@ public class RockPaperScissorsCommand: StringCommand {
 
         func beats(_ other: RockPaperScissors) -> Bool? {
             guard self != other else { return nil }
-            switch self {
-                case .rock: return other == .scissors
-                case .paper: return other == .rock
-                case .scissors: return other == .paper
+            return switch self {
+                case .rock: other == .scissors
+                case .paper: other == .rock
+                case .scissors: other == .paper
             }
         }
     }

@@ -2,12 +2,12 @@ import Utils
 
 func createPiece(_ pieceType: ChessPieceType) -> ChessPiece {
     switch pieceType {
-        case .pawn: return Pawn()
-        case .knight: return Knight()
-        case .bishop: return Bishop()
-        case .queen: return Queen()
-        case .king: return King()
-        case .rook: return Rook()
+        case .pawn: Pawn()
+        case .knight: Knight()
+        case .bishop: Bishop()
+        case .queen: Queen()
+        case .king: King()
+        case .rook: Rook()
     }
 }
 

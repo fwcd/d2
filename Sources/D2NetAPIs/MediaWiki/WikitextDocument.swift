@@ -16,11 +16,11 @@ public struct WikitextDocument: Equatable {
 
             public var description: String {
                 switch self {
-                    case let .text(text): return text
-                    case let .link(values): return "[\(values.map { $0.map { "\($0)" }.joined(separator: " ") }.joined(separator: "|"))]"
-                    case let .template(key, nodes): return "{\(key)|\(nodes)}"
-                    case let .other(o): return o
-                    case .unknown: return "?"
+                    case let .text(text): text
+                    case let .link(values): "[\(values.map { $0.map { "\($0)" }.joined(separator: " ") }.joined(separator: "|"))]"
+                    case let .template(key, nodes): "{\(key)|\(nodes)}"
+                    case let .other(o): o
+                    case .unknown: "?"
                 }
             }
 
@@ -30,8 +30,8 @@ public struct WikitextDocument: Equatable {
 
                 public var description: String {
                     switch self {
-                        case let .value(nodes): return "\(nodes)"
-                        case let .keyValue(key, nodes): return "\(key)=\(nodes.map { "\($0)" }.joined(separator: " "))"
+                        case let .value(nodes): "\(nodes)"
+                        case let .keyValue(key, nodes): "\(key)=\(nodes.map { "\($0)" }.joined(separator: " "))"
                     }
                 }
             }

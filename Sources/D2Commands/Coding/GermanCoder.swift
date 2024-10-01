@@ -17,9 +17,9 @@ fileprivate func germanDecodeByte(_ words: [String]) -> UInt8 {
     words
         .compactMap { (w: String) -> UInt8? in
             switch w {
-                case encodedZero: return 0
-                case encodedOne: return 1
-                default: return nil
+                case encodedZero: 0
+                case encodedOne: 1
+                default: nil
             }
         }
         .enumerated()

@@ -16,11 +16,11 @@ indirect enum RegexNode: CustomStringConvertible {
 
     var description: String {
         switch self {
-            case .literal(let s): return s
-            case .sequence(let s): return "seq(\(s.map(\.description).joined(separator: ", ")))"
-            case .choice(let c): return "cho(\(c.map(\.description).joined(separator: ", ")))"
-            case .repetition(let r): return "rep(\(r))"
-            case .option(let r): return "opt(\(r))"
+            case .literal(let s): s
+            case .sequence(let s): "seq(\(s.map(\.description).joined(separator: ", ")))"
+            case .choice(let c): "cho(\(c.map(\.description).joined(separator: ", ")))"
+            case .repetition(let r): "rep(\(r))"
+            case .option(let r): "opt(\(r))"
         }
     }
 

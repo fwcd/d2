@@ -155,10 +155,10 @@ public class DiscordinderCommand: StringCommand {
 
     private func verbOf(activityType: Presence.Activity.ActivityType) -> String {
         switch activityType {
-            case .game: return "play"
-            case .stream: return "stream"
-            case .listening: return "listen to"
-            default: return "do"
+            case .game: "play"
+            case .stream: "stream"
+            case .listening: "listen to"
+            default: "do"
         }
     }
 
