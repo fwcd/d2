@@ -89,7 +89,7 @@ public struct MessageWriter {
                         encoded.append(message)
                     }
 
-                    let childComponents = encoded.flatMap { $0.components.flatMap(\.primitiveChildren) }
+                    let childComponents = encoded.flatMap(\.components)
 
                     return Message(
                         content: encoded.compactMap(\.content.nilIfEmpty).joined(separator: "\n"),
