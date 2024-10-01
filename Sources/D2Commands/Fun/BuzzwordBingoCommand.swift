@@ -12,28 +12,48 @@ public class BuzzwordBingoCommand: StringCommand {
 
     private let corpus: BuzzwordCorpus
 
+    private struct Board {
+        var fields: [[Field]]
+
+        struct Field {
+            let word: String
+            var enabled = false
+        }
+    }
+
     public init(corpus: BuzzwordCorpus = .standard) {
         self.corpus = corpus
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        let rows = 4
-        let cols = 4
-
-        var generator = BuzzwordGenerator(corpus: corpus)
-
         do {
-            try await output.append(.components((0..<rows).map { _ in
-                try .actionRow(.init(components: (0..<cols).map { _ in try generator.primitiveWord() }.map { word in
-                    .button(.init(
-                        customId: "buzzwordbingo:\(word)",
-                        label: convertToFixedWidth(word),
-                        disabled: true // TODO: Make the buttons interactive
-                    ))
-                }))
-            }))
+            let board = try generateBoard()
+            await output.append(.components(components(for: board)))
         } catch {
             await output.append(error, errorText: "Could not generate buzzwords: \(error)")
+        }
+    }
+
+    private func generateBoard(rows: Int = 4, cols: Int = 4) throws -> Board {
+        var generator = BuzzwordGenerator(corpus: corpus)
+        return Board(
+            fields: try (0..<rows).map { _ in
+                try (0..<cols).map { _ in
+                    .init(word: try generator.primitiveWord())
+                }
+            }
+        )
+    }
+
+    private func components(for board: Board) -> [Message.Component] {
+        board.fields.map { row in
+            .actionRow(.init(components: row.map { field in
+                .button(.init(
+                    customId: "buzzwordbingo:\(field.word)",
+                    label: convertToFixedWidth(field.word),
+                    disabled: true // TODO: Make the buttons interactive
+                ))
+            }))
         }
     }
 
