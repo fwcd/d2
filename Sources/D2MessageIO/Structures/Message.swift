@@ -107,6 +107,22 @@ public struct Message: ExpressibleByStringLiteral {
         self.init(content: value)
     }
 
+    public struct Edit {
+        public var content: String?
+        public var embed: Embed?
+        public var components: [Component]?
+
+        public init(
+            content: String? = nil,
+            embed: Embed? = nil,
+            components: [Component]? = nil
+        ) {
+            self.content = content
+            self.embed = embed
+            self.components = components
+        }
+    }
+
     public struct FileUpload {
         public let data: Data
         public let filename: String

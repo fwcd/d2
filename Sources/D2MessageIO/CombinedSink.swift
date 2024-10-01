@@ -91,8 +91,8 @@ public class CombinedSink: Sink {
         }
     }
 
-    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> Message? {
-        try await withSink(of: channelId) { try await $0.editMessage(id, on: channelId, content: content) }
+    public func editMessage(_ id: MessageID, on channelId: ChannelID, edit: Message.Edit) async throws -> Message? {
+        try await withSink(of: channelId) { try await $0.editMessage(id, on: channelId, edit: edit) }
     }
 
     public func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws {

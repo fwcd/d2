@@ -60,7 +60,7 @@ public extension DefaultSink {
         nil
     }
 
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> D2MessageIO.Message? {
+    func editMessage(_ id: MessageID, on channelId: ChannelID, edit: Message.Edit) async throws -> D2MessageIO.Message? {
         // TODO
         nil
     }

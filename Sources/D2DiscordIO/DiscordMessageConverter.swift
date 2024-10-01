@@ -16,6 +16,16 @@ extension Message: DiscordAPIConvertible {
     }
 }
 
+extension Message.Edit: DiscordAPIConvertible {
+    public var usingDiscordAPI: DiscordMessage.Edit {
+        return DiscordMessage.Edit(
+            content: content,
+            embed: embed?.usingDiscordAPI,
+            components: components?.usingDiscordAPI
+        )
+    }
+}
+
 extension Message.FileUpload: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordFileUpload {
         return DiscordFileUpload(data: data, filename: filename, mimeType: mimeType)

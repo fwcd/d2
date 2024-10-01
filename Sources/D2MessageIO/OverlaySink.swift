@@ -56,8 +56,8 @@ public struct OverlaySink: Sink {
         try await inner.sendMessage(message, to: channelId)
     }
 
-    public func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> Message? {
-        try await inner.editMessage(id, on: channelId, content: content)
+    public func editMessage(_ id: MessageID, on channelId: ChannelID, edit: Message.Edit) async throws -> Message? {
+        try await inner.editMessage(id, on: channelId, edit: edit)
     }
 
     public func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "298a5f5d129e175f5d056f8d810c5bbdc2cac3cc3a064f8c7625959d26b84966",
+  "originHash" : "96c960f5953494c86c4c1c2ccac1b3bdad84624a121d804b27bec6f4d69d0323",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -167,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-discord.git",
       "state" : {
-        "revision" : "0d207c23483c279bc33fb6976a652957a045da66",
-        "version" : "11.3.2"
+        "revision" : "a1f953afa89141706a4f81590e6ca536861f5c86",
+        "version" : "12.0.0"
       }
     },
     {

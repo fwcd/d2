@@ -34,7 +34,7 @@ public protocol Sink {
     func sendMessage(_ message: Message, to channelId: ChannelID) async throws -> Message?
 
     @discardableResult
-    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> Message?
+    func editMessage(_ id: MessageID, on channelId: ChannelID, edit: Message.Edit) async throws -> Message?
 
     func deleteMessage(_ id: MessageID, on channelId: ChannelID) async throws
 
@@ -92,6 +92,11 @@ public protocol Sink {
 public extension Sink {
     func sendMessage(_ content: String, to channelId: ChannelID) async throws {
         try await sendMessage(Message(content: content), to: channelId)
+    }
+
+    @discardableResult
+    func editMessage(_ id: MessageID, on channelId: ChannelID, content: String) async throws -> Message? {
+        try await editMessage(id, on: channelId, edit: Message.Edit(content: content))
     }
 
     func getMessages(for channelId: ChannelID, limit: Int) async throws -> [Message] {
