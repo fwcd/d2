@@ -22,10 +22,9 @@ extension InteractionResponse.ResponseType: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordInteractionResponseType {
         switch self {
             case .pong: .pong
-            case .acknowledge: .acknowledge
-            case .channelMessage: .channelMessage
             case .channelMessageWithSource: .channelMessageWithSource
-            case .ackWithSource: .ackWithSource
+            case .deferredChannelMessageWithSource: .deferredChannelMessageWithSource
+            case .deferredUpdateMessage: .deferredUpdateMessage
         }
     }
 }

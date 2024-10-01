@@ -222,7 +222,8 @@ struct DiscordSink: DefaultSink {
 
     func deleteMIOCommand(_ commandId: MIOCommandID) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            client.deleteApplicationCommand(commandId.usingDiscordAPI) { response in
+            client.deleteApplicationCommand(commandId.usingDiscordAPI) { (data, response) in
+                // TODO: Return data in error
                 continuation.resume(with: Result { try check(response: response, "deleting MIO command") })
             }
         }
@@ -254,7 +255,8 @@ struct DiscordSink: DefaultSink {
 
     func deleteMIOCommand(_ commandId: MIOCommandID, on guildId: D2MessageIO.GuildID) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            client.deleteApplicationCommand(commandId.usingDiscordAPI, on: guildId.usingDiscordAPI) { response in
+            client.deleteApplicationCommand(commandId.usingDiscordAPI, on: guildId.usingDiscordAPI) { (data, response) in
+                // TODO: Return data in error
                 continuation.resume(with: Result { try check(response: response, "deleting MIO command") })
             }
         }
@@ -262,7 +264,8 @@ struct DiscordSink: DefaultSink {
 
     func createInteractionResponse(for interactionId: D2MessageIO.InteractionID, token: String, response: InteractionResponse) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            client.createInteractionResponse(for: interactionId.usingDiscordAPI, token: token, response: response.usingDiscordAPI) { response in
+            client.createInteractionResponse(for: interactionId.usingDiscordAPI, token: token, response: response.usingDiscordAPI) { (data, response) in
+                // TODO: Return data in error
                 continuation.resume(with: Result { try check(response: response, "creating interaction response") })
             }
         }

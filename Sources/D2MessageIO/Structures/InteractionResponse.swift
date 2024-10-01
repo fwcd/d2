@@ -9,9 +9,8 @@ public struct InteractionResponse {
 
     public enum ResponseType {
         case pong
-        case acknowledge
-        case channelMessage
         case channelMessageWithSource
-        case ackWithSource
+        case deferredChannelMessageWithSource
+        case deferredUpdateMessage
     }
 }

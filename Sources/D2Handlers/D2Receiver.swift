@@ -624,7 +624,7 @@ public class D2Receiver: Receiver {
                         try await sink.createInteractionResponse(
                             for: interaction.id,
                             token: token,
-                            response: .init(type: .acknowledge)
+                            response: .init(type: .deferredUpdateMessage)
                         )
                     }
                 } catch {
