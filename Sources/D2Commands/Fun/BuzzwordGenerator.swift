@@ -19,24 +19,10 @@ struct BuzzwordGenerator {
     }
 
     mutating func word() throws -> String {
-        let generators: [(inout Self) throws -> String] = [
+        try any(of: [
             { try $0.noun() },
             { try $0.adjective() },
-        ]
-
-        let probability = 1.0 / Double(generators.count)
-        var random = Double.random(in: 0...1)
-
-        for (i, generator) in generators.enumerated() {
-            if i == generators.count - 1 {
-                return try generator(&self)
-            } else if random < probability, let word = try? generator(&self) {
-                return word
-            }
-            random -= probability
-        }
-
-        fatalError("Unreachable")
+        ])
     }
 
     mutating func primitiveNoun() throws -> String {
@@ -83,20 +69,33 @@ struct BuzzwordGenerator {
     }
 
     mutating func compoundAdjective() throws -> String {
-        let prefix: String
-        if Bool.random(), let noun = try? noun() {
-            prefix = noun
-        } else {
-            prefix = try compoundPrefix()
-        }
+        let prefix = try any(of: [
+            { try $0.noun() },
+            { try $0.compoundPrefix() },
+        ])
         return try "\(prefix)-\(compoundSuffix())"
     }
 
     mutating func adjective() throws -> String {
-        if Bool.random(), let adjective = try? compoundAdjective() {
-            return adjective
-        } else {
-            return try primitiveAdjective()
+        try any(of: [
+            { try $0.compoundAdjective() },
+            { try $0.primitiveAdjective() },
+        ])
+    }
+
+    mutating func any(of generators: [(inout Self) throws -> String]) throws -> String {
+        let probability = 1.0 / Double(generators.count)
+        var random = Double.random(in: 0...1)
+
+        for (i, generator) in generators.enumerated() {
+            if i == generators.count - 1 {
+                return try generator(&self)
+            } else if random < probability, let word = try? generator(&self) {
+                return word
+            }
+            random -= probability
         }
+
+        fatalError("Unreachable")
     }
 }
