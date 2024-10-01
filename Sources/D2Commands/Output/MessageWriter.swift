@@ -37,7 +37,7 @@ public struct MessageWriter {
             case let .gif(gif):
                 return try Message(fromGif: gif)
             case let .component(component):
-                return Message(components: [.actionRow(.init(components: [component]))])
+                return Message(components: [component])
             case let .domNode(node):
                 return try await write(value: .code(try node.outerHtml(), language: "html"))
             case let .code(code, language: lang):
