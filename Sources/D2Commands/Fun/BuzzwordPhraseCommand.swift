@@ -10,6 +10,8 @@ public class BuzzwordPhraseCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
+    public let outputValueType: RichValueType = .text
+
     public struct Corpus {
         public var nouns: [String]
         public var adjectives: [String]
