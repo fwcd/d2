@@ -52,17 +52,17 @@ public struct TriggerReactionHandler: MessageHandler {
                     // Check for a special day
                     switch (todayComponents.month, todayComponents.day) {
                     // Valentine's Day
-                    case (2, 14): "💘"
+                    case (2, 14): return "💘"
                     // Pi Day
-                    case (3, 14): "🥧"
+                    case (3, 14): return "🥧"
                     // St Patrick's Day
-                    case (3, 17): "🍀"
+                    case (3, 17): return "🍀"
                     // Halloween
-                    case (10, 31): "🎃"
+                    case (10, 31): return "🎃"
                     // Christmas
-                    case (12, 24), (12, 25), (12, 26): "🎅"
+                    case (12, 24), (12, 25), (12, 26): return "🎅"
                     // New Year's Eve
-                    case (12, 31), (1, 1): "🎆"
+                    case (12, 31), (1, 1): return "🎆"
                     default: break
                     }
 
