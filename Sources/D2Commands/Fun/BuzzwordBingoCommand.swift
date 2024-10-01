@@ -1,3 +1,4 @@
+import D2MessageIO
 import Utils
 
 public class BuzzwordBingoCommand: StringCommand {
@@ -9,12 +10,29 @@ public class BuzzwordBingoCommand: StringCommand {
 
     public let outputValueType: RichValueType = .components
 
-    public init() {}
+    private let corpus: BuzzwordCorpus
+
+    public init(corpus: BuzzwordCorpus = .standard) {
+        self.corpus = corpus
+    }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        await output.append(.components([.actionRow(.init(components: [
-            .button(.init(customId: "a", label: "A")),
-            .button(.init(customId: "b", label: "B")),
-        ]))]))
+        let rows = 5
+        let cols = 5
+
+        var generator = BuzzwordGenerator(corpus: corpus)
+
+        do {
+            try await output.append(.components((0..<rows).map { _ in
+                try .actionRow(.init(components: (0..<cols).map { _ in try generator.word() }.map { word in
+                    .button(.init(
+                        customId: "buzzwordbingo:\(word)",
+                        label: word
+                    ))
+                }))
+            }))
+        } catch {
+            await output.append(error, errorText: "Could not generate buzzwords: \(error)")
+        }
     }
 }
