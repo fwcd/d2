@@ -13,23 +13,27 @@ public class BuzzwordPhraseCommand: StringCommand {
     public let outputValueType: RichValueType = .text
 
     public struct Corpus {
-        public var nouns: [String]
-        public var adjectives: [String]
-        public var compoundPrefixes: [String]
-        public var compoundSuffixes: [String]
+        var nouns: [String]
+        var nounSuffixes: [String]
+        var adjectives: [String]
+        var compoundPrefixes: [String]
+        var compoundSuffixes: [String]
 
         public init(
             nouns: [String],
+            nounSuffixes: [String],
             adjectives: [String],
             compoundPrefixes: [String],
             compoundSuffixes: [String]
         ) {
             assert(!nouns.isEmpty)
+            assert(!nounSuffixes.isEmpty)
             assert(!adjectives.isEmpty)
             assert(!compoundPrefixes.isEmpty)
             assert(!compoundSuffixes.isEmpty)
 
             self.nouns = nouns
+            self.nounSuffixes = nounSuffixes
             self.adjectives = adjectives
             self.compoundPrefixes = compoundPrefixes
             self.compoundSuffixes = compoundSuffixes
@@ -41,6 +45,7 @@ public class BuzzwordPhraseCommand: StringCommand {
 
         private enum GenerationError: Error {
             case noMoreNouns
+            case noMoreNounSuffixes
             case noMoreCompoundPrefixes
             case noMoreCompoundSuffixes
             case noMoreAdjectives
@@ -50,11 +55,18 @@ public class BuzzwordPhraseCommand: StringCommand {
             try ((0..<adjectives).map { _ in try adjective() } + (0..<nouns).map { _ in try noun() }).joined(separator: " ")
         }
 
-        private mutating func noun() throws -> String {
+        private mutating func primitiveNoun() throws -> String {
             guard let noun = corpus.nouns.removeRandomElementBySwap() else {
                 throw GenerationError.noMoreNouns
             }
             return noun
+        }
+
+        private mutating func nounSuffix() throws -> String {
+            guard let nounSuffix = corpus.nounSuffixes.removeRandomElementBySwap() else {
+                throw GenerationError.noMoreNounSuffixes
+            }
+            return nounSuffix
         }
 
         private mutating func compoundPrefix() throws -> String {
@@ -78,12 +90,30 @@ public class BuzzwordPhraseCommand: StringCommand {
             return adjective
         }
 
+        private mutating func noun() throws -> String {
+            var noun = try primitiveNoun()
+            if Double.random(in: 0...1) < 0.1, let suffix = try? nounSuffix() {
+                noun += "-\(suffix)"
+            }
+            return noun
+        }
+
         private mutating func compoundAdjective() throws -> String {
-            try "\(Bool.random() ? noun() : compoundPrefix())-\(compoundSuffix())"
+            let prefix: String
+            if Bool.random(), let noun = try? noun() {
+                prefix = noun
+            } else {
+                prefix = try compoundPrefix()
+            }
+            return try "\(prefix)-\(compoundSuffix())"
         }
 
         private mutating func adjective() throws -> String {
-            try Bool.random() ? compoundAdjective() : primitiveAdjective()
+            if Bool.random(), let adjective = try? compoundAdjective() {
+                return adjective
+            } else {
+                return try primitiveAdjective()
+            }
         }
     }
 
@@ -94,16 +124,28 @@ public class BuzzwordPhraseCommand: StringCommand {
             nouns: [
                 "AI",
                 "AR",
+                "automation",
                 "blockchain",
                 "catalyst",
+                "computing",
                 "content",
+                "convergence",
                 "cloud",
                 "e-business",
                 "e-commerce",
                 "expertise",
+                "IT",
+                "transformation",
+                "roadmap",
+                "software",
+                "solution",
+                "synergy",
                 "game",
                 "web",
                 "VR",
+            ],
+            nounSuffixes: [
+                "as-a-service",
             ],
             adjectives: [
                 "24/7",
@@ -111,6 +153,7 @@ public class BuzzwordPhraseCommand: StringCommand {
                 "B2B",
                 "B2C",
                 "best-of-breed",
+                "digital",
                 "holistic",
                 "global",
                 "real-time",
@@ -128,8 +171,15 @@ public class BuzzwordPhraseCommand: StringCommand {
                 "state of the art",
                 "next-generation",
                 "low-risk",
+                "serverless",
                 "high-tech",
                 "high-yield",
+                "battle-tested",
+                "low-code",
+                "no-code",
+                "zero-trust",
+                "full-stack",
+                "turnkey",
             ],
             compoundPrefixes: [
                 "client",
@@ -147,11 +197,13 @@ public class BuzzwordPhraseCommand: StringCommand {
                 "adaptive",
                 "added",
                 "based",
+                "building",
                 "centered",
                 "compatible",
                 "compliant",
                 "class",
                 "distributed",
+                "grade",
                 "elastic",
                 "empowered",
                 "enabled",
