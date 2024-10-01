@@ -39,28 +39,51 @@ public class BuzzwordPhraseCommand: StringCommand {
     private struct Generator {
         var corpus: Corpus
 
-        mutating func phrase(adjectives: Int = 1, nouns: Int = 2) -> String {
-            ((0..<adjectives).map { _ in adjective() } + (0..<nouns).map { _ in noun() }).joined(separator: " ")
+        private enum GenerationError: Error {
+            case noMoreNouns
+            case noMoreCompoundPrefixes
+            case noMoreCompoundSuffixes
+            case noMoreAdjectives
         }
 
-        private mutating func noun() -> String {
-            corpus.nouns.removeRandomElementBySwap() ?? ""
+        mutating func phrase(adjectives: Int = 1, nouns: Int = 2) throws -> String {
+            try ((0..<adjectives).map { _ in try adjective() } + (0..<nouns).map { _ in try noun() }).joined(separator: " ")
         }
 
-        private mutating func compoundPrefix() -> String {
-            corpus.compoundPrefixes.removeRandomElementBySwap() ?? ""
+        private mutating func noun() throws -> String {
+            guard let noun = corpus.nouns.removeRandomElementBySwap() else {
+                throw GenerationError.noMoreNouns
+            }
+            return noun
         }
 
-        private mutating func compoundSuffix() -> String {
-            corpus.compoundSuffixes.removeRandomElementBySwap() ?? ""
+        private mutating func compoundPrefix() throws -> String {
+            guard let compoundPrefix = corpus.compoundPrefixes.removeRandomElementBySwap() else {
+                throw GenerationError.noMoreCompoundPrefixes
+            }
+            return compoundPrefix
         }
 
-        private mutating func compoundAdjective() -> String {
-            "\(Bool.random() ? noun() : compoundPrefix())-\(compoundSuffix())"
+        private mutating func compoundSuffix() throws -> String {
+            guard let compoundSuffix = corpus.compoundSuffixes.removeRandomElementBySwap() else {
+                throw GenerationError.noMoreCompoundSuffixes
+            }
+            return compoundSuffix
         }
 
-        private mutating func adjective() -> String {
-            Bool.random() ? compoundAdjective() : corpus.adjectives.removeRandomElementBySwap()!
+        private mutating func primitiveAdjective() throws -> String {
+            guard let adjective = corpus.adjectives.removeRandomElementBySwap() else {
+                throw GenerationError.noMoreAdjectives
+            }
+            return adjective
+        }
+
+        private mutating func compoundAdjective() throws -> String {
+            try "\(Bool.random() ? noun() : compoundPrefix())-\(compoundSuffix())"
+        }
+
+        private mutating func adjective() throws -> String {
+            try Bool.random() ? compoundAdjective() : primitiveAdjective()
         }
     }
 
@@ -159,8 +182,12 @@ public class BuzzwordPhraseCommand: StringCommand {
         let nouns = parsedArgs.output.nouns.flatMap { Int($0) } ?? 2
 
         var generator = Generator(corpus: corpus)
-        let phrase = generator.phrase(adjectives: adjectives, nouns: nouns)
 
-        await output.append(phrase)
+        do {
+            let phrase = try generator.phrase(adjectives: adjectives, nouns: nouns)
+            await output.append(phrase)
+        } catch {
+            await output.append(error, errorText: "Could not generate phrase: \(error)")
+        }
     }
 }
