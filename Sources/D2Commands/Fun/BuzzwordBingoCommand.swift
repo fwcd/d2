@@ -27,7 +27,7 @@ public class BuzzwordBingoCommand: StringCommand {
                 try .actionRow(.init(components: (0..<cols).map { _ in try generator.primitiveWord() }.map { word in
                     .button(.init(
                         customId: "buzzwordbingo:\(word)",
-                        label: pad(word)
+                        label: convertToFixedWidth(word)
                     ))
                 }))
             }))
@@ -36,13 +36,17 @@ public class BuzzwordBingoCommand: StringCommand {
         }
     }
 
-    private func pad(_ word: String, to length: Int = 12) -> String {
-        // Yes, this is intentionally a funky non-whitespace, blank-looking
-        // Unicode char to prevent Discord from stripping it.
-        let padChar = "⠀"
-        let padCharWidth = 1.5 // in "normal" chars
-        let padLength = max(length - word.count, 0) / Int(2 * padCharWidth)
-        let padding = String(repeating: padChar, count: padLength)
-        return "\(padding)\(word)\(padding)"
+    // TODO: Remove this workaround once the Discord API lets us align buttons properly
+    // https://github.com/discord/discord-api-docs/discussions/3333
+    // https://github.com/discord/discord-api-docs/discussions/4972
+
+    private func convertToFixedWidth(_ word: String) -> String {
+        let length = 14
+        let padChar = "\u{200b} "
+        let padCharWidth = 0.45
+        let padLength = Double(max(length - word.count, 0)) / (2 * padCharWidth)
+        let leftPadding = String(repeating: padChar, count: Int(padLength.rounded(.down)))
+        let rightPadding = String(repeating: padChar, count: Int(padLength.rounded(.up)))
+        return "\(leftPadding)\(FancyTextConverter().convert(word, to: .monospaced))\(rightPadding)"
     }
 }
