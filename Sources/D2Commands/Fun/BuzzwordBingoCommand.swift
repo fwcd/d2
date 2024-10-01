@@ -1,6 +1,8 @@
 import D2MessageIO
 import Utils
 
+private let customIdPrefix = "buzzwordbingo:"
+
 public class BuzzwordBingoCommand: StringCommand {
     public let info = CommandInfo(
         category: .fun,
@@ -11,13 +13,14 @@ public class BuzzwordBingoCommand: StringCommand {
     public let outputValueType: RichValueType = .components
 
     private let corpus: BuzzwordCorpus
+    private var boards: [ChannelID: Board] = [:]
 
     private struct Board {
         var fields: [[Field]]
 
         struct Field {
             let word: String
-            var enabled = false
+            var isChecked = false
         }
     }
 
@@ -26,11 +29,43 @@ public class BuzzwordBingoCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+        guard let channelId = context.channel?.id else {
+            await output.append(errorText: "No channel id")
+            return
+        }
         do {
             let board = try generateBoard()
+            boards[channelId] = board
+            context.subscribeToChannel()
             await output.append(.components(components(for: board)))
         } catch {
             await output.append(error, errorText: "Could not generate buzzwords: \(error)")
+        }
+    }
+
+    public func onSubscriptionInteraction(with customId: String, by user: User, output: any CommandOutput, context: CommandContext) async {
+        guard customId.hasPrefix(customIdPrefix),
+              let channelId = context.channel?.id,
+              let messageId = context.message.id,
+              var board = boards[channelId] else { return }
+
+        let encodedIndices = customId.dropFirst(customIdPrefix.count).split(separator: ",")
+        guard let i = encodedIndices[safely: 0].flatMap({ Int($0) }) else {
+            await output.append(errorText: "Could not parse row index from encoded field indices")
+            return
+        }
+        guard let j = encodedIndices[safely: 1].flatMap({ Int($0) }) else {
+            await output.append(errorText: "Could not parse column index from encoded field indices")
+            return
+        }
+
+        board.fields[i][j].isChecked = true
+        boards[channelId] = board
+
+        do {
+            try await context.sink?.editMessage(messageId, on: channelId, edit: .init(components: components(for: board)))
+        } catch {
+            await output.append(error, errorText: "Could not edit bingo message after interaction")
         }
     }
 
@@ -46,12 +81,12 @@ public class BuzzwordBingoCommand: StringCommand {
     }
 
     private func components(for board: Board) -> [Message.Component] {
-        board.fields.map { row in
-            .actionRow(.init(components: row.map { field in
+        board.fields.enumerated().map { (i, row) in
+            .actionRow(.init(components: row.enumerated().map { (j, field) in
                 .button(.init(
-                    customId: "buzzwordbingo:\(field.word)",
-                    label: convertToFixedWidth(field.word),
-                    disabled: true // TODO: Make the buttons interactive
+                    customId: "\(customIdPrefix)\(i),\(j)",
+                    style: field.isChecked ? .secondary : .primary,
+                    label: convertToFixedWidth(field.word)
                 ))
             }))
         }
