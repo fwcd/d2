@@ -24,7 +24,7 @@ public class BuzzwordBingoCommand: StringCommand {
 
         do {
             try await output.append(.components((0..<rows).map { _ in
-                try .actionRow(.init(components: (0..<cols).map { _ in try generator.word() }.map { word in
+                try .actionRow(.init(components: (0..<cols).map { _ in try generator.primitiveWord() }.map { word in
                     .button(.init(
                         customId: "buzzwordbingo:\(word)",
                         label: word

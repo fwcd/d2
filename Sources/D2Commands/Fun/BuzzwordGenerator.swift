@@ -25,6 +25,13 @@ struct BuzzwordGenerator {
         ])
     }
 
+    mutating func primitiveWord() throws -> String {
+        try any(of: [
+            { try $0.primitiveNoun() },
+            { try $0.primitiveAdjective() },
+        ])
+    }
+
     mutating func primitiveNoun() throws -> String {
         guard let noun = corpus.nouns.removeRandomElementBySwap() else {
             throw GenerationError.noMoreNouns
