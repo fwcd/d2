@@ -92,7 +92,7 @@ public class BuzzwordPhraseCommand: StringCommand {
 
         private mutating func noun() throws -> String {
             var noun = try primitiveNoun()
-            if Double.random(in: 0...1) < 0.1, let suffix = try? nounSuffix() {
+            if Double.random(in: 0...1) < 0.2, let suffix = try? nounSuffix() {
                 noun += "-\(suffix)"
             }
             return noun
