@@ -28,16 +28,23 @@ public class PronounsCommand: StringCommand {
         }
 
         do {
-            try await output.append(.compound([.text("Please pick your pronouns:")] + pronounRoles.sorted(by: descendingComparator(comparing: \.key)).map { (name, roleId) in
-                let encodedIdData = try JSONEncoder().encode(roleId)
-                guard let encodedId = String(data: encodedIdData, encoding: .utf8) else {
-                    throw EncodeError.couldNotEncode("Could not encoded pronoun role id (\(roleId))")
-                }
-                return RichValue.components([.button(.init(
-                    customId: "\(customIdPrefix)\(encodedId)",
-                    label: name
-                ))])
-            }))
+            try await output.append(.compound([
+                .text("Please pick your pronouns:"),
+                .components([.actionRow(.init(components:
+                    pronounRoles
+                        .sorted(by: descendingComparator(comparing: \.key))
+                        .map { (name, roleId) in
+                            let encodedIdData = try JSONEncoder().encode(roleId)
+                            guard let encodedId = String(data: encodedIdData, encoding: .utf8) else {
+                                throw EncodeError.couldNotEncode("Could not encoded pronoun role id (\(roleId))")
+                            }
+                            return .button(.init(
+                                customId: "\(customIdPrefix)\(encodedId)",
+                                label: name
+                            ))
+                        }
+                ))]),
+            ]))
             context.subscribeToChannel()
         } catch {
             await output.append(error, errorText: "Could not create pronoun picker message")
