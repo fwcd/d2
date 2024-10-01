@@ -126,6 +126,7 @@ public class BuzzwordPhraseCommand: StringCommand {
                 "elastic",
                 "empowered",
                 "enabled",
+                "engineered",
                 "focused",
                 "proof",
                 "ready",
