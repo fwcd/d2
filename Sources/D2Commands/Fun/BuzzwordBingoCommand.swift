@@ -17,8 +17,8 @@ public class BuzzwordBingoCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        let rows = 5
-        let cols = 5
+        let rows = 4
+        let cols = 4
 
         var generator = BuzzwordGenerator(corpus: corpus)
 
