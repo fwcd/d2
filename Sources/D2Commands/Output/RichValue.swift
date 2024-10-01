@@ -71,12 +71,38 @@ public enum RichValue: Addable {
     public var asAttachments: [Message.Attachment]? {
         extract { r -> [Message.Attachment]? in if case let .attachments(attachments) = r { return attachments } else { return nil } }.first
     }
+
     public var isNone: Bool {
         switch self {
             case .none: return true
             default: return false
         }
     }
+
+    public var type: RichValueType {
+        switch self {
+            case .none: .none
+            case .text: .text
+            case .image: .image
+            case .table: .table
+            case .gif: .gif
+            case .component: .component
+            case .urls: .urls
+            case .domNode: .domNode
+            case .code: .code
+            case .embed: .embed
+            case .geoCoordinates: .geoCoordinates
+            case .mentions: .mentions
+            case .roleMentions: .roleMentions
+            case .ndArrays: .ndArrays
+            case .error: .error
+            case .files: .files
+            case .attachments: .attachments
+            case .lazy(let value): value.wrappedValue.type
+            case .compound(let values): .compound(values.map(\.type))
+        }
+    }
+
     public var values: [RichValue] {
         switch self {
             case .none: return []
