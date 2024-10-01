@@ -6,94 +6,139 @@ public class BuzzwordPhraseCommand: StringCommand {
         shortDescription: "Generates a random buzzword phrase",
         requiredPermissionLevel: .basic
     )
-    private let nouns: [String]
-    private let adjectives: [String]
-    private let compoundPrefixes: [String]
-    private let compoundSuffixes: [String]
+
+    public struct Corpus {
+        public var nouns: [String]
+        public var adjectives: [String]
+        public var compoundPrefixes: [String]
+        public var compoundSuffixes: [String]
+
+        public init(
+            nouns: [String],
+            adjectives: [String],
+            compoundPrefixes: [String],
+            compoundSuffixes: [String]
+        ) {
+            assert(!nouns.isEmpty)
+            assert(!adjectives.isEmpty)
+            assert(!compoundPrefixes.isEmpty)
+            assert(!compoundSuffixes.isEmpty)
+
+            self.nouns = nouns
+            self.adjectives = adjectives
+            self.compoundPrefixes = compoundPrefixes
+            self.compoundSuffixes = compoundSuffixes
+        }
+    }
+
+    private struct Generator {
+        var corpus: Corpus
+
+        mutating func phrase() -> String {
+            "\(adjective()) \(noun()) \(noun())"
+        }
+
+        private mutating func noun() -> String {
+            corpus.nouns.removeRandomElementBySwap() ?? ""
+        }
+
+        private mutating func compoundPrefix() -> String {
+            corpus.compoundPrefixes.removeRandomElementBySwap() ?? ""
+        }
+
+        private mutating func compoundSuffix() -> String {
+            corpus.compoundSuffixes.removeRandomElementBySwap() ?? ""
+        }
+
+        private mutating func compoundAdjective() -> String {
+            "\(Bool.random() ? noun() : compoundPrefix())-\(compoundSuffix())"
+        }
+
+        private mutating func adjective() -> String {
+            Bool.random() ? compoundAdjective() : corpus.adjectives.removeRandomElementBySwap()!
+        }
+    }
+
+    private let corpus: Corpus
 
     public init(
-        nouns: [String] = [
-            "AI",
-            "AR",
-            "blockchain",
-            "catalyst",
-            "content",
-            "client",
-            "cloud",
-            "data",
-            "future",
-            "game",
-            "immersive",
-            "web",
-            "VR",
-        ],
-        adjectives: [String] = [
-            "24/7",
-            "B2B",
-            "B2C",
-            "best-of-breed",
-            "holistic",
-            "real-time",
-            "on-demand",
-        ],
-        compoundPrefixes: [String] = [
-            "cross",
-            "e",
-            "hyper",
-            "goal",
-            "quantum",
-            "world",
-        ],
-        compoundSuffixes: [String] = [
-            "adaptive",
-            "based",
-            "centered",
-            "compatible",
-            "class",
-            "enabled",
-            "focused",
-            "proof",
-            "scale",
-            "infused",
-            "driven",
-            "changing",
-            "connected",
-            "oriented",
-        ]
+        corpus: Corpus = .init(
+            nouns: [
+                "AI",
+                "AR",
+                "blockchain",
+                "catalyst",
+                "content",
+                "cloud",
+                "e-business",
+                "e-commerce",
+                "expertise",
+                "game",
+                "web",
+                "VR",
+            ],
+            adjectives: [
+                "24/7",
+                "agile",
+                "B2B",
+                "B2C",
+                "best-of-breed",
+                "holistic",
+                "global",
+                "real-time",
+                "seamless",
+                "distributed",
+                "diverse",
+                "dynamic",
+                "on-demand",
+                "immersive",
+                "rapid",
+                "end-to-end",
+                "cutting-edge",
+                "cost-effective",
+                "error-free",
+            ],
+            compoundPrefixes: [
+                "client",
+                "cross",
+                "data",
+                "future",
+                "hyper",
+                "goal",
+                "quantum",
+                "world",
+            ],
+            compoundSuffixes: [
+                "adaptive",
+                "added",
+                "based",
+                "centered",
+                "compatible",
+                "class",
+                "distributed",
+                "elastic",
+                "empowered",
+                "enabled",
+                "focused",
+                "proof",
+                "ready",
+                "scale",
+                "infused",
+                "driven",
+                "changing",
+                "connected",
+                "oriented",
+                "ified",
+                "tailored",
+            ]
+        )
     ) {
-        assert(!nouns.isEmpty)
-        assert(!adjectives.isEmpty)
-        assert(!compoundPrefixes.isEmpty)
-        assert(!compoundSuffixes.isEmpty)
-
-        self.nouns = nouns
-        self.adjectives = adjectives
-        self.compoundPrefixes = compoundPrefixes
-        self.compoundSuffixes = compoundSuffixes
+        self.corpus = corpus
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        let phrase = "\(adjective()) \(noun()) \(noun())"
+        var generator = Generator(corpus: corpus)
+        let phrase = generator.phrase()
         await output.append(phrase)
-    }
-
-    private func noun() -> String {
-        nouns.randomElement()!
-    }
-
-    private func compoundPrefix() -> String {
-        compoundPrefixes.randomElement()!
-    }
-
-    private func compoundSuffix() -> String {
-        compoundSuffixes.randomElement()!
-    }
-
-    private func compoundAdjective() -> String {
-        "\(Bool.random() ? noun() : compoundPrefix())-\(compoundSuffix())"
-    }
-
-    private func adjective() -> String {
-        Bool.random() ? compoundAdjective() : adjectives.randomElement()!
     }
 }
