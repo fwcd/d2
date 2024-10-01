@@ -1,8 +1,8 @@
 import Foundation
 import Utils
 
-let encodedZero = "SCHNITZEL"
-let encodedOne = "BEER"
+fileprivate let encodedZero = "SCHNITZEL"
+fileprivate let encodedOne = "BEER"
 
 fileprivate func germanEncodeByte(_ byte: UInt8) -> [String] {
     var words = [String]()
