@@ -109,16 +109,16 @@ public struct Message: ExpressibleByStringLiteral {
 
     public struct Edit {
         public var content: String?
-        public var embed: Embed?
+        public var embeds: [Embed]?
         public var components: [Component]?
 
         public init(
             content: String? = nil,
-            embed: Embed? = nil,
+            embeds: [Embed]? = nil,
             components: [Component]? = nil
         ) {
             self.content = content
-            self.embed = embed
+            self.embeds = embeds
             self.components = components
         }
     }
