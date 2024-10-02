@@ -5,10 +5,9 @@ import Discord
 
 extension Message: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordMessage {
-        let embed: Embed? = embeds.first
         return DiscordMessage(
             content: content,
-            embed: embed?.usingDiscordAPI,
+            embeds: embeds.usingDiscordAPI,
             files: files.usingDiscordAPI,
             tts: tts,
             components: components.usingDiscordAPI
@@ -20,7 +19,7 @@ extension Message.Edit: DiscordAPIConvertible {
     public var usingDiscordAPI: DiscordMessage.Edit {
         return DiscordMessage.Edit(
             content: content,
-            embed: embed?.usingDiscordAPI,
+            embeds: embeds?.usingDiscordAPI,
             components: components?.usingDiscordAPI
         )
     }
