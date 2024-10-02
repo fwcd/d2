@@ -11,8 +11,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // TODO: Use released version once https://github.com/fwcd/swift-discord/pull/20 is merged
-        .package(url: "https://github.com/fwcd/swift-discord.git", revision: "b7fcda889f28d74425c35262ea9311092aacb2d4"),
+        .package(url: "https://github.com/fwcd/swift-discord.git", from: "13.0.0"),
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.3.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.4.3"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
