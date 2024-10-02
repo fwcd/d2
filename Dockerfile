@@ -21,6 +21,8 @@ RUN Scripts/build-release
 
 FROM swift:${SWIFTVERSION}-${UBUNTUDISTRO}-slim AS runner
 
+WORKDIR /opt/d2
+
 # Install build essentials (for node-gyb), curl and node
 RUN apt-get update && apt-get install -y build-essential curl software-properties-common && rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
@@ -28,8 +30,6 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # Install native dependencies
 COPY Scripts/install-runtime-dependencies-apt Scripts/
 RUN Scripts/install-runtime-dependencies-apt && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /opt/d2
 
 # Install Node dependencies
 COPY Scripts/install-node-dependencies Scripts/
