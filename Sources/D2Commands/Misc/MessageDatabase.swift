@@ -4,7 +4,7 @@ import SQLite
 import D2MessageIO
 import Utils
 
-typealias Expression = SQLite.Expression
+fileprivate typealias Expression = SQLite.Expression
 
 fileprivate let guilds = Table("guilds")
 fileprivate let guildId = Expression<Int64>("guild_id")
