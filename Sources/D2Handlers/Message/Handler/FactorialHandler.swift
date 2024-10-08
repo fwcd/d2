@@ -2,7 +2,7 @@ import Utils
 import Logging
 import D2MessageIO
 
-fileprivate let factorialPattern = #/\b(?<operand>\d+)!\b/#
+fileprivate let factorialPattern = #/\b(?<operand>\d+)(?<operator>!+)\b/#
 fileprivate let log = Logger(label: "D2Handlers.FactorialHandler")
 
 public struct FactorialHandler: MessageHandler {
@@ -21,9 +21,11 @@ public struct FactorialHandler: MessageHandler {
                let match = matches.first,
                let operand = Int(match.operand),
                operandRange.contains(operand) {
-                let result = factorial(operand)
+                let `operator` = match.output.operator
+                let alpha = `operator`.count
+                let result = multifactorial(operand, alpha)
                 do {
-                    try await sink.sendMessage("\(operand)! = \(result.isLessThanOrEqualTo(Double(Int.max)) ? String(Int(result)) : String(result))", to: channelId)
+                    try await sink.sendMessage("\(operand)\(`operator`) = \(result.isLessThanOrEqualTo(Double(Int.max)) ? String(Int(result)) : String(result))", to: channelId)
                 } catch {
                     log.warning("Could not send factorial message: \(error)")
                 }
@@ -32,7 +34,14 @@ public struct FactorialHandler: MessageHandler {
         return false
     }
 
-    private func factorial(_ n: Int) -> Double {
-        (1...n).map(Double.init).reduce(1, *)
+    private func multifactorial(_ n: Int, _ alpha: Int) -> Double {
+        precondition(alpha >= 1)
+        var result: Double = 1
+        var n = n
+        while n > 0 {
+            result *= Double(n)
+            n -= alpha
+        }
+        return result
     }
 }
