@@ -24,8 +24,14 @@ public struct FactorialHandler: MessageHandler {
                 let `operator` = match.output.operator
                 let alpha = `operator`.count
                 let result = multifactorial(operand, alpha)
+                let link: String? = switch alpha {
+                    case 1: nil
+                    case 2: "https://en.wikipedia.org/wiki/Double_factorial"
+                    default: "https://en.wikipedia.org/wiki/Double_factorial#Definitions"
+                }
+                let formattedOperator = link.map { "[\(`operator`)](<\($0)>)" } ?? "\(`operator`)"
                 do {
-                    try await sink.sendMessage("\(operand)\(`operator`) = \(result.isLessThanOrEqualTo(Double(Int.max)) ? String(Int(result)) : String(result))", to: channelId)
+                    try await sink.sendMessage("\(operand)\(formattedOperator) = \(result.isLessThanOrEqualTo(Double(Int.max)) ? String(Int(result)) : String(result))", to: channelId)
                 } catch {
                     log.warning("Could not send factorial message: \(error)")
                 }
