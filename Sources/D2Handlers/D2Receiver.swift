@@ -84,6 +84,7 @@ public class D2Receiver: Receiver {
             MessagePreviewHandler($configuration: $messagePreviewsConfiguration),
             TriggerReactionHandler($configuration: $triggerReactionConfiguration, $cityConfiguration: $cityConfiguration),
             CountToNHandler(),
+            Xkcd37Handler(),
             UniversalSummoningHandler(hostInfo: hostInfo),
             HaikuHandler($configuration: $haikuConfiguration, inventoryManager: inventoryManager),
             LuckyNumberHandler(luckyNumbers: [42, 69, 404, 420, 666, 911, 1337, 1984, 42069, 69420, 80085, 8675309], minimumNumberCount: 2),
