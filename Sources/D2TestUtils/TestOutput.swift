@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 import D2MessageIO
-@testable import D2Commands
+import D2Commands
 
 /// An implementation of CommandOutput and Sink
 /// that writes all messages into an array.
