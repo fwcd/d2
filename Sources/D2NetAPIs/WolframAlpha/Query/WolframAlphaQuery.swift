@@ -42,7 +42,7 @@ public struct WolframAlphaQuery {
         let data = try await performRaw()
         return try await withCheckedThrowingContinuation { continuation in
             let parser = XMLParser(data: data)
-            let delegate = WolframAlphaParserDelegate(then: continuation.resume(with:))
+            let delegate = WolframAlphaParserDelegate(continuation: continuation)
 
             parser.delegate = delegate
             _ = parser.parse()
