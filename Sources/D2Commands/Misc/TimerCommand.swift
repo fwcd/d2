@@ -2,7 +2,6 @@ import Foundation
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = #/(?:(?<name>[a-zA-Z]+)\s*)?(?<rest>.*)/#
 fileprivate let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
 fileprivate let flagPattern = #/--([a-z]+)/#
 fileprivate let timeUnits: [String: (Int) -> Int] = [
@@ -29,13 +28,16 @@ fileprivate struct NamedTimer {
     var remainingTime: TimeInterval { elapseDate.timeIntervalSinceNow }
 }
 
-public class TimerCommand: StringCommand {
+public class TimerCommand: RegexCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Pings a group of users after the timer elapses",
         presented: true,
         requiredPermissionLevel: .vip
     )
+
+    public let inputPattern = #/(?:(?<name>[a-zA-Z]+)\s*)?(?<rest>.*)/#
+
     private var subcommands: [String: (String, CommandOutput, CommandContext) async -> Void] = [:]
     private var timers: [Int: NamedTimer] = [:]
     private var nextTimerId: Int = 0
@@ -80,24 +82,18 @@ public class TimerCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
-
-        let name = parsedArgs.name.map { String($0) }
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
+        let name = input.name.map { String($0) }
 
         if let n = name, let subcommand = subcommands[n] {
             // Invoke the subcommand
 
-            await subcommand(String(parsedArgs.rest), output, context)
+            await subcommand(String(input.rest), output, context)
         } else {
             // Create a new timer
 
-            let rawDurations = parsedArgs.rest
-            let allParsedDurations = rawDurations.matches(of: durationPattern)
-            let flags = input.matches(of: flagPattern).map { $0.1 }
+            let allParsedDurations = input.rest.matches(of: durationPattern)
+            let flags = input.rest.matches(of: flagPattern).map { $0.1 }
             let durations = allParsedDurations.compactMap { timeUnits[timeUnitAliases[String($0.2)] ?? String($0.2)]?(Int($0.1)!) }
 
             guard !durations.isEmpty else {
