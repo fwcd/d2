@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-private let tokenPattern = #/token:\s*"(?<token>[^"]+)"/#
+nonisolated(unsafe) private let tokenPattern = #/token:\s*"(?<token>[^"]+)"/#
 
 public struct FastQuery {
     private let rounds: Int
