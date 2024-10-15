@@ -253,7 +253,7 @@ public class DiscordClientManager: DiscordClientDelegate {
         }
     }
 
-    private func overlaySink(with discordClient: DiscordClient) -> Sink {
+    private func overlaySink(with discordClient: DiscordClient) -> some Sink {
         OverlaySink(inner: combinedSink, name: discordClientName, me: discordClient.user?.usingMessageIO)
     }
 }
