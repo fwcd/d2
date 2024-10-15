@@ -1,4 +1,4 @@
-public struct GitLabCommit: Codable {
+public struct GitLabCommit: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case shortId = "short_id"

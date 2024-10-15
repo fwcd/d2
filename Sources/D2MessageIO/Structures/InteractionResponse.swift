@@ -1,4 +1,4 @@
-public struct InteractionResponse {
+public struct InteractionResponse: Sendable {
     public let type: ResponseType
     public let data: Message?
 
@@ -7,7 +7,7 @@ public struct InteractionResponse {
         self.data = data
     }
 
-    public enum ResponseType {
+    public enum ResponseType: Sendable {
         case pong
         case channelMessageWithSource
         case deferredChannelMessageWithSource

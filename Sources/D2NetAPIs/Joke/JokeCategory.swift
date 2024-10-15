@@ -1,4 +1,4 @@
-public enum JokeCategory: String, Codable {
+public enum JokeCategory: String, Sendable, Codable {
     case programming = "Programming"
     case misc = "Miscellaneous"
     case dark = "Dark"

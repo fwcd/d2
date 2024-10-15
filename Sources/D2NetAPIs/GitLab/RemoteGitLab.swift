@@ -24,7 +24,7 @@ public struct RemoteGitLab {
         return try await request(for: endpointPath).fetchUTF8()
     }
 
-    private func fetchJSON<T>(as type: T.Type, from endpointPath: String) async throws -> T where T: Decodable {
+    private func fetchJSON<T>(as type: T.Type, from endpointPath: String) async throws -> T where T: Decodable & Sendable {
         log.info("Querying \(endpointPath) as JSON from GitLab \(host)")
         return try await request(for: endpointPath).fetchJSON(as: type)
     }

@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let emojiPattern = #/<a?:(.+):(\d+)>/#
+nonisolated(unsafe) private let emojiPattern = #/<a?:(.+):(\d+)>/#
 
 public class RoleReactionsCommand: RegexCommand {
     public private(set) var info = CommandInfo(

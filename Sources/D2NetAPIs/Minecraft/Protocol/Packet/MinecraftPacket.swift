@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MinecraftPacket {
+public struct MinecraftPacket: Sendable {
     public let id: Int32
     public private(set) var content: Data
     public var data: Data {

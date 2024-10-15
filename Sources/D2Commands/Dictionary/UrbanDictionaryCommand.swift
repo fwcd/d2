@@ -3,7 +3,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let linkPattern = #/\[(?<term>[\w\s]+)\]/#
+nonisolated(unsafe) private let linkPattern = #/\[(?<term>[\w\s]+)\]/#
 
 public class UrbanDictionaryCommand: StringCommand {
     public let info = CommandInfo(

@@ -1,7 +1,7 @@
 import Utils
 
-fileprivate let wPattern = #/[rl]/#.ignoresCase()
-fileprivate let punctuationPattern = #/[!\.]/#
+nonisolated(unsafe) private let wPattern = #/[rl]/#.ignoresCase()
+nonisolated(unsafe) private let punctuationPattern = #/[!\.]/#
 
 public class UwUifyCommand: StringCommand {
     public let info = CommandInfo(

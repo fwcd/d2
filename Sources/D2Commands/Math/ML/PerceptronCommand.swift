@@ -6,11 +6,11 @@ import Utils
 ///
 /// 1. group: subcommand name
 /// 2. group: subcommand args
-fileprivate let subcommandPattern = #/(?<name>\S+)(?:\s+(?<args>.+))?/#
-fileprivate let learnPattern = #/(?<rate>\S+)?/#
+nonisolated(unsafe) private let subcommandPattern = #/(?<name>\S+)(?:\s+(?<args>.+))?/#
+nonisolated(unsafe) private let learnPattern = #/(?<rate>\S+)?/#
 
 /// Matches a data sample of the form ($0, $1).
-fileprivate let dataSamplePattern = #/\(\s*([^,]+)\s*,\s*(\S+)\s*\)/#
+nonisolated(unsafe) private let dataSamplePattern = #/\(\s*([^,]+)\s*,\s*(\S+)\s*\)/#
 
 // TODO: Use the Arg API
 

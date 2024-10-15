@@ -1,4 +1,4 @@
-public struct StackOverflowAnswer: Codable {
+public struct StackOverflowAnswer: Sendable, Codable {
     public var owner: StackOverflowShallowUser?
     public var body: String?
     public var bodyMarkdown: String?

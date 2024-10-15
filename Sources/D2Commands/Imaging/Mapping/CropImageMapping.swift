@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-fileprivate let argsPattern = #/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/#
+nonisolated(unsafe) private let argsPattern = #/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/#
 
 public struct CropImageMapping: ImageMapping {
     private let topLeftX: Int

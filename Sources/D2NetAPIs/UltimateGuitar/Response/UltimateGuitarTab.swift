@@ -1,4 +1,4 @@
-public struct UltimateGuitarTab: Codable {
+public struct UltimateGuitarTab: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case songId = "song_id"

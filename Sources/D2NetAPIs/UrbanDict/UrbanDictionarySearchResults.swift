@@ -1,3 +1,3 @@
-public struct UrbanDictionarySearchResults: Codable {
+public struct UrbanDictionarySearchResults: Sendable, Codable {
     public let list: [UrbanDictionaryEntry]
 }

@@ -4,7 +4,7 @@ import Utils
 import SwiftSoup
 
 fileprivate let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")
-fileprivate let pageVersionPattern = #/\bpageVersion\s*=\s*(?<pageVersion>\d+)\b/#
+nonisolated(unsafe) private let pageVersionPattern = #/\bpageVersion\s*=\s*(?<pageVersion>\d+)\b/#
 
 public struct IntegralCalculatorQuery<P: IntegralQueryParams> {
     private let params: P

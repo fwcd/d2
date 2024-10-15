@@ -2,9 +2,9 @@ import Foundation
 import CairoGraphics
 import Utils
 
-fileprivate let pngDataUrlPattern = #/data:image\/png;base64,(?<base64>.*)/#
+nonisolated(unsafe) private let pngDataUrlPattern = #/data:image\/png;base64,(?<base64>.*)/#
 
-public struct MinecraftServerInfo: Codable {
+public struct MinecraftServerInfo: Sendable, Codable {
     public let version: Version
     public let players: Players
     public let description: Chat
@@ -19,7 +19,7 @@ public struct MinecraftServerInfo: Codable {
             .flatMap { try? CairoImage(pngData: $0) }
     }
 
-    public struct Version: Codable {
+    public struct Version: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case name = "name"
             case protocolVersion = "protocol"
@@ -29,18 +29,18 @@ public struct MinecraftServerInfo: Codable {
         public let protocolVersion: Int
     }
 
-    public struct Players: Codable {
+    public struct Players: Sendable, Codable {
         public let max: Int
         public let online: Int
         public let sample: [Player]?
 
-        public struct Player: Codable {
+        public struct Player: Sendable, Codable {
             public let name: String
             public let id: String
         }
     }
 
-    public struct Chat: Codable, CustomStringConvertible {
+    public struct Chat: Sendable, Codable, CustomStringConvertible {
         public let text: String
         public var bold: Bool? = nil
         public var italic: Bool? = nil
@@ -74,7 +74,7 @@ public struct MinecraftServerInfo: Codable {
             }
         }
 
-        public struct ClickEvent: Codable {
+        public struct ClickEvent: Sendable, Codable {
             public enum CodingKeys: String, CodingKey {
                 case openUrl = "open_url"
                 case openFile = "open_file" // internal
@@ -92,7 +92,7 @@ public struct MinecraftServerInfo: Codable {
             public let changePage: Int?
         }
 
-        public struct HoverEvent: Codable {
+        public struct HoverEvent: Sendable, Codable {
             public enum CodingKeys: String, CodingKey {
                 case showText = "show_text"
                 case showAchievement = "show_achievement" // deprecated
@@ -103,29 +103,29 @@ public struct MinecraftServerInfo: Codable {
         }
     }
 
-    public struct ForgeData: Codable {
+    public struct ForgeData: Sendable, Codable {
         public let channels: [Channel]?
         public let mods: [Mod]?
         public let fmlNetworkVersion: Int?
 
-        public struct Channel: Codable {
+        public struct Channel: Sendable, Codable {
             public let res: String?
             public let version: String?
             public let required: Bool?
         }
 
-        public struct Mod: Codable, CustomStringConvertible {
+        public struct Mod: Sendable, Codable, CustomStringConvertible {
             public let modId: String
             public let modmarker: String
             public var description: String { return "\(modId) - \(modmarker)" }
         }
     }
 
-    public struct LegacyModInfo: Codable {
+    public struct LegacyModInfo: Sendable, Codable {
         public let type: String?
         public let modList: [Mod]?
 
-        public struct Mod: Codable, CustomStringConvertible {
+        public struct Mod: Sendable, Codable, CustomStringConvertible {
             public let modid: String
             public let version: String
             public var description: String { return "\(modid) - \(version)" }

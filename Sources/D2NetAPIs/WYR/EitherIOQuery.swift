@@ -16,7 +16,7 @@ public struct EitherIOQuery {
         self.maxOffset = maxOffset
     }
 
-    private struct EitherIOResponse: Codable {
+    private struct EitherIOResponse: Sendable, Codable {
         enum CodingKeys: String, CodingKey {
             case activity
             case showMore = "show_more"

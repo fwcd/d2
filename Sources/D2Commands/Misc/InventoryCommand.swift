@@ -3,8 +3,8 @@ import RegexBuilder
 import Utils
 
 fileprivate let allFlag = "--all"
-fileprivate let rawMentionPattern = #/<[^>]+>/#
-fileprivate let subcommandPattern = Regex {
+nonisolated(unsafe) private let rawMentionPattern = #/<[^>]+>/#
+nonisolated(unsafe) private let subcommandPattern = Regex {
     #/^/#
     Optionally {
         rawMentionPattern

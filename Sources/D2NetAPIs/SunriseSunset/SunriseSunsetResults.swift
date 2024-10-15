@@ -1,8 +1,8 @@
-public struct SunriseSunsetResults: Codable {
+public struct SunriseSunsetResults: Sendable, Codable {
     public let status: String
     public let results: Results
 
-    public struct Results: Codable {
+    public struct Results: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case sunrise
             case sunset

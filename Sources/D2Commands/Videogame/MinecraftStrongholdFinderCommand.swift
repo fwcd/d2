@@ -2,8 +2,8 @@ import D2MessageIO
 import RegexBuilder
 import Utils
 
-fileprivate let rawFloatPattern = #/(?:-?\d+(?:\.\d+)?)/#
-fileprivate let pointPattern = Regex {
+nonisolated(unsafe) private let rawFloatPattern = #/(?:-?\d+(?:\.\d+)?)/#
+nonisolated(unsafe) private let pointPattern = Regex {
     #/\(\s*/#
     Capture { rawFloatPattern } transform: { Double($0)! }
     #/\s*,\s*/#

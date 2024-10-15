@@ -2,11 +2,11 @@ import Foundation
 import D2MessageIO
 import Utils
 import Emoji
-import IRC
+@preconcurrency import IRC
 import Logging
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
-fileprivate let mentionPattern = #/<@.+?>/#
+nonisolated(unsafe) private let mentionPattern = #/<@.+?>/#
 
 struct IRCSink: DefaultSink {
     private let client: IRCClient

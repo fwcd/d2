@@ -1,10 +1,10 @@
-public struct DiscordStatus: Codable {
+public struct DiscordStatus: Sendable, Codable {
     public let page: Page?
     public let components: [Component]?
     public let incidents: [Incident]?
     public let status: Status?
 
-    public struct Page: Codable {
+    public struct Page: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case id
             case name
@@ -20,7 +20,7 @@ public struct DiscordStatus: Codable {
         public let updatedAt: String?
     }
 
-    public struct Component: Codable {
+    public struct Component: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case id
             case name
@@ -50,12 +50,12 @@ public struct DiscordStatus: Codable {
         public let onlyShowIfDegraded: Bool?
     }
 
-    public struct Incident: Codable {
+    public struct Incident: Sendable, Codable {
         public let id: String
         public let name: String
     }
 
-    public struct Status: Codable {
+    public struct Status: Sendable, Codable {
         public let indicator: String
         public let description: String
     }

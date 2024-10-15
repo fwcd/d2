@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct ChefkochImage: Codable {
+public struct ChefkochImage: Sendable, Codable {
     public let urls: [String: ImageURLs]
 
     public var thumbnailUrl: URL? {
@@ -11,7 +11,7 @@ public struct ChefkochImage: Codable {
             .1
     }
 
-    public struct ImageURLs: Codable {
+    public struct ImageURLs: Sendable, Codable {
         public let cdn: String?
         public let api: String?
     }

@@ -1,4 +1,4 @@
-public struct GitLabUser: Codable {
+public struct GitLabUser: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case name
         case username

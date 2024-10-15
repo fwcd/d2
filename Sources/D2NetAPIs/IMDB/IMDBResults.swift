@@ -1,6 +1,6 @@
 import Foundation
 
-public struct IMDBResults: Codable {
+public struct IMDBResults: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case entries = "d"
         case query = "q"
@@ -11,7 +11,7 @@ public struct IMDBResults: Codable {
     public let query: String?
     public let v: Int?
 
-    public struct Entry: Codable {
+    public struct Entry: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case info = "i"
             case id
@@ -36,13 +36,13 @@ public struct IMDBResults: Codable {
         public let year: Int?
         public let years: String?
 
-        public struct Info: Codable {
+        public struct Info: Sendable, Codable {
             public let width: Int?
             public let height: Int?
             public let imageUrl: URL?
         }
 
-        public struct Video: Codable {
+        public struct Video: Sendable, Codable {
             public enum CodingKeys: String, CodingKey {
                 case info = "i"
                 case id

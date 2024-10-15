@@ -1,4 +1,4 @@
-public struct XkcdComic: Codable {
+public struct XkcdComic: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case num
         case title

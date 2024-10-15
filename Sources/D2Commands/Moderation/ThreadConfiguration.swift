@@ -1,6 +1,6 @@
 import D2MessageIO
 
-public struct ThreadConfiguration: Codable {
+public struct ThreadConfiguration: Sendable, Codable {
     /// Channels whose threads are considered for unarchivings.
     public var keepaliveParentChannelIds: Set<ChannelID> = []
 

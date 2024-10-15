@@ -5,26 +5,26 @@ public enum AkinatorResponse {
     public typealias StepInformation = Basic<StepInformationParameters>
     public typealias Guess = Basic<GuessParameters>
 
-    public struct Basic<T>: Codable where T: Codable {
+    public struct Basic<T>: Sendable, Codable where T: Sendable & Codable {
         public let completion: String
         public let parameters: T
     }
 
-    public struct Identification: Codable {
+    public struct Identification: Sendable, Codable {
         public let channel: Int
         public let session: String
         public let signature: String
     }
 
-    public struct GuessParameters: Codable {
+    public struct GuessParameters: Sendable, Codable {
         public let elements: [GuessElement]
 
         public var characters: [GuessElement.GuessCharacter] { elements.map(\.element) }
 
-        public struct GuessElement: Codable {
+        public struct GuessElement: Sendable, Codable {
             public let element: GuessCharacter
 
-            public struct GuessCharacter: Codable {
+            public struct GuessCharacter: Sendable, Codable {
                 public enum CodingKeys: String, CodingKey {
                     case name
                     case probability = "proba"
@@ -43,7 +43,7 @@ public enum AkinatorResponse {
         }
     }
 
-    public struct StepInformationParameters: Codable {
+    public struct StepInformationParameters: Sendable, Codable {
         public let question: String
         public let answers: [Answer]
         public let step: String
@@ -56,12 +56,12 @@ public enum AkinatorResponse {
             return AkinatorQuestion(text: question, progression: progression, step: step)
         }
 
-        public struct Answer: Codable {
+        public struct Answer: Sendable, Codable {
             public let answer: String
         }
     }
 
-    public struct NewGameParameters: Codable {
+    public struct NewGameParameters: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case identification
             case stepInformation = "step_information"

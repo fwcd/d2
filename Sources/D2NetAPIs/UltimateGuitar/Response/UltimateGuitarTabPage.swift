@@ -1,4 +1,4 @@
-public struct UltimateGuitarTabPage: Codable {
+public struct UltimateGuitarTabPage: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case tab
         case tabView = "tab_view"

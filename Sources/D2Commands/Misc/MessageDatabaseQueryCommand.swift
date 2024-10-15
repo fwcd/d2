@@ -30,7 +30,7 @@ fileprivate let limitClause = "limit\\s+(\\d+)" // TODO: Fix issue that numbers 
 fileprivate let selectModifier = "distinct|all"
 fileprivate let clauses = [fromClause, whereClause, groupByHavingClause, orderByClause, limitClause].map { "(?:\($0))?" }.joined(separator: "\\s*")
 fileprivate let rawSelectStmt = "^select(?:\\s*(?:\(selectModifier)))?\\s*(?:\(resultColumn))(?:,\\s*(?:\(resultColumn))\\s*)*\\s*(?:\(clauses))$"
-fileprivate let selectStmtPattern = try! Regex(rawSelectStmt)
+nonisolated(unsafe) private let selectStmtPattern = try! Regex(rawSelectStmt)
 
 public class MessageDatabaseQueryCommand: StringCommand {
     public let info = CommandInfo(

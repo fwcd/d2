@@ -1,4 +1,4 @@
-public struct University: Codable {
+public struct University: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case domains
         case webPages = "web_pages"

@@ -1,4 +1,4 @@
-public struct User: Hashable, CustomStringConvertible {
+public struct User: Sendable, Hashable, CustomStringConvertible {
     public let avatar: String // Base64-encoded
     public let bot: Bool
     public let discriminator: String

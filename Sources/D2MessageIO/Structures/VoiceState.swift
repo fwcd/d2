@@ -1,4 +1,4 @@
-public struct VoiceState {
+public struct VoiceState: Sendable {
     public let channelId: ChannelID?
     public let guildId: GuildID?
     public let userId: UserID

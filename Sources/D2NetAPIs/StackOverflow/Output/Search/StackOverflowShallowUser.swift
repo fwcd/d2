@@ -1,4 +1,4 @@
-public struct StackOverflowShallowUser: Codable {
+public struct StackOverflowShallowUser: Sendable, Codable {
     public var reputation: Int?
     public var userId: Int?
     public var userType: String?

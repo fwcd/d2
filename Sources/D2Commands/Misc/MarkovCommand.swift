@@ -2,8 +2,8 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let flagPattern = #/--(\S+)/#
-fileprivate let pingPattern = #/<@&?.+?>/#
+nonisolated(unsafe) private let flagPattern = #/--(\S+)/#
+nonisolated(unsafe) private let pingPattern = #/<@&?.+?>/#
 
 // TODO: Use Arg API
 

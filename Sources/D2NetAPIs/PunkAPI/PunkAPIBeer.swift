@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PunkAPIBeer: Codable {
+public struct PunkAPIBeer: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -43,7 +43,7 @@ public struct PunkAPIBeer: Codable {
     public let brewersTips: String?
     public let contributedBy: String?
 
-    public struct UnitValue: Codable {
+    public struct UnitValue: Sendable, Codable {
         public let value: Double
         public let unit: String
     }

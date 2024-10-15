@@ -1,10 +1,10 @@
 import Utils
 
 public struct RandomWordGeneratorNhieQuery {
-    private struct Response: Codable {
+    private struct Response: Sendable, Codable {
         let data: [String: [Question]]
 
-        struct Question: Codable {
+        struct Question: Sendable, Codable {
             enum CodingKeys: String, CodingKey {
                 case question = "question_never_have_i_ever"
             }

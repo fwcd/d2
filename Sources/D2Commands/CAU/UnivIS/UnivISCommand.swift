@@ -7,12 +7,12 @@ import D2NetAPIs
 
 fileprivate let log = Logger(label: "D2Commands.UnivISCommand")
 
-fileprivate let rawKeyPattern = #/(?:\w+)/#
-fileprivate let rawValuePattern = #/(?:\w+|(?:"[\w ]+"))/#
+nonisolated(unsafe) private let rawKeyPattern = #/(?:\w+)/#
+nonisolated(unsafe) private let rawValuePattern = #/(?:\w+|(?:"[\w ]+"))/#
 
 // Matches a single key-value argument. The first group captures the
 // key, the second (or third) group captures the value.
-fileprivate let kvArgPattern = #/(?<key>\w+)\s*=\s*(?:(?:"(?<quotedValue>.+?)")|(?<value>\S+))/#
+nonisolated(unsafe) private let kvArgPattern = #/(?<key>\w+)\s*=\s*(?:(?:"(?<quotedValue>.+?)")|(?<value>\S+))/#
 
 // TODO: Use the new Arg API for this
 

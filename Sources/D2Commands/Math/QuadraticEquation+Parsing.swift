@@ -4,7 +4,7 @@ import RegexBuilder
 
 fileprivate let log = Logger(label: "D2Commands.QuadraticEquation+Parsing")
 
-fileprivate let tokenPattern = #/(?<operator>[+\-=])|(?<rational>[\d/\.]+)|(?<power>x(?:\^(?<exponent>\d+))?)/#
+nonisolated(unsafe) private let tokenPattern = #/(?<operator>[+\-=])|(?<rational>[\d/\.]+)|(?<power>x(?:\^(?<exponent>\d+))?)/#
 
 // TODO: Factor out general polynomial (equation) parser
 

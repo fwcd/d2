@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Channel: CustomStringConvertible {
+public struct Channel: Sendable, CustomStringConvertible {
     public let id: ChannelID
     public let guildId: GuildID?
     public let name: String
@@ -44,7 +44,7 @@ public struct Channel: CustomStringConvertible {
         self.permissionOverwrites = permissionOverwrites
     }
 
-    public struct ChannelType: RawRepresentable, Hashable, Codable, Comparable {
+    public struct ChannelType: RawRepresentable, Sendable, Hashable, Codable, Comparable {
         public var rawValue: Int
 
         public var isVoice: Bool { [.voice, .stageVoice].contains(self) }
@@ -72,7 +72,7 @@ public struct Channel: CustomStringConvertible {
         }
     }
 
-    public struct PermissionOverwrite {
+    public struct PermissionOverwrite: Sendable {
         public let id: OverwriteID
         public let type: PermissionOverwriteType
 
@@ -81,7 +81,7 @@ public struct Channel: CustomStringConvertible {
             self.type = type
         }
 
-        public struct PermissionOverwriteType: RawRepresentable, Hashable, Codable {
+        public struct PermissionOverwriteType: RawRepresentable, Sendable, Hashable, Codable {
             public var rawValue: Int
 
             public static let role = PermissionOverwriteType(rawValue: 0)
@@ -93,7 +93,7 @@ public struct Channel: CustomStringConvertible {
         }
     }
 
-    public struct ThreadMetadata {
+    public struct ThreadMetadata: Sendable {
         public let archived: Bool
         public let autoArchiveDuration: Int?
         public let archiveTimestamp: Date?

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Pokedex: Codable {
+public struct Pokedex: Sendable, Codable {
     public let count: Int
     public let next: URL?
     public let previous: URL?

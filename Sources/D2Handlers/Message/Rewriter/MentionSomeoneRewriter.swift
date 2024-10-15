@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let someonePattern = #/@someone/#
+nonisolated(unsafe) private let someonePattern = #/@someone/#
 
 public struct MentionSomeoneRewriter: MessageRewriter {
     public func rewrite(message: Message, sink: any Sink) -> Message? {

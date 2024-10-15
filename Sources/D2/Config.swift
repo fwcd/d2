@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Commands
 import Logging
 
-struct Config: Codable {
+struct Config: Sendable, Codable {
     var commandPrefix: String?
     var hostInfo: HostInfo?
     var setPresenceInitially: Bool?
@@ -10,7 +10,7 @@ struct Config: Codable {
     var useMIOCommandsOnlyOnGuild: GuildID?
     var log: Log?
 
-    struct Log: Codable {
+    struct Log: Sendable, Codable {
         var level: Logger.Level?
         var dependencyLevel: Logger.Level?
         var printToStdout: Bool?

@@ -2,7 +2,7 @@ import Utils
 import Logging
 import D2MessageIO
 
-fileprivate let numberPattern = #/\d+/#
+nonisolated(unsafe) private let numberPattern = #/\d+/#
 fileprivate let log = Logger(label: "D2Handlers.LuckyNumberHandler")
 
 public struct LuckyNumberHandler: MessageHandler {

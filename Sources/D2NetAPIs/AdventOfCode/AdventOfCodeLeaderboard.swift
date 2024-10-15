@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct AdventOfCodeLeaderboard: Decodable {
+public struct AdventOfCodeLeaderboard: Decodable, Sendable {
     public enum CodingKeys: String, CodingKey {
         case ownerId = "owner_id"
         case event
@@ -59,7 +59,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
         timeToCompletion(member: member, day: member.lastDay)
     }
 
-    public struct Member: Decodable {
+    public struct Member: Decodable, Sendable {
         public enum CodingKeys: String, CodingKey {
             case stars
             case globalScore = "global_score"
@@ -95,7 +95,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
             return res.sorted()
         }
 
-        public struct StarScore: Equatable, Comparable {
+        public struct StarScore: Equatable, Sendable, Comparable {
             public let score: Int
             public let date: Date
 
@@ -113,7 +113,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
             }
         }
 
-        public struct StarCompletion: Decodable, Equatable, Comparable {
+        public struct StarCompletion: Decodable, Equatable, Sendable, Comparable {
             public enum CodingKeys: String, CodingKey {
                 case getStarTs = "get_star_ts"
             }
@@ -127,7 +127,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
             }
         }
 
-        public struct Timestamp: Decodable, Equatable {
+        public struct Timestamp: Decodable, Equatable, Sendable {
             public let date: Date?
 
             public init(from decoder: Decoder) throws {

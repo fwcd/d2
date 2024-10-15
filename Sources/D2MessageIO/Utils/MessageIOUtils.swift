@@ -28,8 +28,8 @@ extension Guild.Member {
     public var displayName: String { nick ?? user.username }
 }
 
-fileprivate let mentionPattern = #/<@[&!]+(?<id>\d+)>/#
-fileprivate let everyoneMentionPattern = #/@(?<target>everyone|here)/#
+nonisolated(unsafe) private let mentionPattern = #/<@[&!]+(?<id>\d+)>/#
+nonisolated(unsafe) private let everyoneMentionPattern = #/@(?<target>everyone|here)/#
 
 extension String {
     public func cleaningMentions(with guild: Guild? = nil) -> String {

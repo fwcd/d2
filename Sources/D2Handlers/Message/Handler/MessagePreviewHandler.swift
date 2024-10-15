@@ -6,7 +6,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2Handlers.MessagePreviewHandler")
 
-fileprivate let messageLinkPattern = #/https?://discord(?:app)?.com/channels/(?<guildId>\d+)/(?<channelId>\d+)/(?<messageId>\d+)/#
+nonisolated(unsafe) private let messageLinkPattern = #/https?://discord(?:app)?.com/channels/(?<guildId>\d+)/(?<channelId>\d+)/(?<messageId>\d+)/#
 
 /// Displays previews of linked messages.
 public struct MessagePreviewHandler: MessageHandler {

@@ -1,7 +1,7 @@
 import Geodesy
 import Utils
 
-struct NominatimGeocodingResult: Codable {
+struct NominatimGeocodingResult: Sendable, Codable {
     enum CodingKeys: String, CodingKey {
         case placeId = "place_id"
         case license

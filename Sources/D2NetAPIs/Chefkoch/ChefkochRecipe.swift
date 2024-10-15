@@ -1,4 +1,4 @@
-public struct ChefkochRecipe: Codable {
+public struct ChefkochRecipe: Sendable, Codable {
     public let id: String
     public let title: String
     public let subtitle: String?
@@ -25,23 +25,23 @@ public struct ChefkochRecipe: Codable {
     public let totalTime: Double?
     public let ingredientGroups: [IngredientGroup]?
 
-    public struct User: Codable {
+    public struct User: Sendable, Codable {
         public let id: String
         public let username: String
         public let hasAvatar: Bool?
         public let hasPaid: Bool?
     }
 
-    public struct Rating: Codable {
+    public struct Rating: Sendable, Codable {
         public let rating: Double?
         public let numVotes: Int?
     }
 
-    public struct IngredientGroup: Codable {
+    public struct IngredientGroup: Sendable, Codable {
         public let header: String?
         public let ingredients: [Ingredient]
 
-        public struct Ingredient: Codable {
+        public struct Ingredient: Sendable, Codable {
             public let id: String
             public let name: String
             public let unit: String

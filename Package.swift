@@ -186,7 +186,7 @@ let package = Package(
                 .target(name: "D2NetAPIs"),
             ]
         ),
-        .testTarget(
+        .target(
             name: "D2TestUtils",
             dependencies: [
                 .target(name: "D2MessageIO"),

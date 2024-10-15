@@ -37,7 +37,7 @@ fileprivate struct RunnablePipe: AsyncRunnable {
 // The first group matches the command name,
 // the second matches the iteration count and
 // the third the arguments (the rest of the message content)
-fileprivate let commandPattern = #/(?<name>\w+)(?:\^(?<iterations>\d+))?(?:\s+(?<args>[\s\S]*))?/#
+nonisolated(unsafe) private let commandPattern = #/(?<name>\w+)(?:\^(?<iterations>\d+))?(?:\s+(?<args>[\s\S]*))?/#
 
 /// Handles (possibly piped or chained) command invocations.
 public class CommandHandler: MessageHandler {

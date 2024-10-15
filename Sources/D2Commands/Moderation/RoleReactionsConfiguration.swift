@@ -2,13 +2,13 @@ import Foundation
 import D2MessageIO
 import Utils
 
-public struct RoleReactionsConfiguration: Codable {
+public struct RoleReactionsConfiguration: Sendable, Codable {
     /// The messages that can be used to auto-assign roles via reactions.
     public var roleMessages: [MessageID: Mappings] = [:]
 
     public init() {}
 
-    public struct Mappings: Codable, Sequence {
+    public struct Mappings: Codable, Sendable, Sequence {
         /// Maps emojis to role ids. Standard emojis are stored in the usual
         /// unicode format and custom emojis are represented using 'name:id'
         /// syntax.

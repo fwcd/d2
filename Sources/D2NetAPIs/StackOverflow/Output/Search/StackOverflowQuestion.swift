@@ -1,4 +1,4 @@
-public struct StackOverflowQuestion: Codable {
+public struct StackOverflowQuestion: Sendable, Codable {
     public var body: String?
     public var bodyMarkdown: String?
     public var tags: [String]?

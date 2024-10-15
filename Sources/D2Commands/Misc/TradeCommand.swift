@@ -1,7 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let tradePattern = #/(?<authorsItem>\w+)\s+(?<othersItem>\w+)/#
+nonisolated(unsafe) private let tradePattern = #/(?<authorsItem>\w+)\s+(?<othersItem>\w+)/#
 
 public class TradeCommand: Command {
     public let info = CommandInfo(

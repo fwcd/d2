@@ -2,8 +2,8 @@ import Foundation
 import Utils
 import D2MessageIO
 
-fileprivate let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
-fileprivate let flagPattern = #/--([a-z]+)/#
+nonisolated(unsafe) private let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
+nonisolated(unsafe) private let flagPattern = #/--([a-z]+)/#
 fileprivate let timeUnits: [String: (Int) -> Int] = [
     "d": { $0 * 86400 },
     "h": { $0 * 3600 },

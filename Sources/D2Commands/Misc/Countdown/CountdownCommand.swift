@@ -15,8 +15,8 @@ fileprivate let inputDateFormatters = [
     makeDateFormatter("dd.MM.yyyy HH:mm"),
     outputDateFormatter
 ]
-fileprivate let subcommandPattern = #/(?<name>\w+)\s*(?<args>.*)/#
-fileprivate let namedDatePattern = #/(?<name>\w+[\sa-zA-Z]+)\s+(?<date>.+)/#
+nonisolated(unsafe) private let subcommandPattern = #/(?<name>\w+)\s*(?<args>.*)/#
+nonisolated(unsafe) private let namedDatePattern = #/(?<name>\w+[\sa-zA-Z]+)\s+(?<date>.+)/#
 
 public class CountdownCommand: StringCommand {
     public private(set) var info = CommandInfo(

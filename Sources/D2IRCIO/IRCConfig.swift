@@ -1,4 +1,4 @@
-public struct IRCConfig: Codable {
+public struct IRCConfig: Sendable, Codable {
     public let host: String
     public let port: Int
     public let nickname: String

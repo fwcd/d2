@@ -38,8 +38,8 @@ public struct ChessMove: Hashable, CustomStringConvertible {
     }
     public var algebraicNotation: String {
         switch castlingType {
-            case .short?: "O-O"
-            case .long?: "O-O-O"
+            case .short?: return "O-O"
+            case .long?: return "O-O-O"
             default: break
         }
 

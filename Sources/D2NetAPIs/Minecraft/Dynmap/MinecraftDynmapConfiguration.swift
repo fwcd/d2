@@ -1,6 +1,6 @@
 import Utils
 
-public struct MinecraftDynmapConfiguration: Codable {
+public struct MinecraftDynmapConfiguration: Sendable, Codable {
     public let updaterate: Double?
     public let chatlengthlimit: Int?
     public let worlds: [World]?
@@ -25,7 +25,7 @@ public struct MinecraftDynmapConfiguration: Codable {
     public let showplayerfacesinmenu: Bool?
     public let defaultworld: String?
 
-    public struct World: Codable {
+    public struct World: Sendable, Codable {
         public let sealevel: Int?
         public let protected: Bool?
         public let maps: [Map]?
@@ -35,7 +35,7 @@ public struct MinecraftDynmapConfiguration: Codable {
         public let title: String?
         public let worldheight: Int?
 
-        public struct Map: Codable {
+        public struct Map: Sendable, Codable {
             public let inclination: Double?
             public let nightandday: Bool?
             public let shader: String?
@@ -67,7 +67,7 @@ public struct MinecraftDynmapConfiguration: Codable {
             }
         }
 
-        public struct Position: Codable {
+        public struct Position: Sendable, Codable {
             public let x: Double
             public let y: Double
             public let z: Double

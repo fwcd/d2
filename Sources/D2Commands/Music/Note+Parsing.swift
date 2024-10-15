@@ -2,7 +2,7 @@ import Utils
 import MusicTheory
 
 /// Matches a single musical note.
-fileprivate let notePattern = #/(?<letter>[a-zA-Z])(?<accidental>[b#]?)(?<octave>\d+)?/#
+nonisolated(unsafe) private let notePattern = #/(?<letter>[a-zA-Z])(?<accidental>[b#]?)(?<octave>\d+)?/#
 
 extension Note {
     // TODO: Move this method upstream

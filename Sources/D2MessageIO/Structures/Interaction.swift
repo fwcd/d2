@@ -1,4 +1,4 @@
-public struct Interaction {
+public struct Interaction: Sendable {
     public let id: InteractionID
     public let type: InteractionType?
     public let customId: String?
@@ -34,13 +34,13 @@ public struct Interaction {
         self.version = version
     }
 
-    public enum InteractionType {
+    public enum InteractionType: Sendable {
         case ping
         case mioCommand
         case messageComponent
     }
 
-    public struct InteractionData {
+    public struct InteractionData: Sendable {
         public let id: MIOCommandID?
         public let name: String
         public let customId: String?
@@ -58,7 +58,7 @@ public struct Interaction {
             self.options = options
         }
 
-        public struct Option {
+        public struct Option: @unchecked Sendable { // FIXME: We should replace the Any with something else...
             public let name: String
             public let value: Any?
             public let options: [Option]

@@ -5,7 +5,7 @@ import FoundationNetworking
 import Utils
 import D2MessageIO
 import Logging
-import Discord
+@preconcurrency import Discord
 
 fileprivate let log = Logger(label: "D2DiscordIO.DiscordSink")
 

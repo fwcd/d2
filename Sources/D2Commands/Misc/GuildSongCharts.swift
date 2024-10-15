@@ -1,4 +1,4 @@
-struct GuildSongCharts: Codable {
+struct GuildSongCharts: Sendable, Codable {
     var playCounts: [Song: Int] = [:]
 
     struct Song: Codable, Hashable, CustomStringConvertible {

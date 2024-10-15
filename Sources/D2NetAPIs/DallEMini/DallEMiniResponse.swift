@@ -1,6 +1,6 @@
 import Foundation
 
-public struct DallEMiniResponse: Codable {
+public struct DallEMiniResponse: Sendable, Codable {
     public let images: [String]
     public let version: String?
 

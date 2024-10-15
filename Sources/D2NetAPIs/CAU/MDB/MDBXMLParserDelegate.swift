@@ -5,7 +5,7 @@ import FoundationXML
 import Utils
 
 // Matches the contents of an HTML paragraph
-fileprivate let htmlParagraphPattern = #/(?:<[pP]>)?\s*([\s\S]*)\s*(?:</[pP]>)/#
+nonisolated(unsafe) private let htmlParagraphPattern = #/(?:<[pP]>)?\s*([\s\S]*)\s*(?:</[pP]>)/#
 
 class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
     private let then: (Result<[MDBModule], any Error>) -> Void
