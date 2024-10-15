@@ -4,9 +4,8 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.FretboardChordCommand")
-fileprivate let argPattern = #/(?<chord>\w+)(?:\s+(?<instrument>\w+))?/#
 
-public class FretboardChordCommand: StringCommand {
+public class FretboardChordCommand: RegexCommand {
     public let info = CommandInfo(
         category: .music,
         shortDescription: "Finds a guitar/ukulele chord",
@@ -14,6 +13,7 @@ public class FretboardChordCommand: StringCommand {
         helpText: "Syntax: [chord] [instrument]?",
         requiredPermissionLevel: .basic
     )
+    public let inputPattern = #/(?<chord>\w+)(?:\s+(?<instrument>\w+))?/#
     public let outputValueType: RichValueType = .image
     private let fretboards: [String: Fretboard] = [
         "guitar": Fretboard(tuning: standardGuitarTuning),
@@ -23,14 +23,10 @@ public class FretboardChordCommand: StringCommand {
 
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         do {
-            guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-                await output.append(errorText: info.helpText!)
-                return
-            }
-            let rawChord = String(parsedArgs.chord)
-            let rawInstrument = String(parsedArgs.instrument?.lowercased() ?? "guitar")
+            let rawChord = String(input.chord)
+            let rawInstrument = String(input.instrument?.lowercased() ?? "guitar")
 
             // Parse chord and render image
             let chord = try CommonChord(of: rawChord)
