@@ -1,9 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argPattern = #/(?:(?<platform>\w+)\s+)?(?<channelId>\d+)\s+(?<message>.+)/#
-
-public class ChannelMessageCommand: StringCommand {
+public class ChannelMessageCommand: RegexCommand {
     public let info = CommandInfo(
         category: .moderation,
         shortDescription: "Sends a message to an arbitrary channel on an arbitrary platform",
@@ -11,21 +9,18 @@ public class ChannelMessageCommand: StringCommand {
         requiredPermissionLevel: .vip
     )
 
+    public let inputPattern = #/(?:(?<platform>\w+)\s+)?(?<channelId>\d+)\s+(?<message>.+)/#
+
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
-
-        guard let platform = parsedArgs.platform.map({ String($0) }) ?? context.sink?.name else {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
+        guard let platform = input.platform.map({ String($0) }) ?? context.sink?.name else {
             await output.append(errorText: "No platform found")
             return
         }
 
-        let rawId = String(parsedArgs.channelId)
-        let message = String(parsedArgs.message)
+        let rawId = String(input.channelId)
+        let message = String(input.message)
         let id = ChannelID(rawId, clientName: platform)
 
         await output.append(message, to: .guildChannel(id))
