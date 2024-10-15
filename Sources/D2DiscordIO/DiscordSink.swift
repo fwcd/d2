@@ -87,7 +87,10 @@ struct DiscordSink: DefaultSink {
     func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID) async throws -> Message? {
         try await withCheckedThrowingContinuation { continuation in
             client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) { message, response in
-                continuation.resume(with: Result { try check(value: message?.usingMessageIO(with: self), response: response, "sending message") })
+                Task {
+                    let mioMessage = await message?.usingMessageIO(with: self)
+                    continuation.resume(with: Result { try check(value: mioMessage, response: response, "sending message") })
+                }
             }
         }
     }
@@ -95,7 +98,10 @@ struct DiscordSink: DefaultSink {
     func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, edit: Message.Edit) async throws -> Message? {
         try await withCheckedThrowingContinuation { continuation in
             client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, edit: edit.usingDiscordAPI) { message, response in
-                continuation.resume(with: Result { try check(value: message?.usingMessageIO(with: self), response: response, "editing message") })
+                Task {
+                    let mioMessage = await message?.usingMessageIO(with: self)
+                    continuation.resume(with: Result { try check(value: mioMessage, response: response, "editing message") })
+                }
             }
         }
     }
