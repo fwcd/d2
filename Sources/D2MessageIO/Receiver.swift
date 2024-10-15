@@ -1,7 +1,7 @@
 import Utils
 
 /// A handler for events from the message backend.
-public protocol Receiver {
+public protocol Receiver: Sendable {
     func on(connect connected: Bool, sink: any Sink) async
 
     func on(disconnectWithReason reason: String, sink: any Sink) async
