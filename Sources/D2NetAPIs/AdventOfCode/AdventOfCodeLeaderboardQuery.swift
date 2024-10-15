@@ -5,10 +5,6 @@ import Utils
 fileprivate let log = Logger(label: "D2NetAPIs.AdventOfCodeLeaderboardQuery")
 
 public struct AdventOfCodeLeaderboardQuery {
-    private static var cachedBoard: AdventOfCodeLeaderboard? = nil
-    private static var cachedTimestamp: Date? = nil
-    private static let cacheRefreshDelay: TimeInterval = 15 * 60
-
     @globalActor
     private actor Cache: GlobalActor {
         static let refreshDelay: TimeInterval = 15 * 60
