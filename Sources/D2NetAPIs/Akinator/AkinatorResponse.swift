@@ -5,7 +5,7 @@ public enum AkinatorResponse {
     public typealias StepInformation = Basic<StepInformationParameters>
     public typealias Guess = Basic<GuessParameters>
 
-    public struct Basic<T>: Codable where T: Sendable, Codable {
+    public struct Basic<T>: Codable where T: Sendable & Codable {
         public let completion: String
         public let parameters: T
     }
