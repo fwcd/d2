@@ -183,7 +183,7 @@ public class MessageDatabase: MarkovPredictor {
     }
 
     public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) async -> Void)? = nil) async throws {
-        guard let guild = sink.guild(for: id) else { throw MessageDatabaseError.invalidID("\(id)") }
+        guard let guild = await sink.guild(for: id) else { throw MessageDatabaseError.invalidID("\(id)") }
 
         log.notice("Rebuilding messages in database...")
         try db.run(messages.delete())

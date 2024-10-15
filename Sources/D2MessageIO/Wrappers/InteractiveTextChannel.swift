@@ -2,7 +2,7 @@ import Utils
 
 /// A wrapper around a channel ID holding a
 /// client reference.
-public struct InteractiveTextChannel {
+public actor InteractiveTextChannel {
     public let id: ChannelID
     private let sink: any Sink
 

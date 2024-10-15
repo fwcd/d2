@@ -7,8 +7,16 @@ public struct OverlaySink: Sink {
 
     public let name: String
     public let me: User?
-    public var guilds: [Guild]? { inner.guilds }
-    public var messageFetchLimit: Int? { inner.messageFetchLimit }
+    public var guilds: [Guild]? {
+        get async {
+            await inner.guilds
+        }
+    }
+    public var messageFetchLimit: Int? {
+        get async {
+            await inner.messageFetchLimit
+        }
+    }
 
     public init(inner: any Sink, name: String, me: User? = nil) {
         self.inner = inner
@@ -16,28 +24,28 @@ public struct OverlaySink: Sink {
         self.me = me
     }
 
-    public func guild(for guildId: GuildID) -> Guild? {
-        inner.guild(for: guildId)
+    public func guild(for guildId: GuildID) async -> Guild? {
+        await inner.guild(for: guildId)
     }
 
-    public func channel(for channelId: ChannelID) -> Channel? {
-        inner.channel(for: channelId)
+    public func channel(for channelId: ChannelID) async -> Channel? {
+        await inner.channel(for: channelId)
     }
 
     public func setPresence(_ presence: PresenceUpdate) async throws {
         try await inner.setPresence(presence)
     }
 
-    public func guildForChannel(_ channelId: ChannelID) -> Guild? {
-        inner.guildForChannel(channelId)
+    public func guildForChannel(_ channelId: ChannelID) async -> Guild? {
+        await inner.guildForChannel(channelId)
     }
 
-    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions {
-        inner.permissionsForUser(userId, in: channelId, on: guildId)
+    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) async -> Permissions {
+        await inner.permissionsForUser(userId, in: channelId, on: guildId)
     }
 
-    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
-        inner.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension)
+    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) async -> URL? {
+        await inner.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension)
     }
 
     public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws {

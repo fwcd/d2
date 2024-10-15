@@ -730,7 +730,7 @@ public class D2Receiver: Receiver {
 
     public func on(addGuildMember member: Guild.Member, sink: any Sink) async {
         do {
-            if let guild = sink.guild(for: member.guildId) {
+            if let guild = await sink.guild(for: member.guildId) {
                 log.info("Inserting member '\(member.displayName)' into message database...")
                 try messageDB.insert(member: member, on: guild)
             }
@@ -747,7 +747,7 @@ public class D2Receiver: Receiver {
 
     public func on(updateGuildMember member: Guild.Member, sink: any Sink) async {
         do {
-            if let guild = sink.guild(for: member.guildId) {
+            if let guild = await sink.guild(for: member.guildId) {
                 log.info("Updating member '\(member.displayName)' in message database...")
                 try messageDB.insert(member: member, on: guild)
             }

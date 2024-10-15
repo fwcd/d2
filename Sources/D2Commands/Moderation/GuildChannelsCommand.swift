@@ -31,7 +31,7 @@ public class GuildChannelsCommand: StringCommand {
             useChannelLinks = false
         }
 
-        guard let guild = sink.guild(for: guildId) else {
+        guard let guild = await sink.guild(for: guildId) else {
             await output.append(errorText: "No guild with this id found!")
             return
         }
