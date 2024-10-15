@@ -74,7 +74,7 @@ public struct Presence {
             }
         }
 
-        public struct ActivityType: RawRepresentable, Hashable, Codable {
+        public struct ActivityType: RawRepresentable, Sendable, Hashable, Codable {
             public var rawValue: Int
 
             public static let game = ActivityType(rawValue: 0)
@@ -90,7 +90,7 @@ public struct Presence {
         }
     }
 
-    public struct Status: RawRepresentable, Hashable, Codable {
+    public struct Status: RawRepresentable, Sendable, Hashable, Codable {
         public var rawValue: String
 
         public static let idle = Status(rawValue: "idle")

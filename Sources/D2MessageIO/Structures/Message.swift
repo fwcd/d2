@@ -162,7 +162,7 @@ public struct Message: ExpressibleByStringLiteral {
             self.partyId = partyId
         }
 
-        public struct ActivityType: Hashable, Codable, RawRepresentable {
+        public struct ActivityType: Sendable, Hashable, Codable, RawRepresentable {
             public var rawValue: Int
 
             public static let join = ActivityType(rawValue: 1)
@@ -305,7 +305,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct MessageType: Hashable, RawRepresentable, Codable {
+    public struct MessageType: Sendable, Hashable, RawRepresentable, Codable {
         public var rawValue: Int
 
         public static let `default` = MessageType(rawValue: 0)

@@ -44,7 +44,7 @@ public struct Channel: CustomStringConvertible {
         self.permissionOverwrites = permissionOverwrites
     }
 
-    public struct ChannelType: RawRepresentable, Hashable, Codable, Comparable {
+    public struct ChannelType: RawRepresentable, Sendable, Hashable, Codable, Comparable {
         public var rawValue: Int
 
         public var isVoice: Bool { [.voice, .stageVoice].contains(self) }
@@ -81,7 +81,7 @@ public struct Channel: CustomStringConvertible {
             self.type = type
         }
 
-        public struct PermissionOverwriteType: RawRepresentable, Hashable, Codable {
+        public struct PermissionOverwriteType: RawRepresentable, Sendable, Hashable, Codable {
             public var rawValue: Int
 
             public static let role = PermissionOverwriteType(rawValue: 0)
