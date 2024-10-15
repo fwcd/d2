@@ -11,8 +11,8 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-14']
-        swift: ['5.10']
+        os: ['ubuntu-latest', 'macos-15']
+        swift: ['6.0']
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -29,8 +29,8 @@ jobs:
 
         Scripts/install-dependencies-brew
     - name: Install Swift
-    # https://github.com/swift-actions/setup-swift/pull/680
-      uses: swift-actions/setup-swift@bb83339d1e8577741bdc6c65ba551ce7dc0fb854
+    # https://github.com/swift-actions/setup-swift/pull/684
+      uses: swift-actions/setup-swift@736b146b8f26e7a66cbe3a89bc8d413ac0ea536e
       with:
         swift-version: ${{ matrix.swift }}
     - name: Build
