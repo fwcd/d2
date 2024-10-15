@@ -1,8 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = #/(?<halfSteps>-?\d+)\s+(?<notes>.+)/#
-
-public class TransposeChordsCommand: StringCommand {
+public class TransposeChordsCommand: RegexCommand {
     public let info = CommandInfo(
         category: .music,
         shortDescription: "Transposes a sequence of notes/chords",
@@ -11,13 +9,15 @@ public class TransposeChordsCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
+    public let outputValueType: RichValueType = .text
+    public let inputPattern = #/(?<halfSteps>-?\d+)\s+(?<notes>.+)/#
+
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         guard
-            let parsedArgs = try? argsPattern.firstMatch(in: input),
-            let halfSteps = Int(parsedArgs.halfSteps),
-            let chords = try? parsedArgs.notes.split(separator: " ").map({ try CommonChord(of: String($0)) }) else {
+            let halfSteps = Int(input.halfSteps),
+            let chords = try? input.notes.split(separator: " ").map({ try CommonChord(of: String($0)) }) else {
             await output.append(errorText: info.helpText!)
             return
         }
