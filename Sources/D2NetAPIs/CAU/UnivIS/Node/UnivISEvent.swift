@@ -1,4 +1,4 @@
-public struct UnivISEvent: UnivISObjectNode, Hashable {
+public struct UnivISEvent: UnivISObjectNode, Hashable, Sendable {
     public let nodeType = "Event"
     public let key: String
     public var contact: UnivISRef? = nil
