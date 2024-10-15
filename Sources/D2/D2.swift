@@ -106,7 +106,7 @@ struct D2: AsyncParsableCommand {
         for irc in tokens.irc ?? [] {
             do {
                 createdAnyPlatform = true
-                platforms.append(try IRCPlatform(
+                platforms.append(try await IRCPlatform(
                     receiver: receiver,
                     combinedSink: combinedSink,
                     eventLoopGroup: eventLoopGroup,

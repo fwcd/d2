@@ -18,7 +18,7 @@ public class DiscordClientManager: DiscordClientDelegate {
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
-    ) {
+    ) async {
         self.receiver = receiver
         self.combinedSink = combinedSink
 
@@ -29,7 +29,7 @@ public class DiscordClientManager: DiscordClientDelegate {
             .eventLoopGroup(eventLoopGroup),
         ])
 
-        combinedSink.register(sink: DiscordSink(client: discordClient))
+        await combinedSink.register(sink: DiscordSink(client: discordClient))
     }
 
     public func connect() {

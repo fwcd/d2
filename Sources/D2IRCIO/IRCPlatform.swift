@@ -16,12 +16,12 @@ public struct IRCPlatform: MessagePlatform {
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token config: IRCConfig
-    ) throws {
+    ) async throws {
         self.config = config
         name = "IRC \(config.host):\(config.port)"
 
         log.info("Initializing IRC backend (\(config.host):\(config.port))...")
-        manager = IRCClientManager(
+        manager = await IRCClientManager(
             receiver: receiver,
             combinedSink: combinedSink,
             eventLoopGroup: eventLoopGroup,

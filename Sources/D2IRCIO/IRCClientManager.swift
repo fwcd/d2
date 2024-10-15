@@ -22,7 +22,7 @@ public class IRCClientManager: IRCClientDelegate {
         config: IRCConfig,
         name: String,
         channelsToJoin: [String]
-    ) {
+    ) async {
         self.receiver = receiver
         self.combinedSink = combinedSink
         self.name = name
@@ -37,7 +37,7 @@ public class IRCClientManager: IRCClientDelegate {
         ))
         ircClient.delegate = self
 
-        combinedSink.register(sink: IRCSink(client: ircClient, name: name))
+        await combinedSink.register(sink: IRCSink(client: ircClient, name: name))
     }
 
     public func connect() {

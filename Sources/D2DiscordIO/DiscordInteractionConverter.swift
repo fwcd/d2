@@ -4,8 +4,8 @@ import D2MessageIO
 // FROM Discord conversions
 
 extension DiscordInteraction {
-    public func usingMessageIO(with sink: any Sink) -> Interaction {
-        Interaction(
+    public func usingMessageIO(with sink: any Sink) async -> Interaction {
+        await Interaction(
             id: id.usingMessageIO,
             type: type?.usingMessageIO,
             data: data?.usingMessageIO,
