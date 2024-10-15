@@ -4,9 +4,8 @@ import D2MessageIO
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
-fileprivate let argsPattern = #/(?<host>\S+)\s+(?<message>.+)/#
 
-public class MinecraftDynmapChatCommand: StringCommand {
+public class MinecraftDynmapChatCommand: RegexCommand {
     public let info = CommandInfo(
         category: .videogame,
         shortDescription: "Sends a message to a Minecraft server using Dynmap",
@@ -15,6 +14,8 @@ public class MinecraftDynmapChatCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
+    public let inputPattern = #/(?<host>\S+)\s+(?<message>.+)/#
+
     public init() {}
 
     private struct SendMessageRequest: Codable {
@@ -22,14 +23,10 @@ public class MinecraftDynmapChatCommand: StringCommand {
         let message: String
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         do {
-            guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-                await output.append("Syntax: \(info.helpText!)")
-                return
-            }
-            let host = String(parsedArgs.host)
-            let message = "[\(context.author?.username ?? "unknown user")] \(parsedArgs.message)"
+            let host = String(input.host)
+            let message = "[\(context.author?.username ?? "unknown user")] \(input.message)"
 
             log.info("Sending chat message '\(message)' to host '\(host)'")
 
