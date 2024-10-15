@@ -51,7 +51,7 @@ public struct UnivISQuery {
 
                 log.debug("Got \(String(data: data, encoding: .utf8) ?? "nil")")
 
-                let delegate = UnivISXMLParserDelegate(then: continuation.resume(with:))
+                let delegate = UnivISXMLParserDelegate(continuation: continuation)
                 let parser = XMLParser(data: data)
 
                 parser.delegate = delegate
