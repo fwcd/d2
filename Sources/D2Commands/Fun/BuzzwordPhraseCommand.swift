@@ -1,8 +1,6 @@
 import Utils
 
-fileprivate let argsPattern = #/(?:(?<adjectives>\d+)(?:\s+(?<nouns>\d+))?)?/#
-
-public class BuzzwordPhraseCommand: StringCommand {
+public class BuzzwordPhraseCommand: RegexCommand {
     public let info = CommandInfo(
         category: .fun,
         shortDescription: "Generates a random buzzword phrase",
@@ -11,8 +9,7 @@ public class BuzzwordPhraseCommand: StringCommand {
     )
 
     public let outputValueType: RichValueType = .text
-
-
+    public let inputPattern = #/(?:(?<adjectives>\d+)(?:\s+(?<nouns>\d+))?)?/#
 
     private let corpus: BuzzwordCorpus
 
@@ -20,14 +17,9 @@ public class BuzzwordPhraseCommand: StringCommand {
         self.corpus = corpus
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
-
-        let adjectives = parsedArgs.output.adjectives.flatMap { Int($0) } ?? 1
-        let nouns = parsedArgs.output.nouns.flatMap { Int($0) } ?? 2
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
+        let adjectives = input.adjectives.flatMap { Int($0) } ?? 1
+        let nouns = input.nouns.flatMap { Int($0) } ?? 2
 
         var generator = BuzzwordGenerator(corpus: corpus)
 
