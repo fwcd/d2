@@ -95,7 +95,7 @@ public struct AdventOfCodeLeaderboard: Decodable, Sendable {
             return res.sorted()
         }
 
-        public struct StarScore: Equatable, Comparable {
+        public struct StarScore: Equatable, Sendable, Comparable {
             public let score: Int
             public let date: Date
 
@@ -113,7 +113,7 @@ public struct AdventOfCodeLeaderboard: Decodable, Sendable {
             }
         }
 
-        public struct StarCompletion: Decodable, Equatable, Comparable {
+        public struct StarCompletion: Decodable, Equatable, Sendable, Comparable {
             public enum CodingKeys: String, CodingKey {
                 case getStarTs = "get_star_ts"
             }
@@ -127,7 +127,7 @@ public struct AdventOfCodeLeaderboard: Decodable, Sendable {
             }
         }
 
-        public struct Timestamp: Decodable, Equatable {
+        public struct Timestamp: Decodable, Equatable, Sendable {
             public let date: Date?
 
             public init(from decoder: Decoder) throws {
