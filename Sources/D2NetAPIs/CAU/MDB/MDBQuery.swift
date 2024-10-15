@@ -45,7 +45,7 @@ public struct MDBQuery {
                     return
                 }
 
-                let delegate = MDBXMLParserDelegate(then: continuation.resume(with:))
+                let delegate = MDBXMLParserDelegate(continuation: continuation)
                 let parser = XMLParser(data: data)
 
                 parser.delegate = delegate
