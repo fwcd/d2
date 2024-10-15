@@ -4,7 +4,6 @@ import Utils
 import D2NetAPIs
 import D2MessageIO
 
-fileprivate let argPattern = #/(?<name>\w+)\s*(?<args>.*)/#
 fileprivate let rawFloatPattern = #/-?\d+(?:\.\d+)?/#
 fileprivate let coordsWithRadiusPattern = Regex {
     Capture { rawFloatPattern }
@@ -16,12 +15,15 @@ fileprivate let coordsWithRadiusPattern = Regex {
     }
 }
 
-public class WebcamCommand: StringCommand {
+public class WebcamCommand: RegexCommand {
     public private(set) var info = CommandInfo(
         category: .misc,
         shortDescription: "Displays webcams from all around the world",
         requiredPermissionLevel: .basic
     )
+
+    public let inputPattern = #/(?<name>\w+)\s*(?<args>.*)/#
+
     private var subcommands: [String: (String, CommandOutput) async -> Void] = [:]
 
     public init(maxRadius: Int = 250) {
@@ -87,17 +89,12 @@ public class WebcamCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
+        guard let subcommand = subcommands[String(input.name)] else {
+            await output.append(errorText: "Could not find subcommand `\(input.name)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
 
-        guard let subcommand = subcommands[String(parsedArgs.name)] else {
-            await output.append(errorText: "Could not find subcommand `\(parsedArgs.name)`. Try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
-            return
-        }
-
-        await subcommand(String(parsedArgs.args), output)
+        await subcommand(String(input.args), output)
     }
 }
