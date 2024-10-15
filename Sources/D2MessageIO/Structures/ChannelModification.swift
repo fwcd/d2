@@ -1,4 +1,4 @@
-public struct ChannelModification {
+public struct ChannelModification: Sendable {
     public let name: String?
     public let archived: Bool?
     public let locked: Bool?

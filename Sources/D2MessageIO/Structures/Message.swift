@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct Message: ExpressibleByStringLiteral {
+public struct Message: Sendable, ExpressibleByStringLiteral {
     public var content: String
     public var embeds: [Embed]
     public var files: [FileUpload]
@@ -107,7 +107,7 @@ public struct Message: ExpressibleByStringLiteral {
         self.init(content: value)
     }
 
-    public struct Edit {
+    public struct Edit: Sendable {
         public var content: String?
         public var embeds: [Embed]?
         public var components: [Component]?
@@ -123,7 +123,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct FileUpload {
+    public struct FileUpload: Sendable {
         public let data: Data
         public let filename: String
         public let mimeType: String
@@ -135,7 +135,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct Attachment {
+    public struct Attachment: Sendable {
         public let id: AttachmentID
         public let filename: String
         public let size: Int
@@ -153,7 +153,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct Activity {
+    public struct Activity: Sendable {
         public let type: ActivityType
         public let partyId: String?
 
@@ -176,7 +176,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public enum Component {
+    public enum Component: Sendable {
         case button(Button)
         case selectMenu(SelectMenu)
         case actionRow(ActionRow)
@@ -189,7 +189,7 @@ public struct Message: ExpressibleByStringLiteral {
             }
         }
 
-        public struct Button {
+        public struct Button: Sendable {
             public var customId: String
             public var style: Style?
             public var label: String?
@@ -209,7 +209,7 @@ public struct Message: ExpressibleByStringLiteral {
                 self.disabled = disabled
             }
 
-            public enum Style {
+            public enum Style: Sendable {
                 case primary
                 case secondary
                 case success
@@ -218,7 +218,7 @@ public struct Message: ExpressibleByStringLiteral {
             }
         }
 
-        public struct SelectMenu {
+        public struct SelectMenu: Sendable {
             public var customId: String
             public var options: [Option]
             public var placeholder: String?
@@ -242,7 +242,7 @@ public struct Message: ExpressibleByStringLiteral {
                 self.disabled = disabled
             }
 
-            public struct Option {
+            public struct Option: Sendable {
                 public var label: String
                 public var value: String
                 public var description: String?
@@ -265,7 +265,7 @@ public struct Message: ExpressibleByStringLiteral {
             }
         }
 
-        public struct ActionRow {
+        public struct ActionRow: Sendable {
             public let components: [Component]
 
             public init(components: [Component]) {
@@ -274,7 +274,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct MessageApplication {
+    public struct MessageApplication: Sendable {
         public var id: ID
         public var coverImage: String?
         public var description: String?
@@ -290,7 +290,7 @@ public struct Message: ExpressibleByStringLiteral {
         }
     }
 
-    public struct Reaction {
+    public struct Reaction: Sendable {
         public var count: Int
         public var me: Bool
         public var emoji: Emoji

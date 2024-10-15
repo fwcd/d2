@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Channel: CustomStringConvertible {
+public struct Channel: Sendable, CustomStringConvertible {
     public let id: ChannelID
     public let guildId: GuildID?
     public let name: String
@@ -72,7 +72,7 @@ public struct Channel: CustomStringConvertible {
         }
     }
 
-    public struct PermissionOverwrite {
+    public struct PermissionOverwrite: Sendable {
         public let id: OverwriteID
         public let type: PermissionOverwriteType
 
@@ -93,7 +93,7 @@ public struct Channel: CustomStringConvertible {
         }
     }
 
-    public struct ThreadMetadata {
+    public struct ThreadMetadata: Sendable {
         public let archived: Bool
         public let autoArchiveDuration: Int?
         public let archiveTimestamp: Date?

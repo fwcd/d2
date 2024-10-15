@@ -1,4 +1,4 @@
-public struct Role {
+public struct Role: Sendable {
     public let id: RoleID
     public let color: Int
     public let hoist: Bool

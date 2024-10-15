@@ -1,4 +1,4 @@
-public struct MIOCommand {
+public struct MIOCommand: Sendable {
     public let id: MIOCommandID
     public let applicationId: ApplicationID
     public let name: String
@@ -46,7 +46,7 @@ public struct MIOCommand {
             self.options = options
         }
 
-        public struct Choice {
+        public struct Choice: Sendable {
             public let name: String
             public let value: Value?
 
@@ -55,7 +55,7 @@ public struct MIOCommand {
                 self.value = value
             }
 
-            public enum Value {
+            public enum Value: Sendable {
                 case string(String)
                 case int(Int)
             }

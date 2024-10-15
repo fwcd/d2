@@ -1,4 +1,4 @@
-public struct Emoji: Hashable, CustomStringConvertible {
+public struct Emoji: Sendable, Hashable, CustomStringConvertible {
     public let id: EmojiID?
     public let managed: Bool
     public let animated: Bool

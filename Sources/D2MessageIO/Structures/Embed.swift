@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Embed: Codable {
+public struct Embed: Sendable, Codable {
     public var title: String?
     public var description: String?
     public var author: Author?
@@ -36,7 +36,7 @@ public struct Embed: Codable {
         self.fields = fields
     }
 
-    public struct Author: Codable {
+    public struct Author: Sendable, Codable {
         public let name: String
         public let iconUrl: URL?
         public let url: URL?
@@ -48,7 +48,7 @@ public struct Embed: Codable {
         }
     }
 
-    public struct Image: Codable {
+    public struct Image: Sendable, Codable {
         public let url: URL
 
         public init(url: URL) {
@@ -56,7 +56,7 @@ public struct Embed: Codable {
         }
     }
 
-    public struct Thumbnail: Codable {
+    public struct Thumbnail: Sendable, Codable {
         public let url: URL
 
         public init(url: URL) {
@@ -64,7 +64,7 @@ public struct Embed: Codable {
         }
     }
 
-    public struct Footer: Codable, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
+    public struct Footer: Sendable, Codable, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
         public let text: String?
 
         public init(text: String? = nil) {
@@ -76,7 +76,7 @@ public struct Embed: Codable {
         }
     }
 
-    public struct Field: Codable {
+    public struct Field: Sendable, Codable {
         public let name: String
         public let value: String
         public let inline: Bool

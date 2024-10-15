@@ -1,10 +1,10 @@
 // Uses MIT-licensed code from https://github.com/fwcd/swift-discord/blob/main/Sources/Discord/User/DiscordPermissions.swift
 // Copyright (c) 2016 Erik Little
 
-import BigInt
+@preconcurrency import BigInt
 
 /// A user of user permissions.
-public struct Permissions: OptionSet {
+public struct Permissions: OptionSet, Sendable {
     public var rawValue: BigInt
 
     /// This user can create invites.

@@ -2,7 +2,7 @@ import Foundation
 import Utils
 
 // TODO: Make this a protocol and add roles/members properties
-public struct Guild {
+public struct Guild: Sendable {
     public let id: GuildID
     public let ownerId: UserID?
     public let region: String?
@@ -116,7 +116,7 @@ public struct Guild {
         }
     }
 
-    public struct Member {
+    public struct Member: Sendable {
         public let guildId: GuildID
         public let joinedAt: Date
         public let user: User

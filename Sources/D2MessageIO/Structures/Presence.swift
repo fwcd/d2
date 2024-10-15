@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Presence {
+public struct Presence: Sendable {
     public let guildId: GuildID?
     public let user: User
     public let activities: [Activity]
@@ -17,7 +17,7 @@ public struct Presence {
         self.status = status
     }
 
-    public struct Activity: Codable {
+    public struct Activity: Sendable, Codable {
         public let name: String
         public let assets: Assets?
         public let details: String?
@@ -38,7 +38,7 @@ public struct Presence {
             self.url = url
         }
 
-        public struct Assets: Codable {
+        public struct Assets: Sendable, Codable {
             public let largeImage: String?
             public let largeText: String?
             public let smallImage: String?
@@ -52,7 +52,7 @@ public struct Presence {
             }
         }
 
-        public struct Party: Codable {
+        public struct Party: Sendable, Codable {
             public let id: String?
             public let sizes: [Int]?
 
@@ -62,7 +62,7 @@ public struct Presence {
             }
         }
 
-        public struct Timestamps: Codable {
+        public struct Timestamps: Sendable, Codable {
             public let start: Date?
             public let end: Date?
 
@@ -104,7 +104,7 @@ public struct Presence {
     }
 }
 
-public struct PresenceUpdate: Codable {
+public struct PresenceUpdate: Sendable, Codable {
     public let activities: [Presence.Activity]
     public let status: Presence.Status
     public let afkSince: Date?
