@@ -11,7 +11,7 @@ public protocol RegexCommand: StringCommand {
 extension RegexCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard let parsedInput = try? inputPattern.wholeMatch(in: input) else {
-            await output.append(errorText: "Could not parse input\(info.helpText.map { ": \($0)" } ?? "")")
+            await output.append(errorText: info.helpText ?? "Could not parse input")
             return
         }
         await invoke(with: parsedInput.output, output: output, context: context)
