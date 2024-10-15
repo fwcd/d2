@@ -10,29 +10,13 @@ fileprivate let log = Logger(label: "D2Commands.UnivISCommand")
 fileprivate let rawKeyPattern = #/(?:\w+)/#
 fileprivate let rawValuePattern = #/(?:\w+|(?:"[\w ]+"))/#
 
-// Matches the arguments of the command. The first group captures the
-// search parameter, the second group the (raw) key-value parameters.
-fileprivate let inputPattern = Regex {
-    Capture {
-        #/\w+/#
-    }
-    Capture {
-        OneOrMore {
-            #/\s+/#
-            rawKeyPattern
-            #/\s*=\s*/#
-            rawValuePattern
-        }
-    }
-}
-
 // Matches a single key-value argument. The first group captures the
 // key, the second (or third) group captures the value.
 fileprivate let kvArgPattern = #/(?<key>\w+)\s*=\s*(?:(?:"(?<quotedValue>.+?)")|(?<value>\S+))/#
 
 // TODO: Use the new Arg API for this
 
-public class UnivISCommand: StringCommand {
+public class UnivISCommand: RegexCommand {
     public let info = CommandInfo(
         category: .cau,
         shortDescription: "Queries the UnivIS",
@@ -47,22 +31,34 @@ public class UnivISCommand: StringCommand {
     )
     let maxResponseEntries: Int
 
+    // Matches the arguments of the command. The first group captures the
+    // search parameter, the second group the (raw) key-value parameters.
+    public let inputPattern = Regex {
+        Capture {
+            #/\w+/#
+        }
+        Capture {
+            OneOrMore {
+                #/\s+/#
+                rawKeyPattern
+                #/\s*=\s*/#
+                rawValuePattern
+            }
+        }
+    }
+
     public init(maxResponseEntries: Int = 15) {
         self.maxResponseEntries = maxResponseEntries
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         do {
-            guard let parsedArgs = try? inputPattern.firstMatch(in: input) else {
-                await output.append(errorText: "Syntax error: Your arguments need to match `[searchkey] [searchparameter=value]*`")
-                return
-            }
-            guard let searchKey = UnivISSearchKey(rawValue: String(parsedArgs.1)) else {
-                await output.append(errorText: "Unrecognized search key `\(parsedArgs.1)`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
+            guard let searchKey = UnivISSearchKey(rawValue: String(input.1)) else {
+                await output.append(errorText: "Unrecognized search key `\(input.1)`. Try one of:\n```\n\(UnivISSearchKey.allCases.map { $0.rawValue })\n```")
                 return
             }
 
-            let queryParams = try queryParameterDict(of: input.matches(of: kvArgPattern).map { (key: $0.key, value: $0.quotedValue ?? $0.value ?? "") })
+            let queryParams = try queryParameterDict(of: input.2.matches(of: kvArgPattern).map { (key: $0.key, value: $0.quotedValue ?? $0.value ?? "") })
 
             do {
                 let result = try await UnivISQuery(search: searchKey, params: queryParams).perform()
