@@ -19,7 +19,7 @@ public struct MIOCommand {
         self.options = options
     }
 
-    public struct Option {
+    public struct Option: Sendable {
         public let type: OptionType
         public let name: String
         public let description: String
@@ -61,7 +61,7 @@ public struct MIOCommand {
             }
         }
 
-        public struct OptionType: RawRepresentable, Hashable, Codable {
+        public struct OptionType: RawRepresentable, Hashable, Sendable, Codable {
             public var rawValue: Int
 
             public static let unknown = OptionType(rawValue: -1)
