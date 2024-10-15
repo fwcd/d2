@@ -1,9 +1,7 @@
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = #/(?<event>\S+)\s+(?<listener>\w+)/#
-
-public class AddEventListenerCommand: StringCommand {
+public class AddEventListenerCommand: RegexCommand {
     public let info = CommandInfo(
         category: .scripting,
         shortDescription: "Registers an event handler",
@@ -14,26 +12,25 @@ public class AddEventListenerCommand: StringCommand {
             """,
         requiredPermissionLevel: .admin
     )
+
+    public let inputPattern = #/(?<event>\S+)\s+(?<listener>\w+)/#
+
     private let eventListenerBus: EventListenerBus
 
     public init(eventListenerBus: EventListenerBus) {
         self.eventListenerBus = eventListenerBus
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        if let parsedArgs = try? argsPattern.firstMatch(in: input) {
-            let rawEventName = String(parsedArgs.event)
-            let listenerName = String(parsedArgs.listener)
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
+        let rawEventName = String(input.event)
+        let listenerName = String(input.listener)
 
-            guard let event = EventListenerBus.Event(rawValue: rawEventName) else {
-                await output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventListenerBus.Event.allCases.map { $0.rawValue })`")
-                return
-            }
-
-            eventListenerBus.addListener(name: listenerName, for: event, output: output)
-            _ = try? await context.channel?.send(Message(content: "Added event listener!"))
-        } else {
-            await output.append(errorText: info.helpText!)
+        guard let event = EventListenerBus.Event(rawValue: rawEventName) else {
+            await output.append(errorText: "Unknown event `\(rawEventName)`, try one of these: `\(EventListenerBus.Event.allCases.map { $0.rawValue })`")
+            return
         }
+
+        eventListenerBus.addListener(name: listenerName, for: event, output: output)
+        _ = try? await context.channel?.send(Message(content: "Added event listener!"))
     }
 }
