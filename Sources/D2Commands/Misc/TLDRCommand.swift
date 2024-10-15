@@ -2,15 +2,16 @@ import Foundation
 import Utils
 import D2MessageIO
 
-fileprivate let argsPattern = #/(?:<#(?<channelId>\d+)>)?\s*(?<count>\d+)?/#
-
-public class TLDRCommand: StringCommand {
+public class TLDRCommand: RegexCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Automatically summarizes the last n messages from the channel",
         helpText: "Syntax: [channel id]? [message count]?",
         requiredPermissionLevel: .basic
     )
+
+    public let inputPattern = #/(?:<#(?<channelId>\d+)>)?\s*(?<count>\d+)?/#
+
     private let maxMessageCount: Int
     private let highlightThreshold: Double
     private let capitalizedFactor: Int
@@ -28,18 +29,14 @@ public class TLDRCommand: StringCommand {
         self.maxSentenceCount = maxSentenceCount
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink, let channelId = context.channel?.id else {
             await output.append(errorText: "No MessageIO client/channel/guild available")
             return
         }
-        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
 
-        let tldrChannelName = parsedArgs.channelId.map { ID(String($0), clientName: sink.name) } ?? channelId
-        let messageCount = parsedArgs.count.flatMap { Int($0) } ?? 80
+        let tldrChannelName = input.channelId.map { ID(String($0), clientName: sink.name) } ?? channelId
+        let messageCount = input.count.flatMap { Int($0) } ?? 80
 
         guard messageCount <= maxMessageCount else {
             await output.append(errorText: "More than \(maxMessageCount) \("message".pluralized(with: maxMessageCount)) messages are currently not supported")
