@@ -1,7 +1,7 @@
 import Geodesy
 import Utils
 
-public struct FreeGeoIP: Codable {
+public struct FreeGeoIP: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case ip
         case countryCode = "country_code"

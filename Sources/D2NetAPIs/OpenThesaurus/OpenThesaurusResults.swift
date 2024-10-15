@@ -1,8 +1,8 @@
-public struct OpenThesaurusResults: Codable {
+public struct OpenThesaurusResults: Sendable, Codable {
     public let metaData: MetaData?
     public let synsets: [SynSet]
 
-    public struct MetaData: Codable {
+    public struct MetaData: Sendable, Codable {
         public let apiVersion: String
         public let warning: String?
         public let copyright: String?
@@ -11,11 +11,11 @@ public struct OpenThesaurusResults: Codable {
         public let date: String?
     }
 
-    public struct SynSet: Codable {
+    public struct SynSet: Sendable, Codable {
         public let id: Int
         public let terms: [Term]
 
-        public struct Term: Codable {
+        public struct Term: Sendable, Codable {
             public let term: String
         }
     }

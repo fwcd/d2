@@ -10,7 +10,7 @@ public actor LlmChatConversator: Conversator {
     private let systemPrompt: () -> String
     private var isAnswering = false
 
-    private struct Request: Codable {
+    private struct Request: Sendable, Codable {
         enum CodingKeys: String, CodingKey {
             case message
             case systemMessage = "system_message"
@@ -20,7 +20,7 @@ public actor LlmChatConversator: Conversator {
         var systemMessage: String? = nil
     }
 
-    private struct Response: Codable {
+    private struct Response: Sendable, Codable {
         var message: String
     }
 

@@ -1,4 +1,4 @@
-public struct NeverHaveIEverStatement: Codable {
+public struct NeverHaveIEverStatement: Sendable, Codable {
     public let statement: String
     public let category: String?
 

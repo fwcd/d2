@@ -1,7 +1,7 @@
-public struct CocktailDBResults: Codable {
+public struct CocktailDBResults: Sendable, Codable {
     public let drinks: [Drink]?
 
-    public struct Drink: Codable {
+    public struct Drink: Sendable, Codable {
         public let idDrink: String
         public let strDrink: String?
         public let strDrinkAlternate: String?

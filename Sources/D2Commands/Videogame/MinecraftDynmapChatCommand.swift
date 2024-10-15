@@ -18,7 +18,7 @@ public class MinecraftDynmapChatCommand: RegexCommand {
 
     public init() {}
 
-    private struct SendMessageRequest: Codable {
+    private struct SendMessageRequest: Sendable, Codable {
         let name: String
         let message: String
     }

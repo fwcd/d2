@@ -1,4 +1,4 @@
-public struct OpenTDBResponse: Codable {
+public struct OpenTDBResponse: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case responseCode = "response_code"
         case results
@@ -7,7 +7,7 @@ public struct OpenTDBResponse: Codable {
     public let responseCode: Int
     public var results: [Trivia]
 
-    public struct Trivia: Codable {
+    public struct Trivia: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case category
             case type

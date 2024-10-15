@@ -1,10 +1,10 @@
-public struct RecipePuppyResponse: Codable {
+public struct RecipePuppyResponse: Sendable, Codable {
     public let title: String
     public let version: Double
     public let href: String
     public let results: [RecipeResult]
 
-    public struct RecipeResult: Codable {
+    public struct RecipeResult: Sendable, Codable {
         public let title: String
         public let href: String
         public let ingredients: String

@@ -1,4 +1,4 @@
-public struct OpenWeatherMapWeather: Codable {
+public struct OpenWeatherMapWeather: Sendable, Codable {
     public let coord: Coord?
     public let weather: [Weather]?
     public let base: String?
@@ -19,12 +19,12 @@ public struct OpenWeatherMapWeather: Codable {
         weather?.compactMap(\.emoji).first
     }
 
-    public struct Coord: Codable {
+    public struct Coord: Sendable, Codable {
         public let lon: Double
         public let lat: Double
     }
 
-    public struct Weather: Codable {
+    public struct Weather: Sendable, Codable {
         public let id: Int
         public let main: String
         public let description: String
@@ -66,7 +66,7 @@ public struct OpenWeatherMapWeather: Codable {
         }
     }
 
-    public struct Main: Codable {
+    public struct Main: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case temp
             case feelsLike = "feels_like"
@@ -84,17 +84,17 @@ public struct OpenWeatherMapWeather: Codable {
         public let tempMax: Double?
     }
 
-    public struct Wind: Codable {
+    public struct Wind: Sendable, Codable {
         public let speed: Double?
         public let deg: Double?
         public let gust: Double?
     }
 
-    public struct Clouds: Codable {
+    public struct Clouds: Sendable, Codable {
         public let all: Int?
     }
 
-    public struct Sys: Codable {
+    public struct Sys: Sendable, Codable {
         public let type: Int?
         public let id: Int?
         public let message: Double?
@@ -103,7 +103,7 @@ public struct OpenWeatherMapWeather: Codable {
         public let sunset: Int?
     }
 
-    public struct Precipitation: Codable {
+    public struct Precipitation: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case lastHour = "1h"
             case last3Hours = "3h"

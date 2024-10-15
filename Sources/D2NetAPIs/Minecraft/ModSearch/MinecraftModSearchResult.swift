@@ -1,4 +1,4 @@
-public struct MinecraftModSearchResult: Codable {
+public struct MinecraftModSearchResult: Sendable, Codable {
     public let id: Int
     public let name: String?
     public let authors: [Author]?
@@ -28,7 +28,7 @@ public struct MinecraftModSearchResult: Codable {
 
     public var defaultAttachment: Attachment? { attachments?.first { $0.isDefault ?? false } }
 
-    public struct Author: Codable {
+    public struct Author: Sendable, Codable {
         public let name: String?
         public let url: String?
         public let projectId: Int?
@@ -37,7 +37,7 @@ public struct MinecraftModSearchResult: Codable {
         public let twitchId: Int?
     }
 
-    public struct Attachment: Codable {
+    public struct Attachment: Sendable, Codable {
         public let id: Int?
         public let projectId: Int?
         public let description: String?
@@ -48,7 +48,7 @@ public struct MinecraftModSearchResult: Codable {
         public let status: Int?
     }
 
-    public struct File: Codable {
+    public struct File: Sendable, Codable {
         public let id: Int?
         public let displayName: String?
         public let fileName: String?
@@ -79,20 +79,20 @@ public struct MinecraftModSearchResult: Codable {
         public let gameId: Int?
         public let isServerPack: Bool?
 
-        public struct Dependency: Codable {
+        public struct Dependency: Sendable, Codable {
             public let id: Int?
             public let addonId: Int?
             public let type: Int?
             public let fileId: Int?
         }
 
-        public struct Module: Codable {
+        public struct Module: Sendable, Codable {
             public let foldername: String?
             public let fingerprint: Int?
             public let type: Int?
         }
 
-        public struct GameVersion: Codable {
+        public struct GameVersion: Sendable, Codable {
             public let gameVersionPadded: String?
             public let gameVersion: String?
             public let gameVersionReleaseDate: String?
@@ -100,7 +100,7 @@ public struct MinecraftModSearchResult: Codable {
         }
     }
 
-    public struct Category: Codable {
+    public struct Category: Sendable, Codable {
         public let categoryId: Int?
         public let name: String?
         public let url: String?
@@ -112,7 +112,7 @@ public struct MinecraftModSearchResult: Codable {
         public let gameId: Int?
     }
 
-    public struct CategorySection: Codable {
+    public struct CategorySection: Sendable, Codable {
         public let id: Int?
         public let gameId: Int?
         public let name: String?
@@ -122,7 +122,7 @@ public struct MinecraftModSearchResult: Codable {
         public let gameCategoryId: Int?
     }
 
-    public struct GameVersionedFile: Codable {
+    public struct GameVersionedFile: Sendable, Codable {
         public let gameVersion: String?
         public let projectFileId: Int?
         public let projectFileName: String?

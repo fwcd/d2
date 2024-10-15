@@ -1,6 +1,6 @@
 import D2MessageIO
 
-public struct MessagePreviewsConfiguration: Codable {
+public struct MessagePreviewsConfiguration: Sendable, Codable {
     public var enabledGuildIds: Set<GuildID> = []
 
     public init() {}

@@ -1,4 +1,4 @@
-public struct GitLabPipeline: Codable {
+public struct GitLabPipeline: Sendable, Codable {
     // Source: https://docs.gitlab.com/ee/api/pipelines.html#get-a-single-pipeline
 
     public enum CodingKeys: String, CodingKey {

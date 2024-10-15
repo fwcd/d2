@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Pokemon: Codable {
+public struct Pokemon: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case abilities
         case baseExperience = "base_experience"
@@ -39,7 +39,7 @@ public struct Pokemon: Codable {
     public let types: [TypeSlot]?
     public let weight: Int?
 
-    public struct AbilitySlot: Codable {
+    public struct AbilitySlot: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case ability
             case isHidden = "is_hidden"
@@ -51,7 +51,7 @@ public struct Pokemon: Codable {
         public let slot: Int
     }
 
-    public struct GameIndex: Codable {
+    public struct GameIndex: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case gameIndex = "game_index"
             case version
@@ -61,7 +61,7 @@ public struct Pokemon: Codable {
         public let version: NamedPokemonResource?
     }
 
-    public struct HeldItem: Codable {
+    public struct HeldItem: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case item
             case versionDetails = "version_details"
@@ -70,13 +70,13 @@ public struct Pokemon: Codable {
         public let item: NamedPokemonResource
         public let versionDetails: [VersionDetail]?
 
-        public struct VersionDetail: Codable {
+        public struct VersionDetail: Sendable, Codable {
             public let rarity: Int
             public let version: NamedPokemonResource
         }
     }
 
-    public struct Move: Codable {
+    public struct Move: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case move
             case versionGroupDetails = "version_group_details"
@@ -85,7 +85,7 @@ public struct Pokemon: Codable {
         public let move: NamedPokemonResource
         public let versionGroupDetails: [VersionGroupDetail]?
 
-        public struct VersionGroupDetail: Codable {
+        public struct VersionGroupDetail: Sendable, Codable {
             public enum CodingKeys: String, CodingKey {
                 case levelLearnedAt = "level_learned_at"
                 case moveLearnMethod = "move_learn_method"
@@ -98,7 +98,7 @@ public struct Pokemon: Codable {
         }
     }
 
-    public struct Sprites: Codable {
+    public struct Sprites: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case backDefault = "back_default"
             case backFemale = "back_female"
@@ -126,7 +126,7 @@ public struct Pokemon: Codable {
         }
     }
 
-    public struct Stat: Codable {
+    public struct Stat: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case baseStat = "base_stat"
             case effort
@@ -138,7 +138,7 @@ public struct Pokemon: Codable {
         public let stat: NamedPokemonResource
     }
 
-    public struct TypeSlot: Codable {
+    public struct TypeSlot: Sendable, Codable {
         public let slot: Int
         public let type: NamedPokemonResource
     }

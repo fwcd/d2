@@ -1,4 +1,4 @@
-public struct WikipediaPage: Codable {
+public struct WikipediaPage: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case type
         case title
@@ -29,7 +29,7 @@ public struct WikipediaPage: Codable {
     public let extract: String?
     public let extractHtml: String?
 
-    public struct Thumbnail: Codable {
+    public struct Thumbnail: Sendable, Codable {
         public let source: String
         public let width: Int
         public let height: Int

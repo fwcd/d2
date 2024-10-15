@@ -1,4 +1,4 @@
-public struct MinecraftDynmapWorld: Codable {
+public struct MinecraftDynmapWorld: Sendable, Codable {
     public let currentcount: Int?
     public let hasStorm: Bool?
     public let players: [Player]?
@@ -7,7 +7,7 @@ public struct MinecraftDynmapWorld: Codable {
     public let servertime: Int?
     public let timestamp: Int?
 
-    public struct Player: Codable {
+    public struct Player: Sendable, Codable {
         public let world: String?
         public let armor: Int?
         public let health: Double?

@@ -1,6 +1,6 @@
 import Foundation
 
-struct Restart: Codable {
+struct Restart: Sendable, Codable {
     var timestamp: Date = Date()
     var instanceName: String? = nil
 }

@@ -1,22 +1,22 @@
 import Foundation
 
-struct FastApiResponse: Codable {
+struct FastApiResponse: Sendable, Codable {
     let client: Client
     let targets: [Target]
 
-    struct Location: Codable {
+    struct Location: Sendable, Codable {
         let city: String?
         let country: String?
     }
 
-    struct Client: Codable {
+    struct Client: Sendable, Codable {
         let ip: String
         let asn: String?
         let isp: String?
         let location: Location?
     }
 
-    struct Target: Codable {
+    struct Target: Sendable, Codable {
         let name: String?
         let url: URL
         let location: Location?

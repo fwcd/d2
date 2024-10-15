@@ -1,4 +1,4 @@
-public struct AdviceSlipSearchResults: Codable {
+public struct AdviceSlipSearchResults: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case totalResults = "total_results"
         case query

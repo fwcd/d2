@@ -5,7 +5,7 @@ import Utils
 import FoundationNetworking
 #endif
 
-public struct DallEMiniQuery: Codable {
+public struct DallEMiniQuery: Sendable, Codable {
     private let prompt: String
 
     public init(prompt: String) {

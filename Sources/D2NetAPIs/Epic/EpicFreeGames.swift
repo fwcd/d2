@@ -1,22 +1,22 @@
 import Foundation
 
-public struct EpicFreeGames: Codable {
+public struct EpicFreeGames: Sendable, Codable {
     public let data: ResponseData
 
-    public struct ResponseData: Codable {
+    public struct ResponseData: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case catalog = "Catalog"
         }
 
         public let catalog: Catalog
 
-        public struct Catalog: Codable {
+        public struct Catalog: Sendable, Codable {
             public let searchStore: SearchStore
 
-            public struct SearchStore: Codable {
+            public struct SearchStore: Sendable, Codable {
                 public let elements: [Element]
 
-                public struct Element: Codable {
+                public struct Element: Sendable, Codable {
                     public let title: String
                     public let id: String?
                     public let namespace: String?
@@ -29,36 +29,36 @@ public struct EpicFreeGames: Codable {
                     public let price: Price?
                     public let promotions: Promotions?
 
-                    public struct KeyImage: Codable {
+                    public struct KeyImage: Sendable, Codable {
                         public let type: String
                         public let url: String?
                     }
 
-                    public struct Seller: Codable {
+                    public struct Seller: Sendable, Codable {
                         public let id: String
                         public let name: String
                     }
 
-                    public struct CustomAttribute: Codable {
+                    public struct CustomAttribute: Sendable, Codable {
                         public let key: String?
                         public let value: String?
                     }
 
-                    public struct Price: Codable {
+                    public struct Price: Sendable, Codable {
                         public let totalPrice: TotalPrice?
 
-                        public struct TotalPrice: Codable {
+                        public struct TotalPrice: Sendable, Codable {
                             public let discountPrice: Int?
                             public let originalPrice: Int?
                             public let currencyCode: String?
                             public let currencyInfo: CurrencyInfo?
                             public let fmtPrice: FmtPrice?
 
-                            public struct CurrencyInfo: Codable {
+                            public struct CurrencyInfo: Sendable, Codable {
                                 public let decimals: Int?
                             }
 
-                            public struct FmtPrice: Codable {
+                            public struct FmtPrice: Sendable, Codable {
                                 public let originalPrice: String?
                                 public let discountPrice: String?
                                 public let intermediatePrice: String?
@@ -66,14 +66,14 @@ public struct EpicFreeGames: Codable {
                         }
                     }
 
-                    public struct Promotions: Codable {
+                    public struct Promotions: Sendable, Codable {
                         public let promotionalOffers: [Promotion]?
                         public let upcomingPromotionalOffers: [Promotion]?
 
                         public var allPromotions: [Promotion] { (promotionalOffers ?? []) + (upcomingPromotionalOffers ?? []) }
                         public var allOffers: [Promotion.Offer] { allPromotions.flatMap { $0.promotionalOffers ?? [] } }
 
-                        public struct Promotion: Codable {
+                        public struct Promotion: Sendable, Codable {
                             public let promotionalOffers: [Offer]?
 
                             public struct Offer: Codable, CustomStringConvertible {

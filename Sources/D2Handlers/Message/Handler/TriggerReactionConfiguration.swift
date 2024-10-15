@@ -1,6 +1,6 @@
 // TODO: Move this to D2Commands and add a command for configuring these
 
-public struct TriggerReactionConfiguration: Codable {
+public struct TriggerReactionConfiguration: Sendable, Codable {
     public var dateSpecificReactions: Bool
     public var weatherReactions: Bool
 

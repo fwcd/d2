@@ -1,4 +1,4 @@
-public struct PickupLine: Codable {
+public struct PickupLine: Sendable, Codable {
     public let username: String?
     public let tweet: String
 

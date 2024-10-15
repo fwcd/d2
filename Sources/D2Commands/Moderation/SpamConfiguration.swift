@@ -18,7 +18,7 @@ public struct SpamConfiguration: Codable, DefaultInitializable {
 
     public init() {}
 
-    public struct Limits: Codable {
+    public struct Limits: Sendable, Codable {
         /// The length of the time window
         public var interval: TimeInterval
         /// The maximum number of messages classified as spam that are allowed in the time window

@@ -1,4 +1,4 @@
-public struct Joke: Codable {
+public struct Joke: Sendable, Codable {
     public let id: Int
     public let category: String
     public let lang: String

@@ -1,39 +1,39 @@
-struct MapQuestGeocoding: Codable {
+struct MapQuestGeocoding: Sendable, Codable {
     let info: Info?
     let options: Options?
     let results: [GeocodingResult]
 
-    struct Info: Codable {
+    struct Info: Sendable, Codable {
         let statuscode: Int?
         let copyright: Copyright?
 
-        struct Copyright: Codable {
+        struct Copyright: Sendable, Codable {
             let text: String?
             let imageUrl: String?
             let imageAltText: String?
         }
     }
 
-    struct Options: Codable {
+    struct Options: Sendable, Codable {
         let maxResults: Int?
         let thumbMaps: Bool?
         let ignoreLatLngInput: Bool?
     }
 
-    struct GeocodingResult: Codable {
+    struct GeocodingResult: Sendable, Codable {
         let providedLocation: ProvidedLocation?
         let locations: [Location]
 
-        struct ProvidedLocation: Codable {
+        struct ProvidedLocation: Sendable, Codable {
             let location: String?
         }
 
-        struct Location: Codable {
+        struct Location: Sendable, Codable {
             let latLng: LatLng
             let displayLatLng: LatLng?
             let mapUrl: String?
 
-            struct LatLng: Codable {
+            struct LatLng: Sendable, Codable {
                 let lat: Double
                 let lng: Double
             }

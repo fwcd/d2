@@ -1,4 +1,4 @@
-public struct GitHubCommit: Codable {
+public struct GitHubCommit: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case sha
         case nodeId = "node_id"
@@ -16,13 +16,13 @@ public struct GitHubCommit: Codable {
     public let commit: Commit?
     public let parents: [GitHubCommit]?
 
-    public struct Commit: Codable {
+    public struct Commit: Sendable, Codable {
         public let author: Author
         public let committer: Author
         public let message: String
         public let url: String
 
-        public struct Author: Codable {
+        public struct Author: Sendable, Codable {
             public let name: String
             public let email: String
             public let date: String

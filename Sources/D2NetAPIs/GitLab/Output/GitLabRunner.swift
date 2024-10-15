@@ -1,4 +1,4 @@
-public struct GitLabRunner: Codable {
+public struct GitLabRunner: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case description

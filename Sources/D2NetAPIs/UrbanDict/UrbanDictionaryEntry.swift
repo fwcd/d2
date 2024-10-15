@@ -1,4 +1,4 @@
-public struct UrbanDictionaryEntry: Codable {
+public struct UrbanDictionaryEntry: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case defid
         case word

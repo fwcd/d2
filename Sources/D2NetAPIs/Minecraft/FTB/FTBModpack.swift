@@ -1,4 +1,4 @@
-public struct FTBModpack: Codable {
+public struct FTBModpack: Sendable, Codable {
     public let author: String?
     public let curseProjectId: Int?
     public let description: String?

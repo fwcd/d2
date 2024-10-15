@@ -2,7 +2,7 @@ import Utils
 
 let storedNetApiKeys = try? DiskJsonSerializer().readJson(as: NetApiKeys.self, fromFile: "local/netApiKeys.json")
 
-struct NetApiKeys: Codable {
+struct NetApiKeys: Sendable, Codable {
     var mapQuest: String? = nil
     var tier: String? = nil
     var wolframAlpha: String? = nil
@@ -13,7 +13,7 @@ struct NetApiKeys: Codable {
     var giphy: String? = nil
     var nasa: String? = nil
 
-    struct Windy: Codable {
+    struct Windy: Sendable, Codable {
         var webcams: String? = nil
     }
 }

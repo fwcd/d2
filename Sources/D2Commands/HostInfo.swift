@@ -1,5 +1,5 @@
 /// Information about the host running D2.
-public struct HostInfo: Hashable, Codable {
+public struct HostInfo: Sendable, Hashable, Codable {
     public var instanceName: String?
 
     public init(instanceName: String? = nil) {

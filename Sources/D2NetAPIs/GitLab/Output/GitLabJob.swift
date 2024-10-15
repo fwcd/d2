@@ -1,4 +1,4 @@
-public struct GitLabJob: Codable {
+public struct GitLabJob: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case status

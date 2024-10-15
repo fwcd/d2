@@ -1,4 +1,4 @@
-public struct UltimateGuitarSearchResults: Codable {
+public struct UltimateGuitarSearchResults: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case searchQuery = "search_query"
         case searchQueryType = "search_query_type"

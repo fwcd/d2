@@ -1,4 +1,4 @@
-public struct UltimateGuitarTabView: Codable {
+public struct UltimateGuitarTabView: Sendable, Codable {
     public enum CodingKeys: String, CodingKey {
         case wikiTab = "wiki_tab"
         case contributors
@@ -7,7 +7,7 @@ public struct UltimateGuitarTabView: Codable {
     public let wikiTab: WikiTab?
     public let contributors: [Contributor]?
 
-    public struct WikiTab: Codable {
+    public struct WikiTab: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case content
             case revisionId = "revision_id"
@@ -23,7 +23,7 @@ public struct UltimateGuitarTabView: Codable {
         public let date: Int?
     }
 
-    public struct Contributor: Codable {
+    public struct Contributor: Sendable, Codable {
         public enum CodingKeys: String, CodingKey {
             case userId = "userid"
             case username

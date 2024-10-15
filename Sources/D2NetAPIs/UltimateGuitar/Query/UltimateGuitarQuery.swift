@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct UltimateGuitarQuery<T> where T: Codable {
+public struct UltimateGuitarQuery<T> where T: Sendable, Codable {
     private let host: String
     private let path: String
     private let query: [String: String]

@@ -1,4 +1,4 @@
-public struct YahooFinanceStockDataPoint: Codable {
+public struct YahooFinanceStockDataPoint: Sendable, Codable {
     public let date: String
     public let `open`: Double
     public let high: Double

@@ -2,7 +2,7 @@ import Foundation
 import D2MessageIO
 import Utils
 
-public struct RoleReactionsConfiguration: Codable {
+public struct RoleReactionsConfiguration: Sendable, Codable {
     /// The messages that can be used to auto-assign roles via reactions.
     public var roleMessages: [MessageID: Mappings] = [:]
 

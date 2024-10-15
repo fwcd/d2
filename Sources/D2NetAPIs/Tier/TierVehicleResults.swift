@@ -1,15 +1,15 @@
 import Utils
 import Geodesy
 
-public struct TierVehicleResults: Codable {
+public struct TierVehicleResults: Sendable, Codable {
     public let data: [Vehicle]
 
-    public struct Vehicle: Codable {
+    public struct Vehicle: Sendable, Codable {
         public let type: String
         public let id: String
         public let attributes: Attributes
 
-        public struct Attributes: Codable {
+        public struct Attributes: Sendable, Codable {
             public let state: String
             public let lastLocationUpdate: String?
             public let lastStateChange: String?

@@ -1,10 +1,10 @@
 import Foundation
 import Utils
 
-public struct GiphyResults: Codable {
+public struct GiphyResults: Sendable, Codable {
     public let data: [GIF]
 
-    public struct GIF: Codable {
+    public struct GIF: Sendable, Codable {
         // See https://developers.giphy.com/docs/api/schema/#gif-object
 
         public let type: String
