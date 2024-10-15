@@ -19,8 +19,8 @@ fileprivate let headers = [
     "Referer": "https://en.akinator.com/game"
 ]
 
-fileprivate let sessionPattern = #/var uid_ext_session = '([^']*)'\;\s*.*var frontaddr = '([^']*)'\;/#
-fileprivate let startGamePattern = Regex {
+nonisolated(unsafe) private let sessionPattern = #/var uid_ext_session = '([^']*)'\;\s*.*var frontaddr = '([^']*)'\;/#
+nonisolated(unsafe) private let startGamePattern = Regex {
     #/^/#
     jQuerySignature
     #/_\d+\(/#

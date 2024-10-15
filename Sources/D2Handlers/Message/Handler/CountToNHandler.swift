@@ -3,7 +3,7 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let countToNPattern = #/count\s+to\s+(?<n>\d+)/#
+nonisolated(unsafe) private let countToNPattern = #/count\s+to\s+(?<n>\d+)/#
 fileprivate let log = Logger(label: "D2Handlers.CountToNHandler")
 
 public struct CountToNHandler: MessageHandler {

@@ -4,8 +4,8 @@ import Utils
 import D2NetAPIs
 import D2MessageIO
 
-fileprivate let rawFloatPattern = #/-?\d+(?:\.\d+)?/#
-fileprivate let coordsWithRadiusPattern = Regex {
+nonisolated(unsafe) private let rawFloatPattern = #/-?\d+(?:\.\d+)?/#
+nonisolated(unsafe) private let coordsWithRadiusPattern = Regex {
     Capture { rawFloatPattern }
     #/[\s,]+/#
     Capture { rawFloatPattern }

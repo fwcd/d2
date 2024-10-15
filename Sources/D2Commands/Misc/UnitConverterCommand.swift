@@ -3,7 +3,7 @@ import GraphViz
 import CairoGraphics
 import Utils
 
-fileprivate let argsPattern = #/(?<value>\S+)\s+(?<src>\S+)\s+to\s*(?<dest>\S+)/#
+nonisolated(unsafe) private let argsPattern = #/(?<value>\S+)\s+(?<src>\S+)\s+to\s*(?<dest>\S+)/#
 
 public class UnitConverterCommand: StringCommand {
     public private(set) var info = CommandInfo(

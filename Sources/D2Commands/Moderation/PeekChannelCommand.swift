@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let idPattern = #/\d+/#
+nonisolated(unsafe) private let idPattern = #/\d+/#
 
 public class PeekChannelCommand: StringCommand {
     public let info = CommandInfo(

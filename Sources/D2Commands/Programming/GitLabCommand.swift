@@ -5,7 +5,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.GitLabCommand")
-fileprivate let subcommandPattern = #/(?<name>[\w-]+)\s*(?<arg>.*)/#
+nonisolated(unsafe) private let subcommandPattern = #/(?<name>[\w-]+)\s*(?<arg>.*)/#
 
 public class GitLabCommand: StringCommand {
     public var info = CommandInfo(

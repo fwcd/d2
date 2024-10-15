@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.EvaluateExpressionCommand")
-fileprivate let flagsPattern = #/--(\S+)/#
+nonisolated(unsafe) private let flagsPattern = #/--(\S+)/#
 
 // TODO: Use Arg API, integrate flags into arg API
 

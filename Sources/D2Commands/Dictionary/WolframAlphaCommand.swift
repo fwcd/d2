@@ -7,7 +7,7 @@ import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
-fileprivate let flagPattern = #/--(?<flag>\S+)/#
+nonisolated(unsafe) private let flagPattern = #/--(?<flag>\S+)/#
 
 public class WolframAlphaCommand: StringCommand {
     public let info = CommandInfo(

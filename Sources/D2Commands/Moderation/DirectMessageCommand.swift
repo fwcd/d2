@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let inputPattern = #/(?:(?:(?:<\S+>)|(?:@\S+))\s+)+(.+)/#
+nonisolated(unsafe) private let inputPattern = #/(?:(?:(?:<\S+>)|(?:@\S+))\s+)+(.+)/#
 
 // TODO: Use Arg API
 

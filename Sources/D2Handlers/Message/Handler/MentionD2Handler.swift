@@ -4,7 +4,7 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let mentionPattern = #/<@.+?>/#
+nonisolated(unsafe) private let mentionPattern = #/<@.+?>/#
 fileprivate let log = Logger(label: "D2Handlers.MentionD2Handler")
 
 public struct MentionD2Handler<C>: MessageHandler where C: Conversator {

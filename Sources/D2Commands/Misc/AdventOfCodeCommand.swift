@@ -6,7 +6,7 @@ import AGGRenderer
 import CairoGraphics
 import Utils
 
-fileprivate let subcommandPattern = #/(?<name>[\w-]+)\s*(?<args>.*)/#
+nonisolated(unsafe) private let subcommandPattern = #/(?<name>[\w-]+)\s*(?<args>.*)/#
 
 public class AdventOfCodeCommand: StringCommand {
     public private(set) var info = CommandInfo(

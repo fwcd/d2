@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let spymasterMovePattern = #/(\d+)\s+(\w+)/#
+nonisolated(unsafe) private let spymasterMovePattern = #/(\d+)\s+(\w+)/#
 
 public struct CodenamesGame: Game {
     public typealias State = CodenamesState

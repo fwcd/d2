@@ -1,7 +1,7 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = #/(?<word>\w+)\s+(?<clues>[nsh]+)/#
+nonisolated(unsafe) private let argsPattern = #/(?<word>\w+)\s+(?<clues>[nsh]+)/#
 
 public class SolveWordleCommand: StringCommand {
     public let info = CommandInfo(

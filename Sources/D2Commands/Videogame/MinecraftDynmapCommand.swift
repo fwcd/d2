@@ -3,7 +3,7 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let argsPattern = #/(?<host>\S+)(?:\s+(?<playerName>.+))?/#
+nonisolated(unsafe) private let argsPattern = #/(?<host>\S+)(?:\s+(?<playerName>.+))?/#
 
 public class MinecraftDynmapCommand: StringCommand {
     public let info = CommandInfo(

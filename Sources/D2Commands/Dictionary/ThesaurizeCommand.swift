@@ -1,7 +1,7 @@
 import D2NetAPIs
 import Utils
 
-fileprivate let wordPattern = #/\w+|\S+|\s+/#
+nonisolated(unsafe) private let wordPattern = #/\w+|\S+|\s+/#
 
 public class ThesaurizeCommand: StringCommand {
     public let info = CommandInfo(

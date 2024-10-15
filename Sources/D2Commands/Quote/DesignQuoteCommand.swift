@@ -3,7 +3,7 @@ import D2MessageIO
 import D2NetAPIs
 import Utils
 
-fileprivate let htmlTagPattern = #/<[^>]+>/#
+nonisolated(unsafe) private let htmlTagPattern = #/<[^>]+>/#
 
 public class DesignQuoteCommand: StringCommand {
     public let info = CommandInfo(

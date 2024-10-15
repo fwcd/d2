@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.LatexCommand")
-fileprivate let flagPattern = #/--(\S+)=(\S+)/#
+nonisolated(unsafe) private let flagPattern = #/--(\S+)=(\S+)/#
 
 // TODO: Use the Arg API
 

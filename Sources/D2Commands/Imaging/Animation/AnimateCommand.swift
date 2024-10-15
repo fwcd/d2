@@ -11,10 +11,10 @@ fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
 /// The first capture describes the x-coordinate
 /// and the second capture the y-coordinate of the
 /// position where the transform is applied.
-fileprivate let posPattern = #/(-?\d+)\s+(-?\d+)/#
+nonisolated(unsafe) private let posPattern = #/(-?\d+)\s+(-?\d+)/#
 
 /// Matches a single key-value argument.
-fileprivate let kvPattern = #/(\w+)\s*=\s*(\S+)/#
+nonisolated(unsafe) private let kvPattern = #/(\w+)\s*=\s*(\S+)/#
 
 fileprivate let virtualEdgesParameter = "virtualedges"
 fileprivate let framesParameter = "frames"

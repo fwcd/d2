@@ -3,7 +3,7 @@ import FeedKit
 import D2MessageIO
 import Utils
 
-fileprivate let newlinesPattern = #/[\r\n]+/#
+nonisolated(unsafe) private let newlinesPattern = #/[\r\n]+/#
 
 /// Presents the n most recent items as a list.
 public struct FeedListPresenter: FeedPresenter {

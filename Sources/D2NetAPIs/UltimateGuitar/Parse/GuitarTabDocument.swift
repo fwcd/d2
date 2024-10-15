@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let spacesPattern = #/ +/#
+nonisolated(unsafe) private let spacesPattern = #/ +/#
 
 public struct GuitarTabDocument: Equatable {
     public let sections: [Section]

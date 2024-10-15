@@ -1,10 +1,10 @@
 import Utils
 import RegexBuilder
 
-fileprivate let rawOperatorPattern = ChoiceOf(nonEmptyComponents: allExpressionOperators)
+nonisolated(unsafe) private let rawOperatorPattern = ChoiceOf(nonEmptyComponents: allExpressionOperators)
 
 /// Matches a single token.
-fileprivate let tokenPattern = Regex {
+nonisolated(unsafe) private let tokenPattern = Regex {
     ChoiceOf {
         // A number
         Capture { #/\d+(?:\.\d+)?/# }

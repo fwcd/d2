@@ -1,7 +1,7 @@
 import Utils
 import CairoGraphics
 
-fileprivate let argsPattern = #/(?<axis>x|y)?\s*(?<replicas>\d+)?/#
+nonisolated(unsafe) private let argsPattern = #/(?<axis>x|y)?\s*(?<replicas>\d+)?/#
 
 public struct TileImageMapping: ImageMapping {
     private let maxWidth: Int = 2000

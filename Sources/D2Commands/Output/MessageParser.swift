@@ -8,9 +8,9 @@ import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")
 
-fileprivate let urlPattern = #/<?(\w+:[^>\s]+)>?/#
-fileprivate let codePattern = #/`(?:``(?:(?<language>\w*)\n)?)?(?<code>[^`]+)`*/#
-fileprivate let idPattern = #/\d+/#
+nonisolated(unsafe) private let urlPattern = #/<?(\w+:[^>\s]+)>?/#
+nonisolated(unsafe) private let codePattern = #/`(?:``(?:(?<language>\w*)\n)?)?(?<code>[^`]+)`*/#
+nonisolated(unsafe) private let idPattern = #/\d+/#
 
 /// Parses Discord messages into rich values.
 public struct MessageParser {

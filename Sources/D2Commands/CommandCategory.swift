@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let emojiPattern = #/:[^:]:/#
+nonisolated(unsafe) private let emojiPattern = #/:[^:]:/#
 
 public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
     case administration

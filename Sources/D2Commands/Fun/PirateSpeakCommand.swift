@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let punctuationPattern = #/[\.!\?]/#
+nonisolated(unsafe) private let punctuationPattern = #/[\.!\?]/#
 
 fileprivate let substitutions = [
     (#/hello/#, "ahoy"),

@@ -2,7 +2,7 @@ import Foundation
 import CairoGraphics
 import Utils
 
-fileprivate let pngDataUrlPattern = #/data:image\/png;base64,(?<base64>.*)/#
+nonisolated(unsafe) private let pngDataUrlPattern = #/data:image\/png;base64,(?<base64>.*)/#
 
 public struct MinecraftServerInfo: Codable {
     public let version: Version

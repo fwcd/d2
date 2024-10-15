@@ -1,7 +1,7 @@
 import Utils
 
 /// Parses a token in UG's markup.
-fileprivate let tokenPattern = #/(?:\[(?<closing>\/)?(?<tag>[^\]]+)\])|(?<newlines>[\r\n]+)|(?<rest>[^\r\n\[]+)/#
+nonisolated(unsafe) private let tokenPattern = #/(?:\[(?<closing>\/)?(?<tag>[^\]]+)\])|(?<newlines>[\r\n]+)|(?<rest>[^\r\n\[]+)/#
 
 /// Parses UG's tab markup.
 public struct UltimateGuitarTabParser {

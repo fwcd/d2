@@ -5,10 +5,10 @@ import MusicTheory
 fileprivate let majorSymbols: Set<String> = ["maj", "M"]
 fileprivate let minorSymbols: Set<String> = ["min", "m"]
 
-fileprivate let rawQualityPattern = ChoiceOf(nonEmptyComponents: majorSymbols.union(minorSymbols).map { "\($0)" })
+nonisolated(unsafe) private let rawQualityPattern = ChoiceOf(nonEmptyComponents: majorSymbols.union(minorSymbols).map { "\($0)" })
 
 /// Matches a chord.
-fileprivate let chordPattern = Regex {
+nonisolated(unsafe) private let chordPattern = Regex {
     // 1. group: root note
     Capture { #/[a-zA-Z][b#]?/# }
     // 2. group: quality (lowercased m for 'minor')
