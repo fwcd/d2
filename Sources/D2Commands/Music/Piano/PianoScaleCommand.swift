@@ -1,7 +1,6 @@
 import Utils
 import MusicTheory
 
-fileprivate let argsPattern = #/(?:(?<scale>\w+)\s+)?(?<key>\w+[b#]?)/#
 fileprivate let scales: [String: (Note) -> Scale] = [
     "major": MajorScale.init,
     "minor": MinorScale.init,
@@ -9,7 +8,7 @@ fileprivate let scales: [String: (Note) -> Scale] = [
     "pentatonic": MajorPentatonicScale.init,
 ]
 
-public class PianoScaleCommand: StringCommand {
+public class PianoScaleCommand: RegexCommand {
     public let info = CommandInfo(
         category: .music,
         shortDescription: "Renders a musical scale on a piano keyboard",
@@ -20,6 +19,7 @@ public class PianoScaleCommand: StringCommand {
             """,
         requiredPermissionLevel: .basic
     )
+    public let inputPattern = #/(?:(?<scale>\w+)\s+)?(?<key>\w+[b#]?)/#
     public let outputValueType: RichValueType = .image
     private let defaultScale: String
 
@@ -27,15 +27,10 @@ public class PianoScaleCommand: StringCommand {
         self.defaultScale = defaultScale
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         do {
-            guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-                await output.append(errorText: info.helpText!)
-                return
-            }
-
-            let rawScale = parsedArgs.scale.map { String($0) } ?? defaultScale
-            let rawKey = String(parsedArgs.key)
+            let rawScale = input.scale.map { String($0) } ?? defaultScale
+            let rawKey = String(input.key)
 
             guard let scale = scales[rawScale] else {
                 await output.append(errorText: "Unknown scale `\(rawScale)`. Try one of these: \(scales.keys.map { "`\($0)`" }.joined(separator: ", "))")
