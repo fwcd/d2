@@ -2,9 +2,7 @@ import Utils
 import D2MessageIO
 import D2NetAPIs
 
-fileprivate let argPattern = #/(?<targetLanguage>\w+)\s+(?<text>\S.+)/#
-
-public class TranslateCommand: StringCommand {
+public class TranslateCommand: RegexCommand {
     public let info = CommandInfo(
         category: .misc,
         shortDescription: "Translates text into another language",
@@ -13,15 +11,13 @@ public class TranslateCommand: StringCommand {
         requiredPermissionLevel: .basic
     )
 
+    public let inputPattern = #/(?<targetLanguage>\w+)\s+(?<text>\S.+)/#
+
     public init() {}
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let parsedArgs = try? argPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
-        let targetLanguage = String(parsedArgs.targetLanguage)
-        let text = String(parsedArgs.text)
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
+        let targetLanguage = String(input.targetLanguage)
+        let text = String(input.text)
 
         do {
             let results = try await BingTranslateQuery(targetLanguage: targetLanguage, text: text).perform()
