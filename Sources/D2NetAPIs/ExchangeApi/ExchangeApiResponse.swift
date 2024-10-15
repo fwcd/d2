@@ -1,6 +1,6 @@
 import Utils
 
-public struct ExchangeApiResponse: Decodable {
+public struct ExchangeApiResponse: Decodable, Sendable {
     public let date: String
     public let rates: [String: Double]
 

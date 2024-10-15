@@ -147,7 +147,7 @@ public struct RedditLink: Sendable, Codable {
 
         public var firstGif: Resource? { images?.compactMap { $0.variants?.gif }.first }
 
-        public class Resource: Codable {
+        public final class Resource: Sendable, Codable {
             public let source: UrlWithSize?
             public let resolutions: [UrlWithSize]?
             public let variants: Variants?

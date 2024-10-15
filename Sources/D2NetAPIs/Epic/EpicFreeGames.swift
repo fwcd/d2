@@ -76,7 +76,7 @@ public struct EpicFreeGames: Sendable, Codable {
                         public struct Promotion: Sendable, Codable {
                             public let promotionalOffers: [Offer]?
 
-                            public struct Offer: Codable, CustomStringConvertible {
+                            public struct Offer: Sendable, Codable, CustomStringConvertible {
                                 public let startDate: String?
                                 public let endDate: String?
                                 public let discountSetting: DiscountSetting?
@@ -94,7 +94,7 @@ public struct EpicFreeGames: Sendable, Codable {
                                     ].compactMap { $0 }.joined(separator: " ")
                                 }
 
-                                public struct DiscountSetting: Codable, CustomStringConvertible {
+                                public struct DiscountSetting: Sendable, Codable, CustomStringConvertible {
                                     public let discountType: String
                                     public let discountPercentage: Int?
 

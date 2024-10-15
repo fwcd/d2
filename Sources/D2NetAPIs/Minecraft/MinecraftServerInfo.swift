@@ -40,7 +40,7 @@ public struct MinecraftServerInfo: Sendable, Codable {
         }
     }
 
-    public struct Chat: Codable, CustomStringConvertible {
+    public struct Chat: Sendable, Codable, CustomStringConvertible {
         public let text: String
         public var bold: Bool? = nil
         public var italic: Bool? = nil
@@ -114,7 +114,7 @@ public struct MinecraftServerInfo: Sendable, Codable {
             public let required: Bool?
         }
 
-        public struct Mod: Codable, CustomStringConvertible {
+        public struct Mod: Sendable, Codable, CustomStringConvertible {
             public let modId: String
             public let modmarker: String
             public var description: String { return "\(modId) - \(modmarker)" }
@@ -125,7 +125,7 @@ public struct MinecraftServerInfo: Sendable, Codable {
         public let type: String?
         public let modList: [Mod]?
 
-        public struct Mod: Codable, CustomStringConvertible {
+        public struct Mod: Sendable, Codable, CustomStringConvertible {
             public let modid: String
             public let version: String
             public var description: String { return "\(modid) - \(version)" }

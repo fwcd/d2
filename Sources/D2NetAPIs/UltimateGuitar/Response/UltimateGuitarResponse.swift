@@ -1,4 +1,4 @@
-public struct UltimateGuitarResponse<T> {
+public struct UltimateGuitarResponse<T>: Sendable, Codable where T: Sendable & Codable {
     public let store: Store
 
     public struct Store: Sendable, Codable {
@@ -17,7 +17,3 @@ public struct UltimateGuitarResponse<T> {
         }
     }
 }
-
-extension UltimateGuitarResponse: Sendable where T: Sendable {}
-extension UltimateGuitarResponse: Encodable where T: Encodable {}
-extension UltimateGuitarResponse: Decodable where T: Decodable {}

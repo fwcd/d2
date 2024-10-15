@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct AdventOfCodeLeaderboard: Decodable {
+public struct AdventOfCodeLeaderboard: Decodable, Sendable {
     public enum CodingKeys: String, CodingKey {
         case ownerId = "owner_id"
         case event
@@ -59,7 +59,7 @@ public struct AdventOfCodeLeaderboard: Decodable {
         timeToCompletion(member: member, day: member.lastDay)
     }
 
-    public struct Member: Decodable {
+    public struct Member: Decodable, Sendable {
         public enum CodingKeys: String, CodingKey {
             case stars
             case globalScore = "global_score"
