@@ -126,18 +126,18 @@ struct DiscordSink: DefaultSink {
         try await withCheckedThrowingContinuation { continuation in
             client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) { messages, response in
                 Task {
-                    let mioMessages = withTaskGroup(of: Message.self) { group in
+                    let mioMessages = await withTaskGroup(of: Message.self) { group in
                         for message in messages {
                             group.addTask {
                                 await message.usingMessageIO(with: self)
                             }
-
-                            var mioMessages: [Message] = []
-                            for await mioMessage in group {
-                                mioMessages.append(mioMessage)
-                            }
-                            return mioMessages
                         }
+
+                        var mioMessages: [Message] = []
+                        for await mioMessage in group {
+                            mioMessages.append(mioMessage)
+                        }
+                        return mioMessages
                     }
                     continuation.resume(with: Result { try check(value: mioMessages, response: response, "getting messages") })
                 }
