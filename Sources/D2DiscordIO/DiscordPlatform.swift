@@ -17,9 +17,9 @@ public struct DiscordPlatform: MessagePlatform {
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
-    ) {
+    ) async {
         log.info("Initializing Discord backend...")
-        manager = DiscordClientManager(
+        manager = await DiscordClientManager(
             receiver: receiver,
             combinedSink: combinedSink,
             eventLoopGroup: eventLoopGroup,

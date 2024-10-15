@@ -95,7 +95,7 @@ struct D2: AsyncParsableCommand {
 
         if let discordToken = tokens.discord {
             createdAnyPlatform = true
-            platforms.append(DiscordPlatform(
+            platforms.append(await DiscordPlatform(
                 receiver: receiver,
                 combinedSink: combinedSink,
                 eventLoopGroup: eventLoopGroup,
