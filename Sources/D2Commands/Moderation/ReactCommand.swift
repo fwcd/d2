@@ -1,14 +1,15 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = #/(?<messageId>\d+)\s+(?<channelId>\d+)\s+:?(?<emoji>[^:\s]+):?/#
-
-public class ReactCommand: StringCommand {
+public class ReactCommand: RegexCommand {
     public private(set) var info = CommandInfo(
         category: .moderation,
         helpText: "Syntax: [message id] [channel id] [emoji name]",
         requiredPermissionLevel: .admin
     )
+
+    public let inputPattern = #/(?<messageId>\d+)\s+(?<channelId>\d+)\s+:?(?<emoji>[^:\s]+):?/#
+
     private let temporarySeconds: Double?
 
     public init(temporary: Bool = false) {
@@ -22,19 +23,15 @@ public class ReactCommand: StringCommand {
         }
     }
 
-    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
+    public func invoke(with input: Input, output: CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
             await output.append(errorText: "No client available")
             return
         }
-        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
 
-        let messageId = MessageID(String(parsedArgs.messageId), clientName: sink.name)
-        let channelId = MessageID(String(parsedArgs.channelId), clientName: sink.name)
-        var emojiString = String(parsedArgs.emoji)
+        let messageId = MessageID(String(input.messageId), clientName: sink.name)
+        let channelId = MessageID(String(input.channelId), clientName: sink.name)
+        var emojiString = String(input.emoji)
 
         if !emojiString.unicodeScalars.contains(where: \.properties.isEmoji) {
             // Try resolving the emoji via the guilds
