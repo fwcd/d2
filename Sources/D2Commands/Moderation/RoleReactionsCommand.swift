@@ -1,16 +1,18 @@
 import D2MessageIO
 import Utils
 
-fileprivate let argsPattern = #/(?<subcommandName>\w+)\s+<#(?<channelId>\d+)>\s+(?<messageId>\d+)\s*(?<subcommandArgs>.*)/#
 fileprivate let emojiPattern = #/<a?:(.+):(\d+)>/#
 
-public class RoleReactionsCommand: StringCommand {
+public class RoleReactionsCommand: RegexCommand {
     public private(set) var info = CommandInfo(
         category: .moderation,
         shortDescription: "Adds reactions to a message that automatically assign roles",
         requiredPermissionLevel: .mod,
         platformAvailability: ["Discord"]
     )
+
+    public let inputPattern = #/(?<subcommandName>\w+)\s+<#(?<channelId>\d+)>\s+(?<messageId>\d+)\s*(?<subcommandArgs>.*)/#
+
     @Binding private var configuration: RoleReactionsConfiguration
     private var subcommands: [String: (CommandOutput, Sink, ChannelID, MessageID, String) async -> Void] = [:]
 
@@ -69,20 +71,16 @@ public class RoleReactionsCommand: StringCommand {
             """
     }
 
-    public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let parsedArgs = try? argsPattern.firstMatch(in: input) else {
-            await output.append(errorText: info.helpText!)
-            return
-        }
+    public func invoke(with input: Input, output: any CommandOutput, context: CommandContext) async {
         guard let sink = context.sink else {
             await output.append(errorText: "No client available")
             return
         }
 
-        let subcommandName = String(parsedArgs.subcommandName)
-        let channelId = ID(String(parsedArgs.channelId), clientName: sink.name)
-        let messageId = ID(String(parsedArgs.messageId), clientName: sink.name)
-        let subcommandArgs = String(parsedArgs.subcommandArgs)
+        let subcommandName = String(input.subcommandName)
+        let channelId = ID(String(input.channelId), clientName: sink.name)
+        let messageId = ID(String(input.messageId), clientName: sink.name)
+        let subcommandArgs = String(input.subcommandArgs)
 
         guard let subcommand = subcommands[subcommandName] else {
             await output.append(errorText: "Unknown subcommand `\(subcommandName)`, try one of these: \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
