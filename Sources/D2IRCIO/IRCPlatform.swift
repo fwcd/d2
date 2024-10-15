@@ -5,7 +5,7 @@ import IRC
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCPlatform")
 
-public struct IRCPlatform: MessagePlatform {
+public struct IRCPlatform: MessagePlatform, Sendable {
     private let config: IRCConfig
     private let manager: IRCClientManager
 
@@ -33,6 +33,8 @@ public struct IRCPlatform: MessagePlatform {
 
     public func start() throws {
         log.info("Starting IRC client (\(config.host):\(config.port))")
-        manager.connect()
+        Task {
+            await manager.connect()
+        }
     }
 }
