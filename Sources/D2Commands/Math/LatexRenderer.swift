@@ -6,7 +6,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Commands.LatexRenderer")
 fileprivate let latexPrefix = "latex"
 
-class LatexRenderer {
+struct LatexRenderer: Sendable {
     private let node = NodePackage(name: "latex-renderer")
 
     func renderImage(from formula: String, color: String = "white", scale: Double = 2) async throws -> CairoImage {
