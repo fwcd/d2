@@ -75,7 +75,7 @@ public struct MessageWriter {
                 // TODO: Download attachments and re-attach them as fileuploads
                 return try await write(value: .error(nil, errorText: "Cannot write attachments yet!"))
             case let .lazy(wrapper):
-                return try await write(value: wrapper.wrappedValue)
+                return try await write(value: wrapper.wrappedValue.wrappedValue)
             case let .compound(components):
                 return try await withThrowingTaskGroup(of: Message.self) { group in
                     for component in components {

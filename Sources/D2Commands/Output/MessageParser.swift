@@ -101,14 +101,14 @@ public struct MessageParser {
                     group.addTask {
                         do {
                             let data = try await attachment.download()
-                            return .lazy(.lazy {
+                            return .lazy(UncheckedSendable(.lazy {
                                 do {
                                     return .image(try CairoImage(pngData: data))
                                 } catch {
                                     log.error("Could not decode PNG: \(error)")
                                     return .none
                                 }
-                            })
+                            }))
                         } catch {
                             log.error("Could not download PNG attachment: \(error)")
                             return .none
@@ -119,7 +119,7 @@ public struct MessageParser {
                     group.addTask {
                         do {
                             let data = try await attachment.download()
-                            return .lazy(.lazy {
+                            return .lazy(UncheckedSendable(.lazy {
                                 do {
                                     log.info("Decoding GIF...")
                                     return .gif(try GIF(data: data))
@@ -127,7 +127,7 @@ public struct MessageParser {
                                     log.error("Could not parse GIF: \(error)")
                                     return .none
                                 }
-                            })
+                            }))
                         } catch {
                             log.error("Could not download GIF attachment: \(error)")
                             return .none
