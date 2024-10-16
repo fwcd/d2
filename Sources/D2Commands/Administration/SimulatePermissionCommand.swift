@@ -27,7 +27,7 @@ public class SimulatePermissionCommand: StringCommand {
                 return
             }
 
-            permissionManager[simulated: author] = nil
+            await permissionManager.update(simulated: author, to: nil)
             await output.append("Successfully stopped simulating the level")
         } else {
             guard let level = PermissionLevel.of(input) else {
@@ -35,7 +35,7 @@ public class SimulatePermissionCommand: StringCommand {
                 return
             }
 
-            permissionManager[simulated: author] = level
+            await permissionManager.update(simulated: author.id, to: level)
             await output.append("Simulating permission level `\(input)` for you. Invoke this command with `\(cancelSubcommand)` to exit the simulation.")
         }
     }
