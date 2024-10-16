@@ -2,7 +2,7 @@ import Dispatch
 import Utils
 import D2MessageIO
 
-public struct FollowUpConversator: Conversator {
+public struct FollowUpConversator: Conversator, Sendable {
     private let messageDB: MessageDatabase
 
     public init(messageDB: MessageDatabase) {

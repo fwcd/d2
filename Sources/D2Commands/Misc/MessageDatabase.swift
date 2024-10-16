@@ -64,7 +64,7 @@ fileprivate let occurrences = Expression<Int64>("occurrences")
 
 fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
 
-public class MessageDatabase: MarkovPredictor {
+public final class MessageDatabase: MarkovPredictor, Sendable {
     private let db: Connection
 
     public private(set) lazy var initialMarkovDistribution: CustomDiscreteDistribution<String>? = queryInitialMarkovDistribution()
