@@ -5,7 +5,7 @@ import NIO
 
 fileprivate let log = Logger(label: "D2Commands.CommandContext")
 
-public struct CommandContext {
+public struct CommandContext: Sendable {
     public let sink: (any Sink)?
     public let registry: CommandRegistry
     public let message: Message
