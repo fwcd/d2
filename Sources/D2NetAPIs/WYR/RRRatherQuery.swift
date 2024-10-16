@@ -1,5 +1,5 @@
 import Utils
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
 public struct RRRatherQuery {
     private let category: String

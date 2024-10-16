@@ -1,4 +1,4 @@
-import SwiftSoup
+@preconcurrency import SwiftSoup
 import Utils
 
 public struct NNNEverQuery {

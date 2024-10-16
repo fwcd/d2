@@ -1,6 +1,6 @@
 import Logging
 import Utils
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
 fileprivate let log = Logger(label: "D2NetAPIs.EitherIOQuery")
 

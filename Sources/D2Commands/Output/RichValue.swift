@@ -4,7 +4,7 @@ import D2MessageIO
 @preconcurrency import CairoGraphics
 import Utils
 import GIF
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
 /// A value of a common format that
 /// can be sent to an output.

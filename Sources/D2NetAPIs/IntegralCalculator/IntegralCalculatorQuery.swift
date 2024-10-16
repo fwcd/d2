@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 import Utils
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
 fileprivate let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")
 nonisolated(unsafe) private let pageVersionPattern = #/\bpageVersion\s*=\s*(?<pageVersion>\d+)\b/#
