@@ -1,6 +1,6 @@
 import D2MessageIO
 @preconcurrency import CairoGraphics
-import GIF
+@preconcurrency import GIF
 import Utils
 import Logging
 

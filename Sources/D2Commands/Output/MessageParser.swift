@@ -3,7 +3,7 @@ import Logging
 import D2MessageIO
 import Utils
 @preconcurrency import CairoGraphics
-import GIF
+@preconcurrency import GIF
 import Dispatch
 
 fileprivate let log = Logger(label: "D2Commands.MessageParser")

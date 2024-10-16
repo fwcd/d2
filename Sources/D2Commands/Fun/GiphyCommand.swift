@@ -1,6 +1,6 @@
 import D2NetAPIs
 import D2MessageIO
-import GIF
+@preconcurrency import GIF
 
 public class GiphyCommand: StringCommand {
     public let info = CommandInfo(

@@ -1,6 +1,6 @@
 import D2MessageIO
 @preconcurrency import CairoGraphics
-import GIF
+@preconcurrency import GIF
 import Utils
 
 public class MapImageCommand<M>: Command where M: ImageMapping {

@@ -3,7 +3,7 @@ import Geodesy
 import D2MessageIO
 @preconcurrency import CairoGraphics
 import Utils
-import GIF
+@preconcurrency import GIF
 @preconcurrency import SwiftSoup
 
 /// A value of a common format that

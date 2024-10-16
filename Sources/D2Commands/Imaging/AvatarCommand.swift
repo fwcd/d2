@@ -1,7 +1,7 @@
 import D2MessageIO
 import D2Permissions
 @preconcurrency import CairoGraphics
-import GIF
+@preconcurrency import GIF
 import Utils
 import Foundation
 import Logging
