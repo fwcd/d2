@@ -50,6 +50,7 @@ public struct CommandContext: Sendable {
     }
 
     /// Subscribes to the current channel.
+    @CommandActor
     public func subscribeToChannel() {
         if let id = channel?.id {
             subscriptions.subscribe(to: id)
@@ -59,6 +60,7 @@ public struct CommandContext: Sendable {
     }
 
     /// Unsubscribes from the current channel.
+    @CommandActor
     public func unsubscribeFromChannel() {
         if let id = channel?.id {
             subscriptions.unsubscribe(from: id)
