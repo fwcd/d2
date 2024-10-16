@@ -1,6 +1,6 @@
 import Utils
 
-public struct ChessBoardModel {
+public struct ChessBoardModel: Sendable {
     public static var ranks: Int = 8
     public static var files: Int = 8
     public static var positions: [Vec2<Int>] { (0..<Self.ranks).flatMap { y in (0..<Self.files).map { Vec2(x: $0, y: y) } } }

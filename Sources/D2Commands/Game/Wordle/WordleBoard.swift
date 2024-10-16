@@ -1,6 +1,6 @@
 import Utils
 
-public struct WordleBoard: RichValueConvertible {
+public struct WordleBoard: RichValueConvertible, Sendable {
     public var guesses: [Guess] = []
 
     public var isWon: Bool { guesses.last?.isWon ?? false }
@@ -17,7 +17,7 @@ public struct WordleBoard: RichValueConvertible {
             .filter { solution in guesses.allSatisfy { $0.isCompatible(with: solution) } }
     }
 
-    public struct Guess {
+    public struct Guess: Sendable {
         public var word: String
         public var clues: Clues = Clues()
 
@@ -41,7 +41,7 @@ public struct WordleBoard: RichValueConvertible {
         }
     }
 
-    public struct Clues: Hashable, Sequence {
+    public struct Clues: Hashable, Sendable, Sequence {
         public var bitPattern: UInt32
         public var count: Int
 

@@ -1,6 +1,6 @@
 import Utils
 
-public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible {
+public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible, Sendable {
     case team(CodenamesTeam)
     case spymaster(CodenamesTeam)
 

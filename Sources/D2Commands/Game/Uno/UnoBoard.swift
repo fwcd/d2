@@ -4,12 +4,12 @@ import CairoGraphics
 
 fileprivate let log = Logger(label: "D2Commands.UnoBoard")
 
-fileprivate struct PileCard {
+fileprivate struct PileCard: Sendable {
     let card: UnoCard
     let rotation: Double
 }
 
-public struct UnoBoard: RichValueConvertible {
+public struct UnoBoard: RichValueConvertible, Sendable {
     public var deck = UnoDeck()
     private var discardPile = [PileCard]()
     public var asRichValue: RichValue { return createImage().map { RichValue.image($0) } ?? .none }

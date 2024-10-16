@@ -1,5 +1,5 @@
 /// Additional flags for performing game moves.
-public struct GameMoveOptions: OptionSet {
+public struct GameMoveOptions: OptionSet, Sendable {
     public let rawValue: Int
 
     /// Commit the move, i.e. perform some non-essential actions like saving move history.

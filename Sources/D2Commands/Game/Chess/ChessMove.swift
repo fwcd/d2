@@ -1,6 +1,6 @@
 import Utils
 
-public struct ChessMove: Hashable, CustomStringConvertible {
+public struct ChessMove: Hashable, CustomStringConvertible, Sendable {
     public var pieceType: ChessPieceType?
     public var color: ChessRole?
     public var originX: Int?

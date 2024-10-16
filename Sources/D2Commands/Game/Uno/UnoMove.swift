@@ -4,7 +4,7 @@ private let rawColorPattern = "(?:\(UnoColor.allCases.map { $0.rawValue }.joined
 private let rawLabelPattern = "(?:\(UnoActionLabel.allCases.map { $0.rawValue }.joined(separator: "|")))"
 nonisolated(unsafe) private let movePattern = try! Regex("^(?:(\(rawColorPattern))\\s+)?(\(rawLabelPattern)|[0-9])(?:\\s+(\(rawColorPattern)))?$")
 
-public struct UnoMove: Hashable {
+public struct UnoMove: Hashable, Sendable {
     public let card: UnoCard?
     public let drawsCard: Bool
     public let nextColor: UnoColor?

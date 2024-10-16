@@ -1,7 +1,7 @@
 import Utils
 
 /// An immutable tic-tac-toe board.
-public struct TicTacToeBoard: RichValueConvertible {
+public struct TicTacToeBoard: RichValueConvertible, Sendable {
     public typealias Role = TicTacToeRole
 
     let fields: [[TicTacToeRole]]

@@ -2,7 +2,7 @@ import Utils
 
 nonisolated(unsafe) private let argsRegex = #/(\S+)\s+(\S+)/#
 
-public struct TicTacToeMove: Hashable {
+public struct TicTacToeMove: Hashable, Sendable {
     let row: Int
     let column: Int
 

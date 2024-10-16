@@ -1,6 +1,6 @@
 import Utils
 
-public enum ChessRole: String, Hashable, CaseIterable, Codable, RichValueConvertible {
+public enum ChessRole: String, Hashable, CaseIterable, Codable, RichValueConvertible, Sendable {
     case white
     case black
 
