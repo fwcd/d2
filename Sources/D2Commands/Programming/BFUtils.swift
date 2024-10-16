@@ -1,3 +1,3 @@
 import Utils
 
-let bfCodePattern = #/(?:`(?:``(?:\w*\n)?)?)?(?<code>[^`]+)`*/#
+nonisolated(unsafe) let bfCodePattern = #/(?:`(?:``(?:\w*\n)?)?)?(?<code>[^`]+)`*/#
