@@ -1,6 +1,6 @@
 import Foundation
 import D2MessageIO
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import GIF
 import Utils
 import Logging

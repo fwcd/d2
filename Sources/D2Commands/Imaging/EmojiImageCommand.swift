@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class EmojiImageCommand: StringCommand {
     public let info = CommandInfo(

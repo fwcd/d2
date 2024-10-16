@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import GIF
 import Dispatch
 

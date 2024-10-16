@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct ChessBoard: RichValueConvertible, Sendable {
     public var model: ChessBoardModel

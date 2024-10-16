@@ -1,5 +1,5 @@
 import Logging
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.UnoCard")

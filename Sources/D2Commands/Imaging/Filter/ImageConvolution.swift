@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) async -> [[Color]] {
     let height = pixels.count

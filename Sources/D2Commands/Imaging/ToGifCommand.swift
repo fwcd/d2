@@ -1,5 +1,5 @@
 import D2Permissions
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import GIF
 import Utils
 

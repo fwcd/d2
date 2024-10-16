@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 public struct MaskImageMapping<M>: ImageMapping where M: ImageMask {

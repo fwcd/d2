@@ -1,6 +1,6 @@
 import Foundation
 import GraphViz
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import D2MessageIO
 import Utils
 

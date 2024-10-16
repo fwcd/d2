@@ -1,6 +1,6 @@
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class GuildIconCommand: StringCommand {
     public let info = CommandInfo(

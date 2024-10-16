@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 public enum UnoColor: String, Hashable, Sendable, CaseIterable, RichValueConvertible {

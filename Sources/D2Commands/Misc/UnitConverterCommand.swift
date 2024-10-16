@@ -1,6 +1,6 @@
 import Foundation
 import GraphViz
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 nonisolated(unsafe) private let argsPattern = #/(?<value>\S+)\s+(?<src>\S+)\s+to\s*(?<dest>\S+)/#

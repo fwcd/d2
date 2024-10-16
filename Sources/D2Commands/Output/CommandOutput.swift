@@ -1,6 +1,6 @@
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 /// A sink for rich values.
 public protocol CommandOutput {

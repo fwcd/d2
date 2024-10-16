@@ -1,5 +1,5 @@
 import Foundation
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 nonisolated(unsafe) private let pngDataUrlPattern = #/data:image\/png;base64,(?<base64>.*)/#

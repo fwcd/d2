@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import GIF
 
 extension InteractiveTextChannel {

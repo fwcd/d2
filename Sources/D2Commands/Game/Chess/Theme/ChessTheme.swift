@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct ChessTheme: Sendable {
     public static let defaultTheme: ChessTheme = ChessTheme(

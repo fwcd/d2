@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class HugCommand: Command {
     public let info = CommandInfo(

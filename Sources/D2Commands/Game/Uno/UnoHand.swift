@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct UnoHand: RichValueConvertible, Sendable {
     public var cards: [UnoCard]

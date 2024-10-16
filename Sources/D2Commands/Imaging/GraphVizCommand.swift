@@ -1,5 +1,5 @@
 @preconcurrency import GraphViz
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class GraphVizCommand: StringCommand {
     public private(set) var info = CommandInfo(
