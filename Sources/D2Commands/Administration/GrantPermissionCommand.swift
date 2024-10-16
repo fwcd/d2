@@ -31,7 +31,7 @@ public class GrantPermissionCommand: RegexCommand {
 
             if changedPermissions {
                 await output.append(response)
-                permissionManager.writeToDisk()
+                await permissionManager.writeToDisk()
             } else {
                 await output.append("Did not change any permissions.")
             }
