@@ -1,6 +1,6 @@
 import D2MessageIO
 import D2NetAPIs
-import Graphics
+@preconcurrency import Graphics
 import StaticMap
 import Utils
 
