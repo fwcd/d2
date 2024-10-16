@@ -26,6 +26,7 @@ public struct CommandContext {
         }
     }
 
+    @CommandActor
     public var isSubscribed: Bool { (channel?.id).map { subscriptions.contains($0) } ?? false }
 
     public init(
