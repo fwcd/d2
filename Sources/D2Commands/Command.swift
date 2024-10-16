@@ -3,7 +3,7 @@ import D2Permissions
 
 /// Encapsulates functionality that can conveniently be invoked using rich-valued inputs.
 @CommandActor
-public protocol Command: AnyObject {
+public protocol Command: AnyObject, Sendable {
     /// The input that this command expects to be invoked with. Note that this is purely
     /// an annotation for documentary purposes and not enforced at runtime.
     var inputValueType: RichValueType { get }
