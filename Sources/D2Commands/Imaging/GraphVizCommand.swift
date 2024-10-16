@@ -1,4 +1,4 @@
-import GraphViz
+@preconcurrency import GraphViz
 import CairoGraphics
 
 public class GraphVizCommand: StringCommand {
