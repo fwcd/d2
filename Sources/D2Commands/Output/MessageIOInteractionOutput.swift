@@ -50,7 +50,7 @@ public class MessageIOInteractionOutput: CommandOutput {
         }
     }
 
-    public func update(context: CommandContext) {
-        self.context = context
+    public func update(context: CommandContext) async {
+        await self.context = context
     }
 }

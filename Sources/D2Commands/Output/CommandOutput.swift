@@ -11,7 +11,7 @@ public protocol CommandOutput: Sendable {
     /// Updates the internal context of the output. Should only
     /// be used if the CommandOutput if retained beyond the original
     /// message invocation (e.g. when registering event listeners).
-    func update(context: CommandContext)
+    func update(context: CommandContext) async
 }
 
 public extension CommandOutput {

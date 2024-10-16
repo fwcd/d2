@@ -2,7 +2,7 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.PipeOutput")
 
-public class PipeOutput: CommandOutput {
+public actor PipeOutput: CommandOutput {
     private let sink: any Command
     private let args: String
     private let next: (any CommandOutput)?
@@ -17,7 +17,7 @@ public class PipeOutput: CommandOutput {
         self.next = next
     }
 
-    public func append(_ value: RichValue, to channel: OutputChannel) async {
+    public nonisolated func append(_ value: RichValue, to channel: OutputChannel) async {
         let nextOutput = next ?? PrintOutput()
 
         if case .error(_, _) = value {
@@ -32,8 +32,8 @@ public class PipeOutput: CommandOutput {
         }
     }
 
-    public func update(context: CommandContext) {
+    public func update(context: CommandContext) async {
         self.context = context
-        next?.update(context: context)
+        await next?.update(context: context)
     }
 }

@@ -4,7 +4,7 @@ private let log = Logger(label: "D2Commands.BufferedOutput")
 
 /// A buffered output that accumulates RichValues and first outputs once
 /// flushed (or deinited, in which case it happens automatically).
-public class BufferedOutput: CommandOutput {
+public actor BufferedOutput: CommandOutput {
     private let inner: any CommandOutput
     private var buffer: [OutputChannel: [RichValue]] = [:]
     public var messageLengthLimit: Int? { inner.messageLengthLimit }
@@ -17,8 +17,8 @@ public class BufferedOutput: CommandOutput {
         buffer[channel] = (buffer[channel] ?? []) + [value]
     }
 
-    public func update(context: CommandContext) {
-        inner.update(context: context)
+    public func update(context: CommandContext) async {
+        await inner.update(context: context)
     }
 
     public func flush() async {
