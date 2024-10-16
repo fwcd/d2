@@ -4,7 +4,7 @@ import Utils
 /// A general-purpose key-value store for virtual "items"
 /// that a user may acquire. The items are grouped into
 /// categories, which may have custom purposes.
-public struct Inventory: Hashable, Codable, Sequence {
+public struct Inventory: Hashable, Codable, Sendable, Sequence {
     public static let empty = Inventory()
 
     /// A dictionary holding items by category.
@@ -17,7 +17,7 @@ public struct Inventory: Hashable, Codable, Sequence {
         self.items = items
     }
 
-    public struct Item: Hashable, Codable, CustomStringConvertible {
+    public struct Item: Hashable, Codable, Sendable, CustomStringConvertible {
         /// A category-specific identifier
         public let id: String
         public let name: String
