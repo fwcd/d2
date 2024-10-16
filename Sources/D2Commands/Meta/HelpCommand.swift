@@ -30,7 +30,7 @@ public class HelpCommand: StringCommand {
         } else {
             if let category = CommandCategory(rawValue: input) {
                 await output.append(categoryHelpEmbed(for: category, at: authorLevel, context: context))
-            } else if let command = await context.registry[input] {
+            } else if let command = context.registry[input] {
                 await output.append(commandHelpEmbed(for: input, command: command))
             } else {
                 let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.entries.map(\.key)
@@ -44,7 +44,7 @@ public class HelpCommand: StringCommand {
     }
 
     private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) async -> Embed {
-        let commands = await context.registry.commandsWithAliases()
+        let commands = context.registry.commandsWithAliases()
         return Embed(
             title: ":question: Available Commands",
             footer: "Hint: You can use \(commandPrefix)search to find the command you need!",

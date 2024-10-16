@@ -23,7 +23,7 @@ public class SourceFileCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let command = await context.registry[input] else {
+        guard let command = context.registry[input] else {
             await output.append(errorText: "Unknown command `\(input)`")
             return
         }
