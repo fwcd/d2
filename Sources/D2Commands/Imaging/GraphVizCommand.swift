@@ -18,7 +18,9 @@ public class GraphVizCommand: StringCommand {
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         do {
             let data = try await withCheckedThrowingContinuation { continuation in
-                Renderer(layout: layout).render(dot: input, to: .png, completion: continuation.resume(with:))
+                Renderer(layout: layout).render(dot: input, to: .png) {
+                    continuation.resume(with: $0)
+                }
             }
             try await output.append(try CairoImage(pngData: data))
         } catch {

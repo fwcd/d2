@@ -251,7 +251,9 @@ public class UnitConverterCommand: StringCommand {
 
                 do {
                     let data = try await withCheckedThrowingContinuation { continuation in
-                        graph.render(using: .fdp, to: .png, completion: continuation.resume(with:))
+                        graph.render(using: .fdp, to: .png) {
+                            continuation.resume(with: $0)
+                        }
                     }
                     try await output.append(CairoImage(pngData: data))
                 } catch {
