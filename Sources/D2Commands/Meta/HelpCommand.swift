@@ -43,7 +43,7 @@ public class HelpCommand: StringCommand {
         }
     }
 
-    private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
+    private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) async -> Embed {
         let commands = await context.registry.commandsWithAliases()
         return Embed(
             title: ":question: Available Commands",
