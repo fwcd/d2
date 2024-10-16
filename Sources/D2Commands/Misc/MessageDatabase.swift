@@ -67,7 +67,6 @@ fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
 public final class MessageDatabase: MarkovPredictor, Sendable {
     private let db: Connection
 
-    public private(set) lazy var initialMarkovDistribution: CustomDiscreteDistribution<String>? = queryInitialMarkovDistribution()
     public let markovOrder = 1
 
     public init() throws {
