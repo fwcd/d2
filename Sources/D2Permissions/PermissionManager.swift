@@ -94,6 +94,14 @@ public actor PermissionManager {
         set { simulatedPermissions[userID] = newValue }
     }
 
+    public func update(_ user: User, to level: PermissionLevel) {
+        self[user] = level
+    }
+
+    public func update(simulated user: User, to level: PermissionLevel?) {
+        self[simulated: user] = level
+    }
+
     public func update(_ userID: UserID, to level: PermissionLevel) {
         self[userID] = level
     }
