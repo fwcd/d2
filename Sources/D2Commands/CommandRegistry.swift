@@ -47,7 +47,7 @@ public class CommandRegistry: Sequence {
         set { self[name, aka: []] = newValue }
     }
 
-    public struct CommandWithAlias {
+    public struct CommandWithAlias: Sendable {
         public let name: String
         public let aliases: [String]
         public let command: any Command
