@@ -29,7 +29,7 @@ public class DiscordinderCommand: StringCommand {
                 return
             }
 
-            cancelSession(context: context)
+            await cancelSession(context: context)
             await output.append(":x: Cancelled Discordinder session on this channel!")
         } else {
             guard let authorId = context.author?.id else {
@@ -58,7 +58,7 @@ public class DiscordinderCommand: StringCommand {
                 let state = accept(matchBetween: user.id, and: candidateId, on: guild)
                 if state == .accepted {
                     await output.append(":partying_face: It's a match!")
-                    cancelSession(context: context)
+                    await cancelSession(context: context)
                     return
                 }
             case ignoreEmoji:
@@ -131,7 +131,7 @@ public class DiscordinderCommand: StringCommand {
         return true
     }
 
-    private func cancelSession(context: CommandContext) {
+    private func cancelSession(context: CommandContext) async {
         guard let channelId = context.channel?.id else { return }
         activeMatches = activeMatches.filter { (c, _) in channelId != c }
         context.unsubscribeFromChannel()
