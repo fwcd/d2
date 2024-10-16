@@ -1,4 +1,4 @@
-struct UnaryOperatorEntry {
+struct UnaryOperatorEntry: Sendable {
     let position: UnaryOperatorPosition
-    let factory: (any ExpressionASTNode) -> any ExpressionASTNode
+    let factory: @Sendable (any ExpressionASTNode) -> any ExpressionASTNode
 }

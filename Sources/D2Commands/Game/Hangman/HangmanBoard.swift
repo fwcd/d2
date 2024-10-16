@@ -11,7 +11,7 @@ public struct HangmanBoard: RichValueConvertible, Sendable {
         slots = word.map(CharacterSlot.init(character:))
     }
 
-    public struct CharacterSlot {
+    public struct CharacterSlot: Sendable {
         public let character: Character
         public var hidden: Bool = true
 
