@@ -1,5 +1,5 @@
 {
-  "originHash" : "30a8541ee3fb5f24e7553b0bb6634a989dba63060c6be618d32c875f04cc0cc5",
+  "originHash" : "95adc955c14ecd4ad17acbc9e3eac7b1be040bff3bb4ff620b84f47edb28f965",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -239,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-music-theory.git",
       "state" : {
-        "revision" : "668a81476a870d2a10facba183569797c67989f3",
-        "version" : "0.1.0"
+        "revision" : "a02e380c5479dee7d17c42b83ac8908a7d316fd8",
+        "version" : "0.2.0"
       }
     },
     {
