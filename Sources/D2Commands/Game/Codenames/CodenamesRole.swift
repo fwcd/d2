@@ -5,7 +5,7 @@ public enum CodenamesRole: Hashable, CaseIterable, RichValueConvertible, Sendabl
     case spymaster(CodenamesTeam)
 
     // Order matters
-    public static var allCases: [CodenamesRole] = CodenamesTeam.allCases.flatMap { [.spymaster($0), .team($0)] }
+    public static let allCases: [CodenamesRole] = CodenamesTeam.allCases.flatMap { [.spymaster($0), .team($0)] }
 
     public var asRichValue: RichValue {
         switch self {
