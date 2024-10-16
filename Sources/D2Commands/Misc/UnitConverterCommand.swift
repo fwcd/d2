@@ -311,7 +311,7 @@ public class UnitConverterCommand: StringCommand {
         }
     }
 
-    private struct Prioritized<T, U>: Comparable {
+    private struct Prioritized<T, U>: Comparable, Sendable where T: Sendable, U: Sendable {
         let value: T
         let priority: Int
         let bijection: AnyAsyncBijection<U>
