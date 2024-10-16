@@ -30,7 +30,7 @@ public struct SpamHandler: MessageHandler {
             isPossiblySpam(message: message),
             let author = message.author,
             let channelId = message.channelId,
-            let guild = sink.guildForChannel(channelId),
+            let guild = await sink.guildForChannel(channelId),
             let daysOnGuild = guild.members[author.id].map({ Int(-$0.joinedAt.timeIntervalSinceNow / 86400) }),
             let limits = config.limitsByDaysOnGuild.filter({ daysOnGuild >= $0.key }).max(by: ascendingComparator(comparing: \.key))?.value else { return false }
 

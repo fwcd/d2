@@ -13,7 +13,7 @@ public struct MessageDatabaseChannelHandler: ChannelHandler {
 
     private func update(channel: Channel, on eventName: String, sink: any Sink) {
         do {
-            if let guild = sink.guildForChannel(channel.id) {
+            if let guild = await sink.guildForChannel(channel.id) {
                 log.info("Updating channel '\(channel.name)' on \(eventName) into message database...")
                 try messageDB.insert(channel: channel, on: guild)
             }
