@@ -87,7 +87,7 @@ public class SongChartsCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if input.isEmpty {
-            guard let charts = (context.guild?.id).flatMap({ songCharts[$0] }) else {
+            guard let guildId = await context.guild?.id, let charts = songCharts[guildId] else {
                 await output.append(errorText: "No song charts available for this guild.")
                 return
             }
