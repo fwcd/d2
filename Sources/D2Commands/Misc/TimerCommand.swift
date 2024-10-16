@@ -4,7 +4,7 @@ import D2MessageIO
 
 nonisolated(unsafe) private let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
 nonisolated(unsafe) private let flagPattern = #/--([a-z]+)/#
-fileprivate let timeUnits: [String: (Int) -> Int] = [
+fileprivate let timeUnits: [String: @Sendable (Int) -> Int] = [
     "d": { $0 * 86400 },
     "h": { $0 * 3600 },
     "m": { $0 * 60 },

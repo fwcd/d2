@@ -3,7 +3,7 @@ import Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.SongChartsCommand")
-fileprivate let songExtractors: [String: (Presence.Activity) -> GuildSongCharts.Song] = [
+fileprivate let songExtractors: [String: @Sendable (Presence.Activity) -> GuildSongCharts.Song] = [
     "Spotify": { .init(
         title: $0.details,
         album: $0.assets?.largeText,
