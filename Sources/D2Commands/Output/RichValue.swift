@@ -8,7 +8,7 @@ import SwiftSoup
 
 /// A value of a common format that
 /// can be sent to an output.
-public enum RichValue: Addable {
+public enum RichValue: Addable, Sendable {
     case none
     case text(String)
     case image(CairoImage)

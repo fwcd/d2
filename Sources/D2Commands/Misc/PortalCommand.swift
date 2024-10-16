@@ -131,18 +131,18 @@ public class PortalCommand: StringCommand {
         let closeMessage = ":comet: Closed portal."
 
         for (i, portal) in portals.enumerated().reversed() where portal.origin == channelId || portal.target == channelId {
-            context.subscriptions.unsubscribe(from: portal.origin)
+            await context.subscriptions.unsubscribe(from: portal.origin)
             await output.append(closeMessage, to: .guildChannel(portal.origin))
 
             if let target = portal.target {
-                context.subscriptions.unsubscribe(from: target)
+                await context.subscriptions.unsubscribe(from: target)
                 await output.append(closeMessage, to: .guildChannel(target))
             }
             portals.remove(at: i)
         }
 
         if let portal = halfOpenPortal, channelId == portal.origin {
-            context.subscriptions.unsubscribe(from: portal.origin)
+            await context.subscriptions.unsubscribe(from: portal.origin)
             halfOpenPortal = nil
         }
     }

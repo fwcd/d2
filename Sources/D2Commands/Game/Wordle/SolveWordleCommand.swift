@@ -49,11 +49,11 @@ public class SolveWordleCommand: StringCommand {
         }
         if content == "cancel" {
             await output.append("Cancelled wordle solver on this channel")
-            unsubscribe(from: channelId, context: context)
+            await unsubscribe(from: channelId, context: context)
             return
         }
         guard var board = boards[channelId] else {
-            unsubscribe(from: channelId, context: context)
+            await unsubscribe(from: channelId, context: context)
             return
         }
         guard let parsedArgs = try? argsPattern.firstMatch(in: content), parsedArgs.word.count == parsedArgs.clues.count else {
@@ -75,19 +75,19 @@ public class SolveWordleCommand: StringCommand {
             embed = Embed(
                 title: "Congrats, you won!"
             )
-            unsubscribe(from: channelId, context: context)
+            await unsubscribe(from: channelId, context: context)
         } else if possibleSolutions.count == 0 {
             embed = Embed(
                 title: "Impossible",
                 description: "There are no solutions!"
             )
-            unsubscribe(from: channelId, context: context)
+            await unsubscribe(from: channelId, context: context)
         } else if possibleSolutions.count == 1 {
             embed = Embed(
                 title: "Solution",
                 description: possibleSolutions[0]
             )
-            unsubscribe(from: channelId, context: context)
+            await unsubscribe(from: channelId, context: context)
         } else {
             embed = Embed(
                 title: "Top Picks",
