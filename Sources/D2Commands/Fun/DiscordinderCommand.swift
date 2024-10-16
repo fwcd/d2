@@ -137,11 +137,11 @@ public class DiscordinderCommand: StringCommand {
         context.unsubscribeFromChannel()
     }
 
-    private func embedOf(member: Guild.Member, presence: Presence?, sink: any Sink) -> Embed {
+    private func embedOf(member: Guild.Member, presence: Presence?, sink: any Sink) async -> Embed {
         Embed(
             title: member.displayName,
             description: (presence?.activities.first).map { descriptionOf(activity: $0) },
-            image: sink.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
+            image: await sink.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
         )
     }
 
