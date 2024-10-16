@@ -6,7 +6,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Commands.MessageWriter")
 
 /// Writes rich values into MessageIO messages (e.g. for use with Discord).
-public struct MessageWriter {
+public struct MessageWriter: Sendable {
     private let latexRenderer = LatexRenderer()
 
     public init() {}

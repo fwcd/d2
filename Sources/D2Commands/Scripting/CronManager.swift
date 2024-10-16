@@ -65,7 +65,7 @@ public class CronManager {
             subscriptions: SubscriptionSet(), // TODO: Support subscriptions?
             eventLoopGroup: eventLoopGroup
         )
-        let output = await MessageIOOutput(context: context)
+        let output = MessageIOOutput(context: context)
         await command.invoke(with: input, output: output, context: context)
     }
 
