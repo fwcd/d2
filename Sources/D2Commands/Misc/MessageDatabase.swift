@@ -181,7 +181,7 @@ public final class MessageDatabase: MarkovPredictor, Sendable {
         }
     }
 
-    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) async -> Void)? = nil) async throws {
+    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: (@Sendable (String) async -> Void)? = nil) async throws {
         guard let guild = await sink.guild(for: id) else { throw MessageDatabaseError.invalidID("\(id)") }
 
         log.notice("Rebuilding messages in database...")
