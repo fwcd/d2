@@ -64,7 +64,6 @@ fileprivate let occurrences = Expression<Int64>("occurrences")
 
 fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
 
-@CommandActor
 public final class MessageDatabase: MarkovPredictor, Sendable {
     private let db: Connection
 
