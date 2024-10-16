@@ -8,7 +8,7 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.MessageIOInteractionOutput")
 
-public actor MessageIOInteractionOutput: CommandOutput {
+public class MessageIOInteractionOutput: CommandOutput {
     private let interaction: Interaction
     private var context: CommandContext
     private let messageWriter = MessageWriter()

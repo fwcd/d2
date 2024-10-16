@@ -3,6 +3,7 @@ import Utils
 @preconcurrency import CairoGraphics
 
 /// A sink for rich values.
+@CommandActor
 public protocol CommandOutput: Sendable {
     var messageLengthLimit: Int? { get }
 

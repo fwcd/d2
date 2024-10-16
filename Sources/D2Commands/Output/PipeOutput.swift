@@ -2,7 +2,7 @@ import Logging
 
 fileprivate let log = Logger(label: "D2Commands.PipeOutput")
 
-public actor PipeOutput: CommandOutput {
+public class PipeOutput: CommandOutput {
     private let sink: any Command
     private let args: String
     private let next: (any CommandOutput)?

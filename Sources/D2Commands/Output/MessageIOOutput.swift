@@ -10,7 +10,7 @@ fileprivate let log = Logger(label: "D2Commands.MessageIOOutput")
 fileprivate let contentLimit = 2000
 fileprivate let maxSplitFragments = 4
 
-public actor MessageIOOutput: CommandOutput {
+public class MessageIOOutput: CommandOutput {
     private var context: CommandContext
     private let messageWriter = MessageWriter()
     private let onSent: (([Message]) async -> Void)?
