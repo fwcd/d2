@@ -1,4 +1,4 @@
-import FeedKit
+@preconcurrency import FeedKit
 import D2MessageIO
 
 public protocol FeedPresenter {

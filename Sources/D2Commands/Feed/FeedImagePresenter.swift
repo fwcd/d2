@@ -1,5 +1,5 @@
 import Foundation
-import FeedKit
+@preconcurrency import FeedKit
 @preconcurrency import SwiftSoup
 import D2MessageIO
 import Utils
