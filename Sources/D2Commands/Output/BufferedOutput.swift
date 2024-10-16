@@ -33,12 +33,15 @@ public class BufferedOutput: CommandOutput {
 
     deinit {
         if !buffer.isEmpty {
-            log.warning("BufferedOutput contained \(buffer.count) \("value".pluralized(with: buffer.count)) at deinitialization, which will now be flushed automatically. This may sometimes lead to unexpected behavior, since the outputs may be appended asynchronously/out-of-order. It is recommended to .flush() and await explicitly.")
+            let message = "BufferedOutput contained \(buffer.count) \("value".pluralized(with: buffer.count)) at deinitialization, which will now be flushed automatically. This may sometimes lead to unexpected behavior, since the outputs may be appended asynchronously/out-of-order. It is recommended to .flush() and await explicitly."
+            log.warning("\(message)")
 
             let inner = inner
             let buffer = buffer
-            for (channel, values) in buffer {
-                await inner.append(.compound(values), to: channel)
+            Task { @CommandActor in
+                for (channel, values) in buffer {
+                    await inner.append(.compound(values), to: channel)
+                }
             }
         }
     }
