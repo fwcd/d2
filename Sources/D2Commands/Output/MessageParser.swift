@@ -13,7 +13,7 @@ nonisolated(unsafe) private let codePattern = #/`(?:``(?:(?<language>\w*)\n)?)?(
 nonisolated(unsafe) private let idPattern = #/\d+/#
 
 /// Parses Discord messages into rich values.
-public struct MessageParser {
+public struct MessageParser: Sendable {
     private let ndArrayParser = NDArrayParser()
     private let useExplicitMentions: Bool
 
