@@ -2,7 +2,7 @@ import Utils
 
 nonisolated(unsafe) private let emojiPattern = #/:[^:]:/#
 
-public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable {
+public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equatable, Sendable {
     case administration
     case cau
     case coding
