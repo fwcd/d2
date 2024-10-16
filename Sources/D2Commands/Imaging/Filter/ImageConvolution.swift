@@ -1,6 +1,7 @@
 import Utils
 @preconcurrency import CairoGraphics
 
+@CommandActor
 func convolve(pixels: [[Color]], with filterMatrix: Matrix<Double>) async -> [[Color]] {
     let height = pixels.count
     let width = pixels[0].count
