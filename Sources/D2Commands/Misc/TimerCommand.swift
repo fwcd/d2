@@ -47,10 +47,11 @@ public class TimerCommand: RegexCommand {
 
         subcommands = [
             "list": { [unowned self] input, output, context in
+                let guildId = await context.guild?.id
                 await output.append(Embed(
                     title: ":timer: Running Timers",
                     description: self.timers.values
-                        .filter { $0.guildId == context.guild?.id }
+                        .filter { $0.guildId == guildId }
                         .sorted(by: ascendingComparator { $0.remainingTime })
                         .map { "\($0.duration)s timer\($0.name.map { "`\($0)`" } ?? "") elapses in \($0.remainingTime.displayString)" }
                         .joined(separator: "\n")
@@ -102,7 +103,7 @@ public class TimerCommand: RegexCommand {
             }
 
             let authorId = context.author?.id
-            let guildId = context.guild?.id
+            let guildId = await context.guild?.id
             let duration = durations.reduce(0, +)
 
             let timerId = nextTimerId

@@ -29,7 +29,7 @@ public class SongChartsCommand: StringCommand {
     public init() {
         subcommands = [
             "track": { [unowned self] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append(errorText: "No guild available.")
                     return
                 }
@@ -41,7 +41,7 @@ public class SongChartsCommand: StringCommand {
                 await output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
             },
             "untrack": { [unowned self] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append(errorText: "No guild available.")
                     return
                 }
@@ -56,7 +56,7 @@ public class SongChartsCommand: StringCommand {
                 ))
             },
             "clear": { [unowned self] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append(errorText: "No guild available.")
                     return
                 }
@@ -64,7 +64,7 @@ public class SongChartsCommand: StringCommand {
                 await output.append(":wastebasket: Successfully cleared song charts for `\(guild.name)`")
             },
             "debugPresence": { [] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append("Not on a guild.")
                     return
                 }

@@ -17,7 +17,7 @@ public class RandomCommand: Command {
             await output.append(errorText: "No author is present!")
             return
         }
-        let commands = context.registry.compactMap { $0.1.asCommand }.filter { permissionManager.user(author, hasPermission: $0.info.requiredPermissionLevel) }
+        let commands = await context.registry.compactMap { $0.1.asCommand }.filter { permissionManager.user(author, hasPermission: $0.info.requiredPermissionLevel) }
         guard let command = commands.randomElement() else {
             await output.append(errorText: "No (permitted) commands found!")
             return

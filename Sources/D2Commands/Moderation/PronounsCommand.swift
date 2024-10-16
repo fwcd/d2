@@ -20,7 +20,7 @@ public class PronounsCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         guard
-            let guildId = context.guild?.id,
+            let guildId = await context.guild?.id,
             let pronounRoles = config.pronounRoles[guildId],
             !pronounRoles.isEmpty else {
             await output.append(errorText: "No pronoun mappings for this guild available!")
@@ -64,7 +64,7 @@ public class PronounsCommand: StringCommand {
             await output.append(errorText: "Could not add pronouns role due to missing client")
             return
         }
-        guard let guild = context.guild else {
+        guard let guild = await context.guild else {
             await output.append(errorText: "Could not add pronouns role due to missing guild")
             return
         }

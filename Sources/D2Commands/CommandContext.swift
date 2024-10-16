@@ -20,7 +20,11 @@ public struct CommandContext {
     public var author: User? { message.author }
     public var timestamp: Date? { message.timestamp }
     public var guildMember: Guild.Member? { message.guildMember }
-    public var guild: Guild? { message.channelId.flatMap { sink?.guildForChannel($0) } }
+    public var guild: Guild? {
+        get async {
+            await message.channelId.asyncFlatMap { await sink?.guildForChannel($0) }
+        }
+    }
 
     public var isSubscribed: Bool { (channel?.id).map { subscriptions.contains($0) } ?? false }
 

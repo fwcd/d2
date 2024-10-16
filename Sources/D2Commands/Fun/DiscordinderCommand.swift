@@ -47,7 +47,7 @@ public class DiscordinderCommand: StringCommand {
 
     public func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext) async {
         guard
-            let guild = context.guild,
+            let guild = await context.guild,
             let messageId = context.message.id,
             let (_, candidateId) = activeMatches[messageId] else { return }
 
@@ -76,7 +76,7 @@ public class DiscordinderCommand: StringCommand {
 
     @discardableResult
     private func presentNextCandidate(for authorId: UserID, output: any CommandOutput, context: CommandContext) async -> Bool {
-        guard let guild = context.guild else {
+        guard let guild = await context.guild else {
             await output.append(errorText: "Not on a guild!")
             return false
         }

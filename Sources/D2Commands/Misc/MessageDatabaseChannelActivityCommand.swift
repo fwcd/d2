@@ -18,7 +18,7 @@ public class MessageDatabaseChannelActivityCommand: StringCommand {
             await output.append(errorText: "Please enter a channel name!")
             return
         }
-        guard let guildId = context.guild?.id else {
+        guard let guildId = await context.guild?.id else {
             await output.append(errorText: "Not on a guild")
             return
         }

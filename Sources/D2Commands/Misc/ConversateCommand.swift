@@ -37,7 +37,7 @@ public class ConversateCommand<C>: StringCommand where C: Conversator {
 
     public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard context.author?.id != context.sink?.me?.id,
-              let guildId = context.guild?.id,
+              let guildId = await context.guild?.id,
               let channelId = context.channel?.id,
               let conversator = conversators[channelId] else { return }
         if content == stopCommand {

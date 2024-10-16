@@ -26,7 +26,7 @@ public class MessagePreviewsCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let guildId = context.guild?.id else {
+        guard let guildId = await context.guild?.id else {
             await output.append(errorText: "Not on a guild")
             return
         }

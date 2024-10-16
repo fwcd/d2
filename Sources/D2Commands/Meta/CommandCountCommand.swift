@@ -11,7 +11,7 @@ public class CommandCountCommand: VoidCommand {
     public init() {}
 
     public func invoke(output: any CommandOutput, context: CommandContext) async {
-        let count = context.registry.count(forWhich: { $0.value.asCommand != nil })
+        let count = await context.registry.count(forWhich: { $0.value.asCommand != nil })
         await output.append("There are currently \(count) \("command".pluralized(with: count)) available")
     }
 }
