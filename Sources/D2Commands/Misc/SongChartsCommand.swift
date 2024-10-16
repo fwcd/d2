@@ -51,7 +51,7 @@ public class SongChartsCommand: StringCommand {
             "tracked": { [unowned self] output, context in
                 await output.append(Embed(
                     title: "Tracked Guilds",
-                    description: self.trackedGuilds.compactMap { context.sink?.guild(for: $0) }.map { $0.name }.joined(separator: "\n"),
+                    description: self.trackedGuilds.asyncCompactMap { await context.sink?.guild(for: $0) }.map { $0.name }.joined(separator: "\n"),
                     footer: "Guilds for which anonymized song statistics are collected"
                 ))
             },
