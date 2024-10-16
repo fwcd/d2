@@ -1,4 +1,4 @@
-public protocol D2ScriptASTNode {
+public protocol D2ScriptASTNode: Sendable {
     var label: String { get }
 
     func accept<V: D2ScriptASTVisitor>(_ visitor: V) async -> V.VisitResult
