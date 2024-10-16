@@ -1,6 +1,6 @@
 import Foundation
 import Logging
-import SQLite
+@preconcurrency import SQLite
 import D2MessageIO
 import Utils
 

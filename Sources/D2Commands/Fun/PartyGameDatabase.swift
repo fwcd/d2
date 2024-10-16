@@ -1,6 +1,6 @@
 import Utils
 import D2NetAPIs
-import SQLite
+@preconcurrency import SQLite
 
 fileprivate let wyrQuestions = Table("wyr_questions")
 fileprivate let title = Expression<String>("title")
