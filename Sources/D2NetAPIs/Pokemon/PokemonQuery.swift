@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct PokemonQuery {
+public struct PokemonQuery: Sendable {
     private let url: URL
 
     public init(url: URL) {

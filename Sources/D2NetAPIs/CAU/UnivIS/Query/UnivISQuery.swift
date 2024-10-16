@@ -10,7 +10,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.UnivISQuery")
 
-public struct UnivISQuery {
+public struct UnivISQuery: Sendable {
     private let url: URL
 
     public init(

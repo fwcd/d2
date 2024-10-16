@@ -1,6 +1,6 @@
 import Utils
 
-public struct ComplimentrQuery {
+public struct ComplimentrQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> Compliment {

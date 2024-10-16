@@ -1,6 +1,6 @@
 import Utils
 
-public struct PokedexQuery {
+public struct PokedexQuery: Sendable {
     private let limit: Int
 
     @globalActor

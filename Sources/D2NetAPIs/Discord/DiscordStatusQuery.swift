@@ -1,6 +1,6 @@
 import Utils
 
-public struct DiscordStatusQuery {
+public struct DiscordStatusQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> DiscordStatus {

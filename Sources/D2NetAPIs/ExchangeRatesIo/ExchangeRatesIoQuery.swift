@@ -1,6 +1,6 @@
 import Utils
 
-public struct ExchangeRatesIoQuery {
+public struct ExchangeRatesIoQuery: Sendable {
     public let base: String?
 
     public init(base: String? = nil) {

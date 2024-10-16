@@ -1,6 +1,6 @@
 import Utils
 
-public struct RecipePuppyQuery {
+public struct RecipePuppyQuery: Sendable {
     private let ingredients: [String]?
     private let term: String
     private let page: Int

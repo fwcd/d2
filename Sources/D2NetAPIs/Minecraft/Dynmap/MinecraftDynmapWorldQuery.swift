@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct MinecraftDynmapWorldQuery {
+public struct MinecraftDynmapWorldQuery: Sendable {
     private let host: String
     private let world: String
 

@@ -10,7 +10,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.MDBQuery")
 
-public struct MDBQuery {
+public struct MDBQuery: Sendable {
     public let url: URL
 
     public init(

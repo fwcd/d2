@@ -4,7 +4,7 @@ import FoundationXML
 #endif
 import Utils
 
-public struct WolframAlphaQuery {
+public struct WolframAlphaQuery: Sendable {
     private let url: URL
 
     public init(

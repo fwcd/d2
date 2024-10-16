@@ -4,7 +4,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.EitherIOQuery")
 
-public struct EitherIOQuery {
+public struct EitherIOQuery: Sendable {
     private let term: String
     private let maxOffset: Int
 

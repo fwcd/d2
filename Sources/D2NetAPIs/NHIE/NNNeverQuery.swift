@@ -1,7 +1,7 @@
 @preconcurrency import SwiftSoup
 import Utils
 
-public struct NNNEverQuery {
+public struct NNNEverQuery: Sendable {
     private let maxPages: Int
 
     public init(maxPages: Int) {

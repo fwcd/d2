@@ -1,6 +1,6 @@
 import Utils
 
-public struct NhieIoQuery {
+public struct NhieIoQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> NeverHaveIEverStatement {

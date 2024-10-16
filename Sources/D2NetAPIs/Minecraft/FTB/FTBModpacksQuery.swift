@@ -1,6 +1,6 @@
 import Utils
 
-public struct FTBModpacksQuery {
+public struct FTBModpacksQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> [FTBModpack] {

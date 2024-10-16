@@ -2,7 +2,7 @@ import CodableCSV
 import Foundation
 import Utils
 
-public struct YahooFinanceQuery {
+public struct YahooFinanceQuery: Sendable {
     private let stock: String
     private let start: Date
     private let end: Date

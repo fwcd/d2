@@ -1,6 +1,6 @@
 import Utils
 
-public struct MediaWikiParseQuery {
+public struct MediaWikiParseQuery: Sendable {
     private let host: String
     private let path: String
     private let page: String

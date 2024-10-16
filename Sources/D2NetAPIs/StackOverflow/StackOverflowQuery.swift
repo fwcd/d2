@@ -1,6 +1,6 @@
 import Utils
 
-public struct StackOverflowQuery {
+public struct StackOverflowQuery: Sendable {
     private let input: String
     private let host: String
     private let apiVersion: String

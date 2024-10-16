@@ -1,6 +1,6 @@
 import Utils
 
-public struct JokeAPIQuery {
+public struct JokeAPIQuery: Sendable {
     private let categories: [JokeCategory]
     private let type: JokeType?
 
