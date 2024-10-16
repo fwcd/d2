@@ -1,5 +1,6 @@
 import D2MessageIO
 
+@CommandActor
 public class SubscriptionSet: Sequence {
     private var subscriptions: Set<ChannelID> = []
     public var count: Int { subscriptions.count }
