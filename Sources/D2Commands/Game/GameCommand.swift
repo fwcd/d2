@@ -4,8 +4,8 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.GameCommand")
-fileprivate let flagRegex = #/--(\S+)/#
-fileprivate let actionMessageRegex = #/^(\S+)(?:\s+(.+))?/#
+nonisolated(unsafe) private let flagRegex = #/--(\S+)/#
+nonisolated(unsafe) private let actionMessageRegex = #/^(\S+)(?:\s+(.+))?/#
 
 /// Provides a base layer of functionality for a turn-based games.
 public class GameCommand<G: Game>: Command {
@@ -169,13 +169,13 @@ public class GameCommand<G: Game>: Command {
         return sequence.joined(separator: "\n")
     }
 
-    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) {
+    public func onSubscriptionMessage(with content: String, output: any CommandOutput, context: CommandContext) async {
         guard let author = context.author.map({ gamePlayer(from: $0, context: context) }) else { return }
 
         if let actionArgs = try? actionMessageRegex.firstMatch(in: content), let channel = context.channel, let sink = context.sink {
             // TODO: Remove once onSubscriptionMessage is async
             Task {
-                let channelName = sink.guildForChannel(channel.id)?.channels[channel.id]?.name
+                let channelName = await sink.guildForChannel(channel.id)?.channels[channel.id]?.name
                 let continueSubscription = await perform(String(actionArgs.1), withArgs: String(actionArgs.2 ?? ""), on: channel.id, channelName: channelName, output: output, author: author)
                 if !continueSubscription {
                     context.unsubscribeFromChannel()

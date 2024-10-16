@@ -1,9 +1,10 @@
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 /// A sink for rich values.
-public protocol CommandOutput {
+@CommandActor
+public protocol CommandOutput: Sendable {
     var messageLengthLimit: Int? { get }
 
     func append(_ value: RichValue, to channel: OutputChannel) async
@@ -11,7 +12,7 @@ public protocol CommandOutput {
     /// Updates the internal context of the output. Should only
     /// be used if the CommandOutput if retained beyond the original
     /// message invocation (e.g. when registering event listeners).
-    func update(context: CommandContext)
+    func update(context: CommandContext) async
 }
 
 public extension CommandOutput {

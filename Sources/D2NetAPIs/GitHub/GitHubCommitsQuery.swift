@@ -1,6 +1,6 @@
 import Utils
 
-public struct GitHubCommitsQuery {
+public struct GitHubCommitsQuery: Sendable {
     private let user: String
     private let repo: String
 

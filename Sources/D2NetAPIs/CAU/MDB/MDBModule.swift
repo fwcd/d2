@@ -1,4 +1,4 @@
-public struct MDBModule {
+public struct MDBModule: Sendable {
     public var code: String? = nil
     public var url: String? = nil
     public var person: String? = nil

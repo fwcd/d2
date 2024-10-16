@@ -29,7 +29,7 @@ public class DiscordinderCommand: StringCommand {
                 return
             }
 
-            cancelSession(context: context)
+            await cancelSession(context: context)
             await output.append(":x: Cancelled Discordinder session on this channel!")
         } else {
             guard let authorId = context.author?.id else {
@@ -47,7 +47,7 @@ public class DiscordinderCommand: StringCommand {
 
     public func onSubscriptionReaction(emoji: Emoji, by user: User, output: any CommandOutput, context: CommandContext) async {
         guard
-            let guild = context.guild,
+            let guild = await context.guild,
             let messageId = context.message.id,
             let (_, candidateId) = activeMatches[messageId] else { return }
 
@@ -58,7 +58,7 @@ public class DiscordinderCommand: StringCommand {
                 let state = accept(matchBetween: user.id, and: candidateId, on: guild)
                 if state == .accepted {
                     await output.append(":partying_face: It's a match!")
-                    cancelSession(context: context)
+                    await cancelSession(context: context)
                     return
                 }
             case ignoreEmoji:
@@ -76,7 +76,7 @@ public class DiscordinderCommand: StringCommand {
 
     @discardableResult
     private func presentNextCandidate(for authorId: UserID, output: any CommandOutput, context: CommandContext) async -> Bool {
-        guard let guild = context.guild else {
+        guard let guild = await context.guild else {
             await output.append(errorText: "Not on a guild!")
             return false
         }
@@ -131,17 +131,17 @@ public class DiscordinderCommand: StringCommand {
         return true
     }
 
-    private func cancelSession(context: CommandContext) {
+    private func cancelSession(context: CommandContext) async {
         guard let channelId = context.channel?.id else { return }
         activeMatches = activeMatches.filter { (c, _) in channelId != c }
         context.unsubscribeFromChannel()
     }
 
-    private func embedOf(member: Guild.Member, presence: Presence?, sink: any Sink) -> Embed {
+    private func embedOf(member: Guild.Member, presence: Presence?, sink: any Sink) async -> Embed {
         Embed(
             title: member.displayName,
             description: (presence?.activities.first).map { descriptionOf(activity: $0) },
-            image: sink.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
+            image: await sink.avatarUrlForUser(member.user.id, with: member.user.avatar, size: 256).map(Embed.Image.init)
         )
     }
 

@@ -1,7 +1,7 @@
 import D2MessageIO
 
 /// An "actual" player representing a User.
-public struct GamePlayer: Hashable {
+public struct GamePlayer: Hashable, Sendable {
     public let username: String
     public let id: UserID
     public let isUser: Bool

@@ -1,6 +1,6 @@
 import Utils
 
-public struct TaylorRestQuery {
+public struct TaylorRestQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> TaylorQuote {

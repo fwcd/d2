@@ -30,11 +30,12 @@ nonisolated(unsafe) private let startGamePattern = Regex {
 
 fileprivate let log = Logger(label: "D2NetAPIs.AkinatorSession")
 
-public struct AkinatorSession {
+public struct AkinatorSession: Sendable {
     private let session: String
     private let signature: String
     private let serverUrl: URL
-    @Box private var step: Int = 0
+    // FIXME: Make this thread-safe
+    @UncheckedSendable @Box private var step: Int = 0
 
     private init(session: String, signature: String, serverUrl: URL, step: Int) {
         self.session = session

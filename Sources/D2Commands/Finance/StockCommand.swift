@@ -2,7 +2,7 @@ import Foundation
 import D2NetAPIs
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import SwiftPlot
 import AGGRenderer
 

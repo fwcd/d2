@@ -5,23 +5,23 @@ import Utils
 fileprivate let log = Logger(label: "D2MessageIO.Sink")
 
 /// An entry-point for commands sent to the message backend.
-public protocol Sink {
+public protocol Sink: Sendable {
     var name: String { get }
     var me: User? { get }
-    var guilds: [Guild]? { get }
-    var messageFetchLimit: Int? { get }
+    var guilds: [Guild]? { get async }
+    var messageFetchLimit: Int? { get async }
 
-    func guild(for guildId: GuildID) -> Guild?
+    func guild(for guildId: GuildID) async -> Guild?
 
-    func channel(for channelId: ChannelID) -> Channel?
+    func channel(for channelId: ChannelID) async -> Channel?
 
     func setPresence(_ presence: PresenceUpdate) async throws
 
-    func guildForChannel(_ channelId: ChannelID) -> Guild?
+    func guildForChannel(_ channelId: ChannelID) async -> Guild?
 
-    func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions
+    func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) async -> Permissions
 
-    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL?
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) async -> URL?
 
     func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws
 
@@ -107,12 +107,12 @@ public extension Sink {
         try await createEmoji(on: guildId, name: name, image: image, roles: [])
     }
 
-    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) -> URL? {
-        avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: nil)
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int) async -> URL? {
+        await avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: nil)
     }
 
-    func avatarUrlForUser(_ userId: UserID, with avatarId: String, preferredExtension: String? = nil) -> URL? {
-        avatarUrlForUser(userId, with: avatarId, size: 512, preferredExtension: preferredExtension)
+    func avatarUrlForUser(_ userId: UserID, with avatarId: String, preferredExtension: String? = nil) async -> URL? {
+        await avatarUrlForUser(userId, with: avatarId, size: 512, preferredExtension: preferredExtension)
     }
 
     @discardableResult

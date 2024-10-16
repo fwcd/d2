@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct ScaleImageMapping: ImageMapping {
     private let factor: Double

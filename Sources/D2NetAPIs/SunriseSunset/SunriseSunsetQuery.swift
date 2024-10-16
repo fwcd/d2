@@ -1,7 +1,7 @@
 import Utils
 import Geodesy
 
-public struct SunriseSunsetQuery {
+public struct SunriseSunsetQuery: Sendable {
     public let coords: Coordinates
 
     public init(at coords: Coordinates) {

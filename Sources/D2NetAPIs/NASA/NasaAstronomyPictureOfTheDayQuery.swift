@@ -7,7 +7,7 @@ fileprivate let dateFormatter: DateFormatter = {
     return f
 }()
 
-public struct NasaAstronomyPictureOfTheDayQuery {
+public struct NasaAstronomyPictureOfTheDayQuery: Sendable {
     private let date: Date?
 
     public init(date: Date? = nil) {

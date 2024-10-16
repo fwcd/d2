@@ -9,11 +9,11 @@ fileprivate let log = Logger(label: "D2NetAPIs.FTBModpacksXMLParserDelegate")
 fileprivate let baseURL = "https://ftb.forgecdn.net/FTB2"
 
 class FTBModpacksXMLParserDelegate: NSObject, XMLParserDelegate {
-    private let then: (Result<[FTBModpack], any Error>) -> Void
+    private let continuation: CheckedContinuation<[FTBModpack], any Error>
     private var packs: [FTBModpack] = []
 
-    init(then: @escaping (Result<[FTBModpack], any Error>) -> Void) {
-        self.then = then
+    init(continuation: CheckedContinuation<[FTBModpack], any Error>) {
+        self.continuation = continuation
     }
 
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
@@ -42,7 +42,7 @@ class FTBModpacksXMLParserDelegate: NSObject, XMLParserDelegate {
         log.trace("Ended \(elementName)")
         if elementName == "modpacks" {
             log.trace("Finished parsing modpacks")
-            then(.success(packs))
+            continuation.resume(returning: packs)
         }
     }
 }

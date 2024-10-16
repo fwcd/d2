@@ -1,5 +1,5 @@
 {
-  "originHash" : "33452ffe33f8ab934ac265c6e640a8b61d5d4d62bbbe843c51c3ec86c96d9d3f",
+  "originHash" : "586901c3b6450bf6234c617ec0f3c0503c63879e25fac76f0c631addb3d26291",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -230,8 +230,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-mensa.git",
       "state" : {
-        "revision" : "014bc34f384007a2965a7f5b59e6a669c9188461",
-        "version" : "0.1.10"
+        "revision" : "fc5d1724e4d7cb966161d1cfa4f2a78b2a9cdadc",
+        "version" : "0.2.0"
       }
     },
     {
@@ -239,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-music-theory.git",
       "state" : {
-        "revision" : "668a81476a870d2a10facba183569797c67989f3",
-        "version" : "0.1.0"
+        "revision" : "a02e380c5479dee7d17c42b83ac8908a7d316fd8",
+        "version" : "0.2.0"
       }
     },
     {
@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-utils.git",
       "state" : {
-        "revision" : "6a24a7723b8d463aeec8e012d85059782320e1bb",
-        "version" : "4.2.1"
+        "revision" : "394a274f73c9022cbb6fee52b6fa1e4b0ca36da8",
+        "version" : "4.3.0"
       }
     },
     {

@@ -7,7 +7,7 @@ import Discord
 
 fileprivate let log = Logger(label: "D2DiscordIO.DiscordPlatform")
 
-public struct DiscordPlatform: MessagePlatform {
+public struct DiscordPlatform: MessagePlatform, Sendable {
     private let manager: DiscordClientManager
 
     public var name: String { discordClientName }
@@ -17,9 +17,9 @@ public struct DiscordPlatform: MessagePlatform {
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: String
-    ) {
+    ) async {
         log.info("Initializing Discord backend...")
-        manager = DiscordClientManager(
+        manager = await DiscordClientManager(
             receiver: receiver,
             combinedSink: combinedSink,
             eventLoopGroup: eventLoopGroup,
@@ -28,6 +28,8 @@ public struct DiscordPlatform: MessagePlatform {
     }
 
     public func start() {
-        manager.connect()
+        Task {
+            await manager.connect()
+        }
     }
 }

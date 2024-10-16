@@ -2,7 +2,7 @@ import Logging
 import D2MessageIO
 import D2Permissions
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 fileprivate let log = Logger(label: "D2Commands.DemoImageCommand")
 

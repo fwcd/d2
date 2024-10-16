@@ -1,6 +1,6 @@
 import Utils
 
-public struct CodenamesBoardModel {
+public struct CodenamesBoardModel: Sendable {
     public private(set) var cards: [[Card]]
 
     public var width: Int { cards[0].count }
@@ -26,13 +26,13 @@ public struct CodenamesBoardModel {
         } }
     }
 
-    public enum Agent: Hashable {
+    public enum Agent: Hashable, Sendable {
         case team(CodenamesTeam)
         case innocent
         case assasin
     }
 
-    public struct Card {
+    public struct Card: Sendable {
         public let word: String
         public let agent: Agent
         public var hidden: Bool = true

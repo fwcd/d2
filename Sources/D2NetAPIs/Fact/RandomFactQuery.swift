@@ -1,6 +1,6 @@
 import Utils
 
-public struct RandomFactQuery {
+public struct RandomFactQuery: Sendable {
     private let language: String?
 
     public init(language: String? = nil) {

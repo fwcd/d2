@@ -35,7 +35,7 @@ public class ReactCommand: RegexCommand {
 
         if !emojiString.unicodeScalars.contains(where: \.properties.isEmoji) {
             // Try resolving the emoji via the guilds
-            let potentialMatches = (sink.guilds ?? [])
+            let potentialMatches = await (sink.guilds ?? [])
                 .flatMap { $0.emojis.values.filter { $0.name == emojiString } }
             guard let emoji = potentialMatches.first else {
                 await output.append(errorText: "Could not find match for emoji \(emojiString)")

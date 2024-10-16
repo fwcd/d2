@@ -1,6 +1,6 @@
 import Utils
 
-public struct XkcdQuery {
+public struct XkcdQuery: Sendable {
     public init() {}
 
     public func fetch(comicId: Int? = nil) async throws -> XkcdComic {

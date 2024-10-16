@@ -2,7 +2,7 @@ import Foundation
 import Geodesy
 import Utils
 
-public struct NominatimGeocoder {
+public struct NominatimGeocoder: Sendable {
     public init() {}
 
     public func geocode(location: String) async throws -> Coordinates {

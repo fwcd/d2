@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 /// An animation that applies a progress-dependent

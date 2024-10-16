@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Foundation
 
 public class Base64DecoderCommand: StringCommand {

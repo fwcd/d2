@@ -2,7 +2,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-public struct CodenamesState: GameState, Multiplayer {
+public struct CodenamesState: GameState, Multiplayer, Sendable {
     private static let minPlayerCount = 4
 
     public typealias Role = CodenamesRole

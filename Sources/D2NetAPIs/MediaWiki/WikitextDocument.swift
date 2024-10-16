@@ -1,13 +1,13 @@
 import Utils
 
-public struct WikitextDocument: Equatable {
+public struct WikitextDocument: Equatable, Sendable {
     public let sections: [Section]
 
-    public struct Section: Equatable {
+    public struct Section: Equatable, Sendable {
         public let title: String?
         public fileprivate(set) var content: [Node]
 
-        public enum Node: CustomStringConvertible, Equatable {
+        public enum Node: CustomStringConvertible, Equatable, Sendable {
             case text(String)
             case link([[Node]])
             case template(String, [TemplateParameter])
@@ -24,7 +24,7 @@ public struct WikitextDocument: Equatable {
                 }
             }
 
-            public enum TemplateParameter: CustomStringConvertible, Equatable {
+            public enum TemplateParameter: CustomStringConvertible, Equatable, Sendable {
                 case value([Node])
                 case keyValue(String, [Node])
 

@@ -1,6 +1,6 @@
 import Utils
 
-public struct GiphySearchQuery {
+public struct GiphySearchQuery: Sendable {
     private let term: String
     private let limit: Int
 

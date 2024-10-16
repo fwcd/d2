@@ -6,16 +6,52 @@ fileprivate let log = Logger(label: "D2MessageIO.CombinedSink")
 
 /// A Sink that combines multiple sinks and
 /// dispatches requests dynamically based on the ID's sink name.
-public class CombinedSink: Sink {
+public actor CombinedSink: Sink {
     private var sinks: [String: any Sink] = [:]
 
     private let mioCommandSinkName: String?
     private var mioCommandSink: (any Sink)? { mioCommandSinkName.flatMap { sinks[$0] } }
 
-    public var me: User? { nil }
-    public var name: String { "Combined" }
-    public var guilds: [Guild]? { sinks.values.flatMap { $0.guilds ?? [] } }
-    public var messageFetchLimit: Int? { sinks.values.compactMap { $0.messageFetchLimit }.min() }
+    public nonisolated var me: User? { nil }
+    public nonisolated var name: String { "Combined" }
+
+    public var guilds: [Guild]? {
+        get async {
+            await withTaskGroup(of: [Guild].self) { group in
+                for sink in sinks.values {
+                    group.addTask {
+                        await sink.guilds ?? []
+                    }
+                }
+
+                var guilds: [Guild] = []
+                for await sinkGuilds in group {
+                    guilds += sinkGuilds
+                }
+                return guilds
+            }
+        }
+    }
+
+    public var messageFetchLimit: Int? {
+        get async {
+            await withTaskGroup(of: Int?.self) { group in
+                for sink in sinks.values {
+                    group.addTask {
+                        await sink.messageFetchLimit
+                    }
+                }
+
+                var limit: Int? = nil
+                for await sinkLimit in group {
+                    if let sinkLimit {
+                        limit = limit.map { min($0, sinkLimit) } ?? sinkLimit
+                    }
+                }
+                return limit
+            }
+        }
+    }
 
     // TODO: Support more than one sink for global MIO commands
     public init(mioCommandSinkName: String? = nil) {
@@ -28,16 +64,7 @@ public class CombinedSink: Sink {
         return OverlaySink(inner: self, name: sink.name, me: sink.me)
     }
 
-    private func withSink<T>(of id: ID, _ action: (any Sink) throws -> T?) rethrows -> T? {
-        if let sink = sinks[id.clientName] {
-            return try action(sink)
-        } else {
-            log.warning("Could not find sink with name `\(id.clientName)`. This is a bug and might result in unhandled callbacks.")
-            return nil
-        }
-    }
-
-    private func withSink<T>(of id: ID, _ action: (any Sink) async throws -> T?) async rethrows -> T? {
+    private func withSink<T>(of id: ID, _ action: (any Sink) async throws -> T?) async rethrows -> T? where T: Sendable {
         if let sink = sinks[id.clientName] {
             return try await action(sink)
         } else {
@@ -46,12 +73,12 @@ public class CombinedSink: Sink {
         }
     }
 
-    public func guild(for guildId: GuildID) -> Guild? {
-        withSink(of: guildId) { $0.guild(for: guildId) }
+    public func guild(for guildId: GuildID) async -> Guild? {
+        await withSink(of: guildId) { await $0.guild(for: guildId) }
     }
 
-    public func channel(for channelId: ChannelID) -> Channel? {
-        withSink(of: channelId) { $0.channel(for: channelId) }
+    public func channel(for channelId: ChannelID) async -> Channel? {
+        await withSink(of: channelId) { await $0.channel(for: channelId) }
     }
 
     public func setPresence(_ presence: PresenceUpdate) async throws {
@@ -60,16 +87,16 @@ public class CombinedSink: Sink {
         }
     }
 
-    public func guildForChannel(_ channelId: ChannelID) -> Guild? {
-        withSink(of: channelId) { $0.guildForChannel(channelId) }
+    public func guildForChannel(_ channelId: ChannelID) async -> Guild? {
+        await withSink(of: channelId) { await $0.guildForChannel(channelId) }
     }
 
-    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) -> Permissions {
-        withSink(of: channelId) { $0.permissionsForUser(userId, in: channelId, on: guildId) } ?? []
+    public func permissionsForUser(_ userId: UserID, in channelId: ChannelID, on guildId: GuildID) async -> Permissions {
+        await withSink(of: channelId) { await $0.permissionsForUser(userId, in: channelId, on: guildId) } ?? []
     }
 
-    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) -> URL? {
-        withSink(of: userId) { $0.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension) }
+    public func avatarUrlForUser(_ userId: UserID, with avatarId: String, size: Int, preferredExtension: String?) async -> URL? {
+        await withSink(of: userId) { await $0.avatarUrlForUser(userId, with: avatarId, size: size, preferredExtension: preferredExtension) }
     }
 
     public func addGuildMemberRole(_ roleId: RoleID, to userId: UserID, on guildId: GuildID, reason: String?) async throws {

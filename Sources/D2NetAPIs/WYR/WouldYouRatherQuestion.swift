@@ -1,4 +1,4 @@
-public struct WouldYouRatherQuestion {
+public struct WouldYouRatherQuestion: Sendable {
     public let title: String
     public let firstChoice: String
     public let secondChoice: String

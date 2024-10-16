@@ -87,7 +87,10 @@ struct DiscordSink: DefaultSink {
     func sendMessage(_ message: Message, to channelId: D2MessageIO.ChannelID) async throws -> Message? {
         try await withCheckedThrowingContinuation { continuation in
             client.sendMessage(message.usingDiscordAPI, to: channelId.usingDiscordAPI) { message, response in
-                continuation.resume(with: Result { try check(value: message?.usingMessageIO(with: self), response: response, "sending message") })
+                Task { @Sendable in
+                    let mioMessage = await message?.usingMessageIO(with: self)
+                    continuation.resume(with: Result { try check(value: mioMessage, response: response, "sending message") })
+                }
             }
         }
     }
@@ -95,7 +98,10 @@ struct DiscordSink: DefaultSink {
     func editMessage(_ id: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, edit: Message.Edit) async throws -> Message? {
         try await withCheckedThrowingContinuation { continuation in
             client.editMessage(id.usingDiscordAPI, on: channelId.usingDiscordAPI, edit: edit.usingDiscordAPI) { message, response in
-                continuation.resume(with: Result { try check(value: message?.usingMessageIO(with: self), response: response, "editing message") })
+                Task { @Sendable in
+                    let mioMessage = await message?.usingMessageIO(with: self)
+                    continuation.resume(with: Result { try check(value: mioMessage, response: response, "editing message") })
+                }
             }
         }
     }
@@ -119,7 +125,22 @@ struct DiscordSink: DefaultSink {
     func getMessages(for channelId: D2MessageIO.ChannelID, limit: Int, selection: MessageSelection?) async throws -> [Message] {
         try await withCheckedThrowingContinuation { continuation in
             client.getMessages(for: channelId.usingDiscordAPI, selection: selection?.usingDiscordAPI, limit: limit) { messages, response in
-                continuation.resume(with: Result { try check(value: messages.map { $0.usingMessageIO(with: self) }, response: response, "getting messages") })
+                Task { @Sendable in
+                    let mioMessages = await withTaskGroup(of: Message.self) { group in
+                        for message in messages {
+                            group.addTask { @Sendable in
+                                await message.usingMessageIO(with: self)
+                            }
+                        }
+
+                        var mioMessages: [Message] = []
+                        for await mioMessage in group {
+                            mioMessages.append(mioMessage)
+                        }
+                        return mioMessages
+                    }
+                    continuation.resume(with: Result { try check(value: mioMessages, response: response, "getting messages") })
+                }
             }
         }
     }
@@ -159,7 +180,10 @@ struct DiscordSink: DefaultSink {
     func createReaction(for messageId: D2MessageIO.MessageID, on channelId: D2MessageIO.ChannelID, emoji: String) async throws -> Message? {
         await withCheckedContinuation { continuation in
             client.createReaction(for: messageId.usingDiscordAPI, on: channelId.usingDiscordAPI, emoji: emoji) { m, _ in
-                continuation.resume(returning: m?.usingMessageIO(with: self))
+                Task { @Sendable in
+                    let mioMessage = await m?.usingMessageIO(with: self)
+                    continuation.resume(returning: mioMessage)
+                }
             }
         }
     }

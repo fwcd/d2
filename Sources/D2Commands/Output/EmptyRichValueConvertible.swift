@@ -1,3 +1,3 @@
-public struct EmptyRichValueConvertible: RichValueConvertible {
+public struct EmptyRichValueConvertible: RichValueConvertible, Sendable {
     public var asRichValue: RichValue { return .none }
 }

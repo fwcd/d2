@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import MusicTheory
 
 protocol ScaleRenderer {

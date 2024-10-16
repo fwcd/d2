@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 struct PerceptronRenderer {
     private let width: Int

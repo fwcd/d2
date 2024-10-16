@@ -6,7 +6,7 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
 fileprivate let log = Logger(label: "D2Commands.WebCommand")
 

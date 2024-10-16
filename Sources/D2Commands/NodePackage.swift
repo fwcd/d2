@@ -6,7 +6,7 @@ private let newlineUtf8 = "\n".data(using: .utf8)!
 
 /// A wrapper around an executable node package that is located in the `Node`
 /// folder of this repository.
-struct NodePackage {
+struct NodePackage: Sendable {
     private let directoryURL: URL
 
     init(name: String) {

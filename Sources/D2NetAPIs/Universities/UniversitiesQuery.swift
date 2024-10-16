@@ -1,6 +1,6 @@
 import Utils
 
-public struct UniversitiesQuery {
+public struct UniversitiesQuery: Sendable {
     public let name: String
 
     public init(name: String) {

@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public protocol Game {
     associatedtype State: GameState

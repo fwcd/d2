@@ -1,6 +1,6 @@
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class GuildIconCommand: StringCommand {
     public let info = CommandInfo(
@@ -13,7 +13,7 @@ public class GuildIconCommand: StringCommand {
     public init() {}
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let guild = context.guild else {
+        guard let guild = await context.guild else {
             await output.append(errorText: "Not on a guild!")
             return
         }

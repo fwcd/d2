@@ -1,7 +1,7 @@
 import Geodesy
 import Utils
 
-public struct TierVehiclesQuery {
+public struct TierVehiclesQuery: Sendable {
     public let coords: Coordinates
     public let radius: Int
 

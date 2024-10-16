@@ -1,7 +1,7 @@
 import Foundation
 import D2MessageIO
-import CairoGraphics
-import GIF
+@preconcurrency import CairoGraphics
+@preconcurrency import GIF
 import Utils
 import Logging
 
@@ -48,7 +48,7 @@ public class PatCommand: Command {
             await output.append(errorText: "No author")
             return
         }
-        guard let avatarUrl = context.sink?.avatarUrlForUser(user.id, with: user.avatar, size: 128, preferredExtension: "png") else {
+        guard let avatarUrl = await context.sink?.avatarUrlForUser(user.id, with: user.avatar, size: 128, preferredExtension: "png") else {
             await output.append(errorText: "Could not fetch avatar URL")
             return
         }

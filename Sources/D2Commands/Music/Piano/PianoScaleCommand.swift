@@ -1,7 +1,7 @@
 import Utils
 import MusicTheory
 
-fileprivate let scales: [String: (Note) -> Scale] = [
+fileprivate let scales: [String: @Sendable (Note) -> Scale] = [
     "major": MajorScale.init,
     "minor": MinorScale.init,
     "blues": MinorBluesScale.init,

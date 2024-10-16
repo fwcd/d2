@@ -1,4 +1,4 @@
-public struct WolframAlphaPod {
+public struct WolframAlphaPod: Sendable {
     public var title: String? = nil
     public var scanner: String? = nil
     public var id: String? = nil

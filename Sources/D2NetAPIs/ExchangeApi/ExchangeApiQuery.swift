@@ -1,6 +1,6 @@
 import Utils
 
-public struct ExchangeApiQuery {
+public struct ExchangeApiQuery: Sendable {
     public let base: String
 
     public init(base: String = "EUR") {

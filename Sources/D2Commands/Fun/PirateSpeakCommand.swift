@@ -2,7 +2,7 @@ import Utils
 
 nonisolated(unsafe) private let punctuationPattern = #/[\.!\?]/#
 
-fileprivate let substitutions = [
+nonisolated(unsafe) private let substitutions = [
     (#/hello/#, "ahoy"),
     (#/yes/#, "aye"),
     (#/this/#, "'tis"),

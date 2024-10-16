@@ -1,6 +1,6 @@
 import Utils
 
-public struct MinecraftDynmapConfigurationQuery {
+public struct MinecraftDynmapConfigurationQuery: Sendable {
     private let host: String
 
     public init(host: String) {

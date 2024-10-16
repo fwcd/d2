@@ -1,6 +1,6 @@
 import Utils
 
-public struct AgifyQuery {
+public struct AgifyQuery: Sendable {
     public let name: String
 
     public init(name: String) {

@@ -3,7 +3,7 @@ import Utils
 import Logging
 
 fileprivate let log = Logger(label: "D2Commands.SongChartsCommand")
-fileprivate let songExtractors: [String: (Presence.Activity) -> GuildSongCharts.Song] = [
+fileprivate let songExtractors: [String: @Sendable (Presence.Activity) -> GuildSongCharts.Song] = [
     "Spotify": { .init(
         title: $0.details,
         album: $0.assets?.largeText,
@@ -29,7 +29,7 @@ public class SongChartsCommand: StringCommand {
     public init() {
         subcommands = [
             "track": { [unowned self] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append(errorText: "No guild available.")
                     return
                 }
@@ -41,7 +41,7 @@ public class SongChartsCommand: StringCommand {
                 await output.append(":white_check_mark: Successfully begun to track song charts in guild `\(guild.name)`")
             },
             "untrack": { [unowned self] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append(errorText: "No guild available.")
                     return
                 }
@@ -51,12 +51,12 @@ public class SongChartsCommand: StringCommand {
             "tracked": { [unowned self] output, context in
                 await output.append(Embed(
                     title: "Tracked Guilds",
-                    description: self.trackedGuilds.compactMap { context.sink?.guild(for: $0) }.map { $0.name }.joined(separator: "\n"),
+                    description: self.trackedGuilds.asyncCompactMap { await context.sink?.guild(for: $0) }.map { $0.name }.joined(separator: "\n"),
                     footer: "Guilds for which anonymized song statistics are collected"
                 ))
             },
             "clear": { [unowned self] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append(errorText: "No guild available.")
                     return
                 }
@@ -64,7 +64,7 @@ public class SongChartsCommand: StringCommand {
                 await output.append(":wastebasket: Successfully cleared song charts for `\(guild.name)`")
             },
             "debugPresence": { [] output, context in
-                guard let guild = context.guild else {
+                guard let guild = await context.guild else {
                     await output.append("Not on a guild.")
                     return
                 }
@@ -87,7 +87,7 @@ public class SongChartsCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         if input.isEmpty {
-            guard let charts = (context.guild?.id).flatMap({ songCharts[$0] }) else {
+            guard let guildId = await context.guild?.id, let charts = songCharts[guildId] else {
                 await output.append(errorText: "No song charts available for this guild.")
                 return
             }

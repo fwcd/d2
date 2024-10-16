@@ -1,7 +1,7 @@
 import D2MessageIO
 import Foundation
 import Logging
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 fileprivate let log = Logger(label: "D2Commands.ChessGame")
 

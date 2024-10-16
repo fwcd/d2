@@ -41,7 +41,7 @@ public class MarkovCommand: StringCommand {
             var formattedResult = result.joined(separator: " ").nilIfEmpty ?? ":shrug: No results"
 
             if !flags.contains("withpings") {
-                formattedResult = formattedResult.cleaningMentions(with: context.guild)
+                formattedResult = await formattedResult.cleaningMentions(with: context.guild)
             }
 
             await output.append(formattedResult)

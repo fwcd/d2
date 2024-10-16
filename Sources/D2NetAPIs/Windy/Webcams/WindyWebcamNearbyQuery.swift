@@ -1,6 +1,6 @@
 import Utils
 
-public struct WindyWebcamNearbyQuery {
+public struct WindyWebcamNearbyQuery: Sendable {
     private let latitude: Double
     private let longitude: Double
     private let radius: Int // kms, max. 250

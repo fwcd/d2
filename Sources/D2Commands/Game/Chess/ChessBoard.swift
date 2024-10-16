@@ -1,7 +1,7 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
-public struct ChessBoard: RichValueConvertible {
+public struct ChessBoard: RichValueConvertible, Sendable {
     public var model: ChessBoardModel
     public var asRichValue: RichValue { return ChessBoardView(model: model).image.map { RichValue.image($0) } ?? .none }
 

@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 public struct SpinTransform: ImageTransform {

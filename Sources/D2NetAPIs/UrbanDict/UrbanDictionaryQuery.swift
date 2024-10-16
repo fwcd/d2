@@ -1,6 +1,6 @@
 import Utils
 
-public struct UrbanDictionaryQuery {
+public struct UrbanDictionaryQuery: Sendable {
     private let term: String
 
     public init(term: String) {

@@ -1,6 +1,6 @@
 import Utils
 
-public struct FortuneCookieQuery {
+public struct FortuneCookieQuery: Sendable {
     private let fortuneId: String?
     private let lottoId: String?
     private let lessonId: String?

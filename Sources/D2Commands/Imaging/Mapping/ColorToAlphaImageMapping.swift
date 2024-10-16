@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct ColorToAlphaImageMapping: ImageMapping {
     private let color: Color

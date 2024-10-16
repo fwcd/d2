@@ -2,7 +2,7 @@ import Foundation
 import Geodesy
 import Utils
 
-public struct MapQuestGeocoder {
+public struct MapQuestGeocoder: Sendable {
     public init() {}
 
     public func geocode(location: String) async throws -> Coordinates {

@@ -1,6 +1,6 @@
 import Utils
 
-public struct GiphyTrendingQuery {
+public struct GiphyTrendingQuery: Sendable {
     private let limit: Int
 
     public init(limit: Int = 5) {

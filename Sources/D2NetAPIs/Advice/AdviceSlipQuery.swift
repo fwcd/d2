@@ -1,6 +1,6 @@
 import Utils
 
-public struct AdviceSlipQuery {
+public struct AdviceSlipQuery: Sendable {
     private let searchTerm: String?
 
     public init(searchTerm: String? = nil) {

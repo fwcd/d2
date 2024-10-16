@@ -1,4 +1,4 @@
-public struct FastNetworkSpeed {
+public struct FastNetworkSpeed: Sendable {
     public let megabits: Double
     public let seconds: Double
 

@@ -1,4 +1,4 @@
-public enum UnoActionLabel: String, Hashable, CaseIterable {
+public enum UnoActionLabel: String, Hashable, Sendable, CaseIterable {
     case skip
     case reverse
     case drawTwo

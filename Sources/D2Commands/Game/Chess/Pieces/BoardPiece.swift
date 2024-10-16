@@ -1,4 +1,4 @@
-public struct BoardPiece {
+public struct BoardPiece: Sendable {
     public let color: ChessRole
     public var piece: any ChessPiece
     public var moveCount: Int

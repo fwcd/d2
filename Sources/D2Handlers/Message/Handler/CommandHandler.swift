@@ -89,7 +89,7 @@ public class CommandHandler: MessageHandler {
 
     public func handle(message: Message, sink: any Sink) async -> Bool {
         guard message.content.starts(with: commandPrefix),
-            !message.dm || (message.author.map { permissionManager.user($0, hasPermission: .vip) } ?? false),
+            !message.dm || (await message.author.asyncMap { await permissionManager.user($0, hasPermission: .vip) } ?? false),
             let channelId = message.channelId else { return false }
         guard let author = message.author else {
             log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
@@ -106,7 +106,7 @@ public class CommandHandler: MessageHandler {
         // Precedence: Chain < Pipe
         for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
             if let pipe = await constructPipe(rawPipeCommand: rawPipeCommand, message: message, sink: sink) {
-                guard permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
+                guard await permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
                     _ = try? await sink.sendMessage("Your pipe is too long.", to: channelId)
                     log.notice("Too long pipe")
                     return true
@@ -190,7 +190,7 @@ public class CommandHandler: MessageHandler {
                 log.info("\(author.displayTag) invoked '\(name)' with '\(args)' (\(iterationCount) \("time".pluralized(with: iterationCount)))")
 
                 if let command = registry[name] {
-                    let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
+                    let hasPermission = await permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
                     if hasPermission {
                         log.debug("Appending '\(name)' to pipe")
 

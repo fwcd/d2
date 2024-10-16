@@ -1,6 +1,6 @@
 import Foundation
-import GraphViz
-import CairoGraphics
+@preconcurrency import GraphViz
+@preconcurrency import CairoGraphics
 import Utils
 
 nonisolated(unsafe) private let argsPattern = #/(?<value>\S+)\s+(?<src>\S+)\s+to\s*(?<dest>\S+)/#
@@ -251,7 +251,9 @@ public class UnitConverterCommand: StringCommand {
 
                 do {
                     let data = try await withCheckedThrowingContinuation { continuation in
-                        graph.render(using: .fdp, to: .png, completion: continuation.resume(with:))
+                        graph.render(using: .fdp, to: .png) {
+                            continuation.resume(with: $0)
+                        }
                     }
                     try await output.append(CairoImage(pngData: data))
                 } catch {
@@ -309,7 +311,7 @@ public class UnitConverterCommand: StringCommand {
         }
     }
 
-    private struct Prioritized<T, U>: Comparable {
+    private struct Prioritized<T, U>: Comparable, Sendable where T: Sendable, U: Sendable {
         let value: T
         let priority: Int
         let bijection: AnyAsyncBijection<U>

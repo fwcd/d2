@@ -2,7 +2,7 @@ import Foundation
 import Utils
 
 /// Represents a PGN-style game
-public struct ChessPGN: CustomStringConvertible {
+public struct ChessPGN: CustomStringConvertible, Sendable {
     public var event: String = "?"
     public var site: String = "?"
     public var date: Date? = nil

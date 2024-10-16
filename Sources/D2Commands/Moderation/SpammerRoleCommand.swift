@@ -19,7 +19,7 @@ public class SpammerRoleCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let guild = context.guild else { return }
+        guard let guild = await context.guild else { return }
         let mentions = context.message.mentionRoles
 
         guard mentions.count <= 1 else {

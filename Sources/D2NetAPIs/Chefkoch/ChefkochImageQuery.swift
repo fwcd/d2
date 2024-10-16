@@ -1,6 +1,6 @@
 import Utils
 
-public struct ChefkochImageQuery {
+public struct ChefkochImageQuery: Sendable {
     public let recipeId: String
     public let imageId: String
 

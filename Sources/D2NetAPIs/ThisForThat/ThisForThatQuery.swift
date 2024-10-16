@@ -1,6 +1,6 @@
 import Utils
 
-public struct ThisForThatQuery {
+public struct ThisForThatQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> ThisForThat {

@@ -1,6 +1,6 @@
 import D2Permissions
-import CairoGraphics
-import GIF
+@preconcurrency import CairoGraphics
+@preconcurrency import GIF
 import Utils
 
 public class ToGifCommand: Command {

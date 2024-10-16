@@ -49,7 +49,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
             await output.append(errorText: "Unknown command name `\(invocation.name)`")
             return true
         }
-        guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
+        guard await permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
             await output.append(errorText: "Insufficient permissions, sorry. :(")
             return true
         }

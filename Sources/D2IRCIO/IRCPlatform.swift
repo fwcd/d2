@@ -5,7 +5,7 @@ import IRC
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCPlatform")
 
-public struct IRCPlatform: MessagePlatform {
+public struct IRCPlatform: MessagePlatform, Sendable {
     private let config: IRCConfig
     private let manager: IRCClientManager
 
@@ -16,12 +16,12 @@ public struct IRCPlatform: MessagePlatform {
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token config: IRCConfig
-    ) throws {
+    ) async throws {
         self.config = config
         name = "IRC \(config.host):\(config.port)"
 
         log.info("Initializing IRC backend (\(config.host):\(config.port))...")
-        manager = IRCClientManager(
+        manager = await IRCClientManager(
             receiver: receiver,
             combinedSink: combinedSink,
             eventLoopGroup: eventLoopGroup,
@@ -33,6 +33,8 @@ public struct IRCPlatform: MessagePlatform {
 
     public func start() throws {
         log.info("Starting IRC client (\(config.host):\(config.port))")
-        manager.connect()
+        Task {
+            await manager.connect()
+        }
     }
 }

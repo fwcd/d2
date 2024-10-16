@@ -1,6 +1,6 @@
 import Utils
 
-public struct OpenTDBQuery {
+public struct OpenTDBQuery: Sendable {
     private let amount: Int
 
     public init(amount: Int = 1) {

@@ -1,7 +1,7 @@
 import Utils
 import Foundation
 
-public struct FreeGeoIPQuery {
+public struct FreeGeoIPQuery: Sendable {
     public let host: String
 
     public init(host: String) {

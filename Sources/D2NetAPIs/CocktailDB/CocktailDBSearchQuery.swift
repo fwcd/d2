@@ -1,6 +1,6 @@
 import Utils
 
-public struct CocktailDBSearchQuery {
+public struct CocktailDBSearchQuery: Sendable {
     private let term: String
 
     public init(term: String) {

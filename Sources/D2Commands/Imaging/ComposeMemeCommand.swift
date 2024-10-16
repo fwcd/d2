@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 fileprivate let memeTemplatesFilePath = "local/memeTemplates"
 fileprivate let log = Logger(label: "D2Commands.ComposeMemeCommand")

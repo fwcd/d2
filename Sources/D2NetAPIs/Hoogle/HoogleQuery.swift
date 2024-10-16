@@ -1,6 +1,6 @@
 import Utils
 
-public struct HoogleQuery {
+public struct HoogleQuery: Sendable {
     private let term: String
     private let count: Int
 

@@ -1,6 +1,6 @@
 import Utils
 
-public struct RandomWordGeneratorNhieQuery {
+public struct RandomWordGeneratorNhieQuery: Sendable {
     private struct Response: Sendable, Codable {
         let data: [String: [Question]]
 

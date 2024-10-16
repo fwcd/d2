@@ -1,6 +1,6 @@
 import Utils
 import D2NetAPIs
-import SQLite
+@preconcurrency import SQLite
 
 fileprivate let wyrQuestions = Table("wyr_questions")
 fileprivate let title = Expression<String>("title")
@@ -12,6 +12,7 @@ fileprivate let nhieStatements = Table("nhie_statements")
 fileprivate let statement = Expression<String>("statement")
 fileprivate let category = Expression<String?>("category")
 
+@CommandActor
 public class PartyGameDatabase {
     private let db: Connection
 

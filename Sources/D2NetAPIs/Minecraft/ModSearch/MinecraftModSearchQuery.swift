@@ -1,6 +1,6 @@
 import Utils
 
-public struct MinecraftModSearchQuery {
+public struct MinecraftModSearchQuery: Sendable {
     private let params: [String: String]
 
     public init(

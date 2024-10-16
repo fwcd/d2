@@ -1,7 +1,7 @@
 import Utils
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
-public struct RRRatherQuery {
+public struct RRRatherQuery: Sendable {
     private let category: String
 
     public init(category: String) {

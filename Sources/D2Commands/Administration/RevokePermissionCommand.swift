@@ -23,14 +23,14 @@ public class RevokePermissionCommand: StringCommand {
             var changedPermissions = false
 
             for mentionedUser in context.message.allMentionedUsers {
-                permissionManager.remove(permissionsFrom: mentionedUser)
+                await permissionManager.remove(permissionsFrom: mentionedUser)
                 response += ":x: Revoked permissions from `\(mentionedUser.username)`\n"
                 changedPermissions = true
             }
 
             if changedPermissions {
                 await output.append(response)
-                permissionManager.writeToDisk()
+                await permissionManager.writeToDisk()
             } else {
                 await output.append("Did not change any permissions.")
             }

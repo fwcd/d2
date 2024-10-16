@@ -1,5 +1,5 @@
 import D2MessageIO
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class ColorCommand: StringCommand {
     public let info = CommandInfo(

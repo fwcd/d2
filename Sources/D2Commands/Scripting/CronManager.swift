@@ -5,6 +5,7 @@ import NIO
 
 fileprivate let log = Logger(label: "D2Commands.CronManager")
 
+@CommandActor
 public class CronManager {
     @AutoSerializing(filePath: "local/cronTab.json") private var cronTab: CronTab = .init()
     private var liveCronTab: CronTab = .init()

@@ -1,6 +1,6 @@
 import Utils
 
-public struct EpicFreeGamesQuery {
+public struct EpicFreeGamesQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> EpicFreeGames {

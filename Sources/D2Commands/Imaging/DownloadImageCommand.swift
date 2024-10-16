@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public class DownloadImageCommand: Command {
     public let info = CommandInfo(

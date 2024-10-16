@@ -9,7 +9,7 @@ import Logging
 fileprivate let log = Logger(label: "WolframAlphaParserDelegateTests")
 
 final class WolframAlphaParserDelegateTests: XCTestCase {
-    func testWolframAlphaParserDelegate() throws {
+    func testWolframAlphaParserDelegate() async throws {
         let xml = """
             <?xml version='1.0' encoding='UTF-8'?>
             <queryresult success='true'
@@ -85,32 +85,37 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
             </assumptions>
             </queryresult>
             """
-        let parser = XMLParser(data: xml.data(using: .utf8)!)
-        let delegate = WolframAlphaParserDelegate {
-            guard case let .success(result) = $0 else {
-                if case let .failure(error) = $0 {
-                    XCTFail("WolframAlpha parser delegate throwed \(error)")
-                } else {
-                    XCTFail("WolframAlpha parser delegate failed")
-                }
-                return
-            }
 
-            XCTAssertEqual(result.success, true)
-            XCTAssertEqual(result.error, false)
-            XCTAssertEqual(result.numpods, 2)
-            XCTAssertEqual(result.timing ?? 0.0, 0.76, accuracy: 0.0001)
-            XCTAssertEqual(result.pods.count, 2)
+        // FIXME: Fix potential compile issues once D2 compiles
 
-            // TODO: More detailed testing
+        let result = try await withCheckedThrowingContinuation { continuation in
+            let parser = XMLParser(data: xml.data(using: .utf8)!)
+            let delegate = WolframAlphaParserDelegate(continuation: continuation)
+
+            parser.delegate = delegate
+
+            log.debug("Starting to parse")
+            let result = parser.parse()
+            log.debug("Done")
+
+            XCTAssert(result, "XML parser should succeed")
         }
 
-        parser.delegate = delegate
+        guard case let .success(result) = $0 else {
+            if case let .failure(error) = $0 {
+                XCTFail("WolframAlpha parser delegate throwed \(error)")
+            } else {
+                XCTFail("WolframAlpha parser delegate failed")
+            }
+            return
+        }
 
-        log.debug("Starting to parse")
-        let result = parser.parse()
-        log.debug("Done")
+        XCTAssertEqual(result.success, true)
+        XCTAssertEqual(result.error, false)
+        XCTAssertEqual(result.numpods, 2)
+        XCTAssertEqual(result.timing ?? 0.0, 0.76, accuracy: 0.0001)
+        XCTAssertEqual(result.pods.count, 2)
 
-        XCTAssert(result, "XML parser should succeed")
+        // TODO: More detailed testing
     }
 }

@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 nonisolated(unsafe) private let argsPattern = #/(?<axis>x|y)?\s*(?<replicas>\d+)?/#
 

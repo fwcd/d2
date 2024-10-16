@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 /// A simple function from image to image that
 /// is either applied directly to an image or

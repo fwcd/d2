@@ -1,4 +1,4 @@
-public struct WolframAlphaOutput {
+public struct WolframAlphaOutput: Sendable {
     public var success: Bool? = nil
     public var error: Bool? = nil
     public var numpods: Int? = nil

@@ -1,4 +1,4 @@
-public protocol ExpressionASTNode {
+public protocol ExpressionASTNode: Sendable {
     var occurringVariables: Set<String> { get }
     var label: String { get }
     var childs: [any ExpressionASTNode] { get }

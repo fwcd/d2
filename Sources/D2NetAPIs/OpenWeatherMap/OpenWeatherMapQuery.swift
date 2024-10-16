@@ -1,6 +1,6 @@
 import Utils
 
-public struct OpenWeatherMapQuery {
+public struct OpenWeatherMapQuery: Sendable {
     public let city: String
     public let units: String
 

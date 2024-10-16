@@ -1,6 +1,6 @@
 import Utils
 
-public struct WikipediaPageQuery {
+public struct WikipediaPageQuery: Sendable {
     private let page: String
 
     public init(pageName: String) {

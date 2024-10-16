@@ -24,7 +24,7 @@ public class MessageDatabaseCommand: StringCommand {
                 await output.append("Successfully generated/updated \(count) \("transition".pluralized(with: count))")
             },
             "debugRebuild": { [unowned self] output, context in
-                guard let sink = context.sink, let guildId = context.guild?.id else {
+                guard let sink = context.sink, let guildId = await context.guild?.id else {
                     await output.append(errorText: "Debug-rebuilding the message database requires a client and a guild")
                     return
                 }
@@ -39,7 +39,7 @@ public class MessageDatabaseCommand: StringCommand {
                 }
             },
             "rebuild": { [unowned self] output, context in
-                guard let sink = context.sink, let guildId = context.guild?.id else {
+                guard let sink = context.sink, let guildId = await context.guild?.id else {
                     await output.append(errorText: "Rebuilding the message database requires a client and a guild")
                     return
                 }
@@ -54,12 +54,12 @@ public class MessageDatabaseCommand: StringCommand {
                 }
             },
             "track": { [unowned self] output, context async throws in
-                guard let guild = context.guild else { return }
+                guard let guild = await context.guild else { return }
                 try self.messageDB.setTracked(true, guildId: guild.id)
                 await output.append("Successfully started to track messages in `\(guild.name)`")
             },
             "untrack": { [unowned self] output, context async throws in
-                guard let guild = context.guild else { return }
+                guard let guild = await context.guild else { return }
                 try self.messageDB.setTracked(false, guildId: guild.id)
                 await output.append("Successfully stopped to track messages in `\(guild.name)`")
             }

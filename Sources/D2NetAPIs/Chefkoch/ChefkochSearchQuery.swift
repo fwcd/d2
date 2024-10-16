@@ -1,6 +1,6 @@
 import Utils
 
-public struct ChefkochSearchQuery {
+public struct ChefkochSearchQuery: Sendable {
     private let query: String
     private let limit: Int
     private let orderBy: OrderBy
@@ -21,7 +21,7 @@ public struct ChefkochSearchQuery {
         self.order = order
     }
 
-    public enum OrderBy: Int {
+    public enum OrderBy: Int, Sendable {
         case relevance = 2
         case rating = 3
         case difficulty = 4

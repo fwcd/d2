@@ -5,7 +5,7 @@ import NIO
 
 fileprivate let log = Logger(label: "D2Commands.CommandContext")
 
-public struct CommandContext {
+public struct CommandContext: Sendable {
     public let sink: (any Sink)?
     public let registry: CommandRegistry
     public let message: Message
@@ -20,8 +20,13 @@ public struct CommandContext {
     public var author: User? { message.author }
     public var timestamp: Date? { message.timestamp }
     public var guildMember: Guild.Member? { message.guildMember }
-    public var guild: Guild? { message.channelId.flatMap { sink?.guildForChannel($0) } }
+    public var guild: Guild? {
+        get async {
+            await message.channelId.asyncFlatMap { await sink?.guildForChannel($0) }
+        }
+    }
 
+    @CommandActor
     public var isSubscribed: Bool { (channel?.id).map { subscriptions.contains($0) } ?? false }
 
     public init(
@@ -45,6 +50,7 @@ public struct CommandContext {
     }
 
     /// Subscribes to the current channel.
+    @CommandActor
     public func subscribeToChannel() {
         if let id = channel?.id {
             subscriptions.subscribe(to: id)
@@ -54,6 +60,7 @@ public struct CommandContext {
     }
 
     /// Unsubscribes from the current channel.
+    @CommandActor
     public func unsubscribeFromChannel() {
         if let id = channel?.id {
             subscriptions.unsubscribe(from: id)

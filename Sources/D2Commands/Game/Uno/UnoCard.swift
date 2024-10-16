@@ -1,10 +1,10 @@
 import Logging
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.UnoCard")
 
-public enum UnoCard: Hashable {
+public enum UnoCard: Hashable, Sendable {
     case number(Int, UnoColor)
     case action(UnoActionLabel, UnoColor?)
 
