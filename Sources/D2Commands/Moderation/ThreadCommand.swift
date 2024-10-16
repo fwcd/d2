@@ -63,7 +63,7 @@ public class ThreadCommand: StringCommand {
             await output.append(errorText: "Subcommand `\(input)` not in the subcommands \(subcommands.keys.map { "`\($0)`" }.joined(separator: ", "))")
             return
         }
-        guard let channelId = context.channel?.id, let channel = context.sink?.channel(for: channelId) else {
+        guard let channelId = context.channel?.id, let channel = await context.sink?.channel(for: channelId) else {
             await output.append(errorText: "No channel available")
             return
         }
