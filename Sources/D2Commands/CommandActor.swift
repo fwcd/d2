@@ -1,6 +1,6 @@
 @globalActor
-public struct CommandActor: GlobalActor {
-    public let shared = CommandActor()
+public actor CommandActor: GlobalActor {
+    public static let shared = CommandActor()
 
     private init() {}
 }
