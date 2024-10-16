@@ -27,7 +27,7 @@ public class SearchCommand: StringCommand {
 
         let parsedPattern = try? Regex(term)
         let pattern = (parsedPattern ?? Regex(verbatim: term)).ignoresCase()
-        let results = await context.registry
+        let results = context.registry
             .commandsWithAliases()
             .filter {
                 let info = $0.command.info

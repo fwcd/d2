@@ -67,7 +67,7 @@ public class HelpCommand: StringCommand {
     }
 
     private func categoryHelpEmbed(for category: CommandCategory, at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
-        let commands = await context.registry.commandsWithAliases()
+        let commands = context.registry.commandsWithAliases()
         let helpGroups = Dictionary(grouping: commands.filter { !$0.command.info.hidden && $0.command.info.category == category }, by: { $0.command.info.requiredPermissionLevel })
             .filter { $0.key <= authorLevel }
             .sorted { $0.key < $1.key }
