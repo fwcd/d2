@@ -2,6 +2,7 @@ import D2MessageIO
 
 /// A central facility where commands (possibly with aliases)
 /// can be registered.
+@CommandActor
 public class CommandRegistry: Sequence {
     /// The registered commands and aliases. It is assumed that
     /// every alias (possibly being nested) points to a valid
