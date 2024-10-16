@@ -1,5 +1,5 @@
 {
-  "originHash" : "72a15f5bb3e04c152c4450de9947ab52d49dcd81300b97895721d468b641c17d",
+  "originHash" : "f9e96ad0d11530dfdb2cb6bd2cac242c25e0e6a6f5e72ed435a3e38cb953aba8",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -230,8 +230,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-mensa.git",
       "state" : {
-        "revision" : "014bc34f384007a2965a7f5b59e6a669c9188461",
-        "version" : "0.1.10"
+        "revision" : "fc5d1724e4d7cb966161d1cfa4f2a78b2a9cdadc",
+        "version" : "0.2.0"
       }
     },
     {
