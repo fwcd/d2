@@ -3,11 +3,11 @@ import D2MessageIO
 /// A central facility where commands (possibly with aliases)
 /// can be registered.
 @CommandActor
-public class CommandRegistry: Sequence {
+public class CommandRegistry {
     /// The registered commands and aliases. It is assumed that
     /// every alias (possibly being nested) points to a valid
     /// command and neither dangles nor cycles.
-    private var entries = [String: Entry]()
+    public private(set) var entries = [String: Entry]()
 
     public init() {}
 
@@ -61,9 +61,5 @@ public class CommandRegistry: Sequence {
             aliases: ents.map { $0.0 }.filter { name != $0 },
             command: ents.compactMap { $0.1.asCommand }.first! // Dict cannot contain aliases that point to no command
         ) }
-    }
-
-    public func makeIterator() -> Dictionary<String, Entry>.Iterator {
-        return entries.makeIterator()
     }
 }

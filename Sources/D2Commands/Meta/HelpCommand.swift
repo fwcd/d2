@@ -33,7 +33,7 @@ public class HelpCommand: StringCommand {
             } else if let command = await context.registry[input] {
                 await output.append(commandHelpEmbed(for: input, command: command))
             } else {
-                let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.map(\.key)
+                let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.entries.map(\.key)
                 let alternative = cmdsAndCategories.min(by: ascendingComparator { $0.levenshteinDistance(to: input) }) ?? "?"
                 await output.append(Embed(
                     title: ":warning: Did not recognize command or category `\(input)`",

@@ -18,6 +18,7 @@ public class RandomCommand: Command {
             return
         }
         let commands = await context.registry
+            .entries
             .compactMap { $0.1.asCommand }
             .asyncFilter { await permissionManager.user(author, hasPermission: $0.info.requiredPermissionLevel) }
         guard let command = commands.randomElement() else {
