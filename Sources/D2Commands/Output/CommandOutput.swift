@@ -3,7 +3,7 @@ import Utils
 @preconcurrency import CairoGraphics
 
 /// A sink for rich values.
-public protocol CommandOutput {
+public protocol CommandOutput: Sendable {
     var messageLengthLimit: Int? { get }
 
     func append(_ value: RichValue, to channel: OutputChannel) async
