@@ -4,6 +4,7 @@ private let log = Logger(label: "D2Commands.BufferedOutput")
 
 /// A buffered output that accumulates RichValues and first outputs once
 /// flushed (or deinited, in which case it happens automatically).
+@CommandActor
 public class BufferedOutput: CommandOutput {
     private let inner: any CommandOutput
     private var buffer: [OutputChannel: [RichValue]] = [:]
@@ -31,15 +32,13 @@ public class BufferedOutput: CommandOutput {
     }
 
     deinit {
-        Task {
-            if !buffer.isEmpty {
-                log.warning("BufferedOutput contained \(buffer.count) \("value".pluralized(with: buffer.count)) at deinitialization, which will now be flushed automatically. This may sometimes lead to unexpected behavior, since the outputs may be appended asynchronously/out-of-order. It is recommended to .flush() and await explicitly.")
+        if !buffer.isEmpty {
+            log.warning("BufferedOutput contained \(buffer.count) \("value".pluralized(with: buffer.count)) at deinitialization, which will now be flushed automatically. This may sometimes lead to unexpected behavior, since the outputs may be appended asynchronously/out-of-order. It is recommended to .flush() and await explicitly.")
 
-                let inner = inner
-                let buffer = buffer
-                for (channel, values) in buffer {
-                    await inner.append(.compound(values), to: channel)
-                }
+            let inner = inner
+            let buffer = buffer
+            for (channel, values) in buffer {
+                await inner.append(.compound(values), to: channel)
             }
         }
     }
