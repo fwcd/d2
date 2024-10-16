@@ -1,10 +1,10 @@
 import Utils
 
 public struct ChessBoardModel: Sendable {
-    public static var ranks: Int = 8
-    public static var files: Int = 8
-    public static var positions: [Vec2<Int>] { (0..<Self.ranks).flatMap { y in (0..<Self.files).map { Vec2(x: $0, y: y) } } }
-    private static var defaultPieces: [Piece?] = [
+    public static let ranks: Int = 8
+    public static let files: Int = 8
+    public static let positions: [Vec2<Int>] = (0..<Self.ranks).flatMap { y in (0..<Self.files).map { Vec2(x: $0, y: y) } }
+    private static let defaultPieces: [Piece?] = [
         [Piece(.black, Rook()), Piece(.black, Knight()), Piece(.black, Bishop()), Piece(.black, Queen()), Piece(.black, King()), Piece(.black, Bishop()), Piece(.black, Knight()), Piece(.black, Rook())],
         [Piece?](repeating: Piece(.black, Pawn()), count: Self.files),
         [Piece?](repeating: nil, count: Self.files),
