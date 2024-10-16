@@ -1,6 +1,6 @@
 import Utils
 
-public struct TruthOrDareQuery {
+public struct TruthOrDareQuery: Sendable {
     public let category: Category
     public let type: TDType
 
@@ -9,12 +9,12 @@ public struct TruthOrDareQuery {
         self.type = type
     }
 
-    public enum Category: String, CaseIterable {
+    public enum Category: String, CaseIterable, Sendable {
         case friendly
         case dirty
     }
 
-    public enum TDType: String, CaseIterable {
+    public enum TDType: String, CaseIterable, Sendable {
         case truth
         case dare
     }
