@@ -4,8 +4,8 @@ import D2Permissions
 import Utils
 
 fileprivate let log = Logger(label: "D2Commands.GameCommand")
-fileprivate let flagRegex = #/--(\S+)/#
-fileprivate let actionMessageRegex = #/^(\S+)(?:\s+(.+))?/#
+nonisolated(unsafe) private let flagRegex = #/--(\S+)/#
+nonisolated(unsafe) private let actionMessageRegex = #/^(\S+)(?:\s+(.+))?/#
 
 /// Provides a base layer of functionality for a turn-based games.
 public class GameCommand<G: Game>: Command {

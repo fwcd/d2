@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let argsRegex = #/(\S+)\s+(\S+)/#
+nonisolated(unsafe) private let argsRegex = #/(\S+)\s+(\S+)/#
 
 public struct TicTacToeMove: Hashable {
     let row: Int
