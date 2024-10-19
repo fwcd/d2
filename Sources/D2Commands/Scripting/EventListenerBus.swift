@@ -1,15 +1,16 @@
+@CommandActor
 public class EventListenerBus {
     /// Maps events to listeners
     private var listeners: [Event: [Listener]] = [:]
 
     public init() {}
 
-    private struct Listener {
+    private struct Listener: Sendable {
         let name: String
         let output: any CommandOutput
     }
 
-    public enum Event: String, CaseIterable {
+    public enum Event: String, CaseIterable, Sendable {
         case connect
         case createChannel
         case deleteChannel
