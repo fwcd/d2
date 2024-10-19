@@ -1,44 +1,28 @@
-import XCTest
+import Testing
 import D2MessageIO
 import D2TestUtils
 @testable import D2Handlers
 
-final class LuckyNumberHandlerTests: XCTestCase {
-    func testLuckyNumbers() async {
+struct LuckyNumberHandlerTests {
+    @Test func luckyNumbers() async {
         let handler = await LuckyNumberHandler(luckyNumbers: [42])
-        var isLucky: Bool
 
-        isLucky = await handler.isLucky(12)
-        XCTAssertFalse(isLucky)
-
-        isLucky = await handler.isLucky(41)
-        XCTAssertFalse(isLucky)
-
-        isLucky = await handler.isLucky(42)
-        XCTAssertTrue(isLucky)
-
-        isLucky = await handler.isLucky(420)
-        XCTAssertFalse(isLucky)
+        #expect(await !handler.isLucky(12))
+        #expect(await !handler.isLucky(41))
+        #expect(await handler.isLucky(42))
+        #expect(await !handler.isLucky(420))
     }
 
-    func testPowerOfTenLuckyNumbers() async {
+    @Test func powerOfTenLuckyNumbers() async {
         let handler = await LuckyNumberHandler(luckyNumbers: [42], acceptPowerOfTenMultiples: true)
-        var isLucky: Bool
 
-        isLucky = await handler.isLucky(12)
-        XCTAssertFalse(isLucky)
-
-        isLucky = await handler.isLucky(41)
-        XCTAssertFalse(isLucky)
-
-        isLucky = await handler.isLucky(42)
-        XCTAssertTrue(isLucky)
-
-        isLucky = await handler.isLucky(420)
-        XCTAssertTrue(isLucky)
+        #expect(await !handler.isLucky(12))
+        #expect(await !handler.isLucky(41))
+        #expect(await handler.isLucky(42))
+        #expect(await handler.isLucky(420))
     }
 
-    func testMessageTrigger() async {
+    @Test func messageTrigger() async {
         let handler = await LuckyNumberHandler(luckyNumbers: [42])
         let output = await TestOutput()
 
@@ -52,7 +36,7 @@ final class LuckyNumberHandlerTests: XCTestCase {
         _ = await handler.handle(message: message, sink: output)
 
         let lastContent = await output.lastContent
-        XCTAssertEqual(lastContent, """
+        #expect(lastContent == """
             All the numbers in your message added up to 42. Congrats!
             ```
             40 + 2 = 42
