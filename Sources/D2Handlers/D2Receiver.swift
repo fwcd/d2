@@ -674,7 +674,7 @@ public class D2Receiver: Receiver {
 
     public func on(createChannel channel: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(channelCreate: channel, sink: sink)
+            await channelHandlers[i].handle(channelCreate: channel, sink: sink)
         }
 
         await eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
@@ -682,7 +682,7 @@ public class D2Receiver: Receiver {
 
     public func on(deleteChannel channel: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(channelDelete: channel, sink: sink)
+            await channelHandlers[i].handle(channelDelete: channel, sink: sink)
         }
 
         await eventListenerBus.fire(event: .deleteChannel, with: .none) // TODO: Pass channel ID?
@@ -690,7 +690,7 @@ public class D2Receiver: Receiver {
 
     public func on(updateChannel channel: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(channelUpdate: channel, sink: sink)
+            await channelHandlers[i].handle(channelUpdate: channel, sink: sink)
         }
 
         await eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
@@ -698,19 +698,19 @@ public class D2Receiver: Receiver {
 
     public func on(createThread thread: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(threadCreate: thread, sink: sink)
+            await channelHandlers[i].handle(threadCreate: thread, sink: sink)
         }
     }
 
     public func on(deleteThread thread: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(threadDelete: thread, sink: sink)
+            await channelHandlers[i].handle(threadDelete: thread, sink: sink)
         }
     }
 
     public func on(updateThread thread: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(threadUpdate: thread, sink: sink)
+            await channelHandlers[i].handle(threadUpdate: thread, sink: sink)
         }
     }
 
