@@ -1,7 +1,7 @@
 import D2Permissions
 
 /// A collection of metadata about a command.
-public struct CommandInfo {
+public struct CommandInfo: Sendable {
     /// The command's category in the help framework.
     public var category: CommandCategory
     /// A short/one-lined description of the command.

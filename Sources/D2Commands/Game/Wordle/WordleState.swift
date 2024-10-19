@@ -1,4 +1,4 @@
-public struct WordleState: GameState, Multiplayer, FinitePossibleMoves {
+public struct WordleState: GameState, Multiplayer, FinitePossibleMoves, Sendable {
     public typealias Role = Int
     public typealias Board = WordleBoard
     public typealias Move = WordleMove

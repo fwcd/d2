@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct InvertImageMapping: ImageMapping {
     public init(args: String?) {}

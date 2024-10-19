@@ -18,5 +18,5 @@ public protocol MessagePlatform: Startable {
         combinedSink: CombinedSink,
         eventLoopGroup: any EventLoopGroup,
         token: Token
-    ) throws
+    ) async throws
 }

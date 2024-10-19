@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct CAUCSExamsQuery {
+public struct CAUCSExamsQuery: Sendable {
     private let url: URL
 
     // TODO: Use URL macro here (and elsewhere) after Swift 5.9 migration

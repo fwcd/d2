@@ -5,19 +5,24 @@ import D2TestUtils
 
 final class FindKeyCommandTests: XCTestCase {
     func testFindKey() async throws {
-        let command = FindKeyCommand()
-        let output = TestOutput()
+        let command = await FindKeyCommand()
+        let output = await TestOutput()
+        var lastContent: String?
 
         await command.testInvoke(with: .text("C"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: C Cm Db Dm Eb Em F Fm G Gm Ab Am Bb Bbm")
+        lastContent = await output.lastContent
+        XCTAssertEqual(lastContent, "Possible keys: C Cm Db Dm Eb Em F Fm G Gm Ab Am Bb Bbm")
 
         await command.testInvoke(with: .text("E Eb"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: ")
+        lastContent = await output.lastContent
+        XCTAssertEqual(lastContent, "Possible keys: ")
 
         await command.testInvoke(with: .text("C Db E"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: ")
+        lastContent = await output.lastContent
+        XCTAssertEqual(lastContent, "Possible keys: ")
 
         await command.testInvoke(with: .text("C Db Eb"), output: output)
-        XCTAssertEqual(output.lastContent, "Possible keys: Db Fm Ab Bbm")
+        lastContent = await output.lastContent
+        XCTAssertEqual(lastContent, "Possible keys: Db Fm Ab Bbm")
     }
 }

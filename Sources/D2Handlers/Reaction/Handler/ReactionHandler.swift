@@ -1,7 +1,9 @@
+import D2Commands
 import D2MessageIO
 
 /// Anything that handles incoming reactions
 /// to messages from Discord.
+@CommandActor
 public protocol ReactionHandler {
     mutating func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async
 

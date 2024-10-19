@@ -20,7 +20,7 @@ public class RoleReactionsCommand: RegexCommand {
         self._configuration = _configuration
         subcommands = [
             "attach": { [unowned self] output, sink, channelId, messageId, args in
-                guard let guild = sink.guildForChannel(channelId) else {
+                guard let guild = await sink.guildForChannel(channelId) else {
                     await output.append(errorText: "Not on a guild!")
                     return
                 }

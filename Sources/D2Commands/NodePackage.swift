@@ -6,7 +6,7 @@ private let newlineUtf8 = "\n".data(using: .utf8)!
 
 /// A wrapper around an executable node package that is located in the `Node`
 /// folder of this repository.
-struct NodePackage {
+struct NodePackage: Sendable {
     private let directoryURL: URL
 
     init(name: String) {
@@ -19,6 +19,7 @@ struct NodePackage {
     }
 
     /// Invokes `npm start` and return a wrapper for communicating via newline-delimited JSON messages.
+    @CommandActor
     func startJsonSession(_ args: [String] = []) throws -> JsonSession {
         let shell = Shell()
         let (_, process) = shell.newProcess("npm", in: directoryURL, args: npmArgs + args)
@@ -35,11 +36,13 @@ struct NodePackage {
     }
 
     /// A wrapper around a process that facilitates communication via newline-delimited JSON messages.
+    @CommandActor
     class JsonSession {
         private let process: Process
 
         private let stdinFileHandle: FileHandle
-        private var stdoutLines: AsyncThrowingStream<String, any Error>.AsyncIterator
+        // TODO: Figure out how to make this safe (why aren't we allowed to mutate actor-isolated state with an async function?)
+        private nonisolated(unsafe) var stdoutLines: AsyncThrowingStream<String, any Error>.AsyncIterator
 
         private let encoder = JSONEncoder()
         private let decoder = JSONDecoder()

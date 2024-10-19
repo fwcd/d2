@@ -1,4 +1,4 @@
-public enum PermissionLevel: Int, Codable, Comparable {
+public enum PermissionLevel: Int, Codable, Comparable, Sendable {
     case admin = 500
     case dev = 100
     case vip = 50

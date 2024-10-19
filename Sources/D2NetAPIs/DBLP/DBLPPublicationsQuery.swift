@@ -1,7 +1,7 @@
 import XMLCoder
 import Utils
 
-public struct DBLPPublicationsQuery {
+public struct DBLPPublicationsQuery: Sendable {
     public let term: String
 
     public init(term: String) {

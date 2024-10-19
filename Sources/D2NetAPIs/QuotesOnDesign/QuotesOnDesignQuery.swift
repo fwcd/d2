@@ -1,6 +1,6 @@
 import Utils
 
-public struct QuotesOnDesignQuery {
+public struct QuotesOnDesignQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> [DesignQuote] {

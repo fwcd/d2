@@ -1,5 +1,5 @@
 import D2MessageIO
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 import QRCodeGenerator
 

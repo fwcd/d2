@@ -1,7 +1,7 @@
 import Utils
 
 /// Encapsulates an unpositioned chess piece.
-public protocol ChessPiece {
+public protocol ChessPiece: Sendable {
     var pieceType: ChessPieceType { get }
     var blackResourcePng: String { get }
     var whiteResourcePng: String { get }

@@ -3,7 +3,7 @@ import Utils
 // Ported from https://github.com/janniksam/Akinator.Api.Net/blob/master/Akinator.Api.Net/AkinatorServerLocator.cs
 // MIT-licensed, Copyright (c) 2019 Jannik
 
-struct AkinatorServersQuery {
+struct AkinatorServersQuery: Sendable {
     init() {}
 
     func perform() async throws -> AkinatorServers {

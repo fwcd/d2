@@ -15,11 +15,11 @@ fileprivate struct SpammerProfile {
 /// them a spammer role (which can be configured using a command).
 public struct SpamHandler: MessageHandler {
     @Binding private var config: SpamConfiguration
-    private let dateProvider: () -> Date
+    private let dateProvider: @CommandActor () -> Date
     private let lastSpamMessages: ExpiringList<Message>
     private var cautionedSpammers = Set<UserID>()
 
-    public init(@Binding config: SpamConfiguration, dateProvider: @escaping () -> Date = Date.init) {
+    public init(@Binding config: SpamConfiguration, dateProvider: @CommandActor @escaping () -> Date = Date.init) {
         self._config = _config
         self.dateProvider = dateProvider
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)
@@ -30,7 +30,7 @@ public struct SpamHandler: MessageHandler {
             isPossiblySpam(message: message),
             let author = message.author,
             let channelId = message.channelId,
-            let guild = sink.guildForChannel(channelId),
+            let guild = await sink.guildForChannel(channelId),
             let daysOnGuild = guild.members[author.id].map({ Int(-$0.joinedAt.timeIntervalSinceNow / 86400) }),
             let limits = config.limitsByDaysOnGuild.filter({ daysOnGuild >= $0.key }).max(by: ascendingComparator(comparing: \.key))?.value else { return false }
 

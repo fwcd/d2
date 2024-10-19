@@ -19,7 +19,7 @@ public class GuildInfoCommand: VoidCommand {
     }
 
     public func invoke(output: any CommandOutput, context: CommandContext) async {
-        guard let guild = context.guild else {
+        guard let guild = await context.guild else {
             await output.append(errorText: "Could not compute statistics. Make sure that you are on a guild!")
             return
         }

@@ -1,7 +1,7 @@
 import Logging
 import D2MessageIO
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Foundation
 
 fileprivate let log = Logger(label: "D2Commands.MandelbrotCommand")

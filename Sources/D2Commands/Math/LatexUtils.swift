@@ -4,7 +4,13 @@ import Logging
 fileprivate let log = Logger(label: "D2Commands.LatexUtils")
 
 extension LatexRenderer {
-    func renderImage(from input: String, to output: any CommandOutput, color: String = "white", scale: Double = 2) async {
+    func renderImage(
+        from input: String,
+        to output: any CommandOutput,
+        color: String = "white",
+        scale: Double = 2,
+        isolation: isolated (any Actor)? = #isolation
+    ) async {
         do {
             let image = try await renderImage(from: input, color: color, scale: scale)
             try await output.append(image)

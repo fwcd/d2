@@ -25,7 +25,7 @@ public class ReRunCommand: VoidCommand {
             await output.append(errorText: "No author available")
             return
         }
-        guard permissionManager[author] >= minPermissionLevel else {
+        guard await permissionManager[author] >= minPermissionLevel else {
             await output.append(errorText: "You do not have sufficient permissions to run this command pipe!")
             return
         }

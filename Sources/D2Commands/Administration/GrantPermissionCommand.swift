@@ -24,14 +24,14 @@ public class GrantPermissionCommand: RegexCommand {
             var changedPermissions = false
 
             for mentionedUser in context.message.allMentionedUsers {
-                permissionManager[mentionedUser] = level
+                await permissionManager.update(mentionedUser, to: level)
                 response += ":white_check_mark: Granted `\(mentionedUser.username)` \(rawLevel) permissions\n"
                 changedPermissions = true
             }
 
             if changedPermissions {
                 await output.append(response)
-                permissionManager.writeToDisk()
+                await permissionManager.writeToDisk()
             } else {
                 await output.append("Did not change any permissions.")
             }

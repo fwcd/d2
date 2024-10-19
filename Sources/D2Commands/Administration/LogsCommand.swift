@@ -20,7 +20,7 @@ public class LogsCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let lineCount = Int(input) ?? defaultLineCount
-        let logs = logBuffer
+        let logs = await logBuffer.lastOutputs
             .suffix(lineCount)
             .map { $0.replacingOccurrences(of: "```", with: "") }
             .joined(separator: "\n")

@@ -1,6 +1,6 @@
 import Utils
 
-public struct ChefkochRecipeQuery {
+public struct ChefkochRecipeQuery: Sendable {
     public let id: String
 
     public init(id: String) {

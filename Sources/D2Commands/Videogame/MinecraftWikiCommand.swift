@@ -77,8 +77,8 @@ public class MinecraftWikiCommand: StringCommand {
         }.flatMap { (n: WikitextDocument.Section.Node) -> [WikitextDocument.Section.Node.TemplateParameter] in
             guard case let .template(_, params) = n else { return [] }
             return params
-        }.compactMap {
-            guard case let .keyValue(key, params) = $0,
+        }.compactMap { (param: WikitextDocument.Section.Node.TemplateParameter) -> URL? in
+            guard case let .keyValue(key, params) = param,
                 key.starts(with: "image"),
                 case let .text(fileNames) = params.first,
                 let fileName = fileNames.split(separator: ";").first else { return nil }

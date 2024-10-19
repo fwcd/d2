@@ -1,6 +1,6 @@
 import Utils
 
-public struct PunkAPIQuery {
+public struct PunkAPIQuery: Sendable {
     public init() {}
 
     public func perform() async throws -> [PunkAPIBeer] {

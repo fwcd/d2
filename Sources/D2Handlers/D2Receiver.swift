@@ -12,6 +12,7 @@ import protocol NIO.EventLoopGroup
 fileprivate let log = Logger(label: "D2Handlers.D2Receiver")
 
 /// D2's main event handler.
+@CommandActor
 public class D2Receiver: Receiver {
     private let commandPrefix: String
     private let hostInfo: HostInfo
@@ -462,8 +463,8 @@ public class D2Receiver: Receiver {
         registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
     }
 
-    public func on(receiveReady: [String: Any], sink: any Sink) async {
-        let guildCount = sink.guilds?.count ?? 0
+    public func on(receiveReady: ReadyEvent, sink: any Sink) async {
+        let guildCount = await sink.guilds?.count ?? 0
         log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 
         if let presence = initialPresence {
@@ -550,7 +551,7 @@ public class D2Receiver: Receiver {
     }
 
     public func on(receivePresenceUpdate presence: Presence, sink: any Sink) async {
-        for (_, entry) in registry {
+        for (_, entry) in registry.entries {
             if case let .command(command) = entry {
                 await command.onReceivedUpdated(presence: presence)
             }
@@ -673,7 +674,7 @@ public class D2Receiver: Receiver {
 
     public func on(createChannel channel: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(channelCreate: channel, sink: sink)
+            await channelHandlers[i].handle(channelCreate: channel, sink: sink)
         }
 
         await eventListenerBus.fire(event: .createChannel, with: .none) // TODO: Pass channel ID?
@@ -681,7 +682,7 @@ public class D2Receiver: Receiver {
 
     public func on(deleteChannel channel: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(channelDelete: channel, sink: sink)
+            await channelHandlers[i].handle(channelDelete: channel, sink: sink)
         }
 
         await eventListenerBus.fire(event: .deleteChannel, with: .none) // TODO: Pass channel ID?
@@ -689,7 +690,7 @@ public class D2Receiver: Receiver {
 
     public func on(updateChannel channel: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(channelUpdate: channel, sink: sink)
+            await channelHandlers[i].handle(channelUpdate: channel, sink: sink)
         }
 
         await eventListenerBus.fire(event: .updateChannel, with: .none) // TODO: Pass channel ID?
@@ -697,19 +698,19 @@ public class D2Receiver: Receiver {
 
     public func on(createThread thread: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(threadCreate: thread, sink: sink)
+            await channelHandlers[i].handle(threadCreate: thread, sink: sink)
         }
     }
 
     public func on(deleteThread thread: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(threadDelete: thread, sink: sink)
+            await channelHandlers[i].handle(threadDelete: thread, sink: sink)
         }
     }
 
     public func on(updateThread thread: Channel, sink: any Sink) async {
         for i in channelHandlers.indices {
-            channelHandlers[i].handle(threadUpdate: thread, sink: sink)
+            await channelHandlers[i].handle(threadUpdate: thread, sink: sink)
         }
     }
 
@@ -730,7 +731,7 @@ public class D2Receiver: Receiver {
 
     public func on(addGuildMember member: Guild.Member, sink: any Sink) async {
         do {
-            if let guild = sink.guild(for: member.guildId) {
+            if let guild = await sink.guild(for: member.guildId) {
                 log.info("Inserting member '\(member.displayName)' into message database...")
                 try messageDB.insert(member: member, on: guild)
             }
@@ -747,7 +748,7 @@ public class D2Receiver: Receiver {
 
     public func on(updateGuildMember member: Guild.Member, sink: any Sink) async {
         do {
-            if let guild = sink.guild(for: member.guildId) {
+            if let guild = await sink.guild(for: member.guildId) {
                 log.info("Updating member '\(member.displayName)' in message database...")
                 try messageDB.insert(member: member, on: guild)
             }

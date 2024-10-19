@@ -1,6 +1,6 @@
 import Utils
 
-public struct OpenThesaurusQuery {
+public struct OpenThesaurusQuery: Sendable {
     private let term: String
 
     public init(term: String) {

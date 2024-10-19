@@ -7,7 +7,7 @@ import Logging
 fileprivate let log = Logger(label: "D2NetAPIs.WolframAlphaParserDelegate")
 
 class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
-    let then: (Result<WolframAlphaOutput, any Error>) -> Void
+    let continuation: CheckedContinuation<WolframAlphaOutput, any Error>
 
     // Current parser state
     private var result = WolframAlphaOutput()
@@ -22,8 +22,8 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
     private var currentCharacters = ""
     private var hasErrored = false
 
-    init(then: @escaping (Result<WolframAlphaOutput, any Error>) -> Void) {
-        self.then = then
+    init(continuation: CheckedContinuation<WolframAlphaOutput, any Error>) {
+        self.continuation = continuation
     }
 
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
@@ -78,7 +78,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
         log.trace("Exiting \(elementName)")
         if elementName == "queryresult" {
             log.trace("Ending parsing")
-            then(.success(result))
+            continuation.resume(with: .success(result))
         } else {
             switch elementName {
                 case "pod": result.pods.append(pod)
@@ -108,7 +108,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         log.warning("\(parseError)")
         if !hasErrored {
-            then(.failure(parseError))
+            continuation.resume(with: .failure(parseError))
             hasErrored = true
         }
     }
@@ -116,7 +116,7 @@ class WolframAlphaParserDelegate: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, validationErrorOccurred validationError: any Error) {
         log.warning("\(validationError)")
         if !hasErrored {
-            then(.failure(validationError))
+            continuation.resume(with: .failure(validationError))
             hasErrored = true
         }
     }

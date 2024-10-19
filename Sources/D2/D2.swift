@@ -47,7 +47,7 @@ struct D2: AsyncParsableCommand {
         }
 
         await logOutput.register {
-            logBuffer.push($0)
+            await logBuffer.push($0)
         }
 
         LoggingSystem.bootstrap {
@@ -78,11 +78,11 @@ struct D2: AsyncParsableCommand {
         let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 
         // Create platforms
-        var combinedSink: CombinedSink! = CombinedSink(mioCommandSinkName: "Discord")
+        let combinedSink = CombinedSink(mioCommandSinkName: "Discord")
         var platforms: [any Startable] = []
         var createdAnyPlatform = false
 
-        var receiver: D2Receiver! = try D2Receiver(
+        let receiver = try await D2Receiver(
             withPrefix: commandPrefix,
             hostInfo: hostInfo,
             initialPresence: actualInitialPresence,
@@ -95,7 +95,7 @@ struct D2: AsyncParsableCommand {
 
         if let discordToken = tokens.discord {
             createdAnyPlatform = true
-            platforms.append(DiscordPlatform(
+            platforms.append(await DiscordPlatform(
                 receiver: receiver,
                 combinedSink: combinedSink,
                 eventLoopGroup: eventLoopGroup,
@@ -106,7 +106,7 @@ struct D2: AsyncParsableCommand {
         for irc in tokens.irc ?? [] {
             do {
                 createdAnyPlatform = true
-                platforms.append(try IRCPlatform(
+                platforms.append(try await IRCPlatform(
                     receiver: receiver,
                     combinedSink: combinedSink,
                     eventLoopGroup: eventLoopGroup,
@@ -127,8 +127,6 @@ struct D2: AsyncParsableCommand {
         source.setEventHandler {
             log.info("Shutting down...")
             platforms.removeAll()
-            receiver = nil
-            combinedSink = nil
             try! eventLoopGroup.syncShutdownGracefully()
             Self.exit()
         }

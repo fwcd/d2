@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct WolframAlphaSimpleQuery {
+public struct WolframAlphaSimpleQuery: Sendable {
     private let url: URL
 
     public init(

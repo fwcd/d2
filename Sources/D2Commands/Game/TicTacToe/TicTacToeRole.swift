@@ -1,6 +1,6 @@
 import Utils
 
-public enum TicTacToeRole: String, CaseIterable, RichValueConvertible {
+public enum TicTacToeRole: String, CaseIterable, RichValueConvertible, Sendable {
     case x = "x"
     case o = "o"
     case empty = " "

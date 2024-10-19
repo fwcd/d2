@@ -1,4 +1,4 @@
-public struct WolframAlphaImage {
+public struct WolframAlphaImage: Sendable {
     public var src: String? = nil
     public var alt: String? = nil
     public var title: String? = nil

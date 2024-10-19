@@ -1,4 +1,4 @@
-public enum RichValueType: CustomStringConvertible, Hashable {
+public enum RichValueType: CustomStringConvertible, Hashable, Sendable {
     case none
     case text
     case image

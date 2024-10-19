@@ -1,4 +1,4 @@
-import SwiftSoup
+@preconcurrency import SwiftSoup
 
 public class ParseDOMCommand: StringCommand {
     public let info = CommandInfo(

@@ -1,6 +1,6 @@
 import Utils
 
-public struct WindyWebcamDetailQuery {
+public struct WindyWebcamDetailQuery: Sendable {
     private let id: String
     private let show: String
 

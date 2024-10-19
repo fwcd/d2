@@ -1,5 +1,6 @@
 import D2MessageIO
 import Logging
+import Utils
 
 fileprivate let log = Logger(label: "D2Commands.PortalCommand")
 
@@ -82,8 +83,10 @@ public class PortalCommand: StringCommand {
         await output.append(.text("**\(context.author?.username ?? "Unknown user"):** \(content)"), to: .guildChannel(otherChannelId))
     }
 
-    private func endpointName(context: CommandContext) -> String {
-        let channelName = context.channel.flatMap { channel in context.guild.map { "\($0.channels[channel.id]?.name ?? "<unnamed channel>") on server \($0.name)" } } ?? "<unknown channel>"
+    private func endpointName(context: CommandContext) async -> String {
+        let channelName = await context.channel.asyncFlatMap { channel in
+            await context.guild.map { "\($0.channels[channel.id]?.name ?? "<unnamed channel>") on server \($0.name)" }
+        } ?? "<unknown channel>"
         let platformName = context.sink?.name ?? "<unknown platform>"
         return "\(channelName) (\(platformName))"
     }
@@ -99,7 +102,7 @@ public class PortalCommand: StringCommand {
             return
         }
 
-        halfOpenPortal = Portal(origin: channelId, originName: endpointName(context: context))
+        halfOpenPortal = Portal(origin: channelId, originName: await endpointName(context: context))
         context.subscribeToChannel()
 
         await output.append(":sparkles: Opened portal. Make a portal in another channel to connect!")
@@ -118,7 +121,7 @@ public class PortalCommand: StringCommand {
         }
 
         portal.target = channelId
-        portal.targetName = self.endpointName(context: context)
+        portal.targetName = await self.endpointName(context: context)
         self.portals.append(portal)
         context.subscribeToChannel()
 

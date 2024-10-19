@@ -1,4 +1,4 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public struct ThresholdImageMapping: ImageMapping {
     private let minThreshold: UInt8 = 0

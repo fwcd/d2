@@ -3,10 +3,10 @@ import Dispatch
 /// A simple pub/sub facility for publishing log messages.
 actor LogOutput {
     private var isSilenced: Bool = false
-    private var consumers: [(String) async -> Void] = []
+    private var consumers: [@Sendable (String) async -> Void] = []
 
     /// Registers a consumer for log messages.
-    func register(_ consumer: @escaping (String) async -> Void) {
+    func register(_ consumer: @Sendable @escaping (String) async -> Void) {
         consumers.append(consumer)
     }
 

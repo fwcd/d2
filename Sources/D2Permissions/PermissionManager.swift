@@ -7,12 +7,11 @@ fileprivate let log = Logger(label: "D2Permissions.PermissionManager")
 fileprivate let userPermissionsFilePath = "local/userPermissions.json"
 fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
 
-public class PermissionManager: CustomStringConvertible {
+public actor PermissionManager {
     private let storage = DiskJsonSerializer()
     private var adminWhitelist: AdminWhitelist
     private var userPermissions: [UserID: PermissionLevel]
     private var simulatedPermissions: [UserID: PermissionLevel] = [:]
-    public var description: String { userPermissions.description }
 
     private var adminUserIDs: [UserID] { adminWhitelist.users + userPermissions.filter { $0.value == .admin }.map(\.key) }
 
@@ -57,8 +56,16 @@ public class PermissionManager: CustomStringConvertible {
     }
 
     public func userID(_ id: UserID, hasPermission requiredLevel: Int, usingSimulated: Bool = true) -> Bool {
-        let userLevel = self[simulated: id].filter { _ in usingSimulated } ?? self[id]
+        let userLevel = permissionLevel(for: id, usingSimulated: usingSimulated)
         return userLevel.rawValue >= requiredLevel
+    }
+
+    public func permissionLevel(for user: User, usingSimulated: Bool = true) -> PermissionLevel {
+        permissionLevel(for: user.id, usingSimulated: usingSimulated)
+    }
+
+    public func permissionLevel(for id: UserID, usingSimulated: Bool = true) -> PermissionLevel {
+        self[simulated: id].filter { _ in usingSimulated } ?? self[id]
     }
 
     public func remove(permissionsFrom user: User) {
@@ -93,5 +100,21 @@ public class PermissionManager: CustomStringConvertible {
     public subscript(simulated userID: UserID) -> PermissionLevel? {
         get { simulatedPermissions[userID] }
         set { simulatedPermissions[userID] = newValue }
+    }
+
+    public func update(_ user: User, to level: PermissionLevel) {
+        self[user] = level
+    }
+
+    public func update(simulated user: User, to level: PermissionLevel?) {
+        self[simulated: user] = level
+    }
+
+    public func update(_ userID: UserID, to level: PermissionLevel) {
+        self[userID] = level
+    }
+
+    public func update(simulated userID: UserID, to level: PermissionLevel?) {
+        self[simulated: userID] = level
     }
 }

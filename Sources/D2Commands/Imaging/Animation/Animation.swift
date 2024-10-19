@@ -1,5 +1,5 @@
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 public protocol Animation: KeyParameterizable {
     init(pos: Vec2<Int>?, kvArgs: [Key: String]) throws

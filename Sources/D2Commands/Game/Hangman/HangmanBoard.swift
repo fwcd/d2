@@ -1,6 +1,6 @@
 import Utils
 
-public struct HangmanBoard: RichValueConvertible {
+public struct HangmanBoard: RichValueConvertible, Sendable {
     public var slots: [CharacterSlot]
 
     public var asRichValue: RichValue { .text(String(slots.map { $0.hidden ? "-" : $0.character })) }
@@ -11,7 +11,7 @@ public struct HangmanBoard: RichValueConvertible {
         slots = word.map(CharacterSlot.init(character:))
     }
 
-    public struct CharacterSlot {
+    public struct CharacterSlot: Sendable {
         public let character: Character
         public var hidden: Bool = true
 

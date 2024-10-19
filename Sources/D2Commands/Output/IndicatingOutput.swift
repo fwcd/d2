@@ -13,7 +13,7 @@ public class IndicatingOutput: CommandOutput {
         await next?.append(value, to: channel)
     }
 
-    public func update(context: CommandContext) {
-        next?.update(context: context)
+    public func update(context: CommandContext) async {
+        await next?.update(context: context)
     }
 }

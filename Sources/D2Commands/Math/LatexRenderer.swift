@@ -1,15 +1,20 @@
 import Foundation
 import Logging
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 
 fileprivate let log = Logger(label: "D2Commands.LatexRenderer")
 fileprivate let latexPrefix = "latex"
 
-class LatexRenderer {
+struct LatexRenderer: Sendable {
     private let node = NodePackage(name: "latex-renderer")
 
-    func renderImage(from formula: String, color: String = "white", scale: Double = 2) async throws -> CairoImage {
+    func renderImage(
+        from formula: String,
+        color: String = "white",
+        scale: Double = 2,
+        isolation: isolated (any Actor)? = #isolation
+    ) async throws -> CairoImage {
         try await CairoImage(pngData: renderPNG(from: formula, color: color, scale: scale))
     }
 

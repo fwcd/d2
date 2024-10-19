@@ -5,7 +5,7 @@ import Logging
 fileprivate let log = Logger(label: "D2NetAPIs.RemoteGitLab")
 fileprivate let apiPath = "/api/v4"
 
-public struct RemoteGitLab {
+public struct RemoteGitLab: Sendable {
     private let scheme: String
     private let host: String
 

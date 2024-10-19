@@ -1,4 +1,5 @@
 import NIO
+import Utils
 import D2MessageIO
 import D2Permissions
 import D2Commands
@@ -31,7 +32,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
                 content: content,
                 author: interaction.member?.user,
                 channelId: interaction.channelId,
-                guild: interaction.guildId.flatMap(sink.guild(for:)),
+                guild: await interaction.guildId.asyncFlatMap(sink.guild(for:)),
                 guildMember: interaction.member
             ),
             commandPrefix: "/", // TODO: Find a more elegant solution than hardcoding the slash
@@ -49,7 +50,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
             await output.append(errorText: "Unknown command name `\(invocation.name)`")
             return true
         }
-        guard permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
+        guard await permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel) else {
             await output.append(errorText: "Insufficient permissions, sorry. :(")
             return true
         }

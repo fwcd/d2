@@ -3,7 +3,7 @@ import D2NetAPIs
 import Foundation
 import SwiftPlot
 import AGGRenderer
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
 nonisolated(unsafe) private let subcommandPattern = #/(?<name>[\w-]+)\s*(?<args>.*)/#

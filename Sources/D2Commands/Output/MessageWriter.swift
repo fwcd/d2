@@ -6,7 +6,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Commands.MessageWriter")
 
 /// Writes rich values into MessageIO messages (e.g. for use with Discord).
-public struct MessageWriter {
+public struct MessageWriter: Sendable {
     private let latexRenderer = LatexRenderer()
 
     public init() {}
@@ -75,7 +75,7 @@ public struct MessageWriter {
                 // TODO: Download attachments and re-attach them as fileuploads
                 return try await write(value: .error(nil, errorText: "Cannot write attachments yet!"))
             case let .lazy(wrapper):
-                return try await write(value: wrapper.wrappedValue)
+                return try await write(value: wrapper.wrappedValue.wrappedValue)
             case let .compound(components):
                 return try await withThrowingTaskGroup(of: Message.self) { group in
                     for component in components {

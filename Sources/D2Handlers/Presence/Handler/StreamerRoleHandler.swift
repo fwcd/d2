@@ -21,7 +21,7 @@ public struct StreamerRoleHandler: PresenceHandler {
         guard let guildId = presence.guildId else { return }
         if
             let roleId = streamerRoleConfiguration.streamerRoles[guildId],
-            let guild = sink.guild(for: guildId),
+            let guild = await sink.guild(for: guildId),
             let member = guild.members[presence.user.id] {
             if presence.activities.contains(where: { $0.type == .stream }) {
                 guard !member.roleIds.contains(roleId) else {

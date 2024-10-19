@@ -1,6 +1,6 @@
 import Foundation
 import Utils
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import SwiftPlot
 import AGGRenderer
 

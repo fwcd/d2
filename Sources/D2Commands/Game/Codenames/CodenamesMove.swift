@@ -1,6 +1,6 @@
 import Utils
 
-public enum CodenamesMove: Hashable, CustomStringConvertible {
+public enum CodenamesMove: Hashable, CustomStringConvertible, Sendable {
     case codeword(Int, String)
     case guess([String])
 

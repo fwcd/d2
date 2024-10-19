@@ -10,6 +10,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
 
 /// A segment of an invocation pipe that transfers outputs from one command to another.
+@CommandActor
 fileprivate class PipeComponent {
     let name: String
     let command: any Command
@@ -88,8 +89,9 @@ public class CommandHandler: MessageHandler {
     }
 
     public func handle(message: Message, sink: any Sink) async -> Bool {
+        let authorIsVip = await message.author.asyncMap { await permissionManager.user($0, hasPermission: .vip) } ?? false
         guard message.content.starts(with: commandPrefix),
-            !message.dm || (message.author.map { permissionManager.user($0, hasPermission: .vip) } ?? false),
+            !message.dm || authorIsVip,
             let channelId = message.channelId else { return false }
         guard let author = message.author else {
             log.warning("Command invocation message has no author and is thus not handled by CommandHandler. This is probably a bug.")
@@ -106,7 +108,7 @@ public class CommandHandler: MessageHandler {
         // Precedence: Chain < Pipe
         for rawPipeCommand in slicedMessage.splitPreservingQuotes(by: chainSeparator, omitQuotes: false, omitBackslashes: false) {
             if let pipe = await constructPipe(rawPipeCommand: rawPipeCommand, message: message, sink: sink) {
-                guard permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
+                guard await permissionManager.user(author, hasPermission: .admin) || (pipe.count <= maxPipeLengthForUsers) else {
                     _ = try? await sink.sendMessage("Your pipe is too long.", to: channelId)
                     log.notice("Too long pipe")
                     return true
@@ -190,7 +192,7 @@ public class CommandHandler: MessageHandler {
                 log.info("\(author.displayTag) invoked '\(name)' with '\(args)' (\(iterationCount) \("time".pluralized(with: iterationCount)))")
 
                 if let command = registry[name] {
-                    let hasPermission = permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
+                    let hasPermission = await permissionManager.user(author, hasPermission: command.info.requiredPermissionLevel, usingSimulated: command.info.usesSimulatedPermissionLevel)
                     if hasPermission {
                         log.debug("Appending '\(name)' to pipe")
 
@@ -219,7 +221,7 @@ public class CommandHandler: MessageHandler {
                 } else {
                     log.notice("Did not recognize command '\(name)'")
                     if !isBot {
-                        let alternative = registry.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
+                        let alternative = registry.entries.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
                         _ = try? await sink.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
                     }
                     return nil

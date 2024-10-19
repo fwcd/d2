@@ -1,5 +1,5 @@
 {
-  "originHash" : "33452ffe33f8ab934ac265c6e640a8b61d5d4d62bbbe843c51c3ec86c96d9d3f",
+  "originHash" : "b5220a67c3b88c5594928d7b4e62cafca2628e3c9b9b957739834a0fc5cc7b1f",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -230,8 +230,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-mensa.git",
       "state" : {
-        "revision" : "014bc34f384007a2965a7f5b59e6a669c9188461",
-        "version" : "0.1.10"
+        "revision" : "fc5d1724e4d7cb966161d1cfa4f2a78b2a9cdadc",
+        "version" : "0.2.0"
       }
     },
     {
@@ -239,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-music-theory.git",
       "state" : {
-        "revision" : "668a81476a870d2a10facba183569797c67989f3",
-        "version" : "0.1.0"
+        "revision" : "a02e380c5479dee7d17c42b83ac8908a7d316fd8",
+        "version" : "0.2.0"
       }
     },
     {
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-static-map.git",
       "state" : {
-        "revision" : "e0020edc8d8b812cd5b90e793c1aef0244f2c6b3",
-        "version" : "0.5.0"
+        "revision" : "8cacca4b6b3d5df08589ad93ef0e607c9c7cc6a4",
+        "version" : "0.6.0"
       }
     },
     {
@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-utils.git",
       "state" : {
-        "revision" : "6a24a7723b8d463aeec8e012d85059782320e1bb",
-        "version" : "4.2.1"
+        "revision" : "1fd9f7d7a9847f28df512c08841c3f76c3c7c321",
+        "version" : "4.5.0"
       }
     },
     {

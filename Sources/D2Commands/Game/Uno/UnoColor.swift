@@ -1,7 +1,7 @@
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
 
-public enum UnoColor: String, Hashable, CaseIterable, RichValueConvertible {
+public enum UnoColor: String, Hashable, Sendable, CaseIterable, RichValueConvertible {
     case yellow = "yellow"
     case red = "red"
     case green = "green"

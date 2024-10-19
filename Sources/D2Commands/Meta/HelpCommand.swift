@@ -20,7 +20,11 @@ public class HelpCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        let authorLevel = context.author.map { permissionManager[simulated: $0] ?? permissionManager[$0] } ?? PermissionLevel.basic
+        let authorLevel = if let author = context.author {
+            await permissionManager.permissionLevel(for: author)
+        } else {
+            PermissionLevel.basic
+        }
         if input.isEmpty {
             if Int.random(in: 0..<1000) == 0 {
                 await output.append("https://www.youtube.com/watch?v=2Q_ZzBGPdqE") // easter egg
@@ -33,7 +37,7 @@ public class HelpCommand: StringCommand {
             } else if let command = context.registry[input] {
                 await output.append(commandHelpEmbed(for: input, command: command))
             } else {
-                let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.map(\.key)
+                let cmdsAndCategories = CommandCategory.allCases.map(\.rawValue) + context.registry.entries.map(\.key)
                 let alternative = cmdsAndCategories.min(by: ascendingComparator { $0.levenshteinDistance(to: input) }) ?? "?"
                 await output.append(Embed(
                     title: ":warning: Did not recognize command or category `\(input)`",
@@ -43,7 +47,7 @@ public class HelpCommand: StringCommand {
         }
     }
 
-    private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) -> Embed {
+    private func generalHelpEmbed(at authorLevel: PermissionLevel, context: CommandContext) async -> Embed {
         let commands = context.registry.commandsWithAliases()
         return Embed(
             title: ":question: Available Commands",

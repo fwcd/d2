@@ -1,14 +1,14 @@
 import Foundation
 import Geodesy
 import D2MessageIO
-import CairoGraphics
+@preconcurrency import CairoGraphics
 import Utils
-import GIF
-import SwiftSoup
+@preconcurrency import GIF
+@preconcurrency import SwiftSoup
 
 /// A value of a common format that
 /// can be sent to an output.
-public enum RichValue: Addable {
+public enum RichValue: Addable, Sendable {
     case none
     case text(String)
     case image(CairoImage)
@@ -26,7 +26,8 @@ public enum RichValue: Addable {
     case error(Error?, errorText: String)
     case files([Message.FileUpload])
     case attachments([Message.Attachment])
-    case lazy(Lazy<RichValue>)
+    // TODO: Find a better solution to this, maybe by just passing the closure?
+    case lazy(UncheckedSendable<Lazy<RichValue>>)
     case compound([RichValue])
 
     public var asText: String? {
@@ -98,7 +99,7 @@ public enum RichValue: Addable {
             case .error: .error
             case .files: .files
             case .attachments: .attachments
-            case .lazy(let value): value.wrappedValue.type
+            case .lazy(let value): value.wrappedValue.wrappedValue.type
             case .compound(let values): .compound(values.map(\.type))
         }
     }
@@ -107,7 +108,7 @@ public enum RichValue: Addable {
         switch self {
             case .none: []
             case let .compound(values): values
-            case let .lazy(wrapper): [wrapper.wrappedValue]
+            case let .lazy(wrapper): [wrapper.wrappedValue.wrappedValue]
             default: [self]
         }
     }
@@ -118,7 +119,7 @@ public enum RichValue: Addable {
         } else if case let .compound(values) = self {
             values.flatMap { $0.extract(using: extractor) }
         } else if case let .lazy(wrapper) = self {
-            wrapper.wrappedValue.extract(using: extractor)
+            wrapper.wrappedValue.wrappedValue.extract(using: extractor)
         } else {
             []
         }

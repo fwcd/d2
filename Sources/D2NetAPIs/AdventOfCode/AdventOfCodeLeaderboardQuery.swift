@@ -4,7 +4,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.AdventOfCodeLeaderboardQuery")
 
-public struct AdventOfCodeLeaderboardQuery {
+public struct AdventOfCodeLeaderboardQuery: Sendable{
     @globalActor
     private actor Cache: GlobalActor {
         static let refreshDelay: TimeInterval = 15 * 60

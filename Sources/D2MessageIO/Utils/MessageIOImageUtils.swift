@@ -1,6 +1,6 @@
 import Utils
-import CairoGraphics
-import GIF
+@preconcurrency import CairoGraphics
+@preconcurrency import GIF
 
 extension InteractiveTextChannel {
     public func send(image: CairoImage) async throws {

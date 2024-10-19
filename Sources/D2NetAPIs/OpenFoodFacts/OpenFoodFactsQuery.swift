@@ -1,6 +1,6 @@
 import Utils
 
-public struct OpenFoodFactsQuery {
+public struct OpenFoodFactsQuery: Sendable {
     public let code: String
 
     public init(code: String) {

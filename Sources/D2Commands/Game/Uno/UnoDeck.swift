@@ -1,4 +1,4 @@
-public struct UnoDeck: Hashable {
+public struct UnoDeck: Hashable, Sendable {
     public private(set) var cards: [UnoCard] = generateCards()
     public var isEmpty: Bool { return cards.isEmpty }
 

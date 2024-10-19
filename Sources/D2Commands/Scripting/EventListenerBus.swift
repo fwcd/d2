@@ -1,15 +1,16 @@
+@CommandActor
 public class EventListenerBus {
     /// Maps events to listeners
     private var listeners: [Event: [Listener]] = [:]
 
     public init() {}
 
-    private struct Listener {
+    private struct Listener: Sendable {
         let name: String
         let output: any CommandOutput
     }
 
-    public enum Event: String, CaseIterable {
+    public enum Event: String, CaseIterable, Sendable {
         case connect
         case createChannel
         case deleteChannel
@@ -35,7 +36,7 @@ public class EventListenerBus {
     public func fire(event: Event, with input: RichValue, context: CommandContext? = nil) async {
         for listener in listeners[event] ?? [] {
             if let c = context {
-                listener.output.update(context: c)
+                await listener.output.update(context: c)
             }
             await listener.output.append(input)
         }

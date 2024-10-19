@@ -1,5 +1,5 @@
 import Foundation
-import FeedKit
+@preconcurrency import FeedKit
 import Dispatch
 import Utils
 
@@ -23,9 +23,12 @@ public class FeedCommand<P>: VoidCommand where P: FeedPresenter {
         do {
             let parser = FeedParser(URL: url)
             let feed = try await withCheckedThrowingContinuation { continuation in
-                parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: continuation.resume(with:))
+                parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) {
+                    // TODO: Make this safe
+                    continuation.resume(with: $0.map { UncheckedSendable($0) })
+                }
             }
-            guard let embed = try self.presenter.present(feed: feed) else {
+            guard let embed = try self.presenter.present(feed: feed.wrappedValue) else {
                 await output.append(errorText: "Could not present feed")
                 return
             }

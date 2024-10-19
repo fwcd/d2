@@ -3,7 +3,7 @@ import Utils
 
 nonisolated(unsafe) private let tokenPattern = #/token:\s*"(?<token>[^"]+)"/#
 
-public struct FastQuery {
+public struct FastQuery: Sendable {
     private let rounds: Int
 
     public init(rounds: Int = 2) {

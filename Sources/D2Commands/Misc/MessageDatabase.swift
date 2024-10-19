@@ -1,6 +1,6 @@
 import Foundation
 import Logging
-import SQLite
+@preconcurrency import SQLite
 import D2MessageIO
 import Utils
 
@@ -64,10 +64,9 @@ fileprivate let occurrences = Expression<Int64>("occurrences")
 
 fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
 
-public class MessageDatabase: MarkovPredictor {
+public final class MessageDatabase: MarkovPredictor, Sendable {
     private let db: Connection
 
-    public private(set) lazy var initialMarkovDistribution: CustomDiscreteDistribution<String>? = queryInitialMarkovDistribution()
     public let markovOrder = 1
 
     public init() throws {
@@ -182,8 +181,8 @@ public class MessageDatabase: MarkovPredictor {
         }
     }
 
-    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: ((String) async -> Void)? = nil) async throws {
-        guard let guild = sink.guild(for: id) else { throw MessageDatabaseError.invalidID("\(id)") }
+    public func rebuildMessages(with sink: any Sink, from id: GuildID, debugMode: Bool = false, progressListener: (@Sendable (String) async -> Void)? = nil) async throws {
+        guard let guild = await sink.guild(for: id) else { throw MessageDatabaseError.invalidID("\(id)") }
 
         log.notice("Rebuilding messages in database...")
         try db.run(messages.delete())

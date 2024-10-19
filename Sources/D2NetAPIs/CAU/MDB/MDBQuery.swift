@@ -10,7 +10,7 @@ import Utils
 
 fileprivate let log = Logger(label: "D2NetAPIs.MDBQuery")
 
-public struct MDBQuery {
+public struct MDBQuery: Sendable {
     public let url: URL
 
     public init(
@@ -45,7 +45,7 @@ public struct MDBQuery {
                     return
                 }
 
-                let delegate = MDBXMLParserDelegate(then: continuation.resume(with:))
+                let delegate = MDBXMLParserDelegate(continuation: continuation)
                 let parser = XMLParser(data: data)
 
                 parser.delegate = delegate

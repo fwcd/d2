@@ -8,7 +8,7 @@ import Utils
 nonisolated(unsafe) private let htmlParagraphPattern = #/(?:<[pP]>)?\s*([\s\S]*)\s*(?:</[pP]>)/#
 
 class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
-    private let then: (Result<[MDBModule], any Error>) -> Void
+    private let continuation: CheckedContinuation<[MDBModule], any Error>
 
     private var modules = [MDBModule]()
 
@@ -22,8 +22,8 @@ class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
     private var currentCharacters = ""
     private var hasErrored = false
 
-    public init(then: @escaping (Result<[MDBModule], any Error>) -> Void) {
-        self.then = then
+    public init(continuation: CheckedContinuation<[MDBModule], any Error>) {
+        self.continuation = continuation
     }
 
     public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
@@ -104,20 +104,20 @@ class MDBXMLParserDelegate: NSObject, XMLParserDelegate {
         stackHeight -= 1
 
         if stackHeight <= 0 {
-            then(.success(modules))
+            continuation.resume(with: .success(modules))
         }
     }
 
     public func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         if !hasErrored {
-            then(.failure(parseError))
+            continuation.resume(with: .failure(parseError))
             hasErrored = true
         }
     }
 
     public func parser(_ parser: XMLParser, validationErrorOccurred validationError: any Error) {
         if !hasErrored {
-            then(.failure(validationError))
+            continuation.resume(with: .failure(validationError))
             hasErrored = true
         }
     }

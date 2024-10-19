@@ -14,7 +14,7 @@ public class TechSupportCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let guild = context.guild else {
+        guard let guild = await context.guild else {
             await output.append(errorText: "No guild available")
             return
         }

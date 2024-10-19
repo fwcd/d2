@@ -1,9 +1,11 @@
+import D2Commands
 import D2MessageIO
 
 /// Represents anything that receives/handles incoming Discord messages.
 ///
 /// Handlers are usually arranged in a "chain of responsibility" where
 /// the first successful handler stops propagation of the message.
+@CommandActor
 public protocol MessageHandler {
     /// Processes the message and returns whether it was handled (successfully).
     /// Handlers can also return false if they only "observed" the message, but

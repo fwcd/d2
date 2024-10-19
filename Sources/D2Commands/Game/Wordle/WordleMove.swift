@@ -1,4 +1,4 @@
-public struct WordleMove: CustomStringConvertible, Hashable {
+public struct WordleMove: CustomStringConvertible, Hashable, Sendable {
     public let word: String
     public var description: String { word }
 

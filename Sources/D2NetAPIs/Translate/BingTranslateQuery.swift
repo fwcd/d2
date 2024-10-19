@@ -1,6 +1,6 @@
 import Utils
 
-public struct BingTranslateQuery {
+public struct BingTranslateQuery: Sendable {
     private let sourceLanguage: String?
     private let targetLanguage: String
     private let text: String

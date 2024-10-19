@@ -1,11 +1,11 @@
-import IRC
+@preconcurrency import IRC
 import NIO
 import Logging
 import D2MessageIO
 
 fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
 
-public class IRCClientManager: IRCClientDelegate {
+public actor IRCClientManager: IRCClientDelegate {
     private let receiver: any Receiver
     private let combinedSink: CombinedSink
     private let name: String
@@ -22,7 +22,7 @@ public class IRCClientManager: IRCClientDelegate {
         config: IRCConfig,
         name: String,
         channelsToJoin: [String]
-    ) {
+    ) async {
         self.receiver = receiver
         self.combinedSink = combinedSink
         self.name = name
@@ -37,20 +37,14 @@ public class IRCClientManager: IRCClientDelegate {
         ))
         ircClient.delegate = self
 
-        combinedSink.register(sink: IRCSink(client: ircClient, name: name))
+        await combinedSink.register(sink: IRCSink(client: ircClient, name: name))
     }
 
     public func connect() {
         ircClient.connect()
     }
 
-    public func clientFailedToRegister(_ ircClient: IRCClient) {
-        log.warning("Client failed to register")
-    }
-
-    public func client(_ ircClient: IRCClient, registered nick: IRCNickName, with userInfo: IRCUserInfo) {
-        log.info("Registered \(nick) with \(userInfo)")
-
+    private func autojoin() {
         if !joined && !channelsToJoin.isEmpty {
             joined = true
             log.info("Auto-joining channels \(channelsToJoin)...")
@@ -58,23 +52,35 @@ public class IRCClientManager: IRCClientDelegate {
         }
     }
 
-    public func client(_ ircClient: IRCClient, user: IRCUserID, joined channels: [ IRCChannelName ]) {
+    public nonisolated func clientFailedToRegister(_ ircClient: IRCClient) {
+        log.warning("Client failed to register")
+    }
+
+    public nonisolated func client(_ ircClient: IRCClient, registered nick: IRCNickName, with userInfo: IRCUserInfo) {
+        log.info("Registered \(nick) with \(userInfo)")
+
+        Task {
+            await autojoin()
+        }
+    }
+
+    public nonisolated func client(_ ircClient: IRCClient, user: IRCUserID, joined channels: [ IRCChannelName ]) {
         log.info("\(user) joined \(channels)")
     }
 
-    public func client(_ ircClient: IRCClient, user: IRCUserID, left channels: [ IRCChannelName ]) {
+    public nonisolated func client(_ ircClient: IRCClient, user: IRCUserID, left channels: [ IRCChannelName ]) {
         log.info("\(user) left \(channels)")
     }
 
-    public func client(_ client: IRCClient, messageOfTheDay: String) {
+    public nonisolated func client(_ client: IRCClient, messageOfTheDay: String) {
         log.info("Message of the day: \(messageOfTheDay)")
     }
 
-    public func client(_ ircClient: IRCClient, received message: IRCMessage) {
+    public nonisolated func client(_ ircClient: IRCClient, received message: IRCMessage) {
         log.info("Received: \(message)")
     }
 
-    public func client(_ ircClient: IRCClient, message: String, from sender: IRCUserID, for recipients: [ IRCMessageRecipient ]) {
+    public nonisolated func client(_ ircClient: IRCClient, message: String, from sender: IRCUserID, for recipients: [ IRCMessageRecipient ]) {
         log.debug("Received: \(message) (recipients: \(recipients))")
         guard case let .channel(channelName)? = recipients.first else { return }
 
@@ -86,12 +92,12 @@ public class IRCClientManager: IRCClientDelegate {
             channelId: ID(channelName.stringValue, clientName: name)
         )
 
-        Task {
+        Task { @Sendable in
             await receiver.on(createMessage: m, sink: overlaySink(with: ircClient))
         }
     }
 
-    private func overlaySink(with ircClient: IRCClient) -> Sink {
+    private func overlaySink(with ircClient: IRCClient) -> some Sink {
         OverlaySink(inner: combinedSink, name: name)
     }
 }

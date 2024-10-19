@@ -1,6 +1,6 @@
 import Utils
 
-public struct IcndbJokeQuery {
+public struct IcndbJokeQuery: Sendable {
     private var params: [String: String] = [:]
 
     public init(

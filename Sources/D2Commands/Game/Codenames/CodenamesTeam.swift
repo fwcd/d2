@@ -1,4 +1,4 @@
-public enum CodenamesTeam: Hashable, CaseIterable, RichValueConvertible {
+public enum CodenamesTeam: Hashable, CaseIterable, RichValueConvertible, Sendable {
     case red
     case blue
 

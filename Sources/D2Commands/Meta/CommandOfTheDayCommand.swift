@@ -19,6 +19,7 @@ public class CommandOfTheDayCommand: VoidCommand {
         var hasher = Hasher()
         hasher.combine(calendar.dateComponents([.year, .month, .day], from: Date()))
         let commandEntries = context.registry
+            .entries
             .compactMap { (k, v) in v.asCommand.map { (k, $0) } }
             .filter { (_, c) in c.info.requiredPermissionLevel == .basic }
         let (name, command) = commandEntries[abs(hasher.finalize()) % commandEntries.count]

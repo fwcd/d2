@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-public struct IMDBQuery {
+public struct IMDBQuery: Sendable {
     private let query: String
     private var formattedQuery: String {
         query

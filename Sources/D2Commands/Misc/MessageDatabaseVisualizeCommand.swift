@@ -1,6 +1,6 @@
 import Foundation
-import GraphViz
-import CairoGraphics
+@preconcurrency import GraphViz
+@preconcurrency import CairoGraphics
 import D2MessageIO
 import Utils
 
@@ -55,7 +55,9 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
 
                     do {
                         let data = try await withCheckedThrowingContinuation { continuation in
-                            graph.render(using: .fdp, to: .png, completion: continuation.resume(with:))
+                            graph.render(using: .fdp, to: .png) {
+                                continuation.resume(with: $0)
+                            }
                         }
                         try await output.append(CairoImage(pngData: data))
                     } catch {
@@ -74,7 +76,7 @@ public class MessageDatabaseVisualizeCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        guard let guildId = context.guild?.id else {
+        guard let guildId = await context.guild?.id else {
             await output.append(errorText: "Not on a guild!")
             return
         }

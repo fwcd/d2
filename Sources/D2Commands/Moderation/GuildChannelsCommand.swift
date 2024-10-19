@@ -20,7 +20,7 @@ public class GuildChannelsCommand: StringCommand {
         let useChannelLinks: Bool
 
         if input.isEmpty {
-            guard let guild = context.guild else {
+            guard let guild = await context.guild else {
                 await output.append(errorText: "Not on a guild!")
                 return
             }
@@ -31,7 +31,7 @@ public class GuildChannelsCommand: StringCommand {
             useChannelLinks = false
         }
 
-        guard let guild = sink.guild(for: guildId) else {
+        guard let guild = await sink.guild(for: guildId) else {
             await output.append(errorText: "No guild with this id found!")
             return
         }

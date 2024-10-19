@@ -1,6 +1,6 @@
 import Utils
 
-public struct RedditQuery {
+public struct RedditQuery: Sendable {
     private let subreddit: String
     private let maxResults: Int
 

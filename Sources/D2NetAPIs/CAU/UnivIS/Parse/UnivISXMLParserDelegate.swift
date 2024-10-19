@@ -8,7 +8,7 @@ import Utils
 fileprivate let log = Logger(label: "D2NetAPIs.UnivISXMLParserDelegate")
 
 class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
-    let then: (Result<UnivISOutputNode, any Error>) -> Void
+    let continuation: CheckedContinuation<UnivISOutputNode, any Error>
     let registeredBuilderFactories: [String: () -> UnivISObjectNodeXMLBuilder] = [
         "Event": { UnivISEventXMLBuilder() },
         "Room": { UnivISRoomXMLBuilder() },
@@ -22,8 +22,8 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
     var currentCharacters = ""
     var hasErrored = false
 
-    init(then: @escaping (Result<UnivISOutputNode, any Error>) -> Void) {
-        self.then = then
+    init(continuation: CheckedContinuation<UnivISOutputNode, any Error>) {
+        self.continuation = continuation
     }
 
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String]) {
@@ -44,7 +44,7 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
                 currentName = elementName
             } // else ignore unrecognized element
         } catch {
-            then(.failure(error))
+            continuation.resume(with: .failure(error))
         }
     }
 
@@ -58,7 +58,7 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
         do {
             if elementName == "UnivIS" {
                 log.trace("Ending parsing")
-                then(.success(UnivISOutputNode(childs: nodes)))
+                continuation.resume(with: .success(UnivISOutputNode(childs: nodes)))
             } else if let builder = nodeBuilder {
                 if elementName == currentName {
                     // Exit object node
@@ -79,20 +79,20 @@ class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
 
             currentCharacters = ""
         } catch {
-            then(.failure(error))
+            continuation.resume(with: .failure(error))
         }
     }
 
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         if !hasErrored {
-            then(.failure(parseError))
+            continuation.resume(with: .failure(parseError))
             hasErrored = true
         }
     }
 
     func parser(_ parser: XMLParser, validationErrorOccurred validationError: any Error) {
         if !hasErrored {
-            then(.failure(validationError))
+            continuation.resume(with: .failure(validationError))
             hasErrored = true
         }
     }

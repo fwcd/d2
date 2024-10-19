@@ -1,4 +1,4 @@
-public struct UnivISTerm: Hashable {
+public struct UnivISTerm: Hashable, Sendable {
     public var enddate: String? = nil
     public var endtime: String? = nil
     public var room: UnivISRef? = nil
