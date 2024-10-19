@@ -25,7 +25,7 @@ public struct SpamHandler: MessageHandler {
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)
     }
 
-    public mutating func handle(message: Message, sink: any Sink) async throws -> Bool {
+    public mutating func handle(message: Message, sink: any Sink) async -> Bool {
         guard
             isPossiblySpam(message: message),
             let author = message.author,
