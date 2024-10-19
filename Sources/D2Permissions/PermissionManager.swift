@@ -56,8 +56,16 @@ public actor PermissionManager {
     }
 
     public func userID(_ id: UserID, hasPermission requiredLevel: Int, usingSimulated: Bool = true) -> Bool {
-        let userLevel = self[simulated: id].filter { _ in usingSimulated } ?? self[id]
+        let userLevel = permissionLevel(for: id, usingSimulated: usingSimulated)
         return userLevel.rawValue >= requiredLevel
+    }
+
+    public func permissionLevel(for user: User, usingSimulated: Bool = true) -> PermissionLevel {
+        permissionLevel(for: user.id, usingSimulated: usingSimulated)
+    }
+
+    public func permissionLevel(for id: UserID, usingSimulated: Bool = true) -> PermissionLevel {
+        self[simulated: id].filter { _ in usingSimulated } ?? self[id]
     }
 
     public func remove(permissionsFrom user: User) {
