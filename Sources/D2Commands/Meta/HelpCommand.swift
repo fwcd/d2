@@ -21,7 +21,12 @@ public class HelpCommand: StringCommand {
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
         let authorLevel = if let author = context.author {
-            await permissionManager[simulated: author] ?? permissionManager[author]
+            // Unfortunately we cannot use nil coalescing (??) here since we need to await the default value
+            if let simulatedLevel = await permissionManager[simulated: author] {
+                simulatedLevel
+            } else {
+                await permissionManager[author]
+            }
         } else {
             PermissionLevel.basic
         }
