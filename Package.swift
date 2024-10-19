@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/fwcd/swift-gif.git", from: "4.0.0"),
         .package(url: "https://github.com/fwcd/swift-mensa.git", from: "0.2.0"),
         .package(url: "https://github.com/fwcd/swift-music-theory.git", from: "0.2.0"),
-        .package(url: "https://github.com/fwcd/swift-static-map.git", from: "0.5.0"),
+        .package(url: "https://github.com/fwcd/swift-static-map.git", from: "0.6.0"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.59.0"),
         .package(url: "https://github.com/Kitura/BlueSocket.git", .upToNextMinor(from: "2.0.4")),
         .package(url: "https://github.com/swift-server/swift-backtrace.git", from: "1.3.3"),
