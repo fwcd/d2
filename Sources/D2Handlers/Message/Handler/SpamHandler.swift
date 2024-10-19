@@ -15,11 +15,11 @@ fileprivate struct SpammerProfile {
 /// them a spammer role (which can be configured using a command).
 public struct SpamHandler: MessageHandler {
     @Binding private var config: SpamConfiguration
-    private let dateProvider: () -> Date
+    private let dateProvider: @CommandActor () -> Date
     private let lastSpamMessages: ExpiringList<Message>
     private var cautionedSpammers = Set<UserID>()
 
-    public init(@Binding config: SpamConfiguration, dateProvider: @escaping () -> Date = Date.init) {
+    public init(@Binding config: SpamConfiguration, dateProvider: @CommandActor @escaping () -> Date = Date.init) {
         self._config = _config
         self.dateProvider = dateProvider
         lastSpamMessages = ExpiringList(dateProvider: dateProvider)

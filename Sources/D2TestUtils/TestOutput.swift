@@ -6,7 +6,7 @@ import D2Commands
 /// An implementation of CommandOutput and Sink
 /// that writes all messages into an array.
 @CommandActor
-public class TestOutput {
+public final class TestOutput {
     private var _messages = [Message]() {
         didSet {
             changed = true
@@ -46,6 +46,10 @@ public class TestOutput {
 
     private func append(message: Message) {
         _messages.append(message)
+    }
+
+    public func modify(action: @CommandActor (TestOutput) throws -> Void) rethrows {
+        try action(self)
     }
 }
 

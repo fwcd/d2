@@ -4,36 +4,55 @@ import D2TestUtils
 @testable import D2Handlers
 
 final class LuckyNumberHandlerTests: XCTestCase {
-    func testLuckyNumbers() {
-        let handler = LuckyNumberHandler(luckyNumbers: [42])
+    func testLuckyNumbers() async {
+        let handler = await LuckyNumberHandler(luckyNumbers: [42])
+        var isLucky: Bool
 
-        XCTAssertFalse(handler.isLucky(12))
-        XCTAssertFalse(handler.isLucky(41))
-        XCTAssertTrue(handler.isLucky(42))
-        XCTAssertFalse(handler.isLucky(420))
+        isLucky = await handler.isLucky(12)
+        XCTAssertFalse(isLucky)
+
+        isLucky = await handler.isLucky(41)
+        XCTAssertFalse(isLucky)
+
+        isLucky = await handler.isLucky(42)
+        XCTAssertTrue(isLucky)
+
+        isLucky = await handler.isLucky(420)
+        XCTAssertFalse(isLucky)
     }
 
-    func testPowerOfTenLuckyNumbers() {
-        let handler = LuckyNumberHandler(luckyNumbers: [42], acceptPowerOfTenMultiples: true)
+    func testPowerOfTenLuckyNumbers() async {
+        let handler = await LuckyNumberHandler(luckyNumbers: [42], acceptPowerOfTenMultiples: true)
+        var isLucky: Bool
 
-        XCTAssertFalse(handler.isLucky(12))
-        XCTAssertFalse(handler.isLucky(41))
-        XCTAssertTrue(handler.isLucky(42))
-        XCTAssertTrue(handler.isLucky(420))
+        isLucky = await handler.isLucky(12)
+        XCTAssertFalse(isLucky)
+
+        isLucky = await handler.isLucky(41)
+        XCTAssertFalse(isLucky)
+
+        isLucky = await handler.isLucky(42)
+        XCTAssertTrue(isLucky)
+
+        isLucky = await handler.isLucky(420)
+        XCTAssertTrue(isLucky)
     }
 
     func testMessageTrigger() async {
-        let handler = LuckyNumberHandler(luckyNumbers: [42])
-        let output = TestOutput()
+        let handler = await LuckyNumberHandler(luckyNumbers: [42])
+        let output = await TestOutput()
 
         let message = Message(
             content: "40 is a nice number and so is 2",
             channelId: ID("Dummy Channel")
         )
-        output.messages.append(message)
+        await output.modify {
+            $0.messages.append(message)
+        }
         _ = await handler.handle(message: message, sink: output)
 
-        XCTAssertEqual(output.lastContent, """
+        let lastContent = await output.lastContent
+        XCTAssertEqual(lastContent, """
             All the numbers in your message added up to 42. Congrats!
             ```
             40 + 2 = 42

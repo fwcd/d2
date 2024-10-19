@@ -4,10 +4,11 @@ import D2TestUtils
 
 final class EchoCommandTests: XCTestCase {
     func testInvocation() async throws {
-        let command = EchoCommand()
-        let output = TestOutput()
+        let command = await EchoCommand()
+        let output = await TestOutput()
 
         await command.testInvoke(with: .text("demo"), output: output)
-        XCTAssertEqual(output.lastContent, "demo")
+        let lastContent = await output.lastContent
+        XCTAssertEqual(lastContent, "demo")
     }
 }

@@ -21,7 +21,7 @@ final class TriggerReactionHandlers: XCTestCase {
 
     private func messageTriggersWeather(_ content: String) async -> Bool {
         let emoji = ":test:"
-        let handler = TriggerReactionHandler($configuration: .constant(
+        let handler = await TriggerReactionHandler($configuration: .constant(
             TriggerReactionConfiguration(
                 dateSpecificReactions: false,
                 weatherReactions: true
@@ -29,14 +29,16 @@ final class TriggerReactionHandlers: XCTestCase {
         )) {
             emoji
         }
-        let output = TestOutput()
+        let output = await TestOutput()
         let message = Message(
             content: content,
             channelId: ID("Dummy Channel"),
             id: ID("Dummy Message")
         )
-        output.messages.append(message)
+        await output.modify {
+            $0.messages.append(message)
+        }
         _ = await handler.handle(message: message, sink: output)
-        return output.lastReactions.contains { $0.emoji.name == emoji }
+        return await output.lastReactions.contains { $0.emoji.name == emoji }
     }
 }
