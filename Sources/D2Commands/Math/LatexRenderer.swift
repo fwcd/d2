@@ -9,7 +9,12 @@ fileprivate let latexPrefix = "latex"
 struct LatexRenderer: Sendable {
     private let node = NodePackage(name: "latex-renderer")
 
-    func renderImage(from formula: String, color: String = "white", scale: Double = 2) async throws -> CairoImage {
+    func renderImage(
+        from formula: String,
+        color: String = "white",
+        scale: Double = 2,
+        isolation: isolated (any Actor)? = #isolation
+    ) async throws -> CairoImage {
         try await CairoImage(pngData: renderPNG(from: formula, color: color, scale: scale))
     }
 
