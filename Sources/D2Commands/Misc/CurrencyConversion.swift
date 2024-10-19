@@ -6,7 +6,7 @@ private let log = Logger(label: "D2Commands.CurrencyConversion")
 
 @CommandActor
 public struct CurrencyConversion: AsyncBijection {
-    private static var exchangeRates = AsyncLazyExpiring(in: 240.0 /* seconds */) {
+    private static let exchangeRates = AsyncLazyExpiring(in: 240.0 /* seconds */) {
         try await ExchangeApiQuery().perform()
     }
 
