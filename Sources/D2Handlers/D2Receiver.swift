@@ -502,7 +502,7 @@ public class D2Receiver: Receiver {
                     .prefix(10)
 
                 let options = shownCmds
-                    .asyncMap { @CommandActor in
+                    .map {
                         MIOCommand.Option(
                             type: .subCommand,
                             name: ([$0.name] + $0.aliases).first { (3..<32).contains($0.count) } ?? $0.name.truncated(to: 28, appending: "..."),
