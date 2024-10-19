@@ -30,7 +30,10 @@ public extension CommandOutput {
         await append(.embed(embed), to: channel)
     }
 
-    func append(_ image: CairoImage, name: String? = nil, to channel: OutputChannel = .defaultChannel) async throws {
+    // FIXME: We avoid hopping to another actor here to work around CairoImage
+    // not being sendable. This is non-ideal, since we (unsafely) store it in
+    // RichValue anyway, which is Sendable.
+    func append(_ image: CairoImage, name: String? = nil, to channel: OutputChannel = .defaultChannel, isolation: isolated (any Actor)? = #isolation) async throws {
         await append(.image(image), to: channel)
     }
 
