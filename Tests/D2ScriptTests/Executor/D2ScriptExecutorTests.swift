@@ -1,8 +1,8 @@
-import XCTest
+import Testing
 @testable import D2Script
 
-final class D2ScriptExecutorTests: XCTestCase {
-    func testExecutor() async throws {
+struct D2ScriptExecutorTests {
+    @Test func executor() async throws {
         let executor = D2ScriptExecutor()
         let parser = D2ScriptParser()
         let script = try parser.parse("""
@@ -17,13 +17,13 @@ final class D2ScriptExecutorTests: XCTestCase {
             output.append($0)
             return nil
         }
-        XCTAssert(executor.topLevelStorage.commandNames.isEmpty)
+        #expect(executor.topLevelStorage.commandNames.isEmpty)
 
         await executor.run(script)
-        XCTAssert(output.isEmpty)
-        XCTAssertEqual(executor.topLevelStorage.commandNames, ["test"])
+        #expect(output.isEmpty)
+        #expect(executor.topLevelStorage.commandNames == ["test"])
 
         await executor.call(command: "test")
-        XCTAssertEqual(output, [[.string("A")], [.string("B")]])
+        #expect(output == [[.string("A")], [.string("B")]])
     }
 }
