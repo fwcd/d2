@@ -1,17 +1,17 @@
-import XCTest
+import Testing
 @testable import D2Commands
 
-final class WordleBoardTests: XCTestCase {
-    func testClues() throws {
-        XCTAssertEqual(WordleBoard.Clues(fromArray: [.here]).count, 1)
-        XCTAssertEqual(WordleBoard.Clues(fromArray: [.nowhere, .somewhere]).count, 2)
-
-        testCodingRoundtrip(for: [])
-        testCodingRoundtrip(for: [.somewhere, .unknown])
-        testCodingRoundtrip(for: [.nowhere, .somewhere, .somewhere, .here, .nowhere])
+struct WordleBoardTests {
+    @Test func clues() {
+        #expect(WordleBoard.Clues(fromArray: [.here]).count == 1)
+        #expect(WordleBoard.Clues(fromArray: [.nowhere, .somewhere]).count == 2)
     }
 
-    private func testCodingRoundtrip(for clues: [WordleBoard.Clue]) {
-        XCTAssertEqual(Array(WordleBoard.Clues(fromArray: clues)), clues)
+    @Test(arguments: [
+        [WordleBoard.Clue](),
+        [.somewhere, .unknown],
+        [.nowhere, .somewhere, .somewhere, .here, .nowhere],
+    ]) func codingRoundtrip(clues: [WordleBoard.Clue]) {
+        #expect(Array(WordleBoard.Clues(fromArray: clues)) == clues)
     }
 }
