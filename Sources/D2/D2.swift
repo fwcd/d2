@@ -78,11 +78,11 @@ struct D2: AsyncParsableCommand {
         let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 
         // Create platforms
-        var combinedSink: CombinedSink! = CombinedSink(mioCommandSinkName: "Discord")
+        let combinedSink = CombinedSink(mioCommandSinkName: "Discord")
         var platforms: [any Startable] = []
         var createdAnyPlatform = false
 
-        var receiver: D2Receiver! = try await D2Receiver(
+        let receiver = try await D2Receiver(
             withPrefix: commandPrefix,
             hostInfo: hostInfo,
             initialPresence: actualInitialPresence,
@@ -127,8 +127,6 @@ struct D2: AsyncParsableCommand {
         source.setEventHandler {
             log.info("Shutting down...")
             platforms.removeAll()
-            receiver = nil
-            combinedSink = nil
             try! eventLoopGroup.syncShutdownGracefully()
             Self.exit()
         }
