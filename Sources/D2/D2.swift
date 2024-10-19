@@ -47,7 +47,7 @@ struct D2: AsyncParsableCommand {
         }
 
         await logOutput.register {
-            logBuffer.push($0)
+            await logBuffer.push($0)
         }
 
         LoggingSystem.bootstrap {

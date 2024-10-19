@@ -1,8 +1,8 @@
 import Utils
 
 /// A cyclic buffer for log messages.
-public class LogBuffer: Sequence {
-    private var lastOutputs: CircularArray<String>
+public actor LogBuffer {
+    public private(set) var lastOutputs: CircularArray<String>
 
     public var count: Int { lastOutputs.count }
 
@@ -16,9 +16,5 @@ public class LogBuffer: Sequence {
 
     public func suffix(_ n: Int) -> [String] {
         lastOutputs.suffix(n)
-    }
-
-    public func makeIterator() -> CircularArray<String>.Iterator {
-        lastOutputs.makeIterator()
     }
 }
