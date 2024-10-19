@@ -35,7 +35,7 @@ public struct SubscriptionInteractionHandler: InteractionHandler {
                 subscriptions: $1,
                 eventLoopGroup: eventLoopGroup
             )
-            let output = await MessageIOInteractionOutput(interaction: interaction, context: context)
+            let output = MessageIOInteractionOutput(interaction: interaction, context: context)
             await registry[$0]?.onSubscriptionInteraction(with: customId, by: user, output: output, context: context)
         }
         return true
