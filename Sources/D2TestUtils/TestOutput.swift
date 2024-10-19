@@ -5,6 +5,7 @@ import D2Commands
 
 /// An implementation of CommandOutput and Sink
 /// that writes all messages into an array.
+@CommandActor
 public class TestOutput {
     private var _messages = [Message]() {
         didSet {
@@ -60,7 +61,7 @@ extension TestOutput: CommandOutput {
 }
 
 extension TestOutput: DefaultSink {
-    public var name: String { "Test" }
+    public nonisolated var name: String { "Test" }
 
     public func guild(for guildId: GuildID) -> Guild? {
         guilds?.first { $0.id == guildId }
