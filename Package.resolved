@@ -1,5 +1,5 @@
 {
-  "originHash" : "586901c3b6450bf6234c617ec0f3c0503c63879e25fac76f0c631addb3d26291",
+  "originHash" : "aece7f9f4611510304a266430d437137dfd7425cf1bd244a03d0690a6cc5c869",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-utils.git",
       "state" : {
-        "revision" : "394a274f73c9022cbb6fee52b6fa1e4b0ca36da8",
-        "version" : "4.3.0"
+        "revision" : "93e978b2089bcdda06fc04b14eea71aa63a02b47",
+        "version" : "4.4.0"
       }
     },
     {
