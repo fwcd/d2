@@ -82,7 +82,7 @@ struct D2: AsyncParsableCommand {
         var platforms: [any Startable] = []
         var createdAnyPlatform = false
 
-        var receiver: D2Receiver! = try D2Receiver(
+        var receiver: D2Receiver! = try await D2Receiver(
             withPrefix: commandPrefix,
             hostInfo: hostInfo,
             initialPresence: actualInitialPresence,
