@@ -10,6 +10,7 @@ import Utils
 fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
 
 /// A segment of an invocation pipe that transfers outputs from one command to another.
+@CommandActor
 fileprivate class PipeComponent {
     let name: String
     let command: any Command
@@ -40,6 +41,7 @@ fileprivate struct RunnablePipe: AsyncRunnable {
 nonisolated(unsafe) private let commandPattern = #/(?<name>\w+)(?:\^(?<iterations>\d+))?(?:\s+(?<args>[\s\S]*))?/#
 
 /// Handles (possibly piped or chained) command invocations.
+@CommandActor
 public class CommandHandler: MessageHandler {
     private let commandPrefix: String
     private let hostInfo: HostInfo
