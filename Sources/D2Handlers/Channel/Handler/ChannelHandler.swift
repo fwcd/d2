@@ -1,6 +1,8 @@
+import D2Commands
 import D2MessageIO
 
 /// Anything that handles channel updates from Discord.
+@CommandActor
 public protocol ChannelHandler {
     mutating func handle(channelCreate channel: Channel, sink: any Sink) async
 

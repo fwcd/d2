@@ -41,7 +41,6 @@ fileprivate struct RunnablePipe: AsyncRunnable {
 nonisolated(unsafe) private let commandPattern = #/(?<name>\w+)(?:\^(?<iterations>\d+))?(?:\s+(?<args>[\s\S]*))?/#
 
 /// Handles (possibly piped or chained) command invocations.
-@CommandActor
 public class CommandHandler: MessageHandler {
     private let commandPrefix: String
     private let hostInfo: HostInfo

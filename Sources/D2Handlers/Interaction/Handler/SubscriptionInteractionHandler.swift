@@ -2,7 +2,6 @@ import D2MessageIO
 import D2Commands
 import NIO
 
-@CommandActor
 public struct SubscriptionInteractionHandler: InteractionHandler {
     private let commandPrefix: String
     private let hostInfo: HostInfo

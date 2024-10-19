@@ -4,7 +4,6 @@ import D2MessageIO
 import D2Permissions
 import D2Commands
 
-@CommandActor
 public struct MIOCommandInteractionHandler: InteractionHandler {
     private let registry: CommandRegistry
     private let hostInfo: HostInfo
