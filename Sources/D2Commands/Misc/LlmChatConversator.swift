@@ -5,7 +5,8 @@ import D2MessageIO
 
 fileprivate let log = Logger(label: "D2Commands.LlmChatConversator")
 
-public actor LlmChatConversator: Conversator {
+@CommandActor
+public class LlmChatConversator: Conversator {
     private let session: NodePackage.JsonSession
     private let systemPrompt: () -> String
     private var isAnswering = false

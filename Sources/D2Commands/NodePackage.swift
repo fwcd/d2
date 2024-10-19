@@ -19,6 +19,7 @@ struct NodePackage: Sendable {
     }
 
     /// Invokes `npm start` and return a wrapper for communicating via newline-delimited JSON messages.
+    @CommandActor
     func startJsonSession(_ args: [String] = []) throws -> JsonSession {
         let shell = Shell()
         let (_, process) = shell.newProcess("npm", in: directoryURL, args: npmArgs + args)
@@ -35,6 +36,7 @@ struct NodePackage: Sendable {
     }
 
     /// A wrapper around a process that facilitates communication via newline-delimited JSON messages.
+    @CommandActor
     class JsonSession {
         private let process: Process
 

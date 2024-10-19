@@ -23,7 +23,9 @@ public class FeedCommand<P>: VoidCommand where P: FeedPresenter {
         do {
             let parser = FeedParser(URL: url)
             let feed = try await withCheckedThrowingContinuation { continuation in
-                parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: continuation.resume(with:))
+                parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { @Sendable in
+                    continuation.resume(with: $0)
+                }
             }
             guard let embed = try self.presenter.present(feed: feed) else {
                 await output.append(errorText: "Could not present feed")
