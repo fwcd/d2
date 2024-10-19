@@ -86,8 +86,6 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
             </queryresult>
             """
 
-        // FIXME: Fix potential compile issues once D2 compiles
-
         let result = try await withCheckedThrowingContinuation { continuation in
             let parser = XMLParser(data: xml.data(using: .utf8)!)
             let delegate = WolframAlphaParserDelegate(continuation: continuation)
@@ -99,15 +97,6 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
             log.debug("Done")
 
             XCTAssert(result, "XML parser should succeed")
-        }
-
-        guard case let .success(result) = $0 else {
-            if case let .failure(error) = $0 {
-                XCTFail("WolframAlpha parser delegate throwed \(error)")
-            } else {
-                XCTFail("WolframAlpha parser delegate failed")
-            }
-            return
         }
 
         XCTAssertEqual(result.success, true)
