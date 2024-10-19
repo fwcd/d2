@@ -2,6 +2,7 @@ import D2Commands
 import D2MessageIO
 import NIO
 
+@CommandActor
 public struct SubscriptionReactionHandler: ReactionHandler {
     private let commandPrefix: String
     private let registry: CommandRegistry
