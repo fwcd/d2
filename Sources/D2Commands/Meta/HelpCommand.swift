@@ -20,7 +20,11 @@ public class HelpCommand: StringCommand {
     }
 
     public func invoke(with input: String, output: any CommandOutput, context: CommandContext) async {
-        let authorLevel = await context.author.asyncMap { await permissionManager[simulated: $0] ?? permissionManager[$0] } ?? PermissionLevel.basic
+        let authorLevel = if let author = context.author {
+            await permissionManager[simulated: author] ?? permissionManager[author]
+        } else {
+            PermissionLevel.basic
+        }
         if input.isEmpty {
             if Int.random(in: 0..<1000) == 0 {
                 await output.append("https://www.youtube.com/watch?v=2Q_ZzBGPdqE") // easter egg
