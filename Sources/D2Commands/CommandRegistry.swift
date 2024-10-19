@@ -11,7 +11,7 @@ public class CommandRegistry {
 
     public init() {}
 
-    public enum Entry {
+    public enum Entry: Sendable {
         case command(any Command)
         case alias(String)
 

@@ -484,7 +484,7 @@ public class D2Receiver: Receiver {
         }
 
         do {
-            try await partyGameDB.setupTables()
+            try partyGameDB.setupTables()
         } catch {
             log.warning("Could not setup party game database: \(error)")
         }

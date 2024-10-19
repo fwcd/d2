@@ -221,7 +221,7 @@ public class CommandHandler: MessageHandler {
                 } else {
                     log.notice("Did not recognize command '\(name)'")
                     if !isBot {
-                        let alternative = registry.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
+                        let alternative = registry.entries.map { $0.0 }.min(by: ascendingComparator { $0.levenshteinDistance(to: name) })
                         _ = try? await sink.sendMessage("Sorry, I do not know the command `\(name)`.\(alternative.map { " Did you mean `\($0)`?" } ?? "")", to: channelId)
                     }
                     return nil

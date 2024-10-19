@@ -4,6 +4,7 @@ import D2MessageIO
 import D2Permissions
 import D2Commands
 
+@CommandActor
 public struct MIOCommandInteractionHandler: InteractionHandler {
     private let registry: CommandRegistry
     private let hostInfo: HostInfo
@@ -32,7 +33,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
                 content: content,
                 author: interaction.member?.user,
                 channelId: interaction.channelId,
-                guild: interaction.guildId.asyncFlatMap(sink.guild(for:)),
+                guild: await interaction.guildId.asyncFlatMap(sink.guild(for:)),
                 guildMember: interaction.member
             ),
             commandPrefix: "/", // TODO: Find a more elegant solution than hardcoding the slash
@@ -46,7 +47,7 @@ public struct MIOCommandInteractionHandler: InteractionHandler {
             await output.append(errorText: "The interaction must have an author!")
             return true
         }
-        guard let command = await registry[invocation.name] else {
+        guard let command = registry[invocation.name] else {
             await output.append(errorText: "Unknown command name `\(invocation.name)`")
             return true
         }
