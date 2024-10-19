@@ -41,7 +41,8 @@ struct NodePackage: Sendable {
         private let process: Process
 
         private let stdinFileHandle: FileHandle
-        private var stdoutLines: AsyncThrowingStream<String, any Error>.AsyncIterator
+        // TODO: Figure out how to make this safe (why aren't we allowed to mutate actor-isolated state with an async function?)
+        private nonisolated(unsafe) var stdoutLines: AsyncThrowingStream<String, any Error>.AsyncIterator
 
         private let encoder = JSONEncoder()
         private let decoder = JSONDecoder()
