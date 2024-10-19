@@ -1,14 +1,13 @@
-import XCTest
+import Testing
 import D2TestUtils
 @testable import D2Commands
 
-final class EchoCommandTests: XCTestCase {
-    func testInvocation() async throws {
+struct EchoCommandTests {
+    @Test func invocation() async {
         let command = await EchoCommand()
         let output = await TestOutput()
 
         await command.testInvoke(with: .text("demo"), output: output)
-        let lastContent = await output.lastContent
-        XCTAssertEqual(lastContent, "demo")
+        #expect(await output.lastContent == "demo")
     }
 }
