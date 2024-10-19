@@ -13,9 +13,9 @@ public protocol ReactionHandler {
 }
 
 public extension ReactionHandler {
-    func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {}
+    mutating func handle(createdReaction emoji: Emoji, to messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {}
 
-    func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {}
+    mutating func handle(deletedReaction emoji: Emoji, from messageId: MessageID, on channelId: ChannelID, by userId: UserID, sink: any Sink) async {}
 
-    func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, sink: any Sink) async {}
+    mutating func handle(deletedAllReactionsFrom messageId: MessageID, on channelId: ChannelID, sink: any Sink) async {}
 }

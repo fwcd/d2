@@ -8,5 +8,5 @@ public protocol InteractionHandler {
 }
 
 extension InteractionHandler {
-    func handle(interaction: Interaction, sink: any Sink) -> Bool { false }
+    mutating func handle(interaction: Interaction, sink: any Sink) -> Bool { false }
 }
