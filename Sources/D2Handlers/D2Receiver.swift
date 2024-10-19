@@ -463,7 +463,7 @@ public class D2Receiver: Receiver {
         registry["help", aka: ["h"]] = HelpCommand(commandPrefix: commandPrefix, permissionManager: permissionManager)
     }
 
-    public func on(receiveReady: [String: Any], sink: any Sink) async {
+    public func on(receiveReady: ReadyEvent, sink: any Sink) async {
         let guildCount = await sink.guilds?.count ?? 0
         log.info("Received ready! \(guildCount) \("guild".pluralized(with: guildCount)) found.")
 

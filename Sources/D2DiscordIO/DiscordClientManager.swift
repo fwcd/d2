@@ -213,12 +213,8 @@ public actor DiscordClientManager: DiscordClientDelegate {
 
     public nonisolated func client(_ discordClient: DiscordClient, didReceiveReady ready: DiscordReadyEvent) {
         log.debug("Received ready")
-        // TODO: Add a strongly-typed ReadyEvent in D2MessageIO
         Task { @Sendable in
-            await receiver.on(receiveReady: [
-                "gatewayVersion": ready.gatewayVersion as Any,
-                "shard": ready.shard as Any
-            ], sink: overlaySink(with: discordClient))
+            await receiver.on(receiveReady: ready.usingMessageIO, sink: overlaySink(with: discordClient))
         }
     }
 

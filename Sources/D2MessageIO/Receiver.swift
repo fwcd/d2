@@ -50,7 +50,7 @@ public protocol Receiver: Sendable {
 
     func on(createInteraction interaction: Interaction, sink: any Sink) async
 
-    func on(receiveReady data: [String: Any], sink: any Sink) async
+    func on(receiveReady event: ReadyEvent, sink: any Sink) async
 
     func on(receiveVoiceStateUpdate state: VoiceState, sink: any Sink) async
 
@@ -108,7 +108,7 @@ public extension Receiver {
 
     func on(createInteraction interaction: Interaction, sink: any Sink) async {}
 
-    func on(receiveReady data: [String: Any], sink: any Sink) async {}
+    func on(receiveReady data: ReadyEvent, sink: any Sink) async {}
 
     func on(receiveVoiceStateUpdate state: VoiceState, sink: any Sink) async {}
 
