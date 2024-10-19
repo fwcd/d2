@@ -551,7 +551,7 @@ public class D2Receiver: Receiver {
     }
 
     public func on(receivePresenceUpdate presence: Presence, sink: any Sink) async {
-        for (_, entry) in registry {
+        for (_, entry) in registry.entries {
             if case let .command(command) = entry {
                 await command.onReceivedUpdated(presence: presence)
             }
