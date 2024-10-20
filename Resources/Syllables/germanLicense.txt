@@ -1,0 +1,2 @@
+License: CC-BY-SA
+Source: https://dumps.wikimedia.org/dewiktionary/20241001/dewiktionary-20241001-pages-articles.xml.bz2
