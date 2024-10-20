@@ -3,6 +3,10 @@ import Logging
 
 private let log = Logger(label: "D2Datasets.Words")
 
+// TODO: Isolate words to a separate actor too, similar to SyllablesActor
+// (potentially even the same one and rename it to DatasetActor or similar)
+// We would have to refactor the game framework in D2Commands for that
+
 public enum Words {
     public static let english = loadWords(name: "english")
     public static let german = loadWords(name: "german")
