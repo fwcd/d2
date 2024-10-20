@@ -1,48 +1,48 @@
-import XCTest
+import Testing
 @testable import D2Script
 
-final class D2ScriptStorageTests: XCTestCase {
-    func testStorage() throws {
+struct D2ScriptStorageTests {
+    @Test func storage() throws {
         let base = D2ScriptStorage(name: "base storage")
         base["A"] = .number(1)
         base["B"] = .number(2)
 
-        assertThat(storage: base, contains: "A")
-        assertThat(storage: base, contains: "B")
-        assertThat(storage: base, notContains: "C")
-        XCTAssertEqual(base.count, 2)
+        expect(storage: base, contains: "A")
+        expect(storage: base, contains: "B")
+        expect(storage: base, notContains: "C")
+        #expect(base.count == 2)
 
         let scope1 = D2ScriptStorage(name: "scope 1", parent: base)
-        XCTAssertEqual(scope1.count, 2)
-        XCTAssertEqual(scope1["A"], D2ScriptValue.number(1))
+        #expect(scope1.count == 2)
+        #expect(scope1["A"] == D2ScriptValue.number(1))
 
         scope1["C"] = .string("Demo")
-        assertThat(storage: scope1, contains: "C")
-        assertThat(storage: base, notContains: "C")
-        XCTAssertEqual(scope1.count, 3)
+        expect(storage: scope1, contains: "C")
+        expect(storage: base, notContains: "C")
+        #expect(scope1.count == 3)
 
         let shadowingScope = D2ScriptStorage(name: "shadowing scope", parent: base)
         shadowingScope["D"] = .number(42)
         base["D"] = .number(98)
-        XCTAssertEqual(shadowingScope["D"], D2ScriptValue.number(42))
-        XCTAssertEqual(scope1["D"], D2ScriptValue.number(98))
-        XCTAssertEqual(base["D"], D2ScriptValue.number(98))
+        #expect(shadowingScope["D"] == D2ScriptValue.number(42))
+        #expect(scope1["D"] == D2ScriptValue.number(98))
+        #expect(base["D"] == D2ScriptValue.number(98))
 
         shadowingScope["D"] = .number(23)
-        XCTAssertEqual(shadowingScope["D"], D2ScriptValue.number(23))
-        XCTAssertEqual(base["D"], D2ScriptValue.number(98))
+        #expect(shadowingScope["D"] == D2ScriptValue.number(23))
+        #expect(base["D"] == D2ScriptValue.number(98))
 
         let deepScope = D2ScriptStorage(name: "deep scope", parent: scope1)
-        XCTAssertEqual(deepScope.count, 4)
-        XCTAssertEqual(deepScope["D"], D2ScriptValue.number(98))
-        XCTAssertEqual(deepScope["C"], D2ScriptValue.string("Demo"))
+        #expect(deepScope.count == 4)
+        #expect(deepScope["D"] == D2ScriptValue.number(98))
+        #expect(deepScope["C"] == D2ScriptValue.string("Demo"))
     }
 
-    private func assertThat(storage: D2ScriptStorage, contains expected: String) {
-        XCTAssert(storage.contains(expected), "Storage '\(storage.name)' should contain \(expected)")
+    private func expect(storage: D2ScriptStorage, contains expected: String, sourceLocation: SourceLocation = #_sourceLocation) {
+        #expect(storage.contains(expected), "Storage '\(storage.name)' should contain \(expected)", sourceLocation: sourceLocation)
     }
 
-    private func assertThat(storage: D2ScriptStorage, notContains expected: String) {
-        XCTAssert(!storage.contains(expected), "Storage '\(storage.name)' should contain not \(expected)")
+    private func expect(storage: D2ScriptStorage, notContains expected: String, sourceLocation: SourceLocation = #_sourceLocation) {
+        #expect(!storage.contains(expected), "Storage '\(storage.name)' should contain not \(expected)", sourceLocation: sourceLocation)
     }
 }

@@ -1,4 +1,5 @@
-import XCTest
+import D2TestUtils
+import Testing
 import Foundation
 #if canImport(FoundationXML)
 import FoundationXML
@@ -8,8 +9,8 @@ import Logging
 
 fileprivate let log = Logger(label: "WolframAlphaParserDelegateTests")
 
-final class WolframAlphaParserDelegateTests: XCTestCase {
-    func testWolframAlphaParserDelegate() async throws {
+struct WolframAlphaParserDelegateTests {
+    @Test func wolframAlphaParserDelegate() async throws {
         let xml = """
             <?xml version='1.0' encoding='UTF-8'?>
             <queryresult success='true'
@@ -96,14 +97,17 @@ final class WolframAlphaParserDelegateTests: XCTestCase {
             let result = parser.parse()
             log.debug("Done")
 
-            XCTAssert(result, "XML parser should succeed")
+            guard result else {
+                Issue.record("XML parser should succeed")
+                return
+            }
         }
 
-        XCTAssertEqual(result.success, true)
-        XCTAssertEqual(result.error, false)
-        XCTAssertEqual(result.numpods, 2)
-        XCTAssertEqual(result.timing ?? 0.0, 0.76, accuracy: 0.0001)
-        XCTAssertEqual(result.pods.count, 2)
+        #expect(result.success == true)
+        #expect(result.error == false)
+        #expect(result.numpods == 2)
+        #expect((result.timing ?? 0.0).isApproximatelyEqual(to: 0.76))
+        #expect(result.pods.count == 2)
 
         // TODO: More detailed testing
     }

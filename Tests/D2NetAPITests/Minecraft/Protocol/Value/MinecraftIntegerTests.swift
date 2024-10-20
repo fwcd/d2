@@ -1,11 +1,11 @@
 import Foundation
-import XCTest
+import Testing
 @testable import D2NetAPIs
 
-final class MinecraftIntegerTests: XCTestCase {
-    func testInteger() throws {
-        XCTAssertEqual(encode(0), [0x00, 0x00])
-        XCTAssertEqual(encode(3234), [0x0C, 0xA2])
+struct MinecraftIntegerTests {
+    @Test func integer() {
+        #expect(encode(0) == [0x00, 0x00])
+        #expect(encode(3234) == [0x0C, 0xA2])
     }
 
     func encode(_ i: Int16) -> [UInt8] {

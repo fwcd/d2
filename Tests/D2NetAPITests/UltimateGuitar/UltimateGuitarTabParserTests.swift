@@ -1,19 +1,19 @@
-import XCTest
+import Testing
 @testable import D2NetAPIs
 
-final class UltimateGuitarTabParserTests: XCTestCase {
-    func testTabParser() throws {
+struct UltimateGuitarTabParserTests {
+    @Test func tabParser() throws {
         let parser = UltimateGuitarTabParser()
-        XCTAssertEqual(
-            parser.tokenize(tabMarkup: "[Test] this[Thing]\nwith newlines[/closing]"),
-            [.tag("Test"), .content(" this"), .tag("Thing"), .newlines, .content("with newlines"), .closingTag("closing")]
+        #expect(
+            parser.tokenize(tabMarkup: "[Test] this[Thing]\nwith newlines[/closing]")
+            == [.tag("Test"), .content(" this"), .tag("Thing"), .newlines, .content("with newlines"), .closingTag("closing")]
         )
-        XCTAssertEqual(
+        #expect(
             try parser.parse(tabMarkup: """
                 [Test]
                 this
-                """),
-            GuitarTabDocument(
+                """)
+            == GuitarTabDocument(
                 sections: [
                     .init(title: "Test", nodes: [
                         .text("this")
@@ -21,12 +21,12 @@ final class UltimateGuitarTabParserTests: XCTestCase {
                 ]
             )
         )
-        XCTAssertEqual(
+        #expect(
             try parser.parse(tabMarkup: """
                 [Test]
                 test some whitespace
-                """),
-            GuitarTabDocument(
+                """)
+            == GuitarTabDocument(
                 sections: [
                     .init(title: "Test", nodes: [
                         .text("test some whitespace")
@@ -34,13 +34,13 @@ final class UltimateGuitarTabParserTests: XCTestCase {
                 ]
             )
         )
-        XCTAssertEqual(
+        #expect(
             try parser.parse(tabMarkup: """
                 [Test]
                 [tab]This is a tab![/tab]
                 [tab] This is a tab with padding! [/tab]
-                """),
-            GuitarTabDocument(
+                """)
+            == GuitarTabDocument(
                 sections: [
                     .init(title: "Test", nodes: [
                         .tag("tab", [.text("This is a tab!")]), .text("\n"),
@@ -49,7 +49,7 @@ final class UltimateGuitarTabParserTests: XCTestCase {
                 ]
             )
         )
-        XCTAssertEqual(
+        #expect(
             try parser.parse(tabMarkup: """
                 [1. Verse]
                 [tab]    [ch]Am[/ch]    [ch]C[/ch]    [ch]G[/ch]    [ch]D[/ch]
@@ -58,8 +58,8 @@ final class UltimateGuitarTabParserTests: XCTestCase {
                 [Chorus]
                 [tab]Roses are red, violets are blue,[/tab]
                 [tab]i hope this succeeds, and you maybe too![/tab]
-                """),
-            GuitarTabDocument(
+                """)
+            == GuitarTabDocument(
                 sections: [
                     .init(title: "1. Verse", nodes: [
                         .tag("tab", [

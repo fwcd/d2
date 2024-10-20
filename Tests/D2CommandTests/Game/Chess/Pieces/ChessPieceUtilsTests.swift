@@ -1,10 +1,10 @@
-import XCTest
+import Testing
 import Utils
 @testable import D2Commands
 
-final class ChessPieceUtilsTests: XCTestCase {
-    func testNeighborFields() throws {
-        XCTAssertEqual(Set(neighborFields()), Set([
+struct ChessPieceUtilsTests {
+    @Test func neighborFieldsAsExpected() {
+        #expect(Set(neighborFields()) == Set([
             Vec2(x: -1, y: -1),
             Vec2(x: 0, y: -1),
             Vec2(x: 1, y: -1),
@@ -16,18 +16,18 @@ final class ChessPieceUtilsTests: XCTestCase {
         ]))
     }
 
-    func testPieceLetters() throws {
-        assert("Q", matchesPiece: .queen)
-        assert("D", matchesPiece: .queen)
-        assert("R", matchesPiece: .rook)
-        assert("T", matchesPiece: .rook)
-        assert("L", matchesPiece: .bishop)
-        assert("B", matchesPiece: .bishop)
-        assert("N", matchesPiece: .knight)
-        assert("S", matchesPiece: .knight)
+    @Test func pieceLetters() {
+        expect("Q", matchesPiece: .queen)
+        expect("D", matchesPiece: .queen)
+        expect("R", matchesPiece: .rook)
+        expect("T", matchesPiece: .rook)
+        expect("L", matchesPiece: .bishop)
+        expect("B", matchesPiece: .bishop)
+        expect("N", matchesPiece: .knight)
+        expect("S", matchesPiece: .knight)
     }
 
-    private func assert(_ letter: Character, matchesPiece pieceType: ChessPieceType) {
-        XCTAssertEqual(pieceOf(letter: letter)?.pieceType, pieceType)
+    private func expect(_ letter: Character, matchesPiece pieceType: ChessPieceType, sourceLocation: SourceLocation = #_sourceLocation) {
+        #expect(pieceOf(letter: letter)?.pieceType == pieceType, sourceLocation: sourceLocation)
     }
 }

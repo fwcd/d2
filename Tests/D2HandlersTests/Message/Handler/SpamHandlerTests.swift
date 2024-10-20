@@ -1,11 +1,12 @@
-import XCTest
+import Foundation
+import Testing
 import Utils
 import D2TestUtils
 import D2MessageIO
 import D2Commands
 @testable import D2Handlers
 
-final class SpamHandlerTests: XCTestCase {
+struct SpamHandlerTests {
     @CommandActor
     private class Timestamp {
         var value = Date()
@@ -15,14 +16,13 @@ final class SpamHandlerTests: XCTestCase {
         }
     }
 
-    private var timestamp: Timestamp!
+    private let timestamp: Timestamp
+    private var handler: SpamHandler
+    private let output: TestOutput
+    private let channelId: ChannelID
+    private let user: User
 
-    private var handler: SpamHandler!
-    private var output: TestOutput!
-    private var channelId: ChannelID!
-    private var user: User!
-
-    override func setUp() async throws {
+    init() async {
         let timestamp = Timestamp()
         self.timestamp = timestamp
         @Box var config = SpamConfiguration()
@@ -34,77 +34,60 @@ final class SpamHandlerTests: XCTestCase {
         channelId = ChannelID("0")
     }
 
-    func testNewUserSpamming() async throws {
+    @Test mutating func newUserSpamming() async {
         await join(daysAgo: 0.2)
 
-        var warned: Bool
-        var penalized: Bool
+        #expect(await !isWarned())
+        #expect(await !isPenalized())
 
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(!warned)
-        XCTAssert(!penalized)
+        await spam(after: 0.5)
 
-        try await spam(after: 0.5)
+        #expect(await isWarned())
+        #expect(await !isPenalized())
 
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(warned)
-        XCTAssert(!penalized)
+        await spam(after: 0.5)
 
-        try await spam(after: 0.5)
-
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(warned)
-        XCTAssert(penalized)
+        #expect(await isWarned())
+        #expect(await isPenalized())
     }
 
-    func testOlderUserSpamming() async throws {
+    @Test mutating func olderUserSpamming() async {
         await join(daysAgo: 32)
 
-        try await spam() // This one should be expired by the time the second one is sent
-        try await spam(after: 200)
-        try await spam()
-        try await spam()
-        try await spam()
+        await spam() // This one should be expired by the time the second one is sent
+        await spam(after: 200)
+        await spam()
+        await spam()
+        await spam()
 
-        var warned: Bool
-        var penalized: Bool
+        #expect(await !isWarned())
+        #expect(await !isPenalized())
 
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(!warned)
-        XCTAssert(!penalized)
+        await spam()
 
-        try await spam()
-
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(warned)
-        XCTAssert(!penalized)
+        #expect(await isWarned())
+        #expect(await !isPenalized())
     }
 
-    func testEvenOlderUserSpamming() async throws {
+    @Test mutating func evenOlderUserSpamming() async {
         await join(daysAgo: 365)
 
         for _ in 0..<6 {
-            try await spam()
+            await spam()
         }
 
-        var warned: Bool
-        var penalized: Bool
+        #expect(await !isWarned())
+        #expect(await !isPenalized())
 
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(!warned)
-        XCTAssert(!penalized)
+        await spam()
 
-        try await spam()
+        #expect(await isWarned())
+        #expect(await !isPenalized())
 
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(warned)
-        XCTAssert(!penalized)
+        await spam()
 
-        try await spam()
-
-        (warned, penalized) = await (isWarned(), isPenalized())
-        XCTAssert(warned)
-        XCTAssert(penalized)
+        #expect(await isWarned())
+        #expect(await isPenalized())
     }
 
     private func join(daysAgo: Double) async {
@@ -117,9 +100,9 @@ final class SpamHandlerTests: XCTestCase {
         }
     }
 
-    private func spam(after interval: TimeInterval = 0) async throws {
+    private mutating func spam(after interval: TimeInterval = 0) async {
         await timestamp.increase(by: interval)
-        let _ = try await handler.handle(
+        let _ = await handler.handle(
             message: Message(
                 content: "@everyone",
                 author: user,

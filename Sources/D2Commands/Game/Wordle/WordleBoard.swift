@@ -85,7 +85,7 @@ public struct WordleBoard: RichValueConvertible, Sendable {
         }
     }
 
-    public enum Clue: UInt32, CaseIterable {
+    public enum Clue: UInt32, CaseIterable, Sendable, Hashable {
         case unknown = 0
         case nowhere
         case somewhere

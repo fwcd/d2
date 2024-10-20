@@ -1,22 +1,18 @@
-import XCTest
+import Testing
 import Utils
 import D2MessageIO
 import D2TestUtils
 @testable import D2Handlers
 
-final class TriggerReactionHandlers: XCTestCase {
-    func testGoodMorningReaction() async {
-        assert(!(await messageTriggersWeather("good mornin")))
-        assert(!(await messageTriggersWeather("Moin")))
-        assert(await messageTriggersWeather("good morning"))
-        assert(await messageTriggersWeather("guten moin"))
-        assert(await messageTriggersWeather("Guten Morgen"))
-        assert(await messageTriggersWeather("Guten   mooorgen"))
-        assert(await messageTriggersWeather("Guten Morgen, guten Morgen, guten Morgen, Sonnenschein!"))
-    }
-
-    private func assert(_ condition: Bool, line: UInt = #line) {
-        XCTAssert(condition, line: line)
+struct TriggerReactionHandlerTests {
+    @Test func goodMorningReaction() async {
+        #expect(await !messageTriggersWeather("good mornin"))
+        #expect(await !messageTriggersWeather("Moin"))
+        #expect(await messageTriggersWeather("good morning"))
+        #expect(await messageTriggersWeather("guten moin"))
+        #expect(await messageTriggersWeather("Guten Morgen"))
+        #expect(await messageTriggersWeather("Guten   mooorgen"))
+        #expect(await messageTriggersWeather("Guten Morgen, guten Morgen, guten Morgen, Sonnenschein!"))
     }
 
     private func messageTriggersWeather(_ content: String) async -> Bool {
