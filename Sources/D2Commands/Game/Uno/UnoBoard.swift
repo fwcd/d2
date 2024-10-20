@@ -2,9 +2,9 @@ import Logging
 import Utils
 @preconcurrency import CairoGraphics
 
-fileprivate let log = Logger(label: "D2Commands.UnoBoard")
+private let log = Logger(label: "D2Commands.UnoBoard")
 
-fileprivate struct PileCard: Sendable {
+private struct PileCard: Sendable {
     let card: UnoCard
     let rotation: Double
 }

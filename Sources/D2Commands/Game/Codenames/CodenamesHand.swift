@@ -1,7 +1,7 @@
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.CodenamesHand")
+private let log = Logger(label: "D2Commands.CodenamesHand")
 
 public struct CodenamesHand: RichValueConvertible, Sendable {
     private let model: CodenamesBoardModel

@@ -1,7 +1,7 @@
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2NetAPIs.WikitextParser")
+private let log = Logger(label: "D2NetAPIs.WikitextParser")
 nonisolated(unsafe) private let tokenPattern = #/\s*(?:(?<text>[^=\[\]\{\}\|]+)|(?<symbol>=+|\[+|\]+|\{+|\}+|\|))\s*/#
 
 /// A basic recursive-descent parser for a subset of wikitext.

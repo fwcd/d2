@@ -3,7 +3,7 @@ import Logging
 import NIO
 import IRC
 
-fileprivate let log = Logger(label: "D2IRCIO.IRCPlatform")
+private let log = Logger(label: "D2IRCIO.IRCPlatform")
 
 public struct IRCPlatform: MessagePlatform, Sendable {
     private let config: IRCConfig

@@ -3,12 +3,12 @@ import D2Permissions
 import RegexBuilder
 import Utils
 
-fileprivate let activityTypes: [String: Presence.Activity.ActivityType] = [
+private let activityTypes: [String: Presence.Activity.ActivityType] = [
     "playing": .game,
     "streaming": .stream,
     "listening": .listening
 ]
-fileprivate let availableStatusTypes = ["idle", "offline", "online", "dnd"]
+private let availableStatusTypes = ["idle", "offline", "online", "dnd"]
 
 public class PresenceCommand: RegexCommand {
     public let info = CommandInfo(

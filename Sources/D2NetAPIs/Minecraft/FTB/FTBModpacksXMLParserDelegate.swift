@@ -5,8 +5,8 @@ import FoundationXML
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2NetAPIs.FTBModpacksXMLParserDelegate")
-fileprivate let baseURL = "https://ftb.forgecdn.net/FTB2"
+private let log = Logger(label: "D2NetAPIs.FTBModpacksXMLParserDelegate")
+private let baseURL = "https://ftb.forgecdn.net/FTB2"
 
 class FTBModpacksXMLParserDelegate: NSObject, XMLParserDelegate {
     private let continuation: CheckedContinuation<[FTBModpack], any Error>

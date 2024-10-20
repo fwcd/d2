@@ -4,7 +4,7 @@ import D2Commands
 import D2MessageIO
 import Utils
 
-fileprivate let log = Logger(label: "D2Handlers.MessagePreviewHandler")
+private let log = Logger(label: "D2Handlers.MessagePreviewHandler")
 
 nonisolated(unsafe) private let messageLinkPattern = #/https?://discord(?:app)?.com/channels/(?<guildId>\d+)/(?<channelId>\d+)/(?<messageId>\d+)/#
 

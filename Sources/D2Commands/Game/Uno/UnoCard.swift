@@ -2,7 +2,7 @@ import Logging
 @preconcurrency import CairoGraphics
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.UnoCard")
+private let log = Logger(label: "D2Commands.UnoCard")
 
 public enum UnoCard: Hashable, Sendable {
     case number(Int, UnoColor)

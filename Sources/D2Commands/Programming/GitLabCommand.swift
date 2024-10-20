@@ -4,7 +4,7 @@ import D2NetAPIs
 import D2Permissions
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.GitLabCommand")
+private let log = Logger(label: "D2Commands.GitLabCommand")
 nonisolated(unsafe) private let subcommandPattern = #/(?<name>[\w-]+)\s*(?<arg>.*)/#
 
 public class GitLabCommand: StringCommand {

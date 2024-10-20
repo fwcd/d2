@@ -2,7 +2,7 @@ import Logging
 import Utils
 import RegexBuilder
 
-fileprivate let log = Logger(label: "D2Commands.QuadraticEquation+Parsing")
+private let log = Logger(label: "D2Commands.QuadraticEquation+Parsing")
 
 nonisolated(unsafe) private let tokenPattern = #/(?<operator>[+\-=])|(?<rational>[\d/\.]+)|(?<power>x(?:\^(?<exponent>\d+))?)/#
 

@@ -9,7 +9,7 @@ import D2Permissions
 import class NIO.MultiThreadedEventLoopGroup
 import protocol NIO.EventLoopGroup
 
-fileprivate let log = Logger(label: "D2Handlers.D2Receiver")
+private let log = Logger(label: "D2Handlers.D2Receiver")
 
 /// D2's main event handler.
 @CommandActor

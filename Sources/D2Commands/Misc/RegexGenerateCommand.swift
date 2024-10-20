@@ -1,8 +1,8 @@
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.RegexGenerateCommand")
+private let log = Logger(label: "D2Commands.RegexGenerateCommand")
 
-fileprivate enum RegexGenerateError: Error {
+private enum RegexGenerateError: Error {
     case emptyChoice
 }
 

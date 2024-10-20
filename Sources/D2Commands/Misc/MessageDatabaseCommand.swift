@@ -2,7 +2,7 @@ import Utils
 import Logging
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2Commands.MessageDatabaseCommand")
+private let log = Logger(label: "D2Commands.MessageDatabaseCommand")
 
 public class MessageDatabaseCommand: StringCommand {
     public let info = CommandInfo(

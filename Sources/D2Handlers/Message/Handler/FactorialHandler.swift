@@ -3,7 +3,7 @@ import Logging
 import D2MessageIO
 
 nonisolated(unsafe) private let factorialPattern = #/\b(?<operand>\d+)(?<operator>!+)\b/#
-fileprivate let log = Logger(label: "D2Handlers.FactorialHandler")
+private let log = Logger(label: "D2Handlers.FactorialHandler")
 
 public struct FactorialHandler: MessageHandler {
     private let operandRange: Range<Int>

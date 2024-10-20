@@ -5,7 +5,7 @@ import FoundationXML
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2NetAPIs.UnivISXMLParserDelegate")
+private let log = Logger(label: "D2NetAPIs.UnivISXMLParserDelegate")
 
 class UnivISXMLParserDelegate: NSObject, XMLParserDelegate {
     let continuation: CheckedContinuation<UnivISOutputNode, any Error>

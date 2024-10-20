@@ -4,13 +4,13 @@ import D2MessageIO
 
 nonisolated(unsafe) private let durationPattern = #/(\d+)\s*([a-zA-Z]+)/#
 nonisolated(unsafe) private let flagPattern = #/--([a-z]+)/#
-fileprivate let timeUnits: [String: @Sendable (Int) -> Int] = [
+private let timeUnits: [String: @Sendable (Int) -> Int] = [
     "d": { $0 * 86400 },
     "h": { $0 * 3600 },
     "m": { $0 * 60 },
     "s": { $0 }
 ]
-fileprivate let timeUnitAliases: [String: String] = [
+private let timeUnitAliases: [String: String] = [
     "days": "d",
     "hours": "h",
     "minutes": "m",
@@ -18,7 +18,7 @@ fileprivate let timeUnitAliases: [String: String] = [
     "sec": "s"
 ]
 
-fileprivate struct NamedTimer {
+private struct NamedTimer {
     let name: String?
     let guildId: GuildID?
     let task: Task<Void, Never>

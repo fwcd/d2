@@ -2,7 +2,7 @@ import Foundation
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2MessageIO.CombinedSink")
+private let log = Logger(label: "D2MessageIO.CombinedSink")
 
 /// A Sink that combines multiple sinks and
 /// dispatches requests dynamically based on the ID's sink name.

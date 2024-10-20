@@ -3,7 +3,7 @@ import D2MessageIO
 import Utils
 import D2Permissions
 
-fileprivate let initialPlayerTries: Int = 10
+private let initialPlayerTries: Int = 10
 
 public struct HangmanState: GameState, Multiplayer, FinitePossibleMoves, Sendable {
     public typealias Role = Int

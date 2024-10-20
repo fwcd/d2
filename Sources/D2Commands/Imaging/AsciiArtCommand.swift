@@ -1,6 +1,6 @@
 @preconcurrency import CairoGraphics
 
-fileprivate let asciiShades = [
+private let asciiShades = [
     "@", "o", ":", "-", ".", " "
 ]
 

@@ -4,7 +4,7 @@ import D2MessageIO
 import D2Permissions
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.IntegralCalculatorCommand")
+private let log = Logger(label: "D2Commands.IntegralCalculatorCommand")
 
 public class IntegralCalculatorCommand: StringCommand {
     public let info = CommandInfo(

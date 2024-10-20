@@ -3,7 +3,7 @@ import Foundation
 import Logging
 import NIO
 
-fileprivate let log = Logger(label: "D2Commands.CommandContext")
+private let log = Logger(label: "D2Commands.CommandContext")
 
 public struct CommandContext: Sendable {
     public let sink: (any Sink)?

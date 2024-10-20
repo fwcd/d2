@@ -6,7 +6,7 @@ import Utils
 @preconcurrency import GIF
 import Dispatch
 
-fileprivate let log = Logger(label: "D2Commands.MessageParser")
+private let log = Logger(label: "D2Commands.MessageParser")
 
 nonisolated(unsafe) private let urlPattern = #/<?(\w+:[^>\s]+)>?/#
 nonisolated(unsafe) private let codePattern = #/`(?:``(?:(?<language>\w*)\n)?)?(?<code>[^`]+)`*/#

@@ -5,7 +5,7 @@ import NIO
 import D2MessageIO
 import Discord
 
-fileprivate let log = Logger(label: "D2DiscordIO.DiscordPlatform")
+private let log = Logger(label: "D2DiscordIO.DiscordPlatform")
 
 public struct DiscordPlatform: MessagePlatform, Sendable {
     private let manager: DiscordClientManager

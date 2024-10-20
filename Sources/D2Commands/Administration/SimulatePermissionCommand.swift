@@ -1,6 +1,6 @@
 import D2Permissions
 
-fileprivate let cancelSubcommand = "cancel"
+private let cancelSubcommand = "cancel"
 
 public class SimulatePermissionCommand: StringCommand {
     public let info = CommandInfo(

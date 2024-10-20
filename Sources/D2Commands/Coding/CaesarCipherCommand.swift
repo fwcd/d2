@@ -1,8 +1,8 @@
 import Utils
 
-fileprivate let alphabetLength: Int = 26
-fileprivate let alphabetRange = 0..<alphabetLength
-fileprivate let alphabetStart = Unicode.Scalar("a").value
+private let alphabetLength: Int = 26
+private let alphabetRange = 0..<alphabetLength
+private let alphabetStart = Unicode.Scalar("a").value
 
 public class CaesarCipherCommand: RegexCommand {
     public let info = CommandInfo(

@@ -6,7 +6,7 @@ import D2NetAPIs
 @preconcurrency import CairoGraphics
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.WolframAlphaCommand")
+private let log = Logger(label: "D2Commands.WolframAlphaCommand")
 nonisolated(unsafe) private let flagPattern = #/--(?<flag>\S+)/#
 
 public class WolframAlphaCommand: StringCommand {

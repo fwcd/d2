@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.UwUCommand")
+private let log = Logger(label: "D2Commands.UwUCommand")
 
 public class UwUCommand: StringCommand {
     public let info = CommandInfo(

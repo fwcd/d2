@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 @preconcurrency import CairoGraphics
 
-fileprivate let log = Logger(label: "D2Commands.DemoImageCommand")
+private let log = Logger(label: "D2Commands.DemoImageCommand")
 
 public class DemoImageCommand: VoidCommand {
     public let info = CommandInfo(

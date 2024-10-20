@@ -7,11 +7,11 @@ import D2Permissions
 import NIO
 import Utils
 
-fileprivate let log = Logger(label: "D2Handlers.CommandHandler")
+private let log = Logger(label: "D2Handlers.CommandHandler")
 
 /// A segment of an invocation pipe that transfers outputs from one command to another.
 @CommandActor
-fileprivate class PipeComponent {
+private class PipeComponent {
     let name: String
     let command: any Command
     let context: CommandContext
@@ -26,7 +26,7 @@ fileprivate class PipeComponent {
     }
 }
 
-fileprivate struct RunnablePipe: AsyncRunnable {
+private struct RunnablePipe: AsyncRunnable {
     let pipeSource: PipeComponent
     let input: RichValue
 

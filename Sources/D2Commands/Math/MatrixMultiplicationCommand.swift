@@ -2,7 +2,7 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.MatrixMultiplicationCommand")
+private let log = Logger(label: "D2Commands.MatrixMultiplicationCommand")
 
 public class MatrixMultiplicationCommand: Command {
     public let info = CommandInfo(

@@ -4,7 +4,7 @@ import Utils
 @preconcurrency import CairoGraphics
 import Foundation
 
-fileprivate let log = Logger(label: "D2Commands.MandelbrotCommand")
+private let log = Logger(label: "D2Commands.MandelbrotCommand")
 
 public class MandelbrotCommand: StringCommand {
     public let info = CommandInfo(

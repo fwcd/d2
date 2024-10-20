@@ -3,8 +3,8 @@ import Logging
 import Utils
 @preconcurrency import CairoGraphics
 
-fileprivate let log = Logger(label: "D2Commands.LatexRenderer")
-fileprivate let latexPrefix = "latex"
+private let log = Logger(label: "D2Commands.LatexRenderer")
+private let latexPrefix = "latex"
 
 struct LatexRenderer: Sendable {
     private let node = NodePackage(name: "latex-renderer")

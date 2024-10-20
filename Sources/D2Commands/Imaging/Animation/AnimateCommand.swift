@@ -4,7 +4,7 @@ import D2MessageIO
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.AnimateCommand")
+private let log = Logger(label: "D2Commands.AnimateCommand")
 
 /// Matches a single integer vector.
 ///
@@ -16,8 +16,8 @@ nonisolated(unsafe) private let posPattern = #/(-?\d+)\s+(-?\d+)/#
 /// Matches a single key-value argument.
 nonisolated(unsafe) private let kvPattern = #/(\w+)\s*=\s*(\S+)/#
 
-fileprivate let virtualEdgesParameter = "virtualedges"
-fileprivate let framesParameter = "frames"
+private let virtualEdgesParameter = "virtualedges"
+private let framesParameter = "frames"
 
 public class AnimateCommand<A>: Command where A: Animation {
     public let info: CommandInfo

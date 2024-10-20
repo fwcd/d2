@@ -1,6 +1,6 @@
 import D2MessageIO
 
-fileprivate let diceFaces = [
+private let diceFaces = [
     1: [[false, false, false], [false, true, false], [false, false, false]],
     2: [[false, false, true], [false, false, false], [true, false, false]],
     3: [[false, false, true], [false, true, false], [true, false, false]],

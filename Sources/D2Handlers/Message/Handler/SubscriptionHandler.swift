@@ -3,7 +3,7 @@ import NIO
 import D2MessageIO
 import D2Commands
 
-fileprivate let log = Logger(label: "D2Handlers.SubscriptionHandler")
+private let log = Logger(label: "D2Handlers.SubscriptionHandler")
 
 /// Handles messages from command subscriptions.
 public struct SubscriptionHandler: MessageHandler {

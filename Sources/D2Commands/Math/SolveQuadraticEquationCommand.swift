@@ -1,7 +1,7 @@
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.SolveQuadraticEquationCommand")
+private let log = Logger(label: "D2Commands.SolveQuadraticEquationCommand")
 
 public class SolveQuadraticEquationCommand: StringCommand {
     public let info = CommandInfo(

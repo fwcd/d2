@@ -1,4 +1,4 @@
-fileprivate let files: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
+private let files: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
 func parseRaw(checkType: String) -> CheckType? {
     switch checkType {

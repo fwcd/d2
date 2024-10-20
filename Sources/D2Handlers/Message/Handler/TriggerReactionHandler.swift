@@ -6,7 +6,7 @@ import Utils
 import Logging
 
 nonisolated(unsafe) private let goodMorningOrEveningPattern = #/\b[gm](?:u+te+n?|oo+d+)\s+(?:[gm]o+(?:rni+ng|(?:rge+|i+)n)|e+ve+ni+ng|a+be+nd|da+y|ta+g|n(?:a+ch|i+gh)t)\b/#.ignoresCase()
-fileprivate let log = Logger(label: "D2Handler.TriggerReactionHandler")
+private let log = Logger(label: "D2Handler.TriggerReactionHandler")
 
 public struct TriggerReactionHandler: MessageHandler {
     private let triggers: [ReactionTrigger]

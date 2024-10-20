@@ -2,7 +2,7 @@ import D2MessageIO
 import Logging
 
 nonisolated(unsafe) private let pattern = #/(?<prefix>.*\b\w+)-(?<subject>ass) (?<suffix>\w+\b.*)/#
-fileprivate let log = Logger(label: "D2Handlers.Xkcd37Handler")
+private let log = Logger(label: "D2Handlers.Xkcd37Handler")
 
 public struct Xkcd37Handler: MessageHandler {
     public func handle(message: Message, sink: any Sink) async -> Bool {

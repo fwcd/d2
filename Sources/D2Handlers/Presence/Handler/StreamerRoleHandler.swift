@@ -3,7 +3,7 @@ import Utils
 import D2MessageIO
 import Logging
 
-fileprivate let log = Logger(label: "D2Handlers.StreamerRoleHandler")
+private let log = Logger(label: "D2Handlers.StreamerRoleHandler")
 
 // TODO: Note that the Discord API currently (as of July 2020) does not emit
 //       presence updates/activities for Twitch streams (possibly only for

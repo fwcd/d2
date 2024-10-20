@@ -6,7 +6,7 @@ import Utils
 import Foundation
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.AvatarCommand")
+private let log = Logger(label: "D2Commands.AvatarCommand")
 
 public class AvatarUrlCommand: Command {
     public let info = CommandInfo(

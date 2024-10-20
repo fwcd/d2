@@ -4,7 +4,7 @@ import Logging
 import Utils
 
 nonisolated(unsafe) private let countToNPattern = #/count\s+to\s+(?<n>\d+)/#
-fileprivate let log = Logger(label: "D2Handlers.CountToNHandler")
+private let log = Logger(label: "D2Handlers.CountToNHandler")
 
 public struct CountToNHandler: MessageHandler {
     public func handle(message: Message, sink: any Sink) async -> Bool {

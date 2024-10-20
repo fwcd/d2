@@ -3,7 +3,7 @@ import Logging
 import Utils
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2Commands.LlmChatConversator")
+private let log = Logger(label: "D2Commands.LlmChatConversator")
 
 @CommandActor
 public class LlmChatConversator: Conversator {

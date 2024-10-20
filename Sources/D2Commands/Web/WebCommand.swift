@@ -8,7 +8,7 @@ import FoundationNetworking
 #endif
 @preconcurrency import SwiftSoup
 
-fileprivate let log = Logger(label: "D2Commands.WebCommand")
+private let log = Logger(label: "D2Commands.WebCommand")
 
 public class WebCommand: Command {
     public let info = CommandInfo(

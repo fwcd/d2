@@ -1,9 +1,9 @@
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Script.D2ScriptParser")
-fileprivate let operators: [String] = ["=", "+", "-", "*", "/", "^"]
-fileprivate let keywords: [String] = ["command", "if", "else", "for", "while"]
+private let log = Logger(label: "D2Script.D2ScriptParser")
+private let operators: [String] = ["=", "+", "-", "*", "/", "^"]
+private let keywords: [String] = ["command", "if", "else", "for", "while"]
 
 private let rawKeywordPattern = keywords
     .map { "(?:\(LegacyRegex.escape($0)))" }

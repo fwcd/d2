@@ -4,10 +4,10 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.HoogleCommand")
+private let log = Logger(label: "D2Commands.HoogleCommand")
 nonisolated(unsafe) private let newlines = #/\n+/#
 
-fileprivate struct HoogleResultKey: Hashable {
+private struct HoogleResultKey: Hashable {
     let item: String
     let renderedDoc: String
 }

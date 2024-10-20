@@ -3,7 +3,7 @@ import StaticMap
 import D2MessageIO
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.MessageWriter")
+private let log = Logger(label: "D2Commands.MessageWriter")
 
 /// Writes rich values into MessageIO messages (e.g. for use with Discord).
 public struct MessageWriter: Sendable {

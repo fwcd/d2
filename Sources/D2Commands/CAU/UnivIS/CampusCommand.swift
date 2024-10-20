@@ -9,7 +9,7 @@ import StaticMap
 import Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.CampusCommand")
+private let log = Logger(label: "D2Commands.CampusCommand")
 nonisolated(unsafe) private let addressWithCityPattern = #/.+,\s*\d\d\d\d\d\s+\w+/#
 
 /// Locates locations on the University of Kiel's campus.

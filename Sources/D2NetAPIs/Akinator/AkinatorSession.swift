@@ -6,8 +6,8 @@ import Logging
 // Ported from https://github.com/janniksam/Akinator.Api.Net/blob/master/Akinator.Api.Net/Akinatorsink.cs
 // MIT-licensed, Copyright (c) 2019 Jannik
 
-fileprivate let jQuerySignature = "jQuery331023608747682107778"
-fileprivate let headers = [
+private let jQuerySignature = "jQuery331023608747682107778"
+private let headers = [
     "Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01",
     "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
     "X-Requested-With": "XMLHttpRequest",
@@ -28,7 +28,7 @@ nonisolated(unsafe) private let startGamePattern = Regex {
     #/\)$/#
 }
 
-fileprivate let log = Logger(label: "D2NetAPIs.AkinatorSession")
+private let log = Logger(label: "D2NetAPIs.AkinatorSession")
 
 public struct AkinatorSession: Sendable {
     private let session: String

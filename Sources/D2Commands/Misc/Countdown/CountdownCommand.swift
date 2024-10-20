@@ -3,14 +3,14 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate func makeDateFormatter(_ format: String) -> DateFormatter {
+private func makeDateFormatter(_ format: String) -> DateFormatter {
     let formatter = DateFormatter()
     formatter.dateFormat = format
     return formatter
 }
 
-fileprivate let outputDateFormatter = makeDateFormatter("dd.MM.yyyy - HH:mm")
-fileprivate let inputDateFormatters = [
+private let outputDateFormatter = makeDateFormatter("dd.MM.yyyy - HH:mm")
+private let inputDateFormatters = [
     makeDateFormatter("dd.MM.yyyy"),
     makeDateFormatter("dd.MM.yyyy HH:mm"),
     outputDateFormatter

@@ -2,7 +2,7 @@ import Dispatch
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2MessageIO.TypingIndicator")
+private let log = Logger(label: "D2MessageIO.TypingIndicator")
 
 public actor TypingIndicator {
     private let channel: InteractiveTextChannel

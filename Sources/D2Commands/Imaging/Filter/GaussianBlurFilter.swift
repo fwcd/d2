@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let accuracy: Int = 4
+private let accuracy: Int = 4
 
 public struct GaussianBlurFilter: ImageFilter {
     public let matrices: [Matrix<Double>]

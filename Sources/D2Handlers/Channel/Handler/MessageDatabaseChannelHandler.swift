@@ -2,7 +2,7 @@ import D2Commands
 import D2MessageIO
 import Logging
 
-fileprivate let log = Logger(label: "D2Handlers.MessageDatabaseChannelHandler")
+private let log = Logger(label: "D2Handlers.MessageDatabaseChannelHandler")
 
 public struct MessageDatabaseChannelHandler: ChannelHandler {
     private let messageDB: MessageDatabase

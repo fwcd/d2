@@ -1,7 +1,7 @@
 import D2MessageIO
 import D2NetAPIs
 
-fileprivate let progressionThreshold: Double = 85 // percent
+private let progressionThreshold: Double = 85 // percent
 
 public class AkinatorCommand: StringCommand {
     public let info = CommandInfo(

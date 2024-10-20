@@ -2,7 +2,7 @@ import Logging
 import NIO
 import NIOCronScheduler
 
-fileprivate let log = Logger(label: "D2Commands.CronSchedulerBus")
+private let log = Logger(label: "D2Commands.CronSchedulerBus")
 
 public class CronSchedulerBus {
     private var schedules: [String: Schedule] = [:]

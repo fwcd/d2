@@ -8,7 +8,7 @@ import FoundationXML
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2NetAPIs.UnivISQuery")
+private let log = Logger(label: "D2NetAPIs.UnivISQuery")
 
 public struct UnivISQuery: Sendable {
     private let url: URL

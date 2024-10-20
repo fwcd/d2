@@ -5,7 +5,7 @@ import D2Permissions
 import Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.UnivISCommand")
+private let log = Logger(label: "D2Commands.UnivISCommand")
 
 nonisolated(unsafe) private let rawKeyPattern = #/(?:\w+)/#
 nonisolated(unsafe) private let rawValuePattern = #/(?:\w+|(?:"[\w ]+"))/#

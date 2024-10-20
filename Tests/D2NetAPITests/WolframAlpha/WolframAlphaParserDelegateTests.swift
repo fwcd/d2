@@ -7,7 +7,7 @@ import FoundationXML
 import Logging
 @testable import D2NetAPIs
 
-fileprivate let log = Logger(label: "WolframAlphaParserDelegateTests")
+private let log = Logger(label: "WolframAlphaParserDelegateTests")
 
 struct WolframAlphaParserDelegateTests {
     @Test func wolframAlphaParserDelegate() async throws {

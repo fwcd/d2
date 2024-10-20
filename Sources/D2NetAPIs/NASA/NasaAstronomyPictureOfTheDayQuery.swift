@@ -1,7 +1,7 @@
 import Foundation
 import Utils
 
-fileprivate let dateFormatter: DateFormatter = {
+private let dateFormatter: DateFormatter = {
     let f = DateFormatter()
     f.dateFormat = "dd.MM.yyyy"
     return f

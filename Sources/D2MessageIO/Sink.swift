@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2MessageIO.Sink")
+private let log = Logger(label: "D2MessageIO.Sink")
 
 /// An entry-point for commands sent to the message backend.
 public protocol Sink: Sendable {

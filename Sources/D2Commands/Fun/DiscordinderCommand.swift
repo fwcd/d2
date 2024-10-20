@@ -2,11 +2,11 @@ import Foundation
 import D2MessageIO
 import Utils
 
-fileprivate let inventoryCategory = "Discordinder Matches"
-fileprivate let cancelSubcommand = "cancel"
-fileprivate let acceptEmoji = "✅"
-fileprivate let ignoreEmoji = "🟨"
-fileprivate let rejectEmoji = "❌"
+private let inventoryCategory = "Discordinder Matches"
+private let cancelSubcommand = "cancel"
+private let acceptEmoji = "✅"
+private let ignoreEmoji = "🟨"
+private let rejectEmoji = "❌"
 
 public class DiscordinderCommand: StringCommand {
     public let info = CommandInfo(

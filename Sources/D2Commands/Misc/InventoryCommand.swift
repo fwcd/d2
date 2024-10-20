@@ -2,7 +2,7 @@ import D2MessageIO
 import RegexBuilder
 import Utils
 
-fileprivate let allFlag = "--all"
+private let allFlag = "--all"
 nonisolated(unsafe) private let rawMentionPattern = #/<[^>]+>/#
 nonisolated(unsafe) private let subcommandPattern = Regex {
     #/^/#

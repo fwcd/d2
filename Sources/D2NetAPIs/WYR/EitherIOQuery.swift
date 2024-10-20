@@ -2,7 +2,7 @@ import Logging
 import Utils
 @preconcurrency import SwiftSoup
 
-fileprivate let log = Logger(label: "D2NetAPIs.EitherIOQuery")
+private let log = Logger(label: "D2NetAPIs.EitherIOQuery")
 
 public struct EitherIOQuery: Sendable {
     private let term: String

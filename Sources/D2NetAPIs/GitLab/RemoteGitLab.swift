@@ -2,8 +2,8 @@ import Utils
 import Foundation
 import Logging
 
-fileprivate let log = Logger(label: "D2NetAPIs.RemoteGitLab")
-fileprivate let apiPath = "/api/v4"
+private let log = Logger(label: "D2NetAPIs.RemoteGitLab")
+private let apiPath = "/api/v4"
 
 public struct RemoteGitLab: Sendable {
     private let scheme: String

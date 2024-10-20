@@ -3,11 +3,11 @@ import D2MessageIO
 import D2TestUtils
 @testable import D2Commands
 
-fileprivate let x = ":x:"
-fileprivate let o = ":o:"
-fileprivate let e = ":white_large_square:"
-fileprivate let nameX = "Mr. X"
-fileprivate let nameO = "Mr. O"
+private let x = ":x:"
+private let o = ":o:"
+private let e = ":white_large_square:"
+private let nameX = "Mr. X"
+private let nameO = "Mr. O"
 
 struct TicTacToeCommandTests {
     private let playerX = GamePlayer(username: nameX)

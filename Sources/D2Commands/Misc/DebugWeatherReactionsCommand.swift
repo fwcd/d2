@@ -1,7 +1,7 @@
 import D2NetAPIs
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.DebugWeatherReactionsCommand")
+private let log = Logger(label: "D2Commands.DebugWeatherReactionsCommand")
 
 public class DebugWeatherReactionsCommand: StringCommand {
     public let info = CommandInfo(

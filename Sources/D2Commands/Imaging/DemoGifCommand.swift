@@ -5,7 +5,7 @@ import D2Permissions
 @preconcurrency import GIF
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.DemoGifCommand")
+private let log = Logger(label: "D2Commands.DemoGifCommand")
 
 public class DemoGifCommand: VoidCommand {
     public let info = CommandInfo(

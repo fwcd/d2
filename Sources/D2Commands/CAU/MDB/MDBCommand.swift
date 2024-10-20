@@ -4,7 +4,7 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.MDBCommand")
+private let log = Logger(label: "D2Commands.MDBCommand")
 
 public class MDBCommand: StringCommand {
     public let info = CommandInfo(

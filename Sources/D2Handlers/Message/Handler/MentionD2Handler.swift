@@ -5,7 +5,7 @@ import Logging
 import Utils
 
 nonisolated(unsafe) private let mentionPattern = #/<@.+?>/#
-fileprivate let log = Logger(label: "D2Handlers.MentionD2Handler")
+private let log = Logger(label: "D2Handlers.MentionD2Handler")
 
 public struct MentionD2Handler<C>: MessageHandler where C: Conversator {
     private let conversator: C

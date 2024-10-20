@@ -4,65 +4,65 @@ import Logging
 import D2MessageIO
 import Utils
 
-fileprivate typealias Expression = SQLite.Expression
+private typealias Expression = SQLite.Expression
 
-fileprivate let guilds = Table("guilds")
-fileprivate let guildId = Expression<Int64>("guild_id")
-fileprivate let guildName = Expression<String>("guild_name")
-fileprivate let guildTracked = Expression<Bool>("guild_tracked")
+private let guilds = Table("guilds")
+private let guildId = Expression<Int64>("guild_id")
+private let guildName = Expression<String>("guild_name")
+private let guildTracked = Expression<Bool>("guild_tracked")
 
-fileprivate let channels = Table("channels")
-fileprivate let channelName = Expression<String>("channel_name")
+private let channels = Table("channels")
+private let channelName = Expression<String>("channel_name")
 
-fileprivate let users = Table("users")
-fileprivate let userId = Expression<Int64>("user_id")
-fileprivate let userName = Expression<String>("user_name")
-fileprivate let discriminator = Expression<String>("discriminator")
-fileprivate let bot = Expression<Bool>("bot")
-fileprivate let verified = Expression<Bool>("verified")
+private let users = Table("users")
+private let userId = Expression<Int64>("user_id")
+private let userName = Expression<String>("user_name")
+private let discriminator = Expression<String>("discriminator")
+private let bot = Expression<Bool>("bot")
+private let verified = Expression<Bool>("verified")
 
-fileprivate let members = Table("members")
-fileprivate let nick = Expression<String?>("nick")
+private let members = Table("members")
+private let nick = Expression<String?>("nick")
 
-fileprivate let memberRoles = Table("member_roles")
+private let memberRoles = Table("member_roles")
 
-fileprivate let roles = Table("roles")
-fileprivate let roleId = Expression<Int64>("role_id")
-fileprivate let roleName = Expression<String>("role_name")
-fileprivate let roleColor = Expression<Int64>("role_color")
-fileprivate let rolePosition = Expression<Int64>("role_position")
+private let roles = Table("roles")
+private let roleId = Expression<Int64>("role_id")
+private let roleName = Expression<String>("role_name")
+private let roleColor = Expression<Int64>("role_color")
+private let rolePosition = Expression<Int64>("role_position")
 
-fileprivate let messages = Table("messages")
-fileprivate let messageId = Expression<Int64>("message_id")
-fileprivate let authorId = Expression<Int64>("author_id")
-fileprivate let channelId = Expression<Int64>("channel_id")
-fileprivate let content = Expression<String>("content")
-fileprivate let timestamp = Expression<Date>("timestamp")
-fileprivate let hasAttachments = Expression<Bool>("has_attachments")
-fileprivate let hasEmbed = Expression<Bool>("has_embed")
-fileprivate let mentionsEveryone = Expression<Bool>("mentions_everyone")
+private let messages = Table("messages")
+private let messageId = Expression<Int64>("message_id")
+private let authorId = Expression<Int64>("author_id")
+private let channelId = Expression<Int64>("channel_id")
+private let content = Expression<String>("content")
+private let timestamp = Expression<Date>("timestamp")
+private let hasAttachments = Expression<Bool>("has_attachments")
+private let hasEmbed = Expression<Bool>("has_embed")
+private let mentionsEveryone = Expression<Bool>("mentions_everyone")
 
-fileprivate let reactions = Table("reactions")
+private let reactions = Table("reactions")
 
-fileprivate let userMentions = Table("user_mentions")
+private let userMentions = Table("user_mentions")
 
-fileprivate let roleMentions = Table("role_mentions")
+private let roleMentions = Table("role_mentions")
 
-fileprivate let emojis = Table("emojis")
-fileprivate let emojiId = Expression<Int64>("emoji_id")
-fileprivate let emojiName = Expression<String>("emoji_name")
-fileprivate let isAnimated = Expression<Bool>("is_animated")
-fileprivate let isManaged = Expression<Bool>("is_managed")
-fileprivate let requiresColons = Expression<Bool>("requires_colons")
+private let emojis = Table("emojis")
+private let emojiId = Expression<Int64>("emoji_id")
+private let emojiName = Expression<String>("emoji_name")
+private let isAnimated = Expression<Bool>("is_animated")
+private let isManaged = Expression<Bool>("is_managed")
+private let requiresColons = Expression<Bool>("requires_colons")
 
-fileprivate let emojiRoles = Table("emoji_roles")
+private let emojiRoles = Table("emoji_roles")
 
-fileprivate let markovTransitions = Table("markov_transitions")
-fileprivate let word = Expression<String>("word")
-fileprivate let followingWord = Expression<String>("following_word")
-fileprivate let occurrences = Expression<Int64>("occurrences")
+private let markovTransitions = Table("markov_transitions")
+private let word = Expression<String>("word")
+private let followingWord = Expression<String>("following_word")
+private let occurrences = Expression<Int64>("occurrences")
 
-fileprivate let log = Logger(label: "D2Commands.MessageDatabase")
+private let log = Logger(label: "D2Commands.MessageDatabase")
 
 public final class MessageDatabase: MarkovPredictor, Sendable {
     private let db: Connection

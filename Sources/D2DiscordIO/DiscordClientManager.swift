@@ -4,7 +4,7 @@ import Logging
 import NIO
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2DiscordIO.DiscordClientManager")
+private let log = Logger(label: "D2DiscordIO.DiscordClientManager")
 
 public actor DiscordClientManager: DiscordClientDelegate {
     private let receiver: any Receiver

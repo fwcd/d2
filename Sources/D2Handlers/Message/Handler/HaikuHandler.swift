@@ -5,7 +5,7 @@ import Logging
 import D2MessageIO
 import SyllableCounter
 
-fileprivate let log = Logger(label: "D2Handlers.HaikuHandler")
+private let log = Logger(label: "D2Handlers.HaikuHandler")
 
 public struct HaikuHandler: MessageHandler {
     private let syllableCounts: [Int]

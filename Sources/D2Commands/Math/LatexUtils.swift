@@ -1,7 +1,7 @@
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.LatexUtils")
+private let log = Logger(label: "D2Commands.LatexUtils")
 
 extension LatexRenderer {
     func renderImage(

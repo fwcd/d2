@@ -1,4 +1,4 @@
-fileprivate let maxStringLength = 700
+private let maxStringLength = 700
 
 /// Dynamically interprets programs written in BF.
 struct BFInterpreter {

@@ -5,7 +5,7 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.MinecraftServerPingCommand")
+private let log = Logger(label: "D2Commands.MinecraftServerPingCommand")
 
 public class MinecraftServerPingCommand: StringCommand {
     public let info = CommandInfo(

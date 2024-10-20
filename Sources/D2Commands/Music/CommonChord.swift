@@ -2,8 +2,8 @@ import Utils
 import RegexBuilder
 import MusicTheory
 
-fileprivate let majorSymbols: Set<String> = ["maj", "M"]
-fileprivate let minorSymbols: Set<String> = ["min", "m"]
+private let majorSymbols: Set<String> = ["maj", "M"]
+private let minorSymbols: Set<String> = ["min", "m"]
 
 nonisolated(unsafe) private let rawQualityPattern = ChoiceOf(nonEmptyComponents: majorSymbols.union(minorSymbols).map { "\($0)" })
 

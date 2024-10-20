@@ -3,8 +3,8 @@ import Logging
 import Utils
 import D2MessageIO
 
-fileprivate let customIdPrefix = "pronouns:"
-fileprivate let log = Logger(label: "D2Commands.PronounsCommand")
+private let customIdPrefix = "pronouns:"
+private let log = Logger(label: "D2Commands.PronounsCommand")
 
 public class PronounsCommand: StringCommand {
     public let info = CommandInfo(

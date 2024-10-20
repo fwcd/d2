@@ -6,9 +6,9 @@ import FoundationNetworking
 #endif
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.MessageIOOutput")
-fileprivate let contentLimit = 2000
-fileprivate let maxSplitFragments = 4
+private let log = Logger(label: "D2Commands.MessageIOOutput")
+private let contentLimit = 2000
+private let maxSplitFragments = 4
 
 public class MessageIOOutput: CommandOutput {
     private var context: CommandContext

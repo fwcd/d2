@@ -4,9 +4,9 @@ import D2MessageIO
 import D2Commands
 import Utils
 
-fileprivate let log = Logger(label: "D2Handlers.SpamHandler")
+private let log = Logger(label: "D2Handlers.SpamHandler")
 
-fileprivate struct SpammerProfile {
+private struct SpammerProfile {
     let lastSpamMessages = ExpiringList<Message>()
     var cautioned: Bool = false
 }

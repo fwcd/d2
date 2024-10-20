@@ -2,7 +2,7 @@ import Foundation
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2NetAPIs.AdventOfCodeLeaderboardQuery")
+private let log = Logger(label: "D2NetAPIs.AdventOfCodeLeaderboardQuery")
 
 public struct AdventOfCodeLeaderboardQuery: Sendable{
     @globalActor

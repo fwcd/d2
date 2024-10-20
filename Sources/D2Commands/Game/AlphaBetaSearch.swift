@@ -1,6 +1,6 @@
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.AlphaBetaSearch")
+private let log = Logger(label: "D2Commands.AlphaBetaSearch")
 
 /// A generic strategy for picking moves that uses
 /// alpha-beta-search (a variant of min-max-search)

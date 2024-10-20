@@ -3,7 +3,7 @@ import Logging
 import Utils
 @preconcurrency import SwiftSoup
 
-fileprivate let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")
+private let log = Logger(label: "D2NetAPIs.IntegralCalculatorQuery")
 nonisolated(unsafe) private let pageVersionPattern = #/\bpageVersion\s*=\s*(?<pageVersion>\d+)\b/#
 
 public struct IntegralCalculatorQuery<P: IntegralQueryParams>: Sendable {

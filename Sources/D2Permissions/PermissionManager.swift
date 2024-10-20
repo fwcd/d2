@@ -3,9 +3,9 @@ import Foundation
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Permissions.PermissionManager")
-fileprivate let userPermissionsFilePath = "local/userPermissions.json"
-fileprivate let adminWhitelistFilePath = "local/adminWhitelist.json"
+private let log = Logger(label: "D2Permissions.PermissionManager")
+private let userPermissionsFilePath = "local/userPermissions.json"
+private let adminWhitelistFilePath = "local/adminWhitelist.json"
 
 public actor PermissionManager {
     private let storage = DiskJsonSerializer()

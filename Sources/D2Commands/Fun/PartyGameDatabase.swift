@@ -2,15 +2,15 @@ import Utils
 import D2NetAPIs
 @preconcurrency import SQLite
 
-fileprivate let wyrQuestions = Table("wyr_questions")
-fileprivate let title = Expression<String>("title")
-fileprivate let firstChoice = Expression<String>("first_choice")
-fileprivate let secondChoice = Expression<String>("second_choice")
-fileprivate let explanation = Expression<String?>("explanation")
+private let wyrQuestions = Table("wyr_questions")
+private let title = Expression<String>("title")
+private let firstChoice = Expression<String>("first_choice")
+private let secondChoice = Expression<String>("second_choice")
+private let explanation = Expression<String?>("explanation")
 
-fileprivate let nhieStatements = Table("nhie_statements")
-fileprivate let statement = Expression<String>("statement")
-fileprivate let category = Expression<String?>("category")
+private let nhieStatements = Table("nhie_statements")
+private let statement = Expression<String>("statement")
+private let category = Expression<String?>("category")
 
 @CommandActor
 public class PartyGameDatabase {

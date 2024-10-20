@@ -2,9 +2,9 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.PortalCommand")
+private let log = Logger(label: "D2Commands.PortalCommand")
 
-fileprivate struct Portal {
+private struct Portal {
     let origin: ChannelID
     let originName: String
 

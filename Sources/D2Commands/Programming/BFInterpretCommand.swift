@@ -3,7 +3,7 @@ import Logging
 import D2Permissions
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.BFCommand")
+private let log = Logger(label: "D2Commands.BFCommand")
 
 public class BFInterpretCommand: StringCommand {
     public let info = CommandInfo(

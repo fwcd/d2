@@ -3,7 +3,7 @@ import Foundation
 import Logging
 @preconcurrency import CairoGraphics
 
-fileprivate let log = Logger(label: "D2Commands.ChessGame")
+private let log = Logger(label: "D2Commands.ChessGame")
 
 public struct ChessGame: Game {
     public typealias State = ChessState

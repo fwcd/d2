@@ -7,7 +7,7 @@ import D2MessageIO
 import Logging
 @preconcurrency import Discord
 
-fileprivate let log = Logger(label: "D2DiscordIO.DiscordSink")
+private let log = Logger(label: "D2DiscordIO.DiscordSink")
 
 struct DiscordSink: DefaultSink {
     private let client: DiscordClient

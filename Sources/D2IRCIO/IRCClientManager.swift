@@ -3,7 +3,7 @@ import NIO
 import Logging
 import D2MessageIO
 
-fileprivate let log = Logger(label: "D2IRCIO.IRCClientManager")
+private let log = Logger(label: "D2IRCIO.IRCClientManager")
 
 public actor IRCClientManager: IRCClientDelegate {
     private let receiver: any Receiver

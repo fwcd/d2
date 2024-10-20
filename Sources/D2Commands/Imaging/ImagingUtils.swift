@@ -2,7 +2,7 @@
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.ImagingUtils")
+private let log = Logger(label: "D2Commands.ImagingUtils")
 
 func findBoundingBox(in image: CairoImage, where predicate: (Color) -> Bool) -> (Vec2<Int>, Vec2<Int>) {
     var topLeft = image.size

@@ -3,7 +3,7 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Handlers.RoleReactionHandler")
+private let log = Logger(label: "D2Handlers.RoleReactionHandler")
 
 public struct RoleReactionHandler: ReactionHandler {
     @Binding private var configuration: RoleReactionsConfiguration

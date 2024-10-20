@@ -3,7 +3,7 @@ import Logging
 import D2MessageIO
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
+private let log = Logger(label: "D2Commands.MinecraftDynmapChatCommand")
 
 public class MinecraftDynmapChatCommand: RegexCommand {
     public let info = CommandInfo(

@@ -2,8 +2,8 @@ import Logging
 import D2MessageIO
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.SpammerRoleCommand")
-fileprivate let resetSubcommand = "reset"
+private let log = Logger(label: "D2Commands.SpammerRoleCommand")
+private let resetSubcommand = "reset"
 
 public class SpammerRoleCommand: StringCommand {
     public let info = CommandInfo(

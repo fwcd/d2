@@ -5,7 +5,7 @@ import Emoji
 @preconcurrency import IRC
 import Logging
 
-fileprivate let log = Logger(label: "D2IRCIO.IRCSink")
+private let log = Logger(label: "D2IRCIO.IRCSink")
 nonisolated(unsafe) private let mentionPattern = #/<@.+?>/#
 
 struct IRCSink: DefaultSink {

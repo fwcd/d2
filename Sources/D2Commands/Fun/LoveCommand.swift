@@ -2,7 +2,7 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.LoveCommand")
+private let log = Logger(label: "D2Commands.LoveCommand")
 
 public class LoveCommand: Command {
     public let info = CommandInfo(

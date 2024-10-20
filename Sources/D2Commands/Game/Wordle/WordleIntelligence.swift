@@ -3,7 +3,7 @@ import Foundation
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.WordleIntelligence")
+private let log = Logger(label: "D2Commands.WordleIntelligence")
 
 public struct WordleIntelligence: GameIntelligence {
     public init() {}

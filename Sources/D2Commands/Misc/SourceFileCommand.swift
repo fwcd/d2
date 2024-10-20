@@ -7,10 +7,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
-fileprivate let log = Logger(label: "D2Commands.SourceFileCommand")
+private let log = Logger(label: "D2Commands.SourceFileCommand")
 
-fileprivate let repositoryUrl = "https://github.com/fwcd/d2/tree/master"
-fileprivate let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/d2/master"
+private let repositoryUrl = "https://github.com/fwcd/d2/tree/master"
+private let rawRepositoryUrl = "https://raw.githubusercontent.com/fwcd/d2/master"
 
 public class SourceFileCommand: StringCommand {
     public let info = CommandInfo(

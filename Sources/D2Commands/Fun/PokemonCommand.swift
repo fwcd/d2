@@ -3,8 +3,8 @@ import Foundation
 import D2MessageIO
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.PokemonCommand")
-fileprivate let inventoryCategory = "Pokemon"
+private let log = Logger(label: "D2Commands.PokemonCommand")
+private let inventoryCategory = "Pokemon"
 
 public class PokemonCommand: StringCommand {
     public let info = CommandInfo(

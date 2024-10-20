@@ -4,7 +4,7 @@ import D2MessageIO
 import Foundation
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.AutoLatexCommand")
+private let log = Logger(label: "D2Commands.AutoLatexCommand")
 
 /// A simple heuristic for detecting "formulas" in messages. Matches a single character.
 nonisolated(unsafe) private let formulaPattern = #/[0-9{}\+\-*\/\[\]\\|]/#

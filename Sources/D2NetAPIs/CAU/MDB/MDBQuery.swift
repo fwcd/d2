@@ -8,7 +8,7 @@ import FoundationXML
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2NetAPIs.MDBQuery")
+private let log = Logger(label: "D2NetAPIs.MDBQuery")
 
 public struct MDBQuery: Sendable {
     public let url: URL

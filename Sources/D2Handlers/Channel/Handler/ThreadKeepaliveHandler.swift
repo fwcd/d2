@@ -3,7 +3,7 @@ import D2Commands
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Handlers.ThreadKeepaliveHandler")
+private let log = Logger(label: "D2Handlers.ThreadKeepaliveHandler")
 
 public struct ThreadKeepaliveHandler: ChannelHandler {
     @Binding private var config: ThreadConfiguration

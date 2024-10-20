@@ -3,7 +3,7 @@ import Utils
 import Logging
 import NIO
 
-fileprivate let log = Logger(label: "D2Commands.CronManager")
+private let log = Logger(label: "D2Commands.CronManager")
 
 @CommandActor
 public class CronManager {

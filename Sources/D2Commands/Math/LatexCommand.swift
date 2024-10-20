@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.LatexCommand")
+private let log = Logger(label: "D2Commands.LatexCommand")
 nonisolated(unsafe) private let flagPattern = #/--(\S+)=(\S+)/#
 
 // TODO: Use the Arg API

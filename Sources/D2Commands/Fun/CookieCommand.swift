@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let inventoryCategory = "Cookies"
+private let inventoryCategory = "Cookies"
 
 public class CookieCommand: Command {
     public let info = CommandInfo(

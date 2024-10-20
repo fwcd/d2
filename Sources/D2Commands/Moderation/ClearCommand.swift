@@ -2,8 +2,8 @@ import D2MessageIO
 import Utils
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.ClearCommand")
-fileprivate let confirmationString = "delete"
+private let log = Logger(label: "D2Commands.ClearCommand")
+private let confirmationString = "delete"
 
 public class ClearCommand: StringCommand {
     public let info = CommandInfo(

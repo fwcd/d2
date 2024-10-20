@@ -1,6 +1,6 @@
 import Utils
 
-fileprivate let morseTable: BiDictionary<String, String> = [
+private let morseTable: BiDictionary<String, String> = [
     "A": ".-",
     "B": "-...",
     "C": "-.-.",
@@ -51,8 +51,8 @@ fileprivate let morseTable: BiDictionary<String, String> = [
     "=": "-...-"
 ]
 
-fileprivate let wordSeparator = "   "
-fileprivate let charSeparator = " "
+private let wordSeparator = "   "
+private let charSeparator = " "
 
 func morseEncode(_ s: String) -> String {
     s.split(separator: " ")

@@ -6,7 +6,7 @@ import FoundationNetworking
 #endif
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.MessageIOInteractionOutput")
+private let log = Logger(label: "D2Commands.MessageIOInteractionOutput")
 
 public class MessageIOInteractionOutput: CommandOutput {
     private let interaction: Interaction

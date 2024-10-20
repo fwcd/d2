@@ -1,4 +1,4 @@
-fileprivate let substitutions: [Character: Character] = [
+private let substitutions: [Character: Character] = [
     "A": "4",
     "E": "3",
     "O": "0",

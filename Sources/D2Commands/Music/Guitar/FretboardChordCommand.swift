@@ -3,7 +3,7 @@ import D2MessageIO
 import D2Permissions
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.FretboardChordCommand")
+private let log = Logger(label: "D2Commands.FretboardChordCommand")
 
 public class FretboardChordCommand: RegexCommand {
     public let info = CommandInfo(

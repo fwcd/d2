@@ -4,9 +4,9 @@ import D2MessageIO
 import Utils
 import D2NetAPIs
 
-fileprivate let log = Logger(label: "D2Commands.MensaCommand")
+private let log = Logger(label: "D2Commands.MensaCommand")
 
-fileprivate let cauMensaIds = [
+private let cauMensaIds = [
     "1": 1216,
     "2": 1218,
     "schwentine": 1219,

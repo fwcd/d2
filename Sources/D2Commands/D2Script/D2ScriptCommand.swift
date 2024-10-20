@@ -8,7 +8,7 @@ import Utils
 import D2Permissions
 import D2Script
 
-fileprivate let log = Logger(label: "D2Commands.D2ScriptCommand")
+private let log = Logger(label: "D2Commands.D2ScriptCommand")
 
 public class D2ScriptCommand: StringCommand {
     public let info: CommandInfo

@@ -2,8 +2,8 @@ import Logging
 import D2MessageIO
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.PronounRoleCommand")
-fileprivate let resetSubcommand = "reset"
+private let log = Logger(label: "D2Commands.PronounRoleCommand")
+private let resetSubcommand = "reset"
 
 nonisolated(unsafe) private let inputPattern = #/(?<name>[\w\/]+)(?:\s+(?:<@&)?(?<roleId>\d+)>?)?/#
 

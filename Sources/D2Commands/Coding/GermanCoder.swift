@@ -1,10 +1,10 @@
 import Foundation
 import Utils
 
-fileprivate let encodedZero = "SCHNITZEL"
-fileprivate let encodedOne = "BEER"
+private let encodedZero = "SCHNITZEL"
+private let encodedOne = "BEER"
 
-fileprivate func germanEncodeByte(_ byte: UInt8) -> [String] {
+private func germanEncodeByte(_ byte: UInt8) -> [String] {
     var words = [String]()
     for i in (0..<8).reversed() {
         let bit = ((byte >> i) & 1) == 1
@@ -13,7 +13,7 @@ fileprivate func germanEncodeByte(_ byte: UInt8) -> [String] {
     return words
 }
 
-fileprivate func germanDecodeByte(_ words: [String]) -> UInt8 {
+private func germanDecodeByte(_ words: [String]) -> UInt8 {
     words
         .compactMap { (w: String) -> UInt8? in
             switch w {

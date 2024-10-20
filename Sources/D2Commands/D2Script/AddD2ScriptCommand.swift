@@ -4,7 +4,7 @@ import D2Permissions
 import Utils
 import D2Script
 
-fileprivate let log = Logger(label: "D2Commands.AddD2ScriptCommand")
+private let log = Logger(label: "D2Commands.AddD2ScriptCommand")
 nonisolated(unsafe) private let codePattern = #/(?:`(?:``(?:\w*\n)?)?)?(?<code>[^`]+)`*/#
 
 // TODO: Use code command instead of StringCommand

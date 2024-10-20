@@ -2,9 +2,9 @@ import Utils
 import D2Permissions
 import Logging
 
-fileprivate let log = Logger(label: "D2Commands.LastMessageCommand")
+private let log = Logger(label: "D2Commands.LastMessageCommand")
 
-fileprivate enum LastMessageError: Error {
+private enum LastMessageError: Error {
     case noLastMessage
 }
 

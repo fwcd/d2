@@ -28,7 +28,7 @@ nonisolated(unsafe) private let substitutions = [
     (#/\bis/#, "be"),
 ].map { (pattern: $0.0.ignoresCase(), substitution: $0.1) }
 
-fileprivate let interjections = [
+private let interjections = [
     "Arr!",
     "C'mere, me beauty.",
     "Savvy?",

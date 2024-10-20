@@ -2,7 +2,7 @@ import Logging
 import Utils
 @preconcurrency import CairoGraphics
 
-fileprivate let log = Logger(label: "D2Commands.ChessBoardView")
+private let log = Logger(label: "D2Commands.ChessBoardView")
 
 struct ChessBoardView {
     let image: CairoImage?

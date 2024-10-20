@@ -4,32 +4,32 @@ import Utils
 
 // TODO: Recursive expressions are not supported, since Foundation's regex engine does not support those
 // TODO: Migrate to regex builders
-fileprivate let literalExpr = "[\\w\\d_-]+|\"[^\"]*\""
-fileprivate let unaryExpr = "(?:\(literalExpr))(?:\\s+is(?:\\s+not)?(?:\\s+null|(?:\(literalExpr))))?"
-fileprivate let binaryExpr = "(?:\(unaryExpr))(?:\\s+(?:==|<|<=|>|>=|<>|like)\\s+(?:\(unaryExpr)))?"
-fileprivate let andExpr = "(?:\(binaryExpr))(?:\\s+and\\s+(?:\(binaryExpr)))*"
-fileprivate let orExpr = "(?:\(andExpr))(?:\\s+and\\s+(?:\(andExpr)))*"
-fileprivate let expr = orExpr
-fileprivate let table = "\\w+"
-fileprivate let columnAlias = "\\w+"
-fileprivate let columnName = "\\w+"
-fileprivate let alias = "\\s+(?:as\\s+)?(?:\(columnAlias))"
-fileprivate let aggregation = "(?:count|avg|min|max)\\s*\\((?:\\*|\\w+)\\)"
-fileprivate let resultColumn = "(?:(?:\(expr))|\\*|(?:\(aggregation)))(?:\(alias))?"
-fileprivate let joinOperator = ",|(?:(?:natural)?\\s*(?:left\\s*(?:outer|inner|cross)?)?\\s*join)"
-fileprivate let joinConstraint = "(?:on\\s+(?:\(expr))|using\\s+\\((?:\(columnName)(?:\\s*,\\s*(?:\(columnName)))*)\\))?" // TODO
-fileprivate let joinClause = "\(table)\\s*(?:(?:\(joinOperator))\\s*(?:\(table))\\s*(?:\(joinConstraint))\\s*)*"
-fileprivate let fromClause = "from\\s+(?:(?:\(joinClause))|(?:\(table))\\s*(?:,\\s*\(table)\\s*)*)"
-fileprivate let whereClause = "where\\s+(?:\(expr))"
-fileprivate let groupByClause = "group\\s+by\\s+(?:\(expr))(?:\\s*,\\s*(?:\(expr)))*"
-fileprivate let havingClause = "having\\s+(?:\(expr))"
-fileprivate let groupByHavingClause = "(?:\(groupByClause))\\s*(?:\(havingClause))?"
-fileprivate let orderingTerm = "\(expr)\\s*(?:asc|desc)?\\s*(?:nulls\\s+(?:first|last))?"
-fileprivate let orderByClause = "order\\s+by\\s+(?:\(orderingTerm))(?:\\s*,\\s*(?:\(orderingTerm)))*"
-fileprivate let limitClause = "limit\\s+(\\d+)" // TODO: Fix issue that numbers are not parsed
-fileprivate let selectModifier = "distinct|all"
-fileprivate let clauses = [fromClause, whereClause, groupByHavingClause, orderByClause, limitClause].map { "(?:\($0))?" }.joined(separator: "\\s*")
-fileprivate let rawSelectStmt = "^select(?:\\s*(?:\(selectModifier)))?\\s*(?:\(resultColumn))(?:,\\s*(?:\(resultColumn))\\s*)*\\s*(?:\(clauses))$"
+private let literalExpr = "[\\w\\d_-]+|\"[^\"]*\""
+private let unaryExpr = "(?:\(literalExpr))(?:\\s+is(?:\\s+not)?(?:\\s+null|(?:\(literalExpr))))?"
+private let binaryExpr = "(?:\(unaryExpr))(?:\\s+(?:==|<|<=|>|>=|<>|like)\\s+(?:\(unaryExpr)))?"
+private let andExpr = "(?:\(binaryExpr))(?:\\s+and\\s+(?:\(binaryExpr)))*"
+private let orExpr = "(?:\(andExpr))(?:\\s+and\\s+(?:\(andExpr)))*"
+private let expr = orExpr
+private let table = "\\w+"
+private let columnAlias = "\\w+"
+private let columnName = "\\w+"
+private let alias = "\\s+(?:as\\s+)?(?:\(columnAlias))"
+private let aggregation = "(?:count|avg|min|max)\\s*\\((?:\\*|\\w+)\\)"
+private let resultColumn = "(?:(?:\(expr))|\\*|(?:\(aggregation)))(?:\(alias))?"
+private let joinOperator = ",|(?:(?:natural)?\\s*(?:left\\s*(?:outer|inner|cross)?)?\\s*join)"
+private let joinConstraint = "(?:on\\s+(?:\(expr))|using\\s+\\((?:\(columnName)(?:\\s*,\\s*(?:\(columnName)))*)\\))?" // TODO
+private let joinClause = "\(table)\\s*(?:(?:\(joinOperator))\\s*(?:\(table))\\s*(?:\(joinConstraint))\\s*)*"
+private let fromClause = "from\\s+(?:(?:\(joinClause))|(?:\(table))\\s*(?:,\\s*\(table)\\s*)*)"
+private let whereClause = "where\\s+(?:\(expr))"
+private let groupByClause = "group\\s+by\\s+(?:\(expr))(?:\\s*,\\s*(?:\(expr)))*"
+private let havingClause = "having\\s+(?:\(expr))"
+private let groupByHavingClause = "(?:\(groupByClause))\\s*(?:\(havingClause))?"
+private let orderingTerm = "\(expr)\\s*(?:asc|desc)?\\s*(?:nulls\\s+(?:first|last))?"
+private let orderByClause = "order\\s+by\\s+(?:\(orderingTerm))(?:\\s*,\\s*(?:\(orderingTerm)))*"
+private let limitClause = "limit\\s+(\\d+)" // TODO: Fix issue that numbers are not parsed
+private let selectModifier = "distinct|all"
+private let clauses = [fromClause, whereClause, groupByHavingClause, orderByClause, limitClause].map { "(?:\($0))?" }.joined(separator: "\\s*")
+private let rawSelectStmt = "^select(?:\\s*(?:\(selectModifier)))?\\s*(?:\(resultColumn))(?:,\\s*(?:\(resultColumn))\\s*)*\\s*(?:\(clauses))$"
 nonisolated(unsafe) private let selectStmtPattern = try! Regex(rawSelectStmt)
 
 public class MessageDatabaseQueryCommand: StringCommand {

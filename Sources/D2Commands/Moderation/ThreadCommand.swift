@@ -2,7 +2,7 @@ import D2MessageIO
 import Logging
 import Utils
 
-fileprivate let log = Logger(label: "D2Commands.ThreadKeepaliveCommand")
+private let log = Logger(label: "D2Commands.ThreadKeepaliveCommand")
 
 public class ThreadCommand: StringCommand {
     public private(set) var info = CommandInfo(
