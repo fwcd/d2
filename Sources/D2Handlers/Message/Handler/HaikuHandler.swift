@@ -28,7 +28,7 @@ public struct HaikuHandler: MessageHandler {
         if let channelId = message.channelId,
             configuration.enabledChannelIds.contains(channelId),
             let author = message.guildMember,
-            let haiku = haikuOf(message.content) {
+            let haiku = await haikuOf(message.content) {
             log.info("\(author.displayName) wrote a haiku: \(haiku.joined(separator: " - "))")
 
             let item = Inventory.Item(
@@ -52,7 +52,7 @@ public struct HaikuHandler: MessageHandler {
         return false
     }
 
-    private func haikuOf(_ raw: String) -> [String]? {
+    private func haikuOf(_ raw: String) async -> [String]? {
         let words = raw.matches(of: wordPattern).map { String($0.output) }
         var verses = [[String]()]
         var totalSyllables = 0
@@ -66,7 +66,7 @@ public struct HaikuHandler: MessageHandler {
                 guard let word = wordIt.next() else { return nil }
                 verses[verses.count - 1].append(word)
 
-                let count = syllableCount(for: word.lowercased())
+                let count = await syllableCount(for: word.lowercased())
                 syllablesInVerse += count
                 totalSyllables += count
             }
@@ -80,7 +80,7 @@ public struct HaikuHandler: MessageHandler {
         return verses.map { $0.joined(separator: " ") }
     }
 
-    private func syllableCount(for word: String) -> Int {
-        Syllables.german[word] ?? word.syllables
+    private func syllableCount(for word: String) async -> Int {
+        await Syllables.german[word] ?? word.syllables
     }
 }

@@ -4,6 +4,7 @@ import Logging
 private let log = Logger(label: "D2Datasets.Syllables")
 nonisolated(unsafe) private let linePattern = #/^(?<word>[^,]+),(?<count>\d+)/#
 
+@SyllablesActor
 public enum Syllables {
     public static let german = loadSyllables(name: "german")
 
