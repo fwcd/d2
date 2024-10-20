@@ -1,3 +1,6 @@
+# Prefer private to fileprivate at the top level
+2f5e747e28ef80bd25959714b836fe43cfc5200a
+
 # Remove redundant return keywords
 a6e4eead0fc8669093bb360112b627639ab4b17f
 
