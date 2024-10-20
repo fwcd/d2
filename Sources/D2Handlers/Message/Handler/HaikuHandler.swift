@@ -6,6 +6,7 @@ import D2MessageIO
 import SyllableCounter
 
 private let log = Logger(label: "D2Handlers.HaikuHandler")
+nonisolated(unsafe) private let wordPattern = #/[a-zäöüß\-]+/#.ignoresCase()
 
 public struct HaikuHandler: MessageHandler {
     private let syllableCounts: [Int]
@@ -52,11 +53,7 @@ public struct HaikuHandler: MessageHandler {
     }
 
     private func haikuOf(_ raw: String) -> [String]? {
-        let words = raw
-            .replacingOccurrences(of: ".", with: "")
-            .replacingOccurrences(of: "\n", with: " ")
-            .split(separator: " ")
-            .map { $0.lowercased() }
+        let words = raw.matches(of: wordPattern).map { String($0.output) }
         var verses = [[String]()]
         var totalSyllables = 0
         var wordIt = words.makeIterator()
@@ -69,7 +66,7 @@ public struct HaikuHandler: MessageHandler {
                 guard let word = wordIt.next() else { return nil }
                 verses[verses.count - 1].append(word)
 
-                let count = syllableCount(for: word)
+                let count = syllableCount(for: word.lowercased())
                 syllablesInVerse += count
                 totalSyllables += count
             }
