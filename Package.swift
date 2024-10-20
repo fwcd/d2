@@ -108,11 +108,15 @@ let package = Package(
                 .product(name: "AGGRenderer", package: "swiftplot"),
                 .product(name: "NIOCronScheduler", package: "NIOCronScheduler"),
                 .product(name: "Socket", package: "BlueSocket"),
+                .target(name: "D2Datasets"),
                 .target(name: "D2MessageIO"),
                 .target(name: "D2Permissions"),
                 .target(name: "D2Script"),
                 .target(name: "D2NetAPIs"),
             ]
+        ),
+        .target(
+            name: "D2Datasets"
         ),
         .target(
             name: "D2Permissions",

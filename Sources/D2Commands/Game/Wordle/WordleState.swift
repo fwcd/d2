@@ -1,3 +1,5 @@
+import D2Datasets
+
 public struct WordleState: GameState, Multiplayer, FinitePossibleMoves, Sendable {
     public typealias Role = Int
     public typealias Board = WordleBoard

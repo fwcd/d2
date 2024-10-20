@@ -1,4 +1,6 @@
-public struct Words {
+import Foundation
+
+public enum Words {
     public static let english = loadWords(name: "english")
     public static let german = loadWords(name: "german")
     public static let nouns = loadWords(name: "nouns")

@@ -1,3 +1,4 @@
+import D2Datasets
 import Utils
 
 public struct WordleBoard: RichValueConvertible, Sendable {
