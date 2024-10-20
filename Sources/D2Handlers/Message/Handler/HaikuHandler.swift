@@ -1,4 +1,5 @@
 import D2Commands
+import D2Datasets
 import Utils
 import Logging
 import D2MessageIO
@@ -52,8 +53,10 @@ public struct HaikuHandler: MessageHandler {
 
     private func haikuOf(_ raw: String) -> [String]? {
         let words = raw
+            .replacingOccurrences(of: ".", with: "")
             .replacingOccurrences(of: "\n", with: " ")
-            .split(separator: " ").map { String($0) }
+            .split(separator: " ")
+            .map { $0.lowercased() }
         var verses = [[String]()]
         var totalSyllables = 0
         var wordIt = words.makeIterator()
@@ -66,7 +69,7 @@ public struct HaikuHandler: MessageHandler {
                 guard let word = wordIt.next() else { return nil }
                 verses[verses.count - 1].append(word)
 
-                let count = word.syllables
+                let count = syllableCount(for: word)
                 syllablesInVerse += count
                 totalSyllables += count
             }
@@ -78,5 +81,9 @@ public struct HaikuHandler: MessageHandler {
         guard wordIt.next() == nil else { return nil }
 
         return verses.map { $0.joined(separator: " ") }
+    }
+
+    private func syllableCount(for word: String) -> Int {
+        Syllables.german[word] ?? word.syllables
     }
 }
