@@ -175,6 +175,7 @@ let package = Package(
             name: "D2ScriptTests",
             dependencies: [
                 .product(name: "Utils", package: "swift-utils"),
+                .target(name: "D2TestUtils"),
                 .target(name: "D2Script"),
             ]
         ),
