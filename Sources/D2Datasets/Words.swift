@@ -1,4 +1,7 @@
 import Foundation
+import Logging
+
+private let log = Logger(label: "D2Datasets.Words")
 
 public enum Words {
     public static let english = loadWords(name: "english")
@@ -9,6 +12,7 @@ public enum Words {
     public static let wordlePossible = loadWords(name: "wordlePossible")
 
     private static func loadWords(name: String) -> [String] {
-        (try? String(contentsOfFile: "Resources/Words/\(name).txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
+        log.info("Loading \(name) words...")
+        return (try? String(contentsOfFile: "Resources/Words/\(name).txt", encoding: .utf8))?.split(separator: "\n").map(String.init) ?? []
     }
 }
