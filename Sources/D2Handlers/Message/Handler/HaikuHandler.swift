@@ -6,7 +6,7 @@ import D2MessageIO
 import SyllableCounter
 
 private let log = Logger(label: "D2Handlers.HaikuHandler")
-nonisolated(unsafe) private let wordPattern = #/[a-zäöüß\-]+/#.ignoresCase()
+nonisolated(unsafe) private let wordPattern = #/[a-zäöüß\d\-]+/#.ignoresCase()
 
 public struct HaikuHandler: MessageHandler {
     private let syllableCounts: [Int]
