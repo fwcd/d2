@@ -19,10 +19,10 @@ public class WhisperCommand: StringCommand {
 
         if configuration.enabledChannelIds.contains(channelId) {
             configuration.enabledChannelIds.remove(channelId)
-            await output.append("Disabled whisper mode on this channel")
+            await output.append(":scream: Disabled whisper mode on this channel")
         } else {
             configuration.enabledChannelIds.insert(channelId)
-            await output.append("Enabled whisper mode on this channel")
+            await output.append(":shushing_face: Enabled whisper mode on this channel")
         }
     }
 }
