@@ -4,5 +4,5 @@ import D2MessageIO
 /// `MessageRewriter`, which processes incoming messages.
 @CommandActor
 protocol MessagePostprocessor {
-    func postprocess(message: Message) async throws -> Message
+    func postprocess(message: Message, context: CommandContext) async throws -> Message
 }

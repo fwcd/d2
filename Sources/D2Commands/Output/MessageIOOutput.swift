@@ -19,7 +19,7 @@ public class MessageIOOutput: CommandOutput {
         self.context = context
         self.onSent = onSent
 
-        messageWriter = MessageWriter(context: context)
+        messageWriter = MessageWriter()
     }
 
     public func append(_ value: RichValue, to channel: OutputChannel) async {
@@ -34,7 +34,7 @@ public class MessageIOOutput: CommandOutput {
 
         var messages: [Message]
         do {
-            let baseMessage = try await messageWriter.write(value: value)
+            let baseMessage = try await messageWriter.write(value: value, context: context)
             messages = self.splitUp(message: baseMessage)
             if messages.count > maxSplitFragments {
                 log.warning("Splitting up message resulted in \(messages.count) fragments, truncating to \(maxSplitFragments) messages...")

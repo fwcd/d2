@@ -30,7 +30,7 @@ public class MessageIOInteractionOutput: CommandOutput {
 
         // TODO: Split/limit?
         do {
-            let message = try await messageWriter.write(value: value)
+            let message = try await messageWriter.write(value: value, context: context)
             try await self.send(message: message, with: sink, to: channel)
         } catch {
             log.error("Interaction output failed: \(error)")

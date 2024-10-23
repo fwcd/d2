@@ -9,19 +9,19 @@ private let log = Logger(label: "D2Commands.MessageWriter")
 @CommandActor
 public struct MessageWriter: Sendable {
     private let latexRenderer = LatexRenderer()
-    private let postprocessors: [any MessagePostprocessor]
+    private let postprocessors: [any MessagePostprocessor] = [
+        WhisperPostprocessor()
+    ]
 
-    public init(context: CommandContext? = nil) {
-        postprocessors = [
-            (context?.whisperConfiguration).map { WhisperPostprocessor($configuration: $0) },
-        ].compactMap { (pp: (any MessagePostprocessor)?) in pp }
-    }
+    public init() {}
 
-    public func write(value: RichValue) async throws -> Message {
+    public func write(value: RichValue, context: CommandContext? = nil) async throws -> Message {
         var message = try await encode(value: value)
 
-        for postprocessor in postprocessors {
-            message = try await postprocessor.postprocess(message: message)
+        if let context {
+            for postprocessor in postprocessors {
+                message = try await postprocessor.postprocess(message: message, context: context)
+            }
         }
 
         return message
