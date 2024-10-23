@@ -326,7 +326,7 @@ public class D2Receiver: Receiver {
         registry["iambored"] = IAmBoredCommand()
         registry["interject"] = InterjectCommand()
         registry["discordinder"] = DiscordinderCommand(inventoryManager: inventoryManager)
-        registry["pickupline"] = PickupLineCommand()
+        registry["pickupline", aka: ["pickup"]] = PickupLineCommand()
         registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
         registry["joke"] = JokeCommand()
         registry["pat"] = PatCommand(inventoryManager: inventoryManager)
