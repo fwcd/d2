@@ -77,9 +77,9 @@ public struct Embed: Sendable, Codable {
     }
 
     public struct Field: Sendable, Codable {
-        public let name: String
-        public let value: String
-        public let inline: Bool
+        public var name: String
+        public var value: String
+        public var inline: Bool
 
         public init(name: String, value: String, inline: Bool = false) {
             self.name = name
