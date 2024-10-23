@@ -1,9 +1,5 @@
 public struct PickupLine: Sendable, Codable {
-    public let username: String?
-    public let tweet: String
-
-    public init(username: String? = nil, tweet: String) {
-        self.username = username
-        self.tweet = tweet
-    }
+    public let text: String
+    public let category: String
+    public let language: String
 }
