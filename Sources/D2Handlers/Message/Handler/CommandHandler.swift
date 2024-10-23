@@ -207,6 +207,7 @@ public class CommandHandler: MessageHandler {
                             commandPrefix: commandPrefix,
                             hostInfo: hostInfo,
                             subscriptions: subscriptionManager.createIfNotExistsAndGetSubscriptionSet(for: name),
+                            whisperConfiguration: self.whisperConfiguration,
                             eventLoopGroup: eventLoopGroup
                         )
 
