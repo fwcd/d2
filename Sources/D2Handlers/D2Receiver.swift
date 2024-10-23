@@ -72,6 +72,7 @@ public class D2Receiver: Receiver {
         @AutoSerializing(filePath: "local/triggerReactionConfiguration.json") var triggerReactionConfiguration = TriggerReactionConfiguration()
         @AutoSerializing(filePath: "local/pronounRoleConfig.json") var pronounRoleConfiguration = PronounRoleConfiguration()
         @AutoSerializing(filePath: "local/cityConfig.json") var cityConfiguration = CityConfiguration()
+        @AutoSerializing(filePath: "local/whisperConfig.json") var whisperConfiguration = WhisperConfiguration()
 
         messageRewriters = [
             MentionSomeoneRewriter()
@@ -235,6 +236,7 @@ public class D2Receiver: Receiver {
         registry["recipe"] = RecipeCommand()
         registry["chess"] = GameCommand<ChessGame>()
         registry["cyclethrough"] = CycleThroughCommand()
+        registry["whisper"] = WhisperCommand($configuration: $whisperConfiguration)
         registry["dot", aka: ["graphviz"]] = GraphVizCommand(layout: .dot)
         registry["neato"] = GraphVizCommand(layout: .neato)
         registry["fdp"] = GraphVizCommand(layout: .fdp)
