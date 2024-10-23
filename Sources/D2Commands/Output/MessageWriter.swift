@@ -8,10 +8,21 @@ private let log = Logger(label: "D2Commands.MessageWriter")
 /// Writes rich values into MessageIO messages (e.g. for use with Discord).
 public struct MessageWriter: Sendable {
     private let latexRenderer = LatexRenderer()
+    private let postprocessors: [any MessagePostprocessor] = []
 
     public init() {}
 
     public func write(value: RichValue) async throws -> Message {
+        var message = try await encode(value: value)
+
+        for postprocessor in postprocessors {
+            message = try await postprocessor.postprocess(message: message)
+        }
+
+        return message
+    }
+
+    private func encode(value: RichValue) async throws -> Message {
         switch value {
             case .none:
                 return Message(content: "")
