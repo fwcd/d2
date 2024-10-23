@@ -33,6 +33,9 @@ struct WhisperPostprocessor: MessagePostprocessor {
     }
 
     private func whisperify(string: String) -> String {
-        string.replacing(#/(?<prefix>^|\n)(?<suffix>\S)/#) { "\($0.prefix)-# \($0.suffix)" }
+        string
+            .replacing(#/```\S*/#, with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacing(#/(?<prefix>^|\n)(?<suffix>\S)/#) { "\($0.prefix)-# \($0.suffix)" }
     }
 }
