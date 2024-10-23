@@ -3,7 +3,8 @@ import Utils
 public class WhisperCommand: StringCommand {
     public let info = CommandInfo(
         category: .misc,
-        shortDescription: "Toggles whisper mode in the current channel"
+        shortDescription: "Toggles whisper mode in the current channel",
+        requiredPermissionLevel: .basic
     )
     @Binding private var configuration: WhisperConfiguration
 
