@@ -26,8 +26,7 @@ public struct RoleReactionsConfiguration: Sendable, Codable {
         /// where a custom emoji is looked up without its id (i.e. with the
         /// syntax 'name' instead of 'name:id').
         public subscript(emoji: String) -> RoleID? {
-            print("\(emoji) vs \(roleMappings)")
-            return roleMappings[emoji] ?? roleMappings.first { $0.key.starts(with: "\(emoji):") }?.value
+            roleMappings[emoji] ?? roleMappings.first { $0.key.starts(with: "\(emoji):") }?.value
         }
     }
 }

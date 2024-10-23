@@ -26,7 +26,6 @@ extension FileHandle {
                         let chunkSize = 1
                         let chunk = try self.read(upToCount: chunkSize) ?? Data()
                         if chunk.isEmpty {
-                            print("Read \(String(data: chunk, encoding: .utf8)!)")
                             isEOF = true
                             // If there's remaining data in the buffer, yield it as the last line
                             if !buffer.isEmpty {
