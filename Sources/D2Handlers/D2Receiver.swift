@@ -79,7 +79,16 @@ public class D2Receiver: Receiver {
         ]
         messageHandlers = [
             SpamHandler($config: $spamConfiguration),
-            CommandHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, permissionManager: permissionManager, subscriptionManager: subscriptionManager, eventLoopGroup: eventLoopGroup, mostRecentPipeRunner: _mostRecentPipeRunner),
+            CommandHandler(
+                commandPrefix: commandPrefix,
+                hostInfo: hostInfo,
+                registry: registry,
+                permissionManager: permissionManager,
+                subscriptionManager: subscriptionManager,
+                whisperConfiguration: $whisperConfiguration,
+                eventLoopGroup: eventLoopGroup,
+                mostRecentPipeRunner: _mostRecentPipeRunner
+            ),
             SubscriptionHandler(commandPrefix: commandPrefix, hostInfo: hostInfo, registry: registry, manager: subscriptionManager, eventLoopGroup: eventLoopGroup),
             MentionD2Handler(conversator: FollowUpConversator(messageDB: messageDB)),
             MentionSomeoneHandler(),

@@ -12,12 +12,14 @@ private let maxSplitFragments = 4
 
 public class MessageIOOutput: CommandOutput {
     private var context: CommandContext
-    private let messageWriter = MessageWriter()
+    private let messageWriter: MessageWriter
     private let onSent: (([Message]) async -> Void)?
 
     public init(context: CommandContext, onSent: (([Message]) async -> Void)? = nil) {
         self.context = context
         self.onSent = onSent
+
+        messageWriter = MessageWriter(context: context)
     }
 
     public func append(_ value: RichValue, to channel: OutputChannel) async {

@@ -47,6 +47,7 @@ public class CommandHandler: MessageHandler {
     private let registry: CommandRegistry
     private let permissionManager: PermissionManager
     private let subscriptionManager: SubscriptionManager
+    private let whisperConfiguration: Binding<WhisperConfiguration>
     private let eventLoopGroup: any EventLoopGroup
 
     private let msgParser = MessageParser()
@@ -66,6 +67,7 @@ public class CommandHandler: MessageHandler {
         registry: CommandRegistry,
         permissionManager: PermissionManager,
         subscriptionManager: SubscriptionManager,
+        whisperConfiguration: Binding<WhisperConfiguration>,
         eventLoopGroup: any EventLoopGroup,
         mostRecentPipeRunner: Synchronized<Box<(any AsyncRunnable, PermissionLevel)?>>,
         maxPipeLengthForUsers: Int = 7,
@@ -79,6 +81,7 @@ public class CommandHandler: MessageHandler {
         self.registry = registry
         self.permissionManager = permissionManager
         self.subscriptionManager = subscriptionManager
+        self.whisperConfiguration = whisperConfiguration
         self.eventLoopGroup = eventLoopGroup
         self._mostRecentPipeRunner = mostRecentPipeRunner
         self.maxPipeLengthForUsers = maxPipeLengthForUsers
@@ -138,6 +141,7 @@ public class CommandHandler: MessageHandler {
                                 commandPrefix: self.commandPrefix,
                                 hostInfo: self.hostInfo,
                                 subscriptions: pipeSink.context.subscriptions,
+                                whisperConfiguration: self.whisperConfiguration,
                                 eventLoopGroup: self.eventLoopGroup
                             ))
                         }

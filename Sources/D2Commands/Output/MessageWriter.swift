@@ -6,11 +6,16 @@ import Utils
 private let log = Logger(label: "D2Commands.MessageWriter")
 
 /// Writes rich values into MessageIO messages (e.g. for use with Discord).
+@CommandActor
 public struct MessageWriter: Sendable {
     private let latexRenderer = LatexRenderer()
-    private let postprocessors: [any MessagePostprocessor] = []
+    private let postprocessors: [any MessagePostprocessor]
 
-    public init() {}
+    public init(context: CommandContext? = nil) {
+        postprocessors = [
+            (context?.whisperConfiguration).map { WhisperPostprocessor($configuration: $0) },
+        ].compactMap { (pp: (any MessagePostprocessor)?) in pp }
+    }
 
     public func write(value: RichValue) async throws -> Message {
         var message = try await encode(value: value)

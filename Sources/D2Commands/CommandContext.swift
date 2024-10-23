@@ -1,6 +1,7 @@
 import D2MessageIO
 import Foundation
 import Logging
+import Utils
 import NIO
 
 private let log = Logger(label: "D2Commands.CommandContext")
@@ -13,6 +14,7 @@ public struct CommandContext: Sendable {
     public let commandPrefix: String
     public let hostInfo: HostInfo?
     public let subscriptions: SubscriptionSet
+    public let whisperConfiguration: Binding<WhisperConfiguration>?
 
     /// The global event loop group.
     public let eventLoopGroup: (any EventLoopGroup)?
@@ -36,6 +38,7 @@ public struct CommandContext: Sendable {
         commandPrefix: String,
         hostInfo: HostInfo? = nil,
         subscriptions: SubscriptionSet,
+        whisperConfiguration: Binding<WhisperConfiguration>? = nil,
         eventLoopGroup: (any EventLoopGroup)? = nil
     ) {
         self.sink = sink
@@ -44,6 +47,7 @@ public struct CommandContext: Sendable {
         self.commandPrefix = commandPrefix
         self.hostInfo = hostInfo
         self.subscriptions = subscriptions
+        self.whisperConfiguration = whisperConfiguration
         self.eventLoopGroup = eventLoopGroup
 
         channel = sink.flatMap { c in message.channelId.map { InteractiveTextChannel(id: $0, sink: c) } }
