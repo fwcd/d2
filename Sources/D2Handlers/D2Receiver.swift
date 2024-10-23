@@ -420,7 +420,7 @@ public class D2Receiver: Receiver {
         registry["diceroll", aka: ["dice", "roll"]] = DiceRollCommand(1...6)
         registry["pickrandom", aka: ["pick"]] = PickRandomCommand()
         registry["pickprogramminglanguage", aka: ["picklanguage", "picklang"]] = PickProgrammingLanguageCommand()
-        registry["directmessage", aka: ["dm", "whisper"]] = DirectMessageCommand()
+        registry["directmessage", aka: ["dm"]] = DirectMessageCommand()
         registry["react"] = ReactCommand()
         registry["temporaryreact", aka: ["tempreact", "tmpreact", "tr"]] = ReactCommand(temporary: true)
         registry["channelmessage", aka: ["m"]] = ChannelMessageCommand()
