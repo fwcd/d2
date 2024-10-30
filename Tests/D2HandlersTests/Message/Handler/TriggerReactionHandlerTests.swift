@@ -13,6 +13,9 @@ struct TriggerReactionHandlerTests {
         #expect(await messageTriggersWeather("Guten Morgen"))
         #expect(await messageTriggersWeather("Guten   mooorgen"))
         #expect(await messageTriggersWeather("Guten Morgen, guten Morgen, guten Morgen, Sonnenschein!"))
+        #expect(await messageTriggersWeather("Guten morgähn"))
+        #expect(await messageTriggersWeather("Guten morgääään"))
+        #expect(await messageTriggersWeather("Guten morgäääähn"))
     }
 
     private func messageTriggersWeather(_ content: String) async -> Bool {
