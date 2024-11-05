@@ -329,6 +329,7 @@ public class D2Receiver: Receiver {
         registry["pickupline", aka: ["pickup"]] = PickupLineCommand()
         registry["chucknorrisjoke", aka: ["cnj"]] = ChuckNorrisJokeCommand()
         registry["joke"] = JokeCommand()
+        registry["dadjoke"] = DadJokeCommand()
         registry["pat"] = PatCommand(inventoryManager: inventoryManager)
         registry["hug"] = HugCommand(inventoryManager: inventoryManager)
         registry["wouldyourather", aka: ["wyr"]] = WouldYouRatherCommand(partyGameDB: partyGameDB)
