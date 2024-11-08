@@ -5,7 +5,7 @@ import D2NetAPIs
 import Utils
 import Logging
 
-nonisolated(unsafe) private let goodMorningOrEveningPattern = #/\b[gjm](?:j*[uü]+[ste]+n?|oo+d+)\s+(?:[gm](?:[oö]+(?:r+n+i+ng|(?:r+[gj]+(?:e+|ä+h*)|i+)n)|ü+de+)|e+ve+ni+ng|a+be+nd|da+y|ta+g|n(?:a+ch|i+gh)t)\b/#.ignoresCase()
+nonisolated(unsafe) private let goodMorningOrEveningPattern = #/\b[gjm](?:j*[uü]+[ste]+n?|oo+d+)\s+(?:[gm](?:[oö]+(?:r+n+i+ng*|(?:r+[gj]+(?:e+|ä+h*)|i+)n)|ü+de+)|e+ve+ni+ng|a+be+nd|da+y|ta+g|n(?:a+ch|i+gh)t)\b/#.ignoresCase()
 private let log = Logger(label: "D2Handler.TriggerReactionHandler")
 
 public struct TriggerReactionHandler: MessageHandler {

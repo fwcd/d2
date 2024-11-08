@@ -6,8 +6,7 @@ import D2TestUtils
 
 struct TriggerReactionHandlerTests {
     @Test func goodMorningReaction() async {
-        #expect(await !messageTriggersWeather("good mornin"))
-        #expect(await !messageTriggersWeather("Moin"))
+        #expect(await messageTriggersWeather("good mornin"))
         #expect(await messageTriggersWeather("good morning"))
         #expect(await messageTriggersWeather("guten moin"))
         #expect(await messageTriggersWeather("Guten Morgen"))
@@ -21,7 +20,26 @@ struct TriggerReactionHandlerTests {
         #expect(await messageTriggersWeather("Guten morjen"))
         #expect(await messageTriggersWeather("Gusten moin"))
         #expect(await messageTriggersWeather("Gjuten morgen"))
+        #expect(await messageTriggersWeather("Guten Tag"))
+        #expect(await messageTriggersWeather("Guten Day"))
+        #expect(await messageTriggersWeather("Guten abend"))
+        #expect(await messageTriggersWeather("gute nacht"))
+        #expect(await messageTriggersWeather("good Night"))
+        #expect(await messageTriggersWeather("Good evening"))
+        #expect(await messageTriggersWeather("Juten moin"))
         #expect(await messageTriggersWeather("juuten morgen"))
+        #expect(await messageTriggersWeather("guten abend"))
+        #expect(await messageTriggersWeather("juuten aaaabeend"))
+        // TODO: This one currently does not work, likely due to a compiler bug:
+        // https://github.com/swiftlang/swift/issues/77481
+        // #expect(await messageTriggersWeather("Guten Abend"))
+
+        #expect(await !messageTriggersWeather("Moin"))
+        #expect(await !messageTriggersWeather("Guten"))
+        #expect(await !messageTriggersWeather("Good"))
+        #expect(await !messageTriggersWeather("Morning"))
+        #expect(await !messageTriggersWeather("Morgen"))
+        #expect(await !messageTriggersWeather("evening"))
     }
 
     private func messageTriggersWeather(_ content: String) async -> Bool {
