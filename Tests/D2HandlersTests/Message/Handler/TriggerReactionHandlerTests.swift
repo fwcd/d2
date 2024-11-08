@@ -29,6 +29,7 @@ struct TriggerReactionHandlerTests {
         #expect(await messageTriggersWeather("Juten moin"))
         #expect(await messageTriggersWeather("juuten morgen"))
         #expect(await messageTriggersWeather("guten abend"))
+        #expect(await messageTriggersWeather("goodn abend"))
         #expect(await messageTriggersWeather("juuten aaaabeend"))
         // TODO: This one currently does not work, likely due to a compiler bug:
         // https://github.com/swiftlang/swift/issues/77481
@@ -40,6 +41,8 @@ struct TriggerReactionHandlerTests {
         #expect(await !messageTriggersWeather("Morning"))
         #expect(await !messageTriggersWeather("Morgen"))
         #expect(await !messageTriggersWeather("evening"))
+        #expect(await !messageTriggersWeather("gut"))
+        #expect(await !messageTriggersWeather("guten"))
     }
 
     private func messageTriggersWeather(_ content: String) async -> Bool {
