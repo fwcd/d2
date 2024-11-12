@@ -435,6 +435,7 @@ public class D2Receiver: Receiver {
         registry["lyrics"] = LyricsCommand(showChords: false)
         registry["pianoscale", aka: ["piano"]] = PianoScaleCommand()
         registry["httpcode", aka: ["httpstatus", "httpstatuscode", "statuscode", "http"]] = HTTPCodeCommand()
+        registry["port"] = PortCommand()
         registry["web"] = WebCommand()
         registry["get"] = HTTPRequestCommand(method: "GET")
         registry["post"] = HTTPRequestCommand(method: "POST")
