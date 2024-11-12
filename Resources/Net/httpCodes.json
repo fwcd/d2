@@ -1,9 +1,4 @@
 {
-  "1xx": {
-    "code": "1xx",
-    "message": "Information",
-    "description": "1xx codes are often interim responses for sharing connection status information. Not intended for final request or response action."
-  },
   "100": {
     "code": 100,
     "message": "Continue",
@@ -23,11 +18,6 @@
     "code": 103,
     "message": "Early Hints",
     "description": "Used to return some response headers before final HTTP message."
-  },
-  "2xx": {
-    "code": "2xx",
-    "message": "Successful",
-    "description": "2xx codes indicate successful responses usually this means the action requested by the client was received, understood and accepted successfully."
   },
   "200": {
     "code": 200,
@@ -84,11 +74,6 @@
     "message": "IM Used",
     "description": "The server has fulfilled a request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance."
   },
-  "3xx": {
-    "code": "3xx",
-    "message": "Redirection",
-    "description": "3xx codes are a class of responses that suggest the User-Agent must follow another course of action to obtain the complete requested resource."
-  },
   "300": {
     "code": 300,
     "message": "Multiple Choices",
@@ -128,11 +113,6 @@
     "code": 308,
     "message": "Resume Incomplete",
     "description": "Used in the resumable requests proposal to resume aborted PUT or POST requests."
-  },
-  "4xx": {
-    "code": "4xx",
-    "message": "Client Error",
-    "description": "4xx codes generally are error responses specifying an issue at the client’s end. Potentially a network issue."
   },
   "400": {
     "code": 400,
@@ -333,11 +313,6 @@
     "code": 499,
     "message": "Client Closed Request",
     "description": "A non-standard status code introduced by nginx for the case when a client closes the connection while nginx is processing the request."
-  },
-  "5xx": {
-    "code": "5xx",
-    "message": "Server Error",
-    "description": "5xx error codes indicate that an error or unresolvable request occurred on the server side, whether that is a proxy or the origin host."
   },
   "500": {
     "code": 500,
