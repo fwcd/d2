@@ -12,7 +12,7 @@ private let log = Logger(label: "D2Commands.WebCommand")
 
 public class WebCommand: Command {
     public let info = CommandInfo(
-        category: .web,
+        category: .net,
         shortDescription: "Renders a webpage",
         longDescription: "Fetches and renders an arbitrary HTML page using an embed",
         requiredPermissionLevel: .admin

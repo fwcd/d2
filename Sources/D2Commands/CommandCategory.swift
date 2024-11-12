@@ -22,11 +22,11 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
     case misc
     case moderation
     case music
+    case net
     case programming
     case quote
     case scripting
     case videogame
-    case web
 
     public var description: String {
         switch self {
@@ -49,11 +49,11 @@ public enum CommandCategory: String, CaseIterable, CustomStringConvertible, Equa
             case .misc: "🎨 Miscellaneous commands"
             case .moderation: "📣 Moderation"
             case .music: "🎸 Music, theory and chords"
+            case .net: "🌐 Networking"
             case .programming: "🎩 Programming"
             case .quote: "💬 Quotes"
             case .scripting: "🛠️ Command scripting"
             case .videogame: "🌲 Video games"
-            case .web: "🌐 Web browsing"
         }
     }
     public var plainDescription: String {

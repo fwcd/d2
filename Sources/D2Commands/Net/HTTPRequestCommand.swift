@@ -9,7 +9,7 @@ public class HTTPRequestCommand: Command {
 
     public init(method: String) {
         info = CommandInfo(
-            category: .web,
+            category: .net,
             shortDescription: "Performs an HTTP \(method) request",
             helpText: "Syntax: [url] [body]?",
             requiredPermissionLevel: .admin

@@ -2,7 +2,7 @@
 
 public class ParseDOMCommand: StringCommand {
     public let info = CommandInfo(
-        category: .web,
+        category: .net,
         shortDescription: "Parses HTML into a tree of DOM nodes/elements",
         requiredPermissionLevel: .basic
     )

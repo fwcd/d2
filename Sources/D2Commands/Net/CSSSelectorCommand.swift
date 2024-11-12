@@ -1,6 +1,6 @@
 public class CSSSelectorCommand: Command {
     public let info = CommandInfo(
-        category: .web,
+        category: .net,
         shortDescription: "Finds DOM child nodes using a CSS selector",
         requiredPermissionLevel: .basic
     )
