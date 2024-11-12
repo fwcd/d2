@@ -5,6 +5,7 @@ public class HTTPCodeCommand: StringCommand {
     public let info = CommandInfo(
         category: .net,
         shortDescription: "Looks up an HTTP status code",
+        helpText: "Syntax: [status code]",
         requiredPermissionLevel: .basic
     )
 
