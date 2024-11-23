@@ -27,6 +27,10 @@ jobs:
         # https://github.com/actions/runner-images/issues/8500
         brew upgrade || brew link --overwrite python@3.11
 
+        # Work around another potential upstream issue
+        # https://github.com/fwcd/d2/actions/runs/11991028156/job/33429199902
+        brew link --overwrite pkgconf
+
         Scripts/install-dependencies-brew
     - name: Install Swift
     # https://github.com/swift-actions/setup-swift/pull/684
