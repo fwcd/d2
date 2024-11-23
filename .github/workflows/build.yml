@@ -29,7 +29,7 @@ jobs:
 
         # Work around another potential upstream issue
         # https://github.com/fwcd/d2/actions/runs/11991028156/job/33429199902
-        brew link --overwrite pkgconf
+        brew unlink pkg-config@0.29.2
 
         Scripts/install-dependencies-brew
     - name: Install Swift
