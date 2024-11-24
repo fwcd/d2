@@ -8,7 +8,7 @@ public struct SaluteHandler: MessageHandler {
     private let pattern: Regex<Substring>
 
     public init(
-        keywords: Set<String> = ["major", "general"],
+        keywords: Set<String> = ["major", "general", "corporal", "colonel"],
         capitalizedWordsOnly: Bool = true
     ) {
         pattern = Regex {
