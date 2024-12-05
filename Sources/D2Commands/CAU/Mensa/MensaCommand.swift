@@ -41,16 +41,12 @@ public class MensaCommand: StringCommand {
             let canteen = try await client.canteen(for: canteenId)
             do {
                 let meals = try await client.meals(for: canteenId)
-                let mealsByCategory = [String?: [Meal]](grouping: meals, by: \.category)
-                    .map { (key: $0.key ?? "No title", value: $0.value) }
-                    .sorted(by: ascendingComparator(comparing: \.key))
                 await output.append(Embed(
                     title: ":fork_knife_plate: Today's menu for \(canteen.name)",
-                    fields: mealsByCategory.compactMap { (category, meals) -> Embed.Field? in
-                        guard !meals.isEmpty else { return nil }
-                        return Embed.Field(
-                            name: "**+++ \(category) +++**",
-                            value: self.format(meals: meals.sorted(by: ascendingComparator(comparing: \.name)))
+                    fields: meals.map { meal in
+                        Embed.Field(
+                            name: "\(meal.name)\(meal.category.map { " [\($0)]" } ?? "")".nilIfEmpty ?? "?",
+                            value: format(meal: meal)
                         )
                     }
                 ))
@@ -64,16 +60,11 @@ public class MensaCommand: StringCommand {
         }
     }
 
-    private func format(meals: [Meal]) -> String {
-        meals.flatMap { meal in
-            [
-                "**\(meal.name.nilIfEmpty ?? "_no title_")**",
-                ("\(meal.prices) \(emojisOf(attributes: meal.attributes))")
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                    .nilIfEmpty
-                    ?? "_no properties_"
-            ]
-        }.joined(separator: "\n")
+    private func format(meal: Meal) -> String {
+        ("\(meal.prices) \(emojisOf(attributes: meal.attributes))")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .nilIfEmpty
+            ?? "_no properties_"
     }
 
     private func emojisOf(attributes: Meal.Attributes) -> String {
