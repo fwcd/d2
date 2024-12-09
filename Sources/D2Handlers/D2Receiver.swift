@@ -345,6 +345,7 @@ public class D2Receiver: Receiver {
         registry["thisforthat", aka: ["tft"]] = ThisForThatCommand()
         registry["fact"] = FactCommand()
         registry["compliment"] = ComplimentCommand()
+        registry["bubblewrap"] = BubblewrapCommand()
         registry["magic8ball", aka: (1..<20).flatMap { ["\($0)ball", "\($0)b"] }] = Magic8BallCommand()
         registry["slotmachine", aka: ["slots"]] = SlotMachineCommand()
         registry["random"] = RandomCommand(permissionManager: permissionManager)
