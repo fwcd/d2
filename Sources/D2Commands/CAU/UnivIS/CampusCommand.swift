@@ -75,7 +75,7 @@ public class CampusCommand: StringCommand {
         var address: String = rawAddress.replacingOccurrences(of: "str.", with: "straße")
 
         if rawAddress.matches(of: addressWithCityPattern).isEmpty {
-            address = address.split(separator: ",").first! + ", 24118 Kiel"
+            address = address.split(separator: #/[,(]/#).first! + ", 24118 Kiel"
         }
 
         return address
