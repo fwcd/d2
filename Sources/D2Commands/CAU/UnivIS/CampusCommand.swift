@@ -41,7 +41,7 @@ public class CampusCommand: StringCommand {
             }
             log.info("Found address \(rawAddress)")
 
-            let address = self.format(rawAddress: rawAddress)
+            let address = self.normalize(rawAddress: rawAddress)
             log.info("Normalized address to \(address)")
 
             let coords = try await geocoder.geocode(location: address)
@@ -71,7 +71,7 @@ public class CampusCommand: StringCommand {
             + ((room.address != nil) ? 2 : 0)
     }
 
-    private func format(rawAddress: String) -> String {
+    private func normalize(rawAddress: String) -> String {
         var address: String = rawAddress.replacingOccurrences(of: "str.", with: "straße")
 
         if rawAddress.matches(of: addressWithCityPattern).isEmpty {
