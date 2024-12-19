@@ -34,12 +34,18 @@ public class CampusCommand: StringCommand {
             guard let room = self.findBestMatchFor(name: input, in: queryOutput) else {
                 throw CampusCommandError.noRoomFound
             }
+            log.info("Found room \(room)")
+
             guard let rawAddress = room.address else {
                 throw CampusCommandError.roomHasNoAddress("\(room)")
             }
+            log.info("Found address \(rawAddress)")
 
             let address = self.format(rawAddress: rawAddress)
+            log.info("Normalized address to \(address)")
+
             let coords = try await geocoder.geocode(location: address)
+            log.info("Geocoded address to \(coords)")
 
             await output.append(.compound([
                 .geoCoordinates(coords),
