@@ -1,5 +1,5 @@
 {
-  "originHash" : "03cf320e10a610a3cf92fd8088663176e573bdbea707605e1b8161fb4785ab73",
+  "originHash" : "fd0cdd859b3487de68db19033528666831cf45e6cbcb10ef760c3282e05fdc61",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fwcd/swift-gif.git",
       "state" : {
-        "revision" : "31287229e596989f527105fe082672f6fb64fe4d",
-        "version" : "4.0.0"
+        "revision" : "0b6599e72580efbcac3bac3b02ee82eb1cc6b15a",
+        "version" : "5.0.0"
       }
     },
     {
