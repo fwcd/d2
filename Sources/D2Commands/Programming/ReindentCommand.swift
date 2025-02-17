@@ -1,6 +1,6 @@
 import Utils
 
-nonisolated(unsafe) private let indentSpecPattern = #/(?:(?<count>\d+)\s+(?<type>tabs|spaces))|(?<fibonacci>fibonacci)/#
+nonisolated(unsafe) private let indentSpecPattern = #/(?:(?<count>\d+)\s+(?<type>tab|space)s?)|(?<fibonacci>fibonacci)/#
 
 public class ReindentCommand: Command {
     public let info = CommandInfo(
@@ -25,8 +25,8 @@ public class ReindentCommand: Command {
             } else {
                 let count = parsedSpec.count.flatMap { Int($0) } ?? 1
                 return switch parsedSpec.type {
-                case "tabs": .uniform(String(repeating: "\t", count: count))
-                case "spaces": .uniform(String(repeating: " ", count: count))
+                case "tab": .uniform(String(repeating: "\t", count: count))
+                case "space": .uniform(String(repeating: " ", count: count))
                 default: nil
                 }
             }
