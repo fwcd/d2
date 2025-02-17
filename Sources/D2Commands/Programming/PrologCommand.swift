@@ -17,7 +17,7 @@ public class PrologCommand: Command {
     public init() {
         subcommands = [
             "load": { [unowned self] input, output in
-                guard let rawProgram = input.asCode ?? input.asText else {
+                guard let rawProgram = input.asCode?.code ?? input.asText else {
                     await output.append("Please enter a Prolog program (a collection of rules)!")
                     return
                 }
@@ -32,7 +32,7 @@ public class PrologCommand: Command {
                     await output.append("Please load a program first!")
                     return
                 }
-                guard let rawGoal = input.asCode ?? input.asText else {
+                guard let rawGoal = input.asCode?.code ?? input.asText else {
                     await output.append("Please enter a Prolog goal (a collection of provable statements)!")
                     return
                 }

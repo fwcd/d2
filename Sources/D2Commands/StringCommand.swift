@@ -10,6 +10,6 @@ extension StringCommand {
     public var inputValueType: RichValueType { .text }
 
     public func invoke(with input: RichValue, output: any CommandOutput, context: CommandContext) async {
-        await invoke(with: input.asText ?? input.asCode ?? "", output: output, context: context)
+        await invoke(with: input.asText ?? input.asCode?.code ?? "", output: output, context: context)
     }
 }

@@ -33,8 +33,8 @@ public enum RichValue: Addable, Sendable {
     public var asText: String? {
         extract { if case let .text(text) = $0 { text } else { nil } }.nilIfEmpty?.joined(separator: " ")
     }
-    public var asCode: String? {
-        extract { if case let .code(code, language: _) = $0 { code } else { nil } }.first
+    public var asCode: (code: String, language: String?)? {
+        extract { if case let .code(code, language: language) = $0 { (code: code, language: language) } else { nil } }.first
     }
     public var asEmbed: Embed? {
         extract { if case let .embed(embed) = $0 { embed } else { nil } }.first

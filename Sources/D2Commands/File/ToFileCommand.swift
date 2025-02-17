@@ -29,7 +29,7 @@ public class ToFileCommand: Command {
                 return
             }
 
-            guard let data = (content.asText ?? content.asCode ?? "").data(using: .utf8) else {
+            guard let data = (content.asText ?? content.asCode?.code ?? "").data(using: .utf8) else {
                 await output.append(errorText: "Could not encode file data as UTF-8")
                 return
             }

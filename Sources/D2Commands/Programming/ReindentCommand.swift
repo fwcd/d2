@@ -70,6 +70,6 @@ public class ReindentCommand: Command {
             return
         }
 
-        await output.append(.code(spec.reindent(code: code), language: nil))
+        await output.append(.code(spec.reindent(code: code.code), language: code.language))
     }
 }
