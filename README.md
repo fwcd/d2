@@ -3,7 +3,7 @@
 [![Build](https://github.com/fwcd/d2/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/d2/actions/workflows/build.yml)
 [![Docker](https://github.com/fwcd/d2/actions/workflows/docker.yml/badge.svg)](https://github.com/fwcd/d2/actions/workflows/docker.yml)
 
-General-purpose assistant for Discord and IRC with more than 340 commands, including:
+General-purpose assistant for Discord and IRC with more than 350 commands, including:
 
 - **Multiplayer games**, including chess, uno, hangman, codenames, wordle and others
 - **50+ Web APIs**, including dictionaries, news, weather, comics, recipes and more
