@@ -304,6 +304,7 @@ public class D2Receiver: Receiver {
         registry["buzzwordbingo", aka: ["buzzbingo"]] = BuzzwordBingoCommand()
         registry["hoogle"] = HoogleCommand()
         registry["prolog"] = PrologCommand()
+        registry["reindent", aka: ["indent", "redent"]] = ReindentCommand()
         registry["morseencode", aka: ["morse", "morsify"]] = MorseEncoderCommand()
         registry["morsedecode", aka: ["demorse", "demorsify"]] = MorseDecoderCommand()
         registry["germanencode", aka: ["german", "germanify"]] = GermanEncoderCommand()
