@@ -306,7 +306,6 @@ public class D2Receiver: Receiver {
         registry["haskelleval", aka: ["haskell"]] = HaskellEvalCommand()
         registry["haskelltype"] = HaskellTypeCommand()
         registry["pointfree"] = PointfreeCommand()
-        registry["pointful"] = PointfulCommand()
         registry["prolog"] = PrologCommand()
         registry["reindent", aka: ["indent", "redent"]] = ReindentCommand()
         registry["morseencode", aka: ["morse", "morsify"]] = MorseEncoderCommand()

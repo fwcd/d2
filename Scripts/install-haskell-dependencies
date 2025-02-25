@@ -12,4 +12,4 @@ fi
 tool="$1"
 shift
 
-"$tool" install "$@" happy show mueval pointfree pointful
+"$tool" install "$@" happy show mueval pointfree
