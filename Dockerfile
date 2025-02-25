@@ -31,6 +31,12 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 COPY Scripts/install-runtime-dependencies-apt Scripts/
 RUN Scripts/install-runtime-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
+# Install Haskell dependencies
+RUN cabal update && Scripts/install-haskell-dependencies cabal
+
+# Add Cabal to PATH
+ENV PATH /.cabal/bin:/root/.cabal/bin:$PATH
+
 # Install Node dependencies
 COPY Scripts/install-node-dependencies Scripts/
 COPY Node Node

@@ -23,6 +23,7 @@ To build and run D2 locally, make sure to have the following installed:
 
 - Linux or macOS
 - Swift 6+
+- Haskell + cabal-install or Stack (for Hoogle, Pointfree, ...)
 - Node.js and npm (for LaTeX rendering)
 
 On Ubuntu, run
@@ -41,7 +42,17 @@ Scripts/install-dependencies-brew
 
 Create a folder named `local` under the repository and add configuration files as described in [the configuration section](#configuration).
 
-To install the dependencies for node packages used by D2, run
+To install the Haskell packages used by D2, run
+
+```sh
+Scripts/install-haskell-dependencies stack
+```
+
+> If this fails due to version conflicts, check whether your global Stack resolver is too old in `~/.stack/global-project/stack.yaml`.
+
+> This is the command for Haskell Stack, for cabal-install substitute `cabal` for `stack` above.
+
+To install the Node packages used by D2, run
 
 ```sh
 Scripts/install-node-dependencies

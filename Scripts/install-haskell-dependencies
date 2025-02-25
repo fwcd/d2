@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Installs all Haskell packages that are needed to run D2's Haskell-related commands
+
+set -e
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 <stack or cabal>"
+  exit 1
+fi
+
+"$1" install happy show mueval pointfree pointful
