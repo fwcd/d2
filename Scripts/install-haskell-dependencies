@@ -4,9 +4,12 @@
 
 set -e
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $0 <stack or cabal>"
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <stack or cabal> [additional flags...]"
   exit 1
 fi
 
-"$1" install happy show mueval pointfree pointful
+tool="$1"
+shift
+
+"$tool" install "$@" happy show mueval pointfree pointful

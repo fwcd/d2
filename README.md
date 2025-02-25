@@ -48,7 +48,7 @@ To install the Haskell packages used by D2, run
 Scripts/install-haskell-dependencies stack
 ```
 
-> If this fails due to version conflicts, check whether your global Stack resolver is too old in `~/.stack/global-project/stack.yaml`.
+> If this fails due to version conflicts, check whether your global Stack resolver is too old in `~/.stack/global-project/stack.yaml` and/or append the `--allow-newer` flag to the command, which will be forwarded to Stack by the script.
 
 > This is the command for Haskell Stack, for cabal-install substitute `cabal` for `stack` above.
 
