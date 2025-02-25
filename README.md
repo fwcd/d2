@@ -42,7 +42,7 @@ Scripts/install-dependencies-brew
 
 Create a folder named `local` under the repository and add configuration files as described in [the configuration section](#configuration).
 
-To install the Haskell packages used by D2, run
+To install the Haskell packages used by D2, please install Haskell Stack or cabal-install externally (e.g. via `ghcup`), then run
 
 ```sh
 Scripts/install-haskell-dependencies stack
