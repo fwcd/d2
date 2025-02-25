@@ -1,0 +1,33 @@
+import Logging
+import D2MessageIO
+import Utils
+
+fileprivate let log = Logger(label: "D2Commands.HaskellTypeCommand")
+
+public class HaskellTypeCommand: StringCommand {
+    public let info = CommandInfo(
+        category: .programming,
+        shortDescription: "Fetches the type of a Haskell expression",
+        longDescription: "Computes the inferred type of a (pure) Haskell expression using Mueval",
+        presented: true,
+        requiredPermissionLevel: .basic
+    )
+    public let outputValueType: RichValueType = .code
+    private let timeout: Int = 4
+
+    public init() {}
+
+    public func invoke(with input: String, output: CommandOutput, context: CommandContext) async {
+        do {
+            let lines = try await Array((Shell().utf8(for: "mueval", args: ["-iTe", input, "-t", String(timeout)]).get() ?? "").split(separator: "\n"))
+            guard lines.count >= 2 else {
+                log.error("Invalid mueval output: \(lines)")
+                await output.append(errorText: "Invalid mueval output")
+                return
+            }
+            await output.append(.code("\(lines[0]) :: \(lines[1])", language: "haskell"))
+        } catch {
+            await output.append(error, errorText: "Could not fetch inferred expression type.")
+        }
+    }
+}
