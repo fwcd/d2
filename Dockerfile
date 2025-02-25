@@ -32,6 +32,7 @@ COPY Scripts/install-runtime-dependencies-apt Scripts/
 RUN Scripts/install-runtime-dependencies-apt && rm -rf /var/lib/apt/lists/*
 
 # Install Haskell dependencies
+RUN apt-get install -y cabal-install
 RUN cabal update && Scripts/install-haskell-dependencies cabal
 
 # Add Cabal to PATH
